@@ -4,8 +4,6 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {useQuery} from "@tanstack/react-query";
 
 // TODO: replace shadcn SELECT with shadcn esque multiselect -- or build a multiselect using shadcn
-import InformationIcon from "./InformationIcon";
-import SectionHeader from "./SectionHeader";
 import useMap from "@/hooks/useMap";
 import {
     Select,
@@ -161,26 +159,26 @@ export default function ArbovirusDashboard() {
                                 {"Filrter"}
                             </div>
                             {/*// TODO: This stuff needs to be edited*/}
-                            <div className="tooltip-vert-adj">
-                                <InformationIcon
-                                    offset={[10]}
-                                    position="bottom right"
-                                    color="#455a64"
-                                    tooltipHeader={"Filter"}
-                                    popupSize="small"
-                                    size="sm"
-                                    tooltip={"Filter Information"} />
-                            </div>
+                            {/*<div className="tooltip-vert-adj">*/}
+                            {/*    <InformationIcon*/}
+                            {/*        offset={[10]}*/}
+                            {/*        position="bottom right"*/}
+                            {/*        color="#455a64"*/}
+                            {/*        tooltipHeader={"Filter"}*/}
+                            {/*        popupSize="small"*/}
+                            {/*        size="sm"*/}
+                            {/*        tooltip={"Filter Information"} />*/}
+                            {/*</div>*/}
                         </div>
                         <div className="row justify-content-center">
                             <div className="col-10 col align-items-center p-0">
                                 <div className="p-0">
-                                    <div>
-                                        <SectionHeader
-                                            header_text={"Demographics"}
-                                            tooltip_text={"Participant related data"}
-                                        />
-                                    </div>
+                                    {/*<div>*/}
+                                    {/*    <SectionHeader*/}
+                                    {/*        header_text={"Demographics"}*/}
+                                    {/*        tooltip_text={"Participant related data"}*/}
+                                    {/*    />*/}
+                                    {/*</div>*/}
                                     <div>
                                         {buildFilterDropdown('age_group', "Age Group")}
                                     </div>
@@ -192,9 +190,9 @@ export default function ArbovirusDashboard() {
                                     </div>
                                 </div>
                                 <div className="p-0">
-                                    <div>
-                                        <SectionHeader header_text={"Study Information"} tooltip_text={"Filter on different types of study based metadata"}/>
-                                    </div>
+                                    {/*<div>*/}
+                                    {/*    <SectionHeader header_text={"Study Information"} tooltip_text={"Filter on different types of study based metadata"}/>*/}
+                                    {/*</div>*/}
                                     <div>
                                         {buildFilterDropdown('assay',"Assay")}
                                     </div>
