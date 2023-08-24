@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import {Input} from "semantic-ui-react";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
 // import {google} from "googleapis";
 
 export default function NewsletterEmailInput() {
@@ -43,14 +44,15 @@ export default function NewsletterEmailInput() {
             <h5 className={" text-left mb-2"}>{"SEROTRACKER NEWSLETTER"}</h5>
             <p className={"text-left"}>Monthly summaries of recent seroprevalence literature and product updates</p>
             <Input
-                action={{content: "Sign Up", onClick: handleNewsletterSubmit, color: "blue"}}
                 placeholder={"example@somecompany.ext"}
                 value={newsletterEmail}
                 className={"w-100 align-self-end"}
                 type={"email"}
-                error={invalidEntry}
-                onChange={(event) => setNewsletterEmail(event.target.value)}
-            />
+                // error={invalidEntry}
+                onChange={(event) => setNewsletterEmail(event.target.value)} />
+            <Button onClick={handleNewsletterSubmit} className={"bg-background"}>
+                Sign Up
+            </Button>
         </>
     )
 }
