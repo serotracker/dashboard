@@ -76,7 +76,7 @@ export default function ArboStudyPopup(record: any) {
                 {row("Inclusion Criteria", record.inclusion_criteria ? record.inclusion_criteria : "Not Reported")}
                 {row("Location", getGeography(record.city, record.state, record.country))}
                 {row("Sample Size", record.sample_size?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
-                {row("Atibody Target",  record.antibody)}
+                {row("Atibody Target",  record.antibodies)}
                 {row("Antigen", record.antigen)}
                 {row("Assay", record.assay)}
             </div>

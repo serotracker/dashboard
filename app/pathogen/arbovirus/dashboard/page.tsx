@@ -15,6 +15,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {MultiSelect, MultiSelectOption} from "@/components/customs/multi-select";
 
 export default function ArbovirusDashboard() {
 
@@ -29,22 +30,36 @@ export default function ArbovirusDashboard() {
     const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string[] }>({})
 
     // For now cannot select multiple filters
-    const addFilter = (value: string, newFilter: string) => {
+
+    const addFilterMulti = (value: string[], newFilter: string) => {
+        console.log("Adding filter: ", value, newFilter)
         setSelectedFilters(prevState => {
-            let mapboxFilters = []
+            let mapboxFilters: any = []
 
             Object.keys(prevState).forEach((filter: string) => {
-                if (filter !== newFilter && prevState[filter].length > 0)
-                    mapboxFilters.push(['in', filter, ...prevState[filter]])
+                const keyFilters: any = []
+                if (filter !== newFilter && prevState[filter].length > 0) {
+                    prevState[filter].forEach((filterValue: string) => {
+                        keyFilters.push(['in', filterValue, ['get', filter]])
+                    })
+                }
+                if(keyFilters.length > 0) mapboxFilters.push(['any', ...keyFilters])
             })
 
-            if (value.length > 0) mapboxFilters.push(['in', newFilter, value]);
+            if (value.length > 0) {
+                const keyFilters: any = []
+                value.forEach((filterValue: string) => {
+                    keyFilters.push(['in', filterValue, ['get', newFilter]])
+                })
+                if(keyFilters.length > 0) mapboxFilters.push(['any', ...keyFilters])
 
-            console.log("Filters: ", mapboxFilters);
+            };
+
+            console.log("Filters: ", ['all', ...mapboxFilters]);
             map.current?.setFilter('arbo-pins', ['all', ...mapboxFilters])
 
             return ({
-                ...prevState, [newFilter]: [value]
+                ...prevState, [newFilter]: value
             })
         });
     }
@@ -52,24 +67,12 @@ export default function ArbovirusDashboard() {
     const buildFilterDropdown = (filter: string, placeholder: string) => {
         return (
             <div className="pb-3">
-                <Select
-                    onValueChange={(value) => {
-                        addFilter(value, filter)
-                    }}
-                    // defaultValue={selectedFilters[filter][0] as string}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder={placeholder}/>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>{filter}</SelectLabel>
-                            {filters.data[filter].map((filterOption: string) =>
-                                (<SelectItem key={filterOption} value={filterOption}>{filterOption}</SelectItem>)
-                            )}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+                <MultiSelect
+                    handleOnChange={(value) => addFilterMulti(value, filter)}
+                    heading={placeholder}
+                    selected={selectedFilters[filter]}
+                    options={filters.data[filter].filter((assay: string) => assay != null)}
+                />
             </div>
         )
     }
@@ -81,10 +84,16 @@ export default function ArbovirusDashboard() {
         ),
     })
 
-    if (!filters.isLoading && !filters.isError) {
-        console.log(filters.data)
-    } else {
-        console.log("loading or errored filters", filters.error, filters.isError, filters.isLoading)
+    if(filters.isSuccess && !filters.isLoading && !filters.isError) {
+        console.log(filters.data, Object.keys(filters.data))
+
+        Object.keys(filters.data).forEach((key: string) => {
+            if(!selectedFilters[key]) {
+                setSelectedFilters(prevState => ({
+                    ...prevState, [key]: []
+                }))
+            }
+        })
     }
 
     if (!query.isLoading && !query.isError) {
@@ -93,71 +102,85 @@ export default function ArbovirusDashboard() {
         console.log("loading or errored", query.error, query.isError, query.isLoading)
     }
 
+
+
+
+
     return (
-        <div className={"grid gap-4 grid-cols-12 w-full h-full"}>
-            {!filters.isLoading && !filters.isError && (
-                <>
-                    <div className={"col-span-2 flex flex-col"}>
-                        <Card className={""}>
-                            <CardHeader>
-                                <CardTitle>Visualizations</CardTitle>
-                                <CardContent>
-
-                                </CardContent>
-                            </CardHeader>
-                        </Card>
-                        <Card className={""}>
-                            <CardHeader>
-                                <CardTitle>Visualizations</CardTitle>
-                                <CardContent>
-
-                                </CardContent>
-                            </CardHeader>
-                        </Card>
-                    </div>
-
-                    <Card className={"w-full h-full overflow-hidden col-span-8"}>
-                        <CardContent ref={mapContainer} className={"w-full h-full"}/>
-                    </Card>
-                    <Card className={"col-span-2"}>
-                        <CardHeader>
-                            <CardTitle>Filters</CardTitle>
-                        </CardHeader>
+        <div className={"grid gap-4 grid-cols-16 w-full h-full"}>
+            <div className={"col-span-4 flex flex-col"}>
+                <Card className={""}>
+                    <CardHeader>
+                        <CardTitle>Visualizations</CardTitle>
                         <CardContent>
-                            <div className="p-0">
-                                {/*<div>*/}
-                                {/*    <SectionHeader*/}
-                                {/*        header_text={"Demographics"}*/}
-                                {/*        tooltip_text={"Participant related data"}*/}
-                                {/*    />*/}
-                                {/*</div>*/}
-                                <div>
-                                    {buildFilterDropdown('age_group', "Age Group")}
-                                </div>
-                                <div>
-                                    {buildFilterDropdown('sex', "Sex")}
-                                </div>
-                                <div>
-                                    {buildFilterDropdown('country', "Country")}
-                                </div>
-                            </div>
-                            <div className="p-0">
-                                {/*<div>*/}
-                                {/*    <SectionHeader header_text={"Study Information"} tooltip_text={"Filter on different types of study based metadata"}/>*/}
-                                {/*</div>*/}
-                                <div>
-                                    {buildFilterDropdown('assay', "Assay")}
-                                </div>
-                                <div>
-                                    {buildFilterDropdown('producer', "Producer")}
-                                </div>
-                                <div>
-                                    {buildFilterDropdown('sample_frame', "Sample Frame")}
-                                </div>
-                            </div>
+
                         </CardContent>
-                    </Card>
-                </>
+                    </CardHeader>
+                </Card>
+                <Card className={""}>
+                    <CardHeader>
+                        <CardTitle>Visualizations</CardTitle>
+                        <CardContent>
+
+                        </CardContent>
+                    </CardHeader>
+                </Card>
+            </div>
+            <Card className={"w-full h-full overflow-hidden col-span-9"}>
+                <CardContent ref={mapContainer} className={"w-full h-full"}/>
+            </Card>
+            {!filters.isLoading && !filters.isError && (
+
+                <Card className={"col-span-3"}>
+                    <CardHeader>
+                        <CardTitle>Filters</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="p-0">
+                            {/*<div>*/}
+                            {/*    <SectionHeader*/}
+                            {/*        header_text={"Demographics"}*/}
+                            {/*        tooltip_text={"Participant related data"}*/}
+                            {/*    />*/}
+                            {/*</div>*/}
+                            <div>
+                                {buildFilterDropdown('age_group', "Age Group")}
+                            </div>
+                            <div>
+                                {buildFilterDropdown('sex', "Sex")}
+                            </div>
+                            <div>
+                                {buildFilterDropdown('country', "Country")}
+                            </div>
+                        </div>
+                        <div className="p-0">
+                            {/*<div>*/}
+                            {/*    <SectionHeader header_text={"Study Information"} tooltip_text={"Filter on different types of study based metadata"}/>*/}
+                            {/*</div>*/}
+                            <div>
+                                {/*{buildFilterDropdown('assay', "Assay")}*/}
+                                {buildFilterDropdown('assay', "Assay")}
+                            </div>
+                            <div>
+                                {buildFilterDropdown('producer', "Producer")}
+                            </div>
+                            <div>
+                                {buildFilterDropdown('sample_frame', "Sample Frame")}
+                            </div>
+                            <div>
+                                {buildFilterDropdown('antibody', "Antibody")}
+                            </div>
+                            <div>
+                                {/*<MultiSelect*/}
+                                {/*    handleOnChange={(value) => addFilterMulti(value, 'antibody')}*/}
+                                {/*    heading={"Antibody"}*/}
+                                {/*    selected={selectedFilters['antibody'] ?? []}*/}
+                                {/*    options={filters.data['antibody']}*/}
+                                {/*/>*/}
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             )}
         </div>
     )

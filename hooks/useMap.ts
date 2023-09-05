@@ -62,7 +62,8 @@ export default function useMap(query: UseQueryResult<any, unknown>) {
                             country: record.country,
                             assay: record.assay,
                             producer: record.producer,
-                            sample_frame: record.sample_frame
+                            sample_frame: record.sample_frame,
+                            antibody: record.antibodies
                         }
                     }
                 })
