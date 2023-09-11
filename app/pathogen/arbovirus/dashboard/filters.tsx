@@ -7,7 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import mapboxgl from "mapbox-gl";
 import useArboData from "@/hooks/useArboData";
 
-export default function Filters(props: { map: mapboxgl.Map | null }) {
+export default function Filters(props: { map?: mapboxgl.Map | null }) {
   const state = useContext(ArboContext);
   const { map } = props;
   const queryClient = useQueryClient();

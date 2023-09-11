@@ -22,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={"text-black"}>
         <ArboProviders>
           <div>
             <Header />

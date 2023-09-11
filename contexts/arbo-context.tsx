@@ -69,7 +69,9 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
         ...state.selectedFilters,
         [action.payload.filter]: action.payload.value,
       };
-      setMapboxFilters(selectedFilters, action.payload.map);
+
+      if (action.payload.map)
+        setMapboxFilters(selectedFilters, action.payload.map);
 
       return {
         ...state,
