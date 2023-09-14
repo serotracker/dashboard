@@ -37,11 +37,11 @@ export function CustomResponsiveBar() {
     !visualizations.isLoading &&
     !visualizations.isError
   ) {
-    console.log(visualizations.data);
+    // console.log(visualizations.data);
 
     const config = visualizations.data[0];
 
-    console.log("Responsive Bar: ", config);
+    // console.log("Responsive Bar: ", config);
 
     return (
       <ResponsiveBar
@@ -96,7 +96,7 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
   // The data coming in from the props will be moved to a context
   const state = useContext(ArboContext);
 
-  console.log("State: ", state);
+  // console.log("State: ", state);
 
   const data: DataType = {
     NR: {
@@ -141,7 +141,7 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
     },
   };
 
-  console.log("antibody filtering: ", state.filteredData);
+  // console.log("antibody filtering: ", state.filteredData);
 
   const rawData = state.filteredData;
 
@@ -173,7 +173,7 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
     };
   });
 
-  console.log("Chart Data: ", chartData);
+  // console.log("Chart Data: ", chartData);
 
   return (
     <ResponsiveBar
@@ -309,7 +309,7 @@ export function PathogenSeroprevalenceBoxPlot() {
     };
   });
 
-  console.log("Box Plot Data: ", boxPlotData);
+  // console.log("Box Plot Data: ", boxPlotData);
 
   return (
     <div className={"h-72 w-full"}>

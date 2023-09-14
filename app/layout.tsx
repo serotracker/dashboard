@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={"text-black"}>
+      <body className={"text-black no-scrollbar"}>
         <Header />
         <main className={"h-full-screen w-screen p-4 border-box bg-foreground"}>
           <ArboProviders>{children}</ArboProviders>
