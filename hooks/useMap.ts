@@ -4,7 +4,7 @@ import { getEsriVectorSourceStyle } from "@/app/pathogen/arbovirus/dashboard/(ma
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import ReactDOMServer from "react-dom/server";
 import ArboStudyPopup from "@/app/pathogen/arbovirus/dashboard/ArboStudyPopup";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 console.log(process.env.NEXT_PUBLIC_MAPBOX_API_KEY);

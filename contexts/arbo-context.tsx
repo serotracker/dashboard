@@ -4,7 +4,7 @@ import React, { createContext, ReducerWithoutAction, useReducer } from "react";
 import mapboxgl from "mapbox-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-interface ArboContext extends ArboStateType {
+export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
 }
 interface ArboStateType {
@@ -25,7 +25,6 @@ export const initialState: ArboStateType = {
   filteredData: [],
   selectedFilters: {},
 };
-export const ArboContext = createContext<ArboContext | null>(null);
 
 function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   const filterKeys = Object.keys(filters);
@@ -59,11 +58,6 @@ function setMapboxFilters(
 
 export const arboReducer = (state: ArboStateType, action: ArboAction) => {
   switch (action.type) {
-    case ArboActionType.SET_FILTERS:
-      return {
-        ...state,
-        selectedFilters: action.payload.filters,
-      };
     case ArboActionType.UPDATE_FILTER:
       const selectedFilters = {
         ...state.selectedFilters,
@@ -83,6 +77,11 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
       return state;
   }
 };
+
+export const ArboContext = createContext<ArboContextType>({
+  ...initialState,
+  dispatch: () => null,
+});
 
 export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(arboReducer, initialState);

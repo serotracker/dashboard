@@ -56,16 +56,7 @@ const arbotracker: navMenuItem[] = [
 ];
 
 export const Header = () => {
-  const [tab, setTab] = useState("");
-
   const [language, setLanguage] = useState<"en" | "fr" | "de">("en");
-
-  const getTabClass = (tabName: string) => {
-    return (
-      "text-md non-italic text-white h-100 p-2 flex items-center" +
-      (tab.includes(tabName) ? "font-bold" : "font-medium")
-    );
-  };
 
   return (
     <header className="bg-background flex items-center justify-between h-12 w-screen px-2">

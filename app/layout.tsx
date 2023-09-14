@@ -5,7 +5,6 @@ import { Header } from "@/components/customs/header";
 import { Footer } from "@/components/customs/footer";
 import React from "react";
 import { ArboProviders } from "@/contexts/arbo-context";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,17 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={"text-black"}>
-        <ArboProviders>
-          <div>
-            <Header />
-            <main
-              className={"h-full-screen w-screen p-4 border-box bg-foreground"}
-            >
-              {children}
-            </main>
-            <Footer />
-          </div>
-        </ArboProviders>
+        <Header />
+        <main className={"h-full-screen w-screen p-4 border-box bg-foreground"}>
+          <ArboProviders>{children}</ArboProviders>
+        </main>
+        <Footer />
       </body>
     </html>
   );
