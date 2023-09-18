@@ -5,6 +5,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveBoxPlot } from "@nivo/boxplot";
 import { useQuery } from "@tanstack/react-query";
 import { ArboContext } from "@/contexts/arbo-context";
+import { pathogenColors } from "@/app/pathogen/arbovirus/dashboard/(map)/MapAndFilters";
 
 type DataSubType = {
   DENV: number;
@@ -157,19 +158,29 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
     return {
       antibody: antibody,
       DENV: d.DENV,
+      DENVColor: "hsl(0,100,84)",
       ZIKV: d.ZIKV,
+      ZIKVColor: "hsl(217,100,81)",
       CHIKV: d.CHIKV,
+      CHIKVColor: "hsl(185,100,80)",
       YF: d.YF,
+      YFColor: "hsl(33,100,82)",
       WNV: d.WNV,
+      WNVColor: "hsl(110,100,87)",
       MAYV: d.MAYV,
+      MAYVColor: "hsl(62,100,86)",
     };
   });
 
+  const getColor = (bar: any) => pathogenColors[bar.id];
+
+  // @ts-ignore
   return (
     <ResponsiveBar
       data={chartData}
       keys={["DENV", "ZIKV", "CHIKV", "YF", "WNV", "MAYV"]}
       indexBy={"antibody"}
+      colors={getColor}
       margin={{ top: 20, right: 130, bottom: 50, left: 60 }}
       padding={0.3}
       axisTop={null}

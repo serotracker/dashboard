@@ -158,6 +158,18 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
               data ? data.records : [],
             )}
           </div>
+          {!map && (
+            <div>
+              {buildFilterDropdown(
+                "pathogen",
+                "Pathogen",
+                state,
+                filters.data["pathogen"],
+                map,
+                data ? data.records : [],
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
