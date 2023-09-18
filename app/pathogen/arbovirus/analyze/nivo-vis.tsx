@@ -28,7 +28,7 @@ export function CustomResponsiveBar() {
     queryKey: ["ArbovirusVisualizations"],
     queryFn: () =>
       fetch(
-        "http://localhost:5000/data_provider/data_provider/arbo/visualizations",
+        "http://127.0.0.1:5000/data_provider/data_provider/arbo/visualizations",
       ).then((response) => response.json()),
   });
 
@@ -37,11 +37,7 @@ export function CustomResponsiveBar() {
     !visualizations.isLoading &&
     !visualizations.isError
   ) {
-    // console.log(visualizations.data);
-
     const config = visualizations.data[0];
-
-    // console.log("Responsive Bar: ", config);
 
     return (
       <ResponsiveBar
@@ -86,7 +82,7 @@ export function CustomResponsiveBar() {
       />
     );
   } else {
-    if (visualizations.isError) console.log("Error", visualizations.error);
+    if (visualizations.isError) console.error("Error", visualizations.error);
 
     return <span>Loading...</span>;
   }
@@ -95,8 +91,6 @@ export function CustomResponsiveBar() {
 export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
   // The data coming in from the props will be moved to a context
   const state = useContext(ArboContext);
-
-  // console.log("State: ", state);
 
   const data: DataType = {
     NR: {
@@ -141,8 +135,6 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
     },
   };
 
-  // console.log("antibody filtering: ", state.filteredData);
-
   const rawData = state.filteredData;
 
   rawData?.forEach((d: any) => {
@@ -172,8 +164,6 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
       MAYV: d.MAYV,
     };
   });
-
-  // console.log("Chart Data: ", chartData);
 
   return (
     <ResponsiveBar
@@ -308,8 +298,6 @@ export function PathogenSeroprevalenceBoxPlot() {
       seroprevalence,
     };
   });
-
-  // console.log("Box Plot Data: ", boxPlotData);
 
   return (
     <div className={"h-72 w-full"}>

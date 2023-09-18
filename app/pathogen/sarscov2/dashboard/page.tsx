@@ -20,7 +20,7 @@ export default function ArbovirusDashboard() {
   const query = useQuery({
     queryKey: ["SC2virusRecords"],
     queryFn: () =>
-      fetch("http://localhost:5000/data_provider/records").then((response) =>
+      fetch("http://127.0.0.1:5000/data_provider/records").then((response) =>
         response.json(),
       ),
   });
@@ -82,7 +82,7 @@ export default function ArbovirusDashboard() {
   const filters = useQuery({
     queryKey: ["ArbovirusFilters"],
     queryFn: () =>
-      fetch("http://localhost:5000/data_provider/arbo/filter_options").then(
+      fetch("http://127.0.0.1:5000/data_provider/arbo/filter_options").then(
         (response) => response.json(),
       ),
   });

@@ -1,9 +1,15 @@
 "use client";
 
-import React, { createContext, ReducerWithoutAction, useReducer } from "react";
+import React, {
+  createContext,
+  ReducerWithoutAction,
+  useReducer,
+  useState,
+  cache,
+} from "react";
 import mapboxgl from "mapbox-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
 }
@@ -17,8 +23,7 @@ interface ArboAction {
 }
 export enum ArboActionType {
   UPDATE_FILTER = "UPDATE_FILTER",
-  SET_DATA = "SET_DATA",
-  SET_FILTERS = "SET_FILTERS",
+  ADD_FILTERS_TO_MAP = "ADD_FILTERS_TO_MAP",
 }
 
 export const initialState: ArboStateType = {
@@ -36,7 +41,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   });
 }
 
-function setMapboxFilters(
+export function setMapboxFilters(
   filters: { [key: string]: string[] },
   map: mapboxgl.Map | null,
 ) {
@@ -52,12 +57,16 @@ function setMapboxFilters(
     if (keyFilters.length > 0) mapboxFilters.push(["any", ...keyFilters]);
   });
 
-  console.log("Map Filters: ", ["all", ...mapboxFilters]);
+  console.debug("Map Filters: ", ["all", ...mapboxFilters]);
   map?.setFilter("arbo-pins", ["all", ...mapboxFilters]);
 }
 
 export const arboReducer = (state: ArboStateType, action: ArboAction) => {
   switch (action.type) {
+    case ArboActionType.ADD_FILTERS_TO_MAP:
+      if (action.payload.map)
+        setMapboxFilters(state.selectedFilters, action.payload.map);
+      return state;
     case ArboActionType.UPDATE_FILTER:
       const selectedFilters = {
         ...state.selectedFilters,
@@ -86,14 +95,16 @@ export const ArboContext = createContext<ArboContextType>({
 export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(arboReducer, initialState);
 
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: Infinity,
-        cacheTime: Infinity,
+  const [queryClient] = useState(
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: Infinity,
+          cacheTime: Infinity,
+        },
       },
-    },
-  });
+    }),
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -103,3 +114,7 @@ export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
     </QueryClientProvider>
   );
 };
+
+export function Hydrate(props: HydrateProps) {
+  return <RQHydrate {...props} />;
+}

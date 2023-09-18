@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { getEsriVectorSourceStyle } from "@/app/pathogen/arbovirus/dashboard/(map)/mapping-util";
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
@@ -6,29 +6,127 @@ import ReactDOMServer from "react-dom/server";
 import ArboStudyPopup from "@/app/pathogen/arbovirus/dashboard/ArboStudyPopup";
 import { useQuery } from "@tanstack/react-query";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { ArboContextType, setMapboxFilters } from "@/contexts/arbo-context";
 
-console.log(process.env.NEXT_PUBLIC_MAPBOX_API_KEY);
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string;
 
-export default function useMap(
-  queryKey: string[],
-  queryFn: () => Promise<any>,
-): {
-  map: React.MutableRefObject<mapboxgl.Map | null>;
-  mapContainer: React.MutableRefObject<null>;
-} {
-  const query = useQuery({
-    queryKey: queryKey,
-    queryFn: queryFn,
+function addDataLayers(map: mapboxgl.Map, data: any) {
+  const arboStudyPins = data.map((record: any) => {
+    return {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [record.latitude, record.longitude],
+      },
+      properties: {
+        title: record.title,
+        pathogen: record.pathogen,
+        id: record.id,
+        age_group: record.age_group,
+        sex: record.sex,
+        country: record.country,
+        assay: record.assay,
+        producer: record.producer,
+        sample_frame: record.sample_frame,
+        antibody: record.antibodies,
+      },
+    };
   });
 
-  console.log(query.data);
+  // Create mapbox source
+  map.addSource("arboStudyPins", {
+    type: "geojson",
+    data: {
+      type: "FeatureCollection",
+      features: arboStudyPins,
+    },
+  });
 
-  const map = useRef<mapboxgl.Map | null>(null);
+  // Create mapbox circle layer for pins
+  map.addLayer({
+    id: "arbo-pins",
+    type: "circle",
+    source: "arboStudyPins",
+    paint: {
+      "circle-color": [
+        "match",
+        ["get", "pathogen"],
+        "ZIKV",
+        "#A0C4FF",
+        "CHIKV",
+        "#9BF6FF",
+        "WNV",
+        "#CAFFBF",
+        "DENV",
+        "#FDFFB6",
+        "YF",
+        "#FFD6A5",
+        "MAYV",
+        "#FFADAD",
+        "#FFFFFC",
+      ],
+      "circle-radius": 8,
+      "circle-stroke-color": "#333333",
+      "circle-stroke-width": 1,
+    },
+  });
+}
+
+function initializeMap(map: mapboxgl.Map, data: any) {
+  let pinPopup: mapboxgl.Popup | undefined = undefined;
+  console.debug("adding event listeners");
+  map.on("mouseenter", "arbo-pins", function () {
+    if (map) map.getCanvas().style.cursor = "pointer";
+  });
+  map?.on("mouseleave", "arbo-pins", function () {
+    if (map) map.getCanvas().style.cursor = "";
+  });
+
+  map.on(
+    "click",
+    "arbo-pins",
+    function (e: mapboxgl.MapMouseEvent & mapboxgl.EventData) {
+      if (pinPopup !== undefined) {
+        pinPopup.remove();
+      }
+
+      let study = data.filter(
+        (record: any) => record.id === e.features[0].properties.id,
+      );
+
+      if (study !== undefined && study.length > 0) {
+        if (map)
+          pinPopup = new mapboxgl.Popup({
+            offset: 5,
+            className: "pin-popup",
+          })
+            .setLngLat(e.lngLat)
+            .setMaxWidth("480px")
+            .setHTML(ReactDOMServer.renderToString(ArboStudyPopup(study[0])))
+            .addTo(map);
+      }
+    },
+  );
+}
+
+export default function useMap(
+  data: any,
+  state: ArboContextType,
+): {
+  map: mapboxgl.Map | undefined;
+  mapContainer: React.MutableRefObject<null>;
+} {
+  // TODO: Come back and see if things can be done better if needed.
+  // TODO: Add customization to make this a pure reusable hook
+
+  const [pageIsMounted, setPageIsMounted] = React.useState(false);
+  const [map, setMap] = useState<mapboxgl.Map>();
   const mapContainer = useRef(null);
   // Creates map, only runs once
   useEffect(() => {
-    if (map.current || !mapContainer.current) return; // initialize map only once
+    setPageIsMounted(true);
+
+    if (map || !mapContainer.current) return; // initialize map only once
 
     (async () => {
       if (!mapContainer.current) return; // initialize map only once
@@ -39,7 +137,7 @@ export default function useMap(
 
       //base map style has 31 layers
       //Countries layer is added on top later.
-      map.current = new mapboxgl.Map({
+      const newMap = new mapboxgl.Map({
         container: mapContainer.current, // container id
         style: baseMapStyle,
         center: [10, 30] as [number, number],
@@ -49,118 +147,22 @@ export default function useMap(
         attributionControl: false,
         scrollZoom: false,
       }).addControl(new mapboxgl.NavigationControl());
-    })();
 
-    return () => map.current?.remove();
+      initializeMap(newMap, data);
+      setMap(newMap);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (map.current && query.data) {
-      // Add arbo pins
-      // Once data loads then populate map
-      if (query.data) {
-        // Create array of pin features
-        const arboStudyPins = query.data.records.map((record: any) => {
-          return {
-            type: "Feature",
-            geometry: {
-              type: "Point",
-              coordinates: [record.latitude, record.longitude],
-            },
-            properties: {
-              title: record.title,
-              pathogen: record.pathogen,
-              id: record.id,
-              age_group: record.age_group,
-              sex: record.sex,
-              country: record.country,
-              assay: record.assay,
-              producer: record.producer,
-              sample_frame: record.sample_frame,
-              antibody: record.antibodies,
-            },
-          };
-        });
-
-        if (map.current.getLayer("arbo-pins") == undefined) {
-          // Create mapbox source
-          map.current.addSource("arboStudyPins", {
-            type: "geojson",
-            data: {
-              type: "FeatureCollection",
-              features: arboStudyPins,
-            },
-          });
-
-          // Create mapbox circle layer for pins
-          map.current.addLayer({
-            id: "arbo-pins",
-            type: "circle",
-            source: "arboStudyPins",
-            paint: {
-              "circle-color": [
-                "match",
-                ["get", "pathogen"],
-                "ZIKV",
-                "#A0C4FF",
-                "CHIKV",
-                "#9BF6FF",
-                "WNV",
-                "#CAFFBF",
-                "DENV",
-                "#FDFFB6",
-                "YF",
-                "#FFD6A5",
-                "MAYV",
-                "#FFADAD",
-                "#FFFFFC",
-              ],
-              "circle-radius": 8,
-              "circle-stroke-color": "#333333",
-              "circle-stroke-width": 1,
-            },
-          });
-
-          let pinPopup: mapboxgl.Popup | undefined = undefined;
-          console.log("adding event listeners");
-          map.current.on("mouseenter", "arbo-pins", function () {
-            if (map.current) map.current.getCanvas().style.cursor = "pointer";
-          });
-          map.current?.on("mouseleave", "arbo-pins", function () {
-            if (map.current) map.current.getCanvas().style.cursor = "";
-          });
-
-          map.current.on(
-            "click",
-            "arbo-pins",
-            function (e: mapboxgl.MapMouseEvent & mapboxgl.EventData) {
-              if (pinPopup !== undefined) {
-                pinPopup.remove();
-              }
-
-              let study = query.data.records.filter(
-                (record: any) => record.id === e.features[0].properties.id,
-              );
-
-              if (study !== undefined && study.length > 0) {
-                if (map.current)
-                  pinPopup = new mapboxgl.Popup({
-                    offset: 5,
-                    className: "pin-popup",
-                  })
-                    .setLngLat(e.lngLat)
-                    .setMaxWidth("480px")
-                    .setHTML(
-                      ReactDOMServer.renderToString(ArboStudyPopup(study[0])),
-                    )
-                    .addTo(map.current);
-              }
-            },
-          );
-        }
-      }
+    if (map && pageIsMounted && data) {
+      map.on("load", () => {
+        addDataLayers(map as mapboxgl.Map, data);
+        if (state.selectedFilters)
+          setMapboxFilters(state.selectedFilters, map as mapboxgl.Map);
+      });
     }
-  }, [query.data, map]);
+  }, [data, map, pageIsMounted, state?.selectedFilters]);
 
   return { map, mapContainer };
 }

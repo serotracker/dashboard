@@ -18,7 +18,6 @@ const addFilterMulti = (
   map: mapboxgl.Map | null | undefined,
   data: any,
 ) => {
-  console.log("Adding filter: ", value, newFilter);
   state.dispatch({
     type: ArboActionType.UPDATE_FILTER,
     payload: {
@@ -43,16 +42,18 @@ const buildFilterDropdown = (
   }
 
   return (
-    <div className="pb-3">
-      <MultiSelect
-        handleOnChange={(value) =>
-          addFilterMulti(value, filter, state, map, data)
-        }
-        heading={placeholder}
-        selected={state.selectedFilters[filter]}
-        options={filterOptions.filter((assay: string) => assay != null)}
-      />
-    </div>
+    state.selectedFilters[filter] && (
+      <div className="pb-3">
+        <MultiSelect
+          handleOnChange={(value) =>
+            addFilterMulti(value, filter, state, map, data)
+          }
+          heading={placeholder}
+          selected={state.selectedFilters[filter]}
+          options={filterOptions.filter((assay: string) => assay != null)}
+        />
+      </div>
+    )
   );
 };
 
@@ -65,13 +66,13 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
   const filters = useQuery({
     queryKey: ["ArbovirusFilters"],
     queryFn: () =>
-      fetch("http://localhost:5000/data_provider/arbo/filter_options").then(
+      fetch("http://127.0.0.1:5000/data_provider/arbo/filter_options").then(
         (response) => response.json(),
       ),
   });
 
   if (filters.isSuccess && !filters.isLoading && !filters.isError) {
-    console.log(filters.data, Object.keys(filters.data));
+    console.debug(filters.data, Object.keys(filters.data));
 
     return (
       <div>
