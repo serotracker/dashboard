@@ -1,5 +1,5 @@
 import React, { cache } from "react";
-import { ArboProviders, Hydrate } from "@/contexts/arbo-context";
+import { SarsCov2Providers, Hydrate } from "@/contexts/sarscov2-context";
 import { dehydrate } from "@tanstack/query-core";
 import getQueryClient from "@/components/customs/getQueryClient";
 
@@ -10,19 +10,13 @@ export default async function ArboLayout({
 }) {
   const queryClient = getQueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ["ArbovirusRecords"],
+    queryKey: ["SarsCov2Records"],
     queryFn: () =>
-      fetch("http://127.0.0.1:5000/data_provider/arbo/records").then(
+      fetch("http://127.0.0.1:5000/data_provider/sarscov2/records").then(
         (response) => response.json(),
       ),
   });
-  await queryClient.prefetchQuery({
-    queryKey: ["ArbovirusVisualizations"],
-    queryFn: () =>
-      fetch(
-        "http://127.0.0.1:5000/data_provider/data_provider/arbo/visualizations",
-      ).then((response) => response.json()),
-  });
+  
   const dehydratedState = dehydrate(queryClient);
 
   return (
@@ -31,9 +25,9 @@ export default async function ArboLayout({
         "grid gap-4 grid-cols-12 grid-rows-2 grid-flow-col w-full h-full overflow-hidden"
       }
     >
-      <ArboProviders>
+      <SarsCov2Providers>
         <Hydrate state={dehydratedState}>{children}</Hydrate>
-      </ArboProviders>
+      </SarsCov2Providers>
     </div>
   );
 }

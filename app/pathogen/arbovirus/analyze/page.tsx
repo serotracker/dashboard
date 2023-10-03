@@ -7,13 +7,14 @@ import {
 } from "@/app/pathogen/arbovirus/analyze/nivo-vis";
 import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
 import ArboDataTable from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const VisualizationCard = (props: {
   title: string;
   children: React.ReactNode;
 }) => {
   return (
-    <Card className={"mb-4"}>
+    <Card className={"mb-4 mr-4"}>
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
       </CardHeader>
@@ -25,7 +26,7 @@ const VisualizationCard = (props: {
 export default function ArboAnalyze() {
   return (
     <>
-      <div className={"col-span-4 row-span-2 flex flex-col overflow-auto"}>
+      <div className={"col-span-5 row-span-2 flex flex-col overflow-auto"}>
         <VisualizationCard title={"Count Antibody Pathogen - Client"}>
           <CountOfStudiesStratifiedByAntibodyAndPathogen />
         </VisualizationCard>
@@ -36,7 +37,7 @@ export default function ArboAnalyze() {
           <CustomResponsiveBar />
         </VisualizationCard>
       </div>
-      <div className={"col-span-6 row-span-2 overflow-auto"}>
+      <div className={"col-span-5 row-span-2 overflow-auto"}>
         <ArboDataTable />
       </div>
       <Card className={"col-span-2 row-span-2"}>

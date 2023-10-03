@@ -1,5 +1,5 @@
 import mapboxgl from "mapbox-gl";
-import { Expressions } from "./map-config";
+import { Expressions } from "../app/pathogen/arbovirus/dashboard/(map)/map-config";
 
 // Params: url - to an esri vector tile service
 // Returns: Modified style object with attributes for Mapbox GL JS compatability

@@ -8,9 +8,7 @@ import useArboData from "@/hooks/useArboData";
 import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
-import { Separator } from "@/components/ui/separator";
-import { Bug, ScrollText } from "lucide-react";
-import { clsx } from "clsx";
+import { ScrollText } from "lucide-react";
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
   ZIKV: "border-[#A0C4FF] data-[state=checked]:bg-[#A0C4FF]",
@@ -43,7 +41,7 @@ export default function MapAndFilters() {
   });
 
   // Might have to find a way to make this synchronous instead of asynchronous
-  const { map, mapContainer } = useMap(dataQuery.data.records, state);
+  const { map, mapContainer } = useMap(dataQuery.data.records, state, "Arbovirus");
 
   if (dataQuery.isSuccess && dataQuery.data) {
     state.dispatch({
@@ -55,9 +53,8 @@ export default function MapAndFilters() {
     });
 
     const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
-      const value = state.selectedFilters?.pathogen
-        ? state.selectedFilters.pathogen
-        : [];
+      const value = state.selectedFilters.pathogen;
+
       if (checked) {
         value.push(pathogen);
       } else {
@@ -79,7 +76,7 @@ export default function MapAndFilters() {
       <>
         <Card
           className={
-            "w-full h-full overflow-hidden col-span-9 row-span-2 relative"
+            "w-full h-full overflow-hidden col-span-6 row-span-2 relative"
           }
         >
           <CardContent ref={mapContainer} className={"w-full h-full"} />
@@ -106,8 +103,8 @@ export default function MapAndFilters() {
                               )
                             : false
                         }
-                        onCheckedChange={(checked) => {
-                          handleOnClickCheckbox(pathogen, checked as boolean);
+                        onCheckedChange={(checked: boolean) => {
+                          handleOnClickCheckbox(pathogen, checked);
                           console.log("Check clicked: ", pathogen, checked);
                         }}
                       />
@@ -133,7 +130,7 @@ export default function MapAndFilters() {
             </CardContent>
           </Card>
         </Card>
-        <Card className={"col-span-3 row-span-2"}>
+        <Card className={"col-span-2 row-span-2"}>
           <CardHeader>
             <CardTitle>Filters</CardTitle>
           </CardHeader>

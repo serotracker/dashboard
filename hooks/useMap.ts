@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
-import { getEsriVectorSourceStyle } from "@/app/pathogen/arbovirus/dashboard/(map)/mapping-util";
+import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import ReactDOMServer from "react-dom/server";
 import ArboStudyPopup from "@/app/pathogen/arbovirus/dashboard/ArboStudyPopup";
-import { useQuery } from "@tanstack/react-query";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { ArboContextType, setMapboxFilters } from "@/contexts/arbo-context";
+import { SarsCov2ContextType } from "@/contexts/sarscov2-context";
+import { Expressions } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
+import SarsCov2StudyPopup from "@/app/pathogen/sarscov2/dashboard/(map)/SarsCov2StudyPopup";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string;
 
-function addDataLayers(map: mapboxgl.Map, data: any) {
+function addArboDataLayers(map: mapboxgl.Map, data: any) {
   const arboStudyPins = data.map((record: any) => {
     return {
       type: "Feature",
@@ -44,7 +46,7 @@ function addDataLayers(map: mapboxgl.Map, data: any) {
 
   // Create mapbox circle layer for pins
   map.addLayer({
-    id: "arbo-pins",
+    id: "Arbovirus-pins",
     type: "circle",
     source: "arboStudyPins",
     paint: {
@@ -72,37 +74,81 @@ function addDataLayers(map: mapboxgl.Map, data: any) {
   });
 }
 
-function initializeMap(map: mapboxgl.Map, data: any) {
+function addSarsCov2DataLayers(map: mapboxgl.Map, data: any) {
+  console.log("Adding data", data);
+  const sarscov2StudyPins = data.map((record: any, index: number) => {
+    return {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [record.pin_longitude, record.pin_latitude],
+      },
+      properties: {
+        title: record.study_name,
+        id: record.study_name,
+        age: record.age,
+        sex: record.sex,
+        estimate_grade: record.estimate_grade,
+        source_id: record.source_id ?? undefined,
+        antibody_target: record.antibody_target,
+        genpop: record.genpop,
+        overall_risk_of_bias: record.overall_risk_of_bias,
+        population_group: record.population_group,
+      },
+    };
+  });
+
+  // Create mapbox source
+  map.addSource("sarscov2StudyPins", {
+    type: "geojson",
+    data: {
+      type: "FeatureCollection",
+      features: sarscov2StudyPins,
+    },
+  });
+
+  // Create mapbox circle layer for pins
+  map.addLayer({
+    id: "SarsCov2-pins",
+    type: "circle",
+    source: "sarscov2StudyPins",
+    paint: Expressions.Studies as mapboxgl.CirclePaint,
+  });
+}
+
+function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "SarsCov2") {
   let pinPopup: mapboxgl.Popup | undefined = undefined;
   console.debug("adding event listeners");
-  map.on("mouseenter", "arbo-pins", function () {
+  map.on("mouseenter", `${pathogen}-pins`, function () {
     if (map) map.getCanvas().style.cursor = "pointer";
   });
-  map?.on("mouseleave", "arbo-pins", function () {
+  map?.on("mouseleave", `${pathogen}-pins`, function () {
     if (map) map.getCanvas().style.cursor = "";
   });
 
   map.on(
     "click",
-    "arbo-pins",
+    `${pathogen}-pins`,
     function (e: mapboxgl.MapMouseEvent & mapboxgl.EventData) {
       if (pinPopup !== undefined) {
         pinPopup.remove();
       }
 
       let study = data.filter(
-        (record: any) => record.id === e.features[0].properties.id,
+        (record: any) => pathogen == "Arbovirus" ? record.id === e.features[0].properties.id: record.study_name === e.features[0].properties.id,
       );
+
+        console.log("study", study);
 
       if (study !== undefined && study.length > 0) {
         if (map)
           pinPopup = new mapboxgl.Popup({
-            offset: 5,
+            // offset: 5,
             className: "pin-popup",
           })
             .setLngLat(e.lngLat)
             .setMaxWidth("480px")
-            .setHTML(ReactDOMServer.renderToString(ArboStudyPopup(study[0])))
+            .setHTML(ReactDOMServer.renderToString(pathogen == "Arbovirus" ? ArboStudyPopup(study[0]) : SarsCov2StudyPopup(study[0])))
             .addTo(map);
       }
     },
@@ -111,7 +157,8 @@ function initializeMap(map: mapboxgl.Map, data: any) {
 
 export default function useMap(
   data: any,
-  state: ArboContextType,
+  state: ArboContextType | SarsCov2ContextType,
+  pathogen: "Arbovirus" | "SarsCov2",
 ): {
   map: mapboxgl.Map | undefined;
   mapContainer: React.MutableRefObject<null>;
@@ -148,7 +195,7 @@ export default function useMap(
         scrollZoom: false,
       }).addControl(new mapboxgl.NavigationControl());
 
-      initializeMap(newMap, data);
+      initializeMap(newMap, data, pathogen);
       setMap(newMap);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,7 +204,15 @@ export default function useMap(
   useEffect(() => {
     if (map && pageIsMounted && data) {
       map.on("load", () => {
-        addDataLayers(map as mapboxgl.Map, data);
+        switch (pathogen) {
+          case "Arbovirus":
+            addArboDataLayers(map as mapboxgl.Map, data);
+            break;
+          case "SarsCov2":
+            console.log("adding sarscov2 layers")
+            addSarsCov2DataLayers(map as mapboxgl.Map, data);
+            break;
+        }
         if (state.selectedFilters)
           setMapboxFilters(state.selectedFilters, map as mapboxgl.Map);
       });

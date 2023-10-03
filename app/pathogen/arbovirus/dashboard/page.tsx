@@ -27,7 +27,6 @@ export default function ArbovirusDashboard() {
           <CardTitle>Patho Sero Boxplot</CardTitle>
         </CardHeader>
         <CardContent className={"px-0 h-72 w-full"}>
-          {/*<CustomResponsiveBar />*/}
           <PathogenSeroprevalenceBoxPlot />
         </CardContent>
       </Card>

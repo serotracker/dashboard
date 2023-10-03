@@ -10,27 +10,30 @@ import React, {
 import mapboxgl from "mapbox-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
-export interface ArboContextType extends ArboStateType {
-  dispatch: React.Dispatch<ArboAction>;
+
+
+export interface SarsCov2ContextType extends SarsCov2StateType {
+  dispatch: React.Dispatch<SarsCov2Action>;
 }
-interface ArboStateType {
+
+interface SarsCov2StateType {
   filteredData: any[];
   selectedFilters: { [key: string]: string[] };
 }
-interface ArboAction {
-  type: ArboActionType;
+
+interface SarsCov2Action {
+  type: SarsCov2ActionType;
   payload: any;
 }
-export enum ArboActionType {
+
+export enum SarsCov2ActionType {
   UPDATE_FILTER = "UPDATE_FILTER",
   ADD_FILTERS_TO_MAP = "ADD_FILTERS_TO_MAP",
 }
 
-export const initialState: ArboStateType = {
+export const initialState: SarsCov2StateType = {
   filteredData: [],
-  selectedFilters: {
-    ["pathogen"]: ["DENV", "ZIKV", "CHIKV", "YF", "WNV", "MAYV"],
-  },
+  selectedFilters: {},
 };
 
 function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
@@ -59,17 +62,17 @@ export function setMapboxFilters(
     if (keyFilters.length > 0) mapboxFilters.push(["any", ...keyFilters]);
   });
 
-  console.log("Map Filters: ", ["all", ...mapboxFilters]);
-  map?.setFilter("arbo-pins", ["all", ...mapboxFilters]);
+  console.debug("Map Filters: ", ["all", ...mapboxFilters]);
+  map?.setFilter("SarsCov2-pins", ["all", ...mapboxFilters]);
 }
 
-export const arboReducer = (state: ArboStateType, action: ArboAction) => {
+export const SarsCov2Reducer = (state: SarsCov2StateType, action: SarsCov2Action) => {
   switch (action.type) {
-    case ArboActionType.ADD_FILTERS_TO_MAP:
+    case SarsCov2ActionType.ADD_FILTERS_TO_MAP:
       if (action.payload.map)
         setMapboxFilters(state.selectedFilters, action.payload.map);
       return state;
-    case ArboActionType.UPDATE_FILTER:
+    case SarsCov2ActionType.UPDATE_FILTER:
       const selectedFilters = {
         ...state.selectedFilters,
         [action.payload.filter]: action.payload.value,
@@ -89,13 +92,13 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
   }
 };
 
-export const ArboContext = createContext<ArboContextType>({
+export const SarsCov2Context = createContext<SarsCov2ContextType>({
   ...initialState,
   dispatch: () => null,
 });
 
-export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
-  const [state, dispatch] = useReducer(arboReducer, initialState);
+export const SarsCov2Providers = ({ children }: { children: React.ReactNode }) => {
+  const [state, dispatch] = useReducer(SarsCov2Reducer, initialState);
 
   const [queryClient] = useState(
     new QueryClient({
@@ -110,9 +113,9 @@ export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ArboContext.Provider value={{ ...state, dispatch: dispatch }}>
+      <SarsCov2Context.Provider value={{ ...state, dispatch: dispatch }}>
         {children}
-      </ArboContext.Provider>
+      </SarsCov2Context.Provider>
     </QueryClientProvider>
   );
 };

@@ -89,6 +89,12 @@ export function CustomResponsiveBar() {
   }
 }
 
+const getColor = (bar: any) => {
+  if (bar.id) return pathogenColors[bar.id];
+  else if (bar.group) return pathogenColors[bar.group];
+  else return "hsl(0,100,84)";
+};
+
 export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
   // The data coming in from the props will be moved to a context
   const state = useContext(ArboContext);
@@ -171,8 +177,6 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
       MAYVColor: "hsl(62,100,86)",
     };
   });
-
-  const getColor = (bar: any) => pathogenColors[bar.id];
 
   // @ts-ignore
   return (
@@ -316,6 +320,7 @@ export function PathogenSeroprevalenceBoxPlot() {
         data={boxPlotData}
         groupBy="pathogen"
         value="seroprevalence"
+        colors={getColor}
         colorBy="pathogen"
         minValue="0"
         maxValue="100"
@@ -352,7 +357,6 @@ export function PathogenSeroprevalenceBoxPlot() {
           legendPosition: "middle",
           legendOffset: -40,
         }}
-        colors={{ scheme: "nivo" }}
         borderRadius={2}
         borderWidth={2}
         borderColor={{
