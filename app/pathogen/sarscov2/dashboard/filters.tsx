@@ -71,7 +71,7 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
   const filters = useQuery({
     queryKey: ["SarsCov2Filters"],
     queryFn: () =>
-      fetch("http://127.0.0.1:5000/data_provider/sarscov2/filter_options").then(
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sarscov2/filter_options`).then(
         (response) => response.json()
       ),
   });

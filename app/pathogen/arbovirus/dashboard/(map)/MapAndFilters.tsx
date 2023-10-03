@@ -35,7 +35,7 @@ export default function MapAndFilters() {
   const filters = useQuery({
     queryKey: ["ArbovirusFilters"],
     queryFn: () =>
-      fetch("http://127.0.0.1:5000/data_provider/arbo/filter_options").then(
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/filter_options`).then(
         (response) => response.json(),
       ),
   });

@@ -4,7 +4,7 @@ export default function useArboData() {
   return useQuery({
     queryKey: ["ArbovirusRecords"],
     queryFn: () =>
-      fetch("http://127.0.0.1:5000/data_provider/arbo/records").then(
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/records`).then(
         (response) => response.json(),
       ),
   });

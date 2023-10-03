@@ -29,7 +29,7 @@ export function CustomResponsiveBar() {
     queryKey: ["ArbovirusVisualizations"],
     queryFn: () =>
       fetch(
-        "http://127.0.0.1:5000/data_provider/data_provider/arbo/visualizations",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/data_provider/arbo/visualizations`,
       ).then((response) => response.json()),
   });
 

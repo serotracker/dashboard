@@ -12,7 +12,7 @@ export default async function ArboLayout({
   await queryClient.prefetchQuery({
     queryKey: ["SarsCov2Records"],
     queryFn: () =>
-      fetch("http://127.0.0.1:5000/data_provider/sarscov2/records").then(
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sarscov2/records`).then(
         (response) => response.json(),
       ),
   });

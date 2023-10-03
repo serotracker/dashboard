@@ -12,7 +12,7 @@ export default async function ArboLayout({
   await queryClient.prefetchQuery({
     queryKey: ["ArbovirusRecords"],
     queryFn: () =>
-      fetch("http://127.0.0.1:5000/data_provider/arbo/records").then(
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/records`).then(
         (response) => response.json(),
       ),
   });
@@ -20,7 +20,7 @@ export default async function ArboLayout({
     queryKey: ["ArbovirusVisualizations"],
     queryFn: () =>
       fetch(
-        "http://127.0.0.1:5000/data_provider/data_provider/arbo/visualizations",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/data_provider/arbo/visualizations`,
       ).then((response) => response.json()),
   });
   const dehydratedState = dehydrate(queryClient);
