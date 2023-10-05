@@ -48,8 +48,9 @@ const buildFilterDropdown = (
 
   return (
     state.selectedFilters[filter] && (
-      <div className="pb-3">
+      <div className="pb-3" key={filter}>
         <MultiSelect
+        key={filter}
           handleOnChange={(value) =>
             addFilterMulti(value, filter, state, map, data)
           }
