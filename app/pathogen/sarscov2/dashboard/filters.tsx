@@ -90,7 +90,7 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
                   return option.english;
                 });
                 return (
-                  <div>
+                  <>
                     {buildFilterDropdown(
                       key,
                       getHeader(key),
@@ -99,11 +99,11 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
                       map,
                       data ? data.records : []
                     )}
-                  </div>
+                  </> 
                 );
               }
               return (
-                <div>
+                <>
                   {buildFilterDropdown(
                     key,
                     getHeader(key),
@@ -112,7 +112,7 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
                     map,
                     data ? data.records : []
                   )}
-                </div>
+                </>
               );
             })}
         </div>
