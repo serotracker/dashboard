@@ -75,7 +75,6 @@ function addArboDataLayers(map: mapboxgl.Map, data: any) {
 }
 
 function addSarsCov2DataLayers(map: mapboxgl.Map, data: any) {
-  console.log("Adding data", data);
   const sarscov2StudyPins = data.map((record: any, index: number) => {
     return {
       type: "Feature",
@@ -138,7 +137,6 @@ function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "Sa
         (record: any) => pathogen == "Arbovirus" ? record.id === e.features[0].properties.id: record.study_name === e.features[0].properties.id,
       );
 
-        console.log("study", study);
 
       if (study !== undefined && study.length > 0) {
         if (map)

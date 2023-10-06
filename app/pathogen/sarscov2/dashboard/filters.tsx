@@ -78,7 +78,6 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
   });
 
   if (filters.isSuccess && !filters.isLoading && !filters.isError) {
-    console.log(filters.data, Object.keys(filters.data));
 
     return (
       <div>

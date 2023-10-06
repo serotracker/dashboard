@@ -15,8 +15,6 @@ export default function MapAndFilters() {
   // Might have to find a way to make this synchronous instead of asynchronous
   const { map, mapContainer } = useMap(dataQuery.data.records, state, "SarsCov2");
 
-  console.log("dataQuery.data", dataQuery.data);
-
   if (dataQuery.isSuccess && dataQuery.data) {
     state.dispatch({
       type: SarsCov2ActionType.ADD_FILTERS_TO_MAP,

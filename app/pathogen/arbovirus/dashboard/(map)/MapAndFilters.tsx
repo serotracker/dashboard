@@ -105,7 +105,6 @@ export default function MapAndFilters() {
                         }
                         onCheckedChange={(checked: boolean) => {
                           handleOnClickCheckbox(pathogen, checked);
-                          console.log("Check clicked: ", pathogen, checked);
                         }}
                       />
                       <div className="grid gap-1.5 leading-none">
