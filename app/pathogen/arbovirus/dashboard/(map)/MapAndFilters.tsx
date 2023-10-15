@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
 import React, { useContext } from "react";
 import useArboData from "@/hooks/useArboData";
-import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
+import { ArboActionType, ArboContext, setMapboxFilters } from "@/contexts/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollText } from "lucide-react";
@@ -41,16 +41,10 @@ export default function MapAndFilters() {
   });
 
   // Might have to find a way to make this synchronous instead of asynchronous
-  const { map, mapContainer } = useMap(dataQuery.data.records, state, "Arbovirus");
+  const { map, mapContainer } = useMap(dataQuery.data.records, "Arbovirus");
 
   if (dataQuery.isSuccess && dataQuery.data) {
-    state.dispatch({
-      type: ArboActionType.ADD_FILTERS_TO_MAP,
-      payload: {
-        map: map,
-        data: dataQuery.data.records,
-      },
-    });
+    setMapboxFilters(state.selectedFilters, map!);
 
     const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
       const value = state.selectedFilters.pathogen;
@@ -125,7 +119,7 @@ export default function MapAndFilters() {
           <Card className={"absolute top-1 left-1 p-2"}>
             <CardContent className={"flex w-fit p-0"}>
               <ScrollText />
-              <p className={"ml-1 font-medium"}>{state.filteredData?.length}</p>
+              <p className={"ml-1 font-medium"}>{state.filteredData?.length > 0 ? state.filteredData.length : dataQuery.data.records.length}</p>
             </CardContent>
           </Card>
         </Card>

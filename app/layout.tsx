@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import { Header } from "@/components/customs/header";
 import { Footer } from "@/components/customs/footer";
 import React from "react";
-import { ArboProviders } from "@/contexts/arbo-context";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
@@ -5,46 +7,49 @@ import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-confi
 import ReactDOMServer from "react-dom/server";
 import ArboStudyPopup from "@/app/pathogen/arbovirus/dashboard/ArboStudyPopup";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { ArboContextType, setMapboxFilters } from "@/contexts/arbo-context";
-import { SarsCov2ContextType } from "@/contexts/sarscov2-context";
 import { Expressions } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import SarsCov2StudyPopup from "@/app/pathogen/sarscov2/dashboard/(map)/SarsCov2StudyPopup";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string;
 
 function addArboDataLayers(map: mapboxgl.Map, data: any) {
-  const arboStudyPins = data.map((record: any) => {
-    return {
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: [record.latitude, record.longitude],
-      },
-      properties: {
-        title: record.title,
-        pathogen: record.pathogen,
-        id: record.id,
-        age_group: record.age_group,
-        sex: record.sex,
-        country: record.country,
-        assay: record.assay,
-        producer: record.producer,
-        sample_frame: record.sample_frame,
-        antibody: record.antibodies,
-      },
-    };
-  });
-
+  
   // Create mapbox source
-  map.addSource("arboStudyPins", {
-    type: "geojson",
-    data: {
-      type: "FeatureCollection",
-      features: arboStudyPins,
-    },
-  });
+  if(!map.getSource("arboStudyPins")){
+    const arboStudyPins = data.map((record: any) => {
+      return {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [record.latitude, record.longitude],
+        },
+        properties: {
+          title: record.title,
+          pathogen: record.pathogen,
+          id: record.id,
+          age_group: record.age_group,
+          sex: record.sex,
+          country: record.country,
+          assay: record.assay,
+          producer: record.producer,
+          sample_frame: record.sample_frame,
+          antibody: record.antibodies,
+        },
+      };
+    });
+
+    console.log("adding arbo source")
+    map.addSource("arboStudyPins", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: arboStudyPins,
+      },
+    });
+  }
 
   // Create mapbox circle layer for pins
+  if(map.getLayer("Arbovirus-pins")) map.removeLayer("Arbovirus-pins");
   map.addLayer({
     id: "Arbovirus-pins",
     type: "circle",
@@ -75,38 +80,42 @@ function addArboDataLayers(map: mapboxgl.Map, data: any) {
 }
 
 function addSarsCov2DataLayers(map: mapboxgl.Map, data: any) {
-  const sarscov2StudyPins = data.map((record: any, index: number) => {
-    return {
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: [record.pin_longitude, record.pin_latitude],
-      },
-      properties: {
-        title: record.study_name,
-        id: record.study_name,
-        age: record.age,
-        sex: record.sex,
-        estimate_grade: record.estimate_grade,
-        source_id: record.source_id ?? undefined,
-        antibody_target: record.antibody_target,
-        genpop: record.genpop,
-        overall_risk_of_bias: record.overall_risk_of_bias,
-        population_group: record.population_group,
-      },
-    };
-  });
-
+  
   // Create mapbox source
-  map.addSource("sarscov2StudyPins", {
-    type: "geojson",
-    data: {
-      type: "FeatureCollection",
-      features: sarscov2StudyPins,
-    },
-  });
+  if(!map.getSource("sarscov2StudyPins")) {
+    const sarscov2StudyPins = data.map((record: any, index: number) => {
+      return {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [record.pin_longitude, record.pin_latitude],
+        },
+        properties: {
+          title: record.study_name,
+          id: record.study_name,
+          age: record.age,
+          sex: record.sex,
+          estimate_grade: record.estimate_grade,
+          source_id: record.source_id ?? undefined,
+          antibody_target: record.antibody_target,
+          genpop: record.genpop,
+          overall_risk_of_bias: record.overall_risk_of_bias,
+          population_group: record.population_group,
+        },
+      };
+    });
+
+    map.addSource("sarscov2StudyPins", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: sarscov2StudyPins,
+      },
+    });
+  }
 
   // Create mapbox circle layer for pins
+  if(map.getLayer("SarsCov2-pins")) map.removeLayer("SarsCov2-pins");
   map.addLayer({
     id: "SarsCov2-pins",
     type: "circle",
@@ -155,7 +164,6 @@ function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "Sa
 
 export default function useMap(
   data: any,
-  state: ArboContextType | SarsCov2ContextType,
   pathogen: "Arbovirus" | "SarsCov2",
 ): {
   map: mapboxgl.Map | undefined;
@@ -204,6 +212,7 @@ export default function useMap(
       map.on("load", () => {
         switch (pathogen) {
           case "Arbovirus":
+            console.log("adding arbovirus layers")
             addArboDataLayers(map as mapboxgl.Map, data);
             break;
           case "SarsCov2":
@@ -211,11 +220,10 @@ export default function useMap(
             addSarsCov2DataLayers(map as mapboxgl.Map, data);
             break;
         }
-        if (state.selectedFilters)
-          setMapboxFilters(state.selectedFilters, map as mapboxgl.Map);
+
       });
     }
-  }, [data, map, pageIsMounted, state?.selectedFilters]);
+  }, [data, map, pageIsMounted]);
 
   return { map, mapContainer };
 }

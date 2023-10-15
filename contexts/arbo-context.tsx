@@ -2,14 +2,13 @@
 
 import React, {
   createContext,
-  ReducerWithoutAction,
   useReducer,
-  useState,
-  cache,
+
 } from "react";
 import mapboxgl from "mapbox-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
+import getQueryClient from "@/components/customs/getQueryClient";
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
 }
@@ -60,15 +59,11 @@ export function setMapboxFilters(
   });
 
   console.log("Map Filters: ", ["all", ...mapboxFilters]);
-  map?.setFilter("arbo-pins", ["all", ...mapboxFilters]);
+  if(map?.getLayer("Arbovirus-pins")) map?.setFilter("Arbovirus-pins", ["all", ...mapboxFilters]);
 }
 
 export const arboReducer = (state: ArboStateType, action: ArboAction) => {
   switch (action.type) {
-    case ArboActionType.ADD_FILTERS_TO_MAP:
-      if (action.payload.map)
-        setMapboxFilters(state.selectedFilters, action.payload.map);
-      return state;
     case ArboActionType.UPDATE_FILTER:
       const selectedFilters = {
         ...state.selectedFilters,
@@ -91,22 +86,20 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
 
 export const ArboContext = createContext<ArboContextType>({
   ...initialState,
-  dispatch: () => null,
+  dispatch: (obj) => {console.log("dispatch not initialized", obj)},
 });
 
 export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(arboReducer, initialState);
 
-  const [queryClient] = useState(
-    new QueryClient({
-      defaultOptions: {
-        queries: {
-          staleTime: Infinity,
-          cacheTime: Infinity,
-        },
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+        cacheTime: Infinity,
       },
-    }),
-  );
+    },
+  });
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -1,8 +1,7 @@
-import React, { cache } from "react";
+import React from "react";
 import { SarsCov2Providers, Hydrate } from "@/contexts/sarscov2-context";
 import { dehydrate } from "@tanstack/query-core";
 import getQueryClient from "@/components/customs/getQueryClient";
-import { customCache } from "@/cache/sarscov2";
 
 export default async function ArboLayout({
   children,
@@ -13,18 +12,17 @@ export default async function ArboLayout({
   //TODO: this segment is technically repeated in useSarsCov2Data.tsx. It should be refactored to be DRY.
   await queryClient.prefetchQuery({
     queryKey: ["SarsCov2Records"],
-    queryFn: async () => {
-      if (customCache.records && customCache.records.length > 0) {
-        console.log("using cached data")
-        return customCache.records;
-      } else {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sarscov2/records`, { cache: 'no-store' });
-        const data = await response.json();
-        customCache.records = data;
-        return data;
-      }
-    },
-    cacheTime: 0
+    queryFn: () =>
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sarscov2/records`, { cache: 'no-store' }).then(
+        (response) => response.json(),
+      ),
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ["SarsCov2Filters"],
+    queryFn: () =>
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sarscov2/filter_options`).then(
+        (response) => response.json()
+      ),
   });
   
   const dehydratedState = dehydrate(queryClient);

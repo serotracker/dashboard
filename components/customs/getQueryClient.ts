@@ -1,6 +1,15 @@
 import { cache } from "react";
 import { QueryClient } from "@tanstack/react-query";
 
-const getQueryClient = cache(() => new QueryClient());
+// To ensure the whole app is using the same queryClient instance
+
+const getQueryClient = cache(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      },
+    },
+  }));
 
 export default getQueryClient;
