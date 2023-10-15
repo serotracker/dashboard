@@ -96,11 +96,10 @@ function addSarsCov2DataLayers(map: mapboxgl.Map, data: any) {
           age: record.age,
           sex: record.sex,
           estimate_grade: record.estimate_grade,
-          source_id: record.source_id ?? undefined,
-          antibody_target: record.antibody_target,
-          genpop: record.genpop,
           overall_risk_of_bias: record.overall_risk_of_bias,
           population_group: record.population_group,
+          source_type: record.source_type,
+          test_type: record.test_type,
         },
       };
     });

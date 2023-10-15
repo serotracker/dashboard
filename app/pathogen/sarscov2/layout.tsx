@@ -10,6 +10,7 @@ export default async function ArboLayout({
 }) {
   const queryClient = getQueryClient();
   //TODO: this segment is technically repeated in useSarsCov2Data.tsx. It should be refactored to be DRY.
+  console.time("prefetchQuerySero");
   await queryClient.prefetchQuery({
     queryKey: ["SarsCov2Records"],
     queryFn: () =>
@@ -24,6 +25,7 @@ export default async function ArboLayout({
         (response) => response.json()
       ),
   });
+  console.timeEnd("prefetchQuerySero");
   
   const dehydratedState = dehydrate(queryClient);
 
