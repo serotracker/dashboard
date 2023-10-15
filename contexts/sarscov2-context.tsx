@@ -2,14 +2,13 @@
 
 import React, {
   createContext,
-  ReducerWithoutAction,
   useReducer,
-  useState,
-  cache,
+
 } from "react";
 import mapboxgl from "mapbox-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
+import getQueryClient from "@/components/customs/getQueryClient";
 
 
 export interface SarsCov2ContextType extends SarsCov2StateType {
@@ -63,30 +62,27 @@ export function setMapboxFilters(
   });
 
   console.debug("Map Filters: ", ["all", ...mapboxFilters]);
-  map?.setFilter("SarsCov2-pins", ["all", ...mapboxFilters]);
+  if(map?.getLayer("SarsCov2-pins")) map.setFilter("SarsCov2-pins", ["all", ...mapboxFilters]);
 }
 
 export const SarsCov2Reducer = (state: SarsCov2StateType, action: SarsCov2Action) => {
   switch (action.type) {
-    case SarsCov2ActionType.ADD_FILTERS_TO_MAP:
-      if (action.payload.map)
-        setMapboxFilters(state.selectedFilters, action.payload.map);
-      return state;
     case SarsCov2ActionType.UPDATE_FILTER:
       const selectedFilters = {
         ...state.selectedFilters,
         [action.payload.filter]: action.payload.value,
       };
 
-      if (action.payload.map)
+      if (action.payload.map) {
+        console.log("update filters to map")
         setMapboxFilters(selectedFilters, action.payload.map);
+      }
 
       return {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
         selectedFilters: selectedFilters,
       };
-
     default:
       return state;
   }
@@ -100,16 +96,14 @@ export const SarsCov2Context = createContext<SarsCov2ContextType>({
 export const SarsCov2Providers = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(SarsCov2Reducer, initialState);
 
-  const [queryClient] = useState(
-    new QueryClient({
-      defaultOptions: {
-        queries: {
-          staleTime: Infinity,
-          cacheTime: Infinity,
-        },
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+        cacheTime: Infinity,
       },
-    }),
-  );
+    },
+  })
 
   return (
     <QueryClientProvider client={queryClient}>

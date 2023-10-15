@@ -6,6 +6,7 @@ import { ResponsiveBoxPlot } from "@nivo/boxplot";
 import { useQuery } from "@tanstack/react-query";
 import { ArboContext } from "@/contexts/arbo-context";
 import { pathogenColors } from "@/app/pathogen/arbovirus/dashboard/(map)/MapAndFilters";
+import useArboData from "@/hooks/useArboData";
 
 type DataSubType = {
   DENV: number;
@@ -142,7 +143,8 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
     },
   };
 
-  const rawData = state.filteredData;
+  const dataQuery = useArboData();
+  const rawData = state.filteredData?.length > 0 ? state.filteredData : dataQuery.data?.records;
 
   rawData?.forEach((d: any) => {
     const antibodies = d.antibodies as (keyof typeof data)[];
@@ -233,7 +235,8 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
 export function PathogenSeroprevalenceBoxPlot() {
   const state = useContext(ArboContext);
 
-  const rawData = state.filteredData;
+  const dataQuery = useArboData();
+  const rawData = state.filteredData?.length > 0 ? state.filteredData : dataQuery.data?.records;
 
   const data: { pathogen: string; seroprevalence: number }[] = rawData.map(
     (d: any) => {

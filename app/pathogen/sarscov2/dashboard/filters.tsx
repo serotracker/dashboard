@@ -24,6 +24,7 @@ const addFilterMulti = (
       filter: newFilter,
       value: value,
       map: map,
+      // Consider making this a static list synced with the backend so that context is static and we do not need to do this. 
       data: data ? data : [],
     },
   });
@@ -42,12 +43,8 @@ const buildFilterDropdown = (
   map: mapboxgl.Map | null | undefined,
   data: any
 ) => {
-  if (!state.selectedFilters[filter]) {
-    addFilterMulti([], filter, state, map, data);
-  }
 
   return (
-    state.selectedFilters[filter] && (
       <div className="pb-3" key={filter}>
         <MultiSelect
         key={filter}
@@ -55,16 +52,16 @@ const buildFilterDropdown = (
             addFilterMulti(value, filter, state, map, data)
           }
           heading={placeholder}
-          selected={state.selectedFilters[filter]}
+          selected={state.selectedFilters[filter] ?? []}
           options={filterOptions.filter((assay: string) => assay != null)}
         />
       </div>
-    )
   );
 };
 
 export default function Filters(props: { map?: mapboxgl.Map | null }) {
   const state = useContext(SarsCov2Context);
+  console.log("Context in Filters: ", state);
   const { map } = props;
 
   const { data } = useSarsCov2Data();
@@ -78,7 +75,6 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
   });
 
   if (filters.isSuccess && !filters.isLoading && !filters.isError) {
-    console.log(filters.data, Object.keys(filters.data));
 
     return (
       <div>

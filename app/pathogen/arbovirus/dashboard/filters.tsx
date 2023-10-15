@@ -37,23 +37,19 @@ const buildFilterDropdown = (
   map: mapboxgl.Map | null | undefined,
   data: any,
 ) => {
-  if (!state.selectedFilters[filter]) {
-    addFilterMulti([], filter, state, map, data);
-  }
+
 
   return (
-    state.selectedFilters[filter] && (
       <div className="pb-3">
         <MultiSelect
           handleOnChange={(value) =>
             addFilterMulti(value, filter, state, map, data)
           }
           heading={placeholder}
-          selected={state.selectedFilters[filter]}
+          selected={state.selectedFilters[filter] ?? []}
           options={filterOptions.filter((assay: string) => assay != null)}
         />
       </div>
-    )
   );
 };
 

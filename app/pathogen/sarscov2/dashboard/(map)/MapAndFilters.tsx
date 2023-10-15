@@ -6,26 +6,19 @@ import Filters from "@/app/pathogen/sarscov2/dashboard/filters";
 import React, { useContext } from "react";
 import { ScrollText } from "lucide-react";
 import useSarsCov2Data from "@/hooks/useSarsCov2Data";
-import { SarsCov2ActionType, SarsCov2Context } from "@/contexts/sarscov2-context";
+import { SarsCov2ActionType, SarsCov2Context, setMapboxFilters } from "@/contexts/sarscov2-context";
 
 export default function MapAndFilters() {
   const dataQuery = useSarsCov2Data();
   const state = useContext(SarsCov2Context);
 
-  // Might have to find a way to make this synchronous instead of asynchronous
-  const { map, mapContainer } = useMap(dataQuery.data.records, state, "SarsCov2");
+  console.log("Context in MapAndFilters: ", state);
 
-  console.log("dataQuery.data", dataQuery.data);
+  // Might have to find a way to make this synchronous instead of asynchronous
+  const { map, mapContainer } = useMap(dataQuery.data?.records ?? [], "SarsCov2");
 
   if (dataQuery.isSuccess && dataQuery.data) {
-    state.dispatch({
-      type: SarsCov2ActionType.ADD_FILTERS_TO_MAP,
-      payload: {
-        map: map,
-        data: dataQuery.data.records,
-      },
-    });
-
+    setMapboxFilters(state.selectedFilters, map!);
 
     const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
       const value = state.selectedFilters.pathogen;
@@ -66,7 +59,7 @@ export default function MapAndFilters() {
           <Card className={"absolute top-1 left-1 p-2"}>
             <CardContent className={"flex w-fit p-0"}>
               <ScrollText />
-              <p className={"ml-1 font-medium"}>{state.filteredData?.length}</p>
+              <p className={"ml-1 font-medium"}>{state.filteredData?.length > 0 ? state.filteredData.length : dataQuery.data.records.length}</p>
             </CardContent>
           </Card>
         </Card>

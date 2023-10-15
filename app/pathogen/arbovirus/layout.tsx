@@ -1,6 +1,6 @@
-import React, { cache } from "react";
-import { ArboProviders, Hydrate } from "@/contexts/arbo-context";
-import { dehydrate } from "@tanstack/query-core";
+import React from "react";
+import { ArboProviders } from "@/contexts/arbo-context";
+import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
 
 export default async function ArboLayout({
@@ -22,6 +22,13 @@ export default async function ArboLayout({
       fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/data_provider/arbo/visualizations`,
       ).then((response) => response.json()),
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ["ArbovirusFilters"],
+    queryFn: () =>
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/filter_options`).then(
+        (response) => response.json(),
+      ),
   });
   const dehydratedState = dehydrate(queryClient);
 
