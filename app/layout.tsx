@@ -4,6 +4,9 @@ import { Inter } from "next/font/google";
 import { Header } from "@/components/customs/header";
 import { Footer } from "@/components/customs/footer";
 import React from "react";
+import clsx from "clsx";
+import "mapbox-gl/dist/mapbox-gl.css";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={"text-black no-scrollbar"}>
+      <body className={clsx(inter.className, "text-black no-scrollbar")}>
         <Header />
         <main className={"h-full-screen w-screen p-4 border-box bg-foreground"}>
           {children}

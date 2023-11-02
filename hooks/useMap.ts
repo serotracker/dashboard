@@ -6,7 +6,6 @@ import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import ReactDOMServer from "react-dom/server";
 import ArboStudyPopup from "@/app/pathogen/arbovirus/dashboard/ArboStudyPopup";
-import "mapbox-gl/dist/mapbox-gl.css";
 import { Expressions } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import SarsCov2StudyPopup from "@/app/pathogen/sarscov2/dashboard/(map)/SarsCov2StudyPopup";
 
@@ -123,6 +122,18 @@ function addSarsCov2DataLayers(map: mapboxgl.Map, data: any) {
   });
 }
 
+export const getMapboxLatitudeOffset = (map: mapboxgl.Map | undefined) => {
+  // Map seems to zoom in in powers of 2, so reducing offset by powers of 2 keeps the modal apprximately
+  // in the same center everytime
+  if(map){
+    // offset needs to reduce exponentially with zoom -- higher zoom x smaller offset
+    let mapZoom = map.getZoom();
+
+    return 80/(Math.pow(2, mapZoom))
+  }
+  return 0
+}
+
 function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "SarsCov2") {
   let pinPopup: mapboxgl.Popup | undefined = undefined;
   console.debug("adding event listeners");
@@ -137,6 +148,8 @@ function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "Sa
     "click",
     `${pathogen}-pins`,
     function (e: mapboxgl.MapMouseEvent & mapboxgl.EventData) {
+      console.log(e.lngLat);
+
       if (pinPopup !== undefined) {
         pinPopup.remove();
       }
@@ -147,15 +160,22 @@ function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "Sa
 
 
       if (study !== undefined && study.length > 0) {
-        if (map)
+        if (map){
           pinPopup = new mapboxgl.Popup({
-            // offset: 5,
+            offset: 5,
             className: "pin-popup",
           })
             .setLngLat(e.lngLat)
             .setMaxWidth("480px")
             .setHTML(ReactDOMServer.renderToString(pathogen == "Arbovirus" ? ArboStudyPopup(study[0]) : SarsCov2StudyPopup(study[0])))
             .addTo(map);
+          
+            map.flyTo({
+              center: [e.lngLat.lng, e.lngLat.lat - getMapboxLatitudeOffset(map)],
+              curve: 0.5,
+              speed: 0.5,
+              });
+          }
       }
     },
   );
