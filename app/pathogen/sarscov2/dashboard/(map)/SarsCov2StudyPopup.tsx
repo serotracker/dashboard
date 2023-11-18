@@ -76,7 +76,7 @@ export default function SarsCov2StudyPopup(record: any) {
             <div className={"popup-section"}>
                 {row("Summary", record.summary ? record.inclusion_criteria : "")}
                 {row("Location", getGeography(record.city, record.state, record.country))}
-                {row("Atibody Target",  record.isotype_igg ? "IgG" : "IgM")}
+                {row("Antibody Target",  record.isotype_igg ? "IgG" : "IgM")}
             </div>
             {/*RiskTag section*/}
             {riskTag(`${record.overall_risk_of_bias}`)}
