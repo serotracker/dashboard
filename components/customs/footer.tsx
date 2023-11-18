@@ -56,7 +56,7 @@ export const Sponsers = () => (
             <Image src={"https://www.covid19immunitytaskforce.ca/wp-content/themes/pena-lite-child/CITF_logo_ENG.svg"} alt={"COVID-19 Immunity Task Force Logo"} className="flex object-contain" width={120} height={36}/>
         </a>
         <a href="https://cumming.ucalgary.ca/centres/centre-health-informatics" target="__blank" rel="noopener noreferrer" className="flex my-4 justify-center">
-            <Image width={120} height={36} src={"/University-of-Calgary-Logo.png"} alt={"Centre for Health Informatics logo"} className="flex object-contain"/>
+            <Image width={120} height={36} src={"/University-Of-Calgary-Logo.png"} alt={"Centre for Health Informatics logo"} className="flex object-contain"/>
         </a>
         <a href="https://www.canada.ca/en/public-health.html/" target="__blank" rel="noopener noreferrer" className="flex my-4 justify-center">
             <Image width={120} height={36} src={"/public-health-agency.svg"} alt={"Public Health Agency Logo"} className="flex object-contain"/>
