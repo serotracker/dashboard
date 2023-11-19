@@ -1,14 +1,16 @@
 "use client";
 
-import React, {
-  createContext,
-  useReducer,
-
-} from "react";
+import React, { createContext, useReducer } from "react";
 import mapboxgl from "mapbox-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
+import {
+  CountryBoundingBox,
+  combineCountryBoundingBoxes,
+  getBoundingBoxFromCountryName,
+} from "@/lib/country-bounding-boxes";
+
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
 }
@@ -44,7 +46,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
 
 export function setMapboxFilters(
   filters: { [key: string]: string[] },
-  map: mapboxgl.Map | null,
+  map: mapboxgl.Map | null
 ) {
   let mapboxFilters: any = [];
 
@@ -59,7 +61,8 @@ export function setMapboxFilters(
   });
 
   console.log("Map Filters: ", ["all", ...mapboxFilters]);
-  if(map?.getLayer("Arbovirus-pins")) map?.setFilter("Arbovirus-pins", ["all", ...mapboxFilters]);
+  if (map?.getLayer("Arbovirus-pins"))
+    map?.setFilter("Arbovirus-pins", ["all", ...mapboxFilters]);
 }
 
 export const arboReducer = (state: ArboStateType, action: ArboAction) => {
@@ -70,8 +73,25 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
         [action.payload.filter]: action.payload.value,
       };
 
-      if (action.payload.map)
+      if (action.payload.map) {
         setMapboxFilters(selectedFilters, action.payload.map);
+
+        if (action.payload.filter === "country") {
+          const allSelectedCountryBoundingBoxes = action.payload.value
+            .map((countryName: string) =>
+              getBoundingBoxFromCountryName(countryName)
+            )
+            .filter((boundingBox: CountryBoundingBox) => !!boundingBox);
+
+          const boundingBoxToMoveMapTo = combineCountryBoundingBoxes(
+            allSelectedCountryBoundingBoxes
+          );
+
+          action.payload.map.fitBounds(boundingBoxToMoveMapTo);
+
+          console.log("A", boundingBoxToMoveMapTo);
+        }
+      }
 
       return {
         ...state,
@@ -86,7 +106,9 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
 
 export const ArboContext = createContext<ArboContextType>({
   ...initialState,
-  dispatch: (obj) => {console.log("dispatch not initialized", obj)},
+  dispatch: (obj) => {
+    console.log("dispatch not initialized", obj);
+  },
 });
 
 export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
