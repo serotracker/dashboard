@@ -79,19 +79,7 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
       if (action.payload.map) {
         setMapboxFilters(selectedFilters, action.payload.map);
 
-        if (action.payload.filter === "country") {
-          const allSelectedCountryBoundingBoxes = action.payload.value
-            .map((countryName: string) =>
-              getBoundingBoxFromCountryName(countryName)
-            )
-            .filter((boundingBox: CountryBoundingBox) => !!boundingBox);
-
-          const boundingBoxToMoveMapTo = combineCountryBoundingBoxes(
-            allSelectedCountryBoundingBoxes
-          );
-
-          action.payload.map.fitBounds(boundingBoxToMoveMapTo);
-        }
+        adjustMapPositionIfCountryFilterHasChanged(action);
       }
 
       return {
@@ -102,6 +90,26 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
 
     default:
       return state;
+  }
+};
+
+const adjustMapPositionIfCountryFilterHasChanged = (
+  action: ArboAction
+): void => {
+  if (action.payload.filter === "country") {
+    const allSelectedCountryBoundingBoxes = action.payload.value
+      .map((countryName: string) => getBoundingBoxFromCountryName(countryName))
+      .filter((boundingBox: CountryBoundingBox) => !!boundingBox);
+
+    if(allSelectedCountryBoundingBoxes.length === 0) {
+      return;
+    }
+
+    const boundingBoxToMoveMapTo = combineCountryBoundingBoxes(
+      allSelectedCountryBoundingBoxes
+    );
+
+    action.payload.map.fitBounds(boundingBoxToMoveMapTo);
   }
 };
 
