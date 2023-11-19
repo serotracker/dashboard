@@ -88,8 +88,6 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
           );
 
           action.payload.map.fitBounds(boundingBoxToMoveMapTo);
-
-          console.log("A", boundingBoxToMoveMapTo);
         }
       }
 
