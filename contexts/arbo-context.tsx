@@ -102,6 +102,8 @@ const adjustMapPositionIfCountryFilterHasChanged = (
       .filter((boundingBox: CountryBoundingBox) => !!boundingBox);
 
     if(allSelectedCountryBoundingBoxes.length === 0) {
+      action.payload.map.fitBounds([-180, -90, 180, 90]);
+
       return;
     }
 
