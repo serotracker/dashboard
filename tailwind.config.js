@@ -29,6 +29,12 @@ module.exports = {
         'full-screen': 'calc(100vh - 6rem)',
       },
       colors: {
+        denv: "#FFADAD",
+        zikv: "#A0C4FF",
+        chikv: "#9BF6FF",
+        wnv: "#CAFFBF",
+        yf: "#FFD6A5",
+        mayv: "#FDFFB6",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

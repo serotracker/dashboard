@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/table-core";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
+import { pathogenColors } from "../dashboard/(map)/MapAndFilters";
 
 export type Estimate = {
   age_group: string;
@@ -49,14 +50,91 @@ export const columns: ColumnDef<Estimate>[] = [
         </Button>
       );
     },
-  },
-  {
-    accessorKey: "antibodies",
-    header: "Antibodies",
+    cell: ({ row }) => {
+      const pathogen = row.getValue("pathogen");
+      if (typeof pathogen === "string") {
+        let color: string = "";
+        switch (pathogen) {
+          case "DENV":
+            color = "bg-denv";
+            break;
+          case "ZIKV":
+            color = "bg-zikv";
+            break;
+          case "CHIKV":
+            color = "bg-chikv";
+            break;
+          case "YF":
+            color = "bg-yf";
+            break;
+          case "WNV":
+            color = "bg-wnv";
+            break;
+          case "MAYV":
+            color = "bg-mayv";
+            break;
+          default:
+            color = "bg-gray-100";
+            break;
+        }
+
+        return (
+          <div className={color + " p-2 rounded-sm text-center"}>{pathogen}</div>
+        )
+
+      }
+      return "N/A";
+    }
   },
   {
     accessorKey: "seroprevalence",
     header: "Seroprevalence",
+    cell: ({ row }) => {
+      const seroprevalence = row.getValue("seroprevalence");
+      if (typeof seroprevalence === 'number') {
+        return `${(seroprevalence * 100).toFixed(1)}%`;
+      } else if (typeof seroprevalence === 'string') {
+        const seroprevalenceNumber = parseFloat(seroprevalence);
+        if (!isNaN(seroprevalenceNumber)) {
+          return `${(seroprevalenceNumber * 100).toFixed(1)}%`;
+        }
+      }
+      return 'N/A';
+    }
+  },
+  {
+    accessorKey: "antibodies",
+    header: "Antibodies",
+    cell: ({ row }) => {
+      const antibodies = row.getValue("antibodies");
+      if (Array.isArray(antibodies)) {
+        return antibodies.sort().map((antibody) => {
+          let color: string = ""
+          switch (antibody) {
+            case "IgG": 
+              color = "bg-blue-700 text-white"
+              break;
+            case "IgM": 
+              color = "bg-black text-white"
+              break;
+            case "IgAM": 
+              color = "bg-green-200"
+              break;
+            case "NAb": 
+              color = "bg-yellow-400"
+              break;
+            default:
+              color = "bg-sky-100"
+              break;
+          }
+
+          return (
+            <span className={color + " m-1 p-2 rounded-sm"} key={antibody}>{antibody}</span>
+          )
+      });
+      }
+      return 'N/A';
+    }
   },
   {
     accessorKey: "assay",
@@ -74,10 +152,10 @@ export const columns: ColumnDef<Estimate>[] = [
     accessorKey: "producer_other",
     header: "Producer Other",
   },
-  {
-    accessorKey: "same_frame_target_group",
-    header: "Same Frame Target Group",
-  },
+  // {
+  //   accessorKey: "same_frame_target_group",
+  //   header: "Same Frame Target Group",
+  // },
   // {
   //   accessorKey: "sample_end_date",
   //   header: "Sample End Date",
@@ -102,14 +180,6 @@ export const columns: ColumnDef<Estimate>[] = [
     accessorKey: "country",
     header: "Country",
   },
-  {
-    accessorKey: "latitude",
-    header: "Latitude",
-  },
-  {
-    accessorKey: "longitude",
-    header: "Longitude",
-  },
   // {
   //   accessorKey: "sample_start_date",
   //   header: "Sample Start Date",
@@ -130,8 +200,16 @@ export const columns: ColumnDef<Estimate>[] = [
     accessorKey: "age_minimum",
     header: "Age Minimum",
   },
-  // {
-  //   accessorKey: "url",
-  //   header: "URL",
-  // },
+  {
+    accessorKey: "url",
+    header: "Source",
+    cell: ({ row }) => {
+      console.log(row.getValue("url"));
+      return (
+        <Button onClick={() => window.open(row.getValue("url"))} className="w-full">
+          {new URL(row.getValue("url")).hostname}
+        </Button>
+      )
+    },
+  },
 ];
