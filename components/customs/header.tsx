@@ -61,7 +61,7 @@ export const Header = () => {
   return (
     <header className="bg-background flex items-center justify-between h-12 w-screen px-2">
       <div className="cursor-pointer py-5 pl-2">
-        <Link href={"Explore"} className="flex items-center">
+        <Link href={"/"} className="flex items-center">
           <Image
             src={"/SerotrackerLogo.svg"}
             alt={"Serotracker Logo"}
