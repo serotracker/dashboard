@@ -47,7 +47,7 @@ export default function MapAndFilters() {
             "w-full h-full overflow-hidden col-span-6 row-span-2 relative"
           }
         >
-          <CardContent ref={mapContainer} className={"w-full h-full"} />
+          <CardContent ref={mapContainer} className={"w-full h-full p-0"} />
           <Card className={"absolute bottom-1 right-1 "}>
             <CardHeader className={"py-3"}>
               <p>Legend</p>

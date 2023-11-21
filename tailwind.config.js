@@ -82,7 +82,30 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: '60%',
+            a: {
+              color: '#3182ce',
+              '&:hover': {
+                color: '#2c5282',
+              },
+            },
+            h1: {
+              fontWeight: '700',
+              FontSize: '2.25rem',
+              lineHeight: '2.5rem',
+            },
+            h2: {
+              fontWeight: '700',
+              FontSize: '1.875rem',
+              lineHeight: '2.25rem',
+            }
+          },
+        },
+      }
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require('@tailwindcss/typography')],
 }

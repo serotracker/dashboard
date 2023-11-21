@@ -1,3 +1,4 @@
+import { TranslateDate } from "@/utils/translate-util/translate-service";
 import React from "react";
 
 /**
@@ -6,20 +7,20 @@ import React from "react";
  */
 function row(title: string, content: JSX.Element | string | string[] | null | undefined) {
     return (
-        <div className={"d-flex justify-content-between mb-2"}>
-            <div className={"popup-heading"}>
+        <div className={"flex justify-between mb-2"}>
+            <div className={"text-md font-semibold"}>
                 {title}
             </div>
-            <div className={"popup-text"}>
+            <div className={"w-2/3"}>
                 {content}
             </div>
         </div>
     )
 }
 
-function riskTag(pathogen: string) {
+function pathogenTag(pathogen: string) {
     return(
-        <div className={"popup-risk-tag popup-risk-low"}>
+        <div className={"text-center w-full bg-gray-200"}>
             Pathogen: {pathogen}
         </div>
     )
@@ -48,39 +49,40 @@ const getGeography = (city: string, state: string, country: string) => {
 
 export default function ArboStudyPopup(record: any) {
     return (
-        <div className="popup-content pt-2" >
+        <div className="w-[460px] bg-white pt-2" >
             {/*Header section*/}
-            <div className={"popup-section"}>
-                <div className="popup-title">
-                    Study Number {record.estimate_id}
+            <div className={"py-2 px-4"}>
+                <div className="text-lg font-bold">
+                   {`${record.pathogen} Estimate Study`}
                 </div>
-                <div className="popup-subtitle">
-                    {record.url ? <a href={record.url} target="_blank" rel="noopener noreferrer"> PLACEHOLDER LINK </a> : "NO URL"}
+                <div className={"text-sm text-blue-600"}>
+                    {record.url ? <a href={record.url} target="_blank" rel="noopener noreferrer"> {record.url} </a> : "NO URL"}
                 </div>
             </div>
             {/*SeroPrev section*/}
-            <div className={"popup-seroprev-level popup-section"}>
-                <div className={"popup-heading"}>
-                    {"Best Seroprevalence estimate"}: <b> {`${record.seroprevalence * 100}%`}</b>
+            <div className={"flex justify-between bg-gray-200 w-full py-2 px-4"}>
+                <div className={"w-1/3 font-semibold"}>
+                    {"Seroprevalence"}: <b> {`${(record.seroprevalence * 100).toFixed(1)}%`}</b>
                 </div>
-                <div className={"popup-text"}>
+                <div className={"w-2/3"}>
                     {(record.sample_start_date && record.sample_end_date) && (
                         <>
-                            {`${record.sample_start_date} to ${record.sample_end_date}`}
+                            {`${TranslateDate(record.sample_start_date)} to ${TranslateDate(record.sample_end_date)}`}
                         </>)
                     }
                 </div>
             </div>
             {/*Content section*/}
-            <div className={"popup-section"}>
+            <div className={"py-2 px-4 max-h-[250px] overflow-auto"}>
                 {row("Inclusion Criteria", record.inclusion_criteria ? record.inclusion_criteria : "Not Reported")}
                 {row("Location", getGeography(record.city, record.state, record.country))}
                 {row("Sample Size", record.sample_size?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
-                {row("Antibody Target",  record.antibodies)}
+                {row("Antibody Target",  record.antibodies.join(', '))}
                 {row("Antigen", record.antigen)}
                 {row("Assay", record.assay)}
+                {row("LngLat", record.longitude + " " + record.latitude)}
             </div>
             {/*RiskTag section*/}
-            {riskTag(`${record.pathogen}`)}
+            {pathogenTag(`${record.pathogen}`)}
         </div>)
 }
