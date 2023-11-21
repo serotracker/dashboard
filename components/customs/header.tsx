@@ -63,7 +63,7 @@ export const Header = () => {
       <div className="cursor-pointer py-5 pl-2">
         <Link href={"Explore"} className="flex items-center">
           <Image
-            src={"./SerotrackerLogo.svg"}
+            src={"/SerotrackerLogo.svg"}
             alt={"Serotracker Logo"}
             width={23}
             height={23}
