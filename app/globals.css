@@ -5,6 +5,7 @@
 @layer base {
   :root {
     --background: 206 28% 29%;
+    --background-hover: 206 28% 43%;
     --foreground: 0 0% 100%;
 
     --card: 0 0% 100%;
