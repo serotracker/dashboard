@@ -9,6 +9,12 @@ import mapboxgl from "mapbox-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
+import {
+  CountryBoundingBox,
+  combineCountryBoundingBoxes,
+  getBoundingBoxFromCountryName,
+} from "@/lib/country-bounding-boxes";
+
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
 }
@@ -70,8 +76,11 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
         [action.payload.filter]: action.payload.value,
       };
 
-      if (action.payload.map)
+      if (action.payload.map) {
         setMapboxFilters(selectedFilters, action.payload.map);
+
+        adjustMapPositionIfCountryFilterHasChanged(action);
+      }
 
       return {
         ...state,
@@ -81,6 +90,28 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
 
     default:
       return state;
+  }
+};
+
+const adjustMapPositionIfCountryFilterHasChanged = (
+  action: ArboAction
+): void => {
+  if (action.payload.filter === "country") {
+    const allSelectedCountryBoundingBoxes = action.payload.value
+      .map((countryName: string) => getBoundingBoxFromCountryName(countryName))
+      .filter((boundingBox: CountryBoundingBox) => !!boundingBox);
+
+    if(allSelectedCountryBoundingBoxes.length === 0) {
+      action.payload.map.fitBounds([-180, -90, 180, 90]);
+
+      return;
+    }
+
+    const boundingBoxToMoveMapTo = combineCountryBoundingBoxes(
+      allSelectedCountryBoundingBoxes
+    );
+
+    action.payload.map.fitBounds(boundingBoxToMoveMapTo);
   }
 };
 
