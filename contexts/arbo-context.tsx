@@ -43,7 +43,17 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   return data.filter((item: any) => {
     return filterKeys.every((key: string) => {
       if (!filters[key].length) return true;
-      return filters[key].includes(item[key]);
+      if(key === "antibody") {
+        return item["antibodies"].some((element: string) => filters[key].includes(element));
+      } else {
+        if (Array.isArray(item[key])) {
+          // If item[key] is an array, check if any element of item[key] is included in filters[key]
+          return item[key].some((element: string) => filters[key].includes(element));
+        } else {
+          // If item[key] is a string, check if it's included in filters[key]
+          return filters[key].includes(item[key]);
+        }
+      }
     });
   });
 }
@@ -57,9 +67,15 @@ export function setMapboxFilters(
   Object.keys(filters).forEach((filter: string) => {
     const keyFilters: any = [];
     if (filters[filter].length > 0) {
-      filters[filter].forEach((filterValue: string) => {
-        keyFilters.push(["in", filterValue, ["get", filter]]);
-      });
+      if(filter === "antibody") {
+        filters["antibody"].forEach((antibody: string) => {
+          keyFilters.push([">", ["index-of", antibody, ["get", "antibody"]], -1]);
+        });
+      } else {
+        filters[filter].forEach((filterValue: string) => {
+          keyFilters.push(["in", filterValue, ["get", filter]]);
+        });
+      }
     }
     if (keyFilters.length > 0) mapboxFilters.push(["any", ...keyFilters]);
   });

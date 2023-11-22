@@ -204,7 +204,6 @@ export const columns: ColumnDef<Estimate>[] = [
     accessorKey: "url",
     header: "Source",
     cell: ({ row }) => {
-      console.log(row.getValue("url"));
       return (
         <Button onClick={() => window.open(row.getValue("url"))} className="w-full">
           {new URL(row.getValue("url")).hostname}

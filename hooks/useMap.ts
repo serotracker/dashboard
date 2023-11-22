@@ -16,6 +16,7 @@ function addArboDataLayers(map: mapboxgl.Map, data: any) {
   // Create mapbox source
   if(!map.getSource("arboStudyPins")){
     const arboStudyPins = data.map((record: any) => {
+      console.log(record.antibodies)
       return {
         type: "Feature",
         geometry: {
