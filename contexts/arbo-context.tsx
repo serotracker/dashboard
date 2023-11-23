@@ -3,17 +3,17 @@
 import React, {
   createContext,
   useReducer,
-
+  useEffect
 } from "react";
 import mapboxgl from "mapbox-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
-import getQueryClient from "@/components/customs/getQueryClient";
 import {
   CountryBoundingBox,
   combineCountryBoundingBoxes,
   getBoundingBoxFromCountryName,
 } from "@/lib/country-bounding-boxes";
+import useArboData from "@/hooks/useArboData";
 
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
@@ -29,6 +29,7 @@ interface ArboAction {
 }
 export enum ArboActionType {
   UPDATE_FILTER = "UPDATE_FILTER",
+  INITIAL_DATA_FETCH = "INITIAL_DATA_FETCH",
   ADD_FILTERS_TO_MAP = "ADD_FILTERS_TO_MAP",
 }
 
@@ -106,6 +107,13 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
         selectedFilters: selectedFilters,
         dataFiltered: true
       };
+    case ArboActionType.INITIAL_DATA_FETCH:
+      return {
+        ...state,
+        filteredData: action.payload.data,
+        selectedFilters: initialState.selectedFilters,
+        dataFiltered: false
+      };
 
     default:
       return state;
@@ -140,8 +148,6 @@ export const ArboContext = createContext<ArboContextType>({
 });
 
 export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
-  const [state, dispatch] = useReducer(arboReducer, initialState);
-
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -153,12 +159,39 @@ export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ArboContext.Provider value={{ ...state, dispatch: dispatch }}>
+      <FilteredDataProvider>
         {children}
-      </ArboContext.Provider>
+      </FilteredDataProvider>
     </QueryClientProvider>
   );
 };
+
+const FilteredDataProvider = ({children}: {children: React.ReactNode}) => {
+  const [state, dispatch] = useReducer(arboReducer, initialState);
+  const dataQuery = useArboData();
+
+  useEffect(() => {
+    if(
+      state.filteredData.length === 0 &&
+      !state.dataFiltered &&
+      'data' in dataQuery &&
+      !!dataQuery.data && typeof dataQuery.data === 'object' &&
+      'records' in dataQuery.data && Array.isArray(dataQuery.data.records) &&
+      dataQuery.data.records.length > 0
+    ) {
+      dispatch({
+        type: ArboActionType.INITIAL_DATA_FETCH,
+        payload: {data: (dataQuery.data.records)}
+      })
+    }
+  }, [dataQuery]);
+
+  return (
+    <ArboContext.Provider value={{ ...state, dispatch: dispatch }}>
+      {children}
+    </ArboContext.Provider>
+  )
+}
 
 export function Hydrate(props: HydrateProps) {
   return <RQHydrate {...props} />;
