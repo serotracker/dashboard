@@ -21,6 +21,7 @@ export interface ArboContextType extends ArboStateType {
 interface ArboStateType {
   filteredData: any[];
   selectedFilters: { [key: string]: string[] };
+  dataFiltered: boolean;
 }
 interface ArboAction {
   type: ArboActionType;
@@ -36,6 +37,7 @@ export const initialState: ArboStateType = {
   selectedFilters: {
     ["pathogen"]: ["DENV", "ZIKV", "CHIKV", "YF", "WNV", "MAYV"],
   },
+  dataFiltered: false,
 };
 
 function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
@@ -102,6 +104,7 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
         selectedFilters: selectedFilters,
+        dataFiltered: true
       };
 
     default:

@@ -10,7 +10,7 @@ export default function ArboDataTable() {
   const dataQuery = useArboData();
   const state = useContext(ArboContext);
   if(state.filteredData?.length > 0 || (dataQuery.isSuccess && dataQuery.data)) {
-    return <DataTable columns={columns} data={state.filteredData} />;
+  return <DataTable columns={columns} data={state.filteredData?.length <= 0 && !state.dataFiltered ? dataQuery.data.records : state.filteredData} />;
   } else {
     return <>Loading Data ...</>
   }

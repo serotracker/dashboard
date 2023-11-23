@@ -73,7 +73,7 @@ export function MultiSelect(props: MultiSelectProps) {
         className="overflow-visible bg-transparent"
       >
         <div className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
-          <div className="flex gap-1 flex-wrap">
+          <div className="flex flex-col gap-1 flex-wrap">
             {/* Avoid having the "Search" Icon */}
             {selectables.length > 0 && <CommandPrimitive.Input
                 ref={inputRef}
@@ -84,7 +84,8 @@ export function MultiSelect(props: MultiSelectProps) {
                 placeholder={heading}
                 className="bg-transparent outline-none placeholder:text-muted-foreground flex-1 inline pb-1 mb-1 border-b-2"
               />}
-            {createMultiSelectOptionList(selected).map((selectedOption) => {
+              <div className="flex gap-1 flex-wrap">
+              {createMultiSelectOptionList(selected).map((selectedOption) => {
               return (
                 <Badge className="rounded-sm bg-background hover:bg-backgroundHover p-1" key={selectedOption.value}>
                   {selectedOption.label}
@@ -106,6 +107,8 @@ export function MultiSelect(props: MultiSelectProps) {
                 </Badge>
               );
             })}
+              </div>
+
           </div>
         </div>
         <div className="relative mt-2">
