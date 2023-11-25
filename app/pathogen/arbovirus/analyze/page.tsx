@@ -8,6 +8,7 @@ import {
 import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
 import ArboDataTable from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AntibodyPathogenBar } from "./recharts";
 
 const VisualizationCard = (props: {
   title: string;
@@ -33,8 +34,8 @@ export default function ArboAnalyze() {
         <VisualizationCard title={"Pathogen Seroprevalence"}>
           <PathogenSeroprevalenceBoxPlot />
         </VisualizationCard>
-        <VisualizationCard title={"Count Assay Pathogen - Server"}>
-          <CustomResponsiveBar />
+        <VisualizationCard title={"Pathogen Seroprevalence"}>
+          <AntibodyPathogenBar />
         </VisualizationCard>
       </div>
       <div className={"col-span-5 row-span-2 overflow-auto"}>
