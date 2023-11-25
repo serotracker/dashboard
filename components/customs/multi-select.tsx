@@ -68,21 +68,29 @@ export function MultiSelect(props: MultiSelectProps) {
 
   return (
     <>
-      {selected.length > 0 && (
-        <p className={"mb-1 font-light text-sm"}>{heading}</p>
-      )}
       <Command
         onKeyDown={handleKeyDown}
         className="overflow-visible bg-transparent"
       >
         <div className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
-          <div className="flex gap-1 flex-wrap">
-            {createMultiSelectOptionList(selected).map((selectedOption) => {
+          <div className="flex flex-col gap-1 flex-wrap">
+            {/* Avoid having the "Search" Icon */}
+            {selectables.length > 0 && <CommandPrimitive.Input
+                ref={inputRef}
+                value={inputValue}
+                onValueChange={setInputValue}
+                onBlur={() => setOpen(false)}
+                onFocus={() => setOpen(true)}
+                placeholder={heading}
+                className="bg-transparent outline-none placeholder:text-muted-foreground flex-1 inline pb-1 mb-1 border-b-2"
+              />}
+              <div className="flex gap-1 flex-wrap">
+              {createMultiSelectOptionList(selected).map((selectedOption) => {
               return (
-                <Badge key={selectedOption.value}>
+                <Badge className="rounded-sm bg-background hover:bg-backgroundHover p-1" key={selectedOption.value}>
                   {selectedOption.label}
                   <button
-                    className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    className="ml-1 ring-offset-background outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         handleUnselect(selectedOption);
@@ -94,21 +102,13 @@ export function MultiSelect(props: MultiSelectProps) {
                     }}
                     onClick={() => handleUnselect(selectedOption)}
                   >
-                    <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                    <X className="h-3 w-3 text-foreground hover:bg-background" />
                   </button>
                 </Badge>
               );
             })}
-            {/* Avoid having the "Search" Icon */}
-            <CommandPrimitive.Input
-              ref={inputRef}
-              value={inputValue}
-              onValueChange={setInputValue}
-              onBlur={() => setOpen(false)}
-              onFocus={() => setOpen(true)}
-              placeholder={selected.length > 0 ? "" : heading}
-              className="ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
-            />
+              </div>
+
           </div>
         </div>
         <div className="relative mt-2">

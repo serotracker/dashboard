@@ -10,7 +10,7 @@ export default function SarsCov2DataTable() {
   const dataQuery = useSarsCov2Data();
   const state = useContext(SarsCov2Context);
   if(state.filteredData.length > 0 || (dataQuery.isSuccess && dataQuery.data)) {
-    return <DataTable columns={columns} data={state.filteredData?.length > 0 ? state.filteredData : dataQuery.data.records} />;
+    return <DataTable columns={columns} data={state.filteredData} />;
   } else {
     return <>Loading Data ...</>
   }

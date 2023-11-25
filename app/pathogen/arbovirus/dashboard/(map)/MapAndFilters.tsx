@@ -119,7 +119,7 @@ export default function MapAndFilters() {
           <Card className={"absolute top-1 left-1 p-2"}>
             <CardContent className={"flex w-fit p-0"}>
               <ScrollText />
-              <p className={"ml-1 font-medium"}>{state.filteredData?.length > 0 ? state.filteredData.length : dataQuery.data.records.length}</p>
+              <p className={"ml-1 font-medium"}>{state.filteredData.length}</p>
             </CardContent>
           </Card>
         </Card>

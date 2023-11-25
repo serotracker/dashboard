@@ -143,10 +143,7 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
     },
   };
 
-  const dataQuery = useArboData();
-  const rawData = state.filteredData?.length > 0 ? state.filteredData : dataQuery.data?.records;
-
-  rawData?.forEach((d: any) => {
+  state.filteredData.forEach((d: any) => {
     const antibodies = d.antibodies as (keyof typeof data)[];
     if (antibodies.length == 2) {
       const pathogen: keyof (typeof data)["NAb"] = d.pathogen;
@@ -235,10 +232,7 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
 export function PathogenSeroprevalenceBoxPlot() {
   const state = useContext(ArboContext);
 
-  const dataQuery = useArboData();
-  const rawData = state.filteredData?.length > 0 ? state.filteredData : dataQuery.data?.records;
-
-  const data: { pathogen: string; seroprevalence: number }[] = rawData.map(
+  const data: { pathogen: string; seroprevalence: number }[] = state.filteredData.map(
     (d: any) => {
       return {
         pathogen: d.pathogen,
