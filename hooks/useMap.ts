@@ -1,3 +1,7 @@
+/**
+ * @file useMap Custom Hook
+ * @description 
+ */
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -16,7 +20,7 @@ function addArboDataLayers(map: mapboxgl.Map, data: any) {
   // Create mapbox source
   if(!map.getSource("arboStudyPins")){
     const arboStudyPins = data.map((record: any) => {
-      console.log(record.antibodies)
+      //console.log(record.antibodies)
       return {
         type: "Feature",
         geometry: {
@@ -38,7 +42,7 @@ function addArboDataLayers(map: mapboxgl.Map, data: any) {
       };
     });
 
-    console.log("adding arbo source")
+    //console.log("adding arbo source")
     map.addSource("arboStudyPins", {
       type: "geojson",
       data: {
@@ -135,6 +139,7 @@ export const getMapboxLatitudeOffset = (map: mapboxgl.Map | undefined) => {
   return 0
 }
 
+//creates map on click listeners to handle opening pop ups
 function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "SarsCov2") {
   let pinPopup: mapboxgl.Popup | undefined = undefined;
   console.debug("adding event listeners");
@@ -182,6 +187,7 @@ function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "Sa
   );
 }
 
+//Hook called in MapAndFilters to initalize mapbox map, content, logic 
 export default function useMap(
   data: any,
   pathogen: "Arbovirus" | "SarsCov2",
@@ -232,11 +238,11 @@ export default function useMap(
       map.on("load", () => {
         switch (pathogen) {
           case "Arbovirus":
-            console.log("adding arbovirus layers")
+            //console.log("adding arbovirus layers")
             addArboDataLayers(map as mapboxgl.Map, data);
             break;
           case "SarsCov2":
-            console.log("adding sarscov2 layers")
+            //console.log("adding sarscov2 layers")
             addSarsCov2DataLayers(map as mapboxgl.Map, data);
             break;
         }

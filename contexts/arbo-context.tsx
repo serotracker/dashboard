@@ -31,6 +31,7 @@ export enum ArboActionType {
   UPDATE_FILTER = "UPDATE_FILTER",
   INITIAL_DATA_FETCH = "INITIAL_DATA_FETCH",
   ADD_FILTERS_TO_MAP = "ADD_FILTERS_TO_MAP",
+  RESET_FILTERS = "RESET_FILTERS",
 }
 
 export const initialState: ArboStateType = {
@@ -105,14 +106,21 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
         selectedFilters: selectedFilters,
-        dataFiltered: true
+        dataFiltered: true,
       };
     case ArboActionType.INITIAL_DATA_FETCH:
       return {
         ...state,
         filteredData: action.payload.data,
         selectedFilters: initialState.selectedFilters,
-        dataFiltered: false
+        dataFiltered: false,
+      };
+    case ArboActionType.RESET_FILTERS:
+      return {
+        ...state,
+        filteredData: [],
+        selectedFilters: initialState.selectedFilters,
+        dataFiltered: false,
       };
 
     default:

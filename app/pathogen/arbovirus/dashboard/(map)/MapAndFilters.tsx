@@ -1,3 +1,10 @@
+/**
+ * @file MapAndFilters Component
+ * @description This component renders a Map with associated filters for the Arboviruses dashboard.
+ * It includes checkboxes for different pathogens and a side panel with additional filters.
+ * The map and filters are dynamically updated based on user interactions.
+ */
+
 "use client";
 
 import useMap from "@/hooks/useMap";
@@ -10,6 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollText } from "lucide-react";
 
+// Define color styles for pathogens
 export const pathogenColorsTailwind: { [key: string]: string } = {
   ZIKV: "border-[#A0C4FF] data-[state=checked]:bg-[#A0C4FF]",
   CHIKV: "border-[#9BF6FF] data-[state=checked]:bg-[#9BF6FF]",
@@ -29,9 +37,12 @@ export const pathogenColors: { [key: string]: string } = {
 };
 
 export default function MapAndFilters() {
+  // Fetch Arbovirus data using a custom hook
   const dataQuery = useArboData();
+  // Access the global Arbovirus context
   const state = useContext(ArboContext);
 
+  // Fetch filter options from the backend using React Query
   const filters = useQuery({
     queryKey: ["ArbovirusFilters"],
     queryFn: () =>
@@ -40,12 +51,16 @@ export default function MapAndFilters() {
       ),
   });
 
+  // Initialize the Map and get the map container
   // Might have to find a way to make this synchronous instead of asynchronous
   const { map, mapContainer } = useMap(dataQuery.data.records, "Arbovirus");
 
+   // Check if the data has been successfully fetched
   if (dataQuery.isSuccess && dataQuery.data) {
+    // Set Mapbox filters based on the global state
     setMapboxFilters(state.selectedFilters, map!);
 
+    // Handle checkbox click event to update filters
     const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
       const value = state.selectedFilters.pathogen;
 
@@ -55,6 +70,7 @@ export default function MapAndFilters() {
         value.splice(value.indexOf(pathogen), 1);
       }
 
+      // Dispatch an action to update filters in the global context
       state.dispatch({
         type: ArboActionType.UPDATE_FILTER,
         payload: {
