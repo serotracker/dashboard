@@ -1,5 +1,5 @@
 "use client";
-
+// Adding a comment to the data table.
 import {
   ColumnDef,
   SortingState,
