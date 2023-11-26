@@ -13,7 +13,6 @@ import clsx from "clsx";
 
 const VisualizationCard = (props: {
   title: string;
-  subtitle?: string;
   children: React.ReactNode;
   height?: string;
 }) => {
@@ -21,9 +20,10 @@ const VisualizationCard = (props: {
   
   return (
     <Card className={clsx("mb-4 mr-4 p-4 pt-0", props.height ?? "h-full sm:h-3/4 2xl:h-1/2 relative")}>
-      <h3 className="py-4 w-full text-center text-lg">{props.title}</h3>
-      {props.subtitle && <p className="py-4 w-full text-center text-sm">{props.subtitle}</p>}
-      <CardContent className={"px-0 h-full"}>{props.children}</CardContent>
+      <CardContent className={"px-0 h-full flex flex-col"}>
+        <h3 className="py-4 w-full text-center text-lg">{props.title}</h3>
+        {props.children}
+      </CardContent>
     </Card>
   );
 };

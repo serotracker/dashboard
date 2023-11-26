@@ -22,54 +22,66 @@ import { pathogenColors } from "../dashboard/(map)/MapAndFilters";
 
 //Study count by pathogen and antibody type
 
-type arboviruses = "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV";
+type arbovirusesSF = "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV";
+type arboviruses = "Dengue" | "Zika" | "Chikengunia" | "Yellow Fever" | "West Nile" | "Mayaro";
+
+const convertArboSFtoArbo = (arbo: arbovirusesSF): arboviruses => {
+    switch (arbo) {
+        case "DENV":
+        return "Dengue";
+        case "ZIKV":
+        return "Zika";
+        case "CHIKV":
+        return "Chikengunia";
+        case "YF":
+        return "Yellow Fever";
+        case "WNV":
+        return "West Nile";
+        case "MAYV":
+        return "Mayaro";
+    }
+}
+
 
 export function AntibodyPathogenBar() {
   const state = useContext(ArboContext);
 
   const data: {
     isotype: string;
-    DENV: number;
-    ZIKV: number;
-    CHIKV: number;
-    YF: number;
-    WNV: number;
-    MAYV: number;
+    Zika: number;
+    Dengue: number;
+    Chikengunia: number;
+    'Yellow Fever': number;
+    'West Nile': number;
+    Mayaro: number;
   }[] = [];
 
   state.filteredData.forEach((d: any) => {
     const antibody = d.antibodies.sort().join(", ");
-    const pathogen: arboviruses = d.pathogen;
+    const arbovirus: arboviruses = convertArboSFtoArbo(d.pathogen);
 
     const existingData = _.find(data, { isotype: antibody });
 
     if (existingData) {
-      existingData[pathogen]++;
+      existingData[arbovirus]++;
     } else {
       data.push({
         isotype: antibody,
-        DENV: pathogen === "DENV" ? 1 : 0,
-        ZIKV: pathogen === "ZIKV" ? 1 : 0,
-        CHIKV: pathogen === "CHIKV" ? 1 : 0,
-        YF: pathogen === "YF" ? 1 : 0,
-        WNV: pathogen === "WNV" ? 1 : 0,
-        MAYV: pathogen === "MAYV" ? 1 : 0,
+        Zika: arbovirus === "Zika" ? 1 : 0,
+        Dengue: arbovirus === "Dengue" ? 1 : 0,
+        Chikengunia: arbovirus === "Chikengunia" ? 1 : 0,
+        'Yellow Fever': arbovirus === "Yellow Fever" ? 1 : 0,
+        'West Nile': arbovirus === "West Nile" ? 1 : 0,
+        Mayaro: arbovirus === "Mayaro" ? 1 : 0,
       });
     }
   });
 
-  console.log(state.filteredData[0]);
   console.log(data);
 
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
       <BarChart
-        margin={{
-          top: 10,
-          right: 30,
-          left: 0,
-          bottom: 60,
-        }}
         width={730}
         height={250}
         data={data}
@@ -78,13 +90,13 @@ export function AntibodyPathogenBar() {
         <XAxis dataKey="isotype" />
         <YAxis />
         <Tooltip />
-        <Legend />
-        <Bar dataKey="DENV" stackId="a" fill={pathogenColors.DENV} />
-        <Bar dataKey="ZIKV" stackId="a" fill={pathogenColors.ZIKV} />
-        <Bar dataKey="CHIKV" stackId="a" fill={pathogenColors.CHIKV} />
-        <Bar dataKey="YF" stackId="a" fill={pathogenColors.YF} />
-        <Bar dataKey="WNV" stackId="a" fill={pathogenColors.WNV} />
-        <Bar dataKey="MAYV" stackId="a" fill={pathogenColors.MAYV} />
+        <Legend layout="vertical" verticalAlign="middle" align="right" wrapperStyle={{right: -10}}/>        
+        <Bar dataKey="Zika" stackId="a" fill={pathogenColors.ZIKV} />
+        <Bar dataKey="Dengue" stackId="a" fill={pathogenColors.DENV} />
+        <Bar dataKey="Chikengunia" stackId="a" fill={pathogenColors.CHIKV} />
+        <Bar dataKey="Yellow Fever" stackId="a" fill={pathogenColors.YF} />
+        <Bar dataKey="West Nile" stackId="a" fill={pathogenColors.WNV} />
+        <Bar dataKey="Mayaro" stackId="a" fill={pathogenColors.MAYV} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -100,32 +112,31 @@ export function StudyCountOverTime() {
 
   const data: {
     year: number;
-    DENV: number;
-    ZIKV: number;
-    CHIKV: number;
-    YF: number;
-    WNV: number;
-    MAYV: number;
+    Zika: number;
+    Dengue: number;
+    Chikengunia: number;
+    'Yellow Fever': number;
+    'West Nile': number;
+    Mayaro: number;
   }[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const date = new Date(d.sample_end_date);
-    const year = date.getFullYear();
-    const pathogen: arboviruses = d.pathogen;
+    const year = new Date(d.sample_end_date).getFullYear();
+    let arbovirus: arboviruses = convertArboSFtoArbo(d.pathogen);
 
     const existingData = _.find(data, { year: year });
 
     if (existingData) {
-      existingData[pathogen]++;
+      existingData[arbovirus]++;
     } else {
       data.push({
         year: year,
-        DENV: pathogen === "DENV" ? 1 : 0,
-        ZIKV: pathogen === "ZIKV" ? 1 : 0,
-        CHIKV: pathogen === "CHIKV" ? 1 : 0,
-        YF: pathogen === "YF" ? 1 : 0,
-        WNV: pathogen === "WNV" ? 1 : 0,
-        MAYV: pathogen === "MAYV" ? 1 : 0,
+        Zika: arbovirus === "Zika" ? 1 : 0,
+        Dengue: arbovirus === "Dengue" ? 1 : 0,
+        Chikengunia: arbovirus === "Chikengunia" ? 1 : 0,
+        'Yellow Fever': arbovirus === "Yellow Fever" ? 1 : 0,
+        'West Nile': arbovirus === "West Nile" ? 1 : 0,
+        Mayaro: arbovirus === "Mayaro" ? 1 : 0,
       });
     }
   });
@@ -135,22 +146,22 @@ export function StudyCountOverTime() {
   for (let i = 1; i < data.length; i++) {
     const element = data[i];
 
-    element.DENV += data[i - 1].DENV;
-    element.ZIKV += data[i - 1].ZIKV;
-    element.CHIKV += data[i - 1].CHIKV;
-    element.YF += data[i - 1].YF;
-    element.WNV += data[i - 1].WNV;
-    element.MAYV += data[i - 1].MAYV;
+    element.Dengue += data[i - 1].Dengue;
+    element.Zika += data[i - 1].Zika;
+    element.Chikengunia += data[i - 1].Chikengunia;
+    element['Yellow Fever'] += data[i - 1]['Yellow Fever'];
+    element['West Nile'] += data[i - 1]['West Nile'];
+    element.Mayaro += data[i - 1].Mayaro;
   }
 
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
       <AreaChart
         margin={{
-          top: 10,
+          top: 0,
           right: 30,
           left: 0,
-          bottom: 60,
+          bottom: 0,
         }}
         width={730}
         height={250}
@@ -160,45 +171,45 @@ export function StudyCountOverTime() {
         <XAxis dataKey="year" />
         <YAxis />
         <Tooltip />
-        <Legend />
+        <Legend layout="vertical" verticalAlign="middle" align="right" wrapperStyle={{right: -10}}/>        
         <Area
           type="monotone"
-          dataKey="DENV"
-          stackId="1"
-          stroke={pathogenColors.DENV}
-          fill={pathogenColors.DENV}
-        />
-        <Area
-          type="monotone"
-          dataKey="ZIKV"
+          dataKey="Zika"
           stackId="1"
           stroke={pathogenColors.ZIKV}
           fill={pathogenColors.ZIKV}
         />
         <Area
           type="monotone"
-          dataKey="CHIKV"
+          dataKey="Dengue"
+          stackId="1"
+          stroke={pathogenColors.DENV}
+          fill={pathogenColors.DENV}
+        />
+        <Area
+          type="monotone"
+          dataKey="Chikengunia"
           stackId="1"
           stroke={pathogenColors.CHIKV}
           fill={pathogenColors.CHIKV}
         />
         <Area
           type="monotone"
-          dataKey="YF"
+          dataKey="Yellow Fever"
           stackId="1"
           stroke={pathogenColors.YF}
           fill={pathogenColors.YF}
         />
         <Area
           type="monotone"
-          dataKey="WNV"
+          dataKey="West Nile"
           stackId="1"
           stroke={pathogenColors.WNV}
           fill={pathogenColors.WNV}
         />
         <Area
           type="monotone"
-          dataKey="MAYV"
+          dataKey="Mayaro"
           stackId="1"
           stroke={pathogenColors.MAYV}
           fill={pathogenColors.MAYV}
@@ -267,13 +278,13 @@ export function StudyCountOverTimeBySampleFrame() {
   };
 
   return (
-    <ResponsiveContainer width={"100%"} height={"100%"}>
+    <ResponsiveContainer width={"100%"}>
       <AreaChart
         margin={{
-          top: 10,
+          top: 0,
           right: 30,
           left: 0,
-          bottom: 60,
+          bottom: 0,
         }}
         width={730}
         height={500}
@@ -305,155 +316,155 @@ export function Top10CountriesByPathogenStudyCount() {
 
   const data: {
     country: string;
-    DENV: number;
-    ZIKV: number;
-    CHIKV: number;
-    YF: number;
-    WNV: number;
-    MAYV: number;
+    Dengue: number;
+    Zika: number;
+    Chikengunia: number;
+    'Yellow Fever': number;
+    'West Nile': number;
+    Mayaro: number;
   }[] = [];
 
   state.filteredData.forEach((d: any) => {
     const country = d.country;
-    const pathogen: arboviruses = d.pathogen;
+    const arbovirus: arboviruses = convertArboSFtoArbo(d.pathogen);
 
     const existingData = _.find(data, { country: country });
 
     if (existingData) {
-      existingData[pathogen]++;
+      existingData[arbovirus]++;
     } else {
       data.push({
         country: country,
-        DENV: pathogen === "DENV" ? 1 : 0,
-        ZIKV: pathogen === "ZIKV" ? 1 : 0,
-        CHIKV: pathogen === "CHIKV" ? 1 : 0,
-        YF: pathogen === "YF" ? 1 : 0,
-        WNV: pathogen === "WNV" ? 1 : 0,
-        MAYV: pathogen === "MAYV" ? 1 : 0,
+        Dengue: arbovirus === "Dengue" ? 1 : 0,
+        Zika: arbovirus === "Zika" ? 1 : 0,
+        Chikengunia: arbovirus === "Chikengunia" ? 1 : 0,
+        'Yellow Fever': arbovirus === "Yellow Fever" ? 1 : 0,
+        'West Nile': arbovirus === "West Nile" ? 1 : 0,
+        'Mayaro': arbovirus === "Mayaro" ? 1 : 0,
       });
     }
   });
 
   return (
     <div className="h-full flex flex-row flex-wrap">
-      <ResponsiveContainer width="50%" height="28%">
+      <ResponsiveContainer width="50%" height="33%">
+        <BarChart
+          margin={{
+            top: 0,
+            right: 0,
+            left: 30,
+            bottom: 0,
+          }}
+          layout="vertical"
+          width={500}
+          height={250}
+          data={data.sort((a, b) => b.Zika - a.Zika).slice(0, 10)}
+        >
+          <XAxis type="number" />
+          <YAxis dataKey="country" type="category" />
+          <Legend verticalAlign="top"/>
+          <Tooltip />
+          <Bar dataKey="Zika" fill={pathogenColors.ZIKV} />
+        </BarChart>
+      </ResponsiveContainer>
+      <ResponsiveContainer width="50%" height="33%">
           <BarChart
             margin={{
-              top: 10,
-              right: 30,
-              left: 40,
+              top: 0,
+              right: 0,
+              left: 30,
               bottom: 0,
             }}
             layout="vertical"
             width={500}
             height={250}
-            data={data.sort((a, b) => b.DENV - a.DENV).slice(0, 10)}
+            data={data.sort((a, b) => b.Dengue - a.Dengue).slice(0, 10)}
           >
-            <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" />
             <YAxis dataKey="country" type="category" />
+            <Legend verticalAlign="top"/>
             <Tooltip />
-            <Bar dataKey="DENV" fill={pathogenColors.DENV} />
+            <Bar dataKey="Dengue" fill={pathogenColors.DENV} />
           </BarChart>
       </ResponsiveContainer>
-      <ResponsiveContainer width="50%" height="28%">
+      <ResponsiveContainer width="50%" height="33%">
         <BarChart
           margin={{
-            top: 10,
-            right: 30,
-            left: 40,
+            top: 0,
+            right: 0,
+            left: 30,
             bottom: 0,
           }}
           layout="vertical"
           width={500}
           height={250}
-          data={data.sort((a, b) => b.ZIKV - a.ZIKV).slice(0, 10)}
+          data={data.sort((a, b) => b.Chikengunia - a.Chikengunia).slice(0, 10)}
         >
-          <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" />
           <YAxis dataKey="country" type="category" />
+          <Legend verticalAlign="top"/>
           <Tooltip />
-          <Bar dataKey="ZIKV" fill={pathogenColors.ZIKV} />
+          <Bar dataKey="Chikengunia" fill={pathogenColors.CHIKV} />
         </BarChart>
       </ResponsiveContainer>
-      <ResponsiveContainer width="50%" height="28%">
+      <ResponsiveContainer width="50%" height="33%">
         <BarChart
           margin={{
-            top: 10,
-            right: 30,
-            left: 40,
+            top: 0,
+            right: 0,
+            left: 30,
             bottom: 0,
           }}
           layout="vertical"
           width={500}
           height={250}
-          data={data.sort((a, b) => b.CHIKV - a.CHIKV).slice(0, 10)}
+          data={data.sort((a, b) => b["Yellow Fever"] - a["Yellow Fever"]).slice(0, 10)}
         >
-          <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" />
           <YAxis dataKey="country" type="category" />
+          <Legend verticalAlign="top"/>
           <Tooltip />
-          <Bar dataKey="CHIKV" fill={pathogenColors.CHIKV} />
+          <Bar dataKey="Yellow Fever" fill={pathogenColors.YF} />
         </BarChart>
       </ResponsiveContainer>
-      <ResponsiveContainer width="50%" height="28%">
+      <ResponsiveContainer width="50%" height="33%">
         <BarChart
           margin={{
-            top: 10,
-            right: 30,
-            left: 40,
+            top: 0,
+            right: 0,
+            left: 30,
             bottom: 0,
           }}
           layout="vertical"
           width={500}
           height={250}
-          data={data.sort((a, b) => b.YF - a.YF).slice(0, 10)}
+          data={data.sort((a, b) => b['West Nile'] - a['West Nile']).slice(0, 10)}
         >
-          <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" />
           <YAxis dataKey="country" type="category" />
+          <Legend verticalAlign="top"/>
           <Tooltip />
-          <Bar dataKey="YF" fill={pathogenColors.YF} />
+          <Bar dataKey="West Nile" fill={pathogenColors.WNV} />
         </BarChart>
       </ResponsiveContainer>
-      <ResponsiveContainer width="50%" height="28%">
+      <ResponsiveContainer width="50%" height="33%">
         <BarChart
           margin={{
-            top: 10,
-            right: 30,
-            left: 40,
-            bottom: 20,
+            top: 0,
+            right: 0,
+            left: 30,
+            bottom: 0,
           }}
           layout="vertical"
           width={500}
           height={250}
-          data={data.sort((a, b) => b.WNV - a.WNV).slice(0, 10)}
+          data={data.sort((a, b) => b.Mayaro - a.Mayaro).slice(0, 10)}
         >
-          <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" />
           <YAxis dataKey="country" type="category" />
+          <Legend verticalAlign="top"/>
           <Tooltip />
-          <Bar dataKey="WNV" fill={pathogenColors.WNV} />
-        </BarChart>
-      </ResponsiveContainer>
-      <ResponsiveContainer width="50%" height="28%">
-        <BarChart
-          margin={{
-            top: 10,
-            right: 30,
-            left: 40,
-            bottom: 20,
-          }}
-          layout="vertical"
-          width={500}
-          height={250}
-          data={data.sort((a, b) => b.MAYV - a.MAYV).slice(0, 10)}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" />
-          <YAxis dataKey="country" type="category" />
-          <Tooltip />
-          <Bar dataKey="MAYV" fill={pathogenColors.MAYV} />
+          <Bar dataKey="Mayaro" fill={pathogenColors.MAYV} />
         </BarChart>
       </ResponsiveContainer>
     </div>
