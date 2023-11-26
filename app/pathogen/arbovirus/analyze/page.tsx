@@ -8,18 +8,22 @@ import {
 import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
 import ArboDataTable from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AntibodyPathogenBar } from "./recharts";
+import { AntibodyPathogenBar, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount } from "./recharts";
+import clsx from "clsx";
 
 const VisualizationCard = (props: {
   title: string;
+  subtitle?: string;
   children: React.ReactNode;
+  height?: string;
 }) => {
+  
+  
   return (
-    <Card className={"mb-4 mr-4"}>
-      <CardHeader>
-        <CardTitle>{props.title}</CardTitle>
-      </CardHeader>
-      <CardContent className={"px-0 h-72"}>{props.children}</CardContent>
+    <Card className={clsx("mb-4 mr-4 p-4 pt-0", props.height ?? "h-full sm:h-3/4 2xl:h-1/2 relative")}>
+      <h3 className="py-4 w-full text-center text-lg">{props.title}</h3>
+      {props.subtitle && <p className="py-4 w-full text-center text-sm">{props.subtitle}</p>}
+      <CardContent className={"px-0 h-full"}>{props.children}</CardContent>
     </Card>
   );
 };
@@ -27,15 +31,18 @@ const VisualizationCard = (props: {
 export default function ArboAnalyze() {
   return (
     <>
-      <div className={"col-span-5 row-span-2 flex flex-col overflow-auto"}>
-        <VisualizationCard title={"Count Antibody Pathogen - Client"}>
-          <CountOfStudiesStratifiedByAntibodyAndPathogen />
-        </VisualizationCard>
-        <VisualizationCard title={"Pathogen Seroprevalence"}>
-          <PathogenSeroprevalenceBoxPlot />
-        </VisualizationCard>
-        <VisualizationCard title={"Pathogen Seroprevalence"}>
+      <div className={"col-span-5 row-span-2 overflow-auto"}>
+        <VisualizationCard title={"Figure 1. Study count by pathogen & antibody type"}>
           <AntibodyPathogenBar />
+        </VisualizationCard>
+        <VisualizationCard title={"Figure 2. Cumulative study count over time by sample frame"}  height="h-full 2xl:h-3/4">
+          <StudyCountOverTimeBySampleFrame/>
+        </VisualizationCard>
+        <VisualizationCard title={"Figure 3. Cumulative study count over time by pathogen"}>
+          <StudyCountOverTime />
+        </VisualizationCard>
+        <VisualizationCard title={"Figure 4. Top ten countries with most studies by pathogen"} height="h-full">
+          <Top10CountriesByPathogenStudyCount />
         </VisualizationCard>
       </div>
       <div className={"col-span-5 row-span-2 overflow-auto"}>
