@@ -20,6 +20,8 @@ import { pathogenColors } from "../dashboard/(map)/MapAndFilters";
 
 //Study by who region and pathogen
 
+// TODO: future enhancement if needed is to extract the function to build the data and keep things cleaner (may not be needed, more readalbe this way
+
 //Study count by pathogen and antibody type
 
 type arbovirusesSF = "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV";
@@ -42,19 +44,24 @@ const convertArboSFtoArbo = (arbo: arbovirusesSF): arboviruses => {
     }
 }
 
-
-export function AntibodyPathogenBar() {
-  const state = useContext(ArboContext);
-
-  const data: {
-    isotype: string;
+interface dataStratifiedByArbovirus {
+    // X axis variable would be appended here
     Zika: number;
     Dengue: number;
     Chikengunia: number;
     'Yellow Fever': number;
     'West Nile': number;
     Mayaro: number;
-  }[] = [];
+}
+
+interface AntibodyIsotypeArbovirusData extends dataStratifiedByArbovirus {
+    isotype: string;
+} 
+
+export function AntibodyPathogenBar() {
+  const state = useContext(ArboContext);
+
+  const data: AntibodyIsotypeArbovirusData[] = [];
 
   state.filteredData.forEach((d: any) => {
     const antibody = d.antibodies.sort().join(", ");
@@ -107,18 +114,14 @@ export function AntibodyPathogenBar() {
 
 // Cumulative study count over time by pathogen
 
+interface StudyCountOverTime extends dataStratifiedByArbovirus {
+    year: number;
+}
+
 export function StudyCountOverTime() {
   const state = useContext(ArboContext);
 
-  const data: {
-    year: number;
-    Zika: number;
-    Dengue: number;
-    Chikengunia: number;
-    'Yellow Fever': number;
-    'West Nile': number;
-    Mayaro: number;
-  }[] = [];
+  const data: StudyCountOverTime[] = [];
 
   state.filteredData.forEach((d: any) => {
     const year = new Date(d.sample_end_date).getFullYear();
@@ -219,110 +222,17 @@ export function StudyCountOverTime() {
   );
 }
 
-//Cumulative Study count over time by smaple frame
-
-export function StudyCountOverTimeBySampleFrame() {
-  const state = useContext(ArboContext);
-
-  const sampleFrames = [
-    "Community",
-    "Positive cases of a different arbovirus",
-    "Pregnant or parturient women",
-    "Perinatal",
-    "Inpatients",
-    "Target group",
-    "Students and Daycares",
-    "Essential non-healthcare workers",
-    "Positive or suspected cases",
-    "Outpatients",
-    "Blood donors",
-  ];
-
-  const data: { year: number; [key: string]: number }[] = [];
-
-  state.filteredData.forEach((d: any) => {
-    const year = new Date(d.sample_end_date).getFullYear();
-    const sampleFrame = d.sample_frame;
-
-    const existingData = data.find((d) => d.year === year);
-
-    if (existingData) {
-      existingData[sampleFrame]++;
-    } else {
-      const newData: { year: number; [key: string]: number } = { year: year };
-      sampleFrames.forEach(
-        (frame) => (newData[frame] = frame === sampleFrame ? 1 : 0)
-      );
-      data.push(newData);
-    }
-  });
-
-  data.sort((a, b) => a.year - b.year);
-
-  for (let i = 1; i < data.length; i++) {
-    sampleFrames.forEach((frame) => (data[i][frame] += data[i - 1][frame]));
-  }
-
-  const sampleFrameColors: { [key: string]: string } = {
-    Community: "#FF5733",
-    "Positive cases of a different arbovirus": "#C70039",
-    "Pregnant or parturient women": "#900C3F",
-    Perinatal: "#581845",
-    Inpatients: "#1C2833",
-    "Target group": "#B2BABB",
-    "Students and Daycares": "#2E4053",
-    "Essential non-healthcare workers": "#D5D8DC",
-    "Positive or suspected cases": "#85C1E9",
-    Outpatients: "#AED6F1",
-    "Blood donors": "#A569BD",
-  };
-
-  return (
-    <ResponsiveContainer width={"100%"}>
-      <AreaChart
-        margin={{
-          top: 0,
-          right: 30,
-          left: 0,
-          bottom: 0,
-        }}
-        width={730}
-        height={500}
-        data={data}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="year" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        {sampleFrames.map((frame) => (
-          <Area
-            type="monotone"
-            dataKey={frame}
-            stackId="1"
-            stroke={sampleFrameColors[frame]}
-            fill={sampleFrameColors[frame]}
-          />
-        ))}
-      </AreaChart>
-    </ResponsiveContainer>
-  );
-}
 
 //Top 10 countries with most studies by pathogen
+
+interface Top10CountriesByPathogenStudyCount extends dataStratifiedByArbovirus {
+    country: string;
+}
 
 export function Top10CountriesByPathogenStudyCount() {
   const state = useContext(ArboContext);
 
-  const data: {
-    country: string;
-    Dengue: number;
-    Zika: number;
-    Chikengunia: number;
-    'Yellow Fever': number;
-    'West Nile': number;
-    Mayaro: number;
-  }[] = [];
+  const data: Top10CountriesByPathogenStudyCount[] = [];
 
   state.filteredData.forEach((d: any) => {
     const country = d.country;
@@ -340,7 +250,7 @@ export function Top10CountriesByPathogenStudyCount() {
         Chikengunia: arbovirus === "Chikengunia" ? 1 : 0,
         'Yellow Fever': arbovirus === "Yellow Fever" ? 1 : 0,
         'West Nile': arbovirus === "West Nile" ? 1 : 0,
-        'Mayaro': arbovirus === "Mayaro" ? 1 : 0,
+        Mayaro: arbovirus === "Mayaro" ? 1 : 0,
       });
     }
   });
@@ -470,3 +380,95 @@ export function Top10CountriesByPathogenStudyCount() {
     </div>
   );
 }
+
+
+//Cumulative Study count over time by smaple frame
+
+export function StudyCountOverTimeBySampleFrame() {
+    const state = useContext(ArboContext);
+  
+    const sampleFrames = [
+      "Community",
+      "Positive cases of a different arbovirus",
+      "Pregnant or parturient women",
+      "Perinatal",
+      "Inpatients",
+      "Target group",
+      "Students and Daycares",
+      "Essential non-healthcare workers",
+      "Positive or suspected cases",
+      "Outpatients",
+      "Blood donors",
+    ];
+  
+    const data: { year: number; [key: string]: number }[] = [];
+  
+    state.filteredData.forEach((d: any) => {
+      const year = new Date(d.sample_end_date).getFullYear();
+      const sampleFrame = d.sample_frame;
+  
+      const existingData = data.find((d) => d.year === year);
+  
+      if (existingData) {
+        existingData[sampleFrame]++;
+      } else {
+        const newData: { year: number; [key: string]: number } = { year: year };
+        sampleFrames.forEach(
+          (frame) => (newData[frame] = frame === sampleFrame ? 1 : 0)
+        );
+        data.push(newData);
+      }
+    });
+  
+    data.sort((a, b) => a.year - b.year);
+  
+    for (let i = 1; i < data.length; i++) {
+      sampleFrames.forEach((frame) => (data[i][frame] += data[i - 1][frame]));
+    }
+  
+    const sampleFrameColors: { [key: string]: string } = {
+      Community: "#FF5733",
+      "Positive cases of a different arbovirus": "#C70039",
+      "Pregnant or parturient women": "#900C3F",
+      Perinatal: "#581845",
+      Inpatients: "#1C2833",
+      "Target group": "#B2BABB",
+      "Students and Daycares": "#2E4053",
+      "Essential non-healthcare workers": "#D5D8DC",
+      "Positive or suspected cases": "#85C1E9",
+      Outpatients: "#AED6F1",
+      "Blood donors": "#A569BD",
+    };
+  
+    return (
+      <ResponsiveContainer width={"100%"}>
+        <AreaChart
+          margin={{
+            top: 0,
+            right: 30,
+            left: 0,
+            bottom: 0,
+          }}
+          width={730}
+          height={500}
+          data={data}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="year" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          {sampleFrames.map((frame) => (
+            <Area
+              key={frame}
+              type="monotone"
+              dataKey={frame}
+              stackId="1"
+              stroke={sampleFrameColors[frame]}
+              fill={sampleFrameColors[frame]}
+            />
+          ))}
+        </AreaChart>
+      </ResponsiveContainer>
+    );
+  }
