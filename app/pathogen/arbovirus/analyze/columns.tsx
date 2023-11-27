@@ -37,8 +37,8 @@ export type Estimate = {
   url: string;
 };
 
-const get_header = (columnName: string) => ({ column }: HeaderContext<Estimate, unknown>): React.JSX.Element => {
-  return (
+const get_header = (columnName: string) => {
+  const HeaderComponent: React.FC<HeaderContext<Estimate, unknown>> = ({ column }) => (
     <Button
       variant="ghost"
       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -47,6 +47,7 @@ const get_header = (columnName: string) => ({ column }: HeaderContext<Estimate, 
       <ArrowUpDown className="ml-2 h-4 w-4" />
     </Button>
   );
+  return HeaderComponent;
 };
 
 export const columns: ColumnDef<Estimate>[] = [
