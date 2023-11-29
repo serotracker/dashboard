@@ -13,7 +13,7 @@ import { ScrollText } from "lucide-react";
 import { getEsriVectorSourceStyle } from '@/utils/mapping-util';
 import { MapResources } from './map-config';
 import mapboxgl from 'mapbox-gl';
-import ArboStudyPopup from '../ArboStudyPopup';
+import { ArboStudyPopup } from '../ArboStudyPopup';
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
   ZIKV: "border-[#A0C4FF] data-[state=checked]:bg-[#A0C4FF]",
@@ -35,7 +35,6 @@ export const pathogenColors: { [key: string]: string } = {
 
 export default function MapAndFilters() {
   const dataQuery = useArboData();
-  const { arboMap } = useMap();
   const state = useContext(ArboContext);
   const [cursor, setCursor] = useState<string>('')
   const [popUpInfo, setPopUpInfo] = useState<any>({visible: false, data: null});
@@ -43,19 +42,7 @@ export default function MapAndFilters() {
     return process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string;
   }, [])
 
-  const onMouseEnter = ((event:mapboxgl.MapLayerMouseEvent) => {
-    if(!event.features || event.features.length == 0) {
-      return;
-    }
-
-    if(event.features.every((feature) => feature.layer.id == 'Arbovirus-pins')) {
-      setCursor('pointer')
-
-      return
-    }
-
-    setCursor('')
-  })
+  const { arboMap } = useMap();
 
   const getMapboxLatitudeOffset = (map: MapRef) => {
     // Map seems to zoom in in powers of 2, so reducing offset by powers of 2 keeps the modal apprximately
@@ -76,15 +63,10 @@ export default function MapAndFilters() {
     }
 
     if(event.features.every((feature) => feature.layer.id == 'Arbovirus-pins')) {
-      if(arboMap) {
-        arboMap.flyTo(
-          {center: [event.lngLat.lng, event.lngLat.lat - getMapboxLatitudeOffset(arboMap)]}
-        );
-      }
-
       setPopUpInfo({
         visible: true,
         data: {
+          id: event.features[0].properties?.id,
           latitude: event.features[0].properties?.latitude,
           longitude: event.features[0].properties?.longitude,
           city: event.features[0].properties?.city,
@@ -104,6 +86,21 @@ export default function MapAndFilters() {
       })
     }
   })
+
+  const onMouseEnter = ((event:mapboxgl.MapLayerMouseEvent) => {
+    if(!event.features || event.features.length == 0) {
+      return;
+    }
+
+    if(event.features.every((feature) => feature.layer.id == 'Arbovirus-pins')) {
+      setCursor('pointer')
+
+      return
+    }
+
+    setCursor('')
+  })
+
 
   const onMouseLeave = ((event:mapboxgl.MapLayerMouseEvent) => {
     if(!event.features || event.features.length == 0) {
@@ -128,6 +125,7 @@ export default function MapAndFilters() {
           coordinates: [record.latitude, record.longitude],
         },
         properties: {
+          id: record.id,
           title: record.title,
           latitude: record.latitude,
           longitude: record.longitude,
@@ -254,17 +252,9 @@ export default function MapAndFilters() {
                   }}
                 />
                   { (popUpInfo.visible && popUpInfo.data)  &&  (
-                  <Popup 
-                    anchor='top'
-                    style={{maxWidth:'none'}}
-                    closeOnClick={false}
-                    latitude={popUpInfo.data.longitude ?? 0}
-                    longitude={popUpInfo.data.latitude ?? 0}
-                  >
                     <ArboStudyPopup
                       record={popUpInfo.data}
                     />
-                  </Popup>
                   )}
               </Source>
             </Map>
