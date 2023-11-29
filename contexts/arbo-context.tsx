@@ -6,6 +6,7 @@ import React, {
   useEffect
 } from "react";
 import mapboxgl from "mapbox-gl";
+import { MapProvider, MapRef, useMap } from "react-map-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
 import {
@@ -61,32 +62,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   });
 }
 
-export function setMapboxFilters(
-  filters: { [key: string]: string[] },
-  map: mapboxgl.Map | null,
-) {
-  let mapboxFilters: any = [];
-
-  Object.keys(filters).forEach((filter: string) => {
-    const keyFilters: any = [];
-    if (filters[filter].length > 0) {
-      if(filter === "antibody") {
-        filters["antibody"].forEach((antibody: string) => {
-          keyFilters.push([">", ["index-of", antibody, ["get", "antibody"]], -1]);
-        });
-      } else {
-        filters[filter].forEach((filterValue: string) => {
-          keyFilters.push(["in", filterValue, ["get", filter]]);
-        });
-      }
-    }
-    if (keyFilters.length > 0) mapboxFilters.push(["any", ...keyFilters]);
-  });
-
-  if(map?.getLayer("Arbovirus-pins")) map?.setFilter("Arbovirus-pins", ["all", ...mapboxFilters]);
-}
-
-export const arboReducer = (state: ArboStateType, action: ArboAction) => {
+export const arboReducer = (state: ArboStateType, action: ArboAction, map: MapRef | undefined) => {
   switch (action.type) {
     case ArboActionType.UPDATE_FILTER:
       const selectedFilters = {
@@ -94,10 +70,8 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
         [action.payload.filter]: action.payload.value,
       };
 
-      if (action.payload.map) {
-        setMapboxFilters(selectedFilters, action.payload.map);
-
-        adjustMapPositionIfCountryFilterHasChanged(action);
+      if (map) {
+        adjustMapPositionIfCountryFilterHasChanged(action, map);
       }
 
       return {
@@ -120,7 +94,8 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
 };
 
 const adjustMapPositionIfCountryFilterHasChanged = (
-  action: ArboAction
+  action: ArboAction,
+  map: MapRef
 ): void => {
   if (action.payload.filter === "country") {
     const allSelectedCountryBoundingBoxes = action.payload.value
@@ -128,7 +103,7 @@ const adjustMapPositionIfCountryFilterHasChanged = (
       .filter((boundingBox: CountryBoundingBox) => !!boundingBox);
 
     if(allSelectedCountryBoundingBoxes.length === 0) {
-      action.payload.map.fitBounds([-180, -90, 180, 90]);
+      map.fitBounds([-180, -90, 180, 90]);
 
       return;
     }
@@ -137,7 +112,7 @@ const adjustMapPositionIfCountryFilterHasChanged = (
       allSelectedCountryBoundingBoxes
     );
 
-    action.payload.map.fitBounds(boundingBoxToMoveMapTo);
+    map.fitBounds(boundingBoxToMoveMapTo);
   }
 };
 
@@ -157,16 +132,19 @@ export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
   });
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <FilteredDataProvider>
-        {children}
-      </FilteredDataProvider>
-    </QueryClientProvider>
+    <MapProvider>
+      <QueryClientProvider client={queryClient}>
+        <FilteredDataProvider>
+          {children}
+        </FilteredDataProvider>
+      </QueryClientProvider>
+    </MapProvider>
   );
 };
 
 const FilteredDataProvider = ({children}: {children: React.ReactNode}) => {
-  const [state, dispatch] = useReducer(arboReducer, initialState);
+  const { arboMap } = useMap();
+  const [state, dispatch] = useReducer((state: ArboStateType, action: ArboAction) => arboReducer(state,action,arboMap), initialState);
   const dataQuery = useArboData();
 
   useEffect(() => {

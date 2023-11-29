@@ -15,7 +15,6 @@ const addFilterMulti = (
   value: string[],
   newFilter: string,
   state: ArboContextType,
-  map: mapboxgl.Map | null | undefined,
   data: any,
 ) => {
   state.dispatch({
@@ -23,7 +22,6 @@ const addFilterMulti = (
     payload: {
       filter: newFilter,
       value: value,
-      map: map,
       data: data ? data : [],
     },
   });
@@ -34,7 +32,6 @@ const buildFilterDropdown = (
   placeholder: string,
   state: ArboContextType,
   filterOptions: string[],
-  map: mapboxgl.Map | null | undefined,
   data: any,
 ) => {
 
@@ -43,7 +40,7 @@ const buildFilterDropdown = (
       <div className="pb-3">
         <MultiSelect
           handleOnChange={(value) =>
-            addFilterMulti(value, filter, state, map, data)
+            addFilterMulti(value, filter, state, data)
           }
           heading={placeholder}
           selected={state.selectedFilters[filter] ?? []}
@@ -53,9 +50,8 @@ const buildFilterDropdown = (
   );
 };
 
-export default function Filters(props: { map?: mapboxgl.Map | null }) {
+export default function Filters() {
   const state = useContext(ArboContext);
-  const { map } = props;
 
   const { data } = useArboData();
 
@@ -85,7 +81,6 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
               "Age Group",
               state,
               filters.data["age_group"],
-              map,
               data ? data.records : [],
             )}
           </div>
@@ -95,7 +90,6 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
               "Sex",
               state,
               filters.data["sex"],
-              map,
               data ? data.records : [],
             )}
           </div>
@@ -105,7 +99,6 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
               "Country",
               state,
               filters.data["country"],
-              map,
               data ? data.records : [],
             )}
           </div>
@@ -120,7 +113,6 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
               "Assay",
               state,
               filters.data["assay"],
-              map,
               data ? data.records : [],
             )}
           </div>
@@ -130,7 +122,6 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
               "Producer",
               state,
               filters.data["producer"],
-              map,
               data ? data.records : [],
             )}
           </div>
@@ -140,7 +131,6 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
               "Sample Frame",
               state,
               filters.data["sample_frame"],
-              map,
               data ? data.records : [],
             )}
           </div>
@@ -150,22 +140,18 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
               "Antibody",
               state,
               filters.data["antibody"],
-              map,
               data ? data.records : [],
             )}
           </div>
-          {!map && (
-            <div>
-              {buildFilterDropdown(
-                "pathogen",
-                "Pathogen",
-                state,
-                filters.data["pathogen"],
-                map,
-                data ? data.records : [],
-              )}
-            </div>
-          )}
+          <div>
+            {buildFilterDropdown(
+              "pathogen",
+              "Pathogen",
+              state,
+              filters.data["pathogen"],
+              data ? data.records : [],
+            )}
+          </div>
         </div>
       </div>
     );

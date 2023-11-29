@@ -1,13 +1,12 @@
 "use client";
 
-import { Map, Source, Layer, Popup } from 'react-map-gl';
+import { Map, Source, Layer, Popup, useMap, MapRef, NavigationControl } from 'react-map-gl';
 
-import useMap from "@/hooks/useMap";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import useArboData from "@/hooks/useArboData";
-import { ArboActionType, ArboContext, setMapboxFilters } from "@/contexts/arbo-context";
+import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollText } from "lucide-react";
@@ -36,6 +35,7 @@ export const pathogenColors: { [key: string]: string } = {
 
 export default function MapAndFilters() {
   const dataQuery = useArboData();
+  const { arboMap } = useMap();
   const state = useContext(ArboContext);
   const [cursor, setCursor] = useState<string>('')
   const [popUpInfo, setPopUpInfo] = useState<any>({visible: false, data: null});
@@ -57,6 +57,15 @@ export default function MapAndFilters() {
     setCursor('')
   })
 
+  const getMapboxLatitudeOffset = (map: MapRef) => {
+    // Map seems to zoom in in powers of 2, so reducing offset by powers of 2 keeps the modal apprximately
+    // in the same center everytime
+    // offset needs to reduce exponentially with zoom -- higher zoom x smaller offset
+    let mapZoom = map.getZoom();
+
+    return 80/(Math.pow(2, mapZoom))
+  }
+
   const onMouseDown = ((event:mapboxgl.MapLayerMouseEvent) => {
     console.log('onMouseDown', event.features);
 
@@ -67,6 +76,12 @@ export default function MapAndFilters() {
     }
 
     if(event.features.every((feature) => feature.layer.id == 'Arbovirus-pins')) {
+      if(arboMap) {
+        arboMap.flyTo(
+          {center: [event.lngLat.lng, event.lngLat.lat - getMapboxLatitudeOffset(arboMap)]}
+        );
+      }
+
       setPopUpInfo({
         visible: true,
         data: {
@@ -148,13 +163,9 @@ export default function MapAndFilters() {
       ),
   });
 
-  // Might have to find a way to make this synchronous instead of asynchronous
-  const { map, mapContainer } = useMap(dataQuery.data.records, "Arbovirus");
   const [mapStyle, setMapStyle] = useState(null);
 
   if (dataQuery.isSuccess && dataQuery.data) {
-    setMapboxFilters(state.selectedFilters, map!);
-
     const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
       const value = state.selectedFilters.pathogen;
 
@@ -170,7 +181,6 @@ export default function MapAndFilters() {
           data: dataQuery.data.records,
           filter: "pathogen",
           value: value,
-          map: map,
         },
       });
     };
@@ -196,6 +206,7 @@ export default function MapAndFilters() {
         >
           <div className={"w-full h-full p-0"}>
             <Map
+              id="arboMap"
               cursor={cursor}
               mapStyle={mapStyle}
               initialViewState={{
@@ -203,6 +214,8 @@ export default function MapAndFilters() {
                 longitude: 30,
                 zoom: 2,
               }}
+              attributionControl={false}
+              scrollZoom={false}
               minZoom={2}
               maxZoom={14}
               interactiveLayerIds={['Arbovirus-pins']}
@@ -211,6 +224,7 @@ export default function MapAndFilters() {
               onMouseDown={onMouseDown}
               onMouseLeave={onMouseLeave}
             >
+              <NavigationControl/>
               <Source id="arboStudyPins" type="geojson" data={geojsonData}>
                 <Layer
                   id="Arbovirus-pins"
@@ -309,7 +323,7 @@ export default function MapAndFilters() {
             <CardTitle>Filters</CardTitle>
           </CardHeader>
           <CardContent>
-            <Filters map={map} />
+            <Filters />
           </CardContent>
         </Card>
       </>
