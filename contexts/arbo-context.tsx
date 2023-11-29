@@ -83,7 +83,6 @@ export function setMapboxFilters(
     if (keyFilters.length > 0) mapboxFilters.push(["any", ...keyFilters]);
   });
 
-  console.log("Map Filters: ", ["all", ...mapboxFilters]);
   if(map?.getLayer("Arbovirus-pins")) map?.setFilter("Arbovirus-pins", ["all", ...mapboxFilters]);
 }
 

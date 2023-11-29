@@ -47,7 +47,11 @@ const getGeography = (city: string, state: string, country: string) => {
     return "" + renderOutGeography(city) + renderOutGeography(state)  + country
 }
 
-export default function ArboStudyPopup(record: any) {
+interface ArboStudyPopupProps {
+  record: any;
+}
+
+export default function ArboStudyPopup({ record }: ArboStudyPopupProps) {
     return (
         <div className="w-[460px] bg-white pt-2" >
             {/*Header section*/}

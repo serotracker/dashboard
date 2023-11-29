@@ -61,7 +61,6 @@ export function setMapboxFilters(
     if (keyFilters.length > 0) mapboxFilters.push(["any", ...keyFilters]);
   });
 
-  console.debug("Map Filters: ", ["all", ...mapboxFilters]);
   if(map?.getLayer("SarsCov2-pins")) map.setFilter("SarsCov2-pins", ["all", ...mapboxFilters]);
 }
 

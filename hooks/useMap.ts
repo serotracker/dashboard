@@ -16,7 +16,6 @@ function addArboDataLayers(map: mapboxgl.Map, data: any) {
   // Create mapbox source
   if(!map.getSource("arboStudyPins")){
     const arboStudyPins = data.map((record: any) => {
-      console.log(record.antibodies)
       return {
         type: "Feature",
         geometry: {
@@ -149,8 +148,6 @@ function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "Sa
     "click",
     `${pathogen}-pins`,
     function (e: mapboxgl.MapMouseEvent & mapboxgl.EventData) {
-      console.log(e.lngLat);
-
       if (pinPopup !== undefined) {
         pinPopup.remove();
       }
