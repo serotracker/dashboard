@@ -1,6 +1,6 @@
 import { Layer, Source } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { PathogenMapCursor } from "./use-pathogen-map-mouse-events";
+import { PathogenMapCursor } from "./use-pathogen-map-mouse";
 
 export interface PathogenMapLayerInfo<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase

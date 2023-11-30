@@ -14,7 +14,7 @@ import {
 import {
   PathogenMapCursor,
   usePathogenMapMouse,
-} from "./use-pathogen-map-mouse-events";
+} from "./use-pathogen-map-mouse";
 import {
   PathogenMapPopup,
   PopupContentGenerator,
