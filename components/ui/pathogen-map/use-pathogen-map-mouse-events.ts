@@ -16,7 +16,7 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
   const [cursor, setCursor] = useState<string>(baseCursor);
 
   const onMouseLeave = (event: mapboxgl.MapLayerMouseEvent) => {
-    if (!event.features || event.features.length == 0) {
+    if (!event.features || event.features.length === 0) {
       return;
     }
 
@@ -25,7 +25,7 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
 
 
   const onMouseEnter = (event: mapboxgl.MapLayerMouseEvent) => {
-    if (!event.features || event.features.length == 0) {
+    if (!event.features || event.features.length === 0) {
       return;
     }
 
@@ -40,7 +40,7 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
   };
 
   const onMouseDown = (event: mapboxgl.MapLayerMouseEvent) => {
-    if (!event.features || event.features.length == 0) {
+    if (!event.features || event.features.length === 0) {
       setPopUpInfo({ visible: false, properties: null });
 
       return;
