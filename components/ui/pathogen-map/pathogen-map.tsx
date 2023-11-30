@@ -90,7 +90,7 @@ export function PathogenMap<
     >
       <NavigationControl />
       {layers.map((layer) => (
-        <PathogenMapLayer layer={layer} />
+        <PathogenMapLayer key={layer.id} layer={layer} />
       ))}
       <PathogenMapPopup
         mapId={id}
