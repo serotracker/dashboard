@@ -5,7 +5,6 @@ import mapboxgl from "mapbox-gl";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import ReactDOMServer from "react-dom/server";
-import ArboStudyPopup from "@/app/pathogen/arbovirus/dashboard/ArboStudyPopup";
 import { Expressions } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import SarsCov2StudyPopup from "@/app/pathogen/sarscov2/dashboard/(map)/SarsCov2StudyPopup";
 
@@ -165,7 +164,7 @@ function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "Sa
           })
             .setLngLat(e.lngLat)
             .setMaxWidth("480px")
-            .setHTML(ReactDOMServer.renderToString(pathogen == "Arbovirus" ? ArboStudyPopup(study[0]) : SarsCov2StudyPopup(study[0])))
+            .setHTML(ReactDOMServer.renderToString(SarsCov2StudyPopup(study[0])))
             .addTo(map);
           
             map.flyTo({
