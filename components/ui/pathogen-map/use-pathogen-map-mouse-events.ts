@@ -40,8 +40,6 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
   };
 
   const onMouseDown = (event: mapboxgl.MapLayerMouseEvent) => {
-    console.log("onMouseDown", event.features);
-
     if (!event.features || event.features.length == 0) {
       setPopUpInfo({ visible: false, properties: null });
 
