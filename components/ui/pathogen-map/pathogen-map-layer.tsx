@@ -11,34 +11,36 @@ export interface PathogenMapLayerInfo<
   dataPoints: TPathogenDataPointProperties[];
 }
 
-export interface PathogenMapLayerProps<TPathogenDataPointProperties extends PathogenDataPointPropertiesBase>  {
-    layer: PathogenMapLayerInfo<TPathogenDataPointProperties>
+export interface PathogenMapLayerProps<
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+> {
+  layer: PathogenMapLayerInfo<TPathogenDataPointProperties>;
 }
 
 export function PathogenMapLayer<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 >({ layer }: PathogenMapLayerProps<TPathogenDataPointProperties>) {
-    const sourceId = `${layer.id}-[GENERATED-SOURCE-ID]`;
-    const geojsonData = {
-      type: "FeatureCollection" as const,
-      features: layer.dataPoints.map((dataPoint) => ({
-        type: "Feature" as const,
-        geometry: {
-          type: "Point" as const,
-          coordinates: [dataPoint.latitude ?? 0, dataPoint.longitude ?? 0],
-        },
-        properties: dataPoint,
-      })),
-    };
+  const sourceId = `${layer.id}-[GENERATED-SOURCE-ID]`;
+  const geojsonData = {
+    type: "FeatureCollection" as const,
+    features: layer.dataPoints.map((dataPoint) => ({
+      type: "Feature" as const,
+      geometry: {
+        type: "Point" as const,
+        coordinates: [dataPoint.latitude ?? 0, dataPoint.longitude ?? 0],
+      },
+      properties: dataPoint,
+    })),
+  };
 
-        return (
-          <Source id={sourceId} type="geojson" data={geojsonData}>
-            <Layer
-              id={layer.id}
-              type="circle"
-              source={sourceId}
-              paint={layer.layerPaint}
-            />
-          </Source>
-        );
+  return (
+    <Source id={sourceId} type="geojson" data={geojsonData}>
+      <Layer
+        id={layer.id}
+        type="circle"
+        source={sourceId}
+        paint={layer.layerPaint}
+      />
+    </Source>
+  );
 }
