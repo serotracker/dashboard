@@ -50,11 +50,16 @@ export function PathogenMapPopup<
     return null;
   }
 
+  // Not a typo, there is some kind of underlying problem here worth investigating that
+  // makes switching the latitude and longitude a required step to produce the correct results.
   const latitude = popUpInfo.properties.longitude ?? 0;
   const longitude = popUpInfo.properties.latitude ?? 0;
 
   const transformedProperties = Object.fromEntries(
     Object.entries(popUpInfo.properties).map(([key, value]) => {
+      // Arrays in popUpInfo.properties that reach this point have been converted from
+      // ["ABC", "DEF"] to '["ABC", "DEF"]'
+      // In order to proceed further, they need to be converted back to arrays.
       if (/^\[("[^\[\]\"]*",?)+\]$/.test(value)) {
         return [
           key,
