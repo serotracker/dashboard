@@ -8,7 +8,7 @@ import {
 import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
 import ArboDataTable from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AntibodyPathogenBar, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount } from "./recharts";
+import { AntibodyPathogenBar, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "./recharts";
 import clsx from "clsx";
 
 const VisualizationCard = (props: {
@@ -43,6 +43,9 @@ export default function ArboAnalyze() {
         </VisualizationCard>
         <VisualizationCard title={"Figure 4. Top ten countries with most studies by pathogen"} height="h-full">
           <Top10CountriesByPathogenStudyCount />
+        </VisualizationCard>
+        <VisualizationCard title={"Figure 5. Study Count by WHO region and Pathogen"}>
+          <WHORegionAndArbovirusBar />
         </VisualizationCard>
       </div>
       <div className={"col-span-5 row-span-2 overflow-auto"}>

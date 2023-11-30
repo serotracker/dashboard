@@ -84,7 +84,6 @@ export function AntibodyPathogenBar() {
     }
   });
 
-  console.log(data);
 
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
@@ -220,6 +219,69 @@ export function StudyCountOverTime() {
       </AreaChart>
     </ResponsiveContainer>
   );
+}
+
+interface WHORegionAndArbovirusData extends dataStratifiedByArbovirus {
+    region: string;
+}
+
+export function WHORegionAndArbovirusBar() {
+  const state = useContext(ArboContext);
+
+  const data: WHORegionAndArbovirusData[] = [];
+
+  console.log(state.filteredData[0])
+
+  state.filteredData.forEach((d: any) => {
+    const region = d.who_region;
+
+    const arbovirus: arboviruses = convertArboSFtoArbo(d.pathogen);
+
+    const existingData = _.find(data, { region: region });
+
+    if (existingData) {
+      (existingData[arbovirus] as number)++;
+    } else {
+      data.push({
+        region: region,
+        Zika: arbovirus === "Zika" ? 1 : 0,
+        Dengue: arbovirus === "Dengue" ? 1 : 0,
+        Chikengunia: arbovirus === "Chikengunia" ? 1 : 0,
+        'Yellow Fever': arbovirus === "Yellow Fever" ? 1 : 0,
+        'West Nile': arbovirus === "West Nile" ? 1 : 0,
+        Mayaro: arbovirus === "Mayaro" ? 1 : 0,
+      });
+    }
+  });
+
+  return (
+    <ResponsiveContainer width={"100%"} height={"100%"}>
+      <BarChart
+        width={730}
+        height={250}
+        data={data}
+        margin={{
+          top: 0,
+          right: 30,
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="region" />
+        <YAxis />
+        <Tooltip />
+        <Legend layout="vertical" verticalAlign="middle" align="right" wrapperStyle={{right: -10}}/>        
+        <Bar dataKey="Zika" stackId="a" fill={pathogenColors.ZIKV} />
+        <Bar dataKey="Dengue" stackId="a" fill={pathogenColors.DENV} />
+        <Bar dataKey="Chikengunia" stackId="a" fill={pathogenColors.CHIKV} />
+        <Bar dataKey="Yellow Fever" stackId="a" fill={pathogenColors.YF} />
+        <Bar dataKey="West Nile" stackId="a" fill={pathogenColors.WNV} />
+        <Bar dataKey="Mayaro" stackId="a" fill={pathogenColors.MAYV} />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+
 }
 
 
