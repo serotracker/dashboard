@@ -48,7 +48,7 @@ interface ArboStudyPopupContentProps {
   record: any;
 }
 
-export function ArboStudyPopupContext({ record }: ArboStudyPopupContentProps) {
+export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
   return (
     <div className="w-[460px] bg-white pt-2">
       {/*Header section*/}
@@ -105,50 +105,5 @@ export function ArboStudyPopupContext({ record }: ArboStudyPopupContentProps) {
       {/*RiskTag section*/}
       {pathogenTag(`${record.pathogen}`)}
     </div>
-  );
-}
-
-export function ArboStudyPopup({ record }: ArboStudyPopupContentProps) {
-  const { arboMap } = useMap();
-  const getMapboxLatitudeOffset = (map: MapRef) => {
-    // Map seems to zoom in in powers of 2, so reducing offset by powers of 2 keeps the modal apprximately
-    // in the same center everytime
-    // offset needs to reduce exponentially with zoom -- higher zoom x smaller offset
-    let mapZoom = map.getZoom();
-
-    return 80 / Math.pow(2, mapZoom);
-  };
-
-  console.log('record', record);
-
-  const generatePopup = (record: any) => {
-    return (
-      <Popup
-        key={record.id}
-        closeOnClick={false}
-        maxWidth="480px"
-        anchor="top"
-        latitude={record.longitude ?? 0}
-        longitude={record.latitude ?? 0}
-        onOpen={() => {
-          arboMap?.flyTo({
-            center: {
-              lat: (record.longitude ?? 0) - getMapboxLatitudeOffset(arboMap),
-              lon: (record.latitude ?? 0),
-            },
-            speed: 0.5,
-            curve: 0.5,
-          });
-        }}
-      >
-        <ArboStudyPopupContext record={record} />
-      </Popup>
-    );
-  };
-
-  return (
-    <>
-      {generatePopup(record)}
-    </>
   );
 }

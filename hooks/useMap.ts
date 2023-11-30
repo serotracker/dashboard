@@ -10,73 +10,6 @@ import SarsCov2StudyPopup from "@/app/pathogen/sarscov2/dashboard/(map)/SarsCov2
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string;
 
-function addArboDataLayers(map: mapboxgl.Map, data: any) {
-  
-  // Create mapbox source
-  if(!map.getSource("arboStudyPins")){
-    const arboStudyPins = data.map((record: any) => {
-      return {
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [record.latitude, record.longitude],
-        },
-        properties: {
-          title: record.title,
-          pathogen: record.pathogen,
-          id: record.id,
-          age_group: record.age_group,
-          sex: record.sex,
-          country: record.country,
-          assay: record.assay,
-          producer: record.producer,
-          sample_frame: record.sample_frame,
-          antibody: record.antibodies,
-        },
-      };
-    });
-
-    console.log("adding arbo source")
-    map.addSource("arboStudyPins", {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: arboStudyPins,
-      },
-    });
-  }
-
-  // Create mapbox circle layer for pins
-  if(map.getLayer("Arbovirus-pins")) map.removeLayer("Arbovirus-pins");
-  map.addLayer({
-    id: "Arbovirus-pins",
-    type: "circle",
-    source: "arboStudyPins",
-    paint: {
-      "circle-color": [
-        "match",
-        ["get", "pathogen"],
-        "ZIKV",
-        "#A0C4FF",
-        "CHIKV",
-        "#9BF6FF",
-        "WNV",
-        "#CAFFBF",
-        "DENV",
-        "#FFADAD",
-        "YF",
-        "#FFD6A5",
-        "MAYV",
-        "#FDFFB6",
-        "#FFFFFC",
-      ],
-      "circle-radius": 8,
-      "circle-stroke-color": "#333333",
-      "circle-stroke-width": 1,
-    },
-  });
-}
-
 function addSarsCov2DataLayers(map: mapboxgl.Map, data: any) {
   
   // Create mapbox source
@@ -147,6 +80,8 @@ function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "Sa
     "click",
     `${pathogen}-pins`,
     function (e: mapboxgl.MapMouseEvent & mapboxgl.EventData) {
+      console.log(e.lngLat);
+
       if (pinPopup !== undefined) {
         pinPopup.remove();
       }
@@ -180,7 +115,7 @@ function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "Sa
 
 export default function useMap(
   data: any,
-  pathogen: "Arbovirus" | "SarsCov2",
+  pathogen: "SarsCov2",
 ): {
   map: mapboxgl.Map | undefined;
   mapContainer: React.MutableRefObject<null>;
@@ -226,17 +161,8 @@ export default function useMap(
   useEffect(() => {
     if (map && pageIsMounted && data) {
       map.on("load", () => {
-        switch (pathogen) {
-          case "Arbovirus":
-            console.log("adding arbovirus layers")
-            addArboDataLayers(map as mapboxgl.Map, data);
-            break;
-          case "SarsCov2":
-            console.log("adding sarscov2 layers")
-            addSarsCov2DataLayers(map as mapboxgl.Map, data);
-            break;
-        }
-
+        console.log("adding sarscov2 layers")
+        addSarsCov2DataLayers(map as mapboxgl.Map, data);
       });
     }
   }, [data, map, pageIsMounted]);

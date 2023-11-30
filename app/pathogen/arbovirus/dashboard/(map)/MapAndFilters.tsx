@@ -8,7 +8,7 @@ import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollText } from "lucide-react";
-import { ArboStudyPopup } from '../ArboStudyPopup';
+import { ArboStudyPopupContent } from '../ArboStudyPopupContent';
 import { PathogenMap } from '@/components/ui/pathogen-map/pathogen-map';
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
@@ -99,7 +99,7 @@ export default function MapAndFilters() {
                   "circle-stroke-width": 1,
                 }
               }]}
-              generatePopupContent={(record) => (<ArboStudyPopup record={record}/>)}
+              generatePopupContent={(record) => (<ArboStudyPopupContent record={record}/>)}
             />
           </div>
           <Card className={"absolute bottom-1 right-1 "}>
