@@ -70,7 +70,7 @@ export function PathogenMap<
 
   return (
     <Map
-      id="arboMap"
+      id={id}
       cursor={cursor}
       mapStyle={mapStyle}
       initialViewState={{
