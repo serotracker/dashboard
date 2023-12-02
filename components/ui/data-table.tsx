@@ -96,10 +96,10 @@ export function DataTable<TData, TValue>({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-foreground">
-            <Button variant="outline" className="ml-auto" onClick={handleSelectAll}>
+            <Button variant="outline" className="ml-auto bg-white" onClick={handleSelectAll}>
                 Select All
             </Button>
-            <Button variant="outline" className="ml-auto" onClick={handleClearAll}>
+            <Button variant="outline" className="ml-auto bg-white" onClick={handleClearAll}>
                 Clear All
             </Button>
             {table
