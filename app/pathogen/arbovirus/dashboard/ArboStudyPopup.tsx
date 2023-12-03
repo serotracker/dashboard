@@ -80,7 +80,6 @@ export default function ArboStudyPopup(record: any) {
                 {row("Antibody Target",  record.antibodies.join(', '))}
                 {row("Antigen", record.antigen)}
                 {row("Assay", record.assay)}
-                {row("LngLat", record.longitude + " " + record.latitude)}
             </div>
             {/*RiskTag section*/}
             {pathogenTag(`${record.pathogen}`)}
