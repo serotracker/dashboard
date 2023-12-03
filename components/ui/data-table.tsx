@@ -10,7 +10,7 @@ import {
   VisibilityState,
   getFilteredRowModel,
 } from "@tanstack/table-core";
-import { flexRender, useReactTable } from "@tanstack/react-table";
+import { Column, flexRender, useReactTable } from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -60,6 +60,21 @@ export function DataTable<TData, TValue>({
       columnVisibility,
     },
   });
+
+  const getAllVisibleData = () => {
+    let visibleColumns = table.getAllColumns().filter(column => column.getIsVisible()) // map(column => {})
+    let column_keys: string[] = visibleColumns.map(column => {return column.id})
+    const newArrayWithSubsetAttributes: Record<string, any>[] = data.map((originalObject: any) => {
+      const newObj: Record<string, any> = {};
+    
+      column_keys.forEach((attribute) => {
+        newObj[attribute] = originalObject[attribute];
+      });
+      return newObj;
+    }); 
+    console.log(newArrayWithSubsetAttributes)
+    return newArrayWithSubsetAttributes
+  }
 
   return (
     <div>
@@ -176,6 +191,16 @@ export function DataTable<TData, TValue>({
             Next
           </Button>
         </div>
+      </div>
+      <div className="flex items-center space-x-2 py-4">
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => getAllVisibleData()}
+            className="bg-white"
+          >
+            Download CSV
+          </Button>
       </div>
     </div>
   );
