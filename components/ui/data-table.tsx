@@ -32,6 +32,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { mkConfig, generateCsv, download } from "export-to-csv";
 
 export function DataTable<TData, TValue>({
   columns,
@@ -62,18 +63,21 @@ export function DataTable<TData, TValue>({
   });
 
   const getAllVisibleData = () => {
+    // Get the columns we want in the csv
     let visibleColumns = table.getAllColumns().filter(column => column.getIsVisible()) // map(column => {})
     let column_keys: string[] = visibleColumns.map(column => {return column.id})
+    // Gather the subset of data we want
     const newArrayWithSubsetAttributes: Record<string, any>[] = data.map((originalObject: any) => {
       const newObj: Record<string, any> = {};
-    
       column_keys.forEach((attribute) => {
         newObj[attribute] = originalObject[attribute];
       });
       return newObj;
     }); 
-    console.log(newArrayWithSubsetAttributes)
-    return newArrayWithSubsetAttributes
+  // Export the csv
+  const csvConfig = mkConfig({ useKeysAsHeaders: true, filename: "data" });
+  let csv = generateCsv(csvConfig)(newArrayWithSubsetAttributes)
+  download(csvConfig)(csv)
   }
 
   return (
@@ -192,7 +196,7 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
       </div>
-      <div className="flex items-center space-x-2 py-4">
+      <div className="flex items-center space-x-2 py-4 justify-center">
           <Button
             variant="outline"
             size="lg"
