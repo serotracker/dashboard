@@ -61,7 +61,7 @@ export default function ArboStudyPopup(record: any) {
                 </div>
             </div>
             {/*SeroPrev section*/}
-            <div className={`"flex justify-between bg-${record.pathogen.toString().toLowerCase()} w-full py-2 px-4"`}>
+            <div className={`flex justify-between bg-${record.pathogen.toString().toLowerCase()} w-full py-2 px-4`}>
                 <div className={"font-semibold"}>
                     {"Seroprevalence"}: <b> {`${(record.seroprevalence * 100).toFixed(1)}%`}</b>
                 </div>
