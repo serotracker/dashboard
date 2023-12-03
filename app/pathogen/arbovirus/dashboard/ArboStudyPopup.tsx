@@ -53,7 +53,7 @@ export default function ArboStudyPopup(record: any) {
             {/*Header section*/}
             <div className={"py-2 px-4"}>
                 <div className="text-lg font-bold">
-                   {`${record.pathogen} Estimate Study`}
+                   {`${record.pathogen} Estimate`}
                 </div>
                 <div className={"text-sm text-blue-600"}>
                     {record.url ? <a href={record.url} target="_blank" rel="noopener noreferrer"> {record.url} </a> : "NO URL"}
