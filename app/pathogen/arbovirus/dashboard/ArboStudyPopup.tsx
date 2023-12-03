@@ -26,6 +26,26 @@ function pathogenTag(pathogen: string) {
     )
 }
 
+function pathogenFullString(pathogen: string) {
+    switch (pathogen) {
+        case "DENV":
+          return "Dengue Virus";
+        case "ZIKV":
+          return "Zika Virus";
+        case "CHIKV":
+          return "Chikungunya Virus";
+        case "YF":
+          return "Yellow Fever";
+        case "WNV":
+          return "West Nile Virus";
+        case "MAYV":
+          return "Mayaro Virus";
+        default:
+          return "Unknown";
+      }
+
+}
+
 const getGeography = (city: string, state: string, country: string) => {
     if (!country) {
         return "Not Reported";
@@ -60,9 +80,9 @@ export default function ArboStudyPopup(record: any) {
                 </div>
             </div>
             {/*SeroPrev section*/}
-            <div className={`flex justify-between bg-${record.pathogen.toString().toLowerCase()} w-full py-2 px-4`}>
+            <div className={`flex justify-between bg-${record.pathogen.toLowerCase()} w-full py-2 px-4`}>
                 <div className={"font-semibold"}>
-                    {"Seroprevalence"}: <b> {`${(record.seroprevalence * 100).toFixed(1)}%`}</b>
+                    {"Seroprevalence"}: <b> {`${(record.seroprevalence * 100).toFixed(1)}% (Arbovirus: ${pathogenFullString(record.pathogen)})`}</b>
                 </div>
             </div>
             {/*Content section*/}
