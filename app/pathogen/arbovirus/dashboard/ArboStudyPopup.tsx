@@ -81,7 +81,5 @@ export default function ArboStudyPopup(record: any) {
                 {row("Antigen", record.antigen)}
                 {row("Assay", record.assay)}
             </div>
-            {/*RiskTag section*/}
-            {pathogenTag(`${record.pathogen}`)}
         </div>)
 }
