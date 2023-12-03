@@ -43,7 +43,6 @@ function pathogenFullString(pathogen: string) {
         default:
           return "Unknown";
       }
-
 }
 
 const getGeography = (city: string, state: string, country: string) => {
@@ -63,7 +62,6 @@ const getGeography = (city: string, state: string, country: string) => {
             return geoTrimmed.join(", ") + ", ";
         }
     }
-
     return "" + renderOutGeography(city) + renderOutGeography(state)  + country
 }
 
