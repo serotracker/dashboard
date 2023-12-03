@@ -8,7 +8,7 @@ import {
 import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
 import ArboDataTable from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AntibodyPathogenBar, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "./recharts";
+import { AntibodyPathogenBar, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "./recharts";
 import clsx from "clsx";
 
 const VisualizationCard = (props: {
@@ -32,21 +32,29 @@ export default function ArboAnalyze() {
   return (
     <>
       <div className={"col-span-5 row-span-2 overflow-auto"}>
-        <VisualizationCard title={"Figure 1. Study count by pathogen & antibody type"}>
+        <VisualizationCard title={"Study count by pathogen & antibody type"}>
           <AntibodyPathogenBar />
         </VisualizationCard>
-        <VisualizationCard title={"Figure 2. Cumulative study count over time by sample frame"}  height="h-full 2xl:h-3/4">
-          <StudyCountOverTimeBySampleFrame/>
-        </VisualizationCard>
-        <VisualizationCard title={"Figure 3. Cumulative study count over time by pathogen"}>
-          <StudyCountOverTime />
-        </VisualizationCard>
-        <VisualizationCard title={"Figure 4. Top ten countries with most studies by pathogen"} height="h-full">
-          <Top10CountriesByPathogenStudyCount />
-        </VisualizationCard>
-        <VisualizationCard title={"Figure 5. Study Count by WHO region and Pathogen"}>
+        <VisualizationCard title={"Study Count by WHO region and Pathogen"}>
           <WHORegionAndArbovirusBar />
         </VisualizationCard>
+        <VisualizationCard title={"Study Count by Pathogen and WHO Region"} height="h-full">
+          <MedianSeroPrevByWHOregion />
+        </VisualizationCard>
+        <VisualizationCard title={"Medisan Seroprevalence by WHO region and age group"} height="h-full">
+          <MedianSeroPrevByWHOregionAndAgeGroup />
+        </VisualizationCard>
+        <VisualizationCard title={"Cumulative study count over time by pathogen"}>
+          <StudyCountOverTime />
+        </VisualizationCard>
+        <VisualizationCard title={"Cumulative study count over time by sample frame"}  height="h-full 2xl:h-3/4">
+          <StudyCountOverTimeBySampleFrame/>
+        </VisualizationCard>
+        <VisualizationCard title={"Top ten countries with most studies by pathogen"} height="h-full">
+          <Top10CountriesByPathogenStudyCount />
+        </VisualizationCard>
+        
+        
       </div>
       <div className={"col-span-5 row-span-2 overflow-auto"}>
         <ArboDataTable />
