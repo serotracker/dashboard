@@ -48,7 +48,6 @@ const getGeography = (city: string, state: string, country: string) => {
 }
 
 export default function ArboStudyPopup(record: any) {
-    console.log(record)
     return (
         <div className="w-[460px] bg-white pt-2" >
             {/*Header section*/}
