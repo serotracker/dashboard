@@ -5,6 +5,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { pathogenColors } from "../dashboard/(map)/MapAndFilters";
+import validator from "validator";
 
 export type Estimate = {
   age_group: string;
@@ -204,6 +205,12 @@ export const columns: ColumnDef<Estimate>[] = [
     accessorKey: "url",
     header: "Source",
     cell: ({ row }) => {
+      const url: string = row.getValue("url");
+
+      if(!validator.isURL(url)) {
+        return <p> URL unavailable </p>
+      }
+
       return (
         <Button onClick={() => window.open(row.getValue("url"))} className="w-full">
           {new URL(row.getValue("url")).hostname}
