@@ -45,6 +45,21 @@ function pathogenFullString(pathogen: string) {
       }
 }
 
+function getAntiBodyColor(antibody: string) {
+switch (antibody) {
+    case "IgG": 
+      return "bg-blue-700 text-white"
+    case "IgM": 
+        return "bg-black text-white"
+    case "IgAM": 
+      return "bg-green-200"
+    case "NAb": 
+      return "bg-yellow-400"
+    default:
+      return "bg-sky-100"
+  }
+}
+
 const getGeography = (city: string, state: string, country: string) => {
     if (!country) {
         return "Not Reported";
@@ -89,9 +104,17 @@ export default function ArboStudyPopup(record: any) {
                 {row("Inclusion Criteria", record.inclusion_criteria ? record.inclusion_criteria : "Not Reported")}
                 {row("Location", getGeography(record.city, record.state, record.country))}
                 {row("Sample Size", record.sample_size?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
-                {row("Antibody Target",  record.antibodies.join(', '))}
+                <div className={"flex justify-between mb-2"}>
+                    <div className={"text-md font-semibold"}>
+                        AntiBody Target
+                    </div>
+                    <div className={"w-2/3"}>
+                    {record.antibodies.map((antibody: any, index: number) => (<span key={index} className={getAntiBodyColor(antibody)}>{antibody}</span>))}
+                    </div>
+                </div>
                 {row("Antigen", record.antigen)}
                 {row("Assay", record.assay)}
             </div>
         </div>)
 }
+// record.antibodies.map((antibody: any) => `<span class=${getAntiBodyColor(antibody)}>${antibody}</span>`).join(" "))
