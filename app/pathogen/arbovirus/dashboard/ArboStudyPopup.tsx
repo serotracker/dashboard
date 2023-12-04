@@ -85,7 +85,7 @@ export default function ArboStudyPopup(record: any) {
             </div>
             {/*Content section*/}
             <div className={"py-2 px-4 max-h-[250px] overflow-auto"}>
-                {row("Date", `${TranslateDate(record.sample_start_date)} to ${TranslateDate(record.sample_end_date)}`)}
+                {row("Sampling Date Range", `${TranslateDate(record.sample_start_date)} to ${TranslateDate(record.sample_end_date)}`)}
                 {row("Inclusion Criteria", record.inclusion_criteria ? record.inclusion_criteria : "Not Reported")}
                 {row("Location", getGeography(record.city, record.state, record.country))}
                 {row("Sample Size", record.sample_size?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
