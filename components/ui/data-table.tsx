@@ -74,10 +74,10 @@ export function DataTable<TData, TValue>({
       });
       return newObj;
     }); 
-  // Export the csv
-  const csvConfig = mkConfig({ useKeysAsHeaders: true, filename: "data" });
-  let csv = generateCsv(csvConfig)(newArrayWithSubsetAttributes)
-  download(csvConfig)(csv)
+    // Export the csv
+    const csvConfig = mkConfig({ useKeysAsHeaders: true, filename: "data" });
+    let csv = generateCsv(csvConfig)(newArrayWithSubsetAttributes)
+    download(csvConfig)(csv)
   }
 
   return (
