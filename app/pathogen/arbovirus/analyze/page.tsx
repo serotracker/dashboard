@@ -32,25 +32,25 @@ export default function ArboAnalyze() {
   return (
     <>
       <div className={"col-span-5 row-span-2 overflow-auto"}>
-        <VisualizationCard title={"Study count by pathogen & antibody type"}>
-          <AntibodyPathogenBar />
-        </VisualizationCard>
-        <VisualizationCard title={"Study Count by WHO region and Pathogen"}>
+        <VisualizationCard title={"Estimate Count by WHO region and Pathogen"}>
           <WHORegionAndArbovirusBar />
         </VisualizationCard>
-        <VisualizationCard title={"Study Count by Pathogen and WHO Region"} height="h-full">
+        <VisualizationCard title={"Estimate count by arbovirus & antibody type"}>
+          <AntibodyPathogenBar />
+        </VisualizationCard>
+        <VisualizationCard title={"Estimate Count by Pathogen and WHO Region"} height="h-full">
           <MedianSeroPrevByWHOregion />
         </VisualizationCard>
         <VisualizationCard title={"Medisan Seroprevalence by WHO region and age group"} height="h-full">
           <MedianSeroPrevByWHOregionAndAgeGroup />
         </VisualizationCard>
-        <VisualizationCard title={"Cumulative study count over time by pathogen"}>
+        <VisualizationCard title={"Cumulative estimate count over time by arbovirus"}>
           <StudyCountOverTime />
         </VisualizationCard>
-        <VisualizationCard title={"Cumulative study count over time by sample frame"}  height="h-full 2xl:h-3/4">
+        <VisualizationCard title={"Cumulative estimate count over time by sample frame"}  height="h-full 2xl:h-3/4">
           <StudyCountOverTimeBySampleFrame/>
         </VisualizationCard>
-        <VisualizationCard title={"Top ten countries with most studies by pathogen"} height="h-full">
+        <VisualizationCard title={"Top ten countries reporting estimates by arbovirus"} height="h-full">
           <Top10CountriesByPathogenStudyCount />
         </VisualizationCard>
         

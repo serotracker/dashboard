@@ -33,6 +33,8 @@ type arboviruses =
   | "West Nile"
   | "Mayaro";
 
+type antibodies = "IgG" | "IgM" | "NAb" | "NR" | "IgG, IgM";
+
 const convertArboSFtoArbo = (arbo: arbovirusesSF): arboviruses => {
   switch (arbo) {
     case "DENV":
@@ -60,32 +62,34 @@ interface dataStratifiedByArbovirus {
   Mayaro: number;
 }
 
-interface AntibodyIsotypeArbovirusData extends dataStratifiedByArbovirus {
-  isotype: string;
-}
-
 export function AntibodyPathogenBar() {
   const state = useContext(ArboContext);
 
-  const data: AntibodyIsotypeArbovirusData[] = [];
+  const data: {
+    arbovirus: arboviruses;
+    IgG: number;
+    IgM: number;
+    NAb: number;
+    NR: number;
+    "IgG, IgM": number;
+  }[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const antibody = d.antibodies.sort().join(", ");
+    const antibody: antibodies = d.antibodies.sort().join(", ");
     const arbovirus: arboviruses = convertArboSFtoArbo(d.pathogen);
 
-    const existingData = _.find(data, { isotype: antibody });
+    const existingData = _.find(data, { arbovirus: arbovirus });
 
     if (existingData) {
-      existingData[arbovirus]++;
+      existingData[antibody]++;
     } else {
       data.push({
-        isotype: antibody,
-        Zika: arbovirus === "Zika" ? 1 : 0,
-        Dengue: arbovirus === "Dengue" ? 1 : 0,
-        Chikengunia: arbovirus === "Chikengunia" ? 1 : 0,
-        "Yellow Fever": arbovirus === "Yellow Fever" ? 1 : 0,
-        "West Nile": arbovirus === "West Nile" ? 1 : 0,
-        Mayaro: arbovirus === "Mayaro" ? 1 : 0,
+        arbovirus: arbovirus,
+        IgG: antibody === "IgG" ? 1 : 0,
+        IgM: antibody === "IgM" ? 1 : 0,
+        NAb: antibody === "NAb" ? 1 : 0,
+        NR: antibody === "NR" ? 1 : 0,
+        "IgG, IgM": antibody === "IgG, IgM" ? 1 : 0,
       });
     }
   });
@@ -94,7 +98,7 @@ export function AntibodyPathogenBar() {
     <ResponsiveContainer width={"100%"} height={"100%"}>
       <BarChart width={730} height={250} data={data}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="isotype" />
+        <XAxis dataKey="arbovirus" />
         <YAxis />
         <Tooltip />
         <Legend
@@ -103,12 +107,11 @@ export function AntibodyPathogenBar() {
           align="right"
           wrapperStyle={{ right: -10 }}
         />
-        <Bar dataKey="Zika" stackId="a" fill={pathogenColors.ZIKV} />
-        <Bar dataKey="Dengue" stackId="a" fill={pathogenColors.DENV} />
-        <Bar dataKey="Chikengunia" stackId="a" fill={pathogenColors.CHIKV} />
-        <Bar dataKey="Yellow Fever" stackId="a" fill={pathogenColors.YF} />
-        <Bar dataKey="West Nile" stackId="a" fill={pathogenColors.WNV} />
-        <Bar dataKey="Mayaro" stackId="a" fill={pathogenColors.MAYV} />
+        <Bar dataKey="IgG" stackId="a" fill={"purple"} />
+        <Bar dataKey="IgM" stackId="a" fill={"blue"} />
+        <Bar dataKey="IgG, IgM" stackId="a" fill={"green"} />
+        <Bar dataKey="NAb" stackId="a" fill={"orange"} />
+        <Bar dataKey="NR" stackId="a" fill={"red"} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -314,12 +317,20 @@ function median(values: number[]): number {
 }
 
 type WHORegion = "AFR" | "AMR" | "EMR" | "EUR" | "SEAR" | "WPR" | "N/A";
-const WHORegions: WHORegion[] = ["AFR", "AMR", "EMR", "EUR", "SEAR", "WPR", "N/A"];
+const WHORegions: WHORegion[] = [
+  "AFR",
+  "AMR",
+  "EMR",
+  "EUR",
+  "SEAR",
+  "WPR",
+  "N/A",
+];
 type AgeGroup =
   | "Adults (18-64 years)"
   | "Children and Youth (0-17 years)"
   | "Seniors (65+ years)"
-  | "Multiple Groups";
+  | "Multiple groups";
 
 export function MedianSeroPrevByWHOregion() {
   const state = useContext(ArboContext);
@@ -416,7 +427,7 @@ export function MedianSeroPrevByWHOregion() {
   return (
     <div className="h-full flex flex-row flex-wrap">
       {medianData.map((d, index) => (
-        <div className="w-1/2 h-1/3">
+        <div className="w-1/2 h-1/3" key={`med-seroprev-who-${d.arbovirus}`}>
           <h2 className="w-full text-center ">
             {convertArboSFtoArbo(d.arbovirus)}
           </h2>
@@ -434,7 +445,7 @@ export function MedianSeroPrevByWHOregion() {
             >
               <CartesianGrid />
               <XAxis dataKey="region" />
-              <YAxis domain={[0, 100]} hide={index % 2 != 0}/>
+              <YAxis domain={[0, 100]} hide={index % 2 != 0} />
               <Tooltip />
               <Bar dataKey={"median"} fill={pathogenColors[d.arbovirus]} />
             </BarChart>
@@ -466,7 +477,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
       "Adults (18-64 years)": string;
       "Children and Youth (0-17 years)": string;
       "Seniors (65+ years)": string;
-      "Multiple Groups": string;
+      "Multiple groups": string;
     }[];
   }[] = [];
 
@@ -474,56 +485,52 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
     const region: WHORegion = d.who_region ?? "N/A";
     const arbovirus: arbovirusesSF = d.pathogen;
     const seroprevalence = parseFloat(d.seroprevalence);
-    const ageGroup: AgeGroup = d.age_group ?? "Multiple Groups";
-    
-    if (!seroprevalenceData.find(
-      (data) => data.arbovirus === arbovirus
-    )) {
+    const ageGroup: AgeGroup = d.age_group ?? "Multiple groups";
+
+    if (!seroprevalenceData.find((data) => data.arbovirus === arbovirus)) {
       seroprevalenceData.push({
         arbovirus: arbovirus,
         AFR: {
-        "Adults (18-64 years)": [],
-        "Children and Youth (0-17 years)": [],
-        "Seniors (65+ years)": [],
-        "Multiple Groups": [],
-      },
+          "Adults (18-64 years)": [],
+          "Children and Youth (0-17 years)": [],
+          "Seniors (65+ years)": [],
+          "Multiple groups": [],
+        },
         AMR: {
           "Adults (18-64 years)": [],
           "Children and Youth (0-17 years)": [],
           "Seniors (65+ years)": [],
-          "Multiple Groups": [],
+          "Multiple groups": [],
         },
         EMR: {
           "Adults (18-64 years)": [],
           "Children and Youth (0-17 years)": [],
           "Seniors (65+ years)": [],
-          "Multiple Groups": [],
+          "Multiple groups": [],
         },
         EUR: {
           "Adults (18-64 years)": [],
           "Children and Youth (0-17 years)": [],
           "Seniors (65+ years)": [],
-          "Multiple Groups": [],
+          "Multiple groups": [],
         },
-        SEAR:
-        {
+        SEAR: {
           "Adults (18-64 years)": [],
           "Children and Youth (0-17 years)": [],
           "Seniors (65+ years)": [],
-          "Multiple Groups": [],
+          "Multiple groups": [],
         },
         WPR: {
           "Adults (18-64 years)": [],
           "Children and Youth (0-17 years)": [],
           "Seniors (65+ years)": [],
-          "Multiple Groups": [],
+          "Multiple groups": [],
         },
-        "N/A":
-        {
+        "N/A": {
           "Adults (18-64 years)": [],
           "Children and Youth (0-17 years)": [],
           "Seniors (65+ years)": [],
-          "Multiple Groups": [],
+          "Multiple groups": [],
         },
       });
     }
@@ -532,16 +539,17 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
       (data) => data.arbovirus === arbovirus
     );
 
-    if(existingData) {
+    if (existingData) {
       if (Array.isArray(existingData[region][ageGroup])) {
         existingData[region][ageGroup].push(seroprevalence);
       } else {
-        console.error(`Unexpected region: ${region}`);
+        console.error(`Unexpected region or ageGroup: ${region}, ${ageGroup}`, existingData);
       }
     } else {
-      console.error(`Missing seroprevalence data. Unexpected arbovirus or error saving: ${arbovirus}`)
+      console.error(
+        `Missing seroprevalence data. Unexpected arbovirus or error saving: ${arbovirus}`
+      );
     }
-    
   });
 
   seroprevalenceData.forEach((d) => {
@@ -550,13 +558,21 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
       "Adults (18-64 years)": string;
       "Children and Youth (0-17 years)": string;
       "Seniors (65+ years)": string;
-      "Multiple Groups": string;
-    }[] = WHORegions.map(region => ({
+      "Multiple groups": string;
+    }[] = WHORegions.map((region) => ({
       region,
-      "Adults (18-64 years)": (median(d[region]["Adults (18-64 years)"]) * 100).toFixed(1),
-      "Children and Youth (0-17 years)": (median(d[region]["Children and Youth (0-17 years)"]) * 100).toFixed(1),
-      "Seniors (65+ years)": (median(d[region]["Seniors (65+ years)"]) * 100).toFixed(1),
-      "Multiple Groups": (median(d[region]["Multiple Groups"]) * 100).toFixed(1),
+      "Adults (18-64 years)": (
+        median(d[region]["Adults (18-64 years)"]) * 100
+      ).toFixed(1),
+      "Children and Youth (0-17 years)": (
+        median(d[region]["Children and Youth (0-17 years)"]) * 100
+      ).toFixed(1),
+      "Seniors (65+ years)": (
+        median(d[region]["Seniors (65+ years)"]) * 100
+      ).toFixed(1),
+      "Multiple groups": (median(d[region]["Multiple groups"]) * 100).toFixed(
+        1
+      ),
     }));
 
     medianData.push({
@@ -564,14 +580,13 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
       data: dataToPush,
     });
   });
-    
 
   console.log(medianData);
 
   return (
     <div className="h-full flex flex-row flex-wrap">
       {medianData.map((d, index) => (
-        <div className="w-1/2 h-1/3">
+        <div className="w-1/2 h-1/3" key={`med-sero-prev-who-age-${d.arbovirus}`}>
           <h2 className="w-full text-center ">
             {convertArboSFtoArbo(d.arbovirus)}
           </h2>
@@ -591,12 +606,12 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
             >
               <CartesianGrid />
               <XAxis dataKey="region" />
-              <YAxis domain={[0, 100]} hide={index % 2 != 0}/>
+              <YAxis domain={[0, 100]} hide={index % 2 != 0} />
               <Tooltip />
               <Bar dataKey={"Children and Youth (0-17 years)"} fill={"red"} />
               <Bar dataKey={"Adults (18-64 years)"} fill={"green"} />
               <Bar dataKey={"Seniors (65+ years)"} fill={"blue"} />
-              <Bar dataKey={"Multiple Groups"} fill={"purple"} />
+              <Bar dataKey={"Multiple groups"} fill={"purple"} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -772,7 +787,7 @@ export function Top10CountriesByPathogenStudyCount() {
 export function StudyCountOverTimeBySampleFrame() {
   const state = useContext(ArboContext);
 
-  const sampleFrames = [
+  let sampleFrames = [
     "Community",
     "Positive cases of a different arbovirus",
     "Pregnant or parturient women",
@@ -807,6 +822,37 @@ export function StudyCountOverTimeBySampleFrame() {
 
   data.sort((a, b) => a.year - b.year);
 
+  // Calculate the total cumulative values for each sample frame
+  const totalCumulativeValues: { [key: string]: number } = {};
+  data.forEach((d) => {
+    sampleFrames.forEach((frame) => {
+      if (!totalCumulativeValues[frame]) {
+        totalCumulativeValues[frame] = 0;
+      }
+      totalCumulativeValues[frame] += d[frame];
+    });
+  });
+
+  // Find the 3 sample frames with the smallest total cumulative values
+  const smallestSampleFrames = Object.entries(totalCumulativeValues)
+    .sort(([, a], [, b]) => a - b)
+    .slice(0, 3)
+    .map(([frame]) => frame);
+
+  // Combine the 3 smallest sample frames into a single other category
+  data.forEach((d) => {
+    d["Other"] = smallestSampleFrames.reduce((acc, frame) => acc + d[frame], 0);
+    smallestSampleFrames.forEach((frame) => delete d[frame]);
+  });
+
+  // Update the sampleFrames array
+  sampleFrames = sampleFrames.filter(
+    (frame) => !smallestSampleFrames.includes(frame)
+  );
+  sampleFrames.push("Other");
+
+  console.debug("3 smallest sample frames:", smallestSampleFrames);
+
   for (let i = 1; i < data.length; i++) {
     sampleFrames.forEach((frame) => (data[i][frame] += data[i - 1][frame]));
   }
@@ -823,6 +869,7 @@ export function StudyCountOverTimeBySampleFrame() {
     "Positive or suspected cases": "#85C1E9",
     Outpatients: "#AED6F1",
     "Blood donors": "#A569BD",
+    Other: "#F4D03F",
   };
 
   return (
