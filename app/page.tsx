@@ -31,7 +31,7 @@ export default function Home() {
           header="SARSCoV2Tracker"
           subtitle="Access a collection of seroprevalence studies for SARS-CoV-2 that span across 38 million participants and 148 countries."
           backgroundImage={SarsCov2TrackerScreenshot}
-          route="/pathogen/sarscov2/dashboard"
+          route="https://serotracker.com"
         />
         <HomepageTile
           header="ArboTracker"
