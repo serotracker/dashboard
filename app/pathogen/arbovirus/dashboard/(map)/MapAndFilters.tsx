@@ -1,14 +1,17 @@
 "use client";
 
-import useMap from "@/hooks/useMap";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
+import Filters, {
+  FilterableField,
+} from "@/app/pathogen/arbovirus/dashboard/filters";
 import React, { useContext } from "react";
 import useArboData from "@/hooks/useArboData";
-import { ArboActionType, ArboContext, setMapboxFilters } from "@/contexts/arbo-context";
+import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollText } from "lucide-react";
+import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
+import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
   ZIKV: "border-[#A0C4FF] data-[state=checked]:bg-[#A0C4FF]",
@@ -36,16 +39,11 @@ export default function MapAndFilters() {
     queryKey: ["ArbovirusFilters"],
     queryFn: () =>
       fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/filter_options`).then(
-        (response) => response.json(),
+        (response) => response.json()
       ),
   });
 
-  // Might have to find a way to make this synchronous instead of asynchronous
-  const { map, mapContainer } = useMap(dataQuery.data.records, "Arbovirus");
-
   if (dataQuery.isSuccess && dataQuery.data) {
-    setMapboxFilters(state.selectedFilters, map!);
-
     const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
       const value = state.selectedFilters.pathogen;
 
@@ -61,7 +59,6 @@ export default function MapAndFilters() {
           data: dataQuery.data.records,
           filter: "pathogen",
           value: value,
-          map: map,
         },
       });
     };
@@ -73,7 +70,44 @@ export default function MapAndFilters() {
             "w-full h-full overflow-hidden col-span-6 row-span-2 relative"
           }
         >
-          <CardContent ref={mapContainer} className={"w-full h-full p-0"} />
+          <div className={"w-full h-full p-0"}>
+            <PathogenMap
+              id="arboMap"
+              baseCursor=""
+              layers={[
+                {
+                  id: "Arbovirus-pins",
+                  cursor: "pointer",
+                  dataPoints: state.filteredData,
+                  layerPaint: {
+                    "circle-color": [
+                      "match",
+                      ["get", "pathogen"],
+                      "ZIKV",
+                      "#A0C4FF",
+                      "CHIKV",
+                      "#9BF6FF",
+                      "WNV",
+                      "#CAFFBF",
+                      "DENV",
+                      "#FFADAD",
+                      "YF",
+                      "#FFD6A5",
+                      "MAYV",
+                      "#FDFFB6",
+                      "#FFFFFC",
+                    ],
+                    "circle-radius": 8,
+                    "circle-stroke-color": "#333333",
+                    "circle-stroke-width": 1,
+                  },
+                },
+              ]}
+              generatePopupContent={(record) => (
+                <ArboStudyPopupContent record={record} />
+              )}
+            />
+          </div>
           <Card className={"absolute bottom-1 right-1 "}>
             <CardHeader className={"py-3"}>
               <p>Pathogens</p>
@@ -93,7 +127,7 @@ export default function MapAndFilters() {
                         checked={
                           state.selectedFilters["pathogen"]
                             ? state.selectedFilters["pathogen"].includes(
-                                pathogen,
+                                pathogen
                               )
                             : false
                         }
@@ -128,7 +162,7 @@ export default function MapAndFilters() {
             <CardTitle>Filters</CardTitle>
           </CardHeader>
           <CardContent>
-            <Filters map={map} />
+            <Filters excludedFields={[FilterableField.pathogen]} />
           </CardContent>
         </Card>
       </>
