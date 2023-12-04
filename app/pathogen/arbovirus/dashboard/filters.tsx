@@ -6,14 +6,6 @@
  * The component fetches arbovirus data and filter options from the API, rendering the filters once the data is available.
  * It uses the ArboContext to manage global state and interacts with the map using the mapboxgl library.
  *
- * Directory Structure:
- * - contexts/
- *   - arbo-context.tsx: Defines the global context and actions for arbovirus-related data.
- * - hooks/
- *   - useArboData.tsx: Custom hook for fetching arbovirus data using React Query.
- * - components/
- *   - customs/
- *     - multi-select.tsx: Custom MultiSelect component for handling multi-select dropdowns.
  *
  * @see contexts/arbo-context.tsx
  * @see hooks/useArboData.tsx
@@ -98,7 +90,9 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
     // Dispatch action to reset filters
     state.dispatch({
       type: ArboActionType.RESET_FILTERS,
-      payload: {}, // Include an empty object as payload
+      payload: {
+        data: data ? data.records : [],
+      }, // Include an empty object as payload
     });
   };
 
@@ -108,7 +102,7 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
     return (
       <div>
         <div className="p-0">
-          <div>
+          <div className="pb-4">
             <SectionHeader
               header_text={"Demographic"}
               tooltip_text={
@@ -148,7 +142,7 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
           </div>
         </div>
         <div className="p-0">
-          <div>
+          <div className="pb-4">
             <SectionHeader
               header_text={"Study Information"}
               tooltip_text={"Filter on different types of study based metadata"}

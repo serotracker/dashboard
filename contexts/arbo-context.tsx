@@ -1,10 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useReducer,
-  useEffect
-} from "react";
+import React, { createContext, useReducer, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
@@ -47,12 +43,16 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   return data.filter((item: any) => {
     return filterKeys.every((key: string) => {
       if (!filters[key].length) return true;
-      if(key === "antibody") {
-        return item["antibodies"].some((element: string) => filters[key].includes(element));
+      if (key === "antibody") {
+        return item["antibodies"].some((element: string) =>
+          filters[key].includes(element)
+        );
       } else {
         if (Array.isArray(item[key])) {
           // If item[key] is an array, check if any element of item[key] is included in filters[key]
-          return item[key].some((element: string) => filters[key].includes(element));
+          return item[key].some((element: string) =>
+            filters[key].includes(element)
+          );
         } else {
           // If item[key] is a string, check if it's included in filters[key]
           return filters[key].includes(item[key]);
@@ -64,16 +64,20 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
 
 export function setMapboxFilters(
   filters: { [key: string]: string[] },
-  map: mapboxgl.Map | null,
+  map: mapboxgl.Map | null
 ) {
   let mapboxFilters: any = [];
 
   Object.keys(filters).forEach((filter: string) => {
     const keyFilters: any = [];
     if (filters[filter].length > 0) {
-      if(filter === "antibody") {
+      if (filter === "antibody") {
         filters["antibody"].forEach((antibody: string) => {
-          keyFilters.push([">", ["index-of", antibody, ["get", "antibody"]], -1]);
+          keyFilters.push([
+            ">",
+            ["index-of", antibody, ["get", "antibody"]],
+            -1,
+          ]);
         });
       } else {
         filters[filter].forEach((filterValue: string) => {
@@ -85,7 +89,8 @@ export function setMapboxFilters(
   });
 
   console.log("Map Filters: ", ["all", ...mapboxFilters]);
-  if(map?.getLayer("Arbovirus-pins")) map?.setFilter("Arbovirus-pins", ["all", ...mapboxFilters]);
+  if (map?.getLayer("Arbovirus-pins"))
+    map?.setFilter("Arbovirus-pins", ["all", ...mapboxFilters]);
 }
 
 export const arboReducer = (state: ArboStateType, action: ArboAction) => {
@@ -118,7 +123,7 @@ export const arboReducer = (state: ArboStateType, action: ArboAction) => {
     case ArboActionType.RESET_FILTERS:
       return {
         ...state,
-        filteredData: [],
+        filteredData: filterData(action.payload.data, {}),
         selectedFilters: initialState.selectedFilters,
         dataFiltered: false,
       };
@@ -136,7 +141,7 @@ const adjustMapPositionIfCountryFilterHasChanged = (
       .map((countryName: string) => getBoundingBoxFromCountryName(countryName))
       .filter((boundingBox: CountryBoundingBox) => !!boundingBox);
 
-    if(allSelectedCountryBoundingBoxes.length === 0) {
+    if (allSelectedCountryBoundingBoxes.length === 0) {
       action.payload.map.fitBounds([-180, -90, 180, 90]);
 
       return;
@@ -152,7 +157,9 @@ const adjustMapPositionIfCountryFilterHasChanged = (
 
 export const ArboContext = createContext<ArboContextType>({
   ...initialState,
-  dispatch: (obj) => {console.log("dispatch not initialized", obj)},
+  dispatch: (obj) => {
+    console.log("dispatch not initialized", obj);
+  },
 });
 
 export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
@@ -167,30 +174,30 @@ export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <FilteredDataProvider>
-        {children}
-      </FilteredDataProvider>
+      <FilteredDataProvider>{children}</FilteredDataProvider>
     </QueryClientProvider>
   );
 };
 
-const FilteredDataProvider = ({children}: {children: React.ReactNode}) => {
+const FilteredDataProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(arboReducer, initialState);
   const dataQuery = useArboData();
 
   useEffect(() => {
-    if(
+    if (
       state.filteredData.length === 0 &&
       !state.dataFiltered &&
-      'data' in dataQuery &&
-      !!dataQuery.data && typeof dataQuery.data === 'object' &&
-      'records' in dataQuery.data && Array.isArray(dataQuery.data.records) &&
+      "data" in dataQuery &&
+      !!dataQuery.data &&
+      typeof dataQuery.data === "object" &&
+      "records" in dataQuery.data &&
+      Array.isArray(dataQuery.data.records) &&
       dataQuery.data.records.length > 0
     ) {
       dispatch({
         type: ArboActionType.INITIAL_DATA_FETCH,
-        payload: {data: (dataQuery.data.records)}
-      })
+        payload: { data: dataQuery.data.records },
+      });
     }
   }, [dataQuery]);
 
@@ -198,8 +205,8 @@ const FilteredDataProvider = ({children}: {children: React.ReactNode}) => {
     <ArboContext.Provider value={{ ...state, dispatch: dispatch }}>
       {children}
     </ArboContext.Provider>
-  )
-}
+  );
+};
 
 export function Hydrate(props: HydrateProps) {
   return <RQHydrate {...props} />;

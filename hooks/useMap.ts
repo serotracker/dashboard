@@ -187,7 +187,7 @@ function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "Sa
   );
 }
 
-//Hook called in MapAndFilters to initalize mapbox map, content, logic 
+
 export default function useMap(
   data: any,
   pathogen: "Arbovirus" | "SarsCov2",
