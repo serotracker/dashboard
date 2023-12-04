@@ -22,6 +22,8 @@ import {
 import { Input } from "@/components/ui/input";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -61,6 +63,19 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const setAllColumnVisibility = (visibility: boolean) => {
+
+    // Iterate through all columns and toggle visibility based on selectAll state
+    table.getAllColumns().forEach((column) => {
+      if (column.getCanHide()) {
+        column.toggleVisibility(visibility);
+      }
+    });
+  };
+
+  const handleSelectAll = () => {setAllColumnVisibility(true)}
+  const handleClearAll = () => {setAllColumnVisibility(false)}
+
   return (
     <div>
       <div className="flex items-center py-4">
@@ -81,6 +96,12 @@ export function DataTable<TData, TValue>({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-foreground">
+            <Button variant="outline" className="ml-auto bg-white" onClick={handleSelectAll}>
+                Select All
+            </Button>
+            <Button variant="outline" className="ml-auto bg-white" onClick={handleClearAll}>
+                Clear All
+            </Button>
             {table
               .getAllColumns()
               .filter(
