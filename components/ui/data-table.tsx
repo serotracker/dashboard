@@ -75,7 +75,7 @@ export function DataTable<TData, TValue>({
       return newObj;
     }); 
     // Export the csv
-    const csvConfig = mkConfig({ useKeysAsHeaders: true, filename: "data" });
+    const csvConfig = mkConfig({ useKeysAsHeaders: true, filename: "arbotracker_dataset" });
     let csv = generateCsv(csvConfig)(newArrayWithSubsetAttributes)
     download(csvConfig)(csv)
   }
