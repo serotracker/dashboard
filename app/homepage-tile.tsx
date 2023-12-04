@@ -21,14 +21,11 @@ export const HomepageTile = ({
   const router = useRouter();
   return (
     <div
-      className={"w-1/2 h-full flex justify-center items-center"}
+      className={"w-1/2 h-full flex justify-center items-center homepage-tile"}
       style={{
         backgroundImage: `url(${backgroundImage.src})`,
-        border: "1px solid",
-        justifyContent: "flex-start",
         maxWidth: backgroundImage.width,
         maxHeight: backgroundImage.height,
-        borderRadius: "10px",
       }}
     >
       <div className={"homepage-tile-text-container"}>

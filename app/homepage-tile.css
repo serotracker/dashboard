@@ -1,3 +1,9 @@
+.homepage-tile {
+    border: 1px solid;
+    justify-content: flex-start;
+    border-radius: 10px;
+}
+
 .homepage-tile-button {
     background-color: none;
     display: flex;
