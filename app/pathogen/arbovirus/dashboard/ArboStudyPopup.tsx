@@ -74,7 +74,7 @@ export default function ArboStudyPopup(record: any) {
                    {`${record.pathogen} Estimate`}
                 </div>
                 <div className={"text-sm text-blue-600"}>
-                    {record.url ? <a href={record.url} target="_blank" rel="noopener noreferrer"> {record.url} </a> : "NO URL"}
+                    {record.url ? <a href={record.url} target="_blank" rel="noopener noreferrer"> {record.source_sheet_name ? record.source_sheet_name : record.url} </a> : "NO URL"}
                 </div>
             </div>
             {/*SeroPrev section*/}
