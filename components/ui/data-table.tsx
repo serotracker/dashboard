@@ -1,5 +1,5 @@
 "use client";
-// Adding a comment to the data table.
+
 import {
   ColumnDef,
   SortingState,
@@ -63,18 +63,18 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const [selectAll, setSelectAll] = useState(false);
-
-  const handleSelectAllChange = () => {
-    setSelectAll(!selectAll);
+  const setAllColumnVisibility = (visibility: boolean) => {
 
     // Iterate through all columns and toggle visibility based on selectAll state
     table.getAllColumns().forEach((column) => {
       if (column.getCanHide()) {
-        column.toggleVisibility(!selectAll);
+        column.toggleVisibility(visibility);
       }
     });
   };
+
+  const handleSelectAll = () => {setAllColumnVisibility(true)}
+  const handleClearAll = () => {setAllColumnVisibility(false)}
 
   return (
     <div>
@@ -96,14 +96,12 @@ export function DataTable<TData, TValue>({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-foreground">
-          <DropdownMenuCheckboxItem
-          key="selectAll"
-          className="capitalize"
-          checked={selectAll}
-          onCheckedChange={handleSelectAllChange}
-          >
-            All
-          </DropdownMenuCheckboxItem>
+            <Button variant="outline" className="ml-auto bg-white" onClick={handleSelectAll}>
+                Select All
+            </Button>
+            <Button variant="outline" className="ml-auto bg-white" onClick={handleClearAll}>
+                Clear All
+            </Button>
             {table
               .getAllColumns()
               .filter(
