@@ -37,7 +37,7 @@ export default async function ArboLayout({
   return (
     <div
       className={
-        "grid gap-4 grid-cols-12 grid-rows-2 grid-flow-col w-full h-full overflow-hidden"
+        "grid gap-4 grid-cols-12 grid-rows-2 grid-flow-col w-full h-full overflow-hidden p-4 border-box"
       }
     >
       <SarsCov2Providers>
