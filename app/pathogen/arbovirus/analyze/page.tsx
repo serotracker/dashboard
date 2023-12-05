@@ -1,24 +1,23 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  CountOfStudiesStratifiedByAntibodyAndPathogen,
-  CustomResponsiveBar,
-  PathogenSeroprevalenceBoxPlot,
-} from "@/app/pathogen/arbovirus/analyze/nivo-vis";
 import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
 import ArboDataTable from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { AntibodyPathogenBar, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "@/app/pathogen/arbovirus/analyze/recharts";
+import clsx from "clsx";
 
 const VisualizationCard = (props: {
   title: string;
   children: React.ReactNode;
+  height?: string;
 }) => {
+  
+  
   return (
-    <Card className={"mb-4 mr-4"}>
-      <CardHeader>
-        <CardTitle>{props.title}</CardTitle>
-      </CardHeader>
-      <CardContent className={"px-0 h-72"}>{props.children}</CardContent>
+    <Card className={clsx("mb-4 mr-4 p-4 pt-0", props.height ?? "h-full sm:h-3/4 2xl:h-1/2 relative")}>
+      <CardContent className={"px-0 h-full flex flex-col"}>
+        <h3 className="py-4 w-full text-center text-lg">{props.title}</h3>
+        {props.children}
+      </CardContent>
     </Card>
   );
 };
@@ -26,16 +25,30 @@ const VisualizationCard = (props: {
 export default function ArboAnalyze() {
   return (
     <>
-      <div className={"col-span-5 row-span-2 flex flex-col overflow-auto"}>
-        <VisualizationCard title={"Count Antibody Pathogen - Client"}>
-          <CountOfStudiesStratifiedByAntibodyAndPathogen />
+      <div className={"col-span-5 row-span-2 overflow-auto"}>
+        <VisualizationCard title={"Estimate count by WHO region and pathogen"}>
+          <WHORegionAndArbovirusBar />
         </VisualizationCard>
-        <VisualizationCard title={"Pathogen Seroprevalence"}>
-          <PathogenSeroprevalenceBoxPlot />
+        <VisualizationCard title={"Estimate count by arbovirus & antibody type"}>
+          <AntibodyPathogenBar />
         </VisualizationCard>
-        <VisualizationCard title={"Count Assay Pathogen - Server"}>
-          <CustomResponsiveBar />
+        <VisualizationCard title={"Median seroprevalence by WHO Region"} height="h-full">
+          <MedianSeroPrevByWHOregion />
         </VisualizationCard>
+        <VisualizationCard title={"Median seroprevalence by WHO region and age group"} height="h-full">
+          <MedianSeroPrevByWHOregionAndAgeGroup />
+        </VisualizationCard>
+        <VisualizationCard title={"Cumulative estimate count over time by arbovirus"}>
+          <StudyCountOverTime />
+        </VisualizationCard>
+        <VisualizationCard title={"Cumulative estimate count over time by sample frame"}  height="h-full 2xl:h-3/4">
+          <StudyCountOverTimeBySampleFrame/>
+        </VisualizationCard>
+        <VisualizationCard title={"Top ten countries reporting estimates by arbovirus"} height="h-full">
+          <Top10CountriesByPathogenStudyCount />
+        </VisualizationCard>
+        
+        
       </div>
       <div className={"col-span-5 row-span-2 overflow-auto"}>
         <ArboDataTable />

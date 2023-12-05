@@ -34,7 +34,7 @@ module.exports = {
         chikv: "#9BF6FF",
         wnv: "#CAFFBF",
         yf: "#FFD6A5",
-        mayv: "#FDFFB6",
+        mayv: "#c5a3ff",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
