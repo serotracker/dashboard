@@ -169,97 +169,24 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
 
     return (
       <div>
-        <div className="p-0">
-          <div className="pb-4">
-            <SectionHeader
-              header_text={"Demographic"}
-              tooltip_text={
-                "Filter on demographic variables, including population group, sex, and age group."
-              }
-            />
-          </div>
-          <div>
-            {buildFilterDropdown(
-              "age_group",
-              "Age Group",
-              state,
-              filters.data["age_group"],
-              data ? data.records : []
-            )}
-          </div>
-          <div>
-            {buildFilterDropdown(
-              "sex",
-              "Sex",
-              state,
-              filters.data["sex"],
-              data ? data.records : []
-            )}
-          </div>
-          <div>
-            {buildFilterDropdown(
-              "country",
-              "Country",
-              state,
-              filters.data["country"],
-              data ? data.records : []
-            )}
-          </div>
-        </div>
-        <div className="p-0">
-          <div className="pb-4">
-            <SectionHeader
-              header_text={"Study Information"}
-              tooltip_text={"Filter on different types of study based metadata"}
-            />
-          </div>
-          <div>
-            {buildFilterDropdown(
-              "assay",
-              "Assay",
-              state,
-              filters.data["assay"],
-              data ? data.records : []
-            )}
-          </div>
-          <div>
-            {buildFilterDropdown(
-              "producer",
-              "Assay Producer",
-              state,
-              filters.data["producer"],
-              data ? data.records : []
-            )}
-          </div>
-          <div>
-            {buildFilterDropdown(
-              "sample_frame",
-              "Sample Frame",
-              state,
-              filters.data["sample_frame"],
-              data ? data.records : []
-            )}
-          </div>
-          <div>
-            {buildFilterDropdown(
-              "antibody",
-              "Antibody",
-              state,
-              filters.data["antibody"],
-
-              data ? data.records : []
-            )}
-          </div>
-          <div>
-            {buildFilterDropdown(
-              "pathogen",
-              "Pathogen",
-              state,
-              filters.data["pathogen"],
-              data ? data.records : []
-            )}
-          </div>
-        </div>
+        <FilterSection
+          headerText="Demographic"
+          headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
+          fields={demographicFilters}
+          state={state}
+          filters={filters}
+          data={data}
+          filterableFieldToLabelMap={filterableFieldToLabelMap}
+        />
+        <FilterSection
+          headerText="Study Information"
+          headerTooltipText="Filter on different types of study based metadata"
+          fields={studyInformationFilters}
+          state={state}
+          filters={filters}
+          data={data}
+          filterableFieldToLabelMap={filterableFieldToLabelMap}
+        />
         <div>
           <button
             className="w-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 font-bold py-2 px-15 rounded"
