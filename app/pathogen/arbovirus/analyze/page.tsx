@@ -41,7 +41,7 @@ export default function ArboAnalyze() {
         <VisualizationCard title={"Median seroprevalence by WHO Region"} height="h-full">
           <MedianSeroPrevByWHOregion />
         </VisualizationCard>
-        <VisualizationCard title={"Medisan seroprevalence by WHO region and age group"} height="h-full">
+        <VisualizationCard title={"Median seroprevalence by WHO region and age group"} height="h-full">
           <MedianSeroPrevByWHOregionAndAgeGroup />
         </VisualizationCard>
         <VisualizationCard title={"Cumulative estimate count over time by arbovirus"}>

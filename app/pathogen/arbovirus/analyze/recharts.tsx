@@ -28,7 +28,7 @@ type arbovirusesSF = "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV";
 type arboviruses =
   | "Dengue"
   | "Zika"
-  | "Chikengunia"
+  | "Chikungunya"
   | "Yellow Fever"
   | "West Nile"
   | "Mayaro";
@@ -42,7 +42,7 @@ const convertArboSFtoArbo = (arbo: arbovirusesSF): arboviruses => {
     case "ZIKV":
       return "Zika";
     case "CHIKV":
-      return "Chikengunia";
+      return "Chikungunya";
     case "YF":
       return "Yellow Fever";
     case "WNV":
@@ -56,7 +56,7 @@ interface dataStratifiedByArbovirus {
   // X axis variable would be appended here
   Zika: number;
   Dengue: number;
-  Chikengunia: number;
+  Chikungunya: number;
   "Yellow Fever": number;
   "West Nile": number;
   Mayaro: number;
@@ -144,7 +144,7 @@ export function StudyCountOverTime() {
         year: year,
         Zika: arbovirus === "Zika" ? 1 : 0,
         Dengue: arbovirus === "Dengue" ? 1 : 0,
-        Chikengunia: arbovirus === "Chikengunia" ? 1 : 0,
+        Chikungunya: arbovirus === "Chikungunya" ? 1 : 0,
         "Yellow Fever": arbovirus === "Yellow Fever" ? 1 : 0,
         "West Nile": arbovirus === "West Nile" ? 1 : 0,
         Mayaro: arbovirus === "Mayaro" ? 1 : 0,
@@ -159,7 +159,7 @@ export function StudyCountOverTime() {
 
     element.Dengue += data[i - 1].Dengue;
     element.Zika += data[i - 1].Zika;
-    element.Chikengunia += data[i - 1].Chikengunia;
+    element.Chikungunya += data[i - 1].Chikungunya;
     element["Yellow Fever"] += data[i - 1]["Yellow Fever"];
     element["West Nile"] += data[i - 1]["West Nile"];
     element.Mayaro += data[i - 1].Mayaro;
@@ -204,7 +204,7 @@ export function StudyCountOverTime() {
         />
         <Area
           type="monotone"
-          dataKey="Chikengunia"
+          dataKey="Chikungunya"
           stackId="1"
           stroke={pathogenColors.CHIKV}
           fill={pathogenColors.CHIKV}
@@ -245,7 +245,7 @@ export function WHORegionAndArbovirusBar() {
   const data: WHORegionAndArbovirusData[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const region = d.who_region ?? "N/A";
+    const region = d.who_region;
 
     const arbovirus: arboviruses = convertArboSFtoArbo(d.pathogen);
 
@@ -253,12 +253,12 @@ export function WHORegionAndArbovirusBar() {
 
     if (existingData) {
       (existingData[arbovirus] as number)++;
-    } else {
+    } else if (region) {
       data.push({
         region: region,
         Zika: arbovirus === "Zika" ? 1 : 0,
         Dengue: arbovirus === "Dengue" ? 1 : 0,
-        Chikengunia: arbovirus === "Chikengunia" ? 1 : 0,
+        Chikungunya: arbovirus === "Chikungunya" ? 1 : 0,
         "Yellow Fever": arbovirus === "Yellow Fever" ? 1 : 0,
         "West Nile": arbovirus === "West Nile" ? 1 : 0,
         Mayaro: arbovirus === "Mayaro" ? 1 : 0,
@@ -291,7 +291,7 @@ export function WHORegionAndArbovirusBar() {
         />
         <Bar dataKey="Zika" stackId="a" fill={pathogenColors.ZIKV} />
         <Bar dataKey="Dengue" stackId="a" fill={pathogenColors.DENV} />
-        <Bar dataKey="Chikengunia" stackId="a" fill={pathogenColors.CHIKV} />
+        <Bar dataKey="Chikungunya" stackId="a" fill={pathogenColors.CHIKV} />
         <Bar dataKey="Yellow Fever" stackId="a" fill={pathogenColors.YF} />
         <Bar dataKey="West Nile" stackId="a" fill={pathogenColors.WNV} />
         <Bar dataKey="Mayaro" stackId="a" fill={pathogenColors.MAYV} />
@@ -316,7 +316,9 @@ function median(values: number[]): number {
     : (values[half - 1] + values[half]) / 2;
 }
 
-type WHORegion = "AFR" | "AMR" | "EMR" | "EUR" | "SEAR" | "WPR" | "N/A";
+
+
+type WHORegion = "AFR" | "AMR" | "EMR" | "EUR" | "SEAR" | "WPR";
 const WHORegions: WHORegion[] = [
   "AFR",
   "AMR",
@@ -324,13 +326,24 @@ const WHORegions: WHORegion[] = [
   "EUR",
   "SEAR",
   "WPR",
-  "N/A",
 ];
 type AgeGroup =
   | "Adults (18-64 years)"
   | "Children and Youth (0-17 years)"
   | "Seniors (65+ years)"
   | "Multiple groups";
+
+function CustomizedWHORegionTick(props: any) {
+  const { x, y, payload } = props;
+
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform="rotate(-35)">
+        {payload.value}
+      </text>
+    </g>
+  );
+}
 
 export function MedianSeroPrevByWHOregion() {
   const state = useContext(ArboContext);
@@ -343,7 +356,6 @@ export function MedianSeroPrevByWHOregion() {
     EUR: number[];
     SEAR: number[];
     WPR: number[];
-    "N/A": number[];
   }[] = [];
 
   const medianData: {
@@ -355,7 +367,7 @@ export function MedianSeroPrevByWHOregion() {
   }[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const region: WHORegion = d.who_region ?? "N/A";
+    const region: WHORegion = d.who_region;
     const arbovirus: arbovirusesSF = d.pathogen;
     const seroprevalence = parseFloat(d.seroprevalence);
     const existingData = seroprevalenceData.find(
@@ -376,7 +388,6 @@ export function MedianSeroPrevByWHOregion() {
         EUR: region === "EUR" ? [seroprevalence] : [],
         SEAR: region === "SEAR" ? [seroprevalence] : [],
         WPR: region === "WPR" ? [seroprevalence] : [],
-        "N/A": region === "N/A" ? [seroprevalence] : [],
       });
     }
   });
@@ -410,10 +421,6 @@ export function MedianSeroPrevByWHOregion() {
         region: "WPR",
         median: (median(d.WPR) * 100).toFixed(1),
       },
-      {
-        region: "N/A",
-        median: (median(d["N/A"]) * 100).toFixed(1),
-      },
     ];
 
     medianData.push({
@@ -437,14 +444,14 @@ export function MedianSeroPrevByWHOregion() {
                 top: 10,
                 right: 10,
                 left: index % 2 != 0 ? 40 : 0,
-                bottom: 30,
+                bottom: 40,
               }}
               width={500}
               height={450}
               data={d.data}
             >
               <CartesianGrid />
-              <XAxis dataKey="region" />
+              <XAxis dataKey="region" interval={0} tick={<CustomizedWHORegionTick />}/>
               <YAxis domain={[0, 100]} hide={index % 2 != 0} />
               <Tooltip />
               <Bar dataKey={"median"} fill={pathogenColors[d.arbovirus]} />
@@ -467,7 +474,6 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
     EUR: Record<AgeGroup, number[]>;
     SEAR: Record<AgeGroup, number[]>;
     WPR: Record<AgeGroup, number[]>;
-    "N/A": Record<AgeGroup, number[]>;
   }[] = [];
 
   const medianData: {
@@ -482,7 +488,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
   }[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const region: WHORegion = d.who_region ?? "N/A";
+    const region: WHORegion = d.who_region;
     const arbovirus: arbovirusesSF = d.pathogen;
     const seroprevalence = parseFloat(d.seroprevalence);
     const ageGroup: AgeGroup = d.age_group ?? "Multiple groups";
@@ -526,12 +532,6 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
           "Seniors (65+ years)": [],
           "Multiple groups": [],
         },
-        "N/A": {
-          "Adults (18-64 years)": [],
-          "Children and Youth (0-17 years)": [],
-          "Seniors (65+ years)": [],
-          "Multiple groups": [],
-        },
       });
     }
 
@@ -540,7 +540,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
     );
 
     if (existingData) {
-      if (Array.isArray(existingData[region][ageGroup])) {
+      if (existingData[region] && Array.isArray(existingData[region][ageGroup])) {
         existingData[region][ageGroup].push(seroprevalence);
       } else {
         console.error(`Unexpected region or ageGroup: ${region}, ${ageGroup}`, existingData);
@@ -596,7 +596,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
                 top: 10,
                 right: 10,
                 left: index % 2 === 0 ? 0 : 40,
-                bottom: 30,
+                bottom: 40,
               }}
               width={500}
               height={450}
@@ -605,7 +605,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
               barGap={0}
             >
               <CartesianGrid />
-              <XAxis dataKey="region" />
+              <XAxis dataKey="region" interval={0} tick={<CustomizedWHORegionTick />}/>
               <YAxis domain={[0, 100]} hide={index % 2 != 0} />
               <Tooltip />
               <Bar dataKey={"Children and Youth (0-17 years)"} fill={"red"} />
@@ -644,7 +644,7 @@ export function Top10CountriesByPathogenStudyCount() {
         country: country,
         Dengue: arbovirus === "Dengue" ? 1 : 0,
         Zika: arbovirus === "Zika" ? 1 : 0,
-        Chikengunia: arbovirus === "Chikengunia" ? 1 : 0,
+        Chikungunya: arbovirus === "Chikungunya" ? 1 : 0,
         "Yellow Fever": arbovirus === "Yellow Fever" ? 1 : 0,
         "West Nile": arbovirus === "West Nile" ? 1 : 0,
         Mayaro: arbovirus === "Mayaro" ? 1 : 0,
@@ -705,13 +705,13 @@ export function Top10CountriesByPathogenStudyCount() {
           layout="vertical"
           width={500}
           height={250}
-          data={data.sort((a, b) => b.Chikengunia - a.Chikengunia).slice(0, 10)}
+          data={data.sort((a, b) => b.Chikungunya - a.Chikungunya).slice(0, 10)}
         >
           <XAxis type="number" />
           <YAxis hide={true} dataKey="country" type="category" />
           <Legend verticalAlign="top" />
           <Tooltip />
-          <Bar dataKey="Chikengunia" fill={pathogenColors.CHIKV} />
+          <Bar dataKey="Chikungunya" fill={pathogenColors.CHIKV} />
         </BarChart>
       </ResponsiveContainer>
       <ResponsiveContainer width="50%" height="33%">
