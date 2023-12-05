@@ -6,10 +6,9 @@ import { HomepageTile } from "./homepage-tile";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-between h-full"
+    <div className="flex flex-col items-center justify-between h-full bg-no-repeat"
       style={{
         backgroundImage: `url(${HomepageSeroTrackerBackgroundImage.src})`,
-        backgroundRepeat: 'no-repeat',
         backgroundPosition: '40% 30%'
       }}
     >
