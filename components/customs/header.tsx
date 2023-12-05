@@ -74,7 +74,7 @@ export const Header = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem hidden={!process.env.SARS_COV_2_TRACKER_ENABLED}>
-            <NavigationMenuTrigger>Serotracker</NavigationMenuTrigger>
+            <NavigationMenuTrigger>SeroTracker</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {serotracker.map((page) => (
@@ -90,7 +90,7 @@ export const Header = () => {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Arbotracker</NavigationMenuTrigger>
+            <NavigationMenuTrigger>ArboTracker</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {arbotracker.map((page) => (

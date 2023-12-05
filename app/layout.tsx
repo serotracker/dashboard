@@ -11,7 +11,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Pathotracker",
+  title: "SeroTracker",
   description:
     "A collection of dashboards tracking global seroprevalence data for mutliple pathogens.",
 };

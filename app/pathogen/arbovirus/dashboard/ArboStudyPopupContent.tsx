@@ -20,7 +20,7 @@ function row(
 
 function pathogenTag(pathogen: string) {
   return (
-    <div className={"text-center w-full bg-gray-200"}>Pathogen: {pathogen}</div>
+    <div className={"text-center w-full bg-gray-200"}>Arbovirus: {pathogen}</div>
   );
 }
 

@@ -1,33 +1,22 @@
 import React from "react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-import {
-  CountOfStudiesStratifiedByAntibodyAndPathogen,
-  CustomResponsiveBar,
-  PathogenSeroprevalenceBoxPlot,
-} from "@/app/pathogen/arbovirus/analyze/nivo-vis";
+import { Card, CardContent} from "@/components/ui/card";
 
 import MapAndFilters from "@/app/pathogen/arbovirus/dashboard/(map)/MapAndFilters";
+import {
+  MedianSeroPrevByWHOregion,
+} from "../analyze/recharts";
 
 export default function ArbovirusDashboard() {
   // Need to make the visualizations dynamic. Unsure how to do this well using CSS.
   return (
     <>
-      <Card className={"row-span-1 col-span-4"}>
-        <CardHeader>
-          <CardTitle>Count Antibody Pathogen</CardTitle>
-        </CardHeader>
-        <CardContent className={"px-0 h-72 w-full"}>
-          <CountOfStudiesStratifiedByAntibodyAndPathogen />
-        </CardContent>
-      </Card>
-      <Card className={"row-span-1 col-span-4"}>
-        <CardHeader>
-          <CardTitle>Patho Sero Boxplot</CardTitle>
-        </CardHeader>
-        <CardContent className={"px-0 h-72 w-full"}>
-          <PathogenSeroprevalenceBoxPlot />
+      <Card className={"row-span-2 col-span-4 pr-4 pb-4"}>
+        <CardContent className={"px-0 h-full flex flex-col"}>
+          <h3 className="py-4 w-full text-center text-lg">
+            Median seroprevalence by WHO region
+          </h3>
+          <MedianSeroPrevByWHOregion />
         </CardContent>
       </Card>
       <MapAndFilters />
