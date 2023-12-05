@@ -1,7 +1,7 @@
 import Image from "next/image";
 import HomepageMosquitoImage from "../public/HomepageMosquitoImage.jpg";
 import SarsCov2StructureImage from "../public/SarsCov2Structure.png";
-import SeroTrackerBackgroundImage from "../public/SeroTrackerBackgroundImage.png";
+import HomepageSeroTrackerBackgroundImage from "../public/HomepageSeroTrackerBackgroundImage.png";
 import { HomepageTile } from "./homepage-tile";
 
 export default function Home() {
