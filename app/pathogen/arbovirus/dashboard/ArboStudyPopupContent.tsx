@@ -24,6 +24,40 @@ function pathogenTag(pathogen: string) {
   );
 }
 
+function pathogenFullString(pathogen: string) {
+  switch (pathogen) {
+      case "DENV":
+        return "Dengue Virus";
+      case "ZIKV":
+        return "Zika Virus";
+      case "CHIKV":
+        return "Chikungunya Virus";
+      case "YF":
+        return "Yellow Fever";
+      case "WNV":
+        return "West Nile Virus";
+      case "MAYV":
+        return "Mayaro Virus";
+      default:
+        return "Unknown";
+    }
+}
+
+function getAntiBodyColor(antibody: string) {
+  switch (antibody) {
+    case "IgG": 
+      return "bg-blue-700 text-white"
+    case "IgM": 
+        return "bg-black text-white"
+    case "IgAM": 
+      return "bg-green-200"
+    case "NAb": 
+      return "bg-yellow-400"
+    default:
+      return "bg-sky-100"
+  }
+}
+
 const getGeography = (city: string, state: string, country: string) => {
   if (!country) {
     return "Not Reported";
@@ -54,33 +88,18 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
       {/*Header section*/}
       <div className={"py-2 px-4"}>
         <div className="text-lg font-bold">
-          {`${record.pathogen} Estimate Study`}
+          {`${record.pathogen} Estimate`}
         </div>
         <div className={"text-sm text-blue-600"}>
-          {record.url ? (
-            <a href={record.url} target="_blank" rel="noopener noreferrer">
-              {" "}
-              {record.url}{" "}
-            </a>
-          ) : (
-            "NO URL"
-          )}
+          {record.url ? <a href={record.url} target="_blank" rel="noopener noreferrer"> 
+            {record.source_sheet_name ? record.source_sheet_name : record.url} 
+          </a> : "NO URL"}
         </div>
       </div>
       {/*SeroPrev section*/}
-      <div className={"flex justify-between bg-gray-200 w-full py-2 px-4"}>
-        <div className={"w-1/3 font-semibold"}>
-          {"Seroprevalence"}:{" "}
-          <b> {`${(record.seroprevalence * 100).toFixed(1)}%`}</b>
-        </div>
-        <div className={"w-2/3"}>
-          {record.sample_start_date && record.sample_end_date && (
-            <>
-              {`${TranslateDate(record.sample_start_date)} to ${TranslateDate(
-                record.sample_end_date
-              )}`}
-            </>
-          )}
+      <div className={`flex justify-between bg-${record.pathogen.toLowerCase()} w-full py-2 px-4`}>
+        <div className={"font-semibold"}>
+          {"Seroprevalence"}: <b> {`${(record.seroprevalence * 100).toFixed(1)}% (Arbovirus: ${pathogenFullString(record.pathogen)})`}</b>
         </div>
       </div>
       {/*Content section*/}
@@ -97,10 +116,20 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
           "Sample Size",
           record.sample_size?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
         )}
-        {row("Antibody Target", record.antibodies.join(", "))}
+        <div className={"flex justify-between mb-2"}>
+          <div className={"text-md font-semibold"}>
+            AntiBody Target
+          </div>
+          <div className={"w-2/3"}>
+            {record.antibodies.map((antibody: any, index: number) => (
+          <span key={index} className={`${getAntiBodyColor(antibody)} mr-1 p-2 rounded-sm`}>
+            {antibody}
+          </span>
+          ))}
+          </div>
+        </div>
         {row("Antigen", record.antigen)}
         {row("Assay", record.assay)}
-        {row("LngLat", record.longitude + " " + record.latitude)}
       </div>
       {/*RiskTag section*/}
       {pathogenTag(`${record.pathogen}`)}
