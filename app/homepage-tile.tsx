@@ -1,6 +1,5 @@
 "use client";
 
-import "./homepage-tile.css";
 import { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
@@ -21,22 +20,22 @@ export const HomepageTile = ({
   const router = useRouter();
   return (
     <div
-      className={"w-1/2 h-full flex justify-center items-center homepage-tile"}
+      className={"w-1/2 h-full flex justify-start items-center rounded-md border-solid border-2 border-sky-200"}
       style={{
         backgroundImage: `url(${backgroundImage.src})`,
         maxWidth: backgroundImage.width,
         maxHeight: backgroundImage.height,
       }}
     >
-      <div className={"homepage-tile-text-container"}>
-        <h2 className={"homepage-tile-header"}> {header} </h2>
+      <div className={"rounded-md bg-sky-200 w-[40%] p-2 ml-3"}>
+        <h2 className={"font-bold pb-2 text-xl"}> {header} </h2>
         <p> {subtitle} </p>
         <button
-          className={"homepage-tile-button"}
+          className={"flex justify-center rounded-md p-1 mt-2 hover:bg-black/10"}
           onClick={() => router.push(route)}
         >
           <p> See Dashboard </p>
-          <ArrowRight style={{ marginLeft: "10px" }} />
+          <ArrowRight className="ml-2.5" />
         </button>
       </div>
     </div>
