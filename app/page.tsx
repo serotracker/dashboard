@@ -1,6 +1,6 @@
 import Image from "next/image";
-import ArboTrackerScreenshot from "../public/ArbotrackerScreenshot.png";
-import SarsCov2TrackerScreenshot from "../public/SarsCov2TrackerScreenshot.png";
+import HomepageMosquitoImage from "../public/HomepageMosquitoImage.jpg";
+import SarsCov2StructureImage from "../public/SarsCov2Structure.png";
 import { HomepageTile } from "./homepage-tile";
 
 export default function Home() {
@@ -29,13 +29,13 @@ export default function Home() {
         <HomepageTile
           header="SARSCoV2Tracker"
           subtitle="Access a collection of seroprevalence studies for SARS-CoV-2 that span across 38 million participants and 148 countries."
-          backgroundImage={SarsCov2TrackerScreenshot}
+          backgroundImage={SarsCov2StructureImage}
           route="https://serotracker.com"
         />
         <HomepageTile
           header="ArboTracker"
           subtitle="View over a thousand seroprevalence estimates for arboviruses that span across over seventy countries and seven decades."
-          backgroundImage={ArboTrackerScreenshot}
+          backgroundImage={HomepageMosquitoImage}
           route="/pathogen/arbovirus/dashboard"
         />
       </div>
