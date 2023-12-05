@@ -64,10 +64,9 @@ export function DataTable<TData, TValue>({
 
   const getAllVisibleData = () => {
     // Get the columns we want in the csv
-    let visibleColumns = table.getAllColumns().filter(column => column.getIsVisible()) // map(column => {})
+    let visibleColumns = table.getAllColumns().filter(column => column.getIsVisible())
     let column_keys: string[] = visibleColumns.map(column => {return column.id})
-    // Gather the subset of data we want
-    const newArrayWithSubsetAttributes: Record<string, any>[] = data.map((originalObject: any) => {
+    const newArrayWithSubsetAttributes: Record<string, any>[] = table.getFilteredRowModel().rows.map((originalObject: any) => {
       const newObj: Record<string, any> = {};
       column_keys.forEach((attribute) => {
         let temp_data = originalObject[attribute];
@@ -79,6 +78,7 @@ export function DataTable<TData, TValue>({
       return newObj;
     }); 
     // Export the csv
+    // TODO: FIX THIS FILENAME 
     const csvConfig = mkConfig({ useKeysAsHeaders: true, filename: "arbotracker_dataset" });
     let csv = generateCsv(csvConfig)(newArrayWithSubsetAttributes)
     download(csvConfig)(csv)
