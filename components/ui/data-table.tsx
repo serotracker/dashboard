@@ -71,15 +71,14 @@ export function DataTable<TData, TValue>({
     const newArrayWithSubsetAttributes: Record<string, any>[] = table.getFilteredRowModel().rows.map((originalObject: any) => {
       const newObj: Record<string, any> = {};
       column_keys.forEach((attribute) => {
-        let temp_data = originalObject[attribute];
+        let temp_data = originalObject["original"][attribute];
         if (Array.isArray(temp_data)) {
           temp_data = temp_data.join(";")
         }
         newObj[attribute] = temp_data
       });
       return newObj;
-    }); 
-    // Export the csv
+    });
     // TODO: FIX THIS FILENAME 
     const csvConfig = mkConfig({ useKeysAsHeaders: true, filename: "arbotracker_dataset" });
     let csv = generateCsv(csvConfig)(newArrayWithSubsetAttributes)
