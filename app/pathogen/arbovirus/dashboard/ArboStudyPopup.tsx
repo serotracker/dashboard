@@ -119,3 +119,4 @@ export default function ArboStudyPopup(record: any) {
             </div>
         </div>)
 }
+
