@@ -70,11 +70,11 @@ export function DataTable<TData, TValue>({
     const newArrayWithSubsetAttributes: Record<string, any>[] = data.map((originalObject: any) => {
       const newObj: Record<string, any> = {};
       column_keys.forEach((attribute) => {
-        let data = originalObject[attribute];
-        if (Array.isArray(data)) {
-          data = data.join(";")
+        let temp_data = originalObject[attribute];
+        if (Array.isArray(temp_data)) {
+          temp_data = temp_data.join(";")
         }
-        newObj[attribute] = data
+        newObj[attribute] = temp_data
       });
       return newObj;
     }); 
