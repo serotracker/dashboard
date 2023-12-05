@@ -73,10 +73,8 @@ export const Header = () => {
 
       <NavigationMenu>
         <NavigationMenuList>
-          <NavigationMenuItem>
-            {process.env.SARS_COV_2_TRACKER_ENABLED && (
-              <NavigationMenuTrigger>Serotracker</NavigationMenuTrigger>
-            )}
+          <NavigationMenuItem hidden={!process.env.SARS_COV_2_TRACKER_ENABLED}>
+            <NavigationMenuTrigger>Serotracker</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {serotracker.map((page) => (
@@ -131,7 +129,7 @@ export const Header = () => {
           "text-md font-header non-italic text-white h-100 flex justify-end items-center cursor-pointer"
         }
       >
-      {/* TODO: Need to incorporate language switching
+        {/* TODO: Need to incorporate language switching
         <Select
           defaultValue={language}
           onValueChange={(value) => setLanguage(value as "en" | "fr" | "de")}
@@ -147,7 +145,6 @@ export const Header = () => {
         </Select>
       */}
       </div>
-
     </header>
   );
 };
