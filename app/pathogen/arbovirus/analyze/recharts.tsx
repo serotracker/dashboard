@@ -452,7 +452,7 @@ export function MedianSeroPrevByWHOregion() {
             >
               <CartesianGrid />
               <XAxis dataKey="region" interval={0} tick={<CustomizedWHORegionTick />}/>
-              <YAxis domain={[0, 100]} hide={index % 2 != 0} />
+              <YAxis domain={[0, 100]} hide={index % 2 != 0} tickFormatter={tick => (`${tick}%`)}/>
               <Tooltip />
               <Bar dataKey={"median"} fill={pathogenColors[d.arbovirus]} />
             </BarChart>
@@ -606,7 +606,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
             >
               <CartesianGrid />
               <XAxis dataKey="region" interval={0} tick={<CustomizedWHORegionTick />}/>
-              <YAxis domain={[0, 100]} hide={index % 2 != 0} />
+              <YAxis domain={[0, 100]} hide={index % 2 != 0} tickFormatter={tick => (`${tick}%`)}/>
               <Tooltip />
               <Bar dataKey={"Children and Youth (0-17 years)"} fill={"red"} />
               <Bar dataKey={"Adults (18-64 years)"} fill={"green"} />
