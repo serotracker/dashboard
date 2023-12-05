@@ -18,7 +18,7 @@ export default function Home() {
             }}
           />
           <div>
-            <h1 className={"font-bold text-5xl mt-2.5"}>SeroTracker</h1>
+            <h1 className={"font-bold text-5xl mt-2.5 mb-3"}>SeroTracker</h1>
             <h2>
               A global dashboard standardizing pathogen and seroprevalence data
             </h2>
