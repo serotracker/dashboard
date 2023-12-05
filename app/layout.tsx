@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={clsx(inter.className, "text-black no-scrollbar")}>
         <Header />
-        <main className={"h-full-screen w-screen p-4 border-box bg-foreground"}>
+        <main className={"h-full-screen w-screen bg-foreground"}>
           {children}
         </main>
         <Footer />
