@@ -109,7 +109,9 @@ export default function ArboStudyPopup(record: any) {
                         AntiBody Target
                     </div>
                     <div className={"w-2/3"}>
-                    {record.antibodies.map((antibody: any, index: number) => (<span key={index} className={getAntiBodyColor(antibody)}>{antibody}</span>))}
+                    {record.antibodies.map((antibody: any, index: number) => (
+                    <span key={index} className={`${getAntiBodyColor(antibody)} m-1 p-2 rounded-sm`}>{antibody}</span>
+                    ))}
                     </div>
                 </div>
                 {row("Antigen", record.antigen)}
@@ -117,4 +119,3 @@ export default function ArboStudyPopup(record: any) {
             </div>
         </div>)
 }
-// record.antibodies.map((antibody: any) => `<span class=${getAntiBodyColor(antibody)}>${antibody}</span>`).join(" "))
