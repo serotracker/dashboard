@@ -1,8 +1,7 @@
 import React from "react";
 import Translate from "../../utils/translate-util/translate-service";
-import {Sponsers} from "../../components/customs/footer"
 import { Twitter, Linkedin, Mail } from "lucide-react";
-
+import { Sponsors } from "./sponsors";
 
 export default function About() {
   function renderBioBlock(
@@ -52,7 +51,7 @@ export default function About() {
         <b>{Translate("AboutPage", ["AboutSection", "PartOne"])}</b>
           {Translate("AboutPage", ["AboutSection", "PartTwo"], null, [true, false])}
         </p>
-        <Sponsers />
+        <Sponsors />
         <p className="mb-4">
           {Translate("AboutPage", ["AboutSection", "SupportedBy"])}
           <a target="_blank" rel="noreferrer noopener" href="https://www.canada.ca/en/public-health.html">
