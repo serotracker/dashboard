@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-between h-full"
       style={{
-        backgroundImage: `url(${SeroTrackerBackgroundImage.src})`,
+        backgroundImage: `url(${HomepageSeroTrackerBackgroundImage.src})`,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: '40% 30%'
       }}
