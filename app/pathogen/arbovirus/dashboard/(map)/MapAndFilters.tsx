@@ -110,7 +110,7 @@ export default function MapAndFilters() {
           </div>
           <Card className={"absolute bottom-1 right-1 "}>
             <CardHeader className={"py-3"}>
-              <p>Pathogens</p>
+              <p>Arboviruses</p>
             </CardHeader>
             <CardContent className={"flex justify-center flex-col"}>
               {filters.isSuccess &&
