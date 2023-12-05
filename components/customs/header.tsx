@@ -74,7 +74,9 @@ export const Header = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Serotracker</NavigationMenuTrigger>
+            {process.env.SARS_COV_2_TRACKER_ENABLED && (
+              <NavigationMenuTrigger>Serotracker</NavigationMenuTrigger>
+            )}
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {serotracker.map((page) => (
@@ -105,6 +107,7 @@ export const Header = () => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
+          {/*
           <NavigationMenuItem>
             <Link href="/docs" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -119,15 +122,16 @@ export const Header = () => {
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
+          */}
         </NavigationMenuList>
       </NavigationMenu>
 
-      {/*TODO: Need to incorporate language switching*/}
       <div
         className={
           "text-md font-header non-italic text-white h-100 flex justify-end items-center cursor-pointer"
         }
       >
+      {/* TODO: Need to incorporate language switching
         <Select
           defaultValue={language}
           onValueChange={(value) => setLanguage(value as "en" | "fr" | "de")}
@@ -141,7 +145,9 @@ export const Header = () => {
             <SelectItem value="de">DE</SelectItem>
           </SelectContent>
         </Select>
+      */}
       </div>
+
     </header>
   );
 };
