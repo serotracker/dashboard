@@ -40,7 +40,7 @@ export default function ArboAnalyze() {
       <div className={"col-span-5 row-span-2 overflow-auto"}>
         <ArboDataTable />
       </div>
-      <Card className={"col-span-2 row-span-2"}>
+      <Card className={"col-span-2 row-span-2 overflow-y-auto"}>
         <CardHeader>
           <CardTitle>Filters</CardTitle>
         </CardHeader>
