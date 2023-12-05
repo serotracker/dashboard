@@ -8,9 +8,6 @@ module.exports = {
     './src/**/*.{ts,tsx}',
 	],
   theme: {
-    fontFamily: {
-      'sans': ['"Open-Sans",sans-serif']
-    },
     container: {
       center: true,
       padding: "2rem",
