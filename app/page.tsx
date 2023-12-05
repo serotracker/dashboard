@@ -16,17 +16,14 @@ export default function Home() {
     >
       <div>
         <div className="flex flex-start mb-3 mt-[10%]">
-          <Image
-            src={"/SerotrackerLogo.svg"}
-            alt={""}
-            width={120}
-            height={120}
-            style={{
-              marginRight: "20px",
-            }}
-          />
           <div>
-            <h1 className={"font-bold text-5xl mt-2.5 mb-3"}>SeroTracker</h1>
+            <Image
+              src={"/DetailedSeroTrackerLogoWithText.png"}
+              width={377}
+              height={77}
+              alt={"SeroTracker"}
+              className="mb-3 mx-auto"
+            />
             <h2>
               A global dashboard standardizing pathogen and seroprevalence data
             </h2>
