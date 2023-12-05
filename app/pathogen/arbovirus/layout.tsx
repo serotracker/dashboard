@@ -9,10 +9,13 @@ export default async function ArboLayout({
   children: React.ReactNode;
 }) {
   const queryClient = getQueryClient();
+
+  console.log(process.env.NEXT_PUBLIC_API_BASE_URL)
+
   await queryClient.prefetchQuery({
     queryKey: ["ArbovirusRecords"],
     queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/records`).then(
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/records`, { cache: 'no-store' }).then(
         (response) => response.json(),
       ),
   });
@@ -21,12 +24,12 @@ export default async function ArboLayout({
     queryFn: () =>
       fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/data_provider/arbo/visualizations`,
-      ).then((response) => response.json()),
+        { cache: 'no-store' }).then((response) => response.json()),
   });
   await queryClient.prefetchQuery({
     queryKey: ["ArbovirusFilters"],
     queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/filter_options`).then(
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/filter_options`, { cache: 'no-store' }).then(
         (response) => response.json(),
       ),
   });

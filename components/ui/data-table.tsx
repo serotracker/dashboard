@@ -10,7 +10,7 @@ import {
   VisibilityState,
   getFilteredRowModel,
 } from "@tanstack/table-core";
-import { flexRender, useReactTable } from "@tanstack/react-table";
+import { Column, flexRender, useReactTable } from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -22,6 +22,8 @@ import {
 import { Input } from "@/components/ui/input";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -32,6 +34,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { mkConfig, generateCsv, download } from "export-to-csv";
 
 export function DataTable<TData, TValue>({
   columns,
@@ -61,6 +64,40 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const getAllVisibleData = () => {
+    // Get the columns we want in the csv
+    let visibleColumns = table.getAllColumns().filter(column => column.getIsVisible())
+    let column_keys: string[] = visibleColumns.map(column => {return column.id})
+    const newArrayWithSubsetAttributes: Record<string, any>[] = table.getFilteredRowModel().rows.map((originalObject: any) => {
+      const newObj: Record<string, any> = {};
+      column_keys.forEach((attribute) => {
+        let temp_data = originalObject["original"][attribute];
+        if (Array.isArray(temp_data)) {
+          temp_data = temp_data.join(";")
+        }
+        newObj[attribute] = temp_data
+      });
+      return newObj;
+    });
+    // TODO: FIX THIS FILENAME 
+    const csvConfig = mkConfig({ useKeysAsHeaders: true, filename: "arbotracker_dataset" });
+    let csv = generateCsv(csvConfig)(newArrayWithSubsetAttributes)
+    download(csvConfig)(csv)
+  }
+
+  const setAllColumnVisibility = (visibility: boolean) => {
+
+    // Iterate through all columns and toggle visibility based on selectAll state
+    table.getAllColumns().forEach((column) => {
+      if (column.getCanHide()) {
+        column.toggleVisibility(visibility);
+      }
+    });
+  };
+
+  const handleSelectAll = () => {setAllColumnVisibility(true)}
+  const handleClearAll = () => {setAllColumnVisibility(false)}
+
   return (
     <div>
       <div className="flex items-center py-4">
@@ -81,6 +118,12 @@ export function DataTable<TData, TValue>({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-foreground">
+            <Button variant="outline" className="ml-auto bg-white" onClick={handleSelectAll}>
+                Select All
+            </Button>
+            <Button variant="outline" className="ml-auto bg-white" onClick={handleClearAll}>
+                Clear All
+            </Button>
             {table
               .getAllColumns()
               .filter(
@@ -176,6 +219,16 @@ export function DataTable<TData, TValue>({
             Next
           </Button>
         </div>
+      </div>
+      <div className="flex items-center space-x-2 py-4 justify-center">
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => getAllVisibleData()}
+            className="bg-white"
+          >
+            Download CSV
+          </Button>
       </div>
     </div>
   );
