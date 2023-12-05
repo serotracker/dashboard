@@ -111,7 +111,7 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
     [FilterableField.producer]: "Assay Producer",
     [FilterableField.sample_frame]: "Sample Frame",
     [FilterableField.antibody]: "Antibody",
-    [FilterableField.pathogen]: "Pathogen",
+    [FilterableField.pathogen]: "Arbovirus",
   };
   const demographicFilters = [
     FilterableField.age_group,
