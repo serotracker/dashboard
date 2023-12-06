@@ -15,7 +15,6 @@ const addFilterMulti = (
   value: string[],
   newFilter: string,
   state: SarsCov2ContextType,
-  map: mapboxgl.Map | null | undefined,
   data: any
 ) => {
   state.dispatch({
@@ -23,7 +22,6 @@ const addFilterMulti = (
     payload: {
       filter: newFilter,
       value: value,
-      map: map,
       // Consider making this a static list synced with the backend so that context is static and we do not need to do this. 
       data: data ? data : [],
     },
@@ -40,7 +38,6 @@ const buildFilterDropdown = (
   placeholder: string,
   state: SarsCov2ContextType,
   filterOptions: string[],
-  map: mapboxgl.Map | null | undefined,
   data: any
 ) => {
 
@@ -49,7 +46,7 @@ const buildFilterDropdown = (
         <MultiSelect
         key={filter}
           handleOnChange={(value) =>
-            addFilterMulti(value, filter, state, map, data)
+            addFilterMulti(value, filter, state, data)
           }
           heading={placeholder}
           selected={state.selectedFilters[filter] ?? []}
@@ -59,10 +56,9 @@ const buildFilterDropdown = (
   );
 };
 
-export default function Filters(props: { map?: mapboxgl.Map | null }) {
+export default function Filters() {
   const state = useContext(SarsCov2Context);
   console.log("Context in Filters: ", state);
-  const { map } = props;
 
   const { data } = useSarsCov2Data();
 
@@ -93,7 +89,6 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
                       getHeader(key),
                       state,
                       options,
-                      map,
                       data ? data.records : []
                     )}
                   </div>
@@ -106,7 +101,6 @@ export default function Filters(props: { map?: mapboxgl.Map | null }) {
                     getHeader(key),
                     state,
                     filters.data[key],
-                    map,
                     data ? data.records : []
                   )}
                 </div>
