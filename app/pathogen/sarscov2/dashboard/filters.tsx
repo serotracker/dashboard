@@ -3,7 +3,6 @@
 import { MultiSelect } from "@/components/customs/multi-select";
 import React, { useContext } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import mapboxgl, { PositionOptions } from "mapbox-gl";
 import {
   SarsCov2ActionType,
   SarsCov2Context,

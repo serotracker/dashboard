@@ -1,16 +1,7 @@
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
-import mapboxgl from "mapbox-gl";
 import { useState, useEffect, useMemo } from "react";
-import {
-  Map,
-  Source,
-  Layer,
-  Popup,
-  useMap,
-  MapRef,
-  NavigationControl,
-} from "react-map-gl";
+import { Map, NavigationControl } from "react-map-gl";
 import {
   PathogenMapCursor,
   usePathogenMapMouse,

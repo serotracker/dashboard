@@ -8,7 +8,6 @@ import {
 import { MultiSelect } from "@/components/customs/multi-select";
 import React, { useContext } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import mapboxgl from "mapbox-gl";
 import useArboData from "@/hooks/useArboData";
 
 const addFilterMulti = (
