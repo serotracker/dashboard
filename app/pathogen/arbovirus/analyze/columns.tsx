@@ -4,9 +4,10 @@ import { ColumnDef } from "@tanstack/table-core";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
-import { pathogenColors } from "../dashboard/(map)/MapAndFilters";
 import { HeaderContext } from "@tanstack/react-table";
 import validator from "validator";
+import Link from "next/link";
+import { TranslateDate } from "@/utils/translate-util/translate-service";
 
 export type Estimate = {
   age_group: string;
@@ -52,6 +53,27 @@ const get_header = (columnName: string) => {
 };
 
 export const columns: ColumnDef<Estimate>[] = [
+  {
+    accessorKey: "estimate_id",
+    header: get_header("Estimate ID"),
+    cell: ({ row }) => {
+      const url: string = row.getValue("url");
+
+      console.log(url);
+
+      if(url && validator.isURL(url)) {
+        return (
+          // TODO: Link styling needs to be globalised. 
+          <Link className="w-full underline hover:text-blue-400" href={url} rel="noopener noreferrer" target="_blank">
+            {row.getValue("estimate_id")}
+          </Link>
+        )
+      }
+
+      return <p> {row.getValue("estimate_id")} </p>
+      
+    },
+  },
   {
     accessorKey: "pathogen",
     header: ({ column }) => {
@@ -150,6 +172,11 @@ export const columns: ColumnDef<Estimate>[] = [
       }
       return 'N/A';
     }
+  },
+  {
+    id: "sample_date_range",
+    accessorFn: (row) => `${TranslateDate(row.sample_start_date)} - ${TranslateDate(row.sample_end_date)}`,  // TODO: This is a hack to get around the fact that we can't have two columns with the same accessorKey. We should fix this in the future.
+    header: get_header("Sampling Dates"),
   },
   {
     accessorKey: "assay",
