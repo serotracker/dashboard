@@ -1,12 +1,17 @@
 "use client";
 
-import useMap from "@/hooks/useMap";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Filters from "@/app/pathogen/sarscov2/dashboard/filters";
 import React, { useContext } from "react";
 import { ScrollText } from "lucide-react";
 import useSarsCov2Data from "@/hooks/useSarsCov2Data";
-import { SarsCov2ActionType, SarsCov2Context, setMapboxFilters } from "@/contexts/sarscov2-context";
+import {
+  SarsCov2ActionType,
+  SarsCov2Context,
+} from "@/contexts/sarscov2-context";
+import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
+import { MapSymbology } from "./map-config";
+import { SarsCov2StudyPopupContent } from "./SarsCov2StudyPopupContent";
 
 export default function MapAndFilters() {
   const dataQuery = useSarsCov2Data();
@@ -15,11 +20,7 @@ export default function MapAndFilters() {
   console.log("Context in MapAndFilters: ", state);
 
   // Might have to find a way to make this synchronous instead of asynchronous
-  const { map, mapContainer } = useMap(dataQuery.data?.records ?? [], "SarsCov2");
-
   if (dataQuery.isSuccess && dataQuery.data) {
-    setMapboxFilters(state.selectedFilters, map!);
-
     const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
       const value = state.selectedFilters.pathogen;
 
@@ -35,7 +36,6 @@ export default function MapAndFilters() {
           data: dataQuery.data.records,
           filter: "pathogen",
           value: value,
-          map: map,
         },
       });
     };
@@ -47,7 +47,78 @@ export default function MapAndFilters() {
             "w-full h-full overflow-hidden col-span-6 row-span-2 relative"
           }
         >
-          <CardContent ref={mapContainer} className={"w-full h-full p-0"} />
+          <div className={"w-full h-full p-0"}>
+            <PathogenMap
+              id="sarscov2Map"
+              baseCursor=""
+              layers={[
+                {
+                  id: "SARS-CoV2-pins",
+                  cursor: "pointer",
+                  dataPoints: state.filteredData.map((dataPoint) => ({
+                    ...dataPoint,
+                    longitude: dataPoint.pin_latitude,
+                    latitude: dataPoint.pin_longitude,
+                  })),
+                  layerPaint: {
+                    "circle-color": [
+                      "match",
+                      ["get", "estimate_grade"],
+                      "National",
+                      MapSymbology.StudyFeature.National.Color,
+                      "Regional",
+                      MapSymbology.StudyFeature.Regional.Color,
+                      "Local",
+                      MapSymbology.StudyFeature.Local.Color,
+                      "Sublocal",
+                      MapSymbology.StudyFeature.Sublocal.Color,
+                      MapSymbology.StudyFeature.Default.Color,
+                    ],
+                    "circle-radius": [
+                      "match",
+                      ["get", "estimate_grade"],
+                      "National",
+                      MapSymbology.StudyFeature.National.Size,
+                      "Regional",
+                      MapSymbology.StudyFeature.Regional.Size,
+                      "Local",
+                      MapSymbology.StudyFeature.Local.Size,
+                      "Sublocal",
+                      MapSymbology.StudyFeature.Sublocal.Size,
+                      MapSymbology.StudyFeature.Default.Size,
+                    ],
+                    "circle-stroke-color": [
+                      "case",
+                      ["boolean", ["feature-state", "isSelected"], false],
+                      "black",
+                      "white",
+                    ],
+                    "circle-stroke-width": 3,
+                    "circle-stroke-opacity": [
+                      "case",
+                      ["boolean", ["feature-state", "hover"], false],
+                      1,
+                      [
+                        "case",
+                        ["boolean", ["feature-state", "isSelected"], false],
+                        1,
+                        0,
+                      ],
+                    ],
+                    "circle-opacity": [
+                      "case",
+                      ["boolean", ["feature-state", "isBlurred"], false],
+                      0.2,
+                      0.6,
+                    ],
+                  },
+                },
+              ]}
+              generatePopupContent={(record) => (
+                <SarsCov2StudyPopupContent record={record} />
+              )}
+            />
+          </div>
           <Card className={"absolute bottom-1 right-1 "}>
             <CardHeader className={"py-3"}>
               <p>Legend</p>
@@ -68,7 +139,7 @@ export default function MapAndFilters() {
             <CardTitle>Filters</CardTitle>
           </CardHeader>
           <CardContent>
-            <Filters map={map} />
+            <Filters />
           </CardContent>
         </Card>
       </>
