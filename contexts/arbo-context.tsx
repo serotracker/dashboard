@@ -42,9 +42,7 @@ export const initialState: ArboStateType = {
 
 function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   const filterKeys = Object.keys(filters);
-  console.log("Filtering data...");
-  console.log("DATA COMING IN...", data);
-  console.log("FILTERS SELECTED COMING IN...", filters);
+
   return data.filter((item: any) => {
     return filterKeys.every((key: string) => {
       if (!filters[key].length) return true;
@@ -121,9 +119,7 @@ export const arboReducer = (
       if (map) {
         adjustMapPositionIfCountryFilterHasChanged(action, map);
       }
-      console.log("Data filters", action.payload.filter);
-      console.log("Data before filtration", state.filteredData);
-      console.log("Data after filtration", filterData(action.payload.data, selectedFilters));
+
       return {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
@@ -176,7 +172,7 @@ const adjustMapPositionIfCountryFilterHasChanged = (
 export const ArboContext = createContext<ArboContextType>({
   ...initialState,
   dispatch: (obj) => {
-    console.log("dispatch not initialized", obj);
+    console.debug("dispatch not initialized", obj);
   },
 });
 

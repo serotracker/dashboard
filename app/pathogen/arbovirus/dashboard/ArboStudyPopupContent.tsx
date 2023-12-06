@@ -88,7 +88,7 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
       {/*Header section*/}
       <div className={"py-2 px-4"}>
         <div className="text-lg font-bold">
-          {`${record.pathogen} Estimate`}
+          {`${pathogenFullString(record.pathogen)} Estimate`}
         </div>
         <div className={"text-sm text-blue-600"}>
           {record.url ? <a href={record.url} target="_blank" rel="noopener noreferrer"> 
@@ -122,7 +122,7 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
         )}
         <div className={"flex justify-between mb-2"}>
           <div className={"text-md font-semibold"}>
-            AntiBody Target
+            Antibody Target
           </div>
           <div className={"w-2/3"}>
             {record.antibodies.map((antibody: any, index: number) => (

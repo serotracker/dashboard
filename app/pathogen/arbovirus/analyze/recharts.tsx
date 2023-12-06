@@ -107,11 +107,11 @@ export function AntibodyPathogenBar() {
           align="right"
           wrapperStyle={{ right: -10 }}
         />
-        <Bar dataKey="IgG" stackId="a" fill={"purple"} />
-        <Bar dataKey="IgM" stackId="a" fill={"blue"} />
-        <Bar dataKey="IgG, IgM" stackId="a" fill={"green"} />
-        <Bar dataKey="NAb" stackId="a" fill={"orange"} />
-        <Bar dataKey="NR" stackId="a" fill={"red"} />
+        <Bar dataKey="IgG" stackId="a" fill={"#61f4de"} />
+        <Bar dataKey="IgM" stackId="a" fill={"#65cbe9"} />
+        <Bar dataKey="IgG, IgM" stackId="a" fill={"#6cb6ef"} />
+        <Bar dataKey="NAb" stackId="a" fill={"#6c8dfa"} />
+        <Bar dataKey="NR" stackId="a" fill={"#6e78ff"} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -429,8 +429,6 @@ export function MedianSeroPrevByWHOregion() {
     });
   });
 
-  console.log(medianData);
-
   return (
     <div className="h-full flex flex-row flex-wrap">
       {medianData.map((d, index) => (
@@ -580,8 +578,6 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
       data: dataToPush,
     });
   });
-
-  console.log(medianData);
 
   return (
     <div className="h-full flex flex-row flex-wrap">
@@ -850,8 +846,6 @@ export function StudyCountOverTimeBySampleFrame() {
     (frame) => !smallestSampleFrames.includes(frame)
   );
   sampleFrames.push("Other");
-
-  console.debug("3 smallest sample frames:", smallestSampleFrames);
 
   for (let i = 1; i < data.length; i++) {
     sampleFrames.forEach((frame) => (data[i][frame] += data[i - 1][frame]));

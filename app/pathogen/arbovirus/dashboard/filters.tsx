@@ -57,7 +57,7 @@ const buildFilterDropdown = (
     filter === FilterableField.end_date
   ) {
     return (
-      <div className="pb-3">
+      <div className="pb-3" key={filter}>
         <DatePicker
           onChange={(date) => {
             const dateString = date?.toLocaleDateString();
@@ -80,7 +80,7 @@ const buildFilterDropdown = (
     );
   } else {
     return (
-      <div className="pb-3">
+      <div className="pb-3" key={filter}>
         <MultiSelect
           handleOnChange={(value) => addFilterMulti(value, filter, state, data)}
           heading={placeholder}
@@ -103,6 +103,7 @@ export enum FilterableField {
   pathogen = "pathogen",
   start_date = "start_date",
   end_date = "end_date",
+  who_region = "who_region"
 }
 
 interface FilterSectionProps {
@@ -160,18 +161,20 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
     [FilterableField.sample_frame]: "Sample Frame",
     [FilterableField.antibody]: "Antibody",
     [FilterableField.pathogen]: "Arbovirus",
-    [FilterableField.start_date]: "Start Date",
-    [FilterableField.end_date]: "End Date",
+    [FilterableField.start_date]: "Sampling Start Date",
+    [FilterableField.end_date]: "Sampling End Date",
+    [FilterableField.who_region]: "WHO Region"
   };
   const demographicFilters = [
     FilterableField.age_group,
     FilterableField.sex,
-    FilterableField.country,
+    FilterableField.sample_frame,
   ].filter((field) => !excludedFields.includes(field));
   const studyInformationFilters = [
     FilterableField.assay,
     FilterableField.producer,
-    FilterableField.sample_frame,
+    FilterableField.who_region,
+    FilterableField.country,
     FilterableField.antibody,
     FilterableField.pathogen,
     FilterableField.start_date,
@@ -201,8 +204,6 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
   };
 
   if (filters.isSuccess && !filters.isLoading && !filters.isError) {
-    console.debug(filters.data, Object.keys(filters.data));
-
     return (
       <div>
         <FilterSection
