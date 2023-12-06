@@ -96,6 +96,11 @@ const getColor = (bar: any) => {
   else return "hsl(0,100,84)";
 };
 
+
+
+//Study by who region and pathogen
+
+//Study count by pathogen and antibody type
 export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
   // The data coming in from the props will be moved to a context
   const state = useContext(ArboContext);
@@ -222,11 +227,15 @@ export function CountOfStudiesStratifiedByAntibodyAndPathogen() {
     />
   );
 
-  // Potentially consider moving this data manipulation to the backend and retrieve all datasets in a single call
-  //  This also probably comes with config values and other required data for each chart such that I can map over the
-  //  returned data and create a chart for each object in the list based on its specifications.
-  //  Keeps all data handling in one place and could potentially generate this page on the server side instead
 }
+
+//Seroprevalence per pathogen, WHO region and age group
+
+// Cumulative study count over time by pathogen
+
+//Cumulative Study count over time by smaple frame
+
+//Top 10 countries with most studies by pathogen
 
 // Create the boxplot
 export function PathogenSeroprevalenceBoxPlot() {

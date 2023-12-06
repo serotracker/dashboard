@@ -162,6 +162,7 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
     [FilterableField.pathogen]: "Pathogen",
     [FilterableField.start_date]: "Start Date",
     [FilterableField.end_date]: "End Date",
+    [FilterableField.pathogen]: "Arbovirus",
   };
   const demographicFilters = [
     FilterableField.age_group,

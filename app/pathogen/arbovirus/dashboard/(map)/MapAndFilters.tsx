@@ -21,21 +21,22 @@ import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
-  ZIKV: "border-[#A0C4FF] data-[state=checked]:bg-[#A0C4FF]",
-  CHIKV: "border-[#9BF6FF] data-[state=checked]:bg-[#9BF6FF]",
-  WNV: "border-[#CAFFBF] data-[state=checked]:bg-[#CAFFBF]",
-  DENV: "border-[#FFADAD] data-[state=checked]:bg-[#FFADAD]",
-  YF: "border-[#FFD6A5] data-[state=checked]:bg-[#FFD6A5]",
-  MAYV: "border-[#FDFFB6] data-[state=checked]:bg-[#FDFFB6]",
+  ZIKV: "border-zikv data-[state=checked]:bg-zikv",
+  CHIKV: "border-chikv data-[state=checked]:bg-chikv",
+  WNV: "border-wnv data-[state=checked]:bg-wnv",
+  DENV: "border-denv data-[state=checked]:bg-denv",
+  YF: "border-yf data-[state=checked]:bg-yf",
+  MAYV: "border-mayv data-[state=checked]:bg-mayv",
 };
 
+// TODO: Needs to be synced with tailwind pathogne colors. How?
 export const pathogenColors: { [key: string]: string } = {
   ZIKV: "#A0C4FF",
   CHIKV: "#9BF6FF",
   WNV: "#CAFFBF",
   DENV: "#FFADAD",
   YF: "#FFD6A5",
-  MAYV: "#FDFFB6",
+  MAYV: "#c5a3ff",
 };
 
 export default function MapAndFilters() {
@@ -126,7 +127,7 @@ export default function MapAndFilters() {
           </div>
           <Card className={"absolute bottom-1 right-1 "}>
             <CardHeader className={"py-3"}>
-              <p>Pathogens</p>
+              <p>Arboviruses</p>
             </CardHeader>
             <CardContent className={"flex justify-center flex-col"}>
               {pathogenOrder.map((pathogenAbbreviation: string) => {
