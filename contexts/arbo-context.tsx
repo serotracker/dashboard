@@ -1,10 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useReducer,
-  useEffect
-} from "react";
+import React, { createContext, useReducer, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import { MapProvider, MapRef, useMap } from "react-map-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -32,6 +28,7 @@ export enum ArboActionType {
   UPDATE_FILTER = "UPDATE_FILTER",
   INITIAL_DATA_FETCH = "INITIAL_DATA_FETCH",
   ADD_FILTERS_TO_MAP = "ADD_FILTERS_TO_MAP",
+  RESET_FILTERS = "RESET_FILTERS",
 }
 
 export const initialState: ArboStateType = {
@@ -47,12 +44,16 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   return data.filter((item: any) => {
     return filterKeys.every((key: string) => {
       if (!filters[key].length) return true;
-      if(key === "antibody") {
-        return item["antibodies"].some((element: string) => filters[key].includes(element));
+      if (key === "antibody") {
+        return item["antibodies"].some((element: string) =>
+          filters[key].includes(element)
+        );
       } else {
         if (Array.isArray(item[key])) {
           // If item[key] is an array, check if any element of item[key] is included in filters[key]
-          return item[key].some((element: string) => filters[key].includes(element));
+          return item[key].some((element: string) =>
+            filters[key].includes(element)
+          );
         } else {
           // If item[key] is a string, check if it's included in filters[key]
           return filters[key].includes(item[key]);
@@ -78,14 +79,21 @@ export const arboReducer = (state: ArboStateType, action: ArboAction, map: MapRe
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
         selectedFilters: selectedFilters,
-        dataFiltered: true
+        dataFiltered: true,
       };
     case ArboActionType.INITIAL_DATA_FETCH:
       return {
         ...state,
         filteredData: action.payload.data,
         selectedFilters: initialState.selectedFilters,
-        dataFiltered: false
+        dataFiltered: false,
+      };
+    case ArboActionType.RESET_FILTERS:
+      return {
+        ...state,
+        filteredData: filterData(action.payload.data, {}),
+        selectedFilters: initialState.selectedFilters,
+        dataFiltered: false,
       };
 
     default:
@@ -118,7 +126,9 @@ const adjustMapPositionIfCountryFilterHasChanged = (
 
 export const ArboContext = createContext<ArboContextType>({
   ...initialState,
-  dispatch: (obj) => {console.log("dispatch not initialized", obj)},
+  dispatch: (obj) => {
+    console.log("dispatch not initialized", obj);
+  },
 });
 
 export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
@@ -148,18 +158,20 @@ const FilteredDataProvider = ({children}: {children: React.ReactNode}) => {
   const dataQuery = useArboData();
 
   useEffect(() => {
-    if(
+    if (
       state.filteredData.length === 0 &&
       !state.dataFiltered &&
-      'data' in dataQuery &&
-      !!dataQuery.data && typeof dataQuery.data === 'object' &&
-      'records' in dataQuery.data && Array.isArray(dataQuery.data.records) &&
+      "data" in dataQuery &&
+      !!dataQuery.data &&
+      typeof dataQuery.data === "object" &&
+      "records" in dataQuery.data &&
+      Array.isArray(dataQuery.data.records) &&
       dataQuery.data.records.length > 0
     ) {
       dispatch({
         type: ArboActionType.INITIAL_DATA_FETCH,
-        payload: {data: (dataQuery.data.records)}
-      })
+        payload: { data: dataQuery.data.records },
+      });
     }
   }, [dataQuery]);
 
@@ -167,8 +179,8 @@ const FilteredDataProvider = ({children}: {children: React.ReactNode}) => {
     <ArboContext.Provider value={{ ...state, dispatch: dispatch }}>
       {children}
     </ArboContext.Provider>
-  )
-}
+  );
+};
 
 export function Hydrate(props: HydrateProps) {
   return <RQHydrate {...props} />;

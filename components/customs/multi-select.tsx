@@ -82,7 +82,7 @@ export function MultiSelect(props: MultiSelectProps) {
                 onBlur={() => setOpen(false)}
                 onFocus={() => setOpen(true)}
                 placeholder={heading}
-                className="bg-transparent outline-none placeholder:text-muted-foreground flex-1 inline pb-1 mb-1 border-b-2"
+                className="bg-transparent outline-none placeholder:text-muted-foreground w-full flex-1 inline pb-1 mb-1 border-b-2"
               />}
               <div className="flex gap-1 flex-wrap">
               {createMultiSelectOptionList(selected).map((selectedOption) => {

@@ -1,3 +1,17 @@
+/**
+ * @file Filters Component
+ * @description This component renders a set of filters for the Arboviruses dashboard.
+ * It includes dropdowns for age group, sex, country, assay, producer, sample frame, antibody, and pathogen.
+ * The filters are dynamically updated based on user interactions and are synchronized with the global state.
+ * The component fetches arbovirus data and filter options from the API, rendering the filters once the data is available.
+ * It uses the ArboContext to manage global state and interacts with the map using the mapboxgl library.
+ *
+ *
+ * @see contexts/arbo-context.tsx
+ * @see hooks/useArboData.tsx
+ * @see components/customs/multi-select.tsx
+ */
+
 "use client";
 
 import {
@@ -7,10 +21,11 @@ import {
 } from "@/contexts/arbo-context";
 import { MultiSelect } from "@/components/customs/multi-select";
 import React, { useContext } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import mapboxgl from "mapbox-gl";
+import { useQuery } from "@tanstack/react-query";
 import useArboData from "@/hooks/useArboData";
+import SectionHeader from "@/components/customs/SectionHeader";
 
+// Function to add or update filters with multiple values
 const addFilterMulti = (
   value: string[],
   newFilter: string,
@@ -27,6 +42,7 @@ const addFilterMulti = (
   });
 };
 
+// Function to build a filter dropdown
 const buildFilterDropdown = (
   filter: string,
   placeholder: string,
@@ -68,8 +84,8 @@ interface FilterSectionProps {
 }
 
 const FilterSection = ({
-  headerText: _,
-  headerTooltipText: __,
+  headerText,
+  headerTooltipText,
   fields,
   state,
   filterableFieldToLabelMap,
@@ -78,12 +94,12 @@ const FilterSection = ({
 }: FilterSectionProps) => {
   return (
     <div className="p-0">
-      {/*<div>*/}
-      {/*    <SectionHeader*/}
-      {/*        header_text={headerText}*/}
-      {/*        tooltip_text={headerTooltipText}
-      {/*    />*/}
-      {/*</div>*/}
+      <div>
+        <SectionHeader
+          header_text={headerText}
+          tooltip_text={headerTooltipText}
+        />
+      </div>
       {fields.map((field) => {
         return buildFilterDropdown(
           field,
@@ -126,8 +142,10 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
     FilterableField.pathogen,
   ].filter((field) => !excludedFields.includes(field));
 
+  // Fetch arbovirus data using the useArboData hook
   const { data } = useArboData();
 
+  // Fetch filter options using React Query
   const filters = useQuery({
     queryKey: ["ArbovirusFilters"],
     queryFn: () =>
@@ -135,6 +153,16 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
         (response) => response.json()
       ),
   });
+
+  const resetFilters = () => {
+    // Dispatch action to reset filters
+    state.dispatch({
+      type: ArboActionType.RESET_FILTERS,
+      payload: {
+        data: data ? data.records : [],
+      }, // Include an empty object as payload
+    });
+  };
 
   if (filters.isSuccess && !filters.isLoading && !filters.isError) {
     console.debug(filters.data, Object.keys(filters.data));
@@ -159,6 +187,14 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
           data={data}
           filterableFieldToLabelMap={filterableFieldToLabelMap}
         />
+        <div>
+          <button
+            className="w-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 font-bold py-2 px-15 rounded"
+            onClick={resetFilters}
+          >
+            Reset Filters
+          </button>
+        </div>
       </div>
     );
   } else return <div>Filters Loading...</div>;
