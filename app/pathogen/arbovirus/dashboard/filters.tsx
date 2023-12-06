@@ -64,7 +64,17 @@ const buildFilterDropdown = (
             addFilterMulti(dateString ? [dateString] : [], filter, state, data);
           }}
           labelText={placeholder}
-          date={ state.selectedFilters[filter] ? parse(state.selectedFilters[filter][0], "dd/MM/yyyy", new Date()) : undefined}
+          date={ (state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) ? parse(state.selectedFilters[filter][0], "dd/MM/yyyy", new Date()) : undefined}
+          clearDateFilter={() => {
+            state.dispatch({
+              type: ArboActionType.UPDATE_FILTER,
+              payload: {
+                filter: filter,
+                value: [],
+                data: data ? data : []
+              },
+            });
+          }}
         />
       </div>
     );

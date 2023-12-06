@@ -50,7 +50,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
       if (!filters[key].length) return true;
 
       if(key === "end_date") {
-        const filterEndDate = new Date(filters["end_date"][0]);
+        const filterEndDate = parse(filters["end_date"][0], "dd/MM/yyyy", new Date());
         const itemDate = new Date(item.sample_end_date);
 
         const filterEndUTC = Date.UTC(
@@ -69,7 +69,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
       }
 
       if(key === "start_date") {
-        const filterStartDate = new Date(filters["start_date"][0]);
+        const filterStartDate = parse(filters["start_date"][0], "dd/MM/yyyy", new Date());
         const itemDate = new Date(item.sample_start_date);
 
         const filterStartUTC = Date.UTC(
