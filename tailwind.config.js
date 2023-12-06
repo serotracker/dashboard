@@ -26,7 +26,7 @@ module.exports = {
       },
       height: {
         'half-screen': 'calc(50vh - 3rem)',
-        'full-screen': 'calc(100vh - 6rem)',
+        'full-screen': 'calc(100vh - 3rem)',
       },
       colors: {
         denv: "#FFADAD",
@@ -34,7 +34,7 @@ module.exports = {
         chikv: "#9BF6FF",
         wnv: "#CAFFBF",
         yf: "#FFD6A5",
-        mayv: "#FDFFB6",
+        mayv: "#c5a3ff",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

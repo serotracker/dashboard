@@ -4,8 +4,10 @@ import { ColumnDef } from "@tanstack/table-core";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
-import { pathogenColors } from "../dashboard/(map)/MapAndFilters";
+import { HeaderContext } from "@tanstack/react-table";
 import validator from "validator";
+import Link from "next/link";
+import { TranslateDate } from "@/utils/translate-util/translate-service";
 
 export type Estimate = {
   age_group: string;
@@ -37,7 +39,41 @@ export type Estimate = {
   url: string;
 };
 
+const get_header = (columnName: string) => {
+  const HeaderComponent: React.FC<HeaderContext<Estimate, unknown>> = ({ column }) => (
+    <Button
+      variant="ghost"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    >
+      {columnName}
+      <ArrowUpDown className="ml-2 h-4 w-4" />
+    </Button>
+  );
+  return HeaderComponent;
+};
+
 export const columns: ColumnDef<Estimate>[] = [
+  {
+    accessorKey: "estimate_id",
+    header: get_header("Estimate ID"),
+    cell: ({ row }) => {
+      const url: string = row.getValue("url");
+
+      console.log(url);
+
+      if(url && validator.isURL(url)) {
+        return (
+          // TODO: Link styling needs to be globalised. 
+          <Link className="w-full underline hover:text-blue-400" href={url} rel="noopener noreferrer" target="_blank">
+            {row.getValue("estimate_id")}
+          </Link>
+        )
+      }
+
+      return <p> {row.getValue("estimate_id")} </p>
+      
+    },
+  },
   {
     accessorKey: "pathogen",
     header: ({ column }) => {
@@ -46,7 +82,7 @@ export const columns: ColumnDef<Estimate>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Pathogen
+          Arbovirus
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -89,7 +125,7 @@ export const columns: ColumnDef<Estimate>[] = [
   },
   {
     accessorKey: "seroprevalence",
-    header: "Seroprevalence",
+    header: get_header("Seroprevalence"),
     cell: ({ row }) => {
       const seroprevalence = row.getValue("seroprevalence");
       if (typeof seroprevalence === 'number') {
@@ -105,7 +141,7 @@ export const columns: ColumnDef<Estimate>[] = [
   },
   {
     accessorKey: "antibodies",
-    header: "Antibodies",
+    header: get_header("Antibodies"),
     cell: ({ row }) => {
       const antibodies = row.getValue("antibodies");
       if (Array.isArray(antibodies)) {
@@ -138,20 +174,25 @@ export const columns: ColumnDef<Estimate>[] = [
     }
   },
   {
+    id: "sample_date_range",
+    accessorFn: (row) => `${TranslateDate(row.sample_start_date)} - ${TranslateDate(row.sample_end_date)}`,  // TODO: This is a hack to get around the fact that we can't have two columns with the same accessorKey. We should fix this in the future.
+    header: get_header("Sampling Dates"),
+  },
+  {
     accessorKey: "assay",
-    header: "Assay",
+    header: get_header("Assay"),
   },
   {
     accessorKey: "assay_other",
-    header: "Assay Other",
+    header: get_header("Assay Other"),
   },
   {
     accessorKey: "producer",
-    header: "Producer",
+    header: get_header("Producer"),
   },
   {
     accessorKey: "producer_other",
-    header: "Producer Other",
+    header: get_header("Producer Other"),
   },
   // {
   //   accessorKey: "same_frame_target_group",
@@ -163,23 +204,23 @@ export const columns: ColumnDef<Estimate>[] = [
   // },
   {
     accessorKey: "sample_frame",
-    header: "Sample Frame",
+    header: get_header("Sample Frame"),
   },
   {
     accessorKey: "sample_numerator",
-    header: "Sample Numerator",
+    header: get_header("Sample Numerator"),
   },
   {
     accessorKey: "sample_size",
-    header: "Sample Size",
+    header: get_header("Sample Size"),
   },
   {
     accessorKey: "city",
-    header: "City",
+    header: get_header("City"),
   },
   {
     accessorKey: "country",
-    header: "Country",
+    header: get_header("Country"),
   },
   // {
   //   accessorKey: "sample_start_date",
@@ -187,19 +228,19 @@ export const columns: ColumnDef<Estimate>[] = [
   // },
   {
     accessorKey: "sex",
-    header: "Sex",
+    header: get_header("Sex"),
   },
   {
     accessorKey: "age_group",
-    header: "Age Group",
+    header: get_header("Age Group"),
   },
   {
     accessorKey: "age_maximum",
-    header: "Age Maximum",
+    header: get_header("Age Maximum"),
   },
   {
     accessorKey: "age_minimum",
-    header: "Age Minimum",
+    header: get_header("Age Minimum"),
   },
   {
     accessorKey: "url",

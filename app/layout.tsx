@@ -2,7 +2,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Header } from "@/components/customs/header";
-import { Footer } from "@/components/customs/footer";
 import React from "react";
 import clsx from "clsx";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -11,7 +10,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Pathotracker",
+  title: "SeroTracker",
   description:
     "A collection of dashboards tracking global seroprevalence data for mutliple pathogens.",
 };
@@ -25,10 +24,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={clsx(inter.className, "text-black no-scrollbar")}>
         <Header />
-        <main className={"h-full-screen w-screen p-4 border-box bg-foreground"}>
+        <main className={"h-full-screen w-screen bg-foreground"}>
           {children}
         </main>
-        <Footer />
       </body>
     </html>
   );

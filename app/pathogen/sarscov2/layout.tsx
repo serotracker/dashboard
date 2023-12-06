@@ -2,6 +2,7 @@ import React from "react";
 import { SarsCov2Providers, Hydrate } from "@/contexts/sarscov2-context";
 import { dehydrate } from "@tanstack/query-core";
 import getQueryClient from "@/components/customs/getQueryClient";
+import { notFound } from 'next/navigation'
 
 export default async function ArboLayout({
   children,
@@ -29,10 +30,14 @@ export default async function ArboLayout({
   
   const dehydratedState = dehydrate(queryClient);
 
+  if(!process.env.SARS_COV_2_TRACKER_ENABLED) {
+    return notFound();
+  }
+
   return (
     <div
       className={
-        "grid gap-4 grid-cols-12 grid-rows-2 grid-flow-col w-full h-full overflow-hidden"
+        "grid gap-4 grid-cols-12 grid-rows-2 grid-flow-col w-full h-full overflow-hidden p-4 border-box"
       }
     >
       <SarsCov2Providers>
