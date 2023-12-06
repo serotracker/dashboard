@@ -17,29 +17,7 @@ export default function MapAndFilters() {
   const dataQuery = useSarsCov2Data();
   const state = useContext(SarsCov2Context);
 
-  console.log("Context in MapAndFilters: ", state);
-
-  // Might have to find a way to make this synchronous instead of asynchronous
-  if (dataQuery.isSuccess && dataQuery.data) {
-    const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
-      const value = state.selectedFilters.pathogen;
-
-      if (checked) {
-        value.push(pathogen);
-      } else {
-        value.splice(value.indexOf(pathogen), 1);
-      }
-
-      state.dispatch({
-        type: SarsCov2ActionType.UPDATE_FILTER,
-        payload: {
-          data: dataQuery.data.records,
-          filter: "pathogen",
-          value: value,
-        },
-      });
-    };
-
+  if (state.initialFetchCompleted) {
     return (
       <>
         <Card
