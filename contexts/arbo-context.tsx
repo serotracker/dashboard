@@ -49,22 +49,9 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
     return filterKeys.every((key: string) => {
       if (!filters[key].length) return true;
 
-      if (key === "antibody") {
-        return item["antibodies"].some((element: string) =>
-          filters[key].includes(element)
-        );
-      } else if (key === "start_date" && filters.end_date) {
-        // Handle date filtering
-        const filterStartDate = new Date(filters["start_date"][0]);
+      if(key === "end_date") {
         const filterEndDate = new Date(filters["end_date"][0]);
-        const itemDate = new Date(item.sample_start_date);
-
-        // Use UTC methods for creating and comparing dates
-        const filterStartUTC = Date.UTC(
-          filterStartDate.getUTCFullYear(),
-          filterStartDate.getUTCMonth(),
-          filterStartDate.getUTCDate()
-        );
+        const itemDate = new Date(item.sample_end_date);
 
         const filterEndUTC = Date.UTC(
           filterEndDate.getUTCFullYear(),
@@ -78,15 +65,32 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
           itemDate.getUTCDate()
         );
 
-        console.log("Filter Start Date:", filterStartDate);
-        console.log("Filter End Date:", filterEndDate);
-        console.log("Item Date:", itemDate);
-        console.log("Item[key]:", item["sample_start_date"]);
+        return itemDateUTC <= filterEndUTC;
+      }
 
-        // Assuming that the filter values are single dates
-        // return itemDate >= filterStartDate && itemDate <= filterEndDate;
-        console.log("THE RETURN STMT: ",  itemDateUTC >= filterStartUTC && itemDateUTC <= filterEndUTC)
-        return itemDateUTC >= filterStartUTC && itemDateUTC <= filterEndUTC;
+      if(key === "start_date") {
+        const filterStartDate = new Date(filters["start_date"][0]);
+        const itemDate = new Date(item.sample_start_date);
+
+        const filterStartUTC = Date.UTC(
+          filterStartDate.getUTCFullYear(),
+          filterStartDate.getUTCMonth(),
+          filterStartDate.getUTCDate()
+        );
+
+        const itemDateUTC = Date.UTC(
+          itemDate.getUTCFullYear(),
+          itemDate.getUTCMonth(),
+          itemDate.getUTCDate()
+        );
+
+        return itemDateUTC >= filterStartUTC;
+      }
+
+      if (key === "antibody") {
+        return item["antibodies"].some((element: string) =>
+          filters[key].includes(element)
+        );
       } else {
         if (Array.isArray(item[key])) {
           // If item[key] is an array, check if any element of item[key] is included in filters[key]
@@ -117,7 +121,9 @@ export const arboReducer = (
       if (map) {
         adjustMapPositionIfCountryFilterHasChanged(action, map);
       }
-      console.log("Filtered Data:", state.filteredData);
+      console.log("Data filters", action.payload.filter);
+      console.log("Data before filtration", state.filteredData);
+      console.log("Data after filtration", filterData(action.payload.data, selectedFilters));
       return {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
