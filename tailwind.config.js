@@ -26,7 +26,7 @@ module.exports = {
       },
       height: {
         'half-screen': 'calc(50vh - 3rem)',
-        'full-screen': 'calc(100vh - 6rem)',
+        'full-screen': 'calc(100vh - 3rem)',
       },
       colors: {
         denv: "#FFADAD",
