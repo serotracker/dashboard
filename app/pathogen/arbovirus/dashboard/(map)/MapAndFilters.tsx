@@ -70,8 +70,6 @@ export default function MapAndFilters() {
       });
     };
 
-    const uniqueNumberOfSources = Array.from(new Set(state.filteredData.map((item: any) => item.source_sheet_name))).length;
-
     const pathogenOrder = [
       'ZIKV',
       'DENV',
