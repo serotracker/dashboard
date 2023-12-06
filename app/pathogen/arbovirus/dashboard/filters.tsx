@@ -25,6 +25,7 @@ import { useQuery } from "@tanstack/react-query";
 import useArboData from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";
 import { DatePicker } from "@/components/ui/datepicker";
+import { parse } from "date-fns"
 
 // Function to add or update filters with multiple values
 const addFilterMulti = (
@@ -51,16 +52,19 @@ const buildFilterDropdown = (
   filterOptions: string[],
   data: any
 ) => {
-  if (filter === FilterableField.start_date || filter === FilterableField.end_date) {
+  if (
+    filter === FilterableField.start_date ||
+    filter === FilterableField.end_date
+  ) {
     return (
       <div className="pb-3">
-        <DatePicker onChange={(date) => {
-          // Handle the selected date
-          console.log("Selected Date:", date);
-          const dateString = date?.toLocaleDateString();
-          console.log("Formatted Date String:", dateString);
-          addFilterMulti(dateString ? [dateString] : [], filter, state, data);
-        }} />
+        <DatePicker
+          onChange={(date) => {
+            const dateString = date?.toLocaleDateString();
+            addFilterMulti(dateString ? [dateString] : [], filter, state, data);
+          }}
+          date={ state.selectedFilters[filter] ? parse(state.selectedFilters[filter][0], "dd/MM/yyyy", new Date()) : undefined}
+        />
       </div>
     );
   } else {
