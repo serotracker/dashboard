@@ -24,6 +24,7 @@ import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useArboData from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";
+import { DatePicker } from "@/components/ui/datepicker";
 
 // Function to add or update filters with multiple values
 const addFilterMulti = (
@@ -50,16 +51,30 @@ const buildFilterDropdown = (
   filterOptions: string[],
   data: any
 ) => {
-  return (
-    <div className="pb-3">
-      <MultiSelect
-        handleOnChange={(value) => addFilterMulti(value, filter, state, data)}
-        heading={placeholder}
-        selected={state.selectedFilters[filter] ?? []}
-        options={filterOptions.filter((assay: string) => assay != null)}
-      />
-    </div>
-  );
+  if (filter === FilterableField.start_date || filter === FilterableField.end_date) {
+    return (
+      <div className="pb-3">
+        <DatePicker onChange={(date) => {
+          // Handle the selected date
+          console.log("Selected Date:", date);
+          const dateString = date?.toLocaleDateString();
+          console.log("Formatted Date String:", dateString);
+          addFilterMulti(dateString ? [dateString] : [], filter, state, data);
+        }} />
+      </div>
+    );
+  } else {
+    return (
+      <div className="pb-3">
+        <MultiSelect
+          handleOnChange={(value) => addFilterMulti(value, filter, state, data)}
+          heading={placeholder}
+          selected={state.selectedFilters[filter] ?? []}
+          options={filterOptions.filter((assay: string) => assay != null)}
+        />
+      </div>
+    );
+  }
 };
 
 export enum FilterableField {
@@ -71,6 +86,8 @@ export enum FilterableField {
   sample_frame = "sample_frame",
   antibody = "antibody",
   pathogen = "pathogen",
+  start_date = "start_date",
+  end_date = "end_date",
 }
 
 interface FilterSectionProps {
@@ -119,7 +136,7 @@ interface FiltersProps {
 
 export default function Filters({ excludedFields = [] }: FiltersProps) {
   const state = useContext(ArboContext);
-  const filterableFieldToLabelMap: { [key in FilterableField]: string } = {
+  const filterableFieldToLabelMap: Record<FilterableField, string> = {
     [FilterableField.age_group]: "Age Group",
     [FilterableField.sex]: "Sex",
     [FilterableField.country]: "Country",
@@ -128,6 +145,8 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
     [FilterableField.sample_frame]: "Sample Frame",
     [FilterableField.antibody]: "Antibody",
     [FilterableField.pathogen]: "Pathogen",
+    [FilterableField.start_date]: "Start Date",
+    [FilterableField.end_date]: "End Date",
   };
   const demographicFilters = [
     FilterableField.age_group,
@@ -140,6 +159,8 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
     FilterableField.sample_frame,
     FilterableField.antibody,
     FilterableField.pathogen,
+    FilterableField.start_date,
+    FilterableField.end_date,
   ].filter((field) => !excludedFields.includes(field));
 
   // Fetch arbovirus data using the useArboData hook

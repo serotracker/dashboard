@@ -11,6 +11,7 @@ import {
   getBoundingBoxFromCountryName,
 } from "@/lib/country-bounding-boxes";
 import useArboData from "@/hooks/useArboData";
+import { parse } from "date-fns";
 
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
@@ -41,13 +42,51 @@ export const initialState: ArboStateType = {
 
 function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   const filterKeys = Object.keys(filters);
+  console.log("Filtering data...");
+  console.log("DATA COMING IN...", data);
+  console.log("FILTERS SELECTED COMING IN...", filters);
   return data.filter((item: any) => {
     return filterKeys.every((key: string) => {
       if (!filters[key].length) return true;
+
       if (key === "antibody") {
         return item["antibodies"].some((element: string) =>
           filters[key].includes(element)
         );
+      } else if (key === "start_date" && filters.end_date) {
+        // Handle date filtering
+        const filterStartDate = new Date(filters["start_date"][0]);
+        const filterEndDate = new Date(filters["end_date"][0]);
+        const itemDate = new Date(item.sample_start_date);
+
+        // Use UTC methods for creating and comparing dates
+        const filterStartUTC = Date.UTC(
+          filterStartDate.getUTCFullYear(),
+          filterStartDate.getUTCMonth(),
+          filterStartDate.getUTCDate()
+        );
+
+        const filterEndUTC = Date.UTC(
+          filterEndDate.getUTCFullYear(),
+          filterEndDate.getUTCMonth(),
+          filterEndDate.getUTCDate()
+        );
+
+        const itemDateUTC = Date.UTC(
+          itemDate.getUTCFullYear(),
+          itemDate.getUTCMonth(),
+          itemDate.getUTCDate()
+        );
+
+        console.log("Filter Start Date:", filterStartDate);
+        console.log("Filter End Date:", filterEndDate);
+        console.log("Item Date:", itemDate);
+        console.log("Item[key]:", item["sample_start_date"]);
+
+        // Assuming that the filter values are single dates
+        // return itemDate >= filterStartDate && itemDate <= filterEndDate;
+        console.log("THE RETURN STMT: ",  itemDateUTC >= filterStartUTC && itemDateUTC <= filterEndUTC)
+        return itemDateUTC >= filterStartUTC && itemDateUTC <= filterEndUTC;
       } else {
         if (Array.isArray(item[key])) {
           // If item[key] is an array, check if any element of item[key] is included in filters[key]
@@ -63,7 +102,11 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   });
 }
 
-export const arboReducer = (state: ArboStateType, action: ArboAction, map: MapRef | undefined) => {
+export const arboReducer = (
+  state: ArboStateType,
+  action: ArboAction,
+  map: MapRef | undefined
+) => {
   switch (action.type) {
     case ArboActionType.UPDATE_FILTER:
       const selectedFilters = {
@@ -74,7 +117,7 @@ export const arboReducer = (state: ArboStateType, action: ArboAction, map: MapRe
       if (map) {
         adjustMapPositionIfCountryFilterHasChanged(action, map);
       }
-
+      console.log("Filtered Data:", state.filteredData);
       return {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
@@ -110,7 +153,7 @@ const adjustMapPositionIfCountryFilterHasChanged = (
       .map((countryName: string) => getBoundingBoxFromCountryName(countryName))
       .filter((boundingBox: CountryBoundingBox) => !!boundingBox);
 
-    if(allSelectedCountryBoundingBoxes.length === 0) {
+    if (allSelectedCountryBoundingBoxes.length === 0) {
       map.fitBounds([-180, -90, 180, 90]);
 
       return;
@@ -144,17 +187,19 @@ export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
   return (
     <MapProvider>
       <QueryClientProvider client={queryClient}>
-        <FilteredDataProvider>
-          {children}
-        </FilteredDataProvider>
+        <FilteredDataProvider>{children}</FilteredDataProvider>
       </QueryClientProvider>
     </MapProvider>
   );
 };
 
-const FilteredDataProvider = ({children}: {children: React.ReactNode}) => {
+const FilteredDataProvider = ({ children }: { children: React.ReactNode }) => {
   const { arboMap } = useMap();
-  const [state, dispatch] = useReducer((state: ArboStateType, action: ArboAction) => arboReducer(state,action,arboMap), initialState);
+  const [state, dispatch] = useReducer(
+    (state: ArboStateType, action: ArboAction) =>
+      arboReducer(state, action, arboMap),
+    initialState
+  );
   const dataQuery = useArboData();
 
   useEffect(() => {
