@@ -159,7 +159,7 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
     [FilterableField.producer]: "Assay Producer",
     [FilterableField.sample_frame]: "Sample Frame",
     [FilterableField.antibody]: "Antibody",
-    [FilterableField.pathogen]: "Pathogen",
+    [FilterableField.pathogen]: "Arbovirus",
     [FilterableField.start_date]: "Start Date",
     [FilterableField.end_date]: "End Date",
   };
