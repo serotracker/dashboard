@@ -105,6 +105,10 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
       {/*Content section*/}
       <div className={"py-2 px-4 max-h-[250px] overflow-auto"}>
         {row(
+        "Sampling Date Range", 
+        `${TranslateDate(record.sample_start_date)} to ${TranslateDate(record.sample_end_date)}`
+        )}
+        {row(
           "Inclusion Criteria",
           record.inclusion_criteria ? record.inclusion_criteria : "Not Reported"
         )}
@@ -131,8 +135,6 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
         {row("Antigen", record.antigen)}
         {row("Assay", record.assay)}
       </div>
-      {/*RiskTag section*/}
-      {pathogenTag(`${record.pathogen}`)}
     </div>
   );
 }
