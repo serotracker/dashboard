@@ -679,7 +679,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
       <div className="flex justify-center flex-wrap">
         {/* Legend */}
         {Object.keys(ageGroupColorMappings).map((ageGroup) => (
-          <div className="w-fit m-2">
+          <div className="w-fit m-2" key={ageGroup}>
             <div
               className="w-4 h-4 inline-block mr-2"
               style={{
