@@ -464,7 +464,12 @@ export function MedianSeroPrevByWHOregion() {
                 }}
                 width={500}
                 height={450}
-                data={d.data}
+                data={d.data.filter((dataItem) => {
+                  return Object.values(dataItem).some((v) => {
+                    const val = parseFloat(v as string);
+                    return typeof val === "number" && val > 0;
+                  });
+                })}
               >
                 <CartesianGrid />
                 <XAxis
