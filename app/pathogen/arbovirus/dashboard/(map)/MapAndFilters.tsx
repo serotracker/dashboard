@@ -16,7 +16,6 @@ import useArboData from "@/hooks/useArboData";
 import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
-import { ScrollText } from "lucide-react";
 import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 
@@ -183,8 +182,7 @@ export default function MapAndFilters() {
           </Card>
           <Card className={"absolute top-1 left-1 p-2"}>
             <CardContent className={"flex w-fit p-0"}>
-              <ScrollText />
-              <p className={"ml-1 font-medium"}>{state.filteredData.length}</p>
+              <p className={"ml-1 font-medium"}><b>{state.filteredData.length}</b> Estimates displayed from <b>{Array.from(new Set(state.filteredData.map((item: any) => item.source_sheet_name))).length}</b> unique sources</p>
             </CardContent>
           </Card>
         </Card>

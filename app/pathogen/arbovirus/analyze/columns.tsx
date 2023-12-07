@@ -59,8 +59,6 @@ export const columns: ColumnDef<Estimate>[] = [
     cell: ({ row }) => {
       const url: string = row.getValue("url");
 
-      console.log(url);
-
       if(url && validator.isURL(url)) {
         return (
           // TODO: Link styling needs to be globalised. 
@@ -174,9 +172,18 @@ export const columns: ColumnDef<Estimate>[] = [
     }
   },
   {
-    id: "sample_date_range",
-    accessorFn: (row) => `${TranslateDate(row.sample_start_date)} - ${TranslateDate(row.sample_end_date)}`,  // TODO: This is a hack to get around the fact that we can't have two columns with the same accessorKey. We should fix this in the future.
-    header: get_header("Sampling Dates"),
+    id: "sample_start_date",
+    accessorFn: (row) => TranslateDate(row.sample_start_date),  // TODO: This is a hack to get around the fact that we can't have two columns with the same accessorKey. We should fix this in the future.
+    header: get_header("Sampling Start Date"),
+  },
+  {
+    id: "sample_end_date",
+    accessorFn: (row) => TranslateDate(row.sample_end_date),  // TODO: This is a hack to get around the fact that we can't have two columns with the same accessorKey. We should fix this in the future.
+    header: get_header("Sampling End Date"),
+  },
+  {
+    accessorKey: "who_region",
+    header: get_header("WHO Region"),
   },
   {
     accessorKey: "assay",
@@ -234,14 +241,14 @@ export const columns: ColumnDef<Estimate>[] = [
     accessorKey: "age_group",
     header: get_header("Age Group"),
   },
-  {
-    accessorKey: "age_maximum",
-    header: get_header("Age Maximum"),
-  },
-  {
-    accessorKey: "age_minimum",
-    header: get_header("Age Minimum"),
-  },
+  // {
+  //   accessorKey: "age_maximum",
+  //   header: get_header("Age Maximum"),
+  // },
+  // {
+  //   accessorKey: "age_minimum",
+  //   header: get_header("Age Minimum"),
+  // },
   {
     accessorKey: "url",
     header: "Source",

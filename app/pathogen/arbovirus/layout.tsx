@@ -10,8 +10,6 @@ export default async function ArboLayout({
 }) {
   const queryClient = getQueryClient();
 
-  console.log(process.env.NEXT_PUBLIC_API_BASE_URL)
-
   await queryClient.prefetchQuery({
     queryKey: ["ArbovirusRecords"],
     queryFn: () =>

@@ -73,7 +73,6 @@ export const getMapboxLatitudeOffset = (map: mapboxgl.Map | undefined) => {
 //creates map on click listeners to handle opening pop ups
 function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "SarsCov2") {
   let pinPopup: mapboxgl.Popup | undefined = undefined;
-  console.debug("adding event listeners");
   map.on("mouseenter", `${pathogen}-pins`, function () {
     if (map) map.getCanvas().style.cursor = "pointer";
   });
@@ -85,7 +84,6 @@ function initializeMap(map: mapboxgl.Map, data: any, pathogen: "Arbovirus" | "Sa
     "click",
     `${pathogen}-pins`,
     function (e: mapboxgl.MapMouseEvent & mapboxgl.EventData) {
-      console.log(e.lngLat);
 
       if (pinPopup !== undefined) {
         pinPopup.remove();
@@ -167,7 +165,6 @@ export default function useMap(
   useEffect(() => {
     if (map && pageIsMounted && data) {
       map.on("load", () => {
-        //console.log("adding sarscov2 layers")
         addSarsCov2DataLayers(map as mapboxgl.Map, data);
       });
     }

@@ -74,7 +74,6 @@ function getTranslatedPopulationGroup(popGroupOptions: Record<string, string>[],
 }
 
 export default function SarsCov2StudyPopup(record: any) {
-    console.log(record)
     return (
         <div className="w-[460px] bg-white pt-2" >
             {/*Header section*/}

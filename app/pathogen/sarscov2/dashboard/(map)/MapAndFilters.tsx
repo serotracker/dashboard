@@ -12,7 +12,6 @@ export default function MapAndFilters() {
   const dataQuery = useSarsCov2Data();
   const state = useContext(SarsCov2Context);
 
-  console.log("Context in MapAndFilters: ", state);
 
   // Might have to find a way to make this synchronous instead of asynchronous
   const { map, mapContainer } = useMap(dataQuery.data?.records ?? [], "SarsCov2");
