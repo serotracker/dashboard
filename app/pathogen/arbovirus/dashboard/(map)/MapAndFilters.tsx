@@ -95,7 +95,7 @@ export default function MapAndFilters() {
                       "YF",
                       "#FFD6A5",
                       "MAYV",
-                      "#FDFFB6",
+                      "#C5A3FF",
                       "#FFFFFC",
                     ],
                     "circle-radius": 8,
