@@ -59,15 +59,13 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
         const filterEndUTC = Date.UTC(
           filterEndDate.getUTCFullYear(),
           filterEndDate.getUTCMonth(),
-          filterEndDate.getUTCDate()
         );
 
         const itemDateUTC = Date.UTC(
           itemDate.getUTCFullYear(),
           itemDate.getUTCMonth(),
-          itemDate.getUTCDate()
         );
-
+        
         return itemDateUTC <= filterEndUTC;
       }
 
@@ -83,14 +81,13 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
         const filterStartUTC = Date.UTC(
           filterStartDate.getUTCFullYear(),
           filterStartDate.getUTCMonth(),
-          filterStartDate.getUTCDate()
         );
 
         const itemDateUTC = Date.UTC(
           itemDate.getUTCFullYear(),
           itemDate.getUTCMonth(),
-          itemDate.getUTCDate()
         );
+        
 
         return itemDateUTC >= filterStartUTC;
       }
@@ -114,6 +111,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   });
 }
 
+
 export const arboReducer = (
   state: ArboStateType,
   action: ArboAction,
@@ -129,7 +127,6 @@ export const arboReducer = (
       if (map) {
         adjustMapPositionIfCountryFilterHasChanged(action, map);
       }
-
       return {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),

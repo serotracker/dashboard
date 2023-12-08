@@ -50,7 +50,7 @@ const buildFilterDropdown = (
   placeholder: string,
   state: ArboContextType,
   filterOptions: string[],
-  data: any
+  data: any,
 ) => {
   if (
     filter === FilterableField.start_date ||
@@ -71,7 +71,7 @@ const buildFilterDropdown = (
               payload: {
                 filter: filter,
                 value: [],
-                data: data ? data : []
+                data: data ? data : [],
               },
             });
           }}
@@ -139,7 +139,7 @@ const FilterSection = ({
           filterableFieldToLabelMap[field],
           state,
           filters.data[field],
-          data ? data.records : []
+          data ? data.records : [],
         );
       })}
     </div>

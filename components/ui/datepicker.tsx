@@ -20,7 +20,15 @@ interface DatePickerProps {
   clearDateFilter: () => void;
 }
 
-export function DatePicker({ onChange, date, labelText, clearDateFilter }: DatePickerProps) {
+export function DatePicker({
+  onChange,
+  date,
+  labelText,
+  clearDateFilter,
+}: DatePickerProps) {
+  // Check if date is a valid Date object
+  const isValidDate = date instanceof Date && !isNaN(date.getTime());
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -32,18 +40,21 @@ export function DatePicker({ onChange, date, labelText, clearDateFilter }: DateP
             "bg-white border border-gray-300"
           )}
         >
-            <div className="flex justify-start text-left font-normal">
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? (
-                format(date, "EEE, dd MMM yyyy", { timeZone: "GMT" })
-              ) : (
-                <span> {labelText} </span>
-              )}
-            </div>
-          <XCircle onClick={(event) => {
-            event.stopPropagation();
-            clearDateFilter();
-          }} className={date ? '' : 'hidden'}/>
+          <div className="flex justify-start text-left font-normal">
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {isValidDate ? (
+              format(date, "EEE, dd MMM yyyy", { timeZone: "GMT" })
+            ) : (
+              <span> {labelText} </span>
+            )}
+          </div>
+          <XCircle
+            onClick={(event) => {
+              event.stopPropagation();
+              clearDateFilter();
+            }}
+            className={date ? "" : "hidden"}
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
