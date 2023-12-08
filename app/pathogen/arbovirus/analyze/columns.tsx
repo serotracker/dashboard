@@ -172,14 +172,29 @@ export const columns: ColumnDef<Estimate>[] = [
     }
   },
   {
-    id: "sample_start_date",
-    accessorFn: (row) => TranslateDate(row.sample_start_date),  // TODO: This is a hack to get around the fact that we can't have two columns with the same accessorKey. We should fix this in the future.
+    accessorKey: "sample_start_date",
+    //accessorFn: (row) => TranslateDate(row.sample_start_date),  // TODO: This is a hack to get around the fact that we can't have two columns with the same accessorKey. We should fix this in the future.
+    //accessorKey: "sample_start_date",
     header: get_header("Sampling Start Date"),
+    cell: ({ row }) => {
+      const start_date = row.original.sample_start_date;
+      if(start_date) {
+        return TranslateDate(start_date)
+      }
+      return 'N/A';
+    }
   },
   {
-    id: "sample_end_date",
-    accessorFn: (row) => TranslateDate(row.sample_end_date),  // TODO: This is a hack to get around the fact that we can't have two columns with the same accessorKey. We should fix this in the future.
+    accessorKey: "sample_end_date",
+    //accessorFn: (row) => TranslateDate(row.sample_end_date),  // TODO: This is a hack to get around the fact that we can't have two columns with the same accessorKey. We should fix this in the future.
     header: get_header("Sampling End Date"),
+    cell: ({ row }) => {
+      const end_date = row.original.sample_end_date;
+      if(end_date) {
+        return TranslateDate(end_date)
+      }
+      return 'N/A';
+    }
   },
   {
     accessorKey: "who_region",
