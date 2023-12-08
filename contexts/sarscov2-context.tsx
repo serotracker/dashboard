@@ -61,7 +61,6 @@ export function setMapboxFilters(
     if (keyFilters.length > 0) mapboxFilters.push(["any", ...keyFilters]);
   });
 
-  console.debug("Map Filters: ", ["all", ...mapboxFilters]);
   if(map?.getLayer("SarsCov2-pins")) map.setFilter("SarsCov2-pins", ["all", ...mapboxFilters]);
 }
 
@@ -74,7 +73,6 @@ export const SarsCov2Reducer = (state: SarsCov2StateType, action: SarsCov2Action
       };
 
       if (action.payload.map) {
-        console.log("update filters to map")
         setMapboxFilters(selectedFilters, action.payload.map);
       }
 

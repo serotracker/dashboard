@@ -61,7 +61,6 @@ const buildFilterDropdown = (
 
 export default function Filters(props: { map?: mapboxgl.Map | null }) {
   const state = useContext(SarsCov2Context);
-  console.log("Context in Filters: ", state);
   const { map } = props;
 
   const { data } = useSarsCov2Data();

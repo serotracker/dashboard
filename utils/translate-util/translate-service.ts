@@ -137,13 +137,22 @@ export function TranslateObject(text: string): object {
  */
  export function TranslateDate(dateString: string): string {
 
-  const dateTimeFormat = new Intl.DateTimeFormat(language, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-  
-  return dateTimeFormat.format(new Date(dateString))
+  let formattedDateString: string = "-";
+
+  try {
+    const dateTimeFormat = new Intl.DateTimeFormat(language, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+
+    formattedDateString = dateTimeFormat.format(new Date(dateString));
+  } catch (e) {
+    console.error(`Unable to format date ${dateString}. Check data`);
+  }
+
+  // TODO: Need to catch errors here
+  return formattedDateString
 }
 
 export const translateAntibodyTargets = (antibodyTarget: string | string[]) => {

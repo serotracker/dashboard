@@ -11,7 +11,7 @@ import {
   getBoundingBoxFromCountryName,
 } from "@/lib/country-bounding-boxes";
 import useArboData from "@/hooks/useArboData";
-import { parse } from "date-fns";
+import { parseISO } from "date-fns";
 
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
@@ -42,62 +42,19 @@ export const initialState: ArboStateType = {
 
 function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   const filterKeys = Object.keys(filters);
-  console.log("Filtering data...");
-  console.log("DATA COMING IN...", data);
-  console.log("FILTERS SELECTED COMING IN...", filters);
+
   return data.filter((item: any) => {
     return filterKeys.every((key: string) => {
       if (!filters[key].length) return true;
 
-      if (key === "start_date") {
-        const filterStartDate = parse(
-          filters["start_date"][0],
-          "dd/MM/yyyy",
-          new Date()
-        );
+      if(key === "end_date") {
+        const filterEndDate = parseISO(filters["end_date"][0]);
 
-        const itemDate = new Date(item.sample_start_date);
-        // Set day to 1 to ignore the day component
-        // filterStartDate.setUTCDate(1);
-        // filterStartDate.setUTCHours(0, 0, 0, 0);
-        // Set day to 1 to ignore the day component
-        // itemDate.setUTCDate(1);
-        // itemDate.setUTCHours(0, 0, 0, 0);
+        if(!filterEndDate) {
+          return true;
+        }
 
-        console.log("PARSED FILTER START DATE: ", filterStartDate);
-        console.log("PARSED ITEM START DATE: ", itemDate);
-
-        
-        const filterStartUTC = Date.UTC(
-          filterStartDate.getUTCFullYear(),
-          filterStartDate.getUTCMonth(),
-        );
-
-        const itemDateUTC = Date.UTC(
-          itemDate.getUTCFullYear(),
-          itemDate.getUTCMonth(),
-        );
-
-
-        console.log("FILTER START DATE: ", filterStartUTC)
-        console.log("START DATE RETURN: ", itemDateUTC >= filterStartUTC)
-        // return itemDate >= filterStartDate;
-        return itemDateUTC >= filterStartUTC;
-      }
-
-      if (key === "end_date") {
-        const filterEndDate = parse(
-          filters["end_date"][0],
-          "dd/MM/yyyy",
-          new Date()
-        );
         const itemDate = new Date(item.sample_end_date);
-        // Set day to 1 to ignore the day component
-        // filterEndDate.setUTCDate(1);
-        // filterEndDate.setUTCHours(0, 0, 0, 0);
-        // Set day to 1 to ignore the day component
-        // itemDate.setUTCDate(1);
-        // itemDate.setUTCHours(0, 0, 0, 0);
 
         const filterEndUTC = Date.UTC(
           filterEndDate.getUTCFullYear(),
@@ -109,11 +66,30 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
           itemDate.getUTCMonth(),
         );
         
-
-        console.log("FILTER END DATE: ", filterEndUTC)
-        console.log("END DATE RETURN: ", itemDateUTC <= filterEndUTC)
-        // return itemDate <= filterEndDate;
         return itemDateUTC <= filterEndUTC;
+      }
+
+      if(key === "start_date") {
+        const filterStartDate = parseISO(filters["start_date"][0]);
+
+        if(!filterStartDate) {
+          return true;
+        }
+
+        const itemDate = new Date(item.sample_start_date);
+
+        const filterStartUTC = Date.UTC(
+          filterStartDate.getUTCFullYear(),
+          filterStartDate.getUTCMonth(),
+        );
+
+        const itemDateUTC = Date.UTC(
+          itemDate.getUTCFullYear(),
+          itemDate.getUTCMonth(),
+        );
+        
+
+        return itemDateUTC >= filterStartUTC;
       }
 
       if (key === "antibody") {
@@ -153,10 +129,7 @@ export const arboReducer = (
       }
       console.log("Data filters", action.payload.filter);
       console.log("Data before filtration", state.filteredData);
-      console.log(
-        "Data after filtration",
-        filterData(action.payload.data, selectedFilters)
-      );
+      console.log("Data after filtration", filterData(action.payload.data, selectedFilters));
       return {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
@@ -209,7 +182,7 @@ const adjustMapPositionIfCountryFilterHasChanged = (
 export const ArboContext = createContext<ArboContextType>({
   ...initialState,
   dispatch: (obj) => {
-    console.log("dispatch not initialized", obj);
+    console.debug("dispatch not initialized", obj);
   },
 });
 
