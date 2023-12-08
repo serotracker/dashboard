@@ -56,6 +56,9 @@ const buildFilterDropdown = (
     filter === FilterableField.start_date ||
     filter === FilterableField.end_date
   ) {
+    if(state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) {
+      console.log(state.selectedFilters[filter][0])
+    }
     return (
       <div className="pb-3" key={filter}>
         <DatePicker
@@ -64,7 +67,7 @@ const buildFilterDropdown = (
             addFilterMulti(dateString ? [dateString] : [], filter, state, data);
           }}
           labelText={placeholder}
-          date={ (state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) ? parse(state.selectedFilters[filter][0], "dd/MM/yyyy", new Date()) : undefined}
+          date={ (state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) ? parse(state.selectedFilters[filter][0], "yyyy-MM-dd", new Date()) : undefined}
           clearDateFilter={() => {
             state.dispatch({
               type: ArboActionType.UPDATE_FILTER,
