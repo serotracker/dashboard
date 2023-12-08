@@ -26,6 +26,7 @@ import useArboData from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";
 import { DatePicker } from "@/components/ui/datepicker";
 import { parse } from "date-fns"
+import { parseDateString } from "@/utils/date-util";
 
 // Function to add or update filters with multiple values
 const addFilterMulti = (
@@ -56,9 +57,6 @@ const buildFilterDropdown = (
     filter === FilterableField.start_date ||
     filter === FilterableField.end_date
   ) {
-    if(state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) {
-      console.log(state.selectedFilters[filter][0])
-    }
     return (
       <div className="pb-3" key={filter}>
         <DatePicker
@@ -67,7 +65,7 @@ const buildFilterDropdown = (
             addFilterMulti(dateString ? [dateString] : [], filter, state, data);
           }}
           labelText={placeholder}
-          date={ (state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) ? parse(state.selectedFilters[filter][0], "yyyy-MM-dd", new Date()) : undefined}
+          date={ (state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) ? parseDateString(state.selectedFilters[filter][0]) : undefined}
           clearDateFilter={() => {
             state.dispatch({
               type: ArboActionType.UPDATE_FILTER,

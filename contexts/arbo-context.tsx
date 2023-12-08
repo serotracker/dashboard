@@ -12,6 +12,7 @@ import {
 } from "@/lib/country-bounding-boxes";
 import useArboData from "@/hooks/useArboData";
 import { parse } from "date-fns";
+import { parseDateString } from "@/utils/date-util";
 
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
@@ -48,7 +49,12 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
       if (!filters[key].length) return true;
 
       if(key === "end_date") {
-        const filterEndDate = parse(filters["end_date"][0], "yyyy-MM-dd", new Date());
+        const filterEndDate = parseDateString(filters["end_date"][0]);
+
+        if(!filterEndDate) {
+          return true;
+        }
+
         const itemDate = new Date(item.sample_end_date);
 
         const filterEndUTC = Date.UTC(
@@ -67,7 +73,12 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
       }
 
       if(key === "start_date") {
-        const filterStartDate = parse(filters["start_date"][0], "yyyy-MM-dd", new Date());
+        const filterStartDate = parseDateString(filters["start_date"][0]);
+
+        if(!filterStartDate) {
+          return true;
+        }
+
         const itemDate = new Date(item.sample_start_date);
 
         const filterStartUTC = Date.UTC(
