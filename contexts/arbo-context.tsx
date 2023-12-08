@@ -127,9 +127,6 @@ export const arboReducer = (
       if (map) {
         adjustMapPositionIfCountryFilterHasChanged(action, map);
       }
-      console.log("Data filters", action.payload.filter);
-      console.log("Data before filtration", state.filteredData);
-      console.log("Data after filtration", filterData(action.payload.data, selectedFilters));
       return {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
