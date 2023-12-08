@@ -25,8 +25,7 @@ import { useQuery } from "@tanstack/react-query";
 import useArboData from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";
 import { DatePicker } from "@/components/ui/datepicker";
-import { parse } from "date-fns"
-import { formatDateToString, parseDateString } from "@/utils/date-util";
+import { parseISO } from "date-fns";
 
 // Function to add or update filters with multiple values
 const addFilterMulti = (
@@ -61,11 +60,11 @@ const buildFilterDropdown = (
       <div className="pb-3" key={filter}>
         <DatePicker
           onChange={(date) => {
-            const dateString = date ? formatDateToString(date) : undefined;
+            const dateString = date?.toISOString();
             addFilterMulti(dateString ? [dateString] : [], filter, state, data);
           }}
           labelText={placeholder}
-          date={ (state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) ? parseDateString(state.selectedFilters[filter][0]) : undefined}
+          date={ (state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) ? parseISO(state.selectedFilters[filter][0]) : undefined}
           clearDateFilter={() => {
             state.dispatch({
               type: ArboActionType.UPDATE_FILTER,

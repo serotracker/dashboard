@@ -11,8 +11,7 @@ import {
   getBoundingBoxFromCountryName,
 } from "@/lib/country-bounding-boxes";
 import useArboData from "@/hooks/useArboData";
-import { parse } from "date-fns";
-import { parseDateString } from "@/utils/date-util";
+import { parseISO } from "date-fns";
 
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
@@ -49,7 +48,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
       if (!filters[key].length) return true;
 
       if(key === "end_date") {
-        const filterEndDate = parseDateString(filters["end_date"][0]);
+        const filterEndDate = parseISO(filters["end_date"][0]);
 
         if(!filterEndDate) {
           return true;
@@ -73,7 +72,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
       }
 
       if(key === "start_date") {
-        const filterStartDate = parseDateString(filters["start_date"][0]);
+        const filterStartDate = parseISO(filters["start_date"][0]);
 
         if(!filterStartDate) {
           return true;
