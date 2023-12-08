@@ -49,42 +49,71 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
     return filterKeys.every((key: string) => {
       if (!filters[key].length) return true;
 
-      if(key === "end_date") {
-        const filterEndDate = parse(filters["end_date"][0], "dd/MM/yyyy", new Date());
+      if (key === "start_date") {
+        const filterStartDate = parse(
+          filters["start_date"][0],
+          "dd/MM/yyyy",
+          new Date()
+        );
+
+        const itemDate = new Date(item.sample_start_date);
+        // Set day to 1 to ignore the day component
+        // filterStartDate.setUTCDate(1);
+        // filterStartDate.setUTCHours(0, 0, 0, 0);
+        // Set day to 1 to ignore the day component
+        // itemDate.setUTCDate(1);
+        // itemDate.setUTCHours(0, 0, 0, 0);
+
+        console.log("PARSED FILTER START DATE: ", filterStartDate);
+        console.log("PARSED ITEM START DATE: ", itemDate);
+
+        
+        const filterStartUTC = Date.UTC(
+          filterStartDate.getUTCFullYear(),
+          filterStartDate.getUTCMonth(),
+        );
+
+        const itemDateUTC = Date.UTC(
+          itemDate.getUTCFullYear(),
+          itemDate.getUTCMonth(),
+        );
+
+
+        console.log("FILTER START DATE: ", filterStartUTC)
+        console.log("START DATE RETURN: ", itemDateUTC >= filterStartUTC)
+        // return itemDate >= filterStartDate;
+        return itemDateUTC >= filterStartUTC;
+      }
+
+      if (key === "end_date") {
+        const filterEndDate = parse(
+          filters["end_date"][0],
+          "dd/MM/yyyy",
+          new Date()
+        );
         const itemDate = new Date(item.sample_end_date);
+        // Set day to 1 to ignore the day component
+        // filterEndDate.setUTCDate(1);
+        // filterEndDate.setUTCHours(0, 0, 0, 0);
+        // Set day to 1 to ignore the day component
+        // itemDate.setUTCDate(1);
+        // itemDate.setUTCHours(0, 0, 0, 0);
 
         const filterEndUTC = Date.UTC(
           filterEndDate.getUTCFullYear(),
           filterEndDate.getUTCMonth(),
-          filterEndDate.getUTCDate()
         );
 
         const itemDateUTC = Date.UTC(
           itemDate.getUTCFullYear(),
           itemDate.getUTCMonth(),
-          itemDate.getUTCDate()
         );
+        
 
+        console.log("FILTER END DATE: ", filterEndUTC)
+        console.log("END DATE RETURN: ", itemDateUTC <= filterEndUTC)
+        // return itemDate <= filterEndDate;
         return itemDateUTC <= filterEndUTC;
-      }
-
-      if(key === "start_date") {
-        const filterStartDate = parse(filters["start_date"][0], "dd/MM/yyyy", new Date());
-        const itemDate = new Date(item.sample_start_date);
-
-        const filterStartUTC = Date.UTC(
-          filterStartDate.getUTCFullYear(),
-          filterStartDate.getUTCMonth(),
-          filterStartDate.getUTCDate()
-        );
-
-        const itemDateUTC = Date.UTC(
-          itemDate.getUTCFullYear(),
-          itemDate.getUTCMonth(),
-          itemDate.getUTCDate()
-        );
-
-        return itemDateUTC >= filterStartUTC;
       }
 
       if (key === "antibody") {
@@ -106,6 +135,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   });
 }
 
+
 export const arboReducer = (
   state: ArboStateType,
   action: ArboAction,
@@ -123,7 +153,10 @@ export const arboReducer = (
       }
       console.log("Data filters", action.payload.filter);
       console.log("Data before filtration", state.filteredData);
-      console.log("Data after filtration", filterData(action.payload.data, selectedFilters));
+      console.log(
+        "Data after filtration",
+        filterData(action.payload.data, selectedFilters)
+      );
       return {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),

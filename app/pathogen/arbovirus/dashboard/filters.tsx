@@ -25,7 +25,7 @@ import { useQuery } from "@tanstack/react-query";
 import useArboData from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";
 import { DatePicker } from "@/components/ui/datepicker";
-import { parse } from "date-fns"
+import { parse } from "date-fns";
 
 // Function to add or update filters with multiple values
 const addFilterMulti = (
@@ -50,28 +50,38 @@ const buildFilterDropdown = (
   placeholder: string,
   state: ArboContextType,
   filterOptions: string[],
-  data: any
+  data: any,
+  { key }: { key: string } // add key prop
 ) => {
   if (
     filter === FilterableField.start_date ||
     filter === FilterableField.end_date
   ) {
     return (
-      <div className="pb-3">
+      <div key={key} className="pb-3">
         <DatePicker
           onChange={(date) => {
             const dateString = date?.toLocaleDateString();
             addFilterMulti(dateString ? [dateString] : [], filter, state, data);
           }}
           labelText={placeholder}
-          date={ (state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) ? parse(state.selectedFilters[filter][0], "dd/MM/yyyy", new Date()) : undefined}
+          date={
+            state.selectedFilters[filter] &&
+            state.selectedFilters[filter].length > 0
+              ? parse(
+                  state.selectedFilters[filter][0],
+                  "dd/MM/yyyy",
+                  new Date()
+                )
+              : undefined
+          }
           clearDateFilter={() => {
             state.dispatch({
               type: ArboActionType.UPDATE_FILTER,
               payload: {
                 filter: filter,
                 value: [],
-                data: data ? data : []
+                data: data ? data : [],
               },
             });
           }}
@@ -138,7 +148,8 @@ const FilterSection = ({
           filterableFieldToLabelMap[field],
           state,
           filters.data[field],
-          data ? data.records : []
+          data ? data.records : [],
+          { key: field } // add key prop
         );
       })}
     </div>
