@@ -51,7 +51,6 @@ const buildFilterDropdown = (
   state: ArboContextType,
   filterOptions: string[],
   data: any,
-  { key }: { key: string } // add key prop
 ) => {
   if (
     filter === FilterableField.start_date ||
@@ -141,7 +140,6 @@ const FilterSection = ({
           state,
           filters.data[field],
           data ? data.records : [],
-          { key: field } // add key prop
         );
       })}
     </div>
