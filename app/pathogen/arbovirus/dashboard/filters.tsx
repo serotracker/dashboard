@@ -26,7 +26,7 @@ import useArboData from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";
 import { DatePicker } from "@/components/ui/datepicker";
 import { parse } from "date-fns"
-import { parseDateString } from "@/utils/date-util";
+import { formatDateToString, parseDateString } from "@/utils/date-util";
 
 // Function to add or update filters with multiple values
 const addFilterMulti = (
@@ -61,7 +61,7 @@ const buildFilterDropdown = (
       <div className="pb-3" key={filter}>
         <DatePicker
           onChange={(date) => {
-            const dateString = date?.toLocaleDateString();
+            const dateString = date ? formatDateToString(date) : undefined;
             addFilterMulti(dateString ? [dateString] : [], filter, state, data);
           }}
           labelText={placeholder}
