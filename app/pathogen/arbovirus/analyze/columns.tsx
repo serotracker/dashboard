@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/table-core";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
-import { HeaderContext } from "@tanstack/react-table";
+import { HeaderContext, Row } from "@tanstack/react-table";
 import validator from "validator";
 import Link from "next/link";
 import { TranslateDate } from "@/utils/translate-util/translate-service";
@@ -172,14 +172,78 @@ export const columns: ColumnDef<Estimate>[] = [
     }
   },
   {
-    id: "sample_start_date",
-    accessorFn: (row) => TranslateDate(row.sample_start_date),  // TODO: This is a hack to get around the fact that we can't have two columns with the same accessorKey. We should fix this in the future.
-    header: get_header("Sampling Start Date"),
+    accessorKey: "sample_start_date",
+    header: ({ column }) => {
+      const sortingFn = (rowA: Row<Estimate>, rowB: Row<Estimate>, columnId: string) => {
+        if(!rowA.original.sample_start_date){
+          return -1
+        }
+        if(!rowB.original.sample_start_date){
+          return 1
+        }
+        const rowASampleStartDate = new Date(rowA.original.sample_start_date)
+        const rowBSampleStartDate = new Date(rowB.original.sample_start_date)
+        if (rowASampleStartDate.getTime() > rowBSampleStartDate.getTime()) {
+          return 1
+        }
+        return -1
+
+      }
+      column.columnDef.sortingFn = sortingFn
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Sampling Start Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const start_date = row.original.sample_start_date;
+      if(start_date) {
+        return TranslateDate(start_date)
+      }
+      return 'N/A';
+    }
   },
   {
-    id: "sample_end_date",
-    accessorFn: (row) => TranslateDate(row.sample_end_date),  // TODO: This is a hack to get around the fact that we can't have two columns with the same accessorKey. We should fix this in the future.
-    header: get_header("Sampling End Date"),
+    accessorKey: "sample_end_date",
+    header: ({ column }) => {
+      const sortingFn = (rowA: Row<Estimate>, rowB: Row<Estimate>, columnId: string) => {
+        if(!rowA.original.sample_end_date){
+          return -1
+        }
+        if(!rowB.original.sample_end_date){
+          return 1
+        }
+        const rowASampleEndDate = new Date(rowA.original.sample_end_date)
+        const rowBSampleEndDate = new Date(rowB.original.sample_end_date)
+        if (rowASampleEndDate.getTime() > rowBSampleEndDate.getTime()) {
+          return 1
+        }
+        return -1
+
+      }
+      column.columnDef.sortingFn = sortingFn
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Sampling End Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const end_date = row.original.sample_end_date;
+      if(end_date) {
+        return TranslateDate(end_date)
+      }
+      return 'N/A';
+    }
   },
   {
     accessorKey: "who_region",
@@ -201,14 +265,6 @@ export const columns: ColumnDef<Estimate>[] = [
     accessorKey: "producer_other",
     header: get_header("Producer Other"),
   },
-  // {
-  //   accessorKey: "same_frame_target_group",
-  //   header: "Same Frame Target Group",
-  // },
-  // {
-  //   accessorKey: "sample_end_date",
-  //   header: "Sample End Date",
-  // },
   {
     accessorKey: "sample_frame",
     header: get_header("Sample Frame"),
