@@ -1,17 +1,8 @@
-import {
-  MapResources,
-  MapSymbology,
-} from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
+import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
-import mapboxgl from "mapbox-gl";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import {
   Map,
-  Source,
-  Layer,
-  Popup,
-  useMap,
-  MapRef,
   NavigationControl,
 } from "react-map-gl";
 import {
@@ -23,7 +14,12 @@ import {
   PopupContentGenerator,
   PopupInfo,
 } from "./pathogen-map-popup";
-import { PathogenMapLayer, PathogenMapLayerInfo } from "./pathogen-map-layer";
+import {
+  PathogenMapLayer,
+  PathogenMapLayerInfo,
+  PathogenMapLayerInfoWithCountryHighlighting,
+  shouldLayerBeUsedForCountryHighlighting,
+} from "./pathogen-map-layer";
 import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-layer";
 
 export interface PathogenDataPointPropertiesBase {
@@ -94,10 +90,13 @@ export function PathogenMap<
     >
       <NavigationControl />
       <PathogenCountryHighlightLayer
-        layer={layers.find((layer) => layer.isDataUsedForCountryHighlighting)}
+        layer={layers.find((layer):
+          layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> =>
+            shouldLayerBeUsedForCountryHighlighting(layer)
+        )}
       />
       {layers.map((layer) => (
-        <PathogenMapLayer key={layer.id} layer={layer}/>
+        <PathogenMapLayer key={layer.id} layer={layer} />
       ))}
       <PathogenMapPopup
         mapId={id}

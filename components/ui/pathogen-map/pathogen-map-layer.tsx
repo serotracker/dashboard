@@ -2,15 +2,39 @@ import { Layer, Source } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { PathogenMapCursor } from "./use-pathogen-map-mouse";
 
-export interface PathogenMapLayerInfo<
+export interface PathogenMapLayerInfoWithoutCountryHighlighting<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
   id: string;
   cursor: PathogenMapCursor;
-  isDataUsedForCountryHighlighting: boolean;
+  isDataUsedForCountryHighlighting: false;
   layerPaint: mapboxgl.CirclePaint;
   dataPoints: TPathogenDataPointProperties[];
 }
+
+export interface PathogenMapLayerInfoWithCountryHighlighting<
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+> {
+  id: string;
+  cursor: PathogenMapCursor;
+  isDataUsedForCountryHighlighting: true;
+  layerPaint: mapboxgl.CirclePaint;
+  dataPoints: (TPathogenDataPointProperties & { country: string })[];
+}
+
+export type PathogenMapLayerInfo<
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+> =
+  | PathogenMapLayerInfoWithoutCountryHighlighting<TPathogenDataPointProperties>
+  | PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties>;
+
+export const shouldLayerBeUsedForCountryHighlighting = <
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+>(
+  layer: PathogenMapLayerInfo<TPathogenDataPointProperties>
+): layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> => {
+  return !!layer.isDataUsedForCountryHighlighting;
+};
 
 export interface PathogenMapLayerProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase

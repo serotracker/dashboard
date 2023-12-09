@@ -1,6 +1,6 @@
 import { Layer, Source, useMap } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { PathogenMapLayerInfo } from "./pathogen-map-layer";
+import { PathogenMapLayerInfoWithCountryHighlighting } from "./pathogen-map-layer";
 import { useEffect, useState } from "react";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import {
@@ -12,26 +12,20 @@ import { countryNameToIso31661Alpha3CodeMap } from "@/lib/country-iso-3166-1-alp
 interface PathogenCountryHighlightLayerProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
-  layer: PathogenMapLayerInfo<TPathogenDataPointProperties> | undefined;
+  layer: PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> | undefined;
 }
 
 const generatePaintForLayer = <
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 >(input: {
-  layer: PathogenMapLayerInfo<TPathogenDataPointProperties> | undefined;
+  layer: PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> | undefined;
 }) => {
   const { layer } = input;
 
   const allUniqueCountryCodesWithData = new Set(
     layer?.dataPoints
       .map((dataPoint) => {
-        if (
-          "country" in dataPoint &&
-          typeof dataPoint.country === "string" &&
-          !!dataPoint.country
-        ) {
-          return countryNameToIso31661Alpha3CodeMap[dataPoint.country];
-        }
+        return countryNameToIso31661Alpha3CodeMap[dataPoint.country];
       })
       .filter(
         (alpha3CountryCode: string | undefined): alpha3CountryCode is string =>
