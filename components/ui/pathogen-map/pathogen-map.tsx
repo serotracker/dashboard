@@ -68,6 +68,11 @@ export function PathogenMap<
     return;
   }
 
+  const layerForCountryHighlighting = layers.find((layer):
+          layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> =>
+            shouldLayerBeUsedForCountryHighlighting(layer)
+        )
+
   return (
     <Map
       id={id}
@@ -90,10 +95,8 @@ export function PathogenMap<
     >
       <NavigationControl />
       <PathogenCountryHighlightLayer
-        layer={layers.find((layer):
-          layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> =>
-            shouldLayerBeUsedForCountryHighlighting(layer)
-        )}
+        layer={layerForCountryHighlighting}
+        positionedUnderLayerWithId={layerForCountryHighlighting?.id}
       />
       {layers.map((layer) => (
         <PathogenMapLayer key={layer.id} layer={layer} />

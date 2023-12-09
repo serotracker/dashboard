@@ -12,13 +12,18 @@ import { countryNameToIso31661Alpha3CodeMap } from "@/lib/country-iso-3166-1-alp
 interface PathogenCountryHighlightLayerProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
-  layer: PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> | undefined;
+  layer:
+    | PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties>
+    | undefined;
+  positionedUnderLayerWithId: string | undefined;
 }
 
 const generatePaintForLayer = <
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 >(input: {
-  layer: PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> | undefined;
+  layer:
+    | PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties>
+    | undefined;
 }) => {
   const { layer } = input;
 
@@ -33,7 +38,9 @@ const generatePaintForLayer = <
       ) ?? []
   );
 
-  const countryColorsAndOpacities = Array.from(allUniqueCountryCodesWithData).map((alpha3CountryCode) => ({
+  const countryColorsAndOpacities = Array.from(
+    allUniqueCountryCodesWithData
+  ).map((alpha3CountryCode) => ({
     alpha3CountryCode: alpha3CountryCode,
     fill: MapSymbology.CountryFeature.HasData.Color,
     opacity: MapSymbology.CountryFeature.HasData.Opacity,
@@ -65,6 +72,7 @@ export function PathogenCountryHighlightLayer<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 >({
   layer,
+  positionedUnderLayerWithId,
 }: PathogenCountryHighlightLayerProps<TPathogenDataPointProperties>) {
   const maps = useMap();
 
@@ -87,6 +95,7 @@ export function PathogenCountryHighlightLayer<
       <Layer
         {...mapCountryVectors.layers[0]}
         paint={generatePaintForLayer({ layer })}
+        beforeId={positionedUnderLayerWithId}
       />
     </Source>
   );
