@@ -7,6 +7,7 @@ export interface PathogenMapLayerInfo<
 > {
   id: string;
   cursor: PathogenMapCursor;
+  isDataUsedForCountryHighlighting: boolean;
   layerPaint: mapboxgl.CirclePaint;
   dataPoints: TPathogenDataPointProperties[];
 }
