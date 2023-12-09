@@ -1,10 +1,7 @@
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { useState, useEffect } from "react";
-import {
-  Map,
-  NavigationControl,
-} from "react-map-gl";
+import { Map, NavigationControl } from "react-map-gl";
 import {
   PathogenMapCursor,
   usePathogenMapMouse,
@@ -68,10 +65,9 @@ export function PathogenMap<
     return;
   }
 
-  const layerForCountryHighlighting = layers.find((layer):
-          layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> =>
-            shouldLayerBeUsedForCountryHighlighting(layer)
-        )
+  const layerForCountryHighlighting = layers.find((layer): layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> =>
+    shouldLayerBeUsedForCountryHighlighting(layer)
+  );
 
   return (
     <Map
@@ -95,7 +91,7 @@ export function PathogenMap<
     >
       <NavigationControl />
       <PathogenCountryHighlightLayer
-        layer={layerForCountryHighlighting}
+        dataLayer={layerForCountryHighlighting}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
       />
       {layers.map((layer) => (
