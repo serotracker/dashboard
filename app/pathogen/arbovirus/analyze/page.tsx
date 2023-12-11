@@ -26,7 +26,10 @@ export default function ArboAnalyze() {
   return (
     <>
       <div className={"col-span-5 row-span-2 overflow-auto"}>
-        <VisualizationCard title={"Estimate count by WHO region and pathogen"}>
+        <VisualizationCard title={"Median seroprevalence by WHO region and age group"} height="h-full">
+          <MedianSeroPrevByWHOregionAndAgeGroup />
+        </VisualizationCard>
+        <VisualizationCard title={"Estimate count by WHO region and arbovirus"}>
           <WHORegionAndArbovirusBar />
         </VisualizationCard>
         <VisualizationCard title={"Estimate count by arbovirus & antibody type"}>
@@ -34,9 +37,6 @@ export default function ArboAnalyze() {
         </VisualizationCard>
         <VisualizationCard title={"Median seroprevalence by WHO Region"} height="h-full">
           <MedianSeroPrevByWHOregion />
-        </VisualizationCard>
-        <VisualizationCard title={"Median seroprevalence by WHO region and age group"} height="h-full">
-          <MedianSeroPrevByWHOregionAndAgeGroup />
         </VisualizationCard>
         <VisualizationCard title={"Cumulative estimate count over time by arbovirus"}>
           <StudyCountOverTime />
@@ -53,7 +53,7 @@ export default function ArboAnalyze() {
       <div className={"col-span-5 row-span-2 overflow-auto"}>
         <ArboDataTable />
       </div>
-      <Card className={"col-span-2 row-span-2"}>
+      <Card className={"col-span-2 row-span-2 overflow-y-auto"}>
         <CardHeader>
           <CardTitle>Filters</CardTitle>
         </CardHeader>

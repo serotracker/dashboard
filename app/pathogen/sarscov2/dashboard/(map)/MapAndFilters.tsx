@@ -32,6 +32,7 @@ export default function MapAndFilters() {
               layers={[
                 {
                   id: "SARS-CoV2-pins",
+                  isDataUsedForCountryHighlighting: true,
                   cursor: "pointer",
                   dataPoints: state.filteredData.map((dataPoint) => ({
                     ...dataPoint,

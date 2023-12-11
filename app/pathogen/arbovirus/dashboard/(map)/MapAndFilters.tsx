@@ -1,3 +1,10 @@
+/**
+ * @file MapAndFilters Component
+ * @description This component renders a Map with associated filters for the Arboviruses dashboard.
+ * It includes checkboxes for different pathogens and a side panel with additional filters.
+ * The map and filters are dynamically updated based on user interactions.
+ */
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +16,6 @@ import useArboData from "@/hooks/useArboData";
 import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
-import { ScrollText } from "lucide-react";
 import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 
@@ -64,6 +70,15 @@ export default function MapAndFilters() {
       });
     };
 
+    const pathogenOrder = [
+      'ZIKV',
+      'DENV',
+      'CHIKV',
+      'YF',
+      'WNV',
+      'MAYV',
+    ];
+
     return (
       <>
         <Card
@@ -78,6 +93,7 @@ export default function MapAndFilters() {
               layers={[
                 {
                   id: "Arbovirus-pins",
+                  isDataUsedForCountryHighlighting: true,
                   cursor: "pointer",
                   dataPoints: state.filteredData,
                   layerPaint: {
@@ -95,7 +111,7 @@ export default function MapAndFilters() {
                       "YF",
                       "#FFD6A5",
                       "MAYV",
-                      "#FDFFB6",
+                      "#C5A3FF",
                       "#FFFFFC",
                     ],
                     "circle-radius": 8,
@@ -114,51 +130,64 @@ export default function MapAndFilters() {
               <p>Arboviruses</p>
             </CardHeader>
             <CardContent className={"flex justify-center flex-col"}>
-              {filters.isSuccess &&
-                filters.data &&
-                filters.data.pathogen.map((pathogen: string) => {
-                  return (
-                    <div
-                      key={pathogen}
-                      className="items-top flex space-x-2 my-1"
-                    >
-                      <Checkbox
-                        id={`checkbox-${pathogen}`}
-                        className={pathogenColorsTailwind[pathogen]}
-                        checked={
-                          state.selectedFilters["pathogen"]
-                            ? state.selectedFilters["pathogen"].includes(
-                                pathogen
-                              )
-                            : false
+              {pathogenOrder.map((pathogenAbbreviation: string) => {
+                // Map abbreviations to full names
+                const pathogenFullName =
+                  pathogenAbbreviation === "ZIKV"
+                    ? "Zika Virus"
+                    : pathogenAbbreviation === "DENV"
+                    ? "Dengue Virus"
+                    : pathogenAbbreviation === "CHIKV"
+                    ? "Chikungunya Virus"
+                    : pathogenAbbreviation === "YF"
+                    ? "Yellow Fever"
+                    : pathogenAbbreviation === "WNV"
+                    ? "West Nile Virus"
+                    : pathogenAbbreviation === "MAYV"
+                    ? "Mayaro Virus"
+                    : pathogenAbbreviation;
+
+                return (
+                  <div
+                    key={pathogenAbbreviation}
+                    className="items-top flex space-x-2 my-1"
+                  >
+                    <Checkbox
+                      id={`checkbox-${pathogenAbbreviation}`}
+                      className={pathogenColorsTailwind[pathogenAbbreviation]}
+                      checked={
+                        state.selectedFilters["pathogen"]
+                          ? state.selectedFilters["pathogen"].includes(
+                              pathogenAbbreviation
+                            )
+                          : false
+                      }
+                      onCheckedChange={(checked: boolean) => {
+                        handleOnClickCheckbox(pathogenAbbreviation, checked);
+                      }}
+                    />
+                    <div className="grid gap-1.5 leading-none">
+                      <label
+                        htmlFor={`checkbox-${pathogenAbbreviation}`}
+                        className={
+                          "text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         }
-                        onCheckedChange={(checked: boolean) => {
-                          handleOnClickCheckbox(pathogen, checked);
-                        }}
-                      />
-                      <div className="grid gap-1.5 leading-none">
-                        <label
-                          htmlFor={`checkbox-${pathogen}`}
-                          className={
-                            "text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          }
-                        >
-                          {pathogen}
-                        </label>
-                      </div>
+                      >
+                        {pathogenFullName}
+                      </label>
                     </div>
-                  );
-                })}
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
           <Card className={"absolute top-1 left-1 p-2"}>
             <CardContent className={"flex w-fit p-0"}>
-              <ScrollText />
-              <p className={"ml-1 font-medium"}>{state.filteredData.length}</p>
+              <p className={"ml-1 font-medium"}><b>{state.filteredData.length}</b> Estimates displayed from <b>{Array.from(new Set(state.filteredData.map((item: any) => item.source_sheet_name))).length}</b> unique sources</p>
             </CardContent>
           </Card>
         </Card>
-        <Card className={"col-span-2 row-span-2"}>
+        <Card className={"col-span-2 row-span-2 overflow-y-auto"}>
           <CardHeader>
             <CardTitle>Filters</CardTitle>
           </CardHeader>

@@ -1,3 +1,17 @@
+/**
+ * @file Filters Component
+ * @description This component renders a set of filters for the Arboviruses dashboard.
+ * It includes dropdowns for age group, sex, country, assay, producer, sample frame, antibody, and pathogen.
+ * The filters are dynamically updated based on user interactions and are synchronized with the global state.
+ * The component fetches arbovirus data and filter options from the API, rendering the filters once the data is available.
+ * It uses the ArboContext to manage global state and interacts with the map using the mapboxgl library.
+ *
+ *
+ * @see contexts/arbo-context.tsx
+ * @see hooks/useArboData.tsx
+ * @see components/customs/multi-select.tsx
+ */
+
 "use client";
 
 import {
@@ -7,9 +21,13 @@ import {
 } from "@/contexts/arbo-context";
 import { MultiSelect } from "@/components/customs/multi-select";
 import React, { useContext } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import useArboData from "@/hooks/useArboData";
+import SectionHeader from "@/components/customs/SectionHeader";
+import { DatePicker } from "@/components/ui/datepicker";
+import { parseISO } from "date-fns";
 
+// Function to add or update filters with multiple values
 const addFilterMulti = (
   value: string[],
   newFilter: string,
@@ -26,23 +44,52 @@ const addFilterMulti = (
   });
 };
 
+// Function to build a filter dropdown
 const buildFilterDropdown = (
   filter: string,
   placeholder: string,
   state: ArboContextType,
   filterOptions: string[],
-  data: any
+  data: any,
 ) => {
-  return (
-    <div className="pb-3">
-      <MultiSelect
-        handleOnChange={(value) => addFilterMulti(value, filter, state, data)}
-        heading={placeholder}
-        selected={state.selectedFilters[filter] ?? []}
-        options={filterOptions.filter((assay: string) => assay != null)}
-      />
-    </div>
-  );
+  if (
+    filter === FilterableField.start_date ||
+    filter === FilterableField.end_date
+  ) {
+    return (
+      <div className="pb-3" key={filter}>
+        <DatePicker
+          onChange={(date) => {
+            const dateString = date?.toISOString();
+            addFilterMulti(dateString ? [dateString] : [], filter, state, data);
+          }}
+          labelText={placeholder}
+          date={ (state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) ? parseISO(state.selectedFilters[filter][0]) : undefined}
+          clearDateFilter={() => {
+            state.dispatch({
+              type: ArboActionType.UPDATE_FILTER,
+              payload: {
+                filter: filter,
+                value: [],
+                data: data ? data : [],
+              },
+            });
+          }}
+        />
+      </div>
+    );
+  } else {
+    return (
+      <div className="pb-3" key={filter}>
+        <MultiSelect
+          handleOnChange={(value) => addFilterMulti(value, filter, state, data)}
+          heading={placeholder}
+          selected={state.selectedFilters[filter] ?? []}
+          options={filterOptions.filter((assay: string) => assay != null)}
+        />
+      </div>
+    );
+  }
 };
 
 export enum FilterableField {
@@ -54,6 +101,9 @@ export enum FilterableField {
   sample_frame = "sample_frame",
   antibody = "antibody",
   pathogen = "pathogen",
+  start_date = "start_date",
+  end_date = "end_date",
+  who_region = "who_region"
 }
 
 interface FilterSectionProps {
@@ -67,8 +117,8 @@ interface FilterSectionProps {
 }
 
 const FilterSection = ({
-  headerText: _,
-  headerTooltipText: __,
+  headerText,
+  headerTooltipText,
   fields,
   state,
   filterableFieldToLabelMap,
@@ -77,19 +127,19 @@ const FilterSection = ({
 }: FilterSectionProps) => {
   return (
     <div className="p-0">
-      {/*<div>*/}
-      {/*    <SectionHeader*/}
-      {/*        header_text={headerText}*/}
-      {/*        tooltip_text={headerTooltipText}
-      {/*    />*/}
-      {/*</div>*/}
+      <div>
+        <SectionHeader
+          header_text={headerText}
+          tooltip_text={headerTooltipText}
+        />
+      </div>
       {fields.map((field) => {
         return buildFilterDropdown(
           field,
           filterableFieldToLabelMap[field],
           state,
           filters.data[field],
-          data ? data.records : []
+          data ? data.records : [],
         );
       })}
     </div>
@@ -102,7 +152,7 @@ interface FiltersProps {
 
 export default function Filters({ excludedFields = [] }: FiltersProps) {
   const state = useContext(ArboContext);
-  const filterableFieldToLabelMap: { [key in FilterableField]: string } = {
+  const filterableFieldToLabelMap: Record<FilterableField, string> = {
     [FilterableField.age_group]: "Age Group",
     [FilterableField.sex]: "Sex",
     [FilterableField.country]: "Country",
@@ -111,22 +161,30 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
     [FilterableField.sample_frame]: "Sample Frame",
     [FilterableField.antibody]: "Antibody",
     [FilterableField.pathogen]: "Arbovirus",
+    [FilterableField.start_date]: "Sampling Start Date",
+    [FilterableField.end_date]: "Sampling End Date",
+    [FilterableField.who_region]: "WHO Region"
   };
   const demographicFilters = [
     FilterableField.age_group,
     FilterableField.sex,
-    FilterableField.country,
+    FilterableField.sample_frame,
   ].filter((field) => !excludedFields.includes(field));
   const studyInformationFilters = [
     FilterableField.assay,
     FilterableField.producer,
-    FilterableField.sample_frame,
+    FilterableField.who_region,
+    FilterableField.country,
     FilterableField.antibody,
     FilterableField.pathogen,
+    FilterableField.start_date,
+    FilterableField.end_date,
   ].filter((field) => !excludedFields.includes(field));
 
+  // Fetch arbovirus data using the useArboData hook
   const { data } = useArboData();
 
+  // Fetch filter options using React Query
   const filters = useQuery({
     queryKey: ["ArbovirusFilters"],
     queryFn: () =>
@@ -135,9 +193,17 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
       ),
   });
 
-  if (filters.isSuccess && !filters.isLoading && !filters.isError) {
-    console.debug(filters.data, Object.keys(filters.data));
+  const resetFilters = () => {
+    // Dispatch action to reset filters
+    state.dispatch({
+      type: ArboActionType.RESET_FILTERS,
+      payload: {
+        data: data ? data.records : [],
+      }, // Include an empty object as payload
+    });
+  };
 
+  if (filters.isSuccess && !filters.isLoading && !filters.isError) {
     return (
       <div>
         <FilterSection
@@ -158,6 +224,14 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
           data={data}
           filterableFieldToLabelMap={filterableFieldToLabelMap}
         />
+        <div>
+          <button
+            className="w-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 font-bold py-2 px-15 rounded"
+            onClick={resetFilters}
+          >
+            Reset Filters
+          </button>
+        </div>
       </div>
     );
   } else return <div>Filters Loading...</div>;

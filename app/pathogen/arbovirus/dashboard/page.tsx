@@ -14,7 +14,7 @@ export default function ArbovirusDashboard() {
       <Card className={"row-span-2 col-span-4 pr-4 pb-4"}>
         <CardContent className={"px-0 h-full flex flex-col"}>
           <h3 className="py-4 w-full text-center text-lg">
-            Median seroprevalence by WHO region
+            Median seroprevalence of arboviruses by WHO region
           </h3>
           <MedianSeroPrevByWHOregion />
         </CardContent>

@@ -17,6 +17,7 @@ import {
 } from "recharts";
 import _ from "lodash";
 import { pathogenColors } from "../dashboard/(map)/MapAndFilters";
+import clsx from "clsx";
 
 //Study by who region and pathogen
 
@@ -100,18 +101,18 @@ export function AntibodyPathogenBar() {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="arbovirus" />
         <YAxis />
-        <Tooltip />
+        <Tooltip itemStyle={{"color": "black"}}/>
         <Legend
           layout="vertical"
           verticalAlign="middle"
           align="right"
           wrapperStyle={{ right: -10 }}
         />
-        <Bar dataKey="IgG" stackId="a" fill={"purple"} />
-        <Bar dataKey="IgM" stackId="a" fill={"blue"} />
-        <Bar dataKey="IgG, IgM" stackId="a" fill={"green"} />
-        <Bar dataKey="NAb" stackId="a" fill={"orange"} />
-        <Bar dataKey="NR" stackId="a" fill={"red"} />
+        <Bar dataKey="IgG" stackId="a" fill={"#61f4de"} />
+        <Bar dataKey="IgM" stackId="a" fill={"#65cbe9"} />
+        <Bar dataKey="IgG, IgM" stackId="a" fill={"#6cb6ef"} />
+        <Bar dataKey="NAb" stackId="a" fill={"#6c8dfa"} />
+        <Bar dataKey="NR" stackId="a" fill={"#6e78ff"} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -181,7 +182,7 @@ export function StudyCountOverTime() {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="year" />
         <YAxis />
-        <Tooltip />
+        <Tooltip itemStyle={{"color": "black"}} />
         <Legend
           layout="vertical"
           verticalAlign="middle"
@@ -282,7 +283,7 @@ export function WHORegionAndArbovirusBar() {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="region" />
         <YAxis />
-        <Tooltip />
+        <Tooltip itemStyle={{"color": "black"}} />
         <Legend
           layout="vertical"
           verticalAlign="middle"
@@ -316,17 +317,8 @@ function median(values: number[]): number {
     : (values[half - 1] + values[half]) / 2;
 }
 
-
-
 type WHORegion = "AFR" | "AMR" | "EMR" | "EUR" | "SEAR" | "WPR";
-const WHORegions: WHORegion[] = [
-  "AFR",
-  "AMR",
-  "EMR",
-  "EUR",
-  "SEAR",
-  "WPR",
-];
+const WHORegions: WHORegion[] = ["AFR", "AMR", "EMR", "EUR", "SEAR", "WPR"];
 type AgeGroup =
   | "Adults (18-64 years)"
   | "Children and Youth (0-17 years)"
@@ -338,12 +330,26 @@ function CustomizedWHORegionTick(props: any) {
 
   return (
     <g transform={`translate(${x},${y})`}>
-      <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform="rotate(-35)">
+      <text
+        x={0}
+        y={0}
+        dy={16}
+        textAnchor="end"
+        fill="#666"
+        transform="rotate(-35)"
+      >
         {payload.value}
       </text>
     </g>
   );
 }
+
+const ageGroupColorMappings: Record<AgeGroup, string> = {
+  "Adults (18-64 years)": "#f55c7a",
+  "Children and Youth (0-17 years)": "#f68c70",
+  "Seniors (65+ years)": "#f6bc66",
+  "Multiple groups": "#6c8dfa",
+};
 
 export function MedianSeroPrevByWHOregion() {
   const state = useContext(ArboContext);
@@ -429,36 +435,60 @@ export function MedianSeroPrevByWHOregion() {
     });
   });
 
-  console.log(medianData);
-
   return (
     <div className="h-full flex flex-row flex-wrap">
-      {medianData.map((d, index) => (
-        <div className="w-1/2 h-1/3" key={`med-seroprev-who-${d.arbovirus}`}>
-          <h2 className="w-full text-center ">
-            {convertArboSFtoArbo(d.arbovirus)}
-          </h2>
-          <ResponsiveContainer width="100%" height="90%">
-            <BarChart
-              margin={{
-                top: 10,
-                right: 10,
-                left: index % 2 != 0 ? 40 : 0,
-                bottom: 40,
-              }}
-              width={500}
-              height={450}
-              data={d.data}
-            >
-              <CartesianGrid />
-              <XAxis dataKey="region" interval={0} tick={<CustomizedWHORegionTick />}/>
-              <YAxis domain={[0, 100]} hide={index % 2 != 0} tickFormatter={tick => (`${tick}%`)}/>
-              <Tooltip />
-              <Bar dataKey={"median"} fill={pathogenColors[d.arbovirus]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      ))}
+      {medianData.map((d, index) => {
+        const width = medianData.length < 3 ? "w-full" : "w-1/2";
+        const height =
+          medianData.length === 1
+            ? "h-full"
+            : medianData.length < 5
+            ? "h-1/2"
+            : "h-1/3";
+
+        return (
+          <div
+            className={clsx(width, height)}
+            key={`med-seroprev-who-${d.arbovirus}`}
+          >
+            <h2 className="w-full text-center ">
+              {convertArboSFtoArbo(d.arbovirus)}
+            </h2>
+            <ResponsiveContainer width="100%" height="90%">
+              <BarChart
+                margin={{
+                  top: 10,
+                  right: 10,
+                  left: index % 2 != 0 ? 40 : 0,
+                  bottom: 40,
+                }}
+                width={500}
+                height={450}
+                data={d.data.filter((dataItem) => {
+                  return Object.values(dataItem).some((v) => {
+                    const val = parseFloat(v as string);
+                    return typeof val === "number" && val > 0;
+                  });
+                })}
+              >
+                <CartesianGrid />
+                <XAxis
+                  dataKey="region"
+                  interval={0}
+                  tick={<CustomizedWHORegionTick />}
+                />
+                <YAxis
+                  domain={[0, 100]}
+                  hide={index % 2 != 0}
+                  tickFormatter={(tick) => `${tick}%`}
+                />
+                <Tooltip itemStyle={{"color": "black"}} formatter={(value) => `${value}%`}/>
+                <Bar dataKey={"median"} fill={pathogenColors[d.arbovirus]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -540,10 +570,16 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
     );
 
     if (existingData) {
-      if (existingData[region] && Array.isArray(existingData[region][ageGroup])) {
+      if (
+        existingData[region] &&
+        Array.isArray(existingData[region][ageGroup])
+      ) {
         existingData[region][ageGroup].push(seroprevalence);
       } else {
-        console.error(`Unexpected region or ageGroup: ${region}, ${ageGroup}`, existingData);
+        console.error(
+          `Unexpected region or ageGroup: ${region}, ${ageGroup}`,
+          existingData
+        );
       }
     } else {
       console.error(
@@ -581,41 +617,84 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
     });
   });
 
-  console.log(medianData);
-
   return (
-    <div className="h-full flex flex-row flex-wrap">
-      {medianData.map((d, index) => (
-        <div className="w-1/2 h-1/3" key={`med-sero-prev-who-age-${d.arbovirus}`}>
-          <h2 className="w-full text-center ">
-            {convertArboSFtoArbo(d.arbovirus)}
-          </h2>
-          <ResponsiveContainer width="100%" height="90%">
-            <BarChart
-              margin={{
-                top: 10,
-                right: 10,
-                left: index % 2 === 0 ? 0 : 40,
-                bottom: 40,
-              }}
-              width={500}
-              height={450}
-              data={d.data}
-              barCategoryGap={1}
-              barGap={0}
+    <div className="h-full flex flex-col">
+      <div className="h-[90%] flex flex-row flex-wrap">
+        {medianData.map((d, index) => {
+          const width = medianData.length < 3 ? "w-full" : "w-1/2";
+          const height =
+            medianData.length === 1
+              ? "h-full"
+              : medianData.length < 5
+              ? "h-1/2"
+              : "h-1/3";
+
+          return (
+            <div
+              className={clsx(width, height)}
+              key={`med-sero-prev-who-age-${d.arbovirus}`}
             >
-              <CartesianGrid />
-              <XAxis dataKey="region" interval={0} tick={<CustomizedWHORegionTick />}/>
-              <YAxis domain={[0, 100]} hide={index % 2 != 0} tickFormatter={tick => (`${tick}%`)}/>
-              <Tooltip />
-              <Bar dataKey={"Children and Youth (0-17 years)"} fill={"red"} />
-              <Bar dataKey={"Adults (18-64 years)"} fill={"green"} />
-              <Bar dataKey={"Seniors (65+ years)"} fill={"blue"} />
-              <Bar dataKey={"Multiple groups"} fill={"purple"} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      ))}
+              <h2 className="w-full text-center ">
+                {convertArboSFtoArbo(d.arbovirus)}
+              </h2>
+              <ResponsiveContainer width="100%" height="90%">
+                <BarChart
+                  margin={{
+                    top: 10,
+                    right: 10,
+                    left: index % 2 === 0 ? 0 : 40,
+                    bottom: 40,
+                  }}
+                  width={500}
+                  height={450}
+                  data={d.data.filter((dataItem) => {
+                    return Object.values(dataItem).some((v) => {
+                      const val = parseFloat(v as string);
+                      return typeof val === "number" && val > 0;
+                    });
+                  })}
+                  barCategoryGap={1}
+                  barGap={0}
+                >
+                  <CartesianGrid />
+                  <XAxis
+                    dataKey="region"
+                    interval={0}
+                    tick={<CustomizedWHORegionTick />}
+                  />
+                  <YAxis
+                    domain={[0, 100]}
+                    hide={index % 2 != 0}
+                    tickFormatter={(tick) => `${tick}%`}
+                  />
+                  <Tooltip itemStyle={{"color": "black"}} formatter={(value) => `${value}%`}/>
+                  {Object.keys(ageGroupColorMappings).map((ageGroup) => (
+                     <Bar
+                      key={ageGroup}
+                      dataKey={ageGroup}
+                      fill={ageGroupColorMappings[ageGroup as AgeGroup]}
+                    />
+                  ))}
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex justify-center flex-wrap">
+        {/* Legend */}
+        {Object.keys(ageGroupColorMappings).map((ageGroup) => (
+          <div className="w-fit m-2" key={ageGroup}>
+            <div
+              className="w-4 h-4 inline-block mr-2"
+              style={{
+                backgroundColor: ageGroupColorMappings[ageGroup as AgeGroup],
+              }}
+            ></div>
+            {ageGroup}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -670,7 +749,7 @@ export function Top10CountriesByPathogenStudyCount() {
           <XAxis type="number" />
           <YAxis hide={true} dataKey="country" type="category" />
           <Legend verticalAlign="top" />
-          <Tooltip />
+          <Tooltip itemStyle={{"color": "black"}} />
           <Bar dataKey="Zika" fill={pathogenColors.ZIKV} />
         </BarChart>
       </ResponsiveContainer>
@@ -690,7 +769,7 @@ export function Top10CountriesByPathogenStudyCount() {
           <XAxis type="number" />
           <YAxis hide={true} dataKey="country" type="category" />
           <Legend verticalAlign="top" />
-          <Tooltip />
+          <Tooltip itemStyle={{"color": "black"}} />
           <Bar dataKey="Dengue" fill={pathogenColors.DENV} />
         </BarChart>
       </ResponsiveContainer>
@@ -710,7 +789,7 @@ export function Top10CountriesByPathogenStudyCount() {
           <XAxis type="number" />
           <YAxis hide={true} dataKey="country" type="category" />
           <Legend verticalAlign="top" />
-          <Tooltip />
+          <Tooltip itemStyle={{"color": "black"}} />
           <Bar dataKey="Chikungunya" fill={pathogenColors.CHIKV} />
         </BarChart>
       </ResponsiveContainer>
@@ -732,7 +811,7 @@ export function Top10CountriesByPathogenStudyCount() {
           <XAxis type="number" />
           <YAxis hide={true} dataKey="country" type="category" />
           <Legend verticalAlign="top" />
-          <Tooltip />
+          <Tooltip itemStyle={{"color": "black"}} />
           <Bar dataKey="Yellow Fever" fill={pathogenColors.YF} />
         </BarChart>
       </ResponsiveContainer>
@@ -754,7 +833,7 @@ export function Top10CountriesByPathogenStudyCount() {
           <XAxis type="number" />
           <YAxis hide={true} dataKey="country" type="category" />
           <Legend verticalAlign="top" />
-          <Tooltip />
+          <Tooltip itemStyle={{"color": "black"}} />
           <Bar dataKey="West Nile" fill={pathogenColors.WNV} />
         </BarChart>
       </ResponsiveContainer>
@@ -774,7 +853,7 @@ export function Top10CountriesByPathogenStudyCount() {
           <XAxis type="number" />
           <YAxis hide={true} dataKey="country" type="category" />
           <Legend verticalAlign="top" />
-          <Tooltip />
+          <Tooltip itemStyle={{"color": "black"}} />
           <Bar dataKey="Mayaro" fill={pathogenColors.MAYV} />
         </BarChart>
       </ResponsiveContainer>
@@ -851,8 +930,6 @@ export function StudyCountOverTimeBySampleFrame() {
   );
   sampleFrames.push("Other");
 
-  console.debug("3 smallest sample frames:", smallestSampleFrames);
-
   for (let i = 1; i < data.length; i++) {
     sampleFrames.forEach((frame) => (data[i][frame] += data[i - 1][frame]));
   }
@@ -888,7 +965,7 @@ export function StudyCountOverTimeBySampleFrame() {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="year" />
         <YAxis />
-        <Tooltip />
+        <Tooltip itemStyle={{"color": "black"}} />
         <Legend />
         {sampleFrames.map((frame) => (
           <Area

@@ -101,16 +101,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter producers..."
-          value={
-            (table.getColumn("producer")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            table.getColumn("producer")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm bg-foreground"
-        />
+        <h2><b>Explore arbovirus seroprevalence estimates in our database</b></h2>
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="bg-foreground">
             <Button variant="outline" className="ml-auto">

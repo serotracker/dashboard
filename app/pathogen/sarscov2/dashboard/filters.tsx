@@ -57,7 +57,6 @@ const buildFilterDropdown = (
 
 export default function Filters() {
   const state = useContext(SarsCov2Context);
-  console.log("Context in Filters: ", state);
 
   const { data } = useSarsCov2Data();
 
