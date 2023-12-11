@@ -126,7 +126,10 @@ export function MultiSelect(props: MultiSelectProps) {
                       onSelect={(value) => {
                         setInputValue("");
                         const newValue = selectables.find(
-                          (option) => option.value === value,
+                          // CommandItem appears to strip starting and ending whitespace from the value given as a key
+                          // so the trim() fixes a situation where the value has some starting or trailing whitespace
+                          // and isn't recognized as a selectable option as a result.
+                          (option) => option.value.trim() === value,
                         );
                         if (newValue)
                           handleOnChange([...selected, newValue.label]);
