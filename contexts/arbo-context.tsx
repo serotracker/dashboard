@@ -11,7 +11,7 @@ import {
   getBoundingBoxFromCountryName,
 } from "@/lib/country-bounding-boxes";
 import useArboData from "@/hooks/useArboData";
-import { parse } from "date-fns";
+import { parseISO } from "date-fns";
 
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
@@ -48,39 +48,46 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
       if (!filters[key].length) return true;
 
       if(key === "end_date") {
-        const filterEndDate = parse(filters["end_date"][0], "dd/MM/yyyy", new Date());
+        const filterEndDate = parseISO(filters["end_date"][0]);
+
+        if(!filterEndDate) {
+          return true;
+        }
+
         const itemDate = new Date(item.sample_end_date);
 
         const filterEndUTC = Date.UTC(
           filterEndDate.getUTCFullYear(),
           filterEndDate.getUTCMonth(),
-          filterEndDate.getUTCDate()
         );
 
         const itemDateUTC = Date.UTC(
           itemDate.getUTCFullYear(),
           itemDate.getUTCMonth(),
-          itemDate.getUTCDate()
         );
-
+        
         return itemDateUTC <= filterEndUTC;
       }
 
       if(key === "start_date") {
-        const filterStartDate = parse(filters["start_date"][0], "dd/MM/yyyy", new Date());
+        const filterStartDate = parseISO(filters["start_date"][0]);
+
+        if(!filterStartDate) {
+          return true;
+        }
+
         const itemDate = new Date(item.sample_start_date);
 
         const filterStartUTC = Date.UTC(
           filterStartDate.getUTCFullYear(),
           filterStartDate.getUTCMonth(),
-          filterStartDate.getUTCDate()
         );
 
         const itemDateUTC = Date.UTC(
           itemDate.getUTCFullYear(),
           itemDate.getUTCMonth(),
-          itemDate.getUTCDate()
         );
+        
 
         return itemDateUTC >= filterStartUTC;
       }
@@ -104,6 +111,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   });
 }
 
+
 export const arboReducer = (
   state: ArboStateType,
   action: ArboAction,
@@ -119,7 +127,6 @@ export const arboReducer = (
       if (map) {
         adjustMapPositionIfCountryFilterHasChanged(action, map);
       }
-
       return {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
