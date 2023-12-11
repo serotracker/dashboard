@@ -93,6 +93,7 @@ export default function MapAndFilters() {
               layers={[
                 {
                   id: "Arbovirus-pins",
+                  isDataUsedForCountryHighlighting: true,
                   cursor: "pointer",
                   dataPoints: state.filteredData,
                   layerPaint: {
