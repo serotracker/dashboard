@@ -50,8 +50,13 @@ const buildFilterDropdown = (
   placeholder: string,
   state: ArboContextType,
   filterOptions: string[],
-  data: any,
+  data: any
 ) => {
+  const sortedOptions = filterOptions
+    ? filterOptions
+        .filter((assay: string | null): assay is string => assay !== null)
+        .sort()
+    : [];
   if (
     filter === FilterableField.start_date ||
     filter === FilterableField.end_date
@@ -64,7 +69,12 @@ const buildFilterDropdown = (
             addFilterMulti(dateString ? [dateString] : [], filter, state, data);
           }}
           labelText={placeholder}
-          date={ (state.selectedFilters[filter] && state.selectedFilters[filter].length > 0) ? parseISO(state.selectedFilters[filter][0]) : undefined}
+          date={
+            state.selectedFilters[filter] &&
+            state.selectedFilters[filter].length > 0
+              ? parseISO(state.selectedFilters[filter][0])
+              : undefined
+          }
           clearDateFilter={() => {
             state.dispatch({
               type: ArboActionType.UPDATE_FILTER,
@@ -85,7 +95,7 @@ const buildFilterDropdown = (
           handleOnChange={(value) => addFilterMulti(value, filter, state, data)}
           heading={placeholder}
           selected={state.selectedFilters[filter] ?? []}
-          options={filterOptions.filter((assay: string) => assay != null)}
+          options={sortedOptions}
         />
       </div>
     );
@@ -103,7 +113,7 @@ export enum FilterableField {
   pathogen = "pathogen",
   start_date = "start_date",
   end_date = "end_date",
-  who_region = "who_region"
+  who_region = "who_region",
 }
 
 interface FilterSectionProps {
@@ -139,7 +149,7 @@ const FilterSection = ({
           filterableFieldToLabelMap[field],
           state,
           filters.data[field],
-          data ? data.records : [],
+          data ? data.records : []
         );
       })}
     </div>
@@ -163,7 +173,7 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
     [FilterableField.pathogen]: "Arbovirus",
     [FilterableField.start_date]: "Sampling Start Date",
     [FilterableField.end_date]: "Sampling End Date",
-    [FilterableField.who_region]: "WHO Region"
+    [FilterableField.who_region]: "WHO Region",
   };
   const demographicFilters = [
     FilterableField.age_group,
