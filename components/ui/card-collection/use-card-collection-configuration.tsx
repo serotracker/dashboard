@@ -168,9 +168,6 @@ export const useCardCollectionConfiguration = (
       cardInputData,
     });
 
-    console.log('CardInputData change!');
-    console.log(input.cardInputData)
-
     setCardStates(newCardStates);
   }, [input.cardInputData]);
 
