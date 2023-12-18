@@ -11,7 +11,7 @@ import {
   getBoundingBoxFromCountryName,
 } from "@/lib/country-bounding-boxes";
 import useArboData from "@/hooks/useArboData";
-import { parseISO } from "date-fns";
+import { parseISO, isAfter, isBefore } from "date-fns";
 
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
@@ -47,51 +47,40 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
     return filterKeys.every((key: string) => {
       if (!filters[key].length) return true;
 
-      if(key === "end_date") {
-        const filterEndDate = parseISO(filters["end_date"][0]);
+      if (key === "end_date") {
+        const filterEndDate = new Date(filters["end_date"][0]);
 
-        if(!filterEndDate) {
-          return true;
+        if (isNaN(filterEndDate.getTime())) {
+          return true; // Handle invalid date
         }
 
-        const itemDate = new Date(item.sample_end_date);
-
-        const filterEndUTC = Date.UTC(
-          filterEndDate.getUTCFullYear(),
-          filterEndDate.getUTCMonth(),
-        );
-
-        const itemDateUTC = Date.UTC(
-          itemDate.getUTCFullYear(),
-          itemDate.getUTCMonth(),
-        );
+        const itemStartDate = new Date(item.sample_start_date);
+        const itemEndDate = new Date(item.sample_end_date);
         
-        return itemDateUTC <= filterEndUTC;
+        console.log("filter end date: ", filterEndDate);
+        console.log("item start date: ", itemStartDate);
+        console.log("item end date: ", itemEndDate);
+        console.log("Does overlap: ",  !(itemEndDate < filterEndDate && itemStartDate < filterEndDate));
+
+        // Check for any overlap in the sampling period
+        return !(itemEndDate < filterEndDate && itemStartDate < filterEndDate);
       }
 
-      if(key === "start_date") {
-        const filterStartDate = parseISO(filters["start_date"][0]);
+      if (key === "start_date") {
+        const filterStartDate = new Date(filters["start_date"][0]);
 
-        if(!filterStartDate) {
-          return true;
+        if (isNaN(filterStartDate.getTime())) {
+          return true; // Handle invalid date
         }
 
-        const itemDate = new Date(item.sample_start_date);
+        const itemStartDate = new Date(item.sample_start_date);
+        const itemEndDate = new Date(item.sample_end_date);
 
-        const filterStartUTC = Date.UTC(
-          filterStartDate.getUTCFullYear(),
-          filterStartDate.getUTCMonth(),
+        // Check for any overlap in the sampling period
+        return !(
+          itemStartDate > filterStartDate && itemEndDate > filterStartDate
         );
-
-        const itemDateUTC = Date.UTC(
-          itemDate.getUTCFullYear(),
-          itemDate.getUTCMonth(),
-        );
-        
-
-        return itemDateUTC >= filterStartUTC;
       }
-
       if (key === "antibody") {
         return item["antibodies"].some((element: string) =>
           filters[key].includes(element)
@@ -110,7 +99,6 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
     });
   });
 }
-
 
 export const arboReducer = (
   state: ArboStateType,
