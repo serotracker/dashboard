@@ -56,11 +56,6 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
 
         const itemStartDate = new Date(item.sample_start_date);
         const itemEndDate = new Date(item.sample_end_date);
-        
-        console.log("filter end date: ", filterEndDate);
-        console.log("item start date: ", itemStartDate);
-        console.log("item end date: ", itemEndDate);
-        console.log("Does overlap: ",  !(itemEndDate < filterEndDate && itemStartDate < filterEndDate));
 
         // Check for any overlap in the sampling period
         return !(itemEndDate < filterEndDate && itemStartDate < filterEndDate);
