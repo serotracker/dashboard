@@ -9,7 +9,7 @@ export interface FixedCardInputData {
   order: number,
   columnCount: number,
   cardId: string,
-  renderCardContent: (input: {cardConfiguration: CardConfiguration[]}) => React.ReactNode,
+  renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
   cardClassname: string,
 }
 
@@ -19,7 +19,7 @@ export interface ExpandableCardInputData {
   expandedColumnCount: number,
   isExpandedByDefault: boolean,
   cardId: string,
-  renderCardContent: (input: {cardConfiguration: CardConfiguration[]}) => React.ReactNode,
+  renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
   cardClassname: string,
 }
 
@@ -27,7 +27,7 @@ export interface FillRemainingSpaceCardInputData {
   type: CardType.FILL_REMAINING_SPACE,
   order: number,
   cardId: string,
-  renderCardContent: (input: {cardConfiguration: CardConfiguration[]}) => React.ReactNode,
+  renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
   cardClassname: string,
 }
 
@@ -63,3 +63,53 @@ export const isFillRemainingSpaceCardStateWithoutCurrentColumnCount = (cardState
 export const isFixedCardConfiguration = (cardConfiguration: CardConfiguration): cardConfiguration is FixedCardConfiguration => cardConfiguration.type === CardType.FIXED;
 export const isExpandableCardConfiguration = (cardConfiguration: CardConfiguration): cardConfiguration is ExpandableCardConfiguration => cardConfiguration.type === CardType.EXPANDABLE;
 export const isFillRemainingSpaceCardConfiguration = (cardConfiguration: CardConfiguration): cardConfiguration is FillRemainingSpaceCardConfiguration => cardConfiguration.type === CardType.FILL_REMAINING_SPACE;
+
+const findCardOrThrow = (
+  cardConfigurations: CardConfiguration[],
+  cardId: string
+) => {
+  const card = cardConfigurations.find((element) => element.cardId === cardId);
+
+  if (!card) {
+    throw new Error(`Unable to find card with id ${cardId}.`);
+  }
+
+  return card;
+};
+
+const getCardConfigurationByTypeFunctionMap = {
+  [CardType.EXPANDABLE]: (cardConfigurations: CardConfiguration[], cardId: string): ExpandableCardConfiguration => {
+    const cardConfiguration = findCardOrThrow(cardConfigurations, cardId);
+
+    if (!isExpandableCardConfiguration(cardConfiguration)) {
+      throw new Error(`Attempted to find card with id of ${cardId} and type ${CardType.EXPANDABLE}. Card found but type was ${cardConfiguration.type}.`);
+    }
+
+    return cardConfiguration;
+  },
+  [CardType.FILL_REMAINING_SPACE]: (cardConfigurations: CardConfiguration[], cardId: string): FillRemainingSpaceCardConfiguration => {
+    const cardConfiguration = findCardOrThrow(cardConfigurations, cardId);
+
+    if (!isFillRemainingSpaceCardConfiguration(cardConfiguration)) {
+      throw new Error(`Attempted to find card with id of ${cardId} and type ${CardType.FILL_REMAINING_SPACE}. Card found but type was ${cardConfiguration.type}.`);
+    }
+
+    return cardConfiguration;
+  },
+  [CardType.FIXED]: (cardConfigurations: CardConfiguration[], cardId: string): FixedCardConfiguration => {
+    const cardConfiguration = findCardOrThrow(cardConfigurations, cardId);
+
+    if (!isFixedCardConfiguration(cardConfiguration)) {
+      throw new Error(`Attempted to find card with id of ${cardId} and type ${CardType.FIXED}. Card found but type was ${cardConfiguration.type}.`);
+    }
+
+    return cardConfiguration;
+  },
+} as const;
+
+export const getConfigurationForCard = <T extends CardType>(cardConfigurations: CardConfiguration[], cardId: string, cardType: T): ReturnType<(typeof getCardConfigurationByTypeFunctionMap)[T]> => {
+  return getCardConfigurationByTypeFunctionMap[cardType](
+    cardConfigurations,
+    cardId
+  ) as ReturnType<(typeof getCardConfigurationByTypeFunctionMap)[T]>;
+};

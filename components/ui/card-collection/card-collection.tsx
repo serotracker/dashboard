@@ -1,22 +1,27 @@
 import { Card } from "../card";
-import { CardConfiguration } from "./card-collection-types";
+import { CardConfiguration, CardInputData } from "./card-collection-types";
+import { useCardCollectionConfiguration } from "./use-card-collection-configuration";
 
 interface CardCollectionProps {
-  cardConfiguration: CardConfiguration[];
+  cardInputData: CardInputData[];
+  columnCountToFill: number;
 }
 
-export const CardCollection = (input: CardCollectionProps) => {
-  const { cardConfiguration } = input;
+export const CardCollection = ({ cardInputData, columnCountToFill }: CardCollectionProps) => {
+  const { cardConfigurations } = useCardCollectionConfiguration({
+    cardInputData,
+    columnCountToFill,
+  });
 
   return (
     <>
-      {cardConfiguration.sort((a, b) => a.order > b.order ? 1 : -1).map((card) => (
+      {cardConfigurations.sort((a, b) => a.order > b.order ? 1 : -1).map((card) => (
         <Card
           className={card.cardClassname}
           style={{gridColumn: `span ${card.currentColumnCount} / span ${card.currentColumnCount}`}}
           hidden={card.currentColumnCount <= 0}
         >
-          {card.renderCardContent({ cardConfiguration })}
+          {card.renderCardContent({ cardConfigurations })}
         </Card>
       ))}
     </>

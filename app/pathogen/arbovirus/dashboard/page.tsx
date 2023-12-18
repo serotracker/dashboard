@@ -1,41 +1,40 @@
 "use client";
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { X } from "lucide-react";
 
 import { ArbovirusMap } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
 import { MedianSeroPrevByWHOregion } from "../analyze/recharts";
 import Filters, { FilterableField } from "./filters";
-import { useCardCollectionConfiguration } from "@/components/ui/card-collection/use-card-collection-configuration";
-import { CardConfiguration, CardType } from "@/components/ui/card-collection/card-collection-types";
+import { CardConfiguration, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
 import { CardCollection } from "@/components/ui/card-collection/card-collection";
 
 export default function ArbovirusDashboard() {
   // Need to make the visualizations dynamic. Unsure how to do this well using CSS.
 
-  const renderPlotCardContent = useCallback(({cardConfiguration}: {cardConfiguration: CardConfiguration[]}) => (
+  const renderPlotCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => (
     <CardContent className={"px-0 h-full flex flex-col"}>
       <div className={"flex space-between py-4"}>
         <h3 className="w-full text-center text-lg">
           Median seroprevalence of arboviruses by WHO region
         </h3>
         <button aria-label="Close graphs">
-          <X onClick={() => {(cardConfiguration.find((element) => element.cardId === 'plots') as any).minimizeCard()}} className={"h-full"}/>
+          <X onClick={() => {getConfigurationForCard(cardConfigurations, 'plots', CardType.EXPANDABLE).minimizeCard()}} className={"h-full"}/>
         </button>
       </div>
       <MedianSeroPrevByWHOregion />
     </CardContent>
   ), [])
 
-  const renderMapCardContent = useCallback(({cardConfiguration}: {cardConfiguration: CardConfiguration[]}) => (
+  const renderMapCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => (
     <ArbovirusMap
-      expandVisualizations={() => {(cardConfiguration.find((element) => element.cardId === 'plots') as any).expandCard()}}
-      areVisualizationsExpanded={(cardConfiguration.find((element) => element.cardId === 'plots') as any).isExpanded}
+      expandVisualizations={() => {getConfigurationForCard(cardConfigurations, 'plots', CardType.EXPANDABLE).expandCard()}}
+      areVisualizationsExpanded={getConfigurationForCard(cardConfigurations, 'plots', CardType.EXPANDABLE).isExpanded}
     />
   ), [])
 
-  const renderFiltersCardContent = useCallback(({ cardConfiguration }: {cardConfiguration: CardConfiguration[]}) => (
+  const renderFiltersCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => (
     <>
       <CardHeader>
         <CardTitle>Filters</CardTitle>
@@ -73,10 +72,5 @@ export default function ArbovirusDashboard() {
     }
   ], [renderPlotCardContent, renderMapCardContent, renderFiltersCardContent])
 
-  const { cardConfiguration } = useCardCollectionConfiguration({
-    cardInputData,
-    columnCountToFill: 12,
-  });
-
-  return <CardCollection cardConfiguration={cardConfiguration} />
+  return <CardCollection cardInputData={cardInputData} columnCountToFill={12} />
 }

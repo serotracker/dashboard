@@ -11,15 +11,7 @@ interface MapArbovirusFilterProps {
 }
 
 export const MapArbovirusFilter = ({ records }: MapArbovirusFilterProps) => {
-  const dataQuery = useArboData();
   const state = useContext(ArboContext);
-  const filters = useQuery({
-    queryKey: ["ArbovirusFilters"],
-    queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/filter_options`).then(
-        (response) => response.json()
-      ),
-  });
 
   const pathogenOrder = ["ZIKV", "DENV", "CHIKV", "YF", "WNV", "MAYV"];
 

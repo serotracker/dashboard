@@ -113,7 +113,7 @@ interface UseCardCollectionConfigurationInput {
 }
 
 interface UseCardCollectionConfigurationOutput {
-  cardConfiguration: CardConfiguration[];
+  cardConfigurations: CardConfiguration[];
 }
 
 export const useCardCollectionConfiguration = (
@@ -171,11 +171,11 @@ export const useCardCollectionConfiguration = (
     setCardStates(newCardStates);
   }, [input.cardInputData]);
 
-  const cardConfiguration = useMemo(() => {
+  const cardConfigurations = useMemo(() => {
     return cardStates.map((cardState) => generateCardConfigurationFromCardState(cardState));
   },[cardStates])
 
   return {
-    cardConfiguration,
+    cardConfigurations,
   };
 };
