@@ -21,6 +21,7 @@ export interface ExpandableCardInputData {
   cardId: string,
   renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
   cardClassname: string,
+  onCardSizeChange?: () => void,
 }
 
 export interface FillRemainingSpaceCardInputData {
@@ -29,6 +30,7 @@ export interface FillRemainingSpaceCardInputData {
   cardId: string,
   renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
   cardClassname: string,
+  onCardSizeChange?: () => void,
 }
 
 export type CardInputData = FixedCardInputData | ExpandableCardInputData | FillRemainingSpaceCardInputData;

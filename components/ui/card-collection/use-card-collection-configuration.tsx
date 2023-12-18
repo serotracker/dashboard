@@ -17,6 +17,7 @@ import {
   isFillRemainingSpaceCardInputData,
   isExpandableCardInputData,
 } from "./card-collection-types";
+import { useMap } from "react-map-gl";
 
 const getCardStatesWithColumnCountsRecalculated = (input: {
   cardStates: CardStateWithoutCurrentColumnCount[];

@@ -9,9 +9,11 @@ import { MedianSeroPrevByWHOregion } from "../analyze/recharts";
 import Filters, { FilterableField } from "./filters";
 import { CardConfiguration, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
 import { CardCollection } from "@/components/ui/card-collection/card-collection";
+import { useMap } from "react-map-gl";
 
 export default function ArbovirusDashboard() {
   // Need to make the visualizations dynamic. Unsure how to do this well using CSS.
+  const allMaps = useMap();
 
   const renderPlotCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => (
     <CardContent className={"px-0 h-full flex flex-col"}>
@@ -60,7 +62,12 @@ export default function ArbovirusDashboard() {
       cardId: 'map',
       type: CardType.FILL_REMAINING_SPACE as const,
       cardClassname: "w-full h-full overflow-hidden row-span-2 relative",
-      renderCardContent: renderMapCardContent
+      renderCardContent: renderMapCardContent,
+      onCardSizeChange: () => {
+        if(allMaps['arboMap']) {
+          allMaps['arboMap'].resize();
+        }
+      }
     },
     {
       order: 3,
@@ -70,7 +77,7 @@ export default function ArbovirusDashboard() {
       cardClassname: "row-span-2 overflow-y-auto",
       renderCardContent: renderFiltersCardContent
     }
-  ], [renderPlotCardContent, renderMapCardContent, renderFiltersCardContent])
+  ], [renderPlotCardContent, renderMapCardContent, renderFiltersCardContent, allMaps])
 
   return <CardCollection cardInputData={cardInputData} columnCountToFill={12} />
 }
