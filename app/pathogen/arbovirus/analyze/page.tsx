@@ -6,8 +6,9 @@ import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
 import ArboDataTable from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
 import { AntibodyPathogenBar, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "@/app/pathogen/arbovirus/analyze/recharts";
 import clsx from "clsx";
-import { CardConfiguration, CardStyle, CardType } from "@/components/ui/card-collection/card-collection-types";
+import { CardConfiguration, CardStyle, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
 import { CardCollection } from "@/components/ui/card-collection/card-collection";
+import { X } from "lucide-react";
 
 const VisualizationCard = (props: {
   title: string;
@@ -53,12 +54,18 @@ export default function ArboAnalyze() {
     </>
   ), []);
   const renderTableCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => (
-    <ArboDataTable />
+    <ArboDataTable
+      expandFilters={() => {getConfigurationForCard(cardConfigurations, 'filters', CardType.EXPANDABLE).expandCard()}}
+      areFiltersExpanded={getConfigurationForCard(cardConfigurations, 'filters', CardType.EXPANDABLE).isExpanded}
+    />
   ), []);
   const renderFiltersCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => (
     <>
-      <CardHeader>
+      <CardHeader className={"flex flex-row justify-between space-y-0"}>
         <CardTitle>Filters</CardTitle>
+        <button aria-label="Close graphs">
+          <X onClick={() => {getConfigurationForCard(cardConfigurations, 'filters', CardType.EXPANDABLE).minimizeCard()}} className={"h-full"}/>
+        </button>
       </CardHeader>
       <CardContent>
         <Filters />

@@ -19,14 +19,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils"
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  expandFilters: () => void;
+  areFiltersExpanded: boolean;
 }
 import {
   DropdownMenu,
@@ -39,6 +40,8 @@ import { mkConfig, generateCsv, download } from "export-to-csv";
 export function DataTable<TData, TValue>({
   columns,
   data,
+  expandFilters,
+  areFiltersExpanded
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -102,40 +105,45 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <h2><b>Explore arbovirus seroprevalence estimates in our database</b></h2>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="bg-foreground">
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-foreground">
-            <Button variant="outline" className="ml-auto bg-white" onClick={handleSelectAll}>
-                Select All
-            </Button>
-            <Button variant="outline" className="ml-auto bg-white" onClick={handleClearAll}>
-                Clear All
-            </Button>
-            {table
-              .getAllColumns()
-              .filter(
-                (column) => column.getCanHide()
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value: boolean) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
+        <div className="ml-auto">
+          <Button className={cn("bg-foreground ml-2", areFiltersExpanded && 'hidden')} variant="outline" onClick={() => expandFilters()}>
+            See Filters
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="bg-foreground">
+              <Button variant="outline" className="ml-2">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-foreground">
+              <Button variant="outline" className="ml-auto bg-white" onClick={handleSelectAll}>
+                  Select All
+              </Button>
+              <Button variant="outline" className="ml-auto bg-white" onClick={handleClearAll}>
+                  Clear All
+              </Button>
+              {table
+                .getAllColumns()
+                .filter(
+                  (column) => column.getCanHide()
                 )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value: boolean) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  )
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

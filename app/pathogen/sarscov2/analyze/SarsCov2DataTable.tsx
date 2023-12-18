@@ -10,7 +10,12 @@ export default function SarsCov2DataTable() {
   const dataQuery = useSarsCov2Data();
   const state = useContext(SarsCov2Context);
   if(state.filteredData.length > 0 || (dataQuery.isSuccess && dataQuery.data)) {
-    return <DataTable columns={columns} data={state.filteredData} />;
+    return <DataTable
+      columns={columns}
+      data={state.filteredData}
+      expandFilters={() => console.error("Expanding and minimizing filters is not implemented for the Sars Cov 2 dashboard.")}
+      areFiltersExpanded={true}
+    />;
   } else {
     return <>Loading Data ...</>
   }
