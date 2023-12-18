@@ -1,21 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 import { Card } from "../card";
-import {
-  CardConfiguration,
-  CardInputData,
-  isFixedCardConfiguration,
-} from "./card-collection-types";
+import { CardConfiguration, CardInputData, isFixedCardConfiguration } from "./card-collection-types";
 import { useCardCollectionConfiguration } from "./use-card-collection-configuration";
-
-enum CardStyle {
-  DIV = "DIV",
-  CARD = "CARD",
-}
 
 interface CardCollectionProps {
   cardInputData: CardInputData[];
-  cardStyle?: CardStyle;
   columnCountToFill: number;
 }
 
@@ -25,19 +15,14 @@ interface CardContentProps {
   cardConfigurations: CardConfiguration[];
 }
 
-const CardContent = ({
-  cardWidthClass,
-  cardConfiguration,
-  cardConfigurations,
-}: CardContentProps) => {
-  const [previousCardWidthClass, setPreviousCardWidthClass] =
-    useState<string>(cardWidthClass);
+const CardContent = ({cardWidthClass, cardConfiguration, cardConfigurations}: CardContentProps) => {
+  const [previousCardWidthClass, setPreviousCardWidthClass] = useState<string>(cardWidthClass);
 
   useEffect(() => {
-    if (cardWidthClass !== previousCardWidthClass) {
-      setPreviousCardWidthClass(cardWidthClass);
+    if(cardWidthClass !== previousCardWidthClass) {
+      setPreviousCardWidthClass(cardWidthClass)
 
-      if (isFixedCardConfiguration(cardConfiguration)) {
+      if(isFixedCardConfiguration(cardConfiguration)) {
         return;
       }
 
@@ -46,13 +31,9 @@ const CardContent = ({
   }, [previousCardWidthClass, cardWidthClass]);
 
   return cardConfiguration.renderCardContent({ cardConfigurations });
-};
+}
 
-export const CardCollection = ({
-  cardInputData,
-  columnCountToFill,
-  cardStyle = CardStyle.CARD,
-}: CardCollectionProps) => {
+export const CardCollection = ({ cardInputData, columnCountToFill }: CardCollectionProps) => {
   const { cardConfigurations } = useCardCollectionConfiguration({
     cardInputData,
     columnCountToFill,
@@ -60,43 +41,20 @@ export const CardCollection = ({
 
   return (
     <>
-      {cardConfigurations
-        .sort((a, b) => (a.order > b.order ? 1 : -1))
-        .map((card) => {
-          const cardWidthClass = `span ${card.currentColumnCount} / span ${card.currentColumnCount}`;
+      {cardConfigurations.sort((a, b) => a.order > b.order ? 1 : -1).map((card) => {
+        const cardWidthClass = `span ${card.currentColumnCount} / span ${card.currentColumnCount}`;
 
-          if (cardStyle == CardStyle.CARD) {
-            return (
-              <Card
-                key={card.cardId}
-                className={card.cardClassname}
-                style={{ gridColumn: cardWidthClass }}
-                hidden={card.currentColumnCount <= 0}
-              >
-                <CardContent
-                  cardWidthClass={cardWidthClass}
-                  cardConfiguration={card}
-                  cardConfigurations={cardConfigurations}
-                />
-              </Card>
-            );
-          }
-
-          return (
-            <div
-              key={card.cardId}
-              className={card.cardClassname}
-              style={{ gridColumn: cardWidthClass }}
-              hidden={card.currentColumnCount <= 0}
-            >
-              <CardContent
-                cardWidthClass={cardWidthClass}
-                cardConfiguration={card}
-                cardConfigurations={cardConfigurations}
-              />
-            </div>
-          );
-        })}
+        return (
+          <Card
+            key={card.cardId}
+            className={card.cardClassname}
+            style={{gridColumn: cardWidthClass}}
+            hidden={card.currentColumnCount <= 0}
+          >
+            <CardContent cardWidthClass={cardWidthClass} cardConfiguration={card} cardConfigurations={cardConfigurations} />
+          </Card>
+        )
+      })}
     </>
   );
 };
