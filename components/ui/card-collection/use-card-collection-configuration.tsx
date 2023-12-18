@@ -83,7 +83,6 @@ const getCardStatesUpdatedFromCardData = (input: {
     if (isFillRemainingSpaceCardInputData(cardInputData)) {
       return {
         ...cardInputData,
-        currentColumnCount: 0,
       };
     }
 
@@ -94,14 +93,12 @@ const getCardStatesUpdatedFromCardData = (input: {
     if (existingExpandableCardState && isExpandableCardInputData(existingExpandableCardState)) {
       return {
         ...cardInputData,
-        currentColumnCount: 0,
         isExpanded: existingExpandableCardState.isExpanded,
       };
     }
 
     return {
       ...cardInputData,
-      currentColumnCount: 0,
       isExpanded: cardInputData.isExpandedByDefault,
     };
   });
