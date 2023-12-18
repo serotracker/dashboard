@@ -1,9 +1,13 @@
-import React from "react";
+"use client"
+
+import React, { useCallback, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
 import ArboDataTable from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
 import { AntibodyPathogenBar, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "@/app/pathogen/arbovirus/analyze/recharts";
 import clsx from "clsx";
+import { CardConfiguration, CardStyle, CardType } from "@/components/ui/card-collection/card-collection-types";
+import { CardCollection } from "@/components/ui/card-collection/card-collection";
 
 const VisualizationCard = (props: {
   title: string;
@@ -23,44 +27,74 @@ const VisualizationCard = (props: {
 };
 
 export default function ArboAnalyze() {
-  return (
+  const renderPlotCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => (
     <>
-      <div className={"col-span-5 row-span-2 overflow-auto"}>
-        <VisualizationCard title={"Median seroprevalence by WHO region and age group"} height="h-full">
-          <MedianSeroPrevByWHOregionAndAgeGroup />
-        </VisualizationCard>
-        <VisualizationCard title={"Estimate count by WHO region and arbovirus"}>
-          <WHORegionAndArbovirusBar />
-        </VisualizationCard>
-        <VisualizationCard title={"Estimate count by arbovirus & antibody type"}>
-          <AntibodyPathogenBar />
-        </VisualizationCard>
-        <VisualizationCard title={"Median seroprevalence by WHO Region"} height="h-full">
-          <MedianSeroPrevByWHOregion />
-        </VisualizationCard>
-        <VisualizationCard title={"Cumulative estimate count over time by arbovirus"}>
-          <StudyCountOverTime />
-        </VisualizationCard>
-        <VisualizationCard title={"Cumulative estimate count over time by sample frame"}  height="h-full 2xl:h-3/4">
-          <StudyCountOverTimeBySampleFrame/>
-        </VisualizationCard>
-        <VisualizationCard title={"Top ten countries reporting estimates by arbovirus"} height="h-full">
-          <Top10CountriesByPathogenStudyCount />
-        </VisualizationCard>
-        
-        
-      </div>
-      <div className={"col-span-5 row-span-2 overflow-auto"}>
-        <ArboDataTable />
-      </div>
-      <Card className={"col-span-2 row-span-2 overflow-y-auto"}>
-        <CardHeader>
-          <CardTitle>Filters</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Filters />
-        </CardContent>
-      </Card>
+      <VisualizationCard title={"Median seroprevalence by WHO region and age group"} height="h-full">
+        <MedianSeroPrevByWHOregionAndAgeGroup />
+      </VisualizationCard>
+      <VisualizationCard title={"Estimate count by WHO region and arbovirus"}>
+        <WHORegionAndArbovirusBar />
+      </VisualizationCard>
+      <VisualizationCard title={"Estimate count by arbovirus & antibody type"}>
+        <AntibodyPathogenBar />
+      </VisualizationCard>
+      <VisualizationCard title={"Median seroprevalence by WHO Region"} height="h-full">
+        <MedianSeroPrevByWHOregion />
+      </VisualizationCard>
+      <VisualizationCard title={"Cumulative estimate count over time by arbovirus"}>
+        <StudyCountOverTime />
+      </VisualizationCard>
+      <VisualizationCard title={"Cumulative estimate count over time by sample frame"}  height="h-full 2xl:h-3/4">
+        <StudyCountOverTimeBySampleFrame/>
+      </VisualizationCard>
+      <VisualizationCard title={"Top ten countries reporting estimates by arbovirus"} height="h-full">
+        <Top10CountriesByPathogenStudyCount />
+      </VisualizationCard>
     </>
-  );
+  ), []);
+  const renderTableCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => (
+    <ArboDataTable />
+  ), []);
+  const renderFiltersCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => (
+    <>
+      <CardHeader>
+        <CardTitle>Filters</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Filters />
+      </CardContent>
+    </>
+  ), []);
+
+  const cardInputData = useMemo(() => [
+    {
+      order: 1,
+      cardId: 'plots',
+      type: CardType.FIXED as const,
+      columnCount: 5,
+      cardClassname: "row-span-2 overflow-auto",
+      renderCardContent: renderPlotCardContent,
+      cardStyle: CardStyle.DIV
+    },
+    {
+      order: 2,
+      cardId: 'table',
+      type: CardType.FILL_REMAINING_SPACE as const,
+      cardClassname: "row-span-2 overflow-auto",
+      renderCardContent: renderTableCardContent,
+      cardStyle: CardStyle.DIV
+    },
+    {
+      order: 3,
+      cardId: 'filters',
+      type: CardType.EXPANDABLE as const,
+      expandedColumnCount: 2,
+      isExpandedByDefault: true,
+      cardClassname: "row-span-2 overflow-y-auto",
+      renderCardContent: renderFiltersCardContent,
+      cardStyle: CardStyle.CARD
+    }
+  ], [renderPlotCardContent, renderTableCardContent, renderFiltersCardContent])
+
+  return <CardCollection cardInputData={cardInputData} columnCountToFill={12} />
 }

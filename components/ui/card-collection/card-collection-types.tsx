@@ -4,6 +4,11 @@ export enum CardType {
   FILL_REMAINING_SPACE = 'FILL_REMAINING_SPACE'
 }
 
+export enum CardStyle {
+  DIV = 'DIV',
+  CARD = 'CARD',
+}
+
 export interface FixedCardInputData {
   type: CardType.FIXED,
   order: number,
@@ -11,6 +16,7 @@ export interface FixedCardInputData {
   cardId: string,
   renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
   cardClassname: string,
+  cardStyle: CardStyle,
 }
 
 export interface ExpandableCardInputData {
@@ -22,6 +28,7 @@ export interface ExpandableCardInputData {
   renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
   cardClassname: string,
   onCardSizeChange?: () => void,
+  cardStyle: CardStyle,
 }
 
 export interface FillRemainingSpaceCardInputData {
@@ -31,6 +38,7 @@ export interface FillRemainingSpaceCardInputData {
   renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
   cardClassname: string,
   onCardSizeChange?: () => void,
+  cardStyle: CardStyle,
 }
 
 export type CardInputData = FixedCardInputData | ExpandableCardInputData | FillRemainingSpaceCardInputData;

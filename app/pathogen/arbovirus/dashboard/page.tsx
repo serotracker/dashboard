@@ -7,7 +7,7 @@ import { X } from "lucide-react";
 import { ArbovirusMap } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
 import { MedianSeroPrevByWHOregion } from "../analyze/recharts";
 import Filters, { FilterableField } from "./filters";
-import { CardConfiguration, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
+import { CardConfiguration, CardStyle, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
 import { CardCollection } from "@/components/ui/card-collection/card-collection";
 import { useMap } from "react-map-gl";
 
@@ -55,7 +55,8 @@ export default function ArbovirusDashboard() {
       isExpandedByDefault: false,
       expandedColumnCount: 4,
       cardClassname: "row-span-2 pr-4 pb-4",
-      renderCardContent: renderPlotCardContent
+      renderCardContent: renderPlotCardContent,
+      cardStyle: CardStyle.CARD
     },
     {
       order: 2,
@@ -67,7 +68,8 @@ export default function ArbovirusDashboard() {
         if(allMaps['arboMap']) {
           allMaps['arboMap'].resize();
         }
-      }
+      },
+      cardStyle: CardStyle.CARD
     },
     {
       order: 3,
@@ -75,7 +77,8 @@ export default function ArbovirusDashboard() {
       type: CardType.FIXED as const,
       columnCount: 2,
       cardClassname: "row-span-2 overflow-y-auto",
-      renderCardContent: renderFiltersCardContent
+      renderCardContent: renderFiltersCardContent,
+      cardStyle: CardStyle.CARD
     }
   ], [renderPlotCardContent, renderMapCardContent, renderFiltersCardContent, allMaps])
 
