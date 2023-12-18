@@ -51,7 +51,7 @@ export default function ArbovirusDashboard() {
       order: 1,
       cardId: 'plots',
       type: CardType.EXPANDABLE as const,
-      isExpandedByDefault: true,
+      isExpandedByDefault: false,
       expandedColumnCount: 4,
       cardClassname: "row-span-2 pr-4 pb-4",
       renderCardContent: renderPlotCardContent

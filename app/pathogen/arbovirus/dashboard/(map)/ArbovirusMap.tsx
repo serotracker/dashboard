@@ -1,16 +1,13 @@
 /**
- * @file MapAndFilters Component
- * @description This component renders a Map with associated filters for the Arboviruses dashboard.
+ * @file ArbovirusMap Component
+ * @description This component renders a Map for the Arboviruses dashboard.
  * It includes checkboxes for different pathogens and a side panel with additional filters.
  * The map and filters are dynamically updated based on user interactions.
  */
 
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Filters, {
-  FilterableField,
-} from "@/app/pathogen/arbovirus/dashboard/filters";
+import { Card, CardContent } from "@/components/ui/card";
 import React, { useContext } from "react";
 import useArboData from "@/hooks/useArboData";
 import { ArboContext } from "@/contexts/arbo-context";
