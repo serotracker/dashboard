@@ -17,6 +17,7 @@ export const CardCollection = ({ cardInputData, columnCountToFill }: CardCollect
     <>
       {cardConfigurations.sort((a, b) => a.order > b.order ? 1 : -1).map((card) => (
         <Card
+          key={card.cardId}
           className={card.cardClassname}
           style={{gridColumn: `span ${card.currentColumnCount} / span ${card.currentColumnCount}`}}
           hidden={card.currentColumnCount <= 0}
