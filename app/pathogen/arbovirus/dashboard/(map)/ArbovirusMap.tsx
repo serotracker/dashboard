@@ -113,7 +113,7 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
           </CardContent>
         </Card>
         <MapExpandPlotsPrompt
-          text={areVisualizationsExpanded ? "Hide Graphs" : "See Graphs"}
+          text={areVisualizationsExpanded ? "Hide Figures" : "See Figures"}
           onClick={areVisualizationsExpanded ? minimizeVisualizations : expandVisualizations}
         />
       </div>
