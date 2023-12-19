@@ -124,11 +124,12 @@ export function DataTable<TData, TValue>({
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
+                    className="capitalize cursor-pointer"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value: boolean) =>
-                      column.toggleVisibility(!!value)
-                    }
+                    onClick={(e) => {
+                      column.toggleVisibility()
+                      e.preventDefault()
+                    }}
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
