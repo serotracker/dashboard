@@ -89,7 +89,7 @@ export function PathogenMap<
       onMouseDown={onMouseDown}
       onMouseLeave={onMouseLeave}
     >
-      <NavigationControl />
+      <NavigationControl showCompass={false} />
       <PathogenCountryHighlightLayer
         dataLayer={layerForCountryHighlighting}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
