@@ -25,7 +25,7 @@ export const pathogenColorsTailwind: { [key: string]: string } = {
   MAYV: "border-mayv data-[state=checked]:bg-mayv",
 };
 
-// TODO: Needs to be synced with tailwind pathogne colors. How?
+// TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: { [key: string]: string } = {
   ZIKV: "#A0C4FF",
   CHIKV: "#9BF6FF",
@@ -38,10 +38,11 @@ export const pathogenColors: { [key: string]: string } = {
 interface ArbovirusMapProps {
   areVisualizationsExpanded: boolean;
   expandVisualizations: () => void;
+  minimizeVisualizations: () => void;
 }
 
 export function ArbovirusMap(input: ArbovirusMapProps) {
-  const { expandVisualizations, areVisualizationsExpanded } = input;
+  const { expandVisualizations, minimizeVisualizations, areVisualizationsExpanded } = input;
   const state = useContext(ArboContext);
   const dataQuery = useArboData();
 
@@ -111,7 +112,10 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
             </p>
           </CardContent>
         </Card>
-        <MapExpandPlotsPrompt hidden={areVisualizationsExpanded} onClick={expandVisualizations}/>
+        <MapExpandPlotsPrompt
+          text={areVisualizationsExpanded ? "Hide Graphs" : "See Graphs"}
+          onClick={areVisualizationsExpanded ? minimizeVisualizations : expandVisualizations}
+        />
       </div>
     </>
   );
