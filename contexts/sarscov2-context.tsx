@@ -3,13 +3,12 @@
 import React, {
   createContext,
   useReducer,
-
+  useEffect
 } from "react";
-import mapboxgl from "mapbox-gl";
+import { MapProvider } from 'react-map-gl';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
-import getQueryClient from "@/components/customs/getQueryClient";
-
+import useSarsCov2Data from "@/hooks/useSarsCov2Data";
 
 export interface SarsCov2ContextType extends SarsCov2StateType {
   dispatch: React.Dispatch<SarsCov2Action>;
@@ -18,6 +17,7 @@ export interface SarsCov2ContextType extends SarsCov2StateType {
 interface SarsCov2StateType {
   filteredData: any[];
   selectedFilters: { [key: string]: string[] };
+  initialFetchCompleted: boolean;
 }
 
 interface SarsCov2Action {
@@ -27,12 +27,14 @@ interface SarsCov2Action {
 
 export enum SarsCov2ActionType {
   UPDATE_FILTER = "UPDATE_FILTER",
+  INITIAL_DATA_FETCH = "INITIAL_DATA_FETCH",
   ADD_FILTERS_TO_MAP = "ADD_FILTERS_TO_MAP",
 }
 
 export const initialState: SarsCov2StateType = {
   filteredData: [],
   selectedFilters: {},
+  initialFetchCompleted: false
 };
 
 function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
@@ -45,25 +47,6 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
   });
 }
 
-export function setMapboxFilters(
-  filters: { [key: string]: string[] },
-  map: mapboxgl.Map | null,
-) {
-  let mapboxFilters: any = [];
-
-  Object.keys(filters).forEach((filter: string) => {
-    const keyFilters: any = [];
-    if (filters[filter].length > 0) {
-      filters[filter].forEach((filterValue: string) => {
-        keyFilters.push(["in", filterValue, ["get", filter]]);
-      });
-    }
-    if (keyFilters.length > 0) mapboxFilters.push(["any", ...keyFilters]);
-  });
-
-  if(map?.getLayer("SarsCov2-pins")) map.setFilter("SarsCov2-pins", ["all", ...mapboxFilters]);
-}
-
 export const SarsCov2Reducer = (state: SarsCov2StateType, action: SarsCov2Action) => {
   switch (action.type) {
     case SarsCov2ActionType.UPDATE_FILTER:
@@ -72,14 +55,17 @@ export const SarsCov2Reducer = (state: SarsCov2StateType, action: SarsCov2Action
         [action.payload.filter]: action.payload.value,
       };
 
-      if (action.payload.map) {
-        setMapboxFilters(selectedFilters, action.payload.map);
-      }
-
       return {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
         selectedFilters: selectedFilters,
+      };
+    case SarsCov2ActionType.INITIAL_DATA_FETCH:
+      return {
+        ...state,
+        filteredData: action.payload.data,
+        selectedFilters: initialState.selectedFilters,
+        initialFetchCompleted: true
       };
     default:
       return state;
@@ -92,8 +78,6 @@ export const SarsCov2Context = createContext<SarsCov2ContextType>({
 });
 
 export const SarsCov2Providers = ({ children }: { children: React.ReactNode }) => {
-  const [state, dispatch] = useReducer(SarsCov2Reducer, initialState);
-
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -104,13 +88,42 @@ export const SarsCov2Providers = ({ children }: { children: React.ReactNode }) =
   })
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SarsCov2Context.Provider value={{ ...state, dispatch: dispatch }}>
-        {children}
-      </SarsCov2Context.Provider>
-    </QueryClientProvider>
+    <MapProvider>
+      <QueryClientProvider client={queryClient}>
+        <FilteredDataProvider>
+          {children}
+        </FilteredDataProvider>
+      </QueryClientProvider>
+    </MapProvider>
   );
 };
+
+const FilteredDataProvider = ({children}: {children: React.ReactNode}) => {
+  const [state, dispatch] = useReducer(SarsCov2Reducer, initialState);
+  const dataQuery = useSarsCov2Data();
+
+  useEffect(() => {
+    if(
+      state.filteredData.length === 0 &&
+      !state.initialFetchCompleted &&
+      'data' in dataQuery &&
+      !!dataQuery.data && typeof dataQuery.data === 'object' &&
+      'records' in dataQuery.data && Array.isArray(dataQuery.data.records) &&
+      dataQuery.data.records.length > 0
+    ) {
+      dispatch({
+        type: SarsCov2ActionType.INITIAL_DATA_FETCH,
+        payload: {data: (dataQuery.data.records)}
+      })
+    }
+  }, [dataQuery]);
+
+  return (
+    <SarsCov2Context.Provider value={{ ...state, dispatch: dispatch }}>
+      {children}
+    </SarsCov2Context.Provider>
+  )
+}
 
 export function Hydrate(props: HydrateProps) {
   return <RQHydrate {...props} />;

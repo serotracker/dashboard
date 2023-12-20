@@ -9,15 +9,13 @@ export type PopupContentGenerator<
 type VisiblePopupInfo<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > = { visible: true; properties: TPathogenDataPointProperties };
-type HiddenPopupInfo<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
-> = { visible: false; properties: null };
+type HiddenPopupInfo = { visible: false; properties: null };
 
 export type PopupInfo<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > =
   | VisiblePopupInfo<TPathogenDataPointProperties>
-  | HiddenPopupInfo<TPathogenDataPointProperties>;
+  | HiddenPopupInfo;
 
 interface PathogenMapPopupProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase

@@ -1,7 +1,10 @@
 "use client";
 
-import React, { createContext, useReducer, useEffect } from "react";
-import mapboxgl from "mapbox-gl";
+import React, {
+  createContext,
+  useReducer,
+  useEffect
+} from "react";
 import { MapProvider, MapRef, useMap } from "react-map-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
