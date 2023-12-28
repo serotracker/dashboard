@@ -12,12 +12,12 @@ import Filters, {
   FilterableField,
 } from "@/app/pathogen/arbovirus/dashboard/filters";
 import React, { useContext } from "react";
-import useArboData from "@/hooks/useArboData";
+import { useArboData } from "@/hooks/useArboData";
 import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useQuery } from "@tanstack/react-query";
 import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
+import { useArboFilters } from "@/hooks/useArboFilters";
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
   ZIKV: "border-zikv data-[state=checked]:bg-zikv",
@@ -39,18 +39,10 @@ export const pathogenColors: { [key: string]: string } = {
 };
 
 export default function MapAndFilters() {
-  const dataQuery = useArboData();
+  const { data } = useArboData();
   const state = useContext(ArboContext);
 
-  const filters = useQuery({
-    queryKey: ["ArbovirusFilters"],
-    queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/filter_options`).then(
-        (response) => response.json()
-      ),
-  });
-
-  if (dataQuery.isSuccess && dataQuery.data) {
+  if (data) {
     const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
       const value = state.selectedFilters.pathogen;
 
@@ -63,7 +55,7 @@ export default function MapAndFilters() {
       state.dispatch({
         type: ArboActionType.UPDATE_FILTER,
         payload: {
-          data: dataQuery.data.records,
+          data: data.arbovirusEstimatesQuery,
           filter: "pathogen",
           value: value,
         },
@@ -183,7 +175,7 @@ export default function MapAndFilters() {
           </Card>
           <Card className={"absolute top-1 left-1 p-2"}>
             <CardContent className={"flex w-fit p-0"}>
-              <p className={"ml-1 font-medium"}><b>{state.filteredData.length}</b> Estimates displayed from <b>{Array.from(new Set(state.filteredData.map((item: any) => item.source_sheet_name))).length}</b> unique sources</p>
+              <p className={"ml-1 font-medium"}><b>{state.filteredData.length}</b> Estimates displayed from <b>{Array.from(new Set(state.filteredData.map((item: any) => item.sourceSheetName))).length}</b> unique sources</p>
             </CardContent>
           </Card>
         </Card>

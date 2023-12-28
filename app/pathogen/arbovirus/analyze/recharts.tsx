@@ -76,7 +76,7 @@ export function AntibodyPathogenBar() {
   }[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const antibody: antibodies = d.antibodies.sort().join(", ");
+    const antibody: antibodies = [...d.antibodies].sort().join(", ") as antibodies;
     const arbovirus: arboviruses = convertArboSFtoArbo(d.pathogen);
 
     const existingData = _.find(data, { arbovirus: arbovirus });
@@ -133,7 +133,7 @@ export function StudyCountOverTime() {
   const data: StudyCountOverTime[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const year = new Date(d.sample_end_date).getFullYear();
+    const year = new Date(d.sampleEndDate).getFullYear();
     let arbovirus: arboviruses = convertArboSFtoArbo(d.pathogen);
 
     const existingData = _.find(data, { year: year });
@@ -246,7 +246,7 @@ export function WHORegionAndArbovirusBar() {
   const data: WHORegionAndArbovirusData[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const region = d.who_region;
+    const region = d.whoRegion;
 
     const arbovirus: arboviruses = convertArboSFtoArbo(d.pathogen);
 
@@ -373,7 +373,7 @@ export function MedianSeroPrevByWHOregion() {
   }[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const region: WHORegion = d.who_region;
+    const region: WHORegion = d.whoRegion;
     const arbovirus: arbovirusesSF = d.pathogen;
     const seroprevalence = parseFloat(d.seroprevalence);
     const existingData = seroprevalenceData.find(
@@ -518,10 +518,10 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
   }[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const region: WHORegion = d.who_region;
+    const region: WHORegion = d.whoRegion;
     const arbovirus: arbovirusesSF = d.pathogen;
     const seroprevalence = parseFloat(d.seroprevalence);
-    const ageGroup: AgeGroup = d.age_group ?? "Multiple groups";
+    const ageGroup: AgeGroup = d.ageGroup ?? "Multiple groups";
 
     if (!seroprevalenceData.find((data) => data.arbovirus === arbovirus)) {
       seroprevalenceData.push({
@@ -883,8 +883,8 @@ export function StudyCountOverTimeBySampleFrame() {
   const data: { year: number; [key: string]: number }[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const year = new Date(d.sample_end_date).getFullYear();
-    const sampleFrame = d.sample_frame;
+    const year = new Date(d.sampleEndDate).getFullYear();
+    const sampleFrame = d.sampleFrame;
 
     const existingData = data.find((d) => d.year === year);
 

@@ -48,10 +48,8 @@ export function PathogenMapPopup<
     return null;
   }
 
-  // Not a typo, there is some kind of underlying problem here worth investigating that
-  // makes switching the latitude and longitude a required step to produce the correct results.
-  const latitude = popUpInfo.properties.longitude ?? 0;
-  const longitude = popUpInfo.properties.latitude ?? 0;
+  const latitude = popUpInfo.properties.latitude ?? 0;
+  const longitude = popUpInfo.properties.longitude ?? 0;
 
   const transformedProperties = Object.fromEntries(
     Object.entries(popUpInfo.properties).map(([key, value]) => {

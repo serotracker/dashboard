@@ -6,7 +6,6 @@ import { ResponsiveBoxPlot } from "@nivo/boxplot";
 import { useQuery } from "@tanstack/react-query";
 import { ArboContext } from "@/contexts/arbo-context";
 import { pathogenColors } from "@/app/pathogen/arbovirus/dashboard/(map)/MapAndFilters";
-import useArboData from "@/hooks/useArboData";
 
 type DataSubType = {
   DENV: number;

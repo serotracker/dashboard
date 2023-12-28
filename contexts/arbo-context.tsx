@@ -13,8 +13,9 @@ import {
   combineCountryBoundingBoxes,
   getBoundingBoxFromCountryName,
 } from "@/lib/country-bounding-boxes";
-import useArboData from "@/hooks/useArboData";
+import { useArboData } from "@/hooks/useArboData";
 import { parseISO } from "date-fns";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
@@ -57,7 +58,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
           return true;
         }
 
-        const itemDate = new Date(item.sample_end_date);
+        const itemDate = new Date(item.sampleEndDate);
 
         const filterEndUTC = Date.UTC(
           filterEndDate.getUTCFullYear(),
@@ -79,7 +80,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
           return true;
         }
 
-        const itemDate = new Date(item.sample_start_date);
+        const itemDate = new Date(item.sampleStartDate);
 
         const filterStartUTC = Date.UTC(
           filterStartDate.getUTCFullYear(),
@@ -196,10 +197,18 @@ export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
     },
   });
 
+  const apolloClient = new ApolloClient({
+    cache: new InMemoryCache(),
+    ssrMode: true,
+    uri: "https://iit-backend-v2.vercel.app/api/graphql",
+  })
+
   return (
     <MapProvider>
       <QueryClientProvider client={queryClient}>
-        <FilteredDataProvider>{children}</FilteredDataProvider>
+        <ApolloProvider client={apolloClient}>
+          <FilteredDataProvider>{children}</FilteredDataProvider>
+        </ApolloProvider>
       </QueryClientProvider>
     </MapProvider>
   );
@@ -215,19 +224,21 @@ const FilteredDataProvider = ({ children }: { children: React.ReactNode }) => {
   const dataQuery = useArboData();
 
   useEffect(() => {
+    console.log('dataQuery', dataQuery)
+
     if (
       state.filteredData.length === 0 &&
       !state.dataFiltered &&
       "data" in dataQuery &&
       !!dataQuery.data &&
       typeof dataQuery.data === "object" &&
-      "records" in dataQuery.data &&
-      Array.isArray(dataQuery.data.records) &&
-      dataQuery.data.records.length > 0
+      "arbovirusEstimates" in dataQuery.data &&
+      Array.isArray(dataQuery.data.arbovirusEstimates) &&
+      dataQuery.data.arbovirusEstimates.length > 0
     ) {
       dispatch({
         type: ArboActionType.INITIAL_DATA_FETCH,
-        payload: { data: dataQuery.data.records },
+        payload: { data: dataQuery.data.arbovirusEstimates },
       });
     }
   }, [dataQuery]);

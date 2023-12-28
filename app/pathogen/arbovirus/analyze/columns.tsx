@@ -10,31 +10,31 @@ import Link from "next/link";
 import { TranslateDate } from "@/utils/translate-util/translate-service";
 
 export type Estimate = {
-  age_group: string;
-  age_maximum: number;
-  age_minimum: number;
+  ageGroup: string;
+  ageMaximum: number;
+  ageMinimum: number;
   antibodies: string[];
   assay: string;
-  assay_other: null;
+  assayOther: null;
   city: string;
   country: string;
-  created_at: string;
+  createdAt: string;
   id: string;
-  inclusion_criteria: string;
+  inclusionCriteria: string;
   latitude: number;
   longitude: number;
   pathogen: "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV" | undefined;
   producer: string;
-  producer_other: string;
-  same_frame_target_group: string;
-  sample_end_date: string;
-  sample_frame: string;
-  sample_numerator: number;
-  sample_size: number;
-  sample_start_date: string;
+  producerOther: string;
+  sameFrameTargetGroup: string;
+  sampleEndDate: string;
+  sampleFrame: string;
+  sampleNumerator: number;
+  sampleSize: number;
+  sampleStartDate: string;
   seroprevalence: number;
   sex: string;
-  source_sheet_id: string;
+  sourceSheetId: string;
   state: string;
   url: string;
 };
@@ -54,7 +54,7 @@ const get_header = (columnName: string) => {
 
 export const columns: ColumnDef<Estimate>[] = [
   {
-    accessorKey: "estimate_id",
+    accessorKey: "estimateId",
     header: get_header("Estimate ID"),
     cell: ({ row }) => {
       const url: string = row.getValue("url");
@@ -63,12 +63,12 @@ export const columns: ColumnDef<Estimate>[] = [
         return (
           // TODO: Link styling needs to be globalised. 
           <Link className="w-full underline hover:text-blue-400" href={url} rel="noopener noreferrer" target="_blank">
-            {row.getValue("estimate_id")}
+            {row.getValue("estimateId")}
           </Link>
         )
       }
 
-      return <p> {row.getValue("estimate_id")} </p>
+      return <p> {row.getValue("estimateId")} </p>
       
     },
   },
@@ -143,7 +143,7 @@ export const columns: ColumnDef<Estimate>[] = [
     cell: ({ row }) => {
       const antibodies = row.getValue("antibodies");
       if (Array.isArray(antibodies)) {
-        return antibodies.sort().map((antibody) => {
+        return [...antibodies].sort().map((antibody) => {
           let color: string = ""
           switch (antibody) {
             case "IgG": 
@@ -172,17 +172,17 @@ export const columns: ColumnDef<Estimate>[] = [
     }
   },
   {
-    accessorKey: "sample_start_date",
+    accessorKey: "sampleStartDate",
     header: ({ column }) => {
       const sortingFn = (rowA: Row<Estimate>, rowB: Row<Estimate>, columnId: string) => {
-        if(!rowA.original.sample_start_date){
+        if(!rowA.original.sampleStartDate){
           return -1
         }
-        if(!rowB.original.sample_start_date){
+        if(!rowB.original.sampleStartDate){
           return 1
         }
-        const rowASampleStartDate = new Date(rowA.original.sample_start_date)
-        const rowBSampleStartDate = new Date(rowB.original.sample_start_date)
+        const rowASampleStartDate = new Date(rowA.original.sampleStartDate)
+        const rowBSampleStartDate = new Date(rowB.original.sampleStartDate)
         if (rowASampleStartDate.getTime() > rowBSampleStartDate.getTime()) {
           return 1
         }
@@ -201,7 +201,7 @@ export const columns: ColumnDef<Estimate>[] = [
       );
     },
     cell: ({ row }) => {
-      const start_date = row.original.sample_start_date;
+      const start_date = row.original.sampleStartDate;
       if(start_date) {
         return TranslateDate(start_date)
       }
@@ -209,17 +209,17 @@ export const columns: ColumnDef<Estimate>[] = [
     }
   },
   {
-    accessorKey: "sample_end_date",
+    accessorKey: "sampleEndDate",
     header: ({ column }) => {
       const sortingFn = (rowA: Row<Estimate>, rowB: Row<Estimate>, columnId: string) => {
-        if(!rowA.original.sample_end_date){
+        if(!rowA.original.sampleEndDate){
           return -1
         }
-        if(!rowB.original.sample_end_date){
+        if(!rowB.original.sampleEndDate){
           return 1
         }
-        const rowASampleEndDate = new Date(rowA.original.sample_end_date)
-        const rowBSampleEndDate = new Date(rowB.original.sample_end_date)
+        const rowASampleEndDate = new Date(rowA.original.sampleEndDate)
+        const rowBSampleEndDate = new Date(rowB.original.sampleEndDate)
         if (rowASampleEndDate.getTime() > rowBSampleEndDate.getTime()) {
           return 1
         }
@@ -238,7 +238,7 @@ export const columns: ColumnDef<Estimate>[] = [
       );
     },
     cell: ({ row }) => {
-      const end_date = row.original.sample_end_date;
+      const end_date = row.original.sampleEndDate;
       if(end_date) {
         return TranslateDate(end_date)
       }
@@ -246,7 +246,7 @@ export const columns: ColumnDef<Estimate>[] = [
     }
   },
   {
-    accessorKey: "who_region",
+    accessorKey: "whoRegion",
     header: get_header("WHO Region"),
   },
   {
@@ -254,7 +254,7 @@ export const columns: ColumnDef<Estimate>[] = [
     header: get_header("Assay"),
   },
   {
-    accessorKey: "assay_other",
+    accessorKey: "assayOther",
     header: get_header("Assay Other"),
   },
   {
@@ -262,19 +262,19 @@ export const columns: ColumnDef<Estimate>[] = [
     header: get_header("Producer"),
   },
   {
-    accessorKey: "producer_other",
+    accessorKey: "producerOther",
     header: get_header("Producer Other"),
   },
   {
-    accessorKey: "sample_frame",
+    accessorKey: "sampleFrame",
     header: get_header("Sample Frame"),
   },
   {
-    accessorKey: "sample_numerator",
+    accessorKey: "sampleNumerator",
     header: get_header("Sample Numerator"),
   },
   {
-    accessorKey: "sample_size",
+    accessorKey: "sampleSize",
     header: get_header("Sample Size"),
   },
   {
@@ -286,7 +286,7 @@ export const columns: ColumnDef<Estimate>[] = [
     header: get_header("Country"),
   },
   // {
-  //   accessorKey: "sample_start_date",
+  //   accessorKey: "sampleStartDate",
   //   header: "Sample Start Date",
   // },
   {
@@ -294,15 +294,15 @@ export const columns: ColumnDef<Estimate>[] = [
     header: get_header("Sex"),
   },
   {
-    accessorKey: "age_group",
+    accessorKey: "ageGroup",
     header: get_header("Age Group"),
   },
   // {
-  //   accessorKey: "age_maximum",
+  //   accessorKey: "ageMaximum",
   //   header: get_header("Age Maximum"),
   // },
   // {
-  //   accessorKey: "age_minimum",
+  //   accessorKey: "ageMinimum",
   //   header: get_header("Age Minimum"),
   // },
   {
