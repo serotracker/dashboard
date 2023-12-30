@@ -36,7 +36,7 @@ export default function MapAndFilters() {
                   cursor: "pointer",
                   dataPoints: state.filteredData.map((dataPoint) => ({
                     ...dataPoint,
-                    longitude: dataPoint.longitude,
+                    longitude: dataPoint.pin_longitude,
                     latitude: dataPoint.pin_latitude,
                     // Convert this to some kind of unique identifier returned from the backend once the SARSCoV2 API returns unique ids.
                     id: `${dataPoint.pin_latitude}-${dataPoint.pin_longitude}-${dataPoint.studyName}`
