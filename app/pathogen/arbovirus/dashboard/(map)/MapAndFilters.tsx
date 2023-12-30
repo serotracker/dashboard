@@ -55,7 +55,7 @@ export default function MapAndFilters() {
       state.dispatch({
         type: ArboActionType.UPDATE_FILTER,
         payload: {
-          data: data.arbovirusEstimatesQuery,
+          data: data.arbovirusEstimates,
           filter: "pathogen",
           value: value,
         },
