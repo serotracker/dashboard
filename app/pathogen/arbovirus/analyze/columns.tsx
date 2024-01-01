@@ -143,7 +143,7 @@ export const columns: ColumnDef<Estimate>[] = [
     cell: ({ row }) => {
       const antibodies = row.getValue("antibodies");
       if (Array.isArray(antibodies)) {
-        return [...antibodies].sort().map((antibody) => {
+        return antibodies.sort().map((antibody) => {
           let color: string = ""
           switch (antibody) {
             case "IgG": 

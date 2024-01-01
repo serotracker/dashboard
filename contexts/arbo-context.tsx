@@ -216,8 +216,6 @@ const FilteredDataProvider = ({ children }: { children: React.ReactNode }) => {
   const dataQuery = useArboData();
 
   useEffect(() => {
-    console.log('dataQuery', dataQuery)
-
     if (
       state.filteredData.length === 0 &&
       !state.dataFiltered &&
