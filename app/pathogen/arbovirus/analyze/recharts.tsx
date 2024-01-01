@@ -76,7 +76,7 @@ export function AntibodyPathogenBar() {
   }[] = [];
 
   state.filteredData.forEach((d: any) => {
-    const antibody: antibodies = d.antibodies.sort().join(", ") as antibodies;
+    const antibody: antibodies = d.antibodies.sort().join(", ");
     const arbovirus: arboviruses = convertArboSFtoArbo(d.pathogen);
 
     const existingData = _.find(data, { arbovirus: arbovirus });
