@@ -43,6 +43,6 @@ export const arbovirusEstimatesQuery = gql`
 export function useArboData() {
   return useQuery<any>({
     queryKey: ["arbovirusEstimatesQuery"],
-    queryFn: () => request(process.env.ARBO_API_URL ?? '', arbovirusEstimatesQuery)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
   });
 }

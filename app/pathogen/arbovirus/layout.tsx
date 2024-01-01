@@ -17,11 +17,11 @@ export default async function ArboLayout({
 
   await queryClient.prefetchQuery({
     queryKey: ["arbovirusEstimatesQuery"],
-    queryFn: () => request(process.env.ARBO_API_URL ?? '', arbovirusEstimatesQuery)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
   });
   await queryClient.prefetchQuery({
     queryKey: ["arbovirusFiltersQuery"],
-    queryFn: () => request(process.env.ARBO_API_URL ?? '', arbovirusFiltersQuery)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
   });
 
   const dehydratedState = dehydrate(queryClient);
