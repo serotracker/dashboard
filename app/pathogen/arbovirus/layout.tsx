@@ -17,11 +17,11 @@ export default async function ArboLayout({
 
   await queryClient.prefetchQuery({
     queryKey: ["arbovirusEstimatesQuery"],
-    queryFn: () => request('https://iit-backend-v2.vercel.app/api/graphql', arbovirusEstimatesQuery)
+    queryFn: () => request(process.env.ARBO_API_URL ?? '', arbovirusEstimatesQuery)
   });
   await queryClient.prefetchQuery({
     queryKey: ["arbovirusFiltersQuery"],
-    queryFn: () => request('https://iit-backend-v2.vercel.app/api/graphql', arbovirusFiltersQuery)
+    queryFn: () => request(process.env.ARBO_API_URL ?? '', arbovirusFiltersQuery)
   });
 
   const dehydratedState = dehydrate(queryClient);

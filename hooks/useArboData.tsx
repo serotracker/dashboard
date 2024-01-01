@@ -43,6 +43,6 @@ export const arbovirusEstimatesQuery = gql`
 export function useArboData() {
   return useQuery<any>({
     queryKey: ["arbovirusEstimatesQuery"],
-    queryFn: () => request('https://iit-backend-v2.vercel.app/api/graphql', arbovirusEstimatesQuery)
+    queryFn: () => request(process.env.ARBO_API_URL ?? '', arbovirusEstimatesQuery)
   });
 }

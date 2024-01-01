@@ -21,6 +21,6 @@ export const arbovirusFiltersQuery = gql`
 export function useArboFilters() {
   return useQuery<any>({
     queryKey: ["arbovirusFiltersQuery"],
-    queryFn: () => request('https://iit-backend-v2.vercel.app/api/graphql', arbovirusFiltersQuery)
+    queryFn: () => request(process.env.ARBO_API_URL ?? '', arbovirusFiltersQuery)
   });
 }
