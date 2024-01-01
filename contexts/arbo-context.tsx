@@ -197,18 +197,10 @@ export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
     },
   });
 
-  const apolloClient = new ApolloClient({
-    cache: new InMemoryCache(),
-    ssrMode: true,
-    uri: "https://iit-backend-v2.vercel.app/api/graphql",
-  })
-
   return (
     <MapProvider>
       <QueryClientProvider client={queryClient}>
-        <ApolloProvider client={apolloClient}>
-          <FilteredDataProvider>{children}</FilteredDataProvider>
-        </ApolloProvider>
+        <FilteredDataProvider>{children}</FilteredDataProvider>
       </QueryClientProvider>
     </MapProvider>
   );

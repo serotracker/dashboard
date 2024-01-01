@@ -1,6 +1,8 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@tanstack/react-query";
+import { gql } from "@apollo/client";
+import { request } from 'graphql-request';
 
-const arbovirusEstimatesQuery = gql`
+export const arbovirusEstimatesQuery = gql`
   query arbovirusEstimatesQuery {
     arbovirusEstimates {
       ageGroup
@@ -39,5 +41,8 @@ const arbovirusEstimatesQuery = gql`
 `
 
 export function useArboData() {
-  return useQuery(arbovirusEstimatesQuery, {ssr: true});
+  return useQuery<any>({
+    queryKey: ["arbovirusEstimatesQuery"],
+    queryFn: () => request('https://iit-backend-v2.vercel.app/api/graphql', arbovirusEstimatesQuery)
+  });
 }
