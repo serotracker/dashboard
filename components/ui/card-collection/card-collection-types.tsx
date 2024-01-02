@@ -13,11 +13,13 @@ interface CardInputDataBase {
   cardClassname: string,
 }
 
+// FIXED cards will always take up "columnCount" columns
 export type FixedCardInputData = CardInputDataBase & {
   type: CardType.FIXED,
   columnCount: number,
 }
 
+// EXPANDABLE cards take up either "expandedColumnCount" columns or no columns depending on whether they are expanded or not
 export type ExpandableCardInputData = CardInputDataBase & {
   type: CardType.EXPANDABLE,
   expandedColumnCount: number,
@@ -25,6 +27,8 @@ export type ExpandableCardInputData = CardInputDataBase & {
   onCardSizeChange?: () => void,
 }
 
+// FILL_REMAINING_SPACE cards take up the number of columns needed to make the total meet the "columnCountToFill" of the card collection.
+// If there's two cards with FILL_REMAINING_SPACE they split the remaining space evenly.
 export type FillRemainingSpaceCardInputData = CardInputDataBase & {
   type: CardType.FILL_REMAINING_SPACE,
   onCardSizeChange?: () => void,

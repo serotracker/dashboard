@@ -1,3 +1,10 @@
+/**
+ * @file CardCollection Component
+ * @description This component organizes and renders components inside cards of variable length.
+ * The cards are all next to each other horizontally and occupy a certain number of columns that can vary as functions are called.
+ * Please see card-collection-types.tsx for a list of all of the types of cards and how they behave.
+ */
+
 import { useEffect, useState } from 'react';
 
 import { Card } from "../card";
