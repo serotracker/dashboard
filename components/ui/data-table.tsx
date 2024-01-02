@@ -102,6 +102,9 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <h2><b>Explore arbovirus seroprevalence estimates in our database</b></h2>
+        <Button variant="outline" className="ml-auto bg-foreground" onClick={getAllVisibleData}>
+          Download CSV
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="bg-foreground">
             <Button variant="outline" className="ml-auto">
@@ -210,16 +213,6 @@ export function DataTable<TData, TValue>({
             Next
           </Button>
         </div>
-      </div>
-      <div className="flex items-center space-x-2 py-4 justify-center">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => getAllVisibleData()}
-            className="bg-white"
-          >
-            Download CSV
-          </Button>
       </div>
     </div>
   );
