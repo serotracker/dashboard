@@ -14,7 +14,7 @@ export const MapExpandPlotsPrompt = ({
   return (
     <Card className={hidden ? "hidden" : "inline-block"}>
       <CardContent className={"flex w-fit p-2 hover:bg-black/5 rounded-lg"}>
-        <button onClick={onClick}> <p> {text} </p> </button>
+        <button onClick={onClick}> <p className={"font-bold"}> {text} </p> </button>
       </CardContent>
     </Card>
   );
