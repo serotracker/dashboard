@@ -6,6 +6,7 @@ export enum CardType {
 
 interface CardInputDataBase {
   type: CardType,
+  // order determines where the card will be positioned. Cards with higher order values will be placed to the right of cards with lower order values.
   order: number,
   cardId: string,
   renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,

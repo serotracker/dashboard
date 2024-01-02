@@ -45,8 +45,10 @@ export default function ArbovirusDashboard() {
     </>
   ), [])
 
+  // cardInputData determines the layout of the page by organizing the different components into cards which may take up a variable amount of space.
   const cardInputData = useMemo(() => [
     {
+      // order determines where the card will be positioned. Cards with higher order values will be placed to the right of cards with lower order values.
       order: 1,
       cardId: 'plots',
       type: CardType.EXPANDABLE as const,
