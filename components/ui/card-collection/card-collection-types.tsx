@@ -4,32 +4,26 @@ export enum CardType {
   FILL_REMAINING_SPACE = 'FILL_REMAINING_SPACE'
 }
 
-export interface FixedCardInputData {
-  type: CardType.FIXED,
+interface CardInputDataBase {
+  type: CardType,
   order: number,
-  columnCount: number,
   cardId: string,
   renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
   cardClassname: string,
 }
 
-export interface ExpandableCardInputData {
-  type: CardType.EXPANDABLE,
-  order: number,
+export type FixedCardInputData = CardInputDataBase & {
+  type: CardType.FIXED,
+  columnCount: number,
+}
+
+export type ExpandableCardInputData = CardInputDataBase & {
   expandedColumnCount: number,
   isExpandedByDefault: boolean,
-  cardId: string,
-  renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
-  cardClassname: string,
   onCardSizeChange?: () => void,
 }
 
-export interface FillRemainingSpaceCardInputData {
-  type: CardType.FILL_REMAINING_SPACE,
-  order: number,
-  cardId: string,
-  renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
-  cardClassname: string,
+export type FillRemainingSpaceCardInputData = CardInputDataBase & {
   onCardSizeChange?: () => void,
 }
 
