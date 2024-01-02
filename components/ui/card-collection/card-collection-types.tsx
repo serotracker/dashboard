@@ -18,12 +18,14 @@ export type FixedCardInputData = CardInputDataBase & {
 }
 
 export type ExpandableCardInputData = CardInputDataBase & {
+  type: CardType.EXPANDABLE,
   expandedColumnCount: number,
   isExpandedByDefault: boolean,
   onCardSizeChange?: () => void,
 }
 
 export type FillRemainingSpaceCardInputData = CardInputDataBase & {
+  type: CardType.FILL_REMAINING_SPACE,
   onCardSizeChange?: () => void,
 }
 
