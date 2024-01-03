@@ -8,7 +8,6 @@ import { AntibodyPathogenBar, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregi
 import clsx from "clsx";
 import { CardConfiguration, CardStyle, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
 import { CardCollection } from "@/components/ui/card-collection/card-collection";
-import { X } from "lucide-react";
 
 const VisualizationCard = (props: {
   title: string;

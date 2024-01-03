@@ -2,7 +2,6 @@
 import React, { useCallback, useMemo } from "react";
 
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { X } from "lucide-react";
 
 import { ArbovirusMap } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
 import { MedianSeroPrevByWHOregion } from "../analyze/recharts";
