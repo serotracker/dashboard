@@ -107,47 +107,47 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-between py-4">
         <h2><b>Explore arbovirus seroprevalence estimates in our database</b></h2>
         <div className="flex">
-        <Button variant="outline" className="bg-foreground mx-2 whitespace-nowrap" onClick={() => areFiltersExpanded ? minimizeFilters() : expandFilters()}>
-          { areFiltersExpanded ? "Hide Filters" : "See Filters" }
-        </Button>
-        <Button variant="outline" className="bg-foreground mx-2 whitespace-nowrap" onClick={getAllVisibleData}>
-          Download CSV
-        </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="bg-foreground">
-            <Button variant="outline" className="mx-2 whitespace-nowrap">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-foreground">
-            <Button variant="outline" className="ml-auto bg-white" onClick={handleSelectAll}>
-                Select All
-            </Button>
-            <Button variant="outline" className="ml-auto bg-white" onClick={handleClearAll}>
-                Clear All
-            </Button>
-            {table
-              .getAllColumns()
-              .filter(
-                (column) => column.getCanHide()
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize cursor-pointer"
-                    checked={column.getIsVisible()}
-                    onClick={(e) => {
-                      column.toggleVisibility()
-                      e.preventDefault()
-                    }}
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
+          <Button variant="outline" className="bg-foreground mx-2 whitespace-nowrap" onClick={() => areFiltersExpanded ? minimizeFilters() : expandFilters()}>
+            { areFiltersExpanded ? "Hide Filters" : "See Filters" }
+          </Button>
+          <Button variant="outline" className="bg-foreground mx-2 whitespace-nowrap" onClick={getAllVisibleData}>
+            Download CSV
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="bg-foreground">
+              <Button variant="outline" className="mx-2 whitespace-nowrap">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-foreground">
+              <Button variant="outline" className="ml-auto bg-white" onClick={handleSelectAll}>
+                  Select All
+              </Button>
+              <Button variant="outline" className="ml-auto bg-white" onClick={handleClearAll}>
+                  Clear All
+              </Button>
+              {table
+                .getAllColumns()
+                .filter(
+                  (column) => column.getCanHide()
                 )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize cursor-pointer"
+                      checked={column.getIsVisible()}
+                      onClick={(e) => {
+                        column.toggleVisibility()
+                        e.preventDefault()
+                      }}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  )
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       <div className="rounded-md border">
