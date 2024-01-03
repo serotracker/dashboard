@@ -53,58 +53,6 @@ export const MapResources = {
 
 
 export const Expressions = {
-    Studies: {
-        "circle-color": [
-          "match",
-          ["get", "estimate_grade"],
-          "National",
-          MapSymbology.StudyFeature.National.Color,
-          "Regional",
-          MapSymbology.StudyFeature.Regional.Color,
-          "Local",
-          MapSymbology.StudyFeature.Local.Color,
-          "Sublocal",
-          MapSymbology.StudyFeature.Sublocal.Color,
-          MapSymbology.StudyFeature.Default.Color,
-        ],
-        "circle-radius": [
-          "match",
-          ["get", "estimate_grade"],
-          "National",
-          MapSymbology.StudyFeature.National.Size,
-          "Regional",
-          MapSymbology.StudyFeature.Regional.Size,
-          "Local",
-          MapSymbology.StudyFeature.Local.Size,
-          "Sublocal",
-          MapSymbology.StudyFeature.Sublocal.Size,
-          MapSymbology.StudyFeature.Default.Size,
-        ],
-        'circle-stroke-color':[
-            'case',
-            ['boolean', ['feature-state', 'isSelected'], false],
-            'black',
-            'white'
-        ],
-        'circle-stroke-width': 3,
-        'circle-stroke-opacity': [
-            'case',
-            ['boolean', ['feature-state', 'hover'], false],
-            1,
-            [
-                'case',
-                ['boolean', ['feature-state', 'isSelected'], false],
-                1,
-                0
-            ],
-        ],
-        'circle-opacity': [
-            'case',
-            ['boolean', ['feature-state', 'isBlurred'], false],
-            0.2,
-            0.6
-        ]
-      },
     CountriesPaint : {
     'fill-color': [
       'case',
@@ -121,4 +69,4 @@ export const Expressions = {
     CountriesLayout : {
         'visibility': "visible"
     }
-}
+};

@@ -9,15 +9,13 @@ export type PopupContentGenerator<
 type VisiblePopupInfo<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > = { visible: true; properties: TPathogenDataPointProperties };
-type HiddenPopupInfo<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
-> = { visible: false; properties: null };
+type HiddenPopupInfo = { visible: false; properties: null };
 
 export type PopupInfo<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > =
   | VisiblePopupInfo<TPathogenDataPointProperties>
-  | HiddenPopupInfo<TPathogenDataPointProperties>;
+  | HiddenPopupInfo;
 
 interface PathogenMapPopupProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
@@ -50,10 +48,8 @@ export function PathogenMapPopup<
     return null;
   }
 
-  // Not a typo, there is some kind of underlying problem here worth investigating that
-  // makes switching the latitude and longitude a required step to produce the correct results.
-  const latitude = popUpInfo.properties.longitude ?? 0;
-  const longitude = popUpInfo.properties.latitude ?? 0;
+  const latitude = popUpInfo.properties.latitude ?? 0;
+  const longitude = popUpInfo.properties.longitude ?? 0;
 
   const transformedProperties = Object.fromEntries(
     Object.entries(popUpInfo.properties).map(([key, value]) => {

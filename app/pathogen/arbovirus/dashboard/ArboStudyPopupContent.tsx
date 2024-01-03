@@ -83,6 +83,8 @@ interface ArboStudyPopupContentProps {
 }
 
 export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
+  const antibodiesArray = Array.isArray(record.antibodies) ? record.antibodies : [];
+
   return (
     <div className="w-[460px] bg-white pt-2">
       {/*Header section*/}
@@ -92,7 +94,7 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
         </div>
         <div className={"text-sm text-blue-600"}>
           {record.url ? <a href={record.url} target="_blank" rel="noopener noreferrer"> 
-            {record.source_sheet_name ? record.source_sheet_name : record.url} 
+            {record.sourceSheetName ? record.sourceSheetName : record.url} 
           </a> : "NO URL"}
         </div>
       </div>
@@ -106,11 +108,11 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
       <div className={"py-2 px-4 max-h-[250px] overflow-auto"}>
         {row(
         "Sampling Date Range", 
-        `${TranslateDate(record.sample_start_date)} to ${TranslateDate(record.sample_end_date)}`
+        `${TranslateDate(record.sampleStartDate)} to ${TranslateDate(record.sampleEndDate)}`
         )}
         {row(
           "Inclusion Criteria",
-          record.inclusion_criteria ? record.inclusion_criteria : "Not Reported"
+          record.inclusionCriteria ? record.inclusionCriteria : "Not Reported"
         )}
         {row(
           "Location",
@@ -118,14 +120,14 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
         )}
         {row(
           "Sample Size",
-          record.sample_size?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          record.sampleSize?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
         )}
         <div className={"flex justify-between mb-2"}>
           <div className={"text-md font-semibold"}>
             Antibody Target
           </div>
           <div className={"w-2/3"}>
-            {record.antibodies.map((antibody: any, index: number) => (
+            {antibodiesArray.map((antibody: any, index: number) => (
           <span key={index} className={`${getAntiBodyColor(antibody)} mr-1 p-2 rounded-sm`}>
             {antibody}
           </span>

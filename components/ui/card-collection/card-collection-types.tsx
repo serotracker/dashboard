@@ -9,34 +9,35 @@ export enum CardStyle {
   CARD = 'CARD',
 }
 
-export interface FixedCardInputData {
-  type: CardType.FIXED,
+interface CardInputDataBase {
+  type: CardType,
+  // order determines where the card will be positioned. Cards with higher order values will be placed to the right of cards with lower order values.
   order: number,
-  columnCount: number,
   cardId: string,
   renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
   cardClassname: string,
   cardStyle: CardStyle,
 }
 
-export interface ExpandableCardInputData {
+// FIXED cards will always take up "columnCount" columns
+export type FixedCardInputData = CardInputDataBase & {
+  type: CardType.FIXED,
+  columnCount: number,
+}
+
+// EXPANDABLE cards take up either "expandedColumnCount" columns or no columns depending on whether they are expanded or not
+export type ExpandableCardInputData = CardInputDataBase & {
   type: CardType.EXPANDABLE,
-  order: number,
   expandedColumnCount: number,
   isExpandedByDefault: boolean,
-  cardId: string,
-  renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
-  cardClassname: string,
   onCardSizeChange?: () => void,
   cardStyle: CardStyle,
 }
 
-export interface FillRemainingSpaceCardInputData {
+// FILL_REMAINING_SPACE cards take up the number of columns needed to make the total meet the "columnCountToFill" of the card collection.
+// If there's two cards with FILL_REMAINING_SPACE they split the remaining space evenly.
+export type FillRemainingSpaceCardInputData = CardInputDataBase & {
   type: CardType.FILL_REMAINING_SPACE,
-  order: number,
-  cardId: string,
-  renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
-  cardClassname: string,
   onCardSizeChange?: () => void,
   cardStyle: CardStyle,
 }

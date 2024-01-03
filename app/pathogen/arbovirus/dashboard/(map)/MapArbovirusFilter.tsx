@@ -1,8 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
-import useArboData from "@/hooks/useArboData";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { pathogenColorsTailwind } from "./ArbovirusMap";
 

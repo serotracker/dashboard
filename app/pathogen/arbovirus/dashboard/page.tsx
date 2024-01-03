@@ -21,9 +21,6 @@ export default function ArbovirusDashboard() {
         <h3 className="w-full text-center text-lg">
           Median seroprevalence of arboviruses by WHO region
         </h3>
-        <button aria-label="Close graphs">
-          <X onClick={() => {getConfigurationForCard(cardConfigurations, 'plots', CardType.EXPANDABLE).minimizeCard()}} className={"h-full"}/>
-        </button>
       </div>
       <MedianSeroPrevByWHOregion />
     </CardContent>
@@ -31,6 +28,7 @@ export default function ArbovirusDashboard() {
 
   const renderMapCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => (
     <ArbovirusMap
+      minimizeVisualizations={() => {getConfigurationForCard(cardConfigurations, 'plots', CardType.EXPANDABLE).minimizeCard()}}
       expandVisualizations={() => {getConfigurationForCard(cardConfigurations, 'plots', CardType.EXPANDABLE).expandCard()}}
       areVisualizationsExpanded={getConfigurationForCard(cardConfigurations, 'plots', CardType.EXPANDABLE).isExpanded}
     />
@@ -49,10 +47,11 @@ export default function ArbovirusDashboard() {
 
   const cardInputData = useMemo(() => [
     {
+      // order determines where the card will be positioned. Cards with higher order values will be placed to the right of cards with lower order values.
       order: 1,
       cardId: 'plots',
       type: CardType.EXPANDABLE as const,
-      isExpandedByDefault: false,
+      isExpandedByDefault: true,
       expandedColumnCount: 4,
       cardClassname: "row-span-2 pr-4 pb-4",
       renderCardContent: renderPlotCardContent,

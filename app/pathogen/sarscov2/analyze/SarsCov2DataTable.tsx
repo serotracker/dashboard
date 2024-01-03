@@ -14,6 +14,7 @@ export default function SarsCov2DataTable() {
       columns={columns}
       data={state.filteredData}
       expandFilters={() => console.error("Expanding and minimizing filters is not implemented for the Sars Cov 2 dashboard.")}
+      minimizeFilters={() => console.error("Expanding and minimizing filters is not implemented for the Sars Cov 2 dashboard.")}
       areFiltersExpanded={true}
     />;
   } else {
