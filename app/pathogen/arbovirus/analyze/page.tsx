@@ -62,11 +62,8 @@ export default function ArboAnalyze() {
   ), []);
   const renderFiltersCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => (
     <>
-      <CardHeader className={"flex flex-row justify-between space-y-0"}>
+      <CardHeader>
         <CardTitle>Filters</CardTitle>
-        <button aria-label="Close graphs">
-          <X onClick={() => {getConfigurationForCard(cardConfigurations, 'filters', CardType.EXPANDABLE).minimizeCard()}} className={"h-full"}/>
-        </button>
       </CardHeader>
       <CardContent>
         <Filters />
