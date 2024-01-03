@@ -22,10 +22,11 @@ import {
 import { MultiSelect } from "@/components/customs/multi-select";
 import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
-import useArboData from "@/hooks/useArboData";
+import { useArboData } from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";
 import { DatePicker } from "@/components/ui/datepicker";
 import { parseISO } from "date-fns";
+import { useArboFilters } from "@/hooks/useArboFilters";
 
 // Function to add or update filters with multiple values
 const addFilterMulti = (
@@ -103,17 +104,17 @@ const buildFilterDropdown = (
 };
 
 export enum FilterableField {
-  age_group = "age_group",
+  ageGroup = "ageGroup",
   sex = "sex",
   country = "country",
   assay = "assay",
   producer = "producer",
-  sample_frame = "sample_frame",
+  sampleFrame = "sampleFrame",
   antibody = "antibody",
   pathogen = "pathogen",
   start_date = "start_date",
   end_date = "end_date",
-  who_region = "who_region",
+  whoRegion = "whoRegion",
 }
 
 interface FilterSectionProps {
@@ -148,8 +149,8 @@ const FilterSection = ({
           field,
           filterableFieldToLabelMap[field],
           state,
-          filters.data[field],
-          data ? data.records : []
+          filters[field],
+          data ? data.arbovirusEstimates : []
         );
       })}
     </div>
@@ -163,27 +164,27 @@ interface FiltersProps {
 export default function Filters({ excludedFields = [] }: FiltersProps) {
   const state = useContext(ArboContext);
   const filterableFieldToLabelMap: Record<FilterableField, string> = {
-    [FilterableField.age_group]: "Age Group",
+    [FilterableField.ageGroup]: "Age Group",
     [FilterableField.sex]: "Sex",
     [FilterableField.country]: "Country",
     [FilterableField.assay]: "Assay",
     [FilterableField.producer]: "Assay Producer",
-    [FilterableField.sample_frame]: "Sample Frame",
+    [FilterableField.sampleFrame]: "Sample Frame",
     [FilterableField.antibody]: "Antibody",
     [FilterableField.pathogen]: "Arbovirus",
     [FilterableField.start_date]: "Sampling Start Date",
     [FilterableField.end_date]: "Sampling End Date",
-    [FilterableField.who_region]: "WHO Region",
+    [FilterableField.whoRegion]: "WHO Region",
   };
   const demographicFilters = [
-    FilterableField.age_group,
+    FilterableField.ageGroup,
     FilterableField.sex,
-    FilterableField.sample_frame,
+    FilterableField.sampleFrame,
   ].filter((field) => !excludedFields.includes(field));
   const studyInformationFilters = [
     FilterableField.assay,
     FilterableField.producer,
-    FilterableField.who_region,
+    FilterableField.whoRegion,
     FilterableField.country,
     FilterableField.antibody,
     FilterableField.pathogen,
@@ -194,26 +195,19 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
   // Fetch arbovirus data using the useArboData hook
   const { data } = useArboData();
 
-  // Fetch filter options using React Query
-  const filters = useQuery({
-    queryKey: ["ArbovirusFilters"],
-    queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/filter_options`).then(
-        (response) => response.json()
-      ),
-  });
+  const { data: filterData } = useArboFilters();
 
   const resetFilters = () => {
     // Dispatch action to reset filters
     state.dispatch({
       type: ArboActionType.RESET_FILTERS,
       payload: {
-        data: data ? data.records : [],
+        data: data ? data.arbovirusEstimates : [],
       }, // Include an empty object as payload
     });
   };
 
-  if (filters.isSuccess && !filters.isLoading && !filters.isError) {
+  if (filterData) {
     return (
       <div>
         <FilterSection
@@ -221,7 +215,7 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
           headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
           fields={demographicFilters}
           state={state}
-          filters={filters}
+          filters={filterData.arbovirusFilterOptions}
           data={data}
           filterableFieldToLabelMap={filterableFieldToLabelMap}
         />
@@ -230,7 +224,7 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
           headerTooltipText="Filter on different types of study based metadata"
           fields={studyInformationFilters}
           state={state}
-          filters={filters}
+          filters={filterData.arbovirusFilterOptions}
           data={data}
           filterableFieldToLabelMap={filterableFieldToLabelMap}
         />

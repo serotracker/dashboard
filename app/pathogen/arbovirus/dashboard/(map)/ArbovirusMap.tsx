@@ -9,7 +9,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import React, { useContext } from "react";
-import useArboData from "@/hooks/useArboData";
+import { useArboData } from "@/hooks/useArboData";
 import { ArboContext } from "@/contexts/arbo-context";
 import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
@@ -44,9 +44,9 @@ interface ArbovirusMapProps {
 export function ArbovirusMap(input: ArbovirusMapProps) {
   const { expandVisualizations, minimizeVisualizations, areVisualizationsExpanded } = input;
   const state = useContext(ArboContext);
-  const dataQuery = useArboData();
+  const { data }  = useArboData();
 
-  if (!dataQuery.isSuccess || !dataQuery.data) {
+  if (!data) {
     return <span> Loading... </span>;
   }
 
@@ -91,7 +91,7 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
           )}
         />
       </div>
-      <MapArbovirusFilter records={dataQuery.data.records} />
+      <MapArbovirusFilter records={data.arbovirusEstimates} />
       <div className={"absolute top-1 left-1 p-2"}>
         <Card className={"mb-1"}>
           <CardContent className={"flex w-fit p-2"}>
@@ -102,7 +102,7 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
                   Array.from(
                     new Set(
                       state.filteredData.map(
-                        (item: any) => item.source_sheet_name
+                        (item: any) => item.sourceSheetName
                       )
                     )
                   ).length
