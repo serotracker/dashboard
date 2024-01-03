@@ -83,6 +83,8 @@ interface ArboStudyPopupContentProps {
 }
 
 export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
+  const antibodiesArray = Array.isArray(record.antibodies) ? record.antibodies : [];
+
   return (
     <div className="w-[460px] bg-white pt-2">
       {/*Header section*/}
@@ -125,7 +127,7 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
             Antibody Target
           </div>
           <div className={"w-2/3"}>
-            {record.antibodies.map((antibody: any, index: number) => (
+            {antibodiesArray.map((antibody: any, index: number) => (
           <span key={index} className={`${getAntiBodyColor(antibody)} mr-1 p-2 rounded-sm`}>
             {antibody}
           </span>
