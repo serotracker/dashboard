@@ -5,10 +5,15 @@
  * Please see card-collection-types.tsx for a list of all of the types of cards and how they behave.
  */
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 import { Card } from "../card";
-import { CardConfiguration, CardInputData, CardStyle, isFixedCardConfiguration } from "./card-collection-types";
+import {
+  CardConfiguration,
+  CardInputData,
+  CardStyle,
+  isFixedCardConfiguration,
+} from "./card-collection-types";
 import { useCardCollectionConfiguration } from "./use-card-collection-configuration";
 
 interface CardCollectionProps {
@@ -22,14 +27,19 @@ interface CardContentProps {
   cardConfigurations: CardConfiguration[];
 }
 
-const CardContent = ({cardWidthClass, cardConfiguration, cardConfigurations}: CardContentProps) => {
-  const [previousCardWidthClass, setPreviousCardWidthClass] = useState<string>(cardWidthClass);
+const CardContent = ({
+  cardWidthClass,
+  cardConfiguration,
+  cardConfigurations,
+}: CardContentProps) => {
+  const [previousCardWidthClass, setPreviousCardWidthClass] =
+    useState<string>(cardWidthClass);
 
   useEffect(() => {
-    if(cardWidthClass !== previousCardWidthClass) {
-      setPreviousCardWidthClass(cardWidthClass)
+    if (cardWidthClass !== previousCardWidthClass) {
+      setPreviousCardWidthClass(cardWidthClass);
 
-      if(isFixedCardConfiguration(cardConfiguration)) {
+      if (isFixedCardConfiguration(cardConfiguration)) {
         return;
       }
 
@@ -38,9 +48,12 @@ const CardContent = ({cardWidthClass, cardConfiguration, cardConfigurations}: Ca
   }, [previousCardWidthClass, cardWidthClass]);
 
   return cardConfiguration.renderCardContent({ cardConfigurations });
-}
+};
 
-export const CardCollection = ({ cardInputData, columnCountToFill }: CardCollectionProps) => {
+export const CardCollection = ({
+  cardInputData,
+  columnCountToFill,
+}: CardCollectionProps) => {
   const { cardConfigurations } = useCardCollectionConfiguration({
     cardInputData,
     columnCountToFill,
@@ -48,33 +61,46 @@ export const CardCollection = ({ cardInputData, columnCountToFill }: CardCollect
 
   return (
     <>
-      {cardConfigurations.sort((a, b) => a.order > b.order ? 1 : -1).map((card) => {
-        const cardWidthClass = `span ${card.currentColumnCount} / span ${card.currentColumnCount}`;
+      {cardConfigurations
+        .sort((a, b) => (a.order > b.order ? 1 : -1))
+        .map((card) => {
+          const cardWidthClass = `span ${card.currentColumnCount} / span ${card.currentColumnCount}`;
 
-        if(card.cardStyle === CardStyle.CARD) {
-          return (
-            <Card
-              key={card.cardId}
-              className={card.cardClassname}
-              style={{gridColumn: cardWidthClass}}
-              hidden={card.currentColumnCount <= 0}
-            >
-              <CardContent cardWidthClass={cardWidthClass} cardConfiguration={card} cardConfigurations={cardConfigurations} />
-            </Card>
-          )
-        }
+          const styleToContainerMap: {
+            [key in CardStyle]: (input: {
+              props: {
+                key: string;
+                className: string;
+                style: React.CSSProperties;
+                hidden: boolean;
+              };
+              children: React.ReactNode;
+            }) => React.ReactNode;
+          } = {
+            [CardStyle.CARD]: ({ props, children }) => (
+              <Card {...props}> {children} </Card>
+            ),
+            [CardStyle.DIV]: ({ props, children }) => (
+              <div {...props}> {children} </div>
+            ),
+          };
 
-        return (
-          <div
-            key={card.cardId}
-            className={card.cardClassname}
-            style={{gridColumn: cardWidthClass}}
-            hidden={card.currentColumnCount <= 0}
-          >
-            <CardContent cardWidthClass={cardWidthClass} cardConfiguration={card} cardConfigurations={cardConfigurations} />
-          </div>
-        )
-      })}
+          return styleToContainerMap[card.cardStyle]({
+            props: {
+              key: card.cardId,
+              className: card.cardClassname,
+              style: { gridColumn: cardWidthClass },
+              hidden: card.currentColumnCount <= 0,
+            },
+            children: (
+              <CardContent
+                cardWidthClass={cardWidthClass}
+                cardConfiguration={card}
+                cardConfigurations={cardConfigurations}
+              />
+            ),
+          });
+        })}
     </>
   );
 };
