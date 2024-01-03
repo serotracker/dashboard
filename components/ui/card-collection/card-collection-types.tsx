@@ -31,7 +31,6 @@ export type ExpandableCardInputData = CardInputDataBase & {
   expandedColumnCount: number,
   isExpandedByDefault: boolean,
   onCardSizeChange?: () => void,
-  cardStyle: CardStyle,
 }
 
 // FILL_REMAINING_SPACE cards take up the number of columns needed to make the total meet the "columnCountToFill" of the card collection.
@@ -39,7 +38,6 @@ export type ExpandableCardInputData = CardInputDataBase & {
 export type FillRemainingSpaceCardInputData = CardInputDataBase & {
   type: CardType.FILL_REMAINING_SPACE,
   onCardSizeChange?: () => void,
-  cardStyle: CardStyle,
 }
 
 export type CardInputData = FixedCardInputData | ExpandableCardInputData | FillRemainingSpaceCardInputData;
