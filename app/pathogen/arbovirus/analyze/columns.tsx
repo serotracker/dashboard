@@ -52,7 +52,14 @@ const get_header = (columnName: string) => {
   return HeaderComponent;
 };
 
-export const columns: ColumnDef<Estimate>[] = [
+enum DataTableFixedColumnSide {
+  LEFT = "LEFT",
+  RIGHT = "RIGHT",
+}
+
+export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {fixed? : boolean};
+
+export const columns: DataTableColumnDef<Estimate, unknown>[] = [
   {
     accessorKey: "estimateId",
     header: get_header("Estimate ID"),
@@ -71,6 +78,7 @@ export const columns: ColumnDef<Estimate>[] = [
       return <p> {row.getValue("estimateId")} </p>
       
     },
+    fixed: true
   },
   {
     accessorKey: "pathogen",
