@@ -49,6 +49,7 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
 
       if (key === "end_date") {
         const filterEndDate = new Date(filters["end_date"][0]);
+        const filterStartDate = new Date(filters["start_date"][0]);
 
         if (isNaN(filterEndDate.getTime())) {
           return true; // Handle invalid date
@@ -57,8 +58,23 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
         const itemStartDate = new Date(item.sample_start_date);
         const itemEndDate = new Date(item.sample_end_date);
 
+        console.log("ENDING: ITEM START DATE: ", itemStartDate);
+        console.log("ENDING: ITEM END DATE: ", itemEndDate);
+        console.log("ENDING: FILTER START DATE: ", filterStartDate);
+        console.log("ENDING: FILTER END DATE: ", filterEndDate);
+        console.log(
+          "ENDING: CHECK OVERLAP IN SAMPLE PERIOD: ",
+          (
+            itemEndDate <= filterEndDate ||
+            (itemEndDate >= filterEndDate && itemStartDate < filterEndDate)
+          )
+        );
+
         // Check for any overlap in the sampling period
-        return !(itemEndDate < filterEndDate && itemStartDate < filterEndDate);
+        return (
+          itemEndDate <= filterEndDate ||
+          (itemEndDate >= filterEndDate && itemStartDate < filterEndDate)
+        );
       }
 
       if (key === "start_date") {
@@ -71,10 +87,16 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
         const itemStartDate = new Date(item.sample_start_date);
         const itemEndDate = new Date(item.sample_end_date);
 
-        // Check for any overlap in the sampling period
-        return !(
-          itemStartDate > filterStartDate && itemEndDate > filterStartDate
+        console.log("START: ITEM START DATE: ", itemStartDate);
+        console.log("START: ITEM END DATE: ", itemEndDate);
+        console.log("START: FILTER START DATE: ", filterStartDate);
+        console.log(
+          "STARTING CHECK: ",
+          itemEndDate >= filterStartDate
         );
+
+        // Check for any overlap in the sampling period
+        return itemEndDate >= filterStartDate;
       }
       if (key === "antibody") {
         return item["antibodies"].some((element: string) =>
