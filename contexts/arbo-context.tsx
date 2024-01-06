@@ -58,18 +58,6 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
         const itemStartDate = new Date(item.sample_start_date);
         const itemEndDate = new Date(item.sample_end_date);
 
-        console.log("ENDING: ITEM START DATE: ", itemStartDate);
-        console.log("ENDING: ITEM END DATE: ", itemEndDate);
-        console.log("ENDING: FILTER START DATE: ", filterStartDate);
-        console.log("ENDING: FILTER END DATE: ", filterEndDate);
-        console.log(
-          "ENDING: CHECK OVERLAP IN SAMPLE PERIOD: ",
-          (
-            itemEndDate <= filterEndDate ||
-            (itemEndDate >= filterEndDate && itemStartDate < filterEndDate)
-          )
-        );
-
         // Check for any overlap in the sampling period
         return (
           itemEndDate <= filterEndDate ||
@@ -85,15 +73,22 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
         }
 
         const itemStartDate = new Date(item.sample_start_date);
-        const itemEndDate = new Date(item.sample_end_date);
+        let itemEndDate = new Date(item.sample_end_date);
 
         console.log("START: ITEM START DATE: ", itemStartDate);
         console.log("START: ITEM END DATE: ", itemEndDate);
         console.log("START: FILTER START DATE: ", filterStartDate);
-        console.log(
-          "STARTING CHECK: ",
-          itemEndDate >= filterStartDate
-        );
+
+        // Check if the end date is before the start date (Fix for particular yellow fever studies in central africa that have start date 2009 and end date for 1969)
+        if (itemEndDate < itemStartDate) {
+          // Set the end date to be the same or 1 month after the start date
+          itemEndDate = new Date(itemStartDate);
+          itemEndDate.setMonth(itemEndDate.getMonth() + 1);
+
+          console.log("Adjusted ITEM END DATE: ", itemEndDate);
+        }
+
+        console.log("STARTING CHECK: ", itemEndDate >= filterStartDate);
 
         // Check for any overlap in the sampling period
         return itemEndDate >= filterStartDate;
