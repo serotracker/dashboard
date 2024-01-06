@@ -9,7 +9,7 @@ import {
   VisibilityState,
   getFilteredRowModel,
 } from "@tanstack/table-core";
-import { flexRender, useReactTable } from "@tanstack/react-table";
+import { ColumnDef, flexRender, useReactTable } from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -29,7 +29,10 @@ import {
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import { useDataTableStyles } from "./use-data-table-styles";
 
-export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {fixed? : boolean};
+export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
+  fixed?: boolean,
+  accessorKey: string,
+};
 
 interface DataTableProps<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];

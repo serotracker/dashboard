@@ -21,7 +21,7 @@ export const useDataTableStyles = <TData, TValue>(input: useDataStylesInput<TDat
     const baseClassnameForHeader = "border-b bg-white";
     const classnameForLeftColumnFixation = "sticky left-0 border-r";
 
-    const columnDefinition = columns.find((column) => 'accessorKey' in column && column.accessorKey === columnId);
+    const columnDefinition = columns.find((column) => column.accessorKey === columnId);
 
     if (!columnDefinition || columnDefinition.fixed !== true) {
       return baseClassnameForHeader;
@@ -38,7 +38,7 @@ export const useDataTableStyles = <TData, TValue>(input: useDataStylesInput<TDat
     const baseClassnameForHeader = "border-b bg-white group-hover:bg-zinc-100";
     const classnameForLeftColumnFixation = "sticky left-0 border-r";
 
-    const columnDefinition = columns.find((column) => 'accessorKey' in column && column.accessorKey === columnId);
+    const columnDefinition = columns.find((column) => column.accessorKey === columnId);
 
     if (!columnDefinition || columnDefinition.fixed !== true) {
       return baseClassnameForHeader;
