@@ -142,12 +142,12 @@ export function DataTable<TData, TValue>({
         </DropdownMenu>
       </div>
       <div className="rounded-md border">
-        <Table className="border-separate">
+        <Table className="border-separate border-spacing-0">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                  const className = header.column.id === 'estimateId' ? 'sticky left-0 border-b bg-white' : 'border-b bg-white';
+                  const className = header.column.id === 'estimateId' ? 'sticky left-0 border-b border-r bg-white' : 'border-b bg-white';
 
                   return (
                     <TableHead key={header.id} className={className}>
@@ -171,7 +171,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => {
-                    const className = cell.column.id === 'estimateId' ? 'sticky left-0 border-b bg-white' : 'border-b bg-white';
+                    const className = cell.column.id === 'estimateId' ? 'sticky left-0 border-b border-r bg-white group-hover:bg-zinc-100' : 'border-b bg-white group-hover:bg-zinc-100';
 
                     return (
                       <TableCell key={cell.id} className={className}>
