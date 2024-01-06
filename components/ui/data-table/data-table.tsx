@@ -27,8 +27,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { mkConfig, generateCsv, download } from "export-to-csv";
-import { DataTableColumnDef } from "@/app/pathogen/arbovirus/analyze/columns";
 import { useDataTableStyles } from "./use-data-table-styles";
+
+export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {fixed? : boolean};
 
 interface DataTableProps<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];
@@ -213,18 +214,14 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
-                  {row.getVisibleCells().map((cell) => {
-                    const className = generateClassnameForCell({ columnId: cell.column.id });
-
-                    return (
-                      <TableCell key={cell.id} className={className}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    );
-                  })}
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className={generateClassnameForCell({ columnId: cell.column.id })}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))
             ) : (

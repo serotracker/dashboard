@@ -1,4 +1,4 @@
-import { DataTableColumnDef } from "@/app/pathogen/arbovirus/analyze/columns";
+import { DataTableColumnDef } from "./data-table";
 
 interface useDataStylesInput<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];

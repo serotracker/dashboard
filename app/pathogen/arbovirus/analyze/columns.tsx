@@ -8,6 +8,7 @@ import { HeaderContext, Row } from "@tanstack/react-table";
 import validator from "validator";
 import Link from "next/link";
 import { TranslateDate } from "@/utils/translate-util/translate-service";
+import { DataTableColumnDef } from "@/components/ui/data-table/data-table";
 
 export type Estimate = {
   ageGroup: string;
@@ -51,8 +52,6 @@ const get_header = (columnName: string) => {
   );
   return HeaderComponent;
 };
-
-export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {fixed? : boolean};
 
 export const columns: DataTableColumnDef<Estimate, unknown>[] = [
   {
