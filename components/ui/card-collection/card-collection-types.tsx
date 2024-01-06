@@ -4,6 +4,11 @@ export enum CardType {
   FILL_REMAINING_SPACE = 'FILL_REMAINING_SPACE'
 }
 
+export enum CardStyle {
+  DIV = 'DIV',
+  CARD = 'CARD',
+}
+
 interface CardInputDataBase {
   type: CardType,
   // order determines where the card will be positioned. Cards with higher order values will be placed to the right of cards with lower order values.
@@ -11,6 +16,7 @@ interface CardInputDataBase {
   cardId: string,
   renderCardContent: (input: {cardConfigurations: CardConfiguration[]}) => React.ReactNode,
   cardClassname: string,
+  cardStyle: CardStyle,
 }
 
 // FIXED cards will always take up "columnCount" columns
