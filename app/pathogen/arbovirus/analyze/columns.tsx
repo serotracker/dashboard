@@ -52,11 +52,6 @@ const get_header = (columnName: string) => {
   return HeaderComponent;
 };
 
-enum DataTableFixedColumnSide {
-  LEFT = "LEFT",
-  RIGHT = "RIGHT",
-}
-
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {fixed? : boolean};
 
 export const columns: DataTableColumnDef<Estimate, unknown>[] = [
