@@ -23,7 +23,7 @@ export type Estimate = {
   inclusionCriteria: string;
   latitude: number;
   longitude: number;
-  pathogen: "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV" | undefined;
+  pathogen: pathogen_types | undefined;
   producer: string;
   producerOther: string;
   sameFrameTargetGroup: string;
