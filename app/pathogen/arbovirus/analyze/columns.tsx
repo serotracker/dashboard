@@ -8,6 +8,7 @@ import { HeaderContext, Row } from "@tanstack/react-table";
 import validator from "validator";
 import Link from "next/link";
 import { TranslateDate } from "@/utils/translate-util/translate-service";
+import { pathogen_enum } from "../enums";
 
 export type Estimate = {
   ageGroup: string;
@@ -23,7 +24,7 @@ export type Estimate = {
   inclusionCriteria: string;
   latitude: number;
   longitude: number;
-  pathogen: pathogen_types | undefined;
+  pathogen: pathogen_enum | undefined;
   producer: string;
   producerOther: string;
   sameFrameTargetGroup: string;
@@ -67,9 +68,7 @@ export const columns: ColumnDef<Estimate>[] = [
           </Link>
         )
       }
-
       return <p> {row.getValue("estimateId")} </p>
-      
     },
   },
   {
@@ -89,34 +88,13 @@ export const columns: ColumnDef<Estimate>[] = [
       const pathogen = row.getValue("pathogen");
       if (typeof pathogen === "string") {
         let color: string = "";
-        switch (pathogen) {
-          case "DENV":
-            color = "bg-denv";
-            break;
-          case "ZIKV":
-            color = "bg-zikv";
-            break;
-          case "CHIKV":
-            color = "bg-chikv";
-            break;
-          case "YF":
-            color = "bg-yf";
-            break;
-          case "WNV":
-            color = "bg-wnv";
-            break;
-          case "MAYV":
-            color = "bg-mayv";
-            break;
-          default:
-            color = "bg-gray-100";
-            break;
-        }
-
+        if(pathogen in pathogen_enum)
+          color = `bg-${pathogen.toLowerCase()}`
+        else 
+          color = "bg-gray-100";
         return (
           <div className={color + " p-2 rounded-sm text-center"}>{pathogen}</div>
         )
-
       }
       return "N/A";
     }
