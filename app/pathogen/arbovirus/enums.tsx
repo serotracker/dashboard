@@ -1,4 +1,4 @@
-enum pathogen_types {
+export enum pathogen_enum {
     DENV = "DENV",
     ZIKV = "ZIKV",
     CHIKV = "CHIKV",
