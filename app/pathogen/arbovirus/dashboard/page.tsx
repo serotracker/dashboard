@@ -34,7 +34,7 @@ export default function ArbovirusDashboard() {
       </div>
       <MedianSeroPrevByWHOregion />
     </CardContent>
-  ), [])
+  ), [router])
 
   const renderMapCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => (
     <ArbovirusMap

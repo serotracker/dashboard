@@ -62,7 +62,7 @@ export default function ArboAnalyze() {
         ))}
       </>
     );
-  }, [addToVisualizationInformation]);
+  }, [addToVisualizationInformation, router]);
 
   const renderTableCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => (
     <ArboDataTable

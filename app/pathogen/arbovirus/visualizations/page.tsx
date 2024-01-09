@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { getVisualizationInformationFromVisualizationUrlParameter, isVisualizationUrlParameter } from "./visualizations";
 import { cn } from "@/lib/utils";
 
-export default function visualizationsPage() {
+export default function VisualizationsPage() {
   const searchParams = useSearchParams();
   const visualizationUrlParameter = searchParams.get('visualization');
   
