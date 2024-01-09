@@ -141,7 +141,7 @@ interface GetInformationFromVisualizationIdInput {
 
 export const getVisualizationInformationFromVisualizationId = (
   input: GetInformationFromVisualizationIdInput
-): VisualizationInformation | undefined => {
+): VisualizationInformation => {
   return allVisualizationInformation[input.visualizationId];
 };
 

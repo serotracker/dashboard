@@ -9,17 +9,28 @@ import Filters, { FilterableField } from "./filters";
 import { CardConfiguration, CardStyle, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
 import { CardCollection } from "@/components/ui/card-collection/card-collection";
 import { useMap } from "react-map-gl";
+import { ZoomIn } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { VisualizationId, getVisualizationInformationFromVisualizationId } from "../visualizations/visualizations";
 
 export default function ArbovirusDashboard() {
   // Need to make the visualizations dynamic. Unsure how to do this well using CSS.
   const allMaps = useMap();
+  const router = useRouter();
 
   const renderPlotCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => (
     <CardContent className={"px-0 h-full flex flex-col"}>
-      <div className={"flex space-between py-4"}>
+      <div className="flex py-4">
         <h3 className="w-full text-center text-lg">
           Median seroprevalence of arboviruses by WHO region
         </h3>
+        <button onClick={() => 
+          router.push(
+            `visualizations?visualization=${getVisualizationInformationFromVisualizationId({visualizationId: VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION}).urlParameter}`
+          )}
+        >
+          <ZoomIn />
+        </button>
       </div>
       <MedianSeroPrevByWHOregion />
     </CardContent>
