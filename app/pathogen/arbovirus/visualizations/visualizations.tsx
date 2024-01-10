@@ -36,7 +36,7 @@ enum VisualizationDisplayName {
   "Cumulative estimate count over time by sample frame" = "Cumulative estimate count over time by sample frame",
   "Estimate count by arbovirus & antibody type" = "Estimate count by arbovirus & antibody type",
   "Estimate count by WHO region and arbovirus" = "Estimate count by WHO region and arbovirus",
-  "Median seroprevalence by WHO Region" = "Median seroprevalence by WHO Region",
+  "Median seroprevalence of arboviruses by WHO Region" = "Median seroprevalence of arboviruses by WHO Region",
   "Median seroprevalence by WHO region and age group" = "Median seroprevalence by WHO region and age group",
   "Top ten countries reporting estimates by arbovirus" = "Top ten countries reporting estimates by arbovirus",
 }
@@ -101,7 +101,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
     urlParameter:
       VisualizationUrlParameter["median-seroprevalence-by-who-region"],
     displayName:
-      VisualizationDisplayName["Median seroprevalence by WHO Region"],
+      VisualizationDisplayName["Median seroprevalence of arboviruses by WHO Region"],
     renderVisualization: MedianSeroPrevByWHOregion,
     classNameWhenFullscreen: "p-10"
   },
