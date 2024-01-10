@@ -24,10 +24,9 @@ export default function ArbovirusDashboard() {
         <h3 className="w-full text-center text-lg">
           Median seroprevalence of arboviruses by WHO region
         </h3>
-        <button onClick={() => 
-          router.push(
-            `visualizations?visualization=${getVisualizationInformationFromVisualizationId({visualizationId: VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION}).urlParameter}`
-          )}
+        <button 
+          onClick={() => router.push(`visualizations?visualization=${getVisualizationInformationFromVisualizationId({visualizationId: VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION}).urlParameter}&referrerRoute=/pathogen/arbovirus/dashboard`)}
+          aria-label="See visualization in fullscreen"
         >
           <ZoomIn />
         </button>

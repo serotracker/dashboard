@@ -52,7 +52,10 @@ export default function ArboAnalyze() {
             title={visualizationInformation.displayName}
             height={visualizationInformation.height}
             renderIcons={() => 
-              <button onClick={() => router.push(`visualizations?visualization=${visualizationInformation.urlParameter}`)}>
+              <button
+                onClick={() => router.push(`visualizations?visualization=${visualizationInformation.urlParameter}&referrerRoute=/pathogen/arbovirus/analyze`)}
+                aria-label="See visualization in fullscreen"
+              >
                 <ZoomIn />
               </button>
             }

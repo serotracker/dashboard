@@ -1,12 +1,16 @@
 "use client"
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getVisualizationInformationFromVisualizationUrlParameter, isVisualizationUrlParameter } from "./visualizations";
 import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
+import { isSafeReferrerLink } from "@/utils/referrer-link-util";
 
 export default function VisualizationsPage() {
   const searchParams = useSearchParams();
   const visualizationUrlParameter = searchParams.get('visualization');
+  const referrerRoute = searchParams.get('referrerRoute');
+  const router = useRouter();
   
   if(!visualizationUrlParameter || !isVisualizationUrlParameter(visualizationUrlParameter)) {
     return <div> not found </div>
@@ -20,7 +24,23 @@ export default function VisualizationsPage() {
 
   return (
     <div className="flex-col flex w-screen h-screen">
-      <h3 className="text-center text-lg pt-4"> {visualizationInformation.displayName} </h3>
+      <div className="flex pt-4">
+        <h3 className="w-full text-center text-lg">
+          {visualizationInformation.displayName}
+        </h3>
+        <button 
+          className="pr-8"
+          hidden={!referrerRoute || !isSafeReferrerLink(referrerRoute)}
+          onClick={() => {
+            if(referrerRoute && isSafeReferrerLink(referrerRoute)) {
+              router.push(referrerRoute)
+            }
+          }}
+          aria-label="Close Visualization"
+        >
+          <X />
+        </button>
+      </div>
       <div className={cn("flex-1", visualizationInformation.classNameWhenFullscreen)}>
         {visualizationInformation.renderVisualization()}
       </div>
