@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { getVisualizationInformationFromVisualizationUrlParameter, isVisualizationUrlParameter } from "./visualizations";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
@@ -13,13 +13,13 @@ export default function VisualizationsPage() {
   const router = useRouter();
   
   if(!visualizationUrlParameter || !isVisualizationUrlParameter(visualizationUrlParameter)) {
-    return <div> not found </div>
+    return notFound()
   }
 
   const visualizationInformation = getVisualizationInformationFromVisualizationUrlParameter({ visualizationUrlParameter });
 
   if(!visualizationInformation) {
-    return <div> not found </div>
+    return notFound()
   }
 
   return (
