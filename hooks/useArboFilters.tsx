@@ -13,6 +13,7 @@ export const arbovirusFiltersQuery = gql`
       producer
       sampleFrame
       sex
+      unRegion
       whoRegion
     }
   }

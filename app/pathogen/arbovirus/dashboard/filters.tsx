@@ -21,12 +21,18 @@ import {
 } from "@/contexts/arbo-context";
 import { MultiSelect } from "@/components/customs/multi-select";
 import React, { useContext } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useArboData } from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";
 import { DatePicker } from "@/components/ui/datepicker";
 import { parseISO } from "date-fns";
 import { useArboFilters } from "@/hooks/useArboFilters";
+import { UNRegion } from "@/lib/un-regions";
+
+interface FieldInformation {
+  field: FilterableField;
+  label: string;
+  valueToLabelMap: Record<string, string | undefined>;
+}
 
 // Function to add or update filters with multiple values
 const addFilterMulti = (
@@ -51,7 +57,8 @@ const buildFilterDropdown = (
   placeholder: string,
   state: ArboContextType,
   filterOptions: string[],
-  data: any
+  data: any,
+  optionToLabelMap: Record<string, string | undefined>
 ) => {
   const sortedOptions = filterOptions
     ? filterOptions
@@ -97,6 +104,7 @@ const buildFilterDropdown = (
           heading={placeholder}
           selected={state.selectedFilters[filter] ?? []}
           options={sortedOptions}
+          optionToLabelMap={optionToLabelMap}
         />
       </div>
     );
@@ -115,24 +123,23 @@ export enum FilterableField {
   start_date = "start_date",
   end_date = "end_date",
   whoRegion = "whoRegion",
+  unRegion = "unRegion"
 }
 
 interface FilterSectionProps {
   headerText: string;
   headerTooltipText: string;
   state: ArboContextType;
-  fields: FilterableField[];
+  allFieldInformation: FieldInformation[];
   filters: any;
   data: any;
-  filterableFieldToLabelMap: { [key in FilterableField]: string };
 }
 
 const FilterSection = ({
   headerText,
   headerTooltipText,
-  fields,
+  allFieldInformation,
   state,
-  filterableFieldToLabelMap,
   filters,
   data,
 }: FilterSectionProps) => {
@@ -144,13 +151,14 @@ const FilterSection = ({
           tooltip_text={headerTooltipText}
         />
       </div>
-      {fields.map((field) => {
+      {allFieldInformation.map((fieldInformation) => {
         return buildFilterDropdown(
-          field,
-          filterableFieldToLabelMap[field],
+          fieldInformation.field,
+          fieldInformation.label,
           state,
-          filters[field],
-          data ? data.arbovirusEstimates : []
+          filters[fieldInformation.field],
+          data ? data.arbovirusEstimates : [],
+          fieldInformation.valueToLabelMap
         );
       })}
     </div>
@@ -163,34 +171,45 @@ interface FiltersProps {
 
 export default function Filters({ excludedFields = [] }: FiltersProps) {
   const state = useContext(ArboContext);
-  const filterableFieldToLabelMap: Record<FilterableField, string> = {
-    [FilterableField.ageGroup]: "Age Group",
-    [FilterableField.sex]: "Sex",
-    [FilterableField.country]: "Country",
-    [FilterableField.assay]: "Assay",
-    [FilterableField.producer]: "Assay Producer",
-    [FilterableField.sampleFrame]: "Sample Frame",
-    [FilterableField.antibody]: "Antibody",
-    [FilterableField.pathogen]: "Arbovirus",
-    [FilterableField.start_date]: "Sampling Start Date",
-    [FilterableField.end_date]: "Sampling End Date",
-    [FilterableField.whoRegion]: "WHO Region",
-  };
   const demographicFilters = [
-    FilterableField.ageGroup,
-    FilterableField.sex,
-    FilterableField.sampleFrame,
-  ].filter((field) => !excludedFields.includes(field));
+    {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
+    {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
+    {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}},
+  ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
   const studyInformationFilters = [
-    FilterableField.assay,
-    FilterableField.producer,
-    FilterableField.whoRegion,
-    FilterableField.country,
-    FilterableField.antibody,
-    FilterableField.pathogen,
-    FilterableField.start_date,
-    FilterableField.end_date,
-  ].filter((field) => !excludedFields.includes(field));
+    {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
+    {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
+    {field: FilterableField.whoRegion, label: "WHO Region", valueToLabelMap: {}},
+    {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
+    {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
+    {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
+    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: {
+      [UNRegion.NORTHERN_AFRICA]: "Northern Africa",
+      [UNRegion.EASTERN_AFRICA]: "Eastern Africa",
+      [UNRegion.MIDDLE_AFRICA]: "Middle Africa",
+      [UNRegion.SOUTHERN_AFRICA]: "Southern Africa",
+      [UNRegion.WESTERN_AFRICA]: "Western Africa",
+      [UNRegion.CARIBBEAN]: "Caribbean",
+      [UNRegion.CENTRAL_AMERICA]: "Central America",
+      [UNRegion.SOUTH_AMERICA]: "South America",
+      [UNRegion.NORTHERN_AMERICA]: "Northern America",
+      [UNRegion.CENTRAL_ASIA]: "Central Asia",
+      [UNRegion.EASTERN_ASIA]: "Eastern Asia",
+      [UNRegion.SOUTH_EASTERN_ASIA]: "South-Eastern Asia",
+      [UNRegion.SOUTHERN_ASIA]: "Southern Asia",
+      [UNRegion.WESTERN_ASIA]: "Western Asia",
+      [UNRegion.EASTERN_EUROPE]: "Eastern Europe",
+      [UNRegion.NORTHERN_EUROPE]: "Northern Europe",
+      [UNRegion.SOUTHERN_EUROPE]: "Southern Europe",
+      [UNRegion.WESTERN_EUROPE]: "Western Europe",
+      [UNRegion.AUSTRALIA_AND_NEW_ZEALAND]: "Australia and New Zealand",
+      [UNRegion.MELANESIA]: "Melanesia",
+      [UNRegion.MICRONESIA]: "Micronesia",
+      [UNRegion.POLYNESIA]: "Polynesia",
+    }},
+    {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
+    {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
+  ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
 
   // Fetch arbovirus data using the useArboData hook
   const { data } = useArboData();
@@ -213,20 +232,18 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
         <FilterSection
           headerText="Demographic"
           headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
-          fields={demographicFilters}
+          allFieldInformation={demographicFilters}
           state={state}
           filters={filterData.arbovirusFilterOptions}
           data={data}
-          filterableFieldToLabelMap={filterableFieldToLabelMap}
         />
         <FilterSection
           headerText="Study Information"
           headerTooltipText="Filter on different types of study based metadata"
-          fields={studyInformationFilters}
+          allFieldInformation={studyInformationFilters}
           state={state}
           filters={filterData.arbovirusFilterOptions}
           data={data}
-          filterableFieldToLabelMap={filterableFieldToLabelMap}
         />
         <div>
           <button
