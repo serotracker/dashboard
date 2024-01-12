@@ -2,6 +2,11 @@ import React from "react";
 import { ArboProviders } from "@/contexts/arbo-context";
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
+import { useQuery } from "@tanstack/react-query";
+import { gql } from "@apollo/client";
+import { request } from 'graphql-request';
+import { arbovirusEstimatesQuery } from "@/hooks/useArboData";
+import { arbovirusFiltersQuery } from "@/hooks/useArboFilters";
 
 export default async function ArboLayout({
   children,
@@ -11,26 +16,14 @@ export default async function ArboLayout({
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["ArbovirusRecords"],
-    queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/records`, { cache: 'no-store' }).then(
-        (response) => response.json(),
-      ),
+    queryKey: ["arbovirusEstimatesQuery"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
   });
   await queryClient.prefetchQuery({
-    queryKey: ["ArbovirusVisualizations"],
-    queryFn: () =>
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/data_provider/arbo/visualizations`,
-        { cache: 'no-store' }).then((response) => response.json()),
+    queryKey: ["arbovirusFiltersQuery"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
   });
-  await queryClient.prefetchQuery({
-    queryKey: ["ArbovirusFilters"],
-    queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/arbo/filter_options`, { cache: 'no-store' }).then(
-        (response) => response.json(),
-      ),
-  });
+
   const dehydratedState = dehydrate(queryClient);
 
   return (

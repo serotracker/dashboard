@@ -10,7 +10,7 @@ import {
   VisibilityState,
   getFilteredRowModel,
 } from "@tanstack/table-core";
-import { Column, flexRender, useReactTable } from "@tanstack/react-table";
+import { flexRender, useReactTable } from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -19,14 +19,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  expandFilters: () => void;
+  minimizeFilters: () => void;
+  areFiltersExpanded: boolean;
 }
 import {
   DropdownMenu,
@@ -39,6 +40,9 @@ import { mkConfig, generateCsv, download } from "export-to-csv";
 export function DataTable<TData, TValue>({
   columns,
   data,
+  expandFilters,
+  minimizeFilters,
+  areFiltersExpanded
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -100,42 +104,51 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <h2><b>Explore arbovirus seroprevalence estimates in our database</b></h2>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="bg-foreground">
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-foreground">
-            <Button variant="outline" className="ml-auto bg-white" onClick={handleSelectAll}>
-                Select All
-            </Button>
-            <Button variant="outline" className="ml-auto bg-white" onClick={handleClearAll}>
-                Clear All
-            </Button>
-            {table
-              .getAllColumns()
-              .filter(
-                (column) => column.getCanHide()
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value: boolean) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
+        <div className="flex">
+          <Button variant="outline" className="bg-foreground mx-2 whitespace-nowrap" onClick={() => areFiltersExpanded ? minimizeFilters() : expandFilters()}>
+            { areFiltersExpanded ? "Hide Filters" : "See Filters" }
+          </Button>
+          <Button variant="outline" className="bg-foreground mx-2 whitespace-nowrap" onClick={getAllVisibleData}>
+            Download CSV
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="bg-foreground">
+              <Button variant="outline" className="mx-2 whitespace-nowrap">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-foreground">
+              <Button variant="outline" className="ml-auto bg-white" onClick={handleSelectAll}>
+                  Select All
+              </Button>
+              <Button variant="outline" className="ml-auto bg-white" onClick={handleClearAll}>
+                  Clear All
+              </Button>
+              {table
+                .getAllColumns()
+                .filter(
+                  (column) => column.getCanHide()
                 )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize cursor-pointer"
+                      checked={column.getIsVisible()}
+                      onClick={(e) => {
+                        column.toggleVisibility()
+                        e.preventDefault()
+                      }}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  )
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -210,16 +223,6 @@ export function DataTable<TData, TValue>({
             Next
           </Button>
         </div>
-      </div>
-      <div className="flex items-center space-x-2 py-4 justify-center">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => getAllVisibleData()}
-            className="bg-white"
-          >
-            Download CSV
-          </Button>
       </div>
     </div>
   );

@@ -52,7 +52,7 @@ export function PathogenMapLayer<
       type: "Feature" as const,
       geometry: {
         type: "Point" as const,
-        coordinates: [dataPoint.latitude ?? 0, dataPoint.longitude ?? 0],
+        coordinates: [dataPoint.longitude ?? 0, dataPoint.latitude ?? 0],
       },
       properties: dataPoint,
     })),
