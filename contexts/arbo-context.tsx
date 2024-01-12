@@ -59,8 +59,8 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
           return true; // Handle invalid date
         }
 
-        const itemStartDate = new Date(item.sample_start_date);
-        const itemEndDate = new Date(item.sample_end_date);
+        const itemStartDate = new Date(item.sampleStartDate);
+        const itemEndDate = new Date(item.sampleEndDate);
 
         // Check for any overlap in the sampling period
         return (
@@ -76,8 +76,8 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
           return true; // Handle invalid date
         }
 
-        const itemStartDate = new Date(item.sample_start_date);
-        let itemEndDate = new Date(item.sample_end_date);
+        const itemStartDate = new Date(item.sampleStartDate);
+        let itemEndDate = new Date(item.sampleEndDate);
 
         // Check if the end date is before the start date (Fix for particular yellow fever studies in central africa that have start date 2009 and end date for 1969)
         if (itemEndDate < itemStartDate) {
