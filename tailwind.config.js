@@ -35,6 +35,7 @@ module.exports = {
         wnv: "#CAFFBF",
         yf: "#FFD6A5",
         mayv: "#c5a3ff",
+        default: "#F5F5F5", // gray-100
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
