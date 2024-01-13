@@ -35,13 +35,12 @@ export const MapArbovirusFilter = ({ records }: MapArbovirusFilterProps) => {
       </CardHeader>
       <CardContent className={"flex justify-center flex-col"}>
         {getAllKnownPathogens().map((pathogenAbbreviation: string) => {
-          let checkbox_class = `border-${pathogenAbbreviation.toLowerCase()} data-[state=checked]:bg-${pathogenAbbreviation.toLowerCase()}`
           return (
             <div
               key={pathogenAbbreviation}
               className="items-top flex space-x-2 my-1"
             >
-              <Checkbox // border-mayv data-[state=checked]:bg-mayv
+              <Checkbox
                 id={`checkbox-${pathogenAbbreviation}`}
                 className={`border-${pathogenAbbreviation.toLowerCase()} data-[state=checked]:bg-${pathogenAbbreviation.toLowerCase()}`}
                 checked={

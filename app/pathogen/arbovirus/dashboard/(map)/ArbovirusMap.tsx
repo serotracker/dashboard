@@ -16,15 +16,6 @@ import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusFilter } from "./MapArbovirusFilter";
 import { MapExpandPlotsPrompt } from "./MapExpandPlotsPrompt";
 
-export const pathogenColorsTailwind: { [key: string]: string } = {
-  ZIKV: "border-zikv data-[state=checked]:bg-zikv",
-  CHIKV: "border-chikv data-[state=checked]:bg-chikv",
-  WNV: "border-wnv data-[state=checked]:bg-wnv",
-  DENV: "border-denv data-[state=checked]:bg-denv",
-  YF: "border-yf data-[state=checked]:bg-yf",
-  MAYV: "border-mayv data-[state=checked]:bg-mayv",
-};
-
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: { [key: string]: string } = {
   ZIKV: "#A0C4FF",
