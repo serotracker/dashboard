@@ -8,6 +8,8 @@ import { HeaderContext, Row } from "@tanstack/react-table";
 import validator from "validator";
 import Link from "next/link";
 import { TranslateDate } from "@/utils/translate-util/translate-service";
+import { KnownPathogen, isKnownPathogen } from './../constants';
+
 
 export type Estimate = {
   ageGroup: string;
@@ -23,7 +25,7 @@ export type Estimate = {
   inclusionCriteria: string;
   latitude: number;
   longitude: number;
-  pathogen: "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV" | undefined;
+  pathogen: KnownPathogen | undefined;
   producer: string;
   producerOther: string;
   sameFrameTargetGroup: string;
@@ -87,38 +89,16 @@ export const columns: ColumnDef<Estimate>[] = [
     },
     cell: ({ row }) => {
       const pathogen = row.getValue("pathogen");
-      if (typeof pathogen === "string") {
-        let color: string = "";
-        switch (pathogen) {
-          case "DENV":
-            color = "bg-denv";
-            break;
-          case "ZIKV":
-            color = "bg-zikv";
-            break;
-          case "CHIKV":
-            color = "bg-chikv";
-            break;
-          case "YF":
-            color = "bg-yf";
-            break;
-          case "WNV":
-            color = "bg-wnv";
-            break;
-          case "MAYV":
-            color = "bg-mayv";
-            break;
-          default:
-            color = "bg-gray-100";
-            break;
-        }
-
-        return (
-          <div className={color + " p-2 rounded-sm text-center"}>{pathogen}</div>
-        )
-
+      let color: string = "bg-default";
+      let display_string: string = "N/A"
+      // Find color for well defined pathogens: if unknown, display N/A
+      if (typeof pathogen === "string" && isKnownPathogen(pathogen)) {
+        color = `bg-${pathogen.toLowerCase()}`
+        display_string = pathogen
       }
-      return "N/A";
+      return (
+        <div className={color + " p-2 rounded-sm text-center"}>{display_string}</div>
+      )
     }
   },
   {
