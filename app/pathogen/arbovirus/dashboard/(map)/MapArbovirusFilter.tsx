@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useContext } from "react";
-import { pathogenColorsTailwind } from "./ArbovirusMap";
+import { getAllKnownPathogens, getLongFormPathogen } from "../../constants";
 
 interface MapArbovirusFilterProps {
   records: unknown[];
@@ -10,9 +10,6 @@ interface MapArbovirusFilterProps {
 
 export const MapArbovirusFilter = ({ records }: MapArbovirusFilterProps) => {
   const state = useContext(ArboContext);
-
-  const pathogenOrder = ["ZIKV", "DENV", "CHIKV", "YF", "WNV", "MAYV"];
-
   const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
     const value = state.selectedFilters.pathogen;
 
@@ -31,38 +28,22 @@ export const MapArbovirusFilter = ({ records }: MapArbovirusFilterProps) => {
       },
     });
   };
-
   return (
     <Card className={"absolute bottom-1 right-1 "}>
       <CardHeader className={"py-3"}>
         <p>Arboviruses</p>
       </CardHeader>
       <CardContent className={"flex justify-center flex-col"}>
-        {pathogenOrder.map((pathogenAbbreviation: string) => {
-          // Map abbreviations to full names
-          const pathogenFullName =
-            pathogenAbbreviation === "ZIKV"
-              ? "Zika Virus"
-              : pathogenAbbreviation === "DENV"
-              ? "Dengue Virus"
-              : pathogenAbbreviation === "CHIKV"
-              ? "Chikungunya Virus"
-              : pathogenAbbreviation === "YF"
-              ? "Yellow Fever"
-              : pathogenAbbreviation === "WNV"
-              ? "West Nile Virus"
-              : pathogenAbbreviation === "MAYV"
-              ? "Mayaro Virus"
-              : pathogenAbbreviation;
-
+        {getAllKnownPathogens().map((pathogenAbbreviation: string) => {
+          let checkbox_class = `border-${pathogenAbbreviation.toLowerCase()} data-[state=checked]:bg-${pathogenAbbreviation.toLowerCase()}`
           return (
             <div
               key={pathogenAbbreviation}
               className="items-top flex space-x-2 my-1"
             >
-              <Checkbox
+              <Checkbox // border-mayv data-[state=checked]:bg-mayv
                 id={`checkbox-${pathogenAbbreviation}`}
-                className={pathogenColorsTailwind[pathogenAbbreviation]}
+                className={`border-${pathogenAbbreviation.toLowerCase()} data-[state=checked]:bg-${pathogenAbbreviation.toLowerCase()}`}
                 checked={
                   state.selectedFilters["pathogen"]
                     ? state.selectedFilters["pathogen"].includes(
@@ -81,7 +62,7 @@ export const MapArbovirusFilter = ({ records }: MapArbovirusFilterProps) => {
                     "text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   }
                 >
-                  {pathogenFullName}
+                  {getLongFormPathogen(pathogenAbbreviation)}
                 </label>
               </div>
             </div>

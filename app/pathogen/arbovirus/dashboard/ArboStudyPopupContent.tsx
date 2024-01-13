@@ -1,6 +1,7 @@
 import { TranslateDate } from "@/utils/translate-util/translate-service";
 import React, { useMemo } from "react";
 import { MapRef, Popup, useMap } from "react-map-gl";
+import { getLongFormPathogen } from "../constants";
 
 /**
  * @param title: left column of study modal: title of content
@@ -22,25 +23,6 @@ function pathogenTag(pathogen: string) {
   return (
     <div className={"text-center w-full bg-gray-200"}>Arbovirus: {pathogen}</div>
   );
-}
-
-function pathogenFullString(pathogen: string) {
-  switch (pathogen) {
-      case "DENV":
-        return "Dengue Virus";
-      case "ZIKV":
-        return "Zika Virus";
-      case "CHIKV":
-        return "Chikungunya Virus";
-      case "YF":
-        return "Yellow Fever";
-      case "WNV":
-        return "West Nile Virus";
-      case "MAYV":
-        return "Mayaro Virus";
-      default:
-        return "Unknown";
-    }
 }
 
 function getAntiBodyColor(antibody: string) {
@@ -90,7 +72,7 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
       {/*Header section*/}
       <div className={"py-2 px-4"}>
         <div className="text-lg font-bold">
-          {`${pathogenFullString(record.pathogen)} Estimate`}
+          {`${getLongFormPathogen(record.pathogen)} Estimate`}
         </div>
         <div className={"text-sm text-blue-600"}>
           {record.url ? <a href={record.url} target="_blank" rel="noopener noreferrer"> 
@@ -101,7 +83,7 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
       {/*SeroPrev section*/}
       <div className={`flex justify-between bg-${record.pathogen.toLowerCase()} w-full py-2 px-4`}>
         <div className={"font-semibold"}>
-          {"Seroprevalence"}: <b> {`${(record.seroprevalence * 100).toFixed(1)}% (Arbovirus: ${pathogenFullString(record.pathogen)})`}</b>
+          {"Seroprevalence"}: <b> {`${(record.seroprevalence * 100).toFixed(1)}% (Arbovirus: ${getLongFormPathogen(record.pathogen)})`}</b>
         </div>
       </div>
       {/*Content section*/}

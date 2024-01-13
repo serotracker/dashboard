@@ -3,8 +3,8 @@ interface PathogenInfo {
 }
 
 const pathogenConstants: { [key: string]: PathogenInfo } = {
-    "DENV": { longForm: "Dengue Virus" },
     "ZIKV": { longForm: "Zika Virus" },
+    "DENV": { longForm: "Dengue Virus" },
     "CHIKV": { longForm: "Chikungunya Virus"},
     "YF": { longForm: "Yellow Fever"},
     "WNV": { longForm: "West Nile Virus"},
