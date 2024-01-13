@@ -1,10 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useReducer,
-  useEffect
-} from "react";
+import React, { createContext, useReducer, useEffect } from "react";
 import { MapProvider, MapRef, useMap } from "react-map-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
@@ -120,9 +116,22 @@ export const arboReducer = (
         [action.payload.filter]: action.payload.value,
       };
 
+      console.log("Selected filters: ", selectedFilters);
+
       if (map) {
         adjustMapPositionIfCountryFilterHasChanged(action, map);
+
+        // Check if whoRegion is present in selected filters
+        if (
+          action.payload.filter === "whoRegion" &&
+          Array.isArray(action.payload.value) &&
+          action.payload.value.length > 0
+        ) {
+          //console.log('WHO REGION UPDATED')
+          adjustMapPositionIfWhoRegionFilterHasChanged(action, map);
+        }
       }
+
       return {
         ...state,
         filteredData: filterData(action.payload.data, selectedFilters),
@@ -169,6 +178,33 @@ const adjustMapPositionIfCountryFilterHasChanged = (
     );
 
     map.fitBounds(boundingBoxToMoveMapTo);
+  }
+};
+
+// Define boundaries for WHO regions
+const whoRegionBoundaries: Record<string, CountryBoundingBox> = {
+  AFR: [-25, -40, 60, 20],
+  AMR: [-150, -60, -35, 85],
+  EMR: [20, -40, 105, 45],
+  EUR: [-25, 30, 45, 75],
+  SEAR: [60, -15, 110, 35],
+  WPR: [100, -10, 170, 80],
+};
+
+const adjustMapPositionIfWhoRegionFilterHasChanged = (
+  action: ArboAction,
+  map: MapRef
+): void => {
+  const lastIndex = action.payload.value.length - 1;
+  const selectedWhoRegion = action.payload.value[lastIndex];
+  console.log("Action paid value: ", action.payload.value);
+  //const selectedWhoRegion = action.payload.value.whoRegion[action.payload.value.whoRegion.length - 1];
+  console.log("SELECTED REGION: ", selectedWhoRegion);
+  const boundingBoxForWhoRegion = whoRegionBoundaries[selectedWhoRegion];
+  console.log("BOUNDING BOX FOR WHO REGION: ", boundingBoxForWhoRegion);
+
+  if (boundingBoxForWhoRegion) {
+    map.fitBounds(boundingBoxForWhoRegion);
   }
 };
 
