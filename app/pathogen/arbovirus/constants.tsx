@@ -1,31 +1,28 @@
-interface PathogenInfo {
-    longForm: string; // long form name
-}
-
-const pathogenConstants: { [key: string]: PathogenInfo } = {
-    "ZIKV": { longForm: "Zika Virus" },
-    "DENV": { longForm: "Dengue Virus" },
-    "CHIKV": { longForm: "Chikungunya Virus"},
-    "YF": { longForm: "Yellow Fever"},
-    "WNV": { longForm: "West Nile Virus"},
-    "MAYV": { longForm: "Mayaro Virus"},
+const pathogenSFToLF: { [key: string]: string } = {
+    "ZIKV": "Zika Virus",
+    "DENV": "Dengue Virus",
+    "CHIKV": "Chikungunya Virus",
+    "YF": "Yellow Fever",
+    "WNV": "West Nile Virus",
+    "MAYV": "Mayaro Virus",
 };
 
-export type KnownPathogen = keyof typeof pathogenConstants extends infer Keys ? Keys extends string ? Keys : never : never;
+// What the...?
+export type KnownPathogen = keyof typeof pathogenSFToLF extends infer Keys ? Keys extends string ? Keys : never : never;
 
 export const getAllKnownPathogens = (): string[] => {
-    return Object.keys(pathogenConstants);
+    return Object.keys(pathogenSFToLF);
   };
 
 export const isKnownPathogen = (pathogen: string): pathogen is KnownPathogen => {
-    return pathogen in pathogenConstants;
+    return pathogen in pathogenSFToLF;
 };
 
 export const getLongFormPathogen = (pathogen: KnownPathogen): string => {
     if (!isKnownPathogen(pathogen)) {
         throw new Error(`Attempted to get the longform of pathogen ${pathogen} which does not exist.`)
     }
-    return pathogenConstants[pathogen].longForm
+    return pathogenSFToLF[pathogen]
 }
 
 export const getAllLongFormPathogens = (): string[] => {

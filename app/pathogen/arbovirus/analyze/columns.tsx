@@ -25,7 +25,7 @@ export type Estimate = {
   inclusionCriteria: string;
   latitude: number;
   longitude: number;
-  pathogen: KnownPathogen | undefined;
+  pathogen?: KnownPathogen;
   producer: string;
   producerOther: string;
   sameFrameTargetGroup: string;
