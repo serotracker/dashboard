@@ -16,6 +16,7 @@ import {
 import { useArboData } from "@/hooks/useArboData";
 import { parseISO } from "date-fns";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { getAllKnownPathogens } from "@/app/pathogen/arbovirus/constants";
 
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
@@ -39,7 +40,7 @@ export enum ArboActionType {
 export const initialState: ArboStateType = {
   filteredData: [],
   selectedFilters: {
-    ["pathogen"]: ["DENV", "ZIKV", "CHIKV", "YF", "WNV", "MAYV"],
+    ["pathogen"]: getAllKnownPathogens(),
   },
   dataFiltered: false,
 };
