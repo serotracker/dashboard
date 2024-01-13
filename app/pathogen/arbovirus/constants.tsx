@@ -27,3 +27,9 @@ export const getLongFormPathogen = (pathogen: KnownPathogen): string => {
     }
     return pathogenConstants[pathogen].longForm
 }
+
+export const getAllLongFormPathogens = (): string[] => {
+    return getAllKnownPathogens().map((pathogen) => {
+        return getLongFormPathogen(pathogen)
+    });
+}
