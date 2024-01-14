@@ -6,9 +6,10 @@ import { pathogenColorsTailwind } from "./ArbovirusMap";
 
 interface MapArbovirusFilterProps {
   records: unknown[];
+  className?: string;
 }
 
-export const MapArbovirusFilter = ({ records }: MapArbovirusFilterProps) => {
+export const MapArbovirusFilter = ({ records, className }: MapArbovirusFilterProps) => {
   const state = useContext(ArboContext);
 
   const pathogenOrder = ["ZIKV", "DENV", "CHIKV", "YF", "WNV", "MAYV"];
@@ -33,7 +34,7 @@ export const MapArbovirusFilter = ({ records }: MapArbovirusFilterProps) => {
   };
 
   return (
-    <Card className={"absolute bottom-1 right-1 "}>
+    <Card className={className}>
       <CardHeader className={"py-3"}>
         <p>Arboviruses</p>
       </CardHeader>
