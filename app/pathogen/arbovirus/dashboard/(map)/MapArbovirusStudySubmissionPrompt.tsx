@@ -18,7 +18,7 @@ export const MapArbovirusStudySubmissionPrompt = ({
     <Card className={cn(className, hidden ? "hidden" : undefined)}>
       <CardHeader className={"p-2 flex flex-row space-y-0"}>
         <h3 className={"w-full text-center text-lg"}>
-          Don't see an arbovirus study listed?
+          Don&apos;t see an arbovirus study listed?
         </h3>
         <button className={"rounded-full hover:bg-gray-100 m-0 absolute right-2 top-2 p-1"} onClick={() => onClose()} aria-label="Close pop-up">
           <X />
