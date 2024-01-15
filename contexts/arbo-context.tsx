@@ -1,21 +1,18 @@
 "use client";
 
-import React, {
-  createContext,
-  useReducer,
-  useEffect
-} from "react";
+import React, { createContext, useReducer, useEffect } from "react";
 import { MapProvider, MapRef, useMap } from "react-map-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
 import {
-  CountryBoundingBox,
-  combineCountryBoundingBoxes,
+  BoundingBox,
+  combineBoundingBoxes,
   getBoundingBoxFromCountryName,
-} from "@/lib/country-bounding-boxes";
+  getBoundingBoxFromUNRegion,
+} from "@/lib/bounding-boxes";
 import { useArboData } from "@/hooks/useArboData";
 import { parseISO } from "date-fns";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { isUNRegion } from "@/lib/un-regions";
 
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
@@ -121,7 +118,11 @@ export const arboReducer = (
       };
 
       if (map) {
-        adjustMapPositionIfCountryFilterHasChanged(action, map);
+        adjustMapPositionIfCountryOrUNRegionFilterHasChanged({
+          action,
+          map,
+          selectedFilters,
+        });
       }
       return {
         ...state,
@@ -149,27 +150,65 @@ export const arboReducer = (
   }
 };
 
-const adjustMapPositionIfCountryFilterHasChanged = (
-  action: ArboAction,
-  map: MapRef
+interface GetAllBoundingBoxesFromExistingFiltersInput {
+  selectedFilters: Record<string, string[] | undefined>;
+}
+
+const getAllBoundingBoxesFromExistingFilters = (
+  input: GetAllBoundingBoxesFromExistingFiltersInput
+): BoundingBox[] => {
+  const { selectedFilters } = input;
+
+  const selectedCountries = selectedFilters["country"] ?? [];
+  const boundingBoxesFromSelectedCountries = selectedCountries
+    .map((countryName) => getBoundingBoxFromCountryName(countryName))
+    .filter((boundingBox: BoundingBox | undefined): boundingBox is BoundingBox => !!boundingBox);
+  const selectedUNRegions = selectedFilters["unRegion"] ?? [];
+  const boundingBoxesFromSelectedUnRegions = selectedUNRegions
+    .map((unRegion) => isUNRegion(unRegion) ? getBoundingBoxFromUNRegion(unRegion) : undefined)
+    .filter((boundingBox: BoundingBox | undefined): boundingBox is BoundingBox => !!boundingBox);
+
+  return [...boundingBoxesFromSelectedCountries, ...boundingBoxesFromSelectedUnRegions];
+};
+
+interface AdjustMapPositionIfCountryOrUNRegionFilterHasChangedInput {
+  action: ArboAction;
+  map: MapRef;
+  selectedFilters: Record<string, string[] | undefined>;
+}
+
+const adjustMapPositionIfCountryOrUNRegionFilterHasChanged = (
+  input: AdjustMapPositionIfCountryOrUNRegionFilterHasChangedInput
 ): void => {
-  if (action.payload.filter === "country") {
-    const allSelectedCountryBoundingBoxes = action.payload.value
-      .map((countryName: string) => getBoundingBoxFromCountryName(countryName))
-      .filter((boundingBox: CountryBoundingBox) => !!boundingBox);
+  const { action, map, selectedFilters } = input;
 
-    if (allSelectedCountryBoundingBoxes.length === 0) {
-      map.fitBounds([-180, -90, 180, 90]);
-
-      return;
-    }
-
-    const boundingBoxToMoveMapTo = combineCountryBoundingBoxes(
-      allSelectedCountryBoundingBoxes
-    );
-
-    map.fitBounds(boundingBoxToMoveMapTo);
+  if (action.payload.filter !== "country" && action.payload.filter !== "unRegion") {
+    return;
   }
+
+  const boundingBoxesFromAddedFilter =
+    action.payload.filter === "country"
+      ? action.payload.value
+          .map((countryName: string) => getBoundingBoxFromCountryName(countryName))
+          .filter((boundingBox: BoundingBox) => !!boundingBox)
+      : action.payload.value
+          .map((unRegion: string) => isUNRegion(unRegion) ? getBoundingBoxFromUNRegion(unRegion) : undefined)
+          .filter((boundingBox: BoundingBox) => !!boundingBox);
+
+  const allBoundingBoxesFromOtherFilters =
+    getAllBoundingBoxesFromExistingFilters({ selectedFilters });
+
+  const allBoundingBoxes = [...boundingBoxesFromAddedFilter, ...allBoundingBoxesFromOtherFilters];
+
+  if (allBoundingBoxes.length === 0) {
+    map.fitBounds([-180, -90, 180, 90]);
+
+    return;
+  }
+
+  const boundingBoxToMoveMapTo = combineBoundingBoxes(allBoundingBoxes);
+
+  map.fitBounds(boundingBoxToMoveMapTo);
 };
 
 export const ArboContext = createContext<ArboContextType>({
