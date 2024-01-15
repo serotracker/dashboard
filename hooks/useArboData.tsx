@@ -34,6 +34,7 @@ export const arbovirusEstimatesQuery = gql`
       sex
       sourceSheetId
       sourceSheetName
+      unRegion
       url
       whoRegion
     }

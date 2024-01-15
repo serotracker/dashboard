@@ -50,6 +50,7 @@ const buildFilterDropdown = (
           heading={placeholder}
           selected={state.selectedFilters[filter] ?? []}
           options={filterOptions.filter((assay: string) => assay != null)}
+          optionToLabelMap={{}}
         />
       </div>
   );

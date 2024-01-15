@@ -15,22 +15,23 @@ export type MultiSelectOption = {
 interface MultiSelectProps {
   heading: string;
   options: string[];
+  optionToLabelMap: Record<string, string | undefined>;
   selected: string[];
   handleOnChange: (selected: string[]) => void;
 }
 
-const createMultiSelectOptionList = (options: string[]) => {
+const createMultiSelectOptionList = (options: string[], optionToLabelMap: Record<string, string | undefined>) => {
   return options.map((option: string) => {
     return {
-      label: option,
-      value: option.toLowerCase(),
+      label: optionToLabelMap[option] ?? option,
+      value: option,
     };
   });
 };
 
 export function MultiSelect(props: MultiSelectProps) {
-  const { heading, selected, handleOnChange } = props;
-  const options = createMultiSelectOptionList(props.options);
+  const { heading, selected, handleOnChange, optionToLabelMap } = props;
+  const options = createMultiSelectOptionList(props.options, optionToLabelMap);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
@@ -39,7 +40,7 @@ export function MultiSelect(props: MultiSelectProps) {
   const handleUnselect = (option: MultiSelectOption) => {
     handleOnChange(
       selected.filter((s) => {
-        return s !== option.label;
+        return s !== option.value;
       }),
     );
   };
@@ -85,7 +86,7 @@ export function MultiSelect(props: MultiSelectProps) {
                 className="bg-transparent outline-none placeholder:text-muted-foreground w-full flex-1 inline pb-1 mb-1 border-b-2"
               />}
               <div className="flex gap-1 flex-wrap">
-              {createMultiSelectOptionList(selected).map((selectedOption) => {
+              {createMultiSelectOptionList(selected, optionToLabelMap).map((selectedOption) => {
               return (
                 <Badge className="rounded-sm bg-background hover:bg-backgroundHover p-1" key={selectedOption.value}>
                   {selectedOption.label}
@@ -128,11 +129,11 @@ export function MultiSelect(props: MultiSelectProps) {
                         const newValue = selectables.find(
                           // CommandItem appears to strip starting and ending whitespace from the value given as a key
                           // so the trim() fixes a situation where the value has some starting or trailing whitespace
-                          // and isn't recognized as a selectable option as a result.
-                          (option) => option.value.trim() === value,
+                          // and isn't recognized as a selectable option as a result. This is the same for the toLowerCase().
+                          (option) => option.label.trim().toLowerCase() === value.trim().toLowerCase(),
                         );
                         if (newValue)
-                          handleOnChange([...selected, newValue.label]);
+                          handleOnChange([...selected, newValue.value]);
                       }}
                       className={"cursor-pointer"}
                     >
