@@ -4,22 +4,26 @@ import React, { useCallback, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Filters from "@/app/pathogen/arbovirus/dashboard/filters";
 import ArboDataTable from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
-import { AntibodyPathogenBar, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "@/app/pathogen/arbovirus/analyze/recharts";
 import clsx from "clsx";
 import { CardConfiguration, CardStyle, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
 import { CardCollection } from "@/components/ui/card-collection/card-collection";
+import { VisualizationId, addToVisualizationInformation } from "../visualizations/visualizations";
+import { ZoomIn } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const VisualizationCard = (props: {
   title: string;
   children: React.ReactNode;
   height?: string;
+  renderIcons: () => React.ReactNode;
 }) => {
-  
-  
   return (
     <Card className={clsx("mb-4 mr-4 p-4 pt-0", props.height ?? "h-full sm:h-3/4 2xl:h-1/2 relative")}>
       <CardContent className={"px-0 h-full flex flex-col"}>
-        <h3 className="py-4 w-full text-center text-lg">{props.title}</h3>
+        <div className="flex py-4">
+          <h3 className="w-full text-center text-lg">{props.title}</h3>
+          {props.renderIcons()}
+        </div>
         {props.children}
       </CardContent>
     </Card>
@@ -27,31 +31,42 @@ const VisualizationCard = (props: {
 };
 
 export default function ArboAnalyze() {
-  const renderPlotCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => (
-    <>
-      <VisualizationCard title={"Median seroprevalence by WHO region and age group"} height="h-full">
-        <MedianSeroPrevByWHOregionAndAgeGroup />
-      </VisualizationCard>
-      <VisualizationCard title={"Estimate count by WHO region and arbovirus"}>
-        <WHORegionAndArbovirusBar />
-      </VisualizationCard>
-      <VisualizationCard title={"Estimate count by arbovirus & antibody type"}>
-        <AntibodyPathogenBar />
-      </VisualizationCard>
-      <VisualizationCard title={"Median seroprevalence by WHO Region"} height="h-full">
-        <MedianSeroPrevByWHOregion />
-      </VisualizationCard>
-      <VisualizationCard title={"Cumulative estimate count over time by arbovirus"}>
-        <StudyCountOverTime />
-      </VisualizationCard>
-      <VisualizationCard title={"Cumulative estimate count over time by sample frame"}  height="h-full 2xl:h-3/4">
-        <StudyCountOverTimeBySampleFrame/>
-      </VisualizationCard>
-      <VisualizationCard title={"Top ten countries reporting estimates by arbovirus"} height="h-full">
-        <Top10CountriesByPathogenStudyCount />
-      </VisualizationCard>
-    </>
-  ), []);
+  const router = useRouter();
+
+  const renderPlotCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => {
+    const allVisualizationInformationWithHeights = addToVisualizationInformation({
+      [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP]: { height: "h-full" },
+      [VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS]: { height: undefined },
+      [VisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE ]: { height: undefined },
+      [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: { height: "h-full" },
+      [VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS]: { height: undefined },
+      [VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME]: { height: "h-full 2xl:h-3/4" },
+      [VisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS]: { height: "h-full" },
+    })
+
+    return (
+      <>
+        {allVisualizationInformationWithHeights.map((visualizationInformation) => (
+          <VisualizationCard 
+            key={visualizationInformation.id}
+            title={visualizationInformation.displayName}
+            height={visualizationInformation.height}
+            renderIcons={() => 
+              <button
+                onClick={() => router.push(`visualizations?visualization=${visualizationInformation.urlParameter}&referrerRoute=/pathogen/arbovirus/analyze`)}
+                aria-label="See visualization in fullscreen"
+              >
+                <ZoomIn />
+              </button>
+            }
+          >
+            {visualizationInformation.renderVisualization()}
+          </VisualizationCard>
+        ))}
+      </>
+    );
+  }, [router]);
+
   const renderTableCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => (
     <ArboDataTable
       expandFilters={() => {getConfigurationForCard(cardConfigurations, 'filters', CardType.EXPANDABLE).expandCard()}}
@@ -59,6 +74,7 @@ export default function ArboAnalyze() {
       areFiltersExpanded={getConfigurationForCard(cardConfigurations, 'filters', CardType.EXPANDABLE).isExpanded}
     />
   ), []);
+
   const renderFiltersCardContent = useCallback(({ cardConfigurations }: {cardConfigurations: CardConfiguration[]}) => (
     <>
       <CardHeader>

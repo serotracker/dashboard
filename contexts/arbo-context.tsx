@@ -49,49 +49,43 @@ function filterData(data: any[], filters: { [key: string]: string[] }): any[] {
       if (!filters[key].length) return true;
 
       if (key === "end_date") {
-        const filterEndDate = parseISO(filters["end_date"][0]);
+        const filterEndDate = new Date(filters["end_date"][0]);
+        const filterStartDate = new Date(filters["start_date"][0]);
 
-        if (!filterEndDate) {
-          return true;
+        if (isNaN(filterEndDate.getTime())) {
+          return true; // Handle invalid date
         }
 
-        const itemDate = new Date(item.sampleEndDate);
+        const itemStartDate = new Date(item.sampleStartDate);
+        const itemEndDate = new Date(item.sampleEndDate);
 
-        const filterEndUTC = Date.UTC(
-          filterEndDate.getUTCFullYear(),
-          filterEndDate.getUTCMonth()
+        // Check for any overlap in the sampling period
+        return (
+          itemEndDate <= filterEndDate ||
+          (itemEndDate >= filterEndDate && itemStartDate < filterEndDate)
         );
-
-        const itemDateUTC = Date.UTC(
-          itemDate.getUTCFullYear(),
-          itemDate.getUTCMonth()
-        );
-
-        return itemDateUTC <= filterEndUTC;
       }
 
       if (key === "start_date") {
-        const filterStartDate = parseISO(filters["start_date"][0]);
+        const filterStartDate = new Date(filters["start_date"][0]);
 
-        if (!filterStartDate) {
-          return true;
+        if (isNaN(filterStartDate.getTime())) {
+          return true; // Handle invalid date
         }
 
-        const itemDate = new Date(item.sampleStartDate);
+        const itemStartDate = new Date(item.sampleStartDate);
+        let itemEndDate = new Date(item.sampleEndDate);
 
-        const filterStartUTC = Date.UTC(
-          filterStartDate.getUTCFullYear(),
-          filterStartDate.getUTCMonth()
-        );
+        // Check if the end date is before the start date (Fix for particular yellow fever studies in central africa that have start date 2009 and end date for 1969)
+        if (itemEndDate < itemStartDate) {
+          // Set the end date to be the same or 1 month after the start date
+          itemEndDate = new Date(itemStartDate);
+          itemEndDate.setMonth(itemEndDate.getMonth() + 1);
+        }
 
-        const itemDateUTC = Date.UTC(
-          itemDate.getUTCFullYear(),
-          itemDate.getUTCMonth()
-        );
-
-        return itemDateUTC >= filterStartUTC;
+        // Check for any overlap in the sampling period
+        return itemEndDate >= filterStartDate;
       }
-
       if (key === "antibody") {
         return item["antibodies"].some((element: string) =>
           filters[key].includes(element)
