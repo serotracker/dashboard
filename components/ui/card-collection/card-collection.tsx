@@ -77,26 +77,30 @@ export const CardCollection = ({
               children: React.ReactNode;
             }) => React.ReactNode;
           } = {
-            [CardStyle.CARD]: ({ props, children }) => (
-              <Card
-                key={props.key}
-                className={props.className}
-                style={props.style}
-                hidden={props.hidden}
-              >
-                {children}
-              </Card>
-            ),
-            [CardStyle.DIV]: ({ props, children }) => (
-              <div 
-                key={props.key}
-                className={props.className}
-                style={props.style}
-                hidden={props.hidden}
-              >
-                {children}
-              </div>
-            ),
+            [CardStyle.CARD]: ({ props, children }) => {
+              const { key, ...propsWithoutKey } = props;
+
+              return (
+                <Card
+                  key={props.key}
+                  {...propsWithoutKey}
+                >
+                  {children}
+                </Card>
+              );
+            },
+            [CardStyle.DIV]: ({ props, children }) => {
+              const { key, ...propsWithoutKey } = props;
+
+              return (
+                <div
+                  key={props.key}
+                  {...propsWithoutKey}
+                >
+                  {children}
+                </div>
+              );
+            },
           };
 
           return styleToContainerMap[card.cardStyle]({
