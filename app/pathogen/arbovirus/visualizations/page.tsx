@@ -23,7 +23,7 @@ export default function VisualizationsPage() {
   }
 
   return (
-    <div className="flex-col flex w-screen h-screen">
+    <div className="flex-col flex w-screen h-screen overflow-y-scroll">
       <div className="flex pt-4">
         <h3 className="w-full text-center text-lg">
           {visualizationInformation.displayName}
