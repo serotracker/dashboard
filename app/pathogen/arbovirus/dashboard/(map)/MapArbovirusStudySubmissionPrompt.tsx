@@ -26,7 +26,7 @@ export const MapArbovirusStudySubmissionPrompt = ({
       </CardHeader>
       <CardContent className={"p-2 pt-0"}>
         <p className="inline"> Please fill out the </p>
-        <Link className="inline text-link underline" href="https://forms.gle/pKNiMiMYr6hiKnXx8"> following form </Link>
+        <Link className="inline text-link underline" target="_blank" href="https://forms.gle/pKNiMiMYr6hiKnXx8"> following form </Link>
         <p className="inline"> so that we can add to our dataset. </p>
       </CardContent>
     </Card>
