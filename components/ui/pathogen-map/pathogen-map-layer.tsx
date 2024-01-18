@@ -1,54 +1,39 @@
 import { Layer, Source } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { PathogenMapCursor } from "./use-pathogen-map-mouse";
+import cluster from "cluster";
 
-export interface PathogenMapLayerInfoWithoutCountryHighlighting<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
-> {
+export interface PathogenMapLayerInfo {
   id: string;
-  cursor: PathogenMapCursor;
-  isDataUsedForCountryHighlighting: false;
-  layerPaint: mapboxgl.CirclePaint;
-  dataPoints: TPathogenDataPointProperties[];
+  type: "symbol" | "circle";
+  cursor?: PathogenMapCursor;
+  isDataUsedForCountryHighlighting: boolean;
+  layerPaint?: mapboxgl.CirclePaint;
+  filter?: any;
+  layout?: mapboxgl.SymbolLayout;
 }
 
-export interface PathogenMapLayerInfoWithCountryHighlighting<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
-> {
-  id: string;
-  cursor: PathogenMapCursor;
-  isDataUsedForCountryHighlighting: true;
-  layerPaint: mapboxgl.CirclePaint;
-  dataPoints: (TPathogenDataPointProperties & { country: string })[];
-}
-
-export type PathogenMapLayerInfo<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
-> =
-  | PathogenMapLayerInfoWithoutCountryHighlighting<TPathogenDataPointProperties>
-  | PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties>;
-
-export const shouldLayerBeUsedForCountryHighlighting = <
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
->(
-  layer: PathogenMapLayerInfo<TPathogenDataPointProperties>
-): layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> => {
+export const shouldLayerBeUsedForCountryHighlighting = (
+  layer: PathogenMapLayerInfo
+): layer is PathogenMapLayerInfo => {
   return !!layer.isDataUsedForCountryHighlighting;
 };
 
 export interface PathogenMapLayerProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
-  layer: PathogenMapLayerInfo<TPathogenDataPointProperties>;
+  layers: PathogenMapLayerInfo[];
+  dataPoints: (TPathogenDataPointProperties & { country: string })[];
+  clusterProperties: { [key: string]: any };
+  sourceId: string;
 }
 
-export function PathogenMapLayer<
+export function PathogenMapSourceAndLayer<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
->({ layer }: PathogenMapLayerProps<TPathogenDataPointProperties>) {
-  const sourceId = `${layer.id}-[GENERATED-SOURCE-ID]`;
+>({ layers, dataPoints, clusterProperties, sourceId }: PathogenMapLayerProps<TPathogenDataPointProperties>) {
   const geojsonData = {
     type: "FeatureCollection" as const,
-    features: layer.dataPoints.map((dataPoint) => ({
+    features: dataPoints.map((dataPoint) => ({
       type: "Feature" as const,
       geometry: {
         type: "Point" as const,
@@ -59,13 +44,41 @@ export function PathogenMapLayer<
   };
 
   return (
-    <Source id={sourceId} type="geojson" data={geojsonData}>
-      <Layer
-        id={layer.id}
-        type="circle"
-        source={sourceId}
-        paint={layer.layerPaint}
-      />
+    <Source
+      id={sourceId}
+      type="geojson"
+      data={geojsonData}
+      cluster
+      clusterMaxZoom={6}
+      clusterRadius={100}
+      clusterProperties={clusterProperties}
+    >
+      {layers.map((layer) => {
+        return layer.type == "symbol" ? (
+          <Layer
+            key={layer.id}
+            id={layer.id}
+            type="symbol"
+            source={sourceId}
+            filter={layer.filter}
+            layout={layer.layout}
+            paint={{
+              "text-color": "#ffff00",
+              "text-halo-color": "#333333",
+              "text-halo-width": 1,
+            }}
+          />
+        ) : (
+          <Layer
+            key={layer.id}
+            id={layer.id}
+            type={layer.type}
+            source={sourceId}
+            paint={layer.layerPaint}
+            filter={layer.filter}
+          />
+        );
+      })}
     </Source>
   );
 }

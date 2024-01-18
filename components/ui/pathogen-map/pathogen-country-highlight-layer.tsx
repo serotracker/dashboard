@@ -1,6 +1,6 @@
 import { Layer, Source } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { PathogenMapLayerInfoWithCountryHighlighting } from "./pathogen-map-layer";
+import { PathogenMapLayerInfo } from "./pathogen-map-layer";
 import { useEffect, useState } from "react";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import {
@@ -13,23 +13,21 @@ interface PathogenCountryHighlightLayerProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
   dataLayer:
-    | PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties>
+    | PathogenMapLayerInfo
     | undefined;
   positionedUnderLayerWithId: string | undefined;
+  dataPoints: (TPathogenDataPointProperties & {country : string})[];
 }
 
 const generatePaintForLayer = <
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 >(input: {
-  dataLayer:
-    | PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties>
-    | undefined;
+  dataPoints: (TPathogenDataPointProperties & {country : string})[];
 }) => {
-  const { dataLayer } = input;
+  const { dataPoints } = input;
 
   const allUniqueCountryCodesWithData = new Set(
-    dataLayer?.dataPoints
-      .map((dataPoint) => {
+    dataPoints.map((dataPoint) => {
         return countryNameToIso31661Alpha3CodeMap[dataPoint.country];
       })
       .filter(
@@ -71,8 +69,8 @@ const generatePaintForLayer = <
 export function PathogenCountryHighlightLayer<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 >({
-  dataLayer,
   positionedUnderLayerWithId,
+  dataPoints,
 }: PathogenCountryHighlightLayerProps<TPathogenDataPointProperties>) {
   const [mapCountryVectors, setMapCountryVectors] = useState<any>(null);
 
@@ -94,8 +92,12 @@ export function PathogenCountryHighlightLayer<
     <Source {...mapCountryVectors.sources[countryLayer.source]}>
       <Layer
         {...countryLayer}
+<<<<<<< HEAD
         id='country-highlight-layer'
         paint={generatePaintForLayer({ dataLayer })}
+=======
+        paint={generatePaintForLayer({ dataPoints })}
+>>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
         beforeId={positionedUnderLayerWithId}
       />
     </Source>

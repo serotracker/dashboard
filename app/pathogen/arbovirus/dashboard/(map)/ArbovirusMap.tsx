@@ -12,19 +12,23 @@ import React, { useContext, useState } from "react";
 import { useArboData } from "@/hooks/useArboData";
 import { ArboContext } from "@/contexts/arbo-context";
 import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
-import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
+import { MarkerCollection, PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusFilter } from "./MapArbovirusFilter";
 import { MapExpandPlotsPrompt } from "./MapExpandPlotsPrompt";
+<<<<<<< HEAD
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
 import { ArboCountryPopupContent } from "../ArboCountryPopUpContent";
+=======
+import { computeClusterMarkers } from "./arbo-map-cluster-utils";
+>>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
-  ZIKV: "border-zikv data-[state=checked]:bg-zikv",
-  CHIKV: "border-chikv data-[state=checked]:bg-chikv",
-  WNV: "border-wnv data-[state=checked]:bg-wnv",
-  DENV: "border-denv data-[state=checked]:bg-denv",
-  YF: "border-yf data-[state=checked]:bg-yf",
-  MAYV: "border-mayv data-[state=checked]:bg-mayv",
+  ZIKV: "data-[state=checked]:bg-zikv",
+  CHIKV: "data-[state=checked]:bg-chikv",
+  WNV: "data-[state=checked]:bg-wnv",
+  DENV: "data-[state=checked]:bg-denv",
+  YF: "data-[state=checked]:bg-yf",
+  MAYV: "data-[state=checked]:bg-mayv",
 };
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
@@ -44,6 +48,7 @@ interface OldArbovirusMapProps {
   minimizeVisualizations: () => void;
 }
 
+<<<<<<< HEAD
 const isOldArbovirusMapProps = (props: ArbovirusMapProps): props is OldArbovirusMapProps =>
   'areVisualizationsExpanded' in props && typeof props.areVisualizationsExpanded === 'boolean' &&
   'expandVisualizations' in props && typeof props.expandVisualizations === 'function' &&
@@ -57,6 +62,16 @@ export function ArbovirusMap(props: ArbovirusMapProps) {
   const state = useContext(ArboContext);
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const { data }  = useArboData();
+=======
+export function ArbovirusMap(input: ArbovirusMapProps) {
+  const {
+    expandVisualizations,
+    minimizeVisualizations,
+    areVisualizationsExpanded,
+  } = input;
+  const state = useContext(ArboContext);
+  const { data } = useArboData();
+>>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
 
   if (!data) {
     return <span> Loading... </span>;
@@ -68,12 +83,14 @@ export function ArbovirusMap(props: ArbovirusMapProps) {
         <PathogenMap
           id="arboMap"
           baseCursor=""
+          sourceId="arbo-[GENERATED-SOURCE-ID]"
           layers={[
             {
               id: "Arbovirus-pins",
+              type: "circle",
               isDataUsedForCountryHighlighting: true,
               cursor: "pointer",
-              dataPoints: state.filteredData,
+              filter: ["!", ["has", "point_count"]],
               layerPaint: {
                 "circle-color": [
                   "match",
@@ -98,6 +115,7 @@ export function ArbovirusMap(props: ArbovirusMapProps) {
               },
             },
           ]}
+<<<<<<< HEAD
           generatePopupContent={(input) => {
             if(input.layerId === 'country-highlight-layer') {
               return <ArboCountryPopupContent record={input.data} />
@@ -106,6 +124,22 @@ export function ArbovirusMap(props: ArbovirusMapProps) {
             return <ArboStudyPopupContent record={input.data} />
           }}
         />
+=======
+          generatePopupContent={(record) => (
+            <ArboStudyPopupContent record={record} />
+          )}
+          dataPoints={state.filteredData}
+          clusterProperties={{
+            ZIKV: ["+", ["case", ["==", ["get", "pathogen"], "ZIKV"], 1, 0]],
+            CHIKV: ["+", ["case", ["==", ["get", "pathogen"], "CHIKV"], 1, 0]],
+            WNV: ["+", ["case", ["==", ["get", "pathogen"], "WNV"], 1, 0]],
+            DENV: ["+", ["case", ["==", ["get", "pathogen"], "DENV"], 1, 0]],
+            YF: ["+", ["case", ["==", ["get", "pathogen"], "YF"], 1, 0]],
+            MAYV: ["+", ["case", ["==", ["get", "pathogen"], "MAYV"], 1, 0]],
+          }} 
+          computeClusterMarkers={computeClusterMarkers}        
+          />
+>>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
       </div>
       <MapArbovirusStudySubmissionPrompt 
         hidden={!isStudySubmissionPromptVisible}
@@ -133,6 +167,7 @@ export function ArbovirusMap(props: ArbovirusMapProps) {
             </p>
           </CardContent>
         </Card>
+<<<<<<< HEAD
         {isOldArbovirusMapProps(props) && 
           //TODO: SeanKennyNF remove the expand plots prompt when the website redesign is fully rolled out.
           <MapExpandPlotsPrompt
@@ -140,6 +175,16 @@ export function ArbovirusMap(props: ArbovirusMapProps) {
             onClick={props.areVisualizationsExpanded ? props.minimizeVisualizations : props.expandVisualizations}
           />
         }
+=======
+        <MapExpandPlotsPrompt
+          text={areVisualizationsExpanded ? "Hide Figures" : "See Figures"}
+          onClick={
+            areVisualizationsExpanded
+              ? minimizeVisualizations
+              : expandVisualizations
+          }
+        />
+>>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
       </div>
     </>
   );

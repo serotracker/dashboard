@@ -1,7 +1,7 @@
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
-import { useState, useEffect } from "react";
-import { Map, NavigationControl } from "react-map-gl";
+import { useState, useEffect, MutableRefObject, useRef, useMemo } from "react";
+import { Map, Marker, NavigationControl, useMap } from "react-map-gl";
 import {
   PathogenMapCursor,
   usePathogenMapMouse,
@@ -12,16 +12,23 @@ import {
   PopupInfo,
 } from "./pathogen-map-popup";
 import {
-  PathogenMapLayer,
+  PathogenMapSourceAndLayer,
   PathogenMapLayerInfo,
-  PathogenMapLayerInfoWithCountryHighlighting,
   shouldLayerBeUsedForCountryHighlighting,
 } from "./pathogen-map-layer";
 import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-layer";
+<<<<<<< HEAD
 import { countryNameToIso31661Alpha3CodeMap, iso31661Alpha3CodeToCountryNameMap } from "@/lib/country-iso-3166-1-alpha-3-codes";
 import { getBoundingBoxCenter, getBoundingBoxFromCountryName } from "@/lib/bounding-boxes";
 import { typedGroupBy } from "@/lib/utils";
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
+=======
+import isEqual from "lodash/isEqual";
+
+export interface MarkerCollection {
+  [key: string]: JSX.Element;
+}
+>>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
 
 export interface PathogenDataPointPropertiesBase {
   id: string;
@@ -34,8 +41,16 @@ interface PathogenMapProps<
 > {
   id: string;
   baseCursor: PathogenMapCursor;
-  layers: PathogenMapLayerInfo<TPathogenDataPointProperties>[];
+  layers: PathogenMapLayerInfo[];
   generatePopupContent: PopupContentGenerator<TPathogenDataPointProperties>;
+  dataPoints: (TPathogenDataPointProperties & { country: string })[];
+  clusterProperties: { [key: string]: any };
+  sourceId: string;
+  computeClusterMarkers: (props: {
+    features: mapboxgl.MapboxGeoJSONFeature[];
+    markers: MarkerCollection;
+    map: mapboxgl.Map;
+  }) => MarkerCollection;
 }
 
 export function PathogenMap<
@@ -45,6 +60,10 @@ export function PathogenMap<
   baseCursor,
   generatePopupContent,
   layers,
+  dataPoints,
+  clusterProperties,
+  sourceId,
+  computeClusterMarkers
 }: PathogenMapProps<TPathogenDataPointProperties>) {
   const [popUpInfo, _setPopUpInfo] = useState<
     PopupInfo<TPathogenDataPointProperties>
@@ -69,6 +88,12 @@ export function PathogenMap<
     _setPopUpInfo(newPopUpInfo);
   }
 
+  // objects for caching custom markers
+  const markersRef: MutableRefObject<MarkerCollection> = useRef<MarkerCollection>(
+    {}
+  );
+  const [markersOnScreen, setMarkersOnScreen] = useState<MarkerCollection>({});
+
   const { cursor, onMouseLeave, onMouseEnter, onMouseDown } =
     usePathogenMapMouse({
       baseCursor,
@@ -88,6 +113,35 @@ export function PathogenMap<
     return;
   }
 
+<<<<<<< HEAD
+=======
+  const layerForCountryHighlighting = layers.find(
+    (
+      layer
+    ): layer is PathogenMapLayerInfo =>
+      shouldLayerBeUsedForCountryHighlighting(layer)
+  );
+
+  const onRender = (event: mapboxgl.MapboxEvent) => {
+    const map = event.target;
+    if (map) {
+      const features = map.querySourceFeatures(sourceId);
+      
+      // This needs to be standardized. How? Can we be type specific probable not? 
+      const newMarkers = computeClusterMarkers({
+        features,
+        markers: markersRef.current,
+        map
+      });
+      
+      // Only update the state if newMarkers is different from markersOnScreen
+      if (!isEqual(newMarkers, markersOnScreen)) {
+        setMarkersOnScreen(newMarkers);
+      }
+    }
+  }
+
+>>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
   return (
     <Map
       id={id}
@@ -107,20 +161,24 @@ export function PathogenMap<
       onMouseEnter={onMouseEnter}
       onMouseDown={onMouseDown}
       onMouseLeave={onMouseLeave}
+      onRender={onRender}
     >
       <NavigationControl showCompass={false} />
       <PathogenCountryHighlightLayer
         dataLayer={layerForCountryHighlighting}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
+        dataPoints={dataPoints}
       />
-      {layers.map((layer) => (
-        <PathogenMapLayer key={layer.id} layer={layer} />
-      ))}
+      <PathogenMapSourceAndLayer layers={layers} dataPoints={dataPoints} clusterProperties={clusterProperties} sourceId={sourceId}/>
       <PathogenMapPopup
         mapId={id}
         popUpInfo={popUpInfo}
         generatePopupContent={generatePopupContent}
       />
+      {Object.keys(markersOnScreen).map(
+      (id) => markersOnScreen[id]
+    )}
     </Map>
   );
 }
+
