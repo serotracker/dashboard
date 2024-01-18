@@ -8,7 +8,7 @@ export type PathogenMapCursor = "" | "pointer";
 
 interface UsePathogenMapMouseProps<TPathogenDataPointProperties extends PathogenDataPointPropertiesBase> {
   baseCursor: PathogenMapCursor;
-  layers: PathogenMapLayerInfo<TPathogenDataPointProperties>[];
+  layers: PathogenMapLayerInfo[];
   setPopUpInfo: (input: PopupInfo<TPathogenDataPointProperties>) => void
 }
 
@@ -36,7 +36,7 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
       return;
     }
 
-    setCursor(enteredLayer.cursor);
+    setCursor(enteredLayer?.cursor || baseCursor);
   };
 
   const onMouseDown = (event: mapboxgl.MapLayerMouseEvent) => {
