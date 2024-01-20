@@ -1,6 +1,6 @@
 import { typedObjectEntries } from "@/lib/utils";
 import { AntibodyPathogenBar, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "../analyze/recharts";
-import { ChangeInMedianSeroprevalenceOverTimeGraph } from "../analyze/recharts/change-in-median-seroprevalence-over-time";
+import { ChangeInMedianSeroprevalenceOverTimeGraph } from "../analyze/recharts/change-in-median-seroprevalence-over-time-graph";
 
 export enum VisualizationId {
   CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS = "CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS",
@@ -146,7 +146,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
         "Change in median seroprevalence over time"
       ],
     renderVisualization: ChangeInMedianSeroprevalenceOverTimeGraph,
-    classNameWhenFullscreen: "p-14"
+    classNameWhenFullscreen: "p-16"
   },
 }
 

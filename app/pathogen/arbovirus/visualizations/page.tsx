@@ -1,7 +1,7 @@
 "use client"
 
 import { notFound, useRouter, useSearchParams } from "next/navigation";
-import { getVisualizationInformationFromVisualizationUrlParameter, isVisualizationUrlParameter } from "./visualizations";
+import { VisualizationRenderingMode, getVisualizationInformationFromVisualizationUrlParameter, isVisualizationUrlParameter } from "./visualizations";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import { isSafeReferrerLink } from "@/utils/referrer-link-util";
