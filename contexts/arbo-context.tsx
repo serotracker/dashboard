@@ -184,11 +184,11 @@ const adjustMapPositionIfCountryFilterHasChanged = (
 // Define boundaries for WHO regions
 const whoRegionBoundaries: Record<string, CountryBoundingBox> = {
   AFR: [-25, -40, 60, 20],
-  AMR: [-150, -60, -35, 85],
-  EMR: [20, -40, 105, 45],
-  EUR: [-25, 30, 45, 75],
-  SEAR: [60, -15, 110, 35],
-  WPR: [100, -10, 170, 80],
+  AMR: [-150, -80, -30, 85],
+  EMR: [-10, -45, 105, 45],
+  EUR: [0, -10, 45, 75],
+  SEAR: [60, -15, 145, 35],
+  WPR: [120, -80, 170, 80],
 };
 
 const adjustMapPositionIfWhoRegionFilterHasChanged = (
