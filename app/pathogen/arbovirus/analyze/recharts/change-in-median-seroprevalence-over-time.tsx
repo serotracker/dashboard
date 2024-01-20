@@ -111,8 +111,6 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph =
       (dataPoint) => dataPoint.pathogen
     );
 
-    console.log('dataGroupedByArbovirus', dataGroupedByArbovirus)
-
     const dataGroupedByArbovirusThenByTimeBucket = typedObjectFromEntries(
       typedObjectEntries(dataGroupedByArbovirus).map(
         ([arbovirus, dataPointsForAParticularArbovirus]) => [
@@ -142,8 +140,6 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph =
               dataPoints,
               median: median(dataPoints.map((dataPoint) => dataPoint.seroprevalence * 100))
             }));
-
-            console.log('dataForArbovirus', dataForArbovirus)
 
             const width = Object.keys(dataGroupedByArbovirus).length < 3 ? "w-full" : "w-1/2";
             const height =
