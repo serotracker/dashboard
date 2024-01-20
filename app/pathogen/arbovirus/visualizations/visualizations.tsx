@@ -1,5 +1,6 @@
 import { typedObjectEntries } from "@/lib/utils";
 import { AntibodyPathogenBar, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "../analyze/recharts";
+import { ChangeInMedianSeroprevalenceOverTimeGraph } from "../analyze/recharts/change-in-median-seroprevalence-over-time";
 
 export enum VisualizationId {
   CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS = "CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS",
@@ -9,6 +10,7 @@ export enum VisualizationId {
   MEDIAN_SEROPREVALENCE_BY_WHO_REGION = "MEDIAN_SEROPREVALENCE_BY_WHO_REGION",
   MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP = "MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP",
   TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS = "TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS",
+  CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME = "CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME"
 }
 
 export const isVisualizationId = (
@@ -24,6 +26,7 @@ enum VisualizationUrlParameter {
   "median-seroprevalence-by-who-region" = "median-seroprevalence-by-who-region",
   "median-seroprevalence-by-who-region-and-age-group" = "median-seroprevalence-by-who-region-and-age-group",
   "top-ten-countries-reporting-estimates-by-arbovirus" = "top-ten-countries-reporting-estimates-by-arbovirus",
+  "change-in-median-seroprevalence-over-time" = "change-in-median-seroprevalence-over-time"
 }
 
 export const isVisualizationUrlParameter = (
@@ -39,6 +42,7 @@ enum VisualizationDisplayName {
   "Median seroprevalence of arboviruses by WHO Region" = "Median seroprevalence of arboviruses by WHO Region",
   "Median seroprevalence by WHO region and age group" = "Median seroprevalence by WHO region and age group",
   "Top ten countries reporting estimates by arbovirus" = "Top ten countries reporting estimates by arbovirus",
+  "Change in median seroprevalence over time" = "Change in median seroprevalence over time",
 }
 
 interface VisualizationInformation {
@@ -129,6 +133,19 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
         "Top ten countries reporting estimates by arbovirus"
       ],
     renderVisualization: Top10CountriesByPathogenStudyCount,
+    classNameWhenFullscreen: "p-14"
+  },
+  [VisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME]: {
+    id: VisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME,
+    urlParameter:
+      VisualizationUrlParameter[
+        "change-in-median-seroprevalence-over-time"
+      ],
+    displayName:
+      VisualizationDisplayName[
+        "Change in median seroprevalence over time"
+      ],
+    renderVisualization: ChangeInMedianSeroprevalenceOverTimeGraph,
     classNameWhenFullscreen: "p-14"
   },
 }
