@@ -153,7 +153,7 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
           return (
             <div
               className={clsx(width, height)}
-              key={`med-sero-prev-who-age-${arbovirus}`}
+              key={`change-in-med-sero-prev-${arbovirus}`}
             >
               <h2 className="w-full text-center ">
                 {convertArboSFtoArbo(arbovirus as arbovirusesSF)}
