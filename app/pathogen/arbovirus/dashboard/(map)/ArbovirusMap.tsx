@@ -8,13 +8,14 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useArboData } from "@/hooks/useArboData";
 import { ArboContext } from "@/contexts/arbo-context";
 import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusFilter } from "./MapArbovirusFilter";
 import { MapExpandPlotsPrompt } from "./MapExpandPlotsPrompt";
+import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
   ZIKV: "border-zikv data-[state=checked]:bg-zikv",
@@ -44,6 +45,7 @@ interface ArbovirusMapProps {
 export function ArbovirusMap(input: ArbovirusMapProps) {
   const { expandVisualizations, minimizeVisualizations, areVisualizationsExpanded } = input;
   const state = useContext(ArboContext);
+  const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const { data }  = useArboData();
 
   if (!data) {
@@ -91,7 +93,12 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
           )}
         />
       </div>
-      <MapArbovirusFilter records={data.arbovirusEstimates} />
+      <MapArbovirusStudySubmissionPrompt 
+        hidden={!isStudySubmissionPromptVisible}
+        onClose={() => setStudySubmissionPromptVisibility(false)}
+        className={"absolute bottom-1 inset-x-0 mx-auto text-center w-1/2"}
+      />
+      <MapArbovirusFilter records={data.arbovirusEstimates} className={"absolute bottom-1 right-1"} />
       <div className={"absolute top-1 left-1 p-2"}>
         <Card className={"mb-1"}>
           <CardContent className={"flex w-fit p-2"}>
