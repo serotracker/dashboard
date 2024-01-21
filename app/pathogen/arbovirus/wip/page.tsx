@@ -10,7 +10,7 @@ export default function RedesignedArbovirusPage() {
   const {renderScrollSectionGroup, moveScrollSectionGroupToSection} = useScrollSectionGroup({
     scrollSectionGroupProps: {
       sections: redesignedArbovirusPageSections,
-      className:"overflow-y-scroll col-span-10 h-full row-span-2 snap-y scroll-smooth",
+      className:"col-span-10 row-span-2",
       scrollThrottleThresholdMilliseconds: 700
     }
   })

@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo, useEffect, useState, useRef, RefObject } from "react";
+import React, { useState, RefObject } from "react";
+import { cn } from "@/lib/utils";
 
 export interface ScrollSection<TSectionId extends string> {
   id: TSectionId;
@@ -70,7 +71,7 @@ export const ScrollSectionGroup = <TSectionId extends string>(props: ScrollSecti
 
   return (
     <div
-      className="overflow-y-scroll col-span-10 h-full row-span-2 snap-y scroll-smooth"
+      className={cn("overflow-y-scroll snap-y scroll-smooth", props.className)}
       onScroll={onScroll}
     >
       {props.sections.map((section) => section.renderScrollSectionContent({
