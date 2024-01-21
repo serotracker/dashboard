@@ -18,7 +18,6 @@ const isRedesignedArbovirusPageSectionUrlParam = (urlParam: string): urlParam is
 
 export const redesignedArbovirusPageSections = [{
   id: RedesignedArbovirusPageSectionId.MAP,
-  url: RedesignedArbovirusPageSectionUrlParam.map,
   renderScrollSectionContent: (input: { ref: RefObject<HTMLElement>, key: string}) => (
     <section
       key={input.key}
@@ -30,7 +29,6 @@ export const redesignedArbovirusPageSections = [{
   )
 }, {
   id: RedesignedArbovirusPageSectionId.TABLE,
-  url: RedesignedArbovirusPageSectionUrlParam.table,
   renderScrollSectionContent: (input: { ref: RefObject<HTMLElement>, key: string}) => (
     <section
       key={input.key}
@@ -42,7 +40,6 @@ export const redesignedArbovirusPageSections = [{
   )
 }, {
   id: RedesignedArbovirusPageSectionId.VISUALIZATIONS,
-  url: RedesignedArbovirusPageSectionUrlParam.visualizations,
   renderScrollSectionContent: (input: { ref: RefObject<HTMLElement>, key: string}) => (
     <section
       key={input.key}
