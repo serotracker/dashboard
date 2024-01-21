@@ -167,9 +167,12 @@ const FilterSection = ({
 
 interface FiltersProps {
   excludedFields?: FilterableField[];
+  className?: string;
 }
 
-export default function Filters({ excludedFields = [] }: FiltersProps) {
+export function Filters(props: FiltersProps) {
+  const excludedFields = props.excludedFields ?? [];
+
   const state = useContext(ArboContext);
   const demographicFilters = [
     {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
@@ -228,7 +231,7 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
 
   if (filterData) {
     return (
-      <div>
+      <div className={props.className}>
         <FilterSection
           headerText="Demographic"
           headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
