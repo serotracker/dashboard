@@ -1,6 +1,6 @@
 "use client"
 import { useScrollSectionGroup } from "@/components/ui/scroll-section-group/use-scroll-section-group";
-import { useSearchParams } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { redesignedArbovirusPageSections, sectionUrlParameterToSectionId } from "./sections";
 
@@ -23,6 +23,10 @@ export default function RedesignedArbovirusPage() {
       moveScrollSectionGroupToSection({ sectionId });
     }
   }, [searchParams])
+
+  if(process.env.NEXT_PUBLIC_WEBSITE_REDESIGN_ENABLED !== 'true') {
+    return notFound();
+  }
   
   return (
     <div className="col-span-12 row-span-2 grid gap-0 grid-cols-12 grid-rows-2 grid-flow-col w-screen overflow-hidden border-box -my-4 -ml-4">
