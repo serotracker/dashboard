@@ -7,7 +7,7 @@ import { redesignedArbovirusPageSections, sectionUrlParameterToSectionId } from 
 export default function RedesignedArbovirusPage() {
   const searchParams = useSearchParams();
 
-  const {renderScrollSectionGroup, moveScrollSectionGroupToSection} = useScrollSectionGroup({
+  const { renderScrollSectionGroup, moveScrollSectionGroupToSection } = useScrollSectionGroup({
     scrollSectionGroupProps: {
       sections: redesignedArbovirusPageSections,
       className:"col-span-10 row-span-2",
@@ -17,7 +17,7 @@ export default function RedesignedArbovirusPage() {
 
   useEffect(() => {
     const sectionUrlParameter = searchParams.get('section');
-    const sectionId = sectionUrlParameterToSectionId({urlParam: sectionUrlParameter})
+    const sectionId = sectionUrlParameterToSectionId({ urlParam: sectionUrlParameter })
 
     if(sectionId) {
       moveScrollSectionGroupToSection({ sectionId });
