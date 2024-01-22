@@ -36,14 +36,24 @@ export const pathogenColors: { [key: string]: string } = {
   MAYV: "#c5a3ff",
 };
 
-interface ArbovirusMapProps {
+//TODO: SeanKennyNF remove this type, the typeguard, and all references to expanding and minimizing visualizations once the redesign is rolled out.
+interface OldArbovirusMapProps {
+  className?: string;
   areVisualizationsExpanded: boolean;
   expandVisualizations: () => void;
   minimizeVisualizations: () => void;
 }
 
-export function ArbovirusMap(input: ArbovirusMapProps) {
-  const { expandVisualizations, minimizeVisualizations, areVisualizationsExpanded } = input;
+const isOldArbovirusMapProps = (props: ArbovirusMapProps): props is OldArbovirusMapProps =>
+  'areVisualizationsExpanded' in props && typeof props.areVisualizationsExpanded === 'boolean' &&
+  'expandVisualizations' in props && typeof props.expandVisualizations === 'function' &&
+  'minimizeVisualizations' in props && typeof props.minimizeVisualizations === 'function'
+
+type NewArbovirusMapProps = {}
+
+type ArbovirusMapProps = OldArbovirusMapProps | NewArbovirusMapProps;
+
+export function ArbovirusMap(props: ArbovirusMapProps) {
   const state = useContext(ArboContext);
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const { data }  = useArboData();
@@ -119,10 +129,13 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
             </p>
           </CardContent>
         </Card>
-        <MapExpandPlotsPrompt
-          text={areVisualizationsExpanded ? "Hide Figures" : "See Figures"}
-          onClick={areVisualizationsExpanded ? minimizeVisualizations : expandVisualizations}
-        />
+        {isOldArbovirusMapProps(props) && 
+          //TODO: SeanKennyNF remove the expand plots prompt when the website redesign is fully rolled out.
+          <MapExpandPlotsPrompt
+            text={props.areVisualizationsExpanded ? "Hide Figures" : "See Figures"}
+            onClick={props.areVisualizationsExpanded ? props.minimizeVisualizations : props.expandVisualizations}
+          />
+        }
       </div>
     </>
   );
