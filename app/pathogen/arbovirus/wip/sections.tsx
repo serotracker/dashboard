@@ -1,6 +1,6 @@
 import { RefObject } from "react";
 
-enum RedesignedArbovirusPageSectionId {
+export enum RedesignedArbovirusPageSectionId {
   MAP = 'MAP',
   TABLE = 'TABLE',
   VISUALIZATIONS = 'VISUALIZATIONS'
