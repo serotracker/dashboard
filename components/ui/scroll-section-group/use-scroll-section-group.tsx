@@ -62,7 +62,7 @@ export const useScrollSectionGroup = <TSectionId extends string>(input: UseScrol
   
   const idOfCurrentlyViewedSection = useMemo(() => {
     return input.scrollSectionGroupProps.sections[currentIndex].id;
-  }, [currentIndex])
+  }, [currentIndex, input.scrollSectionGroupProps.sections])
 
   return {
     renderScrollSectionGroup,
