@@ -21,20 +21,20 @@ export const useScrollSectionGroup = <TSectionId extends string>(input: UseScrol
   const sectionRefs = useRef(Array.from({length: input.scrollSectionGroupProps.sections.length}, _ => createRef<HTMLElement>()));
   const [lastScrollEventActionedUnixEpochTimestampMilliseconds, setLastScrollEventActionedUnixEpochTimestampMilliseconds] = useState<number | undefined>(undefined);
 
-  const hasEnoughTimePassedSinceLastScrollEventActioned = (unixEpochTimestampMilliseconds: number): boolean => {
+  const hasEnoughTimePassedSinceLastScrollEventActioned = useCallback((unixEpochTimestampMilliseconds: number): boolean => {
     if(!lastScrollEventActionedUnixEpochTimestampMilliseconds) {
       return true;
     }
 
     return unixEpochTimestampMilliseconds - lastScrollEventActionedUnixEpochTimestampMilliseconds > input.scrollSectionGroupProps.scrollThrottleThresholdMilliseconds;
-  }
+  }, [lastScrollEventActionedUnixEpochTimestampMilliseconds, input.scrollSectionGroupProps.scrollThrottleThresholdMilliseconds]);
 
 
-  const setCurrentIndex = (newCurrentIndex: number) => {
+  const setCurrentIndex = useCallback((newCurrentIndex: number) => {
     _setCurrentIndex(newCurrentIndex);
 
     sectionRefs.current.at(newCurrentIndex)?.current?.scrollIntoView();
-  }
+  }, [])
 
   const renderScrollSectionGroup = useCallback(() => {
     return <ScrollSectionGroup
@@ -46,7 +46,7 @@ export const useScrollSectionGroup = <TSectionId extends string>(input: UseScrol
       currentIndex={currentIndex}
       setCurrentIndex={setCurrentIndex}
     />
-  }, [input.scrollSectionGroupProps, currentIndex, setCurrentIndex]);
+  }, [input.scrollSectionGroupProps, currentIndex, setCurrentIndex, hasEnoughTimePassedSinceLastScrollEventActioned]);
 
   const moveScrollSectionGroupToSection = useCallback(({ sectionId }: MoveScrollSectionGroupToSectionInput<TSectionId>) => {
     const indexOfSection = input.scrollSectionGroupProps.sections.findIndex(({id}) => id === sectionId);
@@ -57,7 +57,7 @@ export const useScrollSectionGroup = <TSectionId extends string>(input: UseScrol
 
       setLastScrollEventActionedUnixEpochTimestampMilliseconds(timeEventOccurredMilliseconds);
     }
-  }, [input.scrollSectionGroupProps.sections, setCurrentIndex]);
+  }, [input.scrollSectionGroupProps.sections, setCurrentIndex, hasEnoughTimePassedSinceLastScrollEventActioned]);
 
   return {
     renderScrollSectionGroup,

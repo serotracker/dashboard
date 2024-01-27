@@ -22,7 +22,7 @@ export default function RedesignedArbovirusPage() {
     if(sectionId) {
       moveScrollSectionGroupToSection({ sectionId });
     }
-  }, [searchParams])
+  }, [searchParams, moveScrollSectionGroupToSection])
 
   if(process.env.NEXT_PUBLIC_WEBSITE_REDESIGN_ENABLED !== 'true') {
     return notFound();
