@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState, createRef, useMemo } from "react";
-import { ScrollSection, ScrollSectionGroup, ScrollSectionGroupProps } from "./scroll-section-group";
+import { ScrollSectionInformation, ScrollSectionGroup, ScrollSectionGroupProps } from "./scroll-section-group";
 
 interface MoveScrollSectionGroupToSectionInput<TSectionId extends string> {
   sectionId: TSectionId;
@@ -7,7 +7,7 @@ interface MoveScrollSectionGroupToSectionInput<TSectionId extends string> {
 
 interface UseScrollSectionGroupInput<TSectionId extends string> {
   scrollSectionGroupProps: Omit<ScrollSectionGroupProps<TSectionId>, 'currentIndex' | 'setCurrentIndex' | 'sections' | 'hasEnoughTimePassedSinceLastScrollEventActioned' | 'setLastScrollEventActionedUnixEpochTimestampMilliseconds'> & {
-    sections: Omit<ScrollSection<TSectionId>, 'ref'>[];
+    sections: Omit<ScrollSectionInformation<TSectionId>, 'ref'>[];
   };
 }
 

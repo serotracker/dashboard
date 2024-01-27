@@ -1,13 +1,13 @@
 import React, { useState, RefObject } from "react";
 import { cn } from "@/lib/utils";
+import { ScrollSection } from "./scroll-section";
 
 export type RenderScrollSectionContentFunction = (input: {
   ref: RefObject<HTMLElement>,
-  key: string,
   onScroll: React.UIEventHandler<HTMLDivElement>
 }) => React.ReactNode;
 
-export interface ScrollSection<TSectionId extends string> {
+export interface ScrollSectionInformation<TSectionId extends string> {
   id: TSectionId;
   renderScrollSectionContent: RenderScrollSectionContentFunction;
   ref: RefObject<HTMLElement>
@@ -18,12 +18,12 @@ export interface ScrollSectionGroupProps<TSectionId extends string> {
   setCurrentIndex: (input: number) => void;
   className: string;
   scrollThrottleThresholdMilliseconds: number;
-  sections: ScrollSection<TSectionId>[];
+  sections: ScrollSectionInformation<TSectionId>[];
   hasEnoughTimePassedSinceLastScrollEventActioned: (unixEpochTimestampMilliseconds: number) => boolean
   setLastScrollEventActionedUnixEpochTimestampMilliseconds: (unixEpochTimestampMilliseconds: number) => void
 }
 
-enum ScrollDirection {
+export enum ScrollDirection {
   UP = 'UP',
   DOWN = 'DOWN',
 }
@@ -72,48 +72,19 @@ export const ScrollSectionGroup = <TSectionId extends string>(props: ScrollSecti
     }
   }
 
-  const scrollSectionOnScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
-    if(!('scrollTop' in event.target) || !('scrollTopMax' in event.target)) {
-      return;
-    }
-
-    if(typeof event.target.scrollTop !== 'number' || typeof event.target.scrollTopMax !== 'number'){
-      return;
-    }
-    
-    let direction = undefined;
-
-    if(event.target.scrollTop <= 0) {
-      direction = ScrollDirection.UP;
-    }
-
-    if(event.target.scrollTop >= event.target.scrollTopMax) {
-      direction = ScrollDirection.DOWN;
-    }
-
-    if(!direction) {
-      return;
-    }
-
-    const timeEventOccurredMilliseconds = Date.now();
-
-    if(props.hasEnoughTimePassedSinceLastScrollEventActioned(timeEventOccurredMilliseconds)) {
-      changeViewedSectionBasedOnScroll(props.currentIndex, direction);
-
-      props.setLastScrollEventActionedUnixEpochTimestampMilliseconds(timeEventOccurredMilliseconds);
-    }
-  }
-
   return (
     <div
       className={cn("overflow-y-scroll snap-y scroll-smooth", props.className)}
       onScroll={onScroll}
     >
-      {props.sections.map((section) => section.renderScrollSectionContent({
-        ref: section.ref,
-        key: `scroll-section-${section.id}`,
-        onScroll: scrollSectionOnScroll
-      }))}
+      {props.sections.map((section) => <ScrollSection
+        currentIndex={props.currentIndex}
+        section={section}
+        key={`scroll-section-${section.id}`}
+        changeViewedSectionBasedOnScroll={changeViewedSectionBasedOnScroll}
+        hasEnoughTimePassedSinceLastScrollEventActioned={props.hasEnoughTimePassedSinceLastScrollEventActioned}
+        setLastScrollEventActionedUnixEpochTimestampMilliseconds={props.setLastScrollEventActionedUnixEpochTimestampMilliseconds}
+      />)}
     </div>
   )
 }

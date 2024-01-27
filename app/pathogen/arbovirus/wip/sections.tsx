@@ -27,7 +27,6 @@ export const redesignedArbovirusPageSections: Array<{id: RedesignedArbovirusPage
   id: RedesignedArbovirusPageSectionId.MAP,
   renderScrollSectionContent: (input) => (
     <section
-      key={input.key}
       ref={input.ref}
       className="w-full h-[95%] snap-start snap-always scroll-smooth overflow-hidden relative row-span-2 border-black border-b-2"
     >
@@ -38,7 +37,6 @@ export const redesignedArbovirusPageSections: Array<{id: RedesignedArbovirusPage
   id: RedesignedArbovirusPageSectionId.TABLE,
   renderScrollSectionContent: (input) => (
     <section
-      key={input.key}
       ref={input.ref}
       className="w-full h-[95%] snap-start snap-always scroll-smooth overflow-scroll"
       onScroll={input.onScroll}
@@ -50,7 +48,6 @@ export const redesignedArbovirusPageSections: Array<{id: RedesignedArbovirusPage
   id: RedesignedArbovirusPageSectionId.VISUALIZATIONS,
   renderScrollSectionContent: (input) => (
     <section
-      key={input.key}
       ref={input.ref}
       className="w-full h-full snap-start snap-always scroll-smooth grid-cols-2 grid-rows-1 grid overflow-y-scroll gap-y-6 pr-4"
       onScroll={input.onScroll}
