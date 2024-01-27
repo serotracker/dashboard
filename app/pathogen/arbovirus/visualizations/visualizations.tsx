@@ -41,7 +41,7 @@ enum VisualizationDisplayName {
   "Top ten countries reporting estimates by arbovirus" = "Top ten countries reporting estimates by arbovirus",
 }
 
-interface VisualizationInformation {
+export interface VisualizationInformation {
   id: VisualizationId;
   urlParameter: VisualizationUrlParameter;
   displayName: VisualizationDisplayName;
