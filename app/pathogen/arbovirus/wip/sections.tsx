@@ -35,7 +35,7 @@ export const redesignedArbovirusPageSections = [{
     <section
       key={input.key}
       ref={input.ref}
-      className="w-full h-[95%] snap-start snap-always scroll-smooth overflow-scroll"
+      className="w-full h-[95%] snap-start snap-always scroll-smooth overflow-scroll border-black border-b-2"
     >
       <ArboDataTable />
     </section>
