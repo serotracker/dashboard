@@ -32,7 +32,7 @@ export const VisualizationsSection = () => {
           <div className="flex py-4">
             <h3 className="w-full text-center text-lg">{visualization.displayName}</h3>
             <button
-              onClick={() => router.push(`visualizations?visualization=${visualization.urlParameter}&referrerRoute=/pathogen/arbovirus/analyze`)}
+              onClick={() => router.push(`visualizations?visualization=${visualization.urlParameter}&referrerRoute=/pathogen/arbovirus/wip%3Fsection=${RedesignedArbovirusPageSectionUrlParam.visualizations}`)}
               aria-label="See visualization in fullscreen"
             >
               <ZoomIn />
