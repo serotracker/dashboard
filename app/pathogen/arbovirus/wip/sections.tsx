@@ -50,7 +50,7 @@ export const redesignedArbovirusPageSections = [{
     <section
       key={input.key}
       ref={input.ref}
-      className="w-full h-full snap-start snap-always scroll-smooth grid-cols-2 grid-rows-1 grid overflow-y-scroll"
+      className="w-full h-full snap-start snap-always scroll-smooth grid-cols-2 grid-rows-1 grid overflow-y-scroll gap-y-6 pr-4"
     >
       <VisualizationsSection />
     </section>
