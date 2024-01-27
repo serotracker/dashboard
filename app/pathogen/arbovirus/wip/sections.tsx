@@ -12,7 +12,7 @@ export enum RedesignedArbovirusPageSectionId {
   VISUALIZATIONS = 'VISUALIZATIONS'
 }
 
-enum RedesignedArbovirusPageSectionUrlParam {
+export enum RedesignedArbovirusPageSectionUrlParam {
   map = 'map',
   table = 'table',
   visualizations = 'visualizations'
