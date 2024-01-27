@@ -5,6 +5,7 @@ import { VisualizationId, addToVisualizationInformation } from "../visualization
 import { ZoomIn } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { VisualizationsSection } from "./visualizations-section";
+import { RenderScrollSectionContentFunction } from "@/components/ui/scroll-section-group/scroll-section-group";
 
 export enum RedesignedArbovirusPageSectionId {
   MAP = 'MAP',
@@ -12,7 +13,7 @@ export enum RedesignedArbovirusPageSectionId {
   VISUALIZATIONS = 'VISUALIZATIONS'
 }
 
-enum RedesignedArbovirusPageSectionUrlParam {
+export enum RedesignedArbovirusPageSectionUrlParam {
   map = 'map',
   table = 'table',
   visualizations = 'visualizations'
@@ -22,9 +23,9 @@ const isRedesignedArbovirusPageSectionUrlParam = (urlParam: string): urlParam is
   return Object.values(RedesignedArbovirusPageSectionUrlParam).some((element) => element === urlParam);
 }
 
-export const redesignedArbovirusPageSections = [{
+export const redesignedArbovirusPageSections: Array<{id: RedesignedArbovirusPageSectionId, renderScrollSectionContent: RenderScrollSectionContentFunction}> = [{
   id: RedesignedArbovirusPageSectionId.MAP,
-  renderScrollSectionContent: (input: { ref: RefObject<HTMLElement>, key: string}) => (
+  renderScrollSectionContent: (input) => (
     <section
       key={input.key}
       ref={input.ref}
@@ -35,22 +36,24 @@ export const redesignedArbovirusPageSections = [{
   )
 }, {
   id: RedesignedArbovirusPageSectionId.TABLE,
-  renderScrollSectionContent: (input: { ref: RefObject<HTMLElement>, key: string}) => (
+  renderScrollSectionContent: (input) => (
     <section
       key={input.key}
       ref={input.ref}
       className="w-full h-[95%] snap-start snap-always scroll-smooth overflow-scroll"
+      onScroll={input.onScroll}
     >
       <ArboDataTable />
     </section>
   )
 }, {
   id: RedesignedArbovirusPageSectionId.VISUALIZATIONS,
-  renderScrollSectionContent: (input: { ref: RefObject<HTMLElement>, key: string}) => (
+  renderScrollSectionContent: (input) => (
     <section
       key={input.key}
       ref={input.ref}
       className="w-full h-full snap-start snap-always scroll-smooth grid-cols-2 grid-rows-1 grid overflow-y-scroll gap-y-6 pr-4"
+      onScroll={input.onScroll}
     >
       <VisualizationsSection />
     </section>

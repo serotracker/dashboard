@@ -1,12 +1,15 @@
 import React, { useState, RefObject } from "react";
 import { cn } from "@/lib/utils";
 
+export type RenderScrollSectionContentFunction = (input: {
+  ref: RefObject<HTMLElement>,
+  key: string,
+  onScroll: React.UIEventHandler<HTMLDivElement>
+}) => React.ReactNode;
+
 export interface ScrollSection<TSectionId extends string> {
   id: TSectionId;
-  renderScrollSectionContent: (input: {
-    ref: RefObject<HTMLElement>,
-    key: string
-  }) => React.ReactNode;
+  renderScrollSectionContent: RenderScrollSectionContentFunction;
   ref: RefObject<HTMLElement>
 }
 
@@ -69,6 +72,38 @@ export const ScrollSectionGroup = <TSectionId extends string>(props: ScrollSecti
     }
   }
 
+  const scrollSectionOnScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+    if(!('scrollTop' in event.target) || !('scrollTopMax' in event.target)) {
+      return;
+    }
+
+    if(typeof event.target.scrollTop !== 'number' || typeof event.target.scrollTopMax !== 'number'){
+      return;
+    }
+    
+    let direction = undefined;
+
+    if(event.target.scrollTop <= 0) {
+      direction = ScrollDirection.UP;
+    }
+
+    if(event.target.scrollTop >= event.target.scrollTopMax) {
+      direction = ScrollDirection.DOWN;
+    }
+
+    if(!direction) {
+      return;
+    }
+
+    const timeEventOccurredMilliseconds = Date.now();
+
+    if(props.hasEnoughTimePassedSinceLastScrollEventActioned(timeEventOccurredMilliseconds)) {
+      changeViewedSectionBasedOnScroll(props.currentIndex, direction);
+
+      props.setLastScrollEventActionedUnixEpochTimestampMilliseconds(timeEventOccurredMilliseconds);
+    }
+  }
+
   return (
     <div
       className={cn("overflow-y-scroll snap-y scroll-smooth", props.className)}
@@ -76,7 +111,8 @@ export const ScrollSectionGroup = <TSectionId extends string>(props: ScrollSecti
     >
       {props.sections.map((section) => section.renderScrollSectionContent({
         ref: section.ref,
-        key: `scroll-section-${section.id}`
+        key: `scroll-section-${section.id}`,
+        onScroll: scrollSectionOnScroll
       }))}
     </div>
   )
