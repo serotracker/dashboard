@@ -1,4 +1,5 @@
 import { RefObject } from "react";
+import { ArbovirusMap } from "../dashboard/(map)/ArbovirusMap";
 
 export enum RedesignedArbovirusPageSectionId {
   MAP = 'MAP',
@@ -22,9 +23,9 @@ export const redesignedArbovirusPageSections = [{
     <section
       key={input.key}
       ref={input.ref}
-      className="w-full h-[95%] bg-blue-500 snap-start snap-always scroll-smooth"
+      className="w-full h-[95%] snap-start snap-always scroll-smooth overflow-hidden relative row-span-2 border-black border-b-2"
     >
-      placeholder for map
+      <ArbovirusMap />
     </section>
   )
 }, {
