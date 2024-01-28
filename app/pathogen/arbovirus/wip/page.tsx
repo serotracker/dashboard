@@ -12,7 +12,7 @@ export default function RedesignedArbovirusPage() {
     scrollSectionGroupProps: {
       sections: redesignedArbovirusPageSections,
       className:"col-span-10 row-span-2",
-      scrollThrottleThresholdMilliseconds: 700
+      scrollThrottleThresholdMilliseconds: 1000
     }
   })
 

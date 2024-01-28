@@ -1,12 +1,15 @@
 import React, { useState, RefObject } from "react";
 import { cn } from "@/lib/utils";
+import { ScrollSection } from "./scroll-section";
 
-export interface ScrollSection<TSectionId extends string> {
+export type RenderScrollSectionContentFunction = (input: {
+  ref: RefObject<HTMLElement>,
+  onScroll: React.UIEventHandler<HTMLDivElement>
+}) => React.ReactNode;
+
+export interface ScrollSectionInformation<TSectionId extends string> {
   id: TSectionId;
-  renderScrollSectionContent: (input: {
-    ref: RefObject<HTMLElement>,
-    key: string
-  }) => React.ReactNode;
+  renderScrollSectionContent: RenderScrollSectionContentFunction;
   ref: RefObject<HTMLElement>
 }
 
@@ -15,12 +18,12 @@ export interface ScrollSectionGroupProps<TSectionId extends string> {
   setCurrentIndex: (input: number) => void;
   className: string;
   scrollThrottleThresholdMilliseconds: number;
-  sections: ScrollSection<TSectionId>[];
+  sections: ScrollSectionInformation<TSectionId>[];
   hasEnoughTimePassedSinceLastScrollEventActioned: (unixEpochTimestampMilliseconds: number) => boolean
   setLastScrollEventActionedUnixEpochTimestampMilliseconds: (unixEpochTimestampMilliseconds: number) => void
 }
 
-enum ScrollDirection {
+export enum ScrollDirection {
   UP = 'UP',
   DOWN = 'DOWN',
 }
@@ -74,10 +77,14 @@ export const ScrollSectionGroup = <TSectionId extends string>(props: ScrollSecti
       className={cn("overflow-y-scroll snap-y scroll-smooth", props.className)}
       onScroll={onScroll}
     >
-      {props.sections.map((section) => section.renderScrollSectionContent({
-        ref: section.ref,
-        key: `scroll-section-${section.id}`
-      }))}
+      {props.sections.map((section) => <ScrollSection
+        currentIndex={props.currentIndex}
+        section={section}
+        key={`scroll-section-${section.id}`}
+        changeViewedSectionBasedOnScroll={changeViewedSectionBasedOnScroll}
+        hasEnoughTimePassedSinceLastScrollEventActioned={props.hasEnoughTimePassedSinceLastScrollEventActioned}
+        setLastScrollEventActionedUnixEpochTimestampMilliseconds={props.setLastScrollEventActionedUnixEpochTimestampMilliseconds}
+      />)}
     </div>
   )
 }
