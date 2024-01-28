@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Filters from "@/app/pathogen/sarscov2/dashboard/filters";
+import { Filters } from "@/app/pathogen/sarscov2/dashboard/filters";
 import React, { useContext } from "react";
 import { ScrollText } from "lucide-react";
 import useSarsCov2Data from "@/hooks/useSarsCov2Data";

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, createRef } from "react";
+import { useCallback, useRef, useState, createRef, useMemo } from "react";
 import { ScrollSection, ScrollSectionGroup, ScrollSectionGroupProps } from "./scroll-section-group";
 
 interface MoveScrollSectionGroupToSectionInput<TSectionId extends string> {
@@ -14,6 +14,7 @@ interface UseScrollSectionGroupInput<TSectionId extends string> {
 interface UseScrollSectionGroupOutput<TSectionId extends string> {
   renderScrollSectionGroup: () => React.ReactNode;
   moveScrollSectionGroupToSection: (input: MoveScrollSectionGroupToSectionInput<TSectionId>) => void;
+  idOfCurrentlyViewedSection: TSectionId;
 }
 
 export const useScrollSectionGroup = <TSectionId extends string>(input: UseScrollSectionGroupInput<TSectionId>): UseScrollSectionGroupOutput<TSectionId> => {
@@ -58,9 +59,14 @@ export const useScrollSectionGroup = <TSectionId extends string>(input: UseScrol
       setLastScrollEventActionedUnixEpochTimestampMilliseconds(timeEventOccurredMilliseconds);
     }
   }, [input.scrollSectionGroupProps.sections, setCurrentIndex, hasEnoughTimePassedSinceLastScrollEventActioned]);
+  
+  const idOfCurrentlyViewedSection = useMemo(() => {
+    return input.scrollSectionGroupProps.sections[currentIndex].id;
+  }, [currentIndex, input.scrollSectionGroupProps.sections])
 
   return {
     renderScrollSectionGroup,
-    moveScrollSectionGroupToSection
+    moveScrollSectionGroupToSection,
+    idOfCurrentlyViewedSection
   }
 }
