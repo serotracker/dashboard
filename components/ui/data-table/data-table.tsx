@@ -34,7 +34,8 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   accessorKey: string,
 };
 
-interface DataTableProps<TData, TValue> {
+//TODO: SeanKennyNF remove this type, the typeguard, and all references to expanding and minimizing visualizations once the redesign is rolled out.
+interface OldDataTableProps<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];
   data: TData[];
   expandFilters: () => void;
@@ -42,13 +43,19 @@ interface DataTableProps<TData, TValue> {
   areFiltersExpanded: boolean;
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  expandFilters,
-  minimizeFilters,
-  areFiltersExpanded,
-}: DataTableProps<TData, TValue>) {
+const isOldDataTableProps = <TData, TValue>(props: DataTableProps<TData, TValue>): props is OldDataTableProps<TData, TValue> =>
+  'areFiltersExpanded' in props && typeof props.areFiltersExpanded === 'boolean' &&
+  'expandFilters' in props && typeof props.expandFilters === 'function' &&
+  'minimizeFilters' in props && typeof props.minimizeFilters === 'function'
+
+interface NewDataTableProps<TData, TValue> {
+  columns: DataTableColumnDef<TData, TValue>[];
+  data: TData[];
+}
+
+type DataTableProps<TData, TValue> = OldDataTableProps<TData, TValue> | NewDataTableProps<TData, TValue>;
+
+export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -57,8 +64,8 @@ export function DataTable<TData, TValue>({
     React.useState<VisibilityState>({});
 
   const table = useReactTable({
-    data,
-    columns,
+    data: props.data,
+    columns: props.columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -74,7 +81,7 @@ export function DataTable<TData, TValue>({
   });
 
   const { generateClassnameForCell, generateClassnameForHeader } =
-    useDataTableStyles<TData, TValue>({ columns });
+    useDataTableStyles<TData, TValue>({ columns: props.columns });
 
   const getAllVisibleData = () => {
     // Get the columns we want in the csv
@@ -129,15 +136,17 @@ export function DataTable<TData, TValue>({
           <b>Explore arbovirus seroprevalence estimates in our database</b>
         </h2>
         <div className="flex">
-          <Button
-            variant="outline"
-            className="bg-foreground mx-2 whitespace-nowrap"
-            onClick={() =>
-              areFiltersExpanded ? minimizeFilters() : expandFilters()
-            }
-          >
-            {areFiltersExpanded ? "Hide Filters" : "See Filters"}
-          </Button>
+          { isOldDataTableProps(props) && (
+            <Button
+              variant="outline"
+              className="bg-foreground mx-2 whitespace-nowrap"
+              onClick={() =>
+                props.areFiltersExpanded ? props.minimizeFilters() : props.expandFilters()
+              }
+            >
+              {props.areFiltersExpanded ? "Hide Filters" : "See Filters"}
+            </Button>
+          )}
           <Button
             variant="outline"
             className="bg-foreground mx-2 whitespace-nowrap"
@@ -230,7 +239,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={props.columns.length}
                   className="h-24 text-center"
                 >
                   No results.

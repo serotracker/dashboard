@@ -1,5 +1,6 @@
 import { RefObject } from "react";
 import { ArbovirusMap } from "../dashboard/(map)/ArbovirusMap";
+import { ArboDataTable } from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
 
 export enum RedesignedArbovirusPageSectionId {
   MAP = 'MAP',
@@ -34,9 +35,9 @@ export const redesignedArbovirusPageSections = [{
     <section
       key={input.key}
       ref={input.ref}
-      className="w-full h-[95%] bg-yellow-500 snap-start snap-always scroll-smooth"
+      className="w-full h-[95%] snap-start snap-always scroll-smooth overflow-scroll border-black border-b-2"
     >
-      placeholder for table
+      <ArboDataTable />
     </section>
   )
 }, {
