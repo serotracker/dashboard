@@ -38,7 +38,6 @@ export const pathogenColors: { [key: string]: string } = {
 
 //TODO: SeanKennyNF remove this type, the typeguard, and all references to expanding and minimizing visualizations once the redesign is rolled out.
 interface OldArbovirusMapProps {
-  className?: string;
   areVisualizationsExpanded: boolean;
   expandVisualizations: () => void;
   minimizeVisualizations: () => void;
