@@ -26,13 +26,23 @@ export function DatePicker({
   labelText,
   clearDateFilter,
 }: DatePickerProps) {
+  // Added state variable to control the visibility of the calendar modal
+  const [isCalendarOpen, setCalendarOpen] = React.useState(false);
+
   // Check if date is a valid Date object
   const isValidDate = date instanceof Date && !isNaN(date.getTime());
+
+  // Function to handle date selection
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    onChange(selectedDate);
+    setCalendarOpen(false); // Close the calendar modal after date selection
+  };
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          onClick={() => setCalendarOpen(true)} // Open the calendar modal
           variant={"outline"}
           className={cn(
             "w-full justify-between text-left font-normal",
@@ -58,12 +68,14 @@ export function DatePicker({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={onChange}
-          initialFocus
-        />
+        {isCalendarOpen && ( // Render the calendar only if isCalendarOpen is true
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={handleDateSelect} // Call handleDateSelect when a date is selected
+            initialFocus
+          />
+        )}
       </PopoverContent>
     </Popover>
   );
