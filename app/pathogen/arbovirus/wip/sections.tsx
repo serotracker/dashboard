@@ -1,6 +1,10 @@
 import { RefObject } from "react";
 import { ArbovirusMap } from "../dashboard/(map)/ArbovirusMap";
 import { ArboDataTable } from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
+import { VisualizationId, addToVisualizationInformation } from "../visualizations/visualizations";
+import { ZoomIn } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { VisualizationsSection } from "./visualizations-section";
 
 export enum RedesignedArbovirusPageSectionId {
   MAP = 'MAP',
@@ -8,7 +12,7 @@ export enum RedesignedArbovirusPageSectionId {
   VISUALIZATIONS = 'VISUALIZATIONS'
 }
 
-enum RedesignedArbovirusPageSectionUrlParam {
+export enum RedesignedArbovirusPageSectionUrlParam {
   map = 'map',
   table = 'table',
   visualizations = 'visualizations'
@@ -46,9 +50,9 @@ export const redesignedArbovirusPageSections = [{
     <section
       key={input.key}
       ref={input.ref}
-      className="w-full h-full bg-red-500 snap-start snap-always scroll-smooth"
+      className="w-full h-full snap-start snap-always scroll-smooth grid-cols-2 grid-rows-1 grid overflow-y-scroll gap-y-6 pr-4"
     >
-      placeholder for visualizations
+      <VisualizationsSection />
     </section>
   )
 }]
