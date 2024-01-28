@@ -25,7 +25,7 @@ import clsx from "clsx";
 
 //Study count by pathogen and antibody type
 
-type arbovirusesSF = "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV";
+export type arbovirusesSF = "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV";
 type arboviruses =
   | "Dengue"
   | "Zika"
@@ -36,7 +36,7 @@ type arboviruses =
 
 type antibodies = "IgG" | "IgM" | "NAb" | "NR" | "IgG, IgM";
 
-const convertArboSFtoArbo = (arbo: arbovirusesSF): arboviruses => {
+export const convertArboSFtoArbo = (arbo: arbovirusesSF): arboviruses => {
   switch (arbo) {
     case "DENV":
       return "Dengue";
@@ -301,7 +301,7 @@ export function WHORegionAndArbovirusBar() {
   );
 }
 
-function median(values: number[]): number {
+export function median(values: number[]): number {
   if (values.length === 0) {
     return 0; // there is no data for this region
   }
@@ -325,7 +325,7 @@ type AgeGroup =
   | "Seniors (65+ years)"
   | "Multiple groups";
 
-function CustomizedWHORegionTick(props: any) {
+export function SlantedTick(props: any) {
   const { x, y, payload } = props;
 
   return (
@@ -475,7 +475,7 @@ export function MedianSeroPrevByWHOregion() {
                 <XAxis
                   dataKey="region"
                   interval={0}
-                  tick={<CustomizedWHORegionTick />}
+                  tick={<SlantedTick />}
                 />
                 <YAxis
                   domain={[0, 100]}
@@ -660,7 +660,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
                   <XAxis
                     dataKey="region"
                     interval={0}
-                    tick={<CustomizedWHORegionTick />}
+                    tick={<SlantedTick />}
                   />
                   <YAxis
                     domain={[0, 100]}

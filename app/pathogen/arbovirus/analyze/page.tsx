@@ -42,6 +42,7 @@ export default function ArboAnalyze() {
       [VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS]: { height: undefined },
       [VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME]: { height: "h-full 2xl:h-3/4" },
       [VisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS]: { height: "h-full" },
+      [VisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME]: { height: "h-full" },
     })
 
     return (
