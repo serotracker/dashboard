@@ -252,14 +252,14 @@ interface WhoRegionAndArbovirusBarInput {
 export function WHORegionAndArbovirusBar(input: WhoRegionAndArbovirusBarInput) {
   const state = useContext(ArboContext);
   const legendProps = input.legendConfiguration === LegendConfiguration.RIGHT_ALIGNED ? {
-    layout:"vertical" as const,
-    verticalAlign:"middle" as const,
-    align:"right" as const,
-    wrapperStyle:{ right: -10 }
+    layout: "vertical" as const,
+    verticalAlign: "middle" as const,
+    align: "right" as const,
+    wrapperStyle: { right: -10 }
   } : {
-    layout:"horizontal" as const,
-    verticalAlign:"bottom" as const,
-    align:"center" as const,
+    layout: "horizontal" as const,
+    verticalAlign: "bottom" as const,
+    align: "center" as const,
   }
 
   const data: WHORegionAndArbovirusData[] = [];
