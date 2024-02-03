@@ -18,22 +18,27 @@ export default function ArbovirusDashboard() {
   const allMaps = useMap();
   const router = useRouter();
 
-  const renderPlotCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => (
-    <CardContent className={"px-0 h-full flex flex-col"}>
-      <div className="flex py-4">
-        <h3 className="w-full text-center text-lg">
-          Median seroprevalence of arboviruses by WHO region
-        </h3>
-        <button 
-          onClick={() => router.push(`visualizations?visualization=${getVisualizationInformationFromVisualizationId({visualizationId: VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION}).urlParameter}&referrerRoute=/pathogen/arbovirus/dashboard`)}
-          aria-label="See visualization in fullscreen"
-        >
-          <ZoomIn />
-        </button>
-      </div>
-      <MedianSeroPrevByWHOregion />
-    </CardContent>
-  ), [router])
+  const renderPlotCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => {
+    const visualizationId = VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS;
+    const visualizationInformation = getVisualizationInformationFromVisualizationId({ visualizationId });
+
+    return (
+      <CardContent className={"px-0 h-full flex flex-col"}>
+        <div className="flex py-4">
+          <h3 className="w-full text-center text-lg">
+            {visualizationInformation.displayName}
+          </h3>
+          <button 
+            onClick={() => router.push(`visualizations?visualization=${getVisualizationInformationFromVisualizationId({visualizationId: VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION}).urlParameter}&referrerRoute=/pathogen/arbovirus/dashboard`)}
+            aria-label="See visualization in fullscreen"
+          >
+            <ZoomIn />
+          </button>
+        </div>
+        {visualizationInformation.renderVisualization()}
+      </CardContent>
+    );
+  }, [router])
 
   const renderMapCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => (
     <ArbovirusMap
