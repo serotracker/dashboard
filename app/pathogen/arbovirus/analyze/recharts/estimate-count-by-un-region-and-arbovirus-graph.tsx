@@ -67,6 +67,8 @@ export function EstimateCountByUnRegionAndArbovirusGraph(input: WhoRegionAndArbo
       unRegion,
       ...dataGroupedByArbovirus,
     };
+    // A little bit silly but this sort is because "Australia and New Zealand" is very long and frequently
+    // runs off the page so this my way of making sure it ends up somewhere on the right of the graph.
   }).sort((a, b) => a.unRegion < b.unRegion ? 1 : -1);
 
   return (
