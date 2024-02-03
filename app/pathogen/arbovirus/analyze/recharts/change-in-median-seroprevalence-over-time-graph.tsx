@@ -176,7 +176,7 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
                   <XAxis
                     dataKey="intervalAsString"
                     interval={0}
-                    tick={<SlantedTick />}
+                    tick={(props) => SlantedTick({...props, tickSlant: 35 })}
                   />
                   <YAxis
                     domain={[0, 100]}

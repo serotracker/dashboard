@@ -339,7 +339,16 @@ type AgeGroup =
   | "Seniors (65+ years)"
   | "Multiple groups";
 
-export function SlantedTick(props: any) {
+interface SlantedTickProps {
+  x: number,
+  y: number,
+  payload: {
+    value: string
+  },
+  tickSlant: number
+}
+
+export function SlantedTick(props: SlantedTickProps) {
   const { x, y, payload } = props;
 
   return (
@@ -350,7 +359,7 @@ export function SlantedTick(props: any) {
         dy={16}
         textAnchor="end"
         fill="#666"
-        transform="rotate(-35)"
+        transform={`rotate(-${props.tickSlant})`}
       >
         {payload.value}
       </text>
@@ -489,7 +498,7 @@ export function MedianSeroPrevByWHOregion() {
                 <XAxis
                   dataKey="region"
                   interval={0}
-                  tick={<SlantedTick />}
+                  tick={(props) => SlantedTick({...props, tickSlant: 35 })}
                 />
                 <YAxis
                   domain={[0, 100]}
@@ -674,7 +683,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
                   <XAxis
                     dataKey="region"
                     interval={0}
-                    tick={<SlantedTick />}
+                    tick={(props) => SlantedTick({...props, tickSlant: 35 })}
                   />
                   <YAxis
                     domain={[0, 100]}

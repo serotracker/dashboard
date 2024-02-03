@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import {
   LegendConfiguration,
+  SlantedTick,
   arbovirusesSF,
   convertArboSFtoArbo,
 } from "../recharts";
@@ -10,7 +11,7 @@ import {
   typedObjectEntries,
   typedObjectFromEntries,
 } from "@/lib/utils";
-import { UNRegion } from "@/lib/un-regions";
+import { UNRegion, getLabelForUNRegion } from "@/lib/un-regions";
 import {
   Bar,
   BarChart,
@@ -41,15 +42,21 @@ export function EstimateCountByUnRegionAndArbovirusGraph(input: WhoRegionAndArbo
           layout: "horizontal" as const,
           verticalAlign: "bottom" as const,
           align: "center" as const,
+          wrapperStyle: {
+            paddingTop: 40,
+            bottom: 0
+          }
         };
-
+  
+  const dataToUse = state.filteredData.filter((dataPoint) => !!dataPoint.unRegion);
+  
   const rechartsData = typedObjectEntries(
     typedGroupBy(
-      state.filteredData,
+      dataToUse,
       (dataPoint) => dataPoint.unRegion as UNRegion
     )
   ).map(([key, value]) => {
-    const unRegion = key;
+    const unRegion = getLabelForUNRegion(key);
     const dataGroupedByArbovirus = typedObjectFromEntries(
       typedObjectEntries(
         typedGroupBy(value, (dataPoint) => dataPoint.pathogen as arbovirusesSF)
@@ -60,7 +67,7 @@ export function EstimateCountByUnRegionAndArbovirusGraph(input: WhoRegionAndArbo
       unRegion,
       ...dataGroupedByArbovirus,
     };
-  });
+  }).sort((a, b) => a.unRegion < b.unRegion ? 1 : -1);
 
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
@@ -70,13 +77,17 @@ export function EstimateCountByUnRegionAndArbovirusGraph(input: WhoRegionAndArbo
         data={rechartsData}
         margin={{
           top: 0,
-          right: 30,
-          left: 0,
-          bottom: 0,
+          right: 0,
+          left: 20,
+          bottom: 60
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="unRegion" />
+        <XAxis
+          dataKey="unRegion"
+          interval={0}
+          tick={(props) => SlantedTick({...props, tickSlant: 20 })}
+        />
         <YAxis />
         <Tooltip itemStyle={{ color: "black" }} />
         <Legend {...legendProps} />
