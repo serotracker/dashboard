@@ -29,7 +29,7 @@ export default function ArbovirusDashboard() {
             {visualizationInformation.displayName}
           </h3>
           <button 
-            onClick={() => router.push(`visualizations?visualization=${getVisualizationInformationFromVisualizationId({visualizationId: VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION}).urlParameter}&referrerRoute=/pathogen/arbovirus/dashboard`)}
+            onClick={() => router.push(`visualizations?visualization=${getVisualizationInformationFromVisualizationId({ visualizationId }).urlParameter}&referrerRoute=/pathogen/arbovirus/dashboard`)}
             aria-label="See visualization in fullscreen"
           >
             <ZoomIn />
