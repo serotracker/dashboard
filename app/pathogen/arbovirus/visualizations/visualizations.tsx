@@ -97,7 +97,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationUrlParameter["estimate-count-by-who-region-and-arbovirus"],
     displayName:
       VisualizationDisplayName["Estimate count by WHO region and arbovirus"],
-    renderVisualization: WHORegionAndArbovirusBar,
+    renderVisualization: () => WHORegionAndArbovirusBar({}),
     classNameWhenFullscreen: "p-16"
   },
   [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: {
