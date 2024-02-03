@@ -4,7 +4,7 @@ import React, { useCallback, useMemo } from "react";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { ArbovirusMap } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
-import { MedianSeroPrevByWHOregion } from "../analyze/recharts";
+import { LegendConfiguration, MedianSeroPrevByWHOregion, WHORegionAndArbovirusBar } from "../analyze/recharts";
 import { FilterableField, Filters } from "./filters";
 import { CardConfiguration, CardStyle, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
 import { CardCollection } from "@/components/ui/card-collection/card-collection";
@@ -35,7 +35,7 @@ export default function ArbovirusDashboard() {
             <ZoomIn />
           </button>
         </div>
-        {visualizationInformation.renderVisualization()}
+        <WHORegionAndArbovirusBar legendConfiguration={LegendConfiguration.BOTTOM_ALIGNED} />
       </CardContent>
     );
   }, [router])

@@ -240,13 +240,13 @@ interface WHORegionAndArbovirusData extends dataStratifiedByArbovirus {
   region: string;
 }
 
-enum LegendConfiguration {
+export enum LegendConfiguration {
   RIGHT_ALIGNED = 'RIGHT_ALIGNED',
   BOTTOM_ALIGNED = 'BOTTOM_ALIGNED'
 }
 
 interface WhoRegionAndArbovirusBarInput {
-  legendConfiguration?: LegendConfiguration;
+  legendConfiguration: LegendConfiguration;
 }
 
 export function WHORegionAndArbovirusBar(input: WhoRegionAndArbovirusBarInput) {
