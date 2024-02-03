@@ -174,11 +174,11 @@ export const getVisualizationInformationFromVisualizationUrlParameter = (
   );
 };
 
-type AddVisualizationInformationInput<TNewInformation extends Record<string, unknown>> = Record<VisualizationId, TNewInformation>;
+type AddVisualizationInformationInput<TVisualizationId extends VisualizationId, TNewInformation extends Record<string, unknown>> = Record<TVisualizationId, TNewInformation>;
 type AddVisualizationInformationOutput<TNewInformation extends Record<string, unknown>> = (TNewInformation & VisualizationInformation)[];
 
-export const addToVisualizationInformation = <TNewInformation extends Record<string, unknown>>(
-  input: AddVisualizationInformationInput<TNewInformation>
+export const addToVisualizationInformation = <TVisualizationId extends VisualizationId, TNewInformation extends Record<string, unknown>>(
+  input: AddVisualizationInformationInput<TVisualizationId, TNewInformation>
 ): AddVisualizationInformationOutput<TNewInformation> => {
   return typedObjectEntries(input).map(([key, value]) => ({
     ...allVisualizationInformation[key],
