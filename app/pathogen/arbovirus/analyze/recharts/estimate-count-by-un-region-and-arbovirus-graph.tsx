@@ -43,7 +43,7 @@ export function EstimateCountByUnRegionAndArbovirusGraph(input: WhoRegionAndArbo
           verticalAlign: "bottom" as const,
           align: "center" as const,
           wrapperStyle: {
-            paddingTop: 40,
+            paddingTop: 10,
             bottom: 0
           }
         };
@@ -77,9 +77,9 @@ export function EstimateCountByUnRegionAndArbovirusGraph(input: WhoRegionAndArbo
         data={rechartsData}
         margin={{
           top: 0,
-          right: 0,
-          left: 20,
-          bottom: 60
+          right: 20,
+          left: 40,
+          bottom: 65
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
