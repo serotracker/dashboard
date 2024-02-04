@@ -92,12 +92,8 @@ export function PathogenCountryHighlightLayer<
     <Source {...mapCountryVectors.sources[countryLayer.source]}>
       <Layer
         {...countryLayer}
-<<<<<<< HEAD
         id='country-highlight-layer'
-        paint={generatePaintForLayer({ dataLayer })}
-=======
         paint={generatePaintForLayer({ dataPoints })}
->>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
         beforeId={positionedUnderLayerWithId}
       />
     </Source>

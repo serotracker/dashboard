@@ -17,18 +17,15 @@ import {
   shouldLayerBeUsedForCountryHighlighting,
 } from "./pathogen-map-layer";
 import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-layer";
-<<<<<<< HEAD
 import { countryNameToIso31661Alpha3CodeMap, iso31661Alpha3CodeToCountryNameMap } from "@/lib/country-iso-3166-1-alpha-3-codes";
 import { getBoundingBoxCenter, getBoundingBoxFromCountryName } from "@/lib/bounding-boxes";
 import { typedGroupBy } from "@/lib/utils";
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
-=======
 import isEqual from "lodash/isEqual";
 
 export interface MarkerCollection {
   [key: string]: JSX.Element;
 }
->>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
 
 export interface PathogenDataPointPropertiesBase {
   id: string;
@@ -113,14 +110,7 @@ export function PathogenMap<
     return;
   }
 
-<<<<<<< HEAD
-=======
-  const layerForCountryHighlighting = layers.find(
-    (
-      layer
-    ): layer is PathogenMapLayerInfo =>
-      shouldLayerBeUsedForCountryHighlighting(layer)
-  );
+
 
   const onRender = (event: mapboxgl.MapboxEvent) => {
     const map = event.target;
@@ -141,7 +131,6 @@ export function PathogenMap<
     }
   }
 
->>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
   return (
     <Map
       id={id}

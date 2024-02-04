@@ -12,15 +12,12 @@ import React, { useContext, useState } from "react";
 import { useArboData } from "@/hooks/useArboData";
 import { ArboContext } from "@/contexts/arbo-context";
 import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
-import { MarkerCollection, PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
+import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusFilter } from "./MapArbovirusFilter";
 import { MapExpandPlotsPrompt } from "./MapExpandPlotsPrompt";
-<<<<<<< HEAD
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
 import { ArboCountryPopupContent } from "../ArboCountryPopUpContent";
-=======
 import { computeClusterMarkers } from "./arbo-map-cluster-utils";
->>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
   ZIKV: "data-[state=checked]:bg-zikv",
@@ -48,7 +45,6 @@ interface OldArbovirusMapProps {
   minimizeVisualizations: () => void;
 }
 
-<<<<<<< HEAD
 const isOldArbovirusMapProps = (props: ArbovirusMapProps): props is OldArbovirusMapProps =>
   'areVisualizationsExpanded' in props && typeof props.areVisualizationsExpanded === 'boolean' &&
   'expandVisualizations' in props && typeof props.expandVisualizations === 'function' &&
@@ -58,23 +54,23 @@ type NewArbovirusMapProps = {}
 
 type ArbovirusMapProps = OldArbovirusMapProps | NewArbovirusMapProps;
 
-export function ArbovirusMap(props: ArbovirusMapProps) {
-  const state = useContext(ArboContext);
-  const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
-  const { data }  = useArboData();
-=======
 export function ArbovirusMap(input: ArbovirusMapProps) {
-  const {
-    expandVisualizations,
-    minimizeVisualizations,
-    areVisualizationsExpanded,
-  } = input;
+  
+  const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const state = useContext(ArboContext);
   const { data } = useArboData();
->>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
 
   if (!data) {
     return <span> Loading... </span>;
+  }
+
+  let expandVisualizations = () => {};
+  let minimizeVisualizations = () => {};
+  let areVisualizationsExpanded;
+  if (isOldArbovirusMapProps(input)) {
+    expandVisualizations = input.expandVisualizations;
+    minimizeVisualizations = input.minimizeVisualizations;
+    areVisualizationsExpanded = input.areVisualizationsExpanded;
   }
 
   return (
@@ -115,7 +111,6 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
               },
             },
           ]}
-<<<<<<< HEAD
           generatePopupContent={(input) => {
             if(input.layerId === 'country-highlight-layer') {
               return <ArboCountryPopupContent record={input.data} />
@@ -123,11 +118,7 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
           
             return <ArboStudyPopupContent record={input.data} />
           }}
-        />
-=======
-          generatePopupContent={(record) => (
-            <ArboStudyPopupContent record={record} />
-          )}
+        
           dataPoints={state.filteredData}
           clusterProperties={{
             ZIKV: ["+", ["case", ["==", ["get", "pathogen"], "ZIKV"], 1, 0]],
@@ -139,7 +130,6 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
           }} 
           computeClusterMarkers={computeClusterMarkers}        
           />
->>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
       </div>
       <MapArbovirusStudySubmissionPrompt 
         hidden={!isStudySubmissionPromptVisible}
@@ -167,16 +157,9 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
             </p>
           </CardContent>
         </Card>
-<<<<<<< HEAD
-        {isOldArbovirusMapProps(props) && 
-          //TODO: SeanKennyNF remove the expand plots prompt when the website redesign is fully rolled out.
-          <MapExpandPlotsPrompt
-            text={props.areVisualizationsExpanded ? "Hide Figures" : "See Figures"}
-            onClick={props.areVisualizationsExpanded ? props.minimizeVisualizations : props.expandVisualizations}
-          />
-        }
-=======
-        <MapExpandPlotsPrompt
+        {
+          isOldArbovirusMapProps(input) && 
+            <MapExpandPlotsPrompt
           text={areVisualizationsExpanded ? "Hide Figures" : "See Figures"}
           onClick={
             areVisualizationsExpanded
@@ -184,7 +167,9 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
               : expandVisualizations
           }
         />
->>>>>>> 08eb8d9 (Added in clustering for the map, hover modal, as well as zoom functionality)
+          
+        }
+        
       </div>
     </>
   );

@@ -6,7 +6,6 @@ import React, { useContext } from "react";
 import { ScrollText } from "lucide-react";
 import useSarsCov2Data from "@/hooks/useSarsCov2Data";
 import {
-  SarsCov2ActionType,
   SarsCov2Context,
 } from "@/contexts/sarscov2-context";
 import { MarkerCollection, PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
@@ -90,7 +89,6 @@ export default function MapAndFilters() {
                   },
                 },
               ]}
-<<<<<<< HEAD
               generatePopupContent={(input) => {
                 if(input.layerId === 'country-highlight-layer') {
                   throw new Error("The SARS CoV2 Country pop-up is unimplemented");
@@ -98,11 +96,8 @@ export default function MapAndFilters() {
           
                 return <SarsCov2StudyPopupContent record={input.data} />
               }}
-            />
-=======
-              generatePopupContent={(record) => (
-                <SarsCov2StudyPopupContent record={record} />
-              )}
+            
+            
               dataPoints={state.filteredData.map((dataPoint) => ({
                 ...dataPoint,
                 longitude: dataPoint.pin_longitude,
@@ -115,7 +110,6 @@ export default function MapAndFilters() {
               computeClusterMarkers={function (props: { features: MapboxGeoJSONFeature[]; markers: MarkerCollection; map: Map; }): MarkerCollection {
                 throw new Error("Function not implemented.");
               } }            />
->>>>>>> 5515f8e (fixed some type errors)
           </div>
           <Card className={"absolute bottom-1 right-1 "}>
             <CardHeader className={"py-3"}>
