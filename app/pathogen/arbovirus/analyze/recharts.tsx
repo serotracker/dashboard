@@ -249,8 +249,27 @@ interface WHORegionAndArbovirusData extends dataStratifiedByArbovirus {
   region: string;
 }
 
-export function WHORegionAndArbovirusBar() {
+export enum LegendConfiguration {
+  RIGHT_ALIGNED = 'RIGHT_ALIGNED',
+  BOTTOM_ALIGNED = 'BOTTOM_ALIGNED'
+}
+
+interface WhoRegionAndArbovirusBarInput {
+  legendConfiguration: LegendConfiguration;
+}
+
+export function WHORegionAndArbovirusBar(input: WhoRegionAndArbovirusBarInput) {
   const state = useContext(ArboContext);
+  const legendProps = input.legendConfiguration === LegendConfiguration.RIGHT_ALIGNED ? {
+    layout: "vertical" as const,
+    verticalAlign: "middle" as const,
+    align: "right" as const,
+    wrapperStyle: { right: -10 }
+  } : {
+    layout: "horizontal" as const,
+    verticalAlign: "bottom" as const,
+    align: "center" as const,
+  }
 
   const data: WHORegionAndArbovirusData[] = [];
 
@@ -293,12 +312,7 @@ export function WHORegionAndArbovirusBar() {
         <XAxis dataKey="region" />
         <YAxis />
         <Tooltip itemStyle={{"color": "black"}} />
-        <Legend
-          layout="vertical"
-          verticalAlign="middle"
-          align="right"
-          wrapperStyle={{ right: -10 }}
-        />
+        <Legend {...legendProps} />
         <Bar dataKey="Zika" stackId="a" fill={pathogenColors.ZIKV} />
         <Bar dataKey="Dengue" stackId="a" fill={pathogenColors.DENV} />
         <Bar dataKey="Chikungunya" stackId="a" fill={pathogenColors.CHIKV} />

@@ -1,5 +1,5 @@
 import { typedObjectEntries } from "@/lib/utils";
-import { AntibodyPathogenBar, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "../analyze/recharts";
+import { AntibodyPathogenBar, LegendConfiguration, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "../analyze/recharts";
 import { ChangeInMedianSeroprevalenceOverTimeGraph } from "../analyze/recharts/change-in-median-seroprevalence-over-time-graph";
 
 export enum VisualizationId {
@@ -97,7 +97,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationUrlParameter["estimate-count-by-who-region-and-arbovirus"],
     displayName:
       VisualizationDisplayName["Estimate count by WHO region and arbovirus"],
-    renderVisualization: WHORegionAndArbovirusBar,
+    renderVisualization: () => WHORegionAndArbovirusBar({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED }),
     classNameWhenFullscreen: "p-16"
   },
   [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: {
