@@ -13,7 +13,7 @@ export type PopupContentGenerator<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > = (input: PopupContentGeneratorInput<TPathogenDataPointProperties>) => React.ReactNode;
 
-type VisiblePopupInfo<
+export type VisiblePopupInfo<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > = { visible: true; properties: TPathogenDataPointProperties, layerId: string };
 type HiddenPopupInfo = { visible: false; properties: null, layerId: null };

@@ -21,6 +21,7 @@ import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-laye
 import { countryNameToIso31661Alpha3CodeMap, iso31661Alpha3CodeToCountryNameMap } from "@/lib/country-iso-3166-1-alpha-3-codes";
 import { getBoundingBoxCenter, getBoundingBoxFromCountryName } from "@/lib/bounding-boxes";
 import { typedGroupBy } from "@/lib/utils";
+import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 
 export interface PathogenDataPointPropertiesBase {
   id: string;
@@ -48,56 +49,24 @@ export function PathogenMap<
   const [popUpInfo, _setPopUpInfo] = useState<
     PopupInfo<TPathogenDataPointProperties>
   >({ visible: false, properties: null, layerId: null });
+  const { setPopUpInfoForCountryHighlightLayer } = useCountryHighlightLayer();
 
   const layerForCountryHighlighting = layers.find((layer): layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> =>
     shouldLayerBeUsedForCountryHighlighting(layer)
   );
 
   const setPopUpInfo = (newPopUpInfo: PopupInfo<TPathogenDataPointProperties>) => {
-    if(newPopUpInfo.layerId !== 'country-highlight-layer') {
-      _setPopUpInfo(newPopUpInfo);
+    if(newPopUpInfo.layerId === 'country-highlight-layer') {
+      setPopUpInfoForCountryHighlightLayer({
+        newPopUpInfo,
+        layerForCountryHighlighting,
+        setPopUpInfo: _setPopUpInfo
+      });
+
       return;
     }
 
-    if(!layerForCountryHighlighting) {
-      return;
-    }
-
-    if('CODE' in newPopUpInfo.properties && !!newPopUpInfo.properties.CODE && typeof newPopUpInfo.properties.CODE === 'string') {
-      const alpha3CountryCode = newPopUpInfo.properties['CODE'];
-      const countryName = iso31661Alpha3CodeToCountryNameMap[alpha3CountryCode];
-      const countryBoundingBox = getBoundingBoxFromCountryName(countryName);
-
-      if(!countryBoundingBox) {
-        return;
-      }
-
-      const dataForCountry = layerForCountryHighlighting.dataPoints
-        .map((dataPoint) => ({...dataPoint, alpha3CountryCode: countryNameToIso31661Alpha3CodeMap[dataPoint.country]}))
-        .filter((dataPoint) => dataPoint.alpha3CountryCode === alpha3CountryCode);
-
-      if(dataForCountry.length === 0) {
-        return;
-      }
-
-      const countryBoundingBoxCenter = getBoundingBoxCenter(countryBoundingBox);
-
-      const popUpDataWithCountryInformation = {
-        layerId: newPopUpInfo.layerId,
-        visible: newPopUpInfo.visible,
-        properties: {
-          ...newPopUpInfo.properties,
-          id: alpha3CountryCode,
-          alpha3CountryCode,
-          countryName: iso31661Alpha3CodeToCountryNameMap[alpha3CountryCode],
-          latitude: countryBoundingBoxCenter.latitude,
-          longitude: countryBoundingBoxCenter.longitude,
-          dataPoints: dataForCountry
-        }
-      }
-
-      _setPopUpInfo(popUpDataWithCountryInformation);
-    }
+    _setPopUpInfo(newPopUpInfo);
   }
 
   const { cursor, onMouseLeave, onMouseEnter, onMouseDown } =
