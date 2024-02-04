@@ -75,7 +75,6 @@ export const ScrollSectionGroup = <TSectionId extends string>(props: ScrollSecti
   return (
     <div
       className={cn("overflow-y-scroll snap-y scroll-smooth", props.className)}
-      onScroll={onScroll}
     >
       {props.sections.map((section) => <ScrollSection
         currentIndex={props.currentIndex}
