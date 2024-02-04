@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -12,14 +12,31 @@ import { useMap } from "react-map-gl";
 import { ZoomIn } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { VisualizationId, getVisualizationInformationFromVisualizationId } from "../visualizations/visualizations";
+import { EstimateCountByUnRegionAndArbovirusGraph } from "../analyze/recharts/estimate-count-by-un-region-and-arbovirus-graph";
+import { ArboContext } from "@/contexts/arbo-context";
+import { useArboDataInsights } from "@/hooks/useArboDataInsights";
 
 export default function ArbovirusDashboard() {
   // Need to make the visualizations dynamic. Unsure how to do this well using CSS.
   const allMaps = useMap();
   const router = useRouter();
+  const { filteredData } = useContext(ArboContext);
+  const { getNumberOfUniqueValuesForField } = useArboDataInsights();
 
   const renderPlotCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => {
-    const visualizationId = VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS;
+    const areLessThanTwoWHORegionsPresentInData = getNumberOfUniqueValuesForField({
+      filteredData: filteredData.filter((dataPoint) => !!dataPoint.whoRegion),
+      fieldName: 'whoRegion'
+    }) < 2;
+
+    const visualizationId = areLessThanTwoWHORegionsPresentInData
+      ? VisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS
+      : VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS;
+
+    const renderVisualization = visualizationId === VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS 
+      ? () => <WHORegionAndArbovirusBar legendConfiguration={LegendConfiguration.BOTTOM_ALIGNED} />
+      : () => <EstimateCountByUnRegionAndArbovirusGraph legendConfiguration={LegendConfiguration.BOTTOM_ALIGNED} />;
+
     const visualizationInformation = getVisualizationInformationFromVisualizationId({ visualizationId });
 
     return (
@@ -35,10 +52,10 @@ export default function ArbovirusDashboard() {
             <ZoomIn />
           </button>
         </div>
-        <WHORegionAndArbovirusBar legendConfiguration={LegendConfiguration.BOTTOM_ALIGNED} />
+        {renderVisualization()}
       </CardContent>
     );
-  }, [router])
+  }, [router, filteredData, getNumberOfUniqueValuesForField])
 
   const renderMapCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => (
     <ArbovirusMap
