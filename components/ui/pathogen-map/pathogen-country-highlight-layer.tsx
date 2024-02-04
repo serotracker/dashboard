@@ -94,6 +94,7 @@ export function PathogenCountryHighlightLayer<
     <Source {...mapCountryVectors.sources[countryLayer.source]}>
       <Layer
         {...countryLayer}
+        id='country-highlight-layer'
         paint={generatePaintForLayer({ dataLayer })}
         beforeId={positionedUnderLayerWithId}
       />

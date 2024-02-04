@@ -18,6 +18,8 @@ import {
   shouldLayerBeUsedForCountryHighlighting,
 } from "./pathogen-map-layer";
 import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-layer";
+import { countryNameToIso31661Alpha3CodeMap, iso31661Alpha3CodeToCountryNameMap } from "@/lib/country-iso-3166-1-alpha-3-codes";
+import { getBoundingBoxCenter, getBoundingBoxFromCountryName } from "@/lib/bounding-boxes";
 
 export interface PathogenDataPointPropertiesBase {
   id: string;
@@ -42,9 +44,60 @@ export function PathogenMap<
   generatePopupContent,
   layers,
 }: PathogenMapProps<TPathogenDataPointProperties>) {
-  const [popUpInfo, setPopUpInfo] = useState<
+  const [popUpInfo, _setPopUpInfo] = useState<
     PopupInfo<TPathogenDataPointProperties>
-  >({ visible: false, properties: null });
+  >({ visible: false, properties: null, layerId: null });
+
+  const layerForCountryHighlighting = layers.find((layer): layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> =>
+    shouldLayerBeUsedForCountryHighlighting(layer)
+  );
+
+  const setPopUpInfo = (newPopUpInfo: PopupInfo<TPathogenDataPointProperties>) => {
+    if(newPopUpInfo.layerId !== 'country-highlight-layer') {
+      _setPopUpInfo(newPopUpInfo);
+      return;
+    }
+
+    if(!layerForCountryHighlighting) {
+      return;
+    }
+
+    if('CODE' in newPopUpInfo.properties && !!newPopUpInfo.properties.CODE && typeof newPopUpInfo.properties.CODE === 'string') {
+      const alpha3CountryCode = newPopUpInfo.properties['CODE'];
+      const countryName = iso31661Alpha3CodeToCountryNameMap[alpha3CountryCode];
+      const countryBoundingBox = getBoundingBoxFromCountryName(countryName);
+
+      if(!countryBoundingBox) {
+        return;
+      }
+
+      const dataForCountry = layerForCountryHighlighting.dataPoints
+        .map((dataPoint) => ({...dataPoint, alpha3CountryCode: countryNameToIso31661Alpha3CodeMap[dataPoint.country]}))
+        .filter((dataPoint) => dataPoint.alpha3CountryCode === alpha3CountryCode);
+
+      if(dataForCountry.length === 0) {
+        return;
+      }
+
+      const countryBoundingBoxCenter = getBoundingBoxCenter(countryBoundingBox);
+
+      const popUpDataWithCountryInformation = {
+        layerId: newPopUpInfo.layerId,
+        visible: newPopUpInfo.visible,
+        properties: {
+          ...newPopUpInfo.properties,
+          id: alpha3CountryCode,
+          alpha3CountryCode,
+          countryName: iso31661Alpha3CodeToCountryNameMap[alpha3CountryCode],
+          latitude: countryBoundingBoxCenter.latitude,
+          longitude: countryBoundingBoxCenter.longitude,
+          estimateCountsByArbovirus: {}
+        }
+      }
+
+      _setPopUpInfo(popUpDataWithCountryInformation);
+    }
+  }
 
   const { cursor, onMouseLeave, onMouseEnter, onMouseDown } =
     usePathogenMapMouse({
@@ -65,10 +118,6 @@ export function PathogenMap<
     return;
   }
 
-  const layerForCountryHighlighting = layers.find((layer): layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> =>
-    shouldLayerBeUsedForCountryHighlighting(layer)
-  );
-
   return (
     <Map
       id={id}
@@ -83,7 +132,7 @@ export function PathogenMap<
       scrollZoom={false}
       minZoom={2}
       maxZoom={14}
-      interactiveLayerIds={layers.map((layer) => layer.id)}
+      interactiveLayerIds={[...layers.map((layer) => layer.id), 'country-highlight-layer']}
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string}
       onMouseEnter={onMouseEnter}
       onMouseDown={onMouseDown}
