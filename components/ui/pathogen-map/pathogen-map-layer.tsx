@@ -1,7 +1,6 @@
 import { Layer, Source } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { PathogenMapCursor } from "./use-pathogen-map-mouse";
-import { arbovirusesSF } from "@/app/pathogen/arbovirus/analyze/recharts";
 
 export interface PathogenMapLayerInfoWithoutCountryHighlighting<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
@@ -20,7 +19,7 @@ export interface PathogenMapLayerInfoWithCountryHighlighting<
   cursor: PathogenMapCursor;
   isDataUsedForCountryHighlighting: true;
   layerPaint: mapboxgl.CirclePaint;
-  dataPoints: (TPathogenDataPointProperties & { country: string, pathogen: arbovirusesSF })[];
+  dataPoints: (TPathogenDataPointProperties & { country: string })[];
 }
 
 export type PathogenMapLayerInfo<
