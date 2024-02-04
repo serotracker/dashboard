@@ -2,11 +2,10 @@ import React from "react";
 import { ArboProviders } from "@/contexts/arbo-context";
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
-import { useQuery } from "@tanstack/react-query";
-import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
 import { arbovirusEstimatesQuery } from "@/hooks/useArboData";
 import { arbovirusFiltersQuery } from "@/hooks/useArboFilters";
+import { groupedTeamMembersQuery } from "@/hooks/useGroupedTeamMemberData";
 
 export default async function ArboLayout({
   children,
@@ -22,6 +21,10 @@ export default async function ArboLayout({
   await queryClient.prefetchQuery({
     queryKey: ["arbovirusFiltersQuery"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ["groupedTeamMembersQuery"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedTeamMembersQuery)
   });
 
   const dehydratedState = dehydrate(queryClient);
