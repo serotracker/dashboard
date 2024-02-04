@@ -41,7 +41,7 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
 
   const onMouseDown = (event: mapboxgl.MapLayerMouseEvent) => {
     if (!event.features || event.features.length === 0) {
-      setPopUpInfo({ visible: false, properties: null });
+      setPopUpInfo({ visible: false, properties: null, layerId: null });
 
       return;
     }
@@ -49,12 +49,13 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
     const clickedLayerId = event.features[0].layer.id;
     const clickedLayer = layers.find((layer) => layer.id === clickedLayerId);
 
-    if (!clickedLayer) {
+    if (!clickedLayer && clickedLayerId !== 'country-highlight-layer') {
       return;
     }
 
     setPopUpInfo({
       visible: true,
+      layerId: clickedLayerId,
       properties: event.features[0].properties as TPathogenDataPointProperties,
     });
   };

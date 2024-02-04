@@ -18,6 +18,10 @@ import {
   shouldLayerBeUsedForCountryHighlighting,
 } from "./pathogen-map-layer";
 import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-layer";
+import { countryNameToIso31661Alpha3CodeMap, iso31661Alpha3CodeToCountryNameMap } from "@/lib/country-iso-3166-1-alpha-3-codes";
+import { getBoundingBoxCenter, getBoundingBoxFromCountryName } from "@/lib/bounding-boxes";
+import { typedGroupBy } from "@/lib/utils";
+import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 
 export interface PathogenDataPointPropertiesBase {
   id: string;
@@ -42,9 +46,28 @@ export function PathogenMap<
   generatePopupContent,
   layers,
 }: PathogenMapProps<TPathogenDataPointProperties>) {
-  const [popUpInfo, setPopUpInfo] = useState<
+  const [popUpInfo, _setPopUpInfo] = useState<
     PopupInfo<TPathogenDataPointProperties>
-  >({ visible: false, properties: null });
+  >({ visible: false, properties: null, layerId: null });
+  const { setPopUpInfoForCountryHighlightLayer } = useCountryHighlightLayer();
+
+  const layerForCountryHighlighting = layers.find((layer): layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> =>
+    shouldLayerBeUsedForCountryHighlighting(layer)
+  );
+
+  const setPopUpInfo = (newPopUpInfo: PopupInfo<TPathogenDataPointProperties>) => {
+    if(newPopUpInfo.layerId === 'country-highlight-layer') {
+      setPopUpInfoForCountryHighlightLayer({
+        newPopUpInfo,
+        layerForCountryHighlighting,
+        setPopUpInfo: _setPopUpInfo
+      });
+
+      return;
+    }
+
+    _setPopUpInfo(newPopUpInfo);
+  }
 
   const { cursor, onMouseLeave, onMouseEnter, onMouseDown } =
     usePathogenMapMouse({
@@ -65,10 +88,6 @@ export function PathogenMap<
     return;
   }
 
-  const layerForCountryHighlighting = layers.find((layer): layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> =>
-    shouldLayerBeUsedForCountryHighlighting(layer)
-  );
-
   return (
     <Map
       id={id}
@@ -83,7 +102,7 @@ export function PathogenMap<
       scrollZoom={false}
       minZoom={2}
       maxZoom={14}
-      interactiveLayerIds={layers.map((layer) => layer.id)}
+      interactiveLayerIds={[...layers.map((layer) => layer.id), 'country-highlight-layer']}
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string}
       onMouseEnter={onMouseEnter}
       onMouseDown={onMouseDown}

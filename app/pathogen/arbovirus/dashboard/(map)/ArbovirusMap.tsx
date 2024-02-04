@@ -16,6 +16,7 @@ import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusFilter } from "./MapArbovirusFilter";
 import { MapExpandPlotsPrompt } from "./MapExpandPlotsPrompt";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
+import { ArboCountryPopupContent } from "../ArboCountryPopUpContent";
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
   ZIKV: "border-zikv data-[state=checked]:bg-zikv",
@@ -97,9 +98,13 @@ export function ArbovirusMap(props: ArbovirusMapProps) {
               },
             },
           ]}
-          generatePopupContent={(record) => (
-            <ArboStudyPopupContent record={record} />
-          )}
+          generatePopupContent={(input) => {
+            if(input.layerId === 'country-highlight-layer') {
+              return <ArboCountryPopupContent record={input.data} />
+            }
+          
+            return <ArboStudyPopupContent record={input.data} />
+          }}
         />
       </div>
       <MapArbovirusStudySubmissionPrompt 

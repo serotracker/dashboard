@@ -1,3 +1,5 @@
+import { typedObjectEntries, typedObjectFromEntries } from "./utils";
+
 export const countryNameToIso31661Alpha3CodeMap: Record<string, string> = {
   Afghanistan: "AFG",
   Angola: "AGO",
@@ -193,3 +195,7 @@ export const countryNameToIso31661Alpha3CodeMap: Record<string, string> = {
   "St Lucia": "LCA",
   "Saint Lucia": "LCA",
 };
+
+export const iso31661Alpha3CodeToCountryNameMap: Record<string, string> = typedObjectFromEntries(
+  typedObjectEntries(countryNameToIso31661Alpha3CodeMap).map(([key, value]) => [value, key])
+);
