@@ -95,9 +95,13 @@ export default function MapAndFilters() {
                   },
                 },
               ]}
-              generatePopupContent={(record) => (
-                <SarsCov2StudyPopupContent record={record} />
-              )}
+              generatePopupContent={(input) => {
+                if(input.layerId === 'country-highlight-layer') {
+                  throw new Error("The SARS CoV2 Country pop-up is unimplemented");
+                }
+          
+                return <SarsCov2StudyPopupContent record={input.data} />
+              }}
             />
           </div>
           <Card className={"absolute bottom-1 right-1 "}>
