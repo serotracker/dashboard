@@ -67,9 +67,7 @@ export function PathogenMap<
   >({ visible: false, properties: null, layerId: null });
   const { setPopUpInfoForCountryHighlightLayer } = useCountryHighlightLayer();
 
-  const layerForCountryHighlighting = layers.find((layer): layer is PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> =>
-    shouldLayerBeUsedForCountryHighlighting(layer)
-  );
+  const layerForCountryHighlighting = layers.find(layer => shouldLayerBeUsedForCountryHighlighting(layer));
 
   const setPopUpInfo = (newPopUpInfo: PopupInfo<TPathogenDataPointProperties>) => {
     if(newPopUpInfo.layerId === 'country-highlight-layer') {
