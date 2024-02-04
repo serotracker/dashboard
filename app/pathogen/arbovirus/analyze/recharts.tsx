@@ -25,6 +25,15 @@ import clsx from "clsx";
 
 //Study count by pathogen and antibody type
 
+export enum ShortformArbovirus {
+  DENV = "DENV",
+  ZIKV = "ZIKV",
+  CHIKV = "CHIKV",
+  YF = "YF",
+  WNV = "WNV",
+  MAYV = "MAYV",
+}
+
 export type arbovirusesSF = "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV";
 type arboviruses =
   | "Dengue"
