@@ -110,13 +110,13 @@ export function createDonutChartAndHoverPopup(props: {
         donutSegment(
           offsets[i] / total,
           (offsets[i] + count) / total,
-          piChartInnerRadius,
           piChartOuterRadius,
+          piChartInnerRadius,
           pathogenColors[arboColorNames[i]]
         )
       )}
-      <circle cx={piChartInnerRadius} cy={piChartInnerRadius} r={piChartOuterRadius} fill="white" />
-      <text dominant-baseline="central" transform={`translate(${piChartInnerRadius}, ${piChartInnerRadius})`}>
+      <circle cx={piChartOuterRadius} cy={piChartOuterRadius} r={piChartInnerRadius} fill="white" />
+      <text dominant-baseline="central" transform={`translate(${piChartOuterRadius}, ${piChartOuterRadius})`}>
         {total.toLocaleString()}
       </text>
     </svg>
