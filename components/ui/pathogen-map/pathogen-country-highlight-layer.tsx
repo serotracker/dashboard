@@ -12,9 +12,6 @@ import { countryNameToIso31661Alpha3CodeMap } from "@/lib/country-iso-3166-1-alp
 interface PathogenCountryHighlightLayerProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
-  dataLayer:
-    | PathogenMapLayerInfo
-    | undefined;
   positionedUnderLayerWithId: string | undefined;
   dataPoints: (TPathogenDataPointProperties & {country : string})[];
 }

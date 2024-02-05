@@ -7,19 +7,16 @@ import { getBoundingBoxCenter, getBoundingBoxFromCountryName } from "@/lib/bound
 interface SetPopUpInfoForCountryHighlightLayerInput<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
-  layerForCountryHighlighting: PathogenMapLayerInfo | undefined;
   newPopUpInfo: VisiblePopupInfo<TPathogenDataPointProperties>;
   setPopUpInfo: (input: VisiblePopupInfo<TPathogenDataPointProperties>) => void;
+  dataPoints: (TPathogenDataPointProperties & { country: string })[];
+
 }
 
 export const useCountryHighlightLayer = () => {
   const setPopUpInfoForCountryHighlightLayer = <TPathogenDataPointProperties extends PathogenDataPointPropertiesBase>(
     input: SetPopUpInfoForCountryHighlightLayerInput<TPathogenDataPointProperties>,
-    dataPoints: (TPathogenDataPointProperties & { country: string })[]
   ) => {
-    if(!input.layerForCountryHighlighting) {
-      return;
-    }
 
     if('CODE' in input.newPopUpInfo.properties && !!input.newPopUpInfo.properties.CODE && typeof input.newPopUpInfo.properties.CODE === 'string') {
       const alpha3CountryCode = input.newPopUpInfo.properties['CODE'];
@@ -30,7 +27,7 @@ export const useCountryHighlightLayer = () => {
         return;
       }
 
-      const dataForCountry = dataPoints
+      const dataForCountry = input.dataPoints
         .map((dataPoint) => ({...dataPoint, alpha3CountryCode: countryNameToIso31661Alpha3CodeMap[dataPoint.country]}))
         .filter((dataPoint) => dataPoint.alpha3CountryCode === alpha3CountryCode);
 

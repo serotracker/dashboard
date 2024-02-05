@@ -67,15 +67,16 @@ export function PathogenMap<
   >({ visible: false, properties: null, layerId: null });
   const { setPopUpInfoForCountryHighlightLayer } = useCountryHighlightLayer();
 
+  // TODO: might be possible to get rid of this
   const layerForCountryHighlighting = layers.find(layer => shouldLayerBeUsedForCountryHighlighting(layer));
 
   const setPopUpInfo = (newPopUpInfo: PopupInfo<TPathogenDataPointProperties>) => {
     if(newPopUpInfo.layerId === 'country-highlight-layer') {
       setPopUpInfoForCountryHighlightLayer({
         newPopUpInfo,
-        layerForCountryHighlighting,
-        setPopUpInfo: _setPopUpInfo
-      }, dataPoints);
+        setPopUpInfo: _setPopUpInfo,
+        dataPoints
+      });
 
       return;
     }
@@ -152,7 +153,6 @@ export function PathogenMap<
     >
       <NavigationControl showCompass={false} />
       <PathogenCountryHighlightLayer
-        dataLayer={layerForCountryHighlighting}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
         dataPoints={dataPoints}
       />

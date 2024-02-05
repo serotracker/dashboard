@@ -54,7 +54,7 @@ export function PathogenMapSourceAndLayer<
       clusterProperties={clusterProperties}
     >
       {layers.map((layer) => {
-        return layer.type == "symbol" ? (
+        return layer.type === "symbol" ? (
           <Layer
             key={layer.id}
             id={layer.id}
