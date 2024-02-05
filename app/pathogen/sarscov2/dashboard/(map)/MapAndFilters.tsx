@@ -6,12 +6,12 @@ import React, { useContext } from "react";
 import { ScrollText } from "lucide-react";
 import useSarsCov2Data from "@/hooks/useSarsCov2Data";
 import {
-  SarsCov2ActionType,
   SarsCov2Context,
 } from "@/contexts/sarscov2-context";
-import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
+import { MarkerCollection, PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapSymbology } from "./map-config";
 import { SarsCov2StudyPopupContent } from "./SarsCov2StudyPopupContent";
+import { MapboxGeoJSONFeature, Map } from "mapbox-gl";
 
 export default function MapAndFilters() {
   const dataQuery = useSarsCov2Data();
@@ -32,15 +32,9 @@ export default function MapAndFilters() {
               layers={[
                 {
                   id: "SARS-CoV2-pins",
+                  type: "circle",
                   isDataUsedForCountryHighlighting: true,
                   cursor: "pointer",
-                  dataPoints: state.filteredData.map((dataPoint) => ({
-                    ...dataPoint,
-                    longitude: dataPoint.pin_longitude,
-                    latitude: dataPoint.pin_latitude,
-                    // Convert this to some kind of unique identifier returned from the backend once the SARSCoV2 API returns unique ids.
-                    id: `${dataPoint.pin_latitude}-${dataPoint.pin_longitude}-${dataPoint.studyName}`
-                  })),
                   layerPaint: {
                     "circle-color": [
                       "match",
@@ -102,7 +96,20 @@ export default function MapAndFilters() {
           
                 return <SarsCov2StudyPopupContent record={input.data} />
               }}
-            />
+            
+            
+              dataPoints={state.filteredData.map((dataPoint) => ({
+                ...dataPoint,
+                longitude: dataPoint.pin_longitude,
+                latitude: dataPoint.pin_latitude,
+                // Convert this to some kind of unique identifier returned from the backend once the SARSCoV2 API returns unique ids.
+                id: `${dataPoint.pin_latitude}-${dataPoint.pin_longitude}-${dataPoint.studyName}`
+              }))} 
+              clusterProperties={{}} 
+              sourceId={"sarscov2-[GENERATE-SOURCE-ID]"} 
+              computeClusterMarkers={function (props: { features: MapboxGeoJSONFeature[]; markers: MarkerCollection; map: Map; }): MarkerCollection {
+                throw new Error("Function not implemented.");
+              } }            />
           </div>
           <Card className={"absolute bottom-1 right-1 "}>
             <CardHeader className={"py-3"}>

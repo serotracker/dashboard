@@ -1,24 +1,22 @@
 import { countryNameToIso31661Alpha3CodeMap, iso31661Alpha3CodeToCountryNameMap } from "@/lib/country-iso-3166-1-alpha-3-codes";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { PathogenMapLayerInfoWithCountryHighlighting } from "./pathogen-map-layer";
+import { PathogenMapLayerInfo } from "./pathogen-map-layer";
 import { VisiblePopupInfo } from "./pathogen-map-popup";
 import { getBoundingBoxCenter, getBoundingBoxFromCountryName } from "@/lib/bounding-boxes";
 
 interface SetPopUpInfoForCountryHighlightLayerInput<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
-  layerForCountryHighlighting: PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> | undefined;
   newPopUpInfo: VisiblePopupInfo<TPathogenDataPointProperties>;
   setPopUpInfo: (input: VisiblePopupInfo<TPathogenDataPointProperties>) => void;
+  dataPoints: (TPathogenDataPointProperties & { country: string })[];
+
 }
 
 export const useCountryHighlightLayer = () => {
   const setPopUpInfoForCountryHighlightLayer = <TPathogenDataPointProperties extends PathogenDataPointPropertiesBase>(
-    input: SetPopUpInfoForCountryHighlightLayerInput<TPathogenDataPointProperties>
+    input: SetPopUpInfoForCountryHighlightLayerInput<TPathogenDataPointProperties>,
   ) => {
-    if(!input.layerForCountryHighlighting) {
-      return;
-    }
 
     if('CODE' in input.newPopUpInfo.properties && !!input.newPopUpInfo.properties.CODE && typeof input.newPopUpInfo.properties.CODE === 'string') {
       const alpha3CountryCode = input.newPopUpInfo.properties['CODE'];
@@ -29,7 +27,7 @@ export const useCountryHighlightLayer = () => {
         return;
       }
 
-      const dataForCountry = input.layerForCountryHighlighting.dataPoints
+      const dataForCountry = input.dataPoints
         .map((dataPoint) => ({...dataPoint, alpha3CountryCode: countryNameToIso31661Alpha3CodeMap[dataPoint.country]}))
         .filter((dataPoint) => dataPoint.alpha3CountryCode === alpha3CountryCode);
 

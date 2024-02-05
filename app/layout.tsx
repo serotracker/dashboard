@@ -5,7 +5,7 @@ import { Header } from "@/components/customs/header";
 import React from "react";
 import clsx from "clsx";
 import "mapbox-gl/dist/mapbox-gl.css";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +27,7 @@ export default function RootLayout({
         <main className={"h-full-screen w-screen bg-foreground"}>
           {children}
         </main>
+        <SpeedInsights />
       </body>
     </html>
   );
