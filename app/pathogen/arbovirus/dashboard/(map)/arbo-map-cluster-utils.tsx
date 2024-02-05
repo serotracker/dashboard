@@ -29,17 +29,18 @@ export function createDonutChartAndHoverPopup(props: {
   }
   const fontSize =
     total >= 1000 ? 22 : total >= 100 ? 20 : total >= 10 ? 18 : 16;
-  const piChartOuterRadius = total >= 50 ? 50 : total >= 25 ? 32 : total >= 10 ? 24 : 18;
-  const piChartInnerRadius = Math.round(r * 0.6);
-  const piChartDiameter = r * 2;
+  const piChartOuterRadius = total >= 50 ? 50 : total >= 25 ? 32 : total >= 10 ? 24 : 18; // r
+  const piChartInnerRadius = Math.round(piChartOuterRadius * 0.6); // r0
+  const piChartDiameter = piChartOuterRadius * 2; // w
 
   // for some reason tailwind is not being recognized here
   // Current country and city are not working on the popup need to add that in
+  // TODO: need to add in popup HTML: <div style="font-size: 1rem">${props.properties.country}</div>
+
   let popupHTML = `
     <div style="display: flex; flex-direction: column; padding: 1rem;">
         <div style="display: flex; flex-direction: column; padding-bottom: 0.5rem">
             <div style="font-size: 1.125rem; font-weight: bold;">Estimate Count</div>
-            <div style="font-size: 1rem">${props.properties.country}</div>
         </div>
         <div style="display: flex; flex-direction: row; justify-content: space-between; padding-bottom: 0.5rem">
             <div style="display: flex; flex-direction: column;">`;
@@ -96,9 +97,9 @@ export function createDonutChartAndHoverPopup(props: {
 
   return (
     <svg
-      width={w}
-      height={w}
-      viewBox={`0 0 ${w} ${w}`}
+      width={piChartDiameter}
+      height={piChartDiameter}
+      viewBox={`0 0 ${piChartDiameter} ${piChartDiameter}`}
       text-anchor="middle"
       style={{ font: `${fontSize}px sans-serif`, display: "block" }}
       onMouseEnter={onMouseEnter}
@@ -109,13 +110,13 @@ export function createDonutChartAndHoverPopup(props: {
         donutSegment(
           offsets[i] / total,
           (offsets[i] + count) / total,
-          r,
-          r0,
+          piChartInnerRadius,
+          piChartOuterRadius,
           pathogenColors[arboColorNames[i]]
         )
       )}
-      <circle cx={r} cy={r} r={r0} fill="white" />
-      <text dominant-baseline="central" transform={`translate(${r}, ${r})`}>
+      <circle cx={piChartInnerRadius} cy={piChartInnerRadius} r={piChartOuterRadius} fill="white" />
+      <text dominant-baseline="central" transform={`translate(${piChartInnerRadius}, ${piChartInnerRadius})`}>
         {total.toLocaleString()}
       </text>
     </svg>
