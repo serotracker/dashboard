@@ -100,10 +100,11 @@ export function createDonutChartAndHoverPopup(props: {
       width={piChartDiameter}
       height={piChartDiameter}
       viewBox={`0 0 ${piChartDiameter} ${piChartDiameter}`}
-      text-anchor="middle"
+      textAnchor="middle"
       style={{ font: `${fontSize}px sans-serif`, display: "block" }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onMouseDown={(e) => {e.preventDefault(); e.stopPropagation()}}
       onClick={() => {popup.remove()}}
     >
       {counts.map((count, i) =>
@@ -112,11 +113,12 @@ export function createDonutChartAndHoverPopup(props: {
           (offsets[i] + count) / total,
           piChartOuterRadius,
           piChartInnerRadius,
-          pathogenColors[arboColorNames[i]]
+          pathogenColors[arboColorNames[i]],
+          `map-cluster-svg-path-${i}`
         )
       )}
       <circle cx={piChartOuterRadius} cy={piChartOuterRadius} r={piChartInnerRadius} fill="white" />
-      <text dominant-baseline="central" transform={`translate(${piChartOuterRadius}, ${piChartOuterRadius})`}>
+      <text dominantBaseline="central" transform={`translate(${piChartOuterRadius}, ${piChartOuterRadius})`}>
         {total.toLocaleString()}
       </text>
     </svg>
@@ -128,7 +130,8 @@ export function donutSegment(
   end: number,
   r: number,
   r0: number,
-  color: string
+  color: string,
+  key: string
 ) {
   if (end - start === 1) end -= 0.00001;
   const a0 = 2 * Math.PI * (start - 0.25);
@@ -150,6 +153,7 @@ export function donutSegment(
         r + r0 * y0
       }`}
       fill={color}
+      key={key}
     />
   );
 }

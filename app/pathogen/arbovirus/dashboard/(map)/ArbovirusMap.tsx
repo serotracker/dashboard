@@ -64,14 +64,9 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
     return <span> Loading... </span>;
   }
 
-  let expandVisualizations = () => {};
-  let minimizeVisualizations = () => {};
-  let areVisualizationsExpanded;
-  if (isOldArbovirusMapProps(input)) {
-    expandVisualizations = input.expandVisualizations;
-    minimizeVisualizations = input.minimizeVisualizations;
-    areVisualizationsExpanded = input.areVisualizationsExpanded;
-  }
+  const {expandVisualizations, minimizeVisualizations, areVisualizationsExpanded} = isOldArbovirusMapProps(input) ?
+    {expandVisualizations: input.expandVisualizations, minimizeVisualizations: input.minimizeVisualizations, areVisualizationsExpanded: input.areVisualizationsExpanded} :
+    {expandVisualizations: () => {}, minimizeVisualizations: () => {}, areVisualizationsExpanded: false}
 
   return (
     <>
