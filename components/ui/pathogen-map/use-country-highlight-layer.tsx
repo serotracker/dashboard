@@ -1,20 +1,21 @@
 import { countryNameToIso31661Alpha3CodeMap, iso31661Alpha3CodeToCountryNameMap } from "@/lib/country-iso-3166-1-alpha-3-codes";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { PathogenMapLayerInfoWithCountryHighlighting } from "./pathogen-map-layer";
+import { PathogenMapLayerInfo } from "./pathogen-map-layer";
 import { VisiblePopupInfo } from "./pathogen-map-popup";
 import { getBoundingBoxCenter, getBoundingBoxFromCountryName } from "@/lib/bounding-boxes";
 
 interface SetPopUpInfoForCountryHighlightLayerInput<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
-  layerForCountryHighlighting: PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties> | undefined;
+  layerForCountryHighlighting: PathogenMapLayerInfo | undefined;
   newPopUpInfo: VisiblePopupInfo<TPathogenDataPointProperties>;
   setPopUpInfo: (input: VisiblePopupInfo<TPathogenDataPointProperties>) => void;
 }
 
 export const useCountryHighlightLayer = () => {
   const setPopUpInfoForCountryHighlightLayer = <TPathogenDataPointProperties extends PathogenDataPointPropertiesBase>(
-    input: SetPopUpInfoForCountryHighlightLayerInput<TPathogenDataPointProperties>
+    input: SetPopUpInfoForCountryHighlightLayerInput<TPathogenDataPointProperties>,
+    dataPoints: (TPathogenDataPointProperties & { country: string })[]
   ) => {
     if(!input.layerForCountryHighlighting) {
       return;
@@ -29,7 +30,7 @@ export const useCountryHighlightLayer = () => {
         return;
       }
 
-      const dataForCountry = input.layerForCountryHighlighting.dataPoints
+      const dataForCountry = dataPoints
         .map((dataPoint) => ({...dataPoint, alpha3CountryCode: countryNameToIso31661Alpha3CodeMap[dataPoint.country]}))
         .filter((dataPoint) => dataPoint.alpha3CountryCode === alpha3CountryCode);
 

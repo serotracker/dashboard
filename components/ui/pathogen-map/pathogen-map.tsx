@@ -75,7 +75,7 @@ export function PathogenMap<
         newPopUpInfo,
         layerForCountryHighlighting,
         setPopUpInfo: _setPopUpInfo
-      });
+      }, dataPoints);
 
       return;
     }
