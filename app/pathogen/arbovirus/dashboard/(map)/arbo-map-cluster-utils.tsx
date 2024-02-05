@@ -29,9 +29,9 @@ export function createDonutChartAndHoverPopup(props: {
   }
   const fontSize =
     total >= 1000 ? 22 : total >= 100 ? 20 : total >= 10 ? 18 : 16;
-  const r = total >= 50 ? 50 : total >= 25 ? 32 : total >= 10 ? 24 : 18;
-  const r0 = Math.round(r * 0.6);
-  const w = r * 2;
+  const piChartOuterRadius = total >= 50 ? 50 : total >= 25 ? 32 : total >= 10 ? 24 : 18;
+  const piChartInnerRadius = Math.round(r * 0.6);
+  const piChartDiameter = r * 2;
 
   // for some reason tailwind is not being recognized here
   // Current country and city are not working on the popup need to add that in
