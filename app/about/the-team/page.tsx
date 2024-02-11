@@ -32,7 +32,7 @@ const TeamMemberInfoCard = (props: TeamMemberInfoCardProps) => {
     <div> 
       <b> {`${props.teamMember.firstName} ${props.teamMember.lastName}`} </b>
       {props.teamMember.affiliations.map((affiliation) => 
-        <p> {affiliation.label} </p>
+        <p key={`${props.teamMember.firstName}-${props.teamMember.lastName}-${affiliation.label}`}> {affiliation.label} </p>
       )}
       <div className="flex flex-row mt-2">
         {props.teamMember.linkedinUrl ? (
