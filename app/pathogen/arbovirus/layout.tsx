@@ -7,6 +7,7 @@ import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
 import { arbovirusEstimatesQuery } from "@/hooks/useArboData";
 import { arbovirusFiltersQuery } from "@/hooks/useArboFilters";
+import { groupedTeamMembersQuery } from "@/hooks/useGroupedTeamMemberData";
 
 export default async function ArboLayout({
   children,
