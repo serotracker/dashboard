@@ -31,7 +31,7 @@ export default async function AboutPageLayout({
           <div className="col-span-2 h-full row-span-2">
             <AboutPageSidebar />
           </div>
-          <div className="col-span-10 h-full row-span-2">
+          <div className="col-span-10 h-full row-span-2 overflow-y-scroll">
             {children}
           </div>
         </div>

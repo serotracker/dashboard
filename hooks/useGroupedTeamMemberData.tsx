@@ -21,7 +21,7 @@ export const groupedTeamMembersQuery = gql`
 `
 
 interface GroupedTeamMembersQuery {
-  groupedTeamMembers: {
+  groupedTeamMembers: Array<{
     label: string;
     teamMembers: Array<{
       firstName: string;
@@ -33,7 +33,7 @@ interface GroupedTeamMembersQuery {
         label: string;
       }>
     }>
-  }
+  }>
 }
 
 export function useGroupedTeamMemberData() {
