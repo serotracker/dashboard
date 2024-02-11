@@ -20,8 +20,24 @@ export const groupedTeamMembersQuery = gql`
   }
 `
 
+interface GroupedTeamMembersQuery {
+  groupedTeamMembers: {
+    label: string;
+    teamMembers: Array<{
+      firstName: string;
+      lastName: string;
+      email: string | null | undefined;
+      linkedinUrl: string | null | undefined;
+      twitterUrl: string | null | undefined;
+      affiliations: Array<{
+        label: string;
+      }>
+    }>
+  }
+}
+
 export function useGroupedTeamMemberData() {
-  return useQuery<any>({
+  return useQuery<GroupedTeamMembersQuery>({
     queryKey: ["groupedTeamMembersQuery"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedTeamMembersQuery)
   });

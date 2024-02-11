@@ -4,6 +4,7 @@ import {
   AboutPageSidebarOption,
   aboutPageSidebarContext,
 } from "../about-page-context";
+import { groupedTeamMembersQuery } from "@/hooks/useGroupedTeamMemberData";
 
 export default function TeamPage() {
   const { setCurrentSidebarOption } = useContext(aboutPageSidebarContext);
