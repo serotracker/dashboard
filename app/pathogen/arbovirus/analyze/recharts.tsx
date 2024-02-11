@@ -25,7 +25,16 @@ import clsx from "clsx";
 
 //Study count by pathogen and antibody type
 
-type arbovirusesSF = "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV";
+export enum ShortformArbovirus {
+  DENV = "DENV",
+  ZIKV = "ZIKV",
+  CHIKV = "CHIKV",
+  YF = "YF",
+  WNV = "WNV",
+  MAYV = "MAYV",
+}
+
+export type arbovirusesSF = "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV";
 type arboviruses =
   | "Dengue"
   | "Zika"
@@ -36,7 +45,7 @@ type arboviruses =
 
 type antibodies = "IgG" | "IgM" | "NAb" | "NR" | "IgG, IgM";
 
-const convertArboSFtoArbo = (arbo: arbovirusesSF): arboviruses => {
+export const convertArboSFtoArbo = (arbo: arbovirusesSF): arboviruses => {
   switch (arbo) {
     case "DENV":
       return "Dengue";
@@ -240,8 +249,27 @@ interface WHORegionAndArbovirusData extends dataStratifiedByArbovirus {
   region: string;
 }
 
-export function WHORegionAndArbovirusBar() {
+export enum LegendConfiguration {
+  RIGHT_ALIGNED = 'RIGHT_ALIGNED',
+  BOTTOM_ALIGNED = 'BOTTOM_ALIGNED'
+}
+
+interface WhoRegionAndArbovirusBarInput {
+  legendConfiguration: LegendConfiguration;
+}
+
+export function WHORegionAndArbovirusBar(input: WhoRegionAndArbovirusBarInput) {
   const state = useContext(ArboContext);
+  const legendProps = input.legendConfiguration === LegendConfiguration.RIGHT_ALIGNED ? {
+    layout: "vertical" as const,
+    verticalAlign: "middle" as const,
+    align: "right" as const,
+    wrapperStyle: { right: -10 }
+  } : {
+    layout: "horizontal" as const,
+    verticalAlign: "bottom" as const,
+    align: "center" as const,
+  }
 
   const data: WHORegionAndArbovirusData[] = [];
 
@@ -284,12 +312,7 @@ export function WHORegionAndArbovirusBar() {
         <XAxis dataKey="region" />
         <YAxis />
         <Tooltip itemStyle={{"color": "black"}} />
-        <Legend
-          layout="vertical"
-          verticalAlign="middle"
-          align="right"
-          wrapperStyle={{ right: -10 }}
-        />
+        <Legend {...legendProps} />
         <Bar dataKey="Zika" stackId="a" fill={pathogenColors.ZIKV} />
         <Bar dataKey="Dengue" stackId="a" fill={pathogenColors.DENV} />
         <Bar dataKey="Chikungunya" stackId="a" fill={pathogenColors.CHIKV} />
@@ -301,7 +324,7 @@ export function WHORegionAndArbovirusBar() {
   );
 }
 
-function median(values: number[]): number {
+export function median(values: number[]): number {
   if (values.length === 0) {
     return 0; // there is no data for this region
   }
@@ -325,7 +348,16 @@ type AgeGroup =
   | "Seniors (65+ years)"
   | "Multiple groups";
 
-function CustomizedWHORegionTick(props: any) {
+interface SlantedTickProps {
+  x: number,
+  y: number,
+  payload: {
+    value: string
+  },
+  tickSlant: number
+}
+
+export function SlantedTick(props: SlantedTickProps) {
   const { x, y, payload } = props;
 
   return (
@@ -336,7 +368,7 @@ function CustomizedWHORegionTick(props: any) {
         dy={16}
         textAnchor="end"
         fill="#666"
-        transform="rotate(-35)"
+        transform={`rotate(-${props.tickSlant})`}
       >
         {payload.value}
       </text>
@@ -475,7 +507,7 @@ export function MedianSeroPrevByWHOregion() {
                 <XAxis
                   dataKey="region"
                   interval={0}
-                  tick={<CustomizedWHORegionTick />}
+                  tick={(props) => SlantedTick({...props, tickSlant: 35 })}
                 />
                 <YAxis
                   domain={[0, 100]}
@@ -660,7 +692,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
                   <XAxis
                     dataKey="region"
                     interval={0}
-                    tick={<CustomizedWHORegionTick />}
+                    tick={(props) => SlantedTick({...props, tickSlant: 35 })}
                   />
                   <YAxis
                     domain={[0, 100]}

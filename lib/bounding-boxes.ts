@@ -26,6 +26,15 @@ export const combineBoundingBoxes = (
   );
 };
 
+export const getBoundingBoxCenter = (boundingBox: BoundingBox): {latitude: number, longitude: number} => {
+  const [minLng, minLat, maxLng, maxLat] = boundingBox;
+
+  return {
+    latitude: (maxLat + minLat) / 2,
+    longitude: (maxLng + minLng) / 2
+  }
+}
+
 const countryBoundingBoxData: Record<string, BoundingBox | undefined> = {
   Afghanistan: [60.53, 29.32, 75.16, 38.49],
   Angola: [11.64, -17.93, 24.08, -4.44],

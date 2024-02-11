@@ -2,14 +2,21 @@ import { MapRef, Popup, useMap } from "react-map-gl";
 
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 
+interface PopupContentGeneratorInput<
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+> {
+  layerId: string;
+  data: TPathogenDataPointProperties;
+}
+
 export type PopupContentGenerator<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
-> = (input: TPathogenDataPointProperties) => React.ReactNode;
+> = (input: PopupContentGeneratorInput<TPathogenDataPointProperties>) => React.ReactNode;
 
-type VisiblePopupInfo<
+export type VisiblePopupInfo<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
-> = { visible: true; properties: TPathogenDataPointProperties };
-type HiddenPopupInfo = { visible: false; properties: null };
+> = { visible: true; properties: TPathogenDataPointProperties, layerId: string };
+type HiddenPopupInfo = { visible: false; properties: null, layerId: null };
 
 export type PopupInfo<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
@@ -92,7 +99,7 @@ export function PathogenMapPopup<
         });
       }}
     >
-      {generatePopupContent(transformedProperties)}
+      {generatePopupContent({layerId: popUpInfo.layerId, data:transformedProperties})}
     </Popup>
   );
 }

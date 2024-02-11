@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Filters from "@/app/pathogen/sarscov2/dashboard/filters";
+import { Filters } from "@/app/pathogen/sarscov2/dashboard/filters";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SarsCov2DataTable from "./SarsCov2DataTable";
 

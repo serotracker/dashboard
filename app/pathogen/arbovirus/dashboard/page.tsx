@@ -1,39 +1,61 @@
 "use client";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { ArbovirusMap } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
-import { MedianSeroPrevByWHOregion } from "../analyze/recharts";
-import Filters, { FilterableField } from "./filters";
+import { LegendConfiguration, MedianSeroPrevByWHOregion, WHORegionAndArbovirusBar } from "../analyze/recharts";
+import { FilterableField, Filters } from "./filters";
 import { CardConfiguration, CardStyle, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
 import { CardCollection } from "@/components/ui/card-collection/card-collection";
 import { useMap } from "react-map-gl";
 import { ZoomIn } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { VisualizationId, getVisualizationInformationFromVisualizationId } from "../visualizations/visualizations";
+import { EstimateCountByUnRegionAndArbovirusGraph } from "../analyze/recharts/estimate-count-by-un-region-and-arbovirus-graph";
+import { ArboContext } from "@/contexts/arbo-context";
+import { useArboDataInsights } from "@/hooks/useArboDataInsights";
 
 export default function ArbovirusDashboard() {
   // Need to make the visualizations dynamic. Unsure how to do this well using CSS.
   const allMaps = useMap();
   const router = useRouter();
+  const { filteredData } = useContext(ArboContext);
+  const { getNumberOfUniqueValuesForField } = useArboDataInsights();
 
-  const renderPlotCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => (
-    <CardContent className={"px-0 h-full flex flex-col"}>
-      <div className="flex py-4">
-        <h3 className="w-full text-center text-lg">
-          Median seroprevalence of arboviruses by WHO region
-        </h3>
-        <button 
-          onClick={() => router.push(`visualizations?visualization=${getVisualizationInformationFromVisualizationId({visualizationId: VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION}).urlParameter}&referrerRoute=/pathogen/arbovirus/dashboard`)}
-          aria-label="See visualization in fullscreen"
-        >
-          <ZoomIn />
-        </button>
-      </div>
-      <MedianSeroPrevByWHOregion />
-    </CardContent>
-  ), [router])
+  const renderPlotCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => {
+    const areLessThanTwoWHORegionsPresentInData = getNumberOfUniqueValuesForField({
+      filteredData: filteredData.filter((dataPoint) => !!dataPoint.whoRegion),
+      fieldName: 'whoRegion'
+    }) < 2;
+
+    const visualizationId = areLessThanTwoWHORegionsPresentInData
+      ? VisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS
+      : VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS;
+
+    const renderVisualization = visualizationId === VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS 
+      ? () => <WHORegionAndArbovirusBar legendConfiguration={LegendConfiguration.BOTTOM_ALIGNED} />
+      : () => <EstimateCountByUnRegionAndArbovirusGraph legendConfiguration={LegendConfiguration.BOTTOM_ALIGNED} />;
+
+    const visualizationInformation = getVisualizationInformationFromVisualizationId({ visualizationId });
+
+    return (
+      <CardContent className={"px-0 h-full flex flex-col"}>
+        <div className="flex py-4">
+          <h3 className="w-full text-center text-lg">
+            {visualizationInformation.displayName}
+          </h3>
+          <button 
+            onClick={() => router.push(`visualizations?visualization=${getVisualizationInformationFromVisualizationId({ visualizationId }).urlParameter}&referrerRoute=/pathogen/arbovirus/dashboard`)}
+            aria-label="See visualization in fullscreen"
+          >
+            <ZoomIn />
+          </button>
+        </div>
+        {renderVisualization()}
+      </CardContent>
+    );
+  }, [router, filteredData, getNumberOfUniqueValuesForField])
 
   const renderMapCardContent = useCallback(({cardConfigurations}: {cardConfigurations: CardConfiguration[]}) => (
     <ArbovirusMap

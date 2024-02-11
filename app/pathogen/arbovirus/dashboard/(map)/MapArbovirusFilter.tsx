@@ -1,8 +1,9 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useContext } from "react";
 import { pathogenColorsTailwind } from "./ArbovirusMap";
+import { Button } from "@/components/ui/button";
 
 interface MapArbovirusFilterProps {
   records: unknown[];
@@ -33,12 +34,23 @@ export const MapArbovirusFilter = ({ records, className }: MapArbovirusFilterPro
     });
   };
 
+  const clearAllHandler = () => {
+    state.dispatch({
+      type: ArboActionType.UPDATE_FILTER,
+      payload: {
+        data: records,
+        filter: "pathogen",
+        value: [],
+      },
+    });
+  };
+
   return (
     <Card className={className}>
       <CardHeader className={"py-3"}>
         <p>Arboviruses</p>
       </CardHeader>
-      <CardContent className={"flex justify-center flex-col"}>
+      <CardContent className={"flex justify-center flex-col pb-3"}>
         {pathogenOrder.map((pathogenAbbreviation: string) => {
           // Map abbreviations to full names
           const pathogenFullName =
@@ -88,6 +100,7 @@ export const MapArbovirusFilter = ({ records, className }: MapArbovirusFilterPro
             </div>
           );
         })}
+        <Button className="mt-2" variant={'ghost'} onClick={clearAllHandler}>Clear all</Button>
       </CardContent>
     </Card>
   );

@@ -56,7 +56,7 @@ const buildFilterDropdown = (
   );
 };
 
-export default function Filters() {
+export function Filters() {
   const state = useContext(SarsCov2Context);
 
   const { data } = useSarsCov2Data();

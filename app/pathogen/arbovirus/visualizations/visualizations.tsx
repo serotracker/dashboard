@@ -1,14 +1,18 @@
 import { typedObjectEntries } from "@/lib/utils";
-import { AntibodyPathogenBar, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "../analyze/recharts";
+import { AntibodyPathogenBar, LegendConfiguration, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "../analyze/recharts";
+import { ChangeInMedianSeroprevalenceOverTimeGraph } from "../analyze/recharts/change-in-median-seroprevalence-over-time-graph";
+import { EstimateCountByUnRegionAndArbovirusGraph } from "../analyze/recharts/estimate-count-by-un-region-and-arbovirus-graph";
 
 export enum VisualizationId {
   CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS = "CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS",
   CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME = "CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME",
   ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE = "ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE",
   ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS = "ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS",
+  ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS = "ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS",
   MEDIAN_SEROPREVALENCE_BY_WHO_REGION = "MEDIAN_SEROPREVALENCE_BY_WHO_REGION",
   MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP = "MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP",
   TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS = "TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS",
+  CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME = "CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME"
 }
 
 export const isVisualizationId = (
@@ -20,10 +24,12 @@ enum VisualizationUrlParameter {
   "cumulative-estimate-count-over-time-by-arbovirus" = "cumulative-estimate-count-over-time-by-arbovirus",
   "cumulative-estimate-count-over-time-by-sample-frame" = "cumulative-estimate-count-over-time-by-sample-frame",
   "estimate-count-by-who-region-and-arbovirus" = "estimate-count-by-who-region-and-arbovirus",
+  "estimate-count-by-un-region-and-arbovirus" = "estimate-count-by-un-region-and-arbovirus",
   "estimate-count-by-arbovirus-and-antibody-type" = "estimate-count-by-arbovirus-and-antibody-type",
   "median-seroprevalence-by-who-region" = "median-seroprevalence-by-who-region",
   "median-seroprevalence-by-who-region-and-age-group" = "median-seroprevalence-by-who-region-and-age-group",
   "top-ten-countries-reporting-estimates-by-arbovirus" = "top-ten-countries-reporting-estimates-by-arbovirus",
+  "change-in-median-seroprevalence-over-time" = "change-in-median-seroprevalence-over-time"
 }
 
 export const isVisualizationUrlParameter = (
@@ -36,12 +42,14 @@ enum VisualizationDisplayName {
   "Cumulative estimate count over time by sample frame" = "Cumulative estimate count over time by sample frame",
   "Estimate count by arbovirus & antibody type" = "Estimate count by arbovirus & antibody type",
   "Estimate count by WHO region and arbovirus" = "Estimate count by WHO region and arbovirus",
+  "Estimate count by UN region and arbovirus" = "Estimate count by UN region and arbovirus",
   "Median seroprevalence of arboviruses by WHO Region" = "Median seroprevalence of arboviruses by WHO Region",
   "Median seroprevalence by WHO region and age group" = "Median seroprevalence by WHO region and age group",
   "Top ten countries reporting estimates by arbovirus" = "Top ten countries reporting estimates by arbovirus",
+  "Change in median seroprevalence over time" = "Change in median seroprevalence over time",
 }
 
-interface VisualizationInformation {
+export interface VisualizationInformation {
   id: VisualizationId;
   urlParameter: VisualizationUrlParameter;
   displayName: VisualizationDisplayName;
@@ -93,7 +101,16 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationUrlParameter["estimate-count-by-who-region-and-arbovirus"],
     displayName:
       VisualizationDisplayName["Estimate count by WHO region and arbovirus"],
-    renderVisualization: WHORegionAndArbovirusBar,
+    renderVisualization: () => WHORegionAndArbovirusBar({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED }),
+    classNameWhenFullscreen: "p-16"
+  },
+  [VisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS]: {
+    id: VisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS,
+    urlParameter:
+      VisualizationUrlParameter["estimate-count-by-un-region-and-arbovirus"],
+    displayName:
+      VisualizationDisplayName["Estimate count by UN region and arbovirus"],
+    renderVisualization: () => EstimateCountByUnRegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED }),
     classNameWhenFullscreen: "p-16"
   },
   [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: {
@@ -131,6 +148,19 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
     renderVisualization: Top10CountriesByPathogenStudyCount,
     classNameWhenFullscreen: "p-14"
   },
+  [VisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME]: {
+    id: VisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME,
+    urlParameter:
+      VisualizationUrlParameter[
+        "change-in-median-seroprevalence-over-time"
+      ],
+    displayName:
+      VisualizationDisplayName[
+        "Change in median seroprevalence over time"
+      ],
+    renderVisualization: ChangeInMedianSeroprevalenceOverTimeGraph,
+    classNameWhenFullscreen: "p-16"
+  },
 }
 
 const visualizationInformationArray = typedObjectEntries(allVisualizationInformation).map(([_, value]) => value);
@@ -157,11 +187,11 @@ export const getVisualizationInformationFromVisualizationUrlParameter = (
   );
 };
 
-type AddVisualizationInformationInput<TNewInformation extends Record<string, unknown>> = Record<VisualizationId, TNewInformation>;
+type AddVisualizationInformationInput<TVisualizationId extends VisualizationId, TNewInformation extends Record<string, unknown>> = Record<TVisualizationId, TNewInformation>;
 type AddVisualizationInformationOutput<TNewInformation extends Record<string, unknown>> = (TNewInformation & VisualizationInformation)[];
 
-export const addToVisualizationInformation = <TNewInformation extends Record<string, unknown>>(
-  input: AddVisualizationInformationInput<TNewInformation>
+export const addToVisualizationInformation = <TVisualizationId extends VisualizationId, TNewInformation extends Record<string, unknown>>(
+  input: AddVisualizationInformationInput<TVisualizationId, TNewInformation>
 ): AddVisualizationInformationOutput<TNewInformation> => {
   return typedObjectEntries(input).map(([key, value]) => ({
     ...allVisualizationInformation[key],

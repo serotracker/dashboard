@@ -26,7 +26,7 @@ import SectionHeader from "@/components/customs/SectionHeader";
 import { DatePicker } from "@/components/ui/datepicker";
 import { parseISO } from "date-fns";
 import { useArboFilters } from "@/hooks/useArboFilters";
-import { UNRegion } from "@/lib/un-regions";
+import { UNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
 
 interface FieldInformation {
   field: FilterableField;
@@ -167,9 +167,12 @@ const FilterSection = ({
 
 interface FiltersProps {
   excludedFields?: FilterableField[];
+  className?: string;
 }
 
-export default function Filters({ excludedFields = [] }: FiltersProps) {
+export function Filters(props: FiltersProps) {
+  const excludedFields = props.excludedFields ?? [];
+
   const state = useContext(ArboContext);
   const demographicFilters = [
     {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
@@ -183,30 +186,7 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
     {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
     {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
     {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
-    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: {
-      [UNRegion.NORTHERN_AFRICA]: "Northern Africa",
-      [UNRegion.EASTERN_AFRICA]: "Eastern Africa",
-      [UNRegion.MIDDLE_AFRICA]: "Middle Africa",
-      [UNRegion.SOUTHERN_AFRICA]: "Southern Africa",
-      [UNRegion.WESTERN_AFRICA]: "Western Africa",
-      [UNRegion.CARIBBEAN]: "Caribbean",
-      [UNRegion.CENTRAL_AMERICA]: "Central America",
-      [UNRegion.SOUTH_AMERICA]: "South America",
-      [UNRegion.NORTHERN_AMERICA]: "Northern America",
-      [UNRegion.CENTRAL_ASIA]: "Central Asia",
-      [UNRegion.EASTERN_ASIA]: "Eastern Asia",
-      [UNRegion.SOUTH_EASTERN_ASIA]: "South-Eastern Asia",
-      [UNRegion.SOUTHERN_ASIA]: "Southern Asia",
-      [UNRegion.WESTERN_ASIA]: "Western Asia",
-      [UNRegion.EASTERN_EUROPE]: "Eastern Europe",
-      [UNRegion.NORTHERN_EUROPE]: "Northern Europe",
-      [UNRegion.SOUTHERN_EUROPE]: "Southern Europe",
-      [UNRegion.WESTERN_EUROPE]: "Western Europe",
-      [UNRegion.AUSTRALIA_AND_NEW_ZEALAND]: "Australia and New Zealand",
-      [UNRegion.MELANESIA]: "Melanesia",
-      [UNRegion.MICRONESIA]: "Micronesia",
-      [UNRegion.POLYNESIA]: "Polynesia",
-    }},
+    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
     {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
@@ -228,7 +208,7 @@ export default function Filters({ excludedFields = [] }: FiltersProps) {
 
   if (filterData) {
     return (
-      <div>
+      <div className={props.className}>
         <FilterSection
           headerText="Demographic"
           headerTooltipText="Filter on demographic variables, including population group, sex, and age group."

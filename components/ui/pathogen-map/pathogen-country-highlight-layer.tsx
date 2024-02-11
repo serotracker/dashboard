@@ -1,6 +1,6 @@
 import { Layer, Source } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { PathogenMapLayerInfoWithCountryHighlighting } from "./pathogen-map-layer";
+import { PathogenMapLayerInfo } from "./pathogen-map-layer";
 import { useEffect, useState } from "react";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import {
@@ -12,24 +12,19 @@ import { countryNameToIso31661Alpha3CodeMap } from "@/lib/country-iso-3166-1-alp
 interface PathogenCountryHighlightLayerProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
-  dataLayer:
-    | PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties>
-    | undefined;
   positionedUnderLayerWithId: string | undefined;
+  dataPoints: (TPathogenDataPointProperties & {country : string})[];
 }
 
 const generatePaintForLayer = <
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 >(input: {
-  dataLayer:
-    | PathogenMapLayerInfoWithCountryHighlighting<TPathogenDataPointProperties>
-    | undefined;
+  dataPoints: (TPathogenDataPointProperties & {country : string})[];
 }) => {
-  const { dataLayer } = input;
+  const { dataPoints } = input;
 
   const allUniqueCountryCodesWithData = new Set(
-    dataLayer?.dataPoints
-      .map((dataPoint) => {
+    dataPoints.map((dataPoint) => {
         return countryNameToIso31661Alpha3CodeMap[dataPoint.country];
       })
       .filter(
@@ -71,8 +66,8 @@ const generatePaintForLayer = <
 export function PathogenCountryHighlightLayer<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 >({
-  dataLayer,
   positionedUnderLayerWithId,
+  dataPoints,
 }: PathogenCountryHighlightLayerProps<TPathogenDataPointProperties>) {
   const [mapCountryVectors, setMapCountryVectors] = useState<any>(null);
 
@@ -94,7 +89,8 @@ export function PathogenCountryHighlightLayer<
     <Source {...mapCountryVectors.sources[countryLayer.source]}>
       <Layer
         {...countryLayer}
-        paint={generatePaintForLayer({ dataLayer })}
+        id='country-highlight-layer'
+        paint={generatePaintForLayer({ dataPoints })}
         beforeId={positionedUnderLayerWithId}
       />
     </Source>
