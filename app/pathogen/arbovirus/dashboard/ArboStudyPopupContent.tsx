@@ -2,18 +2,16 @@ import { TranslateDate } from "@/utils/translate-util/translate-service";
 import React, { useMemo } from "react";
 import { MapRef, Popup, useMap } from "react-map-gl";
 
-/**
- * @param title: left column of study modal: title of content
- * @param content: right content of study modal: the actual content for this record
- */
-function row(
+interface PopUpContentRowProps {
   title: string,
   content: JSX.Element | string | string[] | null | undefined
-) {
+}
+
+export const PopUpContentRow = (props: PopUpContentRowProps): React.ReactNode => {
   return (
     <div className={"flex justify-between mb-2"}>
-      <div className={"text-md font-semibold"}>{title}</div>
-      <div className={"w-2/3"}>{content}</div>
+      <div className={"text-md font-semibold"}>{props.title}</div>
+      <div className={"w-2/3"}>{props.content}</div>
     </div>
   );
 }
@@ -106,22 +104,10 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
       </div>
       {/*Content section*/}
       <div className={"py-2 px-4 max-h-[250px] overflow-auto"}>
-        {row(
-        "Sampling Date Range", 
-        `${TranslateDate(record.sampleStartDate)} to ${TranslateDate(record.sampleEndDate)}`
-        )}
-        {row(
-          "Inclusion Criteria",
-          record.inclusionCriteria ? record.inclusionCriteria : "Not Reported"
-        )}
-        {row(
-          "Location",
-          getGeography(record.city, record.state, record.country)
-        )}
-        {row(
-          "Sample Size",
-          record.sampleSize?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-        )}
+        <PopUpContentRow title="Sampling Date Range" content={`${TranslateDate(record.sampleStartDate)} to ${TranslateDate(record.sampleEndDate)}`}/>
+        <PopUpContentRow title="Inclusion Criteria" content={record.inclusionCriteria ? record.inclusionCriteria : "Not Reported"}/>
+        <PopUpContentRow title="Location" content={getGeography(record.city, record.state, record.country)}/>
+        <PopUpContentRow title="Sample Size" content={record.sampleSize?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}/>
         <div className={"flex justify-between mb-2"}>
           <div className={"text-md font-semibold"}>
             Antibody Target
@@ -134,8 +120,8 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
           ))}
           </div>
         </div>
-        {row("Antigen", record.antigen)}
-        {row("Assay", record.assay)}
+        <PopUpContentRow title="Antigen" content={record.antigen}/>
+        <PopUpContentRow title="Assay" content={record.assay}/>
       </div>
     </div>
   );
