@@ -22,7 +22,7 @@ interface AccordionProps<TAccordionOptionId extends string> {
 export const Accordion = <TAccordionOptionId extends string>(props: AccordionProps<TAccordionOptionId>) => (
   <AccordionRoot type="single" defaultValue={props.defaultOption} collapsible>
     {props.options.map((option) => (
-      <AccordionItem value={option.id} className="border rounded-l">
+      <AccordionItem key={option.id} value={option.id} className="border rounded-l">
         <AccordionHeader>
           <AccordionTrigger className="accordion-trigger w-full">
             <div className="flex py-2 w-full">
