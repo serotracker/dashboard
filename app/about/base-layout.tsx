@@ -1,10 +1,10 @@
 import getQueryClient from "@/components/customs/getQueryClient";
+import { notFound } from "next/navigation";
 import request from "graphql-request";
-import { Hydrate, QueryClientProvider, dehydrate } from "@tanstack/react-query";
+import { Hydrate, dehydrate } from "@tanstack/react-query";
 import { groupedTeamMembersQuery } from "@/hooks/useGroupedTeamMemberData";
 import { AboutPageProvider } from "./about-page-context";
 import { AboutPageSidebar } from "./about-page-sidebar";
-import { notFound } from "next/navigation";
 
 export enum AboutPageSidebarOption {
   DATA_EXTRACTION = "DATA_EXTRACTION",
@@ -38,7 +38,7 @@ export const AboutPageBaseLayout = async (props: AboutPageBaseLayoutProps) => {
           <div className="col-span-2 h-full row-span-2">
             <AboutPageSidebar currentSidebarOption={props.currentSidebarOption} />
           </div>
-          <div className="col-span-10 h-full row-span-2">
+          <div className="col-span-10 h-full row-span-2 overflow-y-scroll">
             {props.children}
           </div>
         </div>
