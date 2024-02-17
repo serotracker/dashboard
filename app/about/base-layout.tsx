@@ -1,8 +1,8 @@
 import getQueryClient from "@/components/customs/getQueryClient";
-import { AboutPageSidebar, AboutPageSidebarOption } from "./about-page-sidebar";
+import { AboutPageSidebarOption } from "./about-page-sidebar";
 import { notFound } from "next/navigation";
 import request from "graphql-request";
-import { Hydrate, QueryClientProvider, dehydrate } from "@tanstack/react-query";
+import { Hydrate, dehydrate } from "@tanstack/react-query";
 import { groupedTeamMembersQuery } from "@/hooks/useGroupedTeamMemberData";
 import { AboutPageProvider } from "./about-page-context";
 
