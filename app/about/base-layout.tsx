@@ -1,10 +1,16 @@
 import getQueryClient from "@/components/customs/getQueryClient";
-import { AboutPageSidebarOption } from "./about-page-sidebar";
 import { notFound } from "next/navigation";
 import request from "graphql-request";
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 import { groupedTeamMembersQuery } from "@/hooks/useGroupedTeamMemberData";
 import { AboutPageProvider } from "./about-page-context";
+import { AboutPageSidebar } from "./about-page-sidebar";
+
+export enum AboutPageSidebarOption {
+  DATA_EXTRACTION = "DATA_EXTRACTION",
+  FAQ = "FAQ",
+  THE_TEAM = "THE_TEAM",
+}
 
 interface AboutPageBaseLayoutProps {
   currentSidebarOption: AboutPageSidebarOption,
