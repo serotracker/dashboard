@@ -1,19 +1,8 @@
 "use client";
-import { useContext, useEffect } from "react";
-import {
-  AboutPageSidebarOption,
-  aboutPageSidebarContext,
-} from "../about-page-context";
 import { Accordion } from "@/components/ui/accordion/accordion";
 import { FAQPageOptionId, faqPageText } from "./text";
 
 export default function FAQPage() {
-  const { setCurrentSidebarOption } = useContext(aboutPageSidebarContext);
-
-  useEffect(() => {
-    setCurrentSidebarOption(AboutPageSidebarOption.FAQ);
-  }, [setCurrentSidebarOption]);
-
   const options = Object.values(FAQPageOptionId).map((optionId) => ({
     id: optionId,
     label: faqPageText[optionId].label,
