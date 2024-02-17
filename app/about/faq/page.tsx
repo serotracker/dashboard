@@ -1,5 +1,11 @@
 "use client";
-import { Accordion } from "@/components/ui/accordion/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+
 import { FAQPageOptionId, faqPageText } from "./text";
 
 export default function FAQPage() {
@@ -12,10 +18,18 @@ export default function FAQPage() {
   return (
     <div className="mx-4">
       <h1 className="text-3xl mt-5 mb-3.5"> Frequently Asked Questions </h1>
-      <Accordion
-        defaultOption={undefined}
-        options={options}
-      />
+      <Accordion type="single" collapsible={true}>
+        {options.map((option) => (
+          <AccordionItem key={option.id} value={option.id} >
+            <AccordionTrigger>
+              {option.label}
+            </AccordionTrigger>
+            <AccordionContent>
+              {option.content}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </div>
   );
 }
