@@ -1,6 +1,11 @@
 "use client";
 import { useGroupedTeamMemberData } from "@/hooks/useGroupedTeamMemberData";
+import { faLinkedin, faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Linkedin, Mail, Twitter } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface TeamInfo {
   label: string;
@@ -29,21 +34,21 @@ const TeamMemberInfoCard = (props: TeamMemberInfoCardProps) => {
       {props.teamMember.affiliations.map((affiliation) => 
         <p key={`${props.teamMember.firstName}-${props.teamMember.lastName}-${affiliation.label}`}> {affiliation.label} </p>
       )}
-      <div className="flex flex-row mt-2">
+      <div className="flex flex-row">
         {props.teamMember.linkedinUrl ? (
-        <a className="pr-2 text-link" href={props.teamMember.linkedinUrl} target="_blank" rel="noopener noreferrer">
-            <Linkedin />
-        </a>
+        <Link className="mr-2" href={props.teamMember.linkedinUrl} target="_blank" rel="noopener noreferrer">
+          <FontAwesomeIcon icon={faLinkedin} className="text-linkedin-icon"/>
+        </Link>
         ) : null}
         {props.teamMember.twitterUrl ? (
-        <a className="pr-2 text-link" href={props.teamMember.twitterUrl} target="_blank" rel="noopener noreferrer">
-            <Twitter />
-        </a>
+        <Link className="mr-2" href={props.teamMember.twitterUrl} target="_blank" rel="noopener noreferrer">
+          <FontAwesomeIcon icon={faTwitter} className="text-twitter-icon"/>
+        </Link>
         ) : null}
         {props.teamMember.email ? (
-        <a className="pr-2 text-link" href={`mailto:${props.teamMember.email}`}>
-            <Mail />
-        </a>
+        <Link className="mr-2" href={`mailto:${props.teamMember.email}`}>
+          <FontAwesomeIcon icon={faEnvelope} className="text-email-icon"/>
+        </Link>
         ) : null}
       </div>
     </div>
@@ -57,8 +62,8 @@ interface TeamInfoCardProps {
 const TeamCard = (props: TeamInfoCardProps) => {
   return (
     <div>
-      <h2 className="italic text-3xl my-8"> {props.teamInfo.label} </h2>
-      <div className='grid grid-cols-3 gap-x-6 gap-y-8'>
+      <h2 className="italic text-3xl mt-5 mb-3"> {props.teamInfo.label} </h2>
+      <div className='grid grid-cols-3 gap-x-4 gap-y-6'>
         {props.teamInfo.teamMembers.map((teamMember) =>
           <TeamMemberInfoCard key={`${teamMember.firstName}-${teamMember.lastName}`} teamMember={teamMember} />
         )}
