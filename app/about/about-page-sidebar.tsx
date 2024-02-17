@@ -1,12 +1,16 @@
-"use client"
-
-import { useContext } from "react";
-import { AboutPageSidebarOption, aboutPageSidebarContext } from "./about-page-context";
 import { NavigationSidebar } from "@/components/ui/navigation-sidebar/navigation-sidebar";
 
-export const AboutPageSidebar = (): React.ReactNode => {
-  const { currentSidebarOption } = useContext(aboutPageSidebarContext)
+export enum AboutPageSidebarOption {
+  DATA_EXTRACTION = "DATA_EXTRACTION",
+  FAQ = "FAQ",
+  THE_TEAM = "THE_TEAM",
+}
 
+interface AboutPageSidebarProps {
+  currentSidebarOption: AboutPageSidebarOption;
+}
+
+export const AboutPageSidebar = (props: AboutPageSidebarProps): React.ReactNode => {
   return <NavigationSidebar
     options={[{
       label: 'Data Extraction',
@@ -21,6 +25,6 @@ export const AboutPageSidebar = (): React.ReactNode => {
       route: '/about/the-team',
       value: AboutPageSidebarOption.THE_TEAM
     }]}
-    selectedValue={ currentSidebarOption }
+    selectedValue={ props.currentSidebarOption }
   />;
 }

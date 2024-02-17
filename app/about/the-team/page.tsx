@@ -1,11 +1,8 @@
 "use client";
 import { useContext, useEffect } from "react";
-import {
-  AboutPageSidebarOption,
-  aboutPageSidebarContext,
-} from "../about-page-context";
 import { useGroupedTeamMemberData } from "@/hooks/useGroupedTeamMemberData";
 import { Linkedin, Mail, Twitter } from "lucide-react";
+import { useHydrate } from "@tanstack/react-query";
 
 interface TeamInfo {
   label: string;
@@ -73,12 +70,7 @@ const TeamCard = (props: TeamInfoCardProps) => {
 }
 
 export default function TeamPage() {
-  const { setCurrentSidebarOption } = useContext(aboutPageSidebarContext);
   const { data } = useGroupedTeamMemberData();
-
-  useEffect(() => {
-    setCurrentSidebarOption(AboutPageSidebarOption.THE_TEAM);
-  }, [setCurrentSidebarOption]);
 
   return (
     <div className='mb-6'>
