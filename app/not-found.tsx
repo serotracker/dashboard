@@ -2,12 +2,10 @@
 import { Button } from '@/components/ui/button';
 import { usePathname, useRouter } from 'next/navigation';
 
-// TODO: Style this
 const NotFoundUI: React.FC = () => {
     const router = useRouter();
     const currentPage = usePathname();
     return (
-    /*<div className="flex flex-col col-12 items-center overflow-auto h-full pt-24">*/
     <div className='flex justify-center items-center h-screen'>
         <div className='prose pb-2'>
             <div className='flex justify-center'>
