@@ -1,5 +1,11 @@
-import { AboutPageSidebar, AboutPageSidebarOption } from "./about-page-sidebar";
+import { AboutPageSidebar } from "./about-page-sidebar";
 import { notFound } from "next/navigation";
+
+export enum AboutPageSidebarOption {
+  DATA_EXTRACTION = "DATA_EXTRACTION",
+  FAQ = "FAQ",
+  THE_TEAM = "THE_TEAM",
+}
 
 interface AboutPageBaseLayoutProps {
   currentSidebarOption: AboutPageSidebarOption,
@@ -17,7 +23,7 @@ export const AboutPageBaseLayout = (props: AboutPageBaseLayoutProps): React.Reac
         <AboutPageSidebar currentSidebarOption={props.currentSidebarOption} />
       </div>
       <div className="col-span-10 h-full row-span-2">
-        <p> data extraction page </p>;
+        {props.children}
       </div>
     </div>
   );

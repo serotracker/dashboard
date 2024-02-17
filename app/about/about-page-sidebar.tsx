@@ -1,13 +1,5 @@
-"use client"
-
-import { useContext } from "react";
 import { NavigationSidebar } from "@/components/ui/navigation-sidebar/navigation-sidebar";
-
-export enum AboutPageSidebarOption {
-  DATA_EXTRACTION = "DATA_EXTRACTION",
-  FAQ = "FAQ",
-  THE_TEAM = "THE_TEAM",
-}
+import { AboutPageSidebarOption } from "./base-layout";
 
 interface AboutPageSidebarProps {
   currentSidebarOption: AboutPageSidebarOption;
