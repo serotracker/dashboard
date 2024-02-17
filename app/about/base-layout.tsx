@@ -27,7 +27,7 @@ export const AboutPageBaseLayout = async (props: AboutPageBaseLayoutProps) => {
 
   const dehydratedState = dehydrate(queryClient);
 
-  if(process.env.NEXT_PUBLIC_WEBSITE_REDESIGN_ENABLED !== 'true') {
+  if(process.env.NEXT_PUBLIC_ABOUT_PAGE_ENABLED !== 'true') {
     return notFound();
   }
 
