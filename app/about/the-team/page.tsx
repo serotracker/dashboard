@@ -61,8 +61,8 @@ interface TeamInfoCardProps {
 
 const TeamCard = (props: TeamInfoCardProps) => {
   return (
-    <div>
-      <h2 className="italic text-3xl mt-5 mb-3"> {props.teamInfo.label} </h2>
+    <div className="mb-6">
+      <h2 className="italic text-3xl mt-7 mb-5"> {props.teamInfo.label} </h2>
       <div className='grid grid-cols-3 gap-x-4 gap-y-6'>
         {props.teamInfo.teamMembers.map((teamMember) =>
           <TeamMemberInfoCard key={`${teamMember.firstName}-${teamMember.lastName}`} teamMember={teamMember} />
