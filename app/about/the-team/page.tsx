@@ -1,8 +1,6 @@
 "use client";
-import { useContext, useEffect } from "react";
 import { useGroupedTeamMemberData } from "@/hooks/useGroupedTeamMemberData";
 import { Linkedin, Mail, Twitter } from "lucide-react";
-import { useHydrate } from "@tanstack/react-query";
 
 interface TeamInfo {
   label: string;
