@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { VisualizationId, VisualizationInformation, addToVisualizationInformation } from "../visualizations/visualizations";
 import { ZoomIn } from "lucide-react";
 import { cn } from '@/lib/utils';
-import { RedesignedArbovirusPageSectionUrlParam } from "./sections";
+import { RedesignedArbovirusPageSectionId } from "./page";
 
 export const VisualizationsSection = () => {
     const router = useRouter();
@@ -34,7 +34,7 @@ export const VisualizationsSection = () => {
           <div className="flex py-4">
             <h3 className="w-full text-center text-lg">{visualization.displayName}</h3>
             <button
-              onClick={() => router.push(`visualizations?visualization=${visualization.urlParameter}&referrerRoute=/pathogen/arbovirus/wip%3Fsection=${RedesignedArbovirusPageSectionUrlParam.visualizations}`)}
+              onClick={() => router.push(`visualizations?visualization=${visualization.urlParameter}&referrerRoute=/pathogen/arbovirus/wip%23${RedesignedArbovirusPageSectionId.VISUALIZATIONS}`)}
               aria-label="See visualization in fullscreen"
             >
               <ZoomIn />
