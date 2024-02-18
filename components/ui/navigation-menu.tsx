@@ -86,7 +86,11 @@ const NavigationMenuViewport = React.forwardRef<
   <div className={cn("fixed left-0 top-12 flex justify-center w-screen")}>
     <NavigationMenuPrimitive.Viewport
       className={cn(
+<<<<<<< HEAD
         "origin-top-left relative h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden text-white shadow-lg data-[state=open]:animate-expand-downwards data-[state=closed]:animate-collapse-upwards dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50",
+=======
+        "origin-top-left relative h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden bg-background text-white shadow-lg data-[state=open]:animate-expandDownwards data-[state=closed]:animate-collapseUpwards dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50",
+>>>>>>> 7850d4b (Updated nav menu to be fulls creen and expand downrads without zoom)
         className
       )}
       ref={ref}

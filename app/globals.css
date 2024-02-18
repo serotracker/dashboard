@@ -98,6 +98,7 @@
 
 @layer utilities {
 
+<<<<<<< HEAD
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -111,8 +112,42 @@
     /* Firefox */
   }
 
+=======
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
+    .animate-expandDownwards {
+      animation: expandDownwards 0.2s forwards
+    }
+    
+    .animate-collapseUpwards {
+      animation: collapseUpwards 0.2s forwards
+    }
+>>>>>>> 7850d4b (Updated nav menu to be fulls creen and expand downrads without zoom)
 }
 
 .mapboxgl-popup-content {
   padding: 0 !important;
 }
+
+@keyframes expandDownwards {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-navigation-menu-viewport-height);
+  }
+}
+
+@keyframes collapseUpwards { 
+  from {
+    height: var(--radix-navigation-menu-viewport-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
