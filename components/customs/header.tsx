@@ -14,13 +14,15 @@ import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import ListItem from "@/components/customs/list-item";
+<<<<<<< HEAD
 import { ArbovirusPageSectionId } from "@/app/constants";
+=======
+import { NavigationMenuLink } from "@radix-ui/react-navigation-menu";
+>>>>>>> 3e60d6d (Updated the header to have the tracker and about tabs with subtabs)
 
 type navMenuItem = {
   title: string;
@@ -35,8 +37,14 @@ const serotracker: navMenuItem[] = [
     description: "A dashboard for SarsCov2 seroprevalence data",
   },
   {
-    title: "Analysis",
-    href: "/pathogen/sarscov2/analyze",
+    title: "Data",
+    href: "/pathogen/sarscov2/dashboard",
+    description:
+      "A collection of visualizations and tabular data tools for our collection of SarsCov2 data",
+  },
+  {
+    title: "Visualizations",
+    href: "/pathogen/sarscov2/dashboard",
     description:
       "A collection of visualizations and tabular data tools for our collection of SarsCov2 data",
   },
@@ -49,10 +57,41 @@ const arbotracker: navMenuItem[] = [
     description: "A dashboard for Arbovirus seroprevalence data",
   },
   {
+<<<<<<< HEAD
     title: "Analysis",
     href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.TABLE}`,
+=======
+    title: "Data",
+    href: "/pathogen/arbovirus/dashboard",
+>>>>>>> 3e60d6d (Updated the header to have the tracker and about tabs with subtabs)
     description:
       "A collection of visualizations and tabular data tools for our collection of arbovirus data",
+  },
+  {
+    title: "Visualizations",
+    href: "/pathogen/arbovirus/dashboard",
+    description:
+      "A collection of visualizations and tabular data tools for our collection of arbovirus data",
+  },
+];
+
+const about: navMenuItem[] = [
+  {
+    title: "Our Team",
+    href: "/pathogen/TODO",
+    description: "A list of our team members, alumni, stakeholders and other partners",
+  },
+  {
+    title: "Data Extraction",
+    href: "/pathogen/TODO",
+    description:
+      "The process used while extracted data",
+  },
+  {
+    title: "FAQ",
+    href: "/pathogen/TODO",
+    description:
+      "A list of frequently asked questions regarding the data, systematic review and organization",
   },
 ];
 
@@ -60,92 +99,64 @@ export const Header = () => {
   const [language, setLanguage] = useState<"en" | "fr" | "de">("en");
 
   return (
-    <header className="bg-background flex items-center justify-between h-12 w-screen px-2">
+    <header className="bg-background flex items-center justify-between h-12 w-screen px-2 text-white border-b-4 border-zinc-100">
       <div className="cursor-pointer py-5 pl-2">
-        <Link href={"/"} className="flex items-center">
-          <Image
-            src={"/SerotrackerLogo.svg"}
-            alt={"Serotracker Logo"}
-            width={23}
-            height={23}
-          />
+        <Link href={"/"} className="flex items-center text-h1">
+          SeroTracker
         </Link>
       </div>
-
       <NavigationMenu>
         <NavigationMenuList>
-          <NavigationMenuItem hidden={!process.env.SARS_COV_2_TRACKER_ENABLED}>
-            <NavigationMenuTrigger>SeroTracker</NavigationMenuTrigger>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger className="bg-transparent">Trackers</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                {serotracker.map((page) => (
-                  <ListItem
-                    key={page.title}
-                    title={page.title}
-                    href={page.href}
-                  >
-                    {page.description}
-                  </ListItem>
-                ))}
-              </ul>
+              <div className="p-4 flex justify-center w-full">
+                {process.env.SARS_COV_2_TRACKER_ENABLED && 
+                <div className="flex flex-col w-2/4 px-2">
+                  <h2 className="mb-2">SC2Tracker</h2>
+                  <ul className="flex flex-row space-x-2">
+                  {serotracker.map((sc2Item: navMenuItem) => (
+                    <ListItem title={sc2Item.title} href={sc2Item.href}>
+                      {sc2Item.description}
+                    </ListItem>
+                  ))}
+                  </ul>
+                </div>
+                }
+                <div className="flex flex-col w-2/4 px-2">
+                  <h2 className="mb-2">ArboTracker</h2>
+                  <ul className="flex flex-row space-x-2">
+                  {arbotracker.map((arboItem: navMenuItem) => (
+                    <ListItem title={arboItem.title} href={arboItem.href}>
+                      {arboItem.description}
+                      </ListItem>
+                  ))}
+                  </ul>
+                </div>
+                
+              </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
+
           <NavigationMenuItem>
-            <NavigationMenuTrigger>ArboTracker</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="bg-transparent">About</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                {arbotracker.map((page) => (
-                  <ListItem
-                    key={page.title}
-                    title={page.title}
-                    href={page.href}
-                  >
-                    {page.description}
-                  </ListItem>
-                ))}
-              </ul>
+            <div className="p-4 flex justify-center w-full">
+                <div className="flex flex-col w-2/4 px-2">
+                  <h2 className="mb-2">About</h2>
+                  <ul className="flex flex-row space-x-2">
+                  {about.map((arboItem: navMenuItem) => (
+                    <ListItem title={arboItem.title} href={arboItem.href}>
+                      {arboItem.description}
+                      </ListItem>
+                  ))}
+                  </ul>
+                </div>
+              </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          {/*
-          <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Documentation
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/about" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                About
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          */}
         </NavigationMenuList>
       </NavigationMenu>
-
-      <div
-        className={
-          "text-md font-header non-italic text-white h-100 flex justify-end items-center cursor-pointer"
-        }
-      >
-        {/* TODO: Need to incorporate language switching
-        <Select
-          defaultValue={language}
-          onValueChange={(value) => setLanguage(value as "en" | "fr" | "de")}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="EN" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="en">EN</SelectItem>
-            <SelectItem value="fr">FR</SelectItem>
-            <SelectItem value="de">DE</SelectItem>
-          </SelectContent>
-        </Select>
-      */}
-      </div>
     </header>
   );
 };
