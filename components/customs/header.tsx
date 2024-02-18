@@ -8,11 +8,13 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
+  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import ListItem from "@/components/customs/list-item";
-
 import { ArbovirusPageSectionId } from "@/app/constants";
+=======
+import { NavigationMenuLink } from "@radix-ui/react-navigation-menu";
+>>>>>>> 3e60d6d (Updated the header to have the tracker and about tabs with subtabs)
 
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -30,14 +32,10 @@ const serotrackerNavItems: NavMenuItem[] = [
     description: "A dashboard for Sars Cov 2 seroprevalence data",
   },
   {
-    title: "Data",
-    href: "/pathogen/sarscov2/dashboard",
-    description: "View or download our entire Sars Cov 2 dataset",
-  },
-  {
-    title: "Visualizations",
-    href: "/pathogen/sarscov2/dashboard",
-    description: "A collection of visualizations for our Sars Cov 2 dataset",
+    title: "Analysis",
+    href: "/pathogen/sarscov2/analyze",
+    description:
+      "A collection of visualizations and tabular data tools for our collection of SarsCov2 data",
   },
 ];
 
@@ -48,60 +46,12 @@ const arbotrackerNavitems: NavMenuItem[] = [
     description: "A dashboard for arbovirus seroprevalence data",
   },
   {
-    title: "Data",
+    title: "Analysis",
     href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.TABLE}`,
-    description: "View or download our entire arbovirus dataset",
-  },
-  {
-    title: "Visualizations",
-    href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.VISUALIZATIONS}`,
-    description: "A collection of visualizations for our arbovirus dataset",
+    description:
+      "A collection of visualizations and tabular data tools for our collection of arbovirus data",
   },
 ];
-
-const aboutNavItems: NavMenuItem[] = [
-  {
-    title: "Data Extraction",
-    href: "/about/data-extraction",
-    description: "The process used to extract the data",
-  },
-  {
-    title: "FAQ",
-    href: "/about/faq",
-    description:
-      "A list of frequently asked questions regarding the data, systematic review and organization",
-  },
-  {
-    title: "Our Team",
-    href: "/about/the-team",
-    description:
-      "A list of our team members, alumni, stakeholders and other partners",
-  },
-];
-
-interface TabGroupProps {
-  title: string;
-  navItems: NavMenuItem[];
-}
-
-function TabGroup(props: TabGroupProps) {
-  return (
-    <div className="flex flex-col w-2/4 md:2/5 px-2">
-      <h2 className="mb-2">{props.title}</h2>
-      <ul className="flex flex-row space-x-2">
-        {props.navItems.map((navItem: NavMenuItem) => (
-          <ListItem
-            key={`${props.title}-${navItem.title}`}
-            title={navItem.title}
-            href={navItem.href}
-          >
-            {navItem.description}
-          </ListItem>
-        ))}
-      </ul>
-    </div>
-  );
-}
 
 export const Header = () => {
   const pathname = usePathname();
@@ -128,58 +78,67 @@ export const Header = () => {
   }, [pathname]);
 
   return (
-    <header
-      className={cn(
-        "flex items-center  justify-between transition-colors duration-300 h-14 w-screen px-2 text-white border-b-4 border-white overflow-hidden",
-        headerBgColor
-      )}
-    >
-      <div className="cursor-pointer pl-2">
-        <Link href={"/"} className="flex items-center text-h1">
-          <h2>
-            <span
-              className={cn(
-                "p-1 mr-1 bg-white rounded-md transition-colors duration-300",
-                titleSuffixColor
-              )}
-            >
-              {titleSuffix}
-            </span>
-            Tracker
-          </h2>
+    <header className="bg-background flex items-center justify-between h-12 w-screen px-2">
+      <div className="cursor-pointer py-5 pl-2">
+        <Link href={"/"} className="flex items-center">
+          <Image
+            src={"/SerotrackerLogo.svg"}
+            alt={"Serotracker Logo"}
+            width={23}
+            height={23}
+          />
         </Link>
       </div>
       <NavigationMenu>
         <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent">
-              Trackers
-            </NavigationMenuTrigger>
+          <NavigationMenuItem hidden={!process.env.SARS_COV_2_TRACKER_ENABLED}>
+            <NavigationMenuTrigger>SeroTracker</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <div className="p-4 flex justify-center w-full">
-                {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED && (
-                  <TabGroup
-                    title={"SC2Tracker"}
-                    navItems={serotrackerNavItems}
-                  />
-                )}
-                <TabGroup
-                  title={"Arbotracker"}
-                  navItems={arbotrackerNavitems}
-                />
-              </div>
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                {serotracker.map((page) => (
+                  <ListItem
+                    key={page.title}
+                    title={page.title}
+                    href={page.href}
+                  >
+                    {page.description}
+                  </ListItem>
+                ))}
+              </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          {process.env.NEXT_PUBLIC_ABOUT_PAGE_ENABLED && <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent">
-              About
-            </NavigationMenuTrigger>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>ArboTracker</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <div className="p-4 flex justify-center w-full">
-                <TabGroup title={"About"} navItems={aboutNavItems} />
-              </div>
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                {arbotracker.map((page) => (
+                  <ListItem
+                    key={page.title}
+                    title={page.title}
+                    href={page.href}
+                  >
+                    {page.description}
+                  </ListItem>
+                ))}
+              </ul>
             </NavigationMenuContent>
-          </NavigationMenuItem>}
+          </NavigationMenuItem>
+          {/*
+          <NavigationMenuItem>
+            <Link href="/docs" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Documentation
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/about" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                About
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          */}
         </NavigationMenuList>
         <NavigationMenuViewport
           className={cn("transition-colors duration-300", headerBgColor)}

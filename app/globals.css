@@ -120,11 +120,11 @@
     }
 
     .animate-expandDownwards {
-      animation: expandDownwards 0.2s forwards
+      animation: expandDownwards 0.4s forwards
     }
     
     .animate-collapseUpwards {
-      animation: collapseUpwards 0.2s forwards
+      animation: collapseUpwards 0.4s forwards
     }
 >>>>>>> 7850d4b (Updated nav menu to be fulls creen and expand downrads without zoom)
 }
