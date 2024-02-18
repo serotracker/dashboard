@@ -5,12 +5,7 @@ import { Filters } from "../dashboard/filters";
 import { VisualizationsSection } from "./visualizations-section";
 import { ArboDataTable } from "../analyze/ArboDataTable";
 import { ArbovirusMap } from "../dashboard/(map)/ArbovirusMap";
-
-export enum RedesignedArbovirusPageSectionId {
-  MAP = 'MAP',
-  TABLE = 'TABLE',
-  VISUALIZATIONS = 'VISUALIZATIONS'
-}
+import { RedesignedArbovirusPageSectionId } from "./sections";
 
 export default function RedesignedArbovirusPage() {
   if(process.env.NEXT_PUBLIC_WEBSITE_REDESIGN_ENABLED !== 'true') {

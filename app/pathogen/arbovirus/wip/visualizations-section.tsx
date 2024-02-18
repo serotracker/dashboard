@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { VisualizationId, VisualizationInformation, addToVisualizationInformation } from "../visualizations/visualizations";
 import { ZoomIn } from "lucide-react";
 import { cn } from '@/lib/utils';
-import { RedesignedArbovirusPageSectionId } from "./page";
+import { RedesignedArbovirusPageSectionId } from "./sections";
 
 export const VisualizationsSection = () => {
     const router = useRouter();
