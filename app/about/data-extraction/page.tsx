@@ -7,7 +7,7 @@ export default function DataExtractionPage() {
   const headerClassname = 'text-3xl font-bold mt-5 mb-4';
 
   return (
-    <>
+    <div className="m-4">
       <h2 className={headerClassname}>About SeroTracker</h2>
       <div className="mb-4">
         <b className="inline">SeroTracker synthesizes findings from thousands of seroprevalence studies worldwide, providing a data platform and interactive dashboard for pathogen serosurveillance. </b>
@@ -20,7 +20,7 @@ export default function DataExtractionPage() {
         <p className="inline">through the </p>
         <Link className="inline text-link" href="https://www.covid19immunitytaskforce.ca/" target="__blank" rel="noopener noreferrer">COVID-19 Immunity Task Force</Link>
         <p className="inline">. SeroTracker is also hosted at the </p>
-        <Link className="inline text-link" href="https://cumming.ucalgary.ca/centres/centre-health-informatics" target="__blank" rel="noopener noreferrer">University of Calgary's Centre for Health Informatics</Link>
+        <Link className="inline text-link" href="https://cumming.ucalgary.ca/centres/centre-health-informatics" target="__blank" rel="noopener noreferrer">University of Calgary&apos;s Centre for Health Informatics</Link>
         <p className="inline">.</p>
       </div>
       <div className='mb-4'>
@@ -32,14 +32,22 @@ export default function DataExtractionPage() {
       </div>
       <div className="mb-4">
         <Link className="inline text-link" href="https://www.mapbox.com/" target="__blank" rel="noopener noreferrer">Mapbox </Link>
-        <p className='mb-4 inline'>supports SeroTracker's mapping infrastructure.</p>
+        <p className='mb-4 inline'>supports SeroTracker&apos;s mapping infrastructure.</p>
       </div>
       <h2 className={headerClassname}>Contact Us</h2>
-      <p className='mb-4'>For all SeroTracker inquiries (including to support our efforts, collaborate with us, or if you are a journalist interested in reporting on our findings), please contact Mairéad Whelan at mairead.whelan@ucalgary.ca, Harriet Ware at ware.harriet@gmail.com, and Niklas Bobrovitz at niklas.bobrovitz@mail.utoronto.ca.</p>
       <div className="mb-4">
-        <p className='inline'>To make us aware of new arbovirus seroprevalence studies or studies that we have not yet captured, please fill out </p>
+        <p className="inline">For all SeroTracker inquiries (including to support our efforts, collaborate with us, or if you are a journalist interested in reporting on our findings), please contact Mairéad Whelan at </p>
+        <Link className="inline text-link" href="mailto:mairead.whelan@ucalgary.ca">mairead.whelan@ucalgary.ca</Link>
+        <p className='inline'>, Harriet Ware at </p>
+        <Link className="inline text-link" href="mailto:ware.harriet@gmail.com">ware.harriet@gmail.com</Link>
+        <p className='inline'>, and Niklas Bobrovitz at </p>
+        <Link className="inline text-link" href="mailto:niklas.bobrovitz@mail.utoronto.ca">niklas.bobrovitz@mail.utoronto.ca</Link>
+        <p className='inline'>.</p>
+      </div>
+      <div className="mb-4">
+        <p className='inline'>To make us aware of new arbovirus seroprevalence studies or arbovirus studies that we have not yet captured, please fill out </p>
         <Link className='inline text-link' href='https://forms.gle/pKNiMiMYr6hiKnXx8'>this form.</Link>
       </div>
-    </>
+    </div>
   );
 }
