@@ -1,28 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
+  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import ListItem from "@/components/customs/list-item";
+<<<<<<< HEAD
 <<<<<<< HEAD
 import { ArbovirusPageSectionId } from "@/app/constants";
 =======
 import { NavigationMenuLink } from "@radix-ui/react-navigation-menu";
 >>>>>>> 3e60d6d (Updated the header to have the tracker and about tabs with subtabs)
+=======
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+>>>>>>> 8af1dec (Added in conditional styling to the header)
 
 type navMenuItem = {
   title: string;
@@ -96,13 +94,39 @@ const about: navMenuItem[] = [
 ];
 
 export const Header = () => {
-  const [language, setLanguage] = useState<"en" | "fr" | "de">("en");
+
+  const pathname = usePathname();
+  const [titleSuffix, setTitleSuffix] = useState("Sero");
+  const [prevTitleSuffix, setPrevTitleSuffix] = useState("");
+  const [titleSuffixColor, setTitleSuffixColor] = useState("text-background");
+  const [headerBgColor, setHeaderBgColor] = useState("bg-background")
+
+
+  useEffect(() => {
+    setPrevTitleSuffix(titleSuffix);
+    if (pathname.includes('arbovirus')) {
+      setTitleSuffix("Arbo");
+      setTitleSuffixColor("text-green-500");
+      setHeaderBgColor("bg-green-500 delay-150");
+    } else if (pathname.includes('sarscov2')) {
+      setTitleSuffix("SC2");
+      setTitleSuffixColor("text-blue-500");
+      setHeaderBgColor("bg-blue-500 delay-150");
+    } else {
+      setTitleSuffix("Sero");
+      setTitleSuffixColor("text-background");
+      setHeaderBgColor("bg-background");
+    }
+  }, [pathname])
 
   return (
-    <header className="bg-background flex items-center justify-between h-12 w-screen px-2 text-white border-b-4 border-zinc-100">
+    <header className={cn("flex items-center justify-between transition-colors duration-300 h-12 w-screen px-2 text-white border-b-4 border-zinc-100", headerBgColor)}>
       <div className="cursor-pointer py-5 pl-2">
         <Link href={"/"} className="flex items-center text-h1">
-          SeroTracker
+          <h1>
+          <span className={cn("p-1 mr-1 bg-white rounded-md transition-colors duration-300", titleSuffixColor)}>{titleSuffix}</span>
+          Tracker
+          </h1>
         </Link>
       </div>
       <NavigationMenu>
@@ -111,7 +135,7 @@ export const Header = () => {
             <NavigationMenuTrigger className="bg-transparent">Trackers</NavigationMenuTrigger>
             <NavigationMenuContent>
               <div className="p-4 flex justify-center w-full">
-                {process.env.SARS_COV_2_TRACKER_ENABLED && 
+                {!process.env.SARS_COV_2_TRACKER_ENABLED && 
                 <div className="flex flex-col w-2/4 px-2">
                   <h2 className="mb-2">SC2Tracker</h2>
                   <ul className="flex flex-row space-x-2">
@@ -133,11 +157,9 @@ export const Header = () => {
                   ))}
                   </ul>
                 </div>
-                
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
-
           <NavigationMenuItem>
             <NavigationMenuTrigger className="bg-transparent">About</NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -156,6 +178,7 @@ export const Header = () => {
             </NavigationMenuContent>
           </NavigationMenuItem>
         </NavigationMenuList>
+        <NavigationMenuViewport className={cn("transition-colors duration-300", headerBgColor)}/>
       </NavigationMenu>
     </header>
   );
