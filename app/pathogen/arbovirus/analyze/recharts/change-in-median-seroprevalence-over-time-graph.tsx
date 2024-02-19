@@ -152,10 +152,6 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
               ? "h-1/2"
               : "h-1/3";
             
-          console.log('dataGroupedByArbovirus', dataGroupedByArbovirus)
-          console.log('arbovirus', arbovirus)
-          console.log('dataForArbovirus', dataForArbovirus)
-
           return (
             <div
               className={clsx(width, height)}
