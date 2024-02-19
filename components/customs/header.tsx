@@ -68,6 +68,17 @@ const arbotrackerNavitems: navMenuItem[] = [
   {
     title: "Analysis",
     href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.TABLE}`,
+<<<<<<< HEAD
+=======
+=======
+    title: "Data",
+<<<<<<< HEAD
+    href: "/pathogen/arbovirus/dashboard",
+>>>>>>> 3e60d6d (Updated the header to have the tracker and about tabs with subtabs)
+=======
+    href: "/pathogen/arbovirus/dashboard/#TABLE",
+>>>>>>> 04e95cb (Updated the links to work)
+>>>>>>> 7280c8c (Updated the links to work)
     description:
       "A collection of visualizations and tabular data tools for our collection of arbovirus data",
   },
@@ -75,7 +86,7 @@ const arbotrackerNavitems: navMenuItem[] = [
 =======
   {
     title: "Visualizations",
-    href: "/pathogen/arbovirus/dashboard",
+    href: "/pathogen/arbovirus/dashboard/#VISUALIZATIONS",
     description:
       "A collection of visualizations and tabular data tools for our collection of arbovirus data",
   },
@@ -84,18 +95,18 @@ const arbotrackerNavitems: navMenuItem[] = [
 const aboutNavItems: navMenuItem[] = [
   {
     title: "Our Team",
-    href: "/pathogen/TODO",
+    href: "/about/the-team",
     description: "A list of our team members, alumni, stakeholders and other partners",
   },
   {
     title: "Data Extraction",
-    href: "/pathogen/TODO",
+    href: "/about/data-extraction",
     description:
       "The process used while extracted data",
   },
   {
     title: "FAQ",
-    href: "/pathogen/TODO",
+    href: "/about/faq",
     description:
       "A list of frequently asked questions regarding the data, systematic review and organization",
   },
