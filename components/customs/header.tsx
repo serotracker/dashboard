@@ -104,7 +104,7 @@ function TabGroup(props: TabGroupProps) {
       <h2 className="mb-2">{props.title}</h2>
       <ul className="flex flex-row space-x-2">
         {props.navItems.map((navItem: navMenuItem) => (
-          <ListItem title={navItem.title} href={navItem.href}>
+          <ListItem key={`${props.title}-${navItem.title}`} title={navItem.title} href={navItem.href}>
             {navItem.description}
           </ListItem>
         ))}
