@@ -115,16 +115,18 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
       ([arbovirus, dataPointsForAParticularArbovirus]) => [
         arbovirus,
         groupDataPointsIntoTimeBuckets({
-          dataPoints: dataPointsForAParticularArbovirus.map((dataPoint) => ({
-            ...dataPoint,
-            groupingTimeInterval: {
-              intervalStartDate: parseISO(dataPoint.sampleStartDate),
-              intervalEndDate: parseISO(dataPoint.sampleEndDate),
+          dataPoints: dataPointsForAParticularArbovirus
+            .filter((dataPoint) => dataPoint.sampleStartDate && dataPoint.sampleEndDate)
+            .map((dataPoint) => ({
+              ...dataPoint,
+              groupingTimeInterval: {
+                intervalStartDate: parseISO(dataPoint.sampleStartDate),
+                intervalEndDate: parseISO(dataPoint.sampleEndDate),
+              },
+            })),
+            groupingBucketSize: {
+              years: 5,
             },
-          })),
-          groupingBucketSize: {
-            years: 5,
-          },
         }).groupedDataPoints,
       ]
     )
@@ -149,6 +151,10 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
               : numberOfSubgraphsDisplayed < 5
               ? "h-1/2"
               : "h-1/3";
+            
+          console.log('dataGroupedByArbovirus', dataGroupedByArbovirus)
+          console.log('arbovirus', arbovirus)
+          console.log('dataForArbovirus', dataForArbovirus)
 
           return (
             <div
