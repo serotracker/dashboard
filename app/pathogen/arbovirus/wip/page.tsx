@@ -5,7 +5,7 @@ import { Filters } from "../dashboard/filters";
 import { VisualizationsSection } from "./visualizations-section";
 import { ArboDataTable } from "../analyze/ArboDataTable";
 import { ArbovirusMap } from "../dashboard/(map)/ArbovirusMap";
-import { RedesignedArbovirusPageSectionId } from "./sections";
+import { RedesignedArbovirusPageSectionId } from "../../../constants";
 
 export default function RedesignedArbovirusPage() {
   if(process.env.NEXT_PUBLIC_WEBSITE_REDESIGN_ENABLED !== 'true') {
