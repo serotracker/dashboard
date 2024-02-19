@@ -37,7 +37,11 @@ type NavMenuItem = {
   description: string;
 };
 
+<<<<<<< HEAD
 const serotrackerNavItems: NavMenuItem[] = [
+=======
+const serotrackerNavItems: navMenuItem[] = [
+>>>>>>> a564c99 (Updated header style a little bit and also extracted a reusable segment of code)
   {
     title: "Dashboard",
     href: "/pathogen/sarscov2/dashboard",
@@ -51,7 +55,11 @@ const serotrackerNavItems: NavMenuItem[] = [
   },
 ];
 
+<<<<<<< HEAD
 const arbotrackerNavitems: NavMenuItem[] = [
+=======
+const arbotrackerNavitems: navMenuItem[] = [
+>>>>>>> a564c99 (Updated header style a little bit and also extracted a reusable segment of code)
   {
     title: "Dashboard",
     href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.MAP}`,
@@ -63,7 +71,56 @@ const arbotrackerNavitems: NavMenuItem[] = [
     description:
       "A collection of visualizations and tabular data tools for our collection of arbovirus data",
   },
+<<<<<<< HEAD
+=======
+  {
+    title: "Visualizations",
+    href: "/pathogen/arbovirus/dashboard",
+    description:
+      "A collection of visualizations and tabular data tools for our collection of arbovirus data",
+  },
 ];
+
+const aboutNavItems: navMenuItem[] = [
+  {
+    title: "Our Team",
+    href: "/pathogen/TODO",
+    description: "A list of our team members, alumni, stakeholders and other partners",
+  },
+  {
+    title: "Data Extraction",
+    href: "/pathogen/TODO",
+    description:
+      "The process used while extracted data",
+  },
+  {
+    title: "FAQ",
+    href: "/pathogen/TODO",
+    description:
+      "A list of frequently asked questions regarding the data, systematic review and organization",
+  },
+>>>>>>> a564c99 (Updated header style a little bit and also extracted a reusable segment of code)
+];
+
+interface TabGroupProps {
+  title: string;
+  navItems: navMenuItem[]
+}
+
+function TabGroup(props: TabGroupProps) {
+  return (
+    <div className="flex flex-col w-2/4 md:2/5 px-2">
+      <h2 className="mb-2">{props.title}</h2>
+      <ul className="flex flex-row space-x-2">
+        {props.navItems.map((navItem: navMenuItem) => (
+          <ListItem title={navItem.title} href={navItem.href}>
+            {navItem.description}
+          </ListItem>
+        ))}
+      </ul>
+    </div>
+  )
+}
 
 export const Header = () => {
 <<<<<<< HEAD
@@ -87,13 +144,11 @@ export const Header = () => {
 
   const pathname = usePathname();
   const [titleSuffix, setTitleSuffix] = useState("Sero");
-  const [prevTitleSuffix, setPrevTitleSuffix] = useState("");
   const [titleSuffixColor, setTitleSuffixColor] = useState("text-background");
   const [headerBgColor, setHeaderBgColor] = useState("bg-background")
 
 
   useEffect(() => {
-    setPrevTitleSuffix(titleSuffix);
     if (pathname.includes('arbovirus')) {
       setTitleSuffix("Arbo");
       setTitleSuffixColor("text-green-500");
@@ -125,12 +180,12 @@ export const Header = () => {
   }, [pathname])
 
   return (
-    <header className={cn("flex items-center justify-between transition-colors duration-300 h-12 w-screen px-2 text-white border-b-4 border-zinc-100", headerBgColor)}>
-      <div className="cursor-pointer py-5 pl-2">
+    <header className={cn("flex items-center justify-between transition-colors duration-300 h-12 w-screen px-2 text-white border-b-4 border-white overflow-hidden", headerBgColor)}>
+      <div className="cursor-pointer pl-2">
         <Link href={"/"} className="flex items-center text-h1">
           <h1>
-          <span className={cn("p-1 mr-1 bg-white rounded-md transition-colors duration-300", titleSuffixColor)}>{titleSuffix}</span>
-          Tracker
+            <span className={cn("p-1 mr-1 bg-white transition-colors duration-300", titleSuffixColor)}>{titleSuffix}</span>
+            Tracker
           </h1>
 >>>>>>> c08bad2 (Added in conditional styling to the header)
         </Link>
@@ -154,18 +209,10 @@ export const Header = () => {
               </ul>
 =======
               <div className="p-4 flex justify-center w-full">
-                {!process.env.SARS_COV_2_TRACKER_ENABLED && 
-                <div className="flex flex-col w-2/4 px-2">
-                  <h2 className="mb-2">SC2Tracker</h2>
-                  <ul className="flex flex-row space-x-2">
-                  {serotracker.map((sc2Item: navMenuItem) => (
-                    <ListItem title={sc2Item.title} href={sc2Item.href}>
-                      {sc2Item.description}
-                    </ListItem>
-                  ))}
-                  </ul>
-                </div>
+                {process.env.SARS_COV_2_TRACKER_ENABLED &&
+                  <TabGroup title={"SC2Tracker"} navItems={serotrackerNavItems}                />
                 }
+<<<<<<< HEAD
                 <div className="flex flex-col w-2/4 px-2">
                   <h2 className="mb-2">ArboTracker</h2>
                   <ul className="flex flex-row space-x-2">
@@ -178,11 +225,16 @@ export const Header = () => {
                 </div>
               </div>
 >>>>>>> c08bad2 (Added in conditional styling to the header)
+=======
+                <TabGroup title={"Arbotracker"} navItems={arbotrackerNavitems} />
+                              </div>
+>>>>>>> a564c99 (Updated header style a little bit and also extracted a reusable segment of code)
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuTrigger>ArboTracker</NavigationMenuTrigger>
             <NavigationMenuContent>
+<<<<<<< HEAD
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {arbotracker.map((page) => (
                   <ListItem
@@ -194,6 +246,11 @@ export const Header = () => {
                   </ListItem>
                 ))}
               </ul>
+=======
+              <div className="p-4 flex justify-center w-full">
+                <TabGroup title={"About"} navItems={aboutNavItems} />
+                              </div>
+>>>>>>> a564c99 (Updated header style a little bit and also extracted a reusable segment of code)
             </NavigationMenuContent>
           </NavigationMenuItem>
           {/*
@@ -214,12 +271,16 @@ export const Header = () => {
           */}
         </NavigationMenuList>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <NavigationMenuViewport
           className={cn("transition-colors duration-300", headerBgColor)}
         />
 =======
         <NavigationMenuViewport className={cn("transition-colors duration-300", headerBgColor)}/>
 >>>>>>> c08bad2 (Added in conditional styling to the header)
+=======
+        <NavigationMenuViewport className={cn("transition-colors duration-300", headerBgColor)} />
+>>>>>>> a564c99 (Updated header style a little bit and also extracted a reusable segment of code)
       </NavigationMenu>
     </header>
   );
