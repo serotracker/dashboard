@@ -54,7 +54,6 @@ export interface VisualizationInformation {
   urlParameter: VisualizationUrlParameter;
   displayName: VisualizationDisplayName;
   renderVisualization: () => React.ReactNode;
-  classNameWhenFullscreen: string
 }
 
 const allVisualizationInformation: Record<VisualizationId, VisualizationInformation> = {
@@ -68,8 +67,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationDisplayName[
         "Cumulative estimate count over time by arbovirus"
       ],
-    renderVisualization: StudyCountOverTime,
-    classNameWhenFullscreen: "p-16"
+    renderVisualization: StudyCountOverTime
   },
   [VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME]: {
     id: VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME,
@@ -81,8 +79,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationDisplayName[
         "Cumulative estimate count over time by sample frame"
       ],
-    renderVisualization: StudyCountOverTimeBySampleFrame,
-    classNameWhenFullscreen: "p-20"
+    renderVisualization: StudyCountOverTimeBySampleFrame
   },
   [VisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE]: {
     id: VisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE,
@@ -92,8 +89,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       ],
     displayName:
       VisualizationDisplayName["Estimate count by arbovirus & antibody type"],
-    renderVisualization: AntibodyPathogenBar,
-    classNameWhenFullscreen: "p-16"
+    renderVisualization: AntibodyPathogenBar
   },
   [VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS]: {
     id: VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS,
@@ -101,8 +97,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationUrlParameter["estimate-count-by-who-region-and-arbovirus"],
     displayName:
       VisualizationDisplayName["Estimate count by WHO region and arbovirus"],
-    renderVisualization: () => WHORegionAndArbovirusBar({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED }),
-    classNameWhenFullscreen: "p-16"
+    renderVisualization: () => WHORegionAndArbovirusBar({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
   [VisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS]: {
     id: VisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS,
@@ -110,8 +105,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationUrlParameter["estimate-count-by-un-region-and-arbovirus"],
     displayName:
       VisualizationDisplayName["Estimate count by UN region and arbovirus"],
-    renderVisualization: () => EstimateCountByUnRegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED }),
-    classNameWhenFullscreen: "p-16"
+    renderVisualization: () => EstimateCountByUnRegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
   [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: {
     id: VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION,
@@ -119,8 +113,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationUrlParameter["median-seroprevalence-by-who-region"],
     displayName:
       VisualizationDisplayName["Median seroprevalence of arboviruses by WHO Region"],
-    renderVisualization: MedianSeroPrevByWHOregion,
-    classNameWhenFullscreen: "p-10"
+    renderVisualization: MedianSeroPrevByWHOregion
   },
   [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP]: {
     id: VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP,
@@ -132,8 +125,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationDisplayName[
         "Median seroprevalence by WHO region and age group"
       ],
-    renderVisualization: MedianSeroPrevByWHOregionAndAgeGroup,
-    classNameWhenFullscreen: "p-6"
+    renderVisualization: MedianSeroPrevByWHOregionAndAgeGroup
   },
   [VisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS]: {
     id: VisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS,
@@ -145,8 +137,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationDisplayName[
         "Top ten countries reporting estimates by arbovirus"
       ],
-    renderVisualization: Top10CountriesByPathogenStudyCount,
-    classNameWhenFullscreen: "p-14"
+    renderVisualization: Top10CountriesByPathogenStudyCount
   },
   [VisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME]: {
     id: VisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME,
@@ -158,8 +149,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationDisplayName[
         "Change in median seroprevalence over time"
       ],
-    renderVisualization: ChangeInMedianSeroprevalenceOverTimeGraph,
-    classNameWhenFullscreen: "p-16"
+    renderVisualization: ChangeInMedianSeroprevalenceOverTimeGraph
   },
 }
 
