@@ -2,8 +2,6 @@ import React from "react";
 import { ArboProviders } from "@/contexts/arbo-context";
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
-import { useQuery } from "@tanstack/react-query";
-import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
 import { arbovirusEstimatesQuery } from "@/hooks/useArboData";
 import { arbovirusFiltersQuery } from "@/hooks/useArboFilters";
