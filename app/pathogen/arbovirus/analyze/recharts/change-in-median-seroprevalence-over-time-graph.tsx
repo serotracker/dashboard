@@ -151,7 +151,7 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
               : numberOfSubgraphsDisplayed < 5
               ? "h-1/2"
               : "h-1/3";
-            
+
           return (
             <div
               className={clsx(width, height)}
