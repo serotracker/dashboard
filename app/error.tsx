@@ -24,7 +24,7 @@ export default function Error({
             <div style={{ color: '#ff0000', backgroundColor: '#f5f5f5' }} className='rounded'>{error.message}</div>
             <p>If you want that operation again, click below!</p>
             <div className='w-full flex justify-center'>
-                <Button className="" onClick={() => reset()}>
+                <Button className="bg-background" onClick={() => reset()}>
                     Try again
                 </Button>
             </div>

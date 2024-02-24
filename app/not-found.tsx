@@ -13,7 +13,7 @@ const NotFoundUI: React.FC = () => {
             </div>
             <p>Sorry, but the route <span className='p-1' style={{ color: '#ff0000', backgroundColor: '#f5f5f5' }}>{currentPage}</span> could not be found. Click the button below to navigate back home.</p>
             <div className='w-full flex justify-center'>
-                <Button className="" onClick={() => {router.push("/")}}>
+                <Button className="bg-background" onClick={() => {router.push("/")}}>
                     Back to home
                 </Button>
             </div>
