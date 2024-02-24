@@ -32,7 +32,7 @@ export const VisualizationsSection = () => {
         <RechartsVisualization
           key={visualizationInformation.id}
           visualizationInformation={visualizationInformation}
-          className={cn(visualizationInformation.className, index != 0 ? 'mt-14' : undefined)}
+          className={cn(visualizationInformation.className, 'pb-14')}
         />
       ));
     }, []);

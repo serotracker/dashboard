@@ -1,4 +1,4 @@
-import { MutableRefObject, useRef } from 'react';
+import { MutableRefObject, useRef, useState } from 'react';
 import domtoimage from "dom-to-image";
 import fileDownload from "js-file-download";
 import { VisualizationId } from '../../visualizations/visualizations';
@@ -9,13 +9,17 @@ interface UseDownloadVisualizationInput {
 
 interface UseDownloadVisualizationOutput {
   ref: MutableRefObject<HTMLDivElement | null>;
-  downloadVisualization: () => void;
+  downloadVisualization: (input: DownloadVisualizationInput) => void;
+}
+
+interface DownloadVisualizationInput {
+  elementIdsToIgnore: string[]
 }
 
 export const useDownloadVisualization = (input: UseDownloadVisualizationInput): UseDownloadVisualizationOutput => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const downloadVisualization = () => {
+  const downloadVisualization = (functionInput: DownloadVisualizationInput) => {
     if(!ref.current) {
       throw Error("Unable to generate image for visualization.")
     }
@@ -23,7 +27,13 @@ export const useDownloadVisualization = (input: UseDownloadVisualizationInput): 
     domtoimage
       .toBlob(ref.current, {
         bgcolor: "#FFFFFF",
-        filter: () => true
+        filter: (input) => {
+          if(functionInput.elementIdsToIgnore.includes((input as HTMLElement)['id'])) {
+            return false;
+          }
+
+          return true;
+        }
       })
       .then(function (blob) {
         fileDownload(blob, `${input.visualizationId.toLowerCase().replaceAll('_', '-')}.png`);

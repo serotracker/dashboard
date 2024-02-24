@@ -12,11 +12,18 @@ export const RechartsVisualization = (props: RechartsVisualizationProps) => {
     visualizationId: props.visualizationInformation.id
   });
 
+  const downloadButtonId = `${props.visualizationInformation.id}-download-icon`
+  const zoomInButtonId = `${props.visualizationInformation.id}-zoom-in-icon`
+
   return (
     <div className={props.className} ref={ref}>
       <VisualizationHeader
         visualizationInformation={props.visualizationInformation}
-        downloadVisualization={() => downloadVisualization()}
+        downloadVisualization={() => downloadVisualization({
+          elementIdsToIgnore: [downloadButtonId, zoomInButtonId]
+        })}
+        zoomInButtonId={zoomInButtonId}
+        downloadButtonId={downloadButtonId}
       />
       {props.visualizationInformation.renderVisualization()}
     </div>

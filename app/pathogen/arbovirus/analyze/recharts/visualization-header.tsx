@@ -8,6 +8,8 @@ import {
 interface VisualizationHeaderProps {
   visualizationInformation: VisualizationInformation;
   downloadVisualization: () => void;
+  downloadButtonId: string;
+  zoomInButtonId: string;
 }
 
 export const VisualizationHeader = (props: VisualizationHeaderProps) => {
@@ -19,6 +21,7 @@ export const VisualizationHeader = (props: VisualizationHeaderProps) => {
         {props.visualizationInformation.displayName}
       </h3>
       <button
+        id={props.downloadButtonId}
         className="mr-4"
         onClick={() => props.downloadVisualization()}
         aria-label="Download visualization"
@@ -26,6 +29,7 @@ export const VisualizationHeader = (props: VisualizationHeaderProps) => {
         <DownloadCloud />
       </button>
       <button
+        id={props.zoomInButtonId}
         onClick={() =>
           router.push(`visualizations?visualization=${getVisualizationInformationFromVisualizationId({ visualizationId: props.visualizationInformation.id }).urlParameter}&referrerRoute=/pathogen/arbovirus/dashboard`)
         }
