@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { VisualizationId, VisualizationInformation, addToVisualizationInformation } from "../visualizations/visualizations";
 import { cn } from '@/lib/utils';
 import { RechartsVisualization } from "../analyze/recharts/recharts-visualization";
+import { RedesignedArbovirusPageSectionId } from "./sections";
 
 export const VisualizationsSection = () => {
     const router = useRouter();
@@ -28,11 +29,23 @@ export const VisualizationsSection = () => {
     ].includes(visualizationInfo.id));
 
     const renderVisualizationList = useCallback((visualizationList: Array<VisualizationInformation & {className: string}>) => {
-      return visualizationList.map((visualizationInformation, index) => (
+      return visualizationList.map((visualizationInformation) => (
         <RechartsVisualization
           key={visualizationInformation.id}
           visualizationInformation={visualizationInformation}
           className={cn(visualizationInformation.className, 'pb-14')}
+          buttonConfig={{
+            downloadButton: {
+              enabled: true,
+            },
+            zoomInButton: {
+              enabled: true,
+              referrerRoute: `/pathogen/arbovirus/wip#${RedesignedArbovirusPageSectionId.VISUALIZATIONS}`
+            },
+            closeButton: {
+              enabled: false
+            }
+          }}
         />
       ));
     }, []);
