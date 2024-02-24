@@ -10,10 +10,8 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
-  useEffect(() => {
-    // TODO: Does vercel automatically log this?
-    console.error(error)
-  }, [error])
+  // TODO: Figure out if vercel logs this.
+  console.error(error)
   return (
     <div className='flex justify-center items-center h-screen'>
         <div className='prose pb-2'>
