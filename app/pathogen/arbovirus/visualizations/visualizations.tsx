@@ -1,5 +1,3 @@
-import { MutableRefObject } from "react";
-
 import { typedObjectEntries } from "@/lib/utils";
 import { AntibodyPathogenBar, LegendConfiguration, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "../analyze/recharts";
 import { ChangeInMedianSeroprevalenceOverTimeGraph } from "../analyze/recharts/change-in-median-seroprevalence-over-time-graph";
@@ -55,7 +53,7 @@ export interface VisualizationInformation {
   id: VisualizationId;
   urlParameter: VisualizationUrlParameter;
   displayName: VisualizationDisplayName;
-  renderVisualization: (ref?: any) => React.ReactNode;
+  renderVisualization: () => React.ReactNode;
 }
 
 const allVisualizationInformation: Record<VisualizationId, VisualizationInformation> = {
@@ -107,7 +105,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationUrlParameter["estimate-count-by-un-region-and-arbovirus"],
     displayName:
       VisualizationDisplayName["Estimate count by UN region and arbovirus"],
-    renderVisualization: (ref) => EstimateCountByUnRegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
+    renderVisualization: () => EstimateCountByUnRegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
   [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: {
     id: VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION,

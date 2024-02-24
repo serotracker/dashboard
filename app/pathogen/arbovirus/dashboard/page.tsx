@@ -4,17 +4,17 @@ import React, { useCallback, useContext, useMemo } from "react";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { ArbovirusMap } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
-import { LegendConfiguration, WHORegionAndArbovirusBar } from "../analyze/recharts";
+import { LegendConfiguration, MedianSeroPrevByWHOregion, WHORegionAndArbovirusBar } from "../analyze/recharts";
 import { FilterableField, Filters } from "./filters";
 import { CardConfiguration, CardStyle, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
 import { CardCollection } from "@/components/ui/card-collection/card-collection";
 import { useMap } from "react-map-gl";
+import { ZoomIn } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { VisualizationId, getVisualizationInformationFromVisualizationId } from "../visualizations/visualizations";
 import { EstimateCountByUnRegionAndArbovirusGraph } from "../analyze/recharts/estimate-count-by-un-region-and-arbovirus-graph";
 import { ArboContext } from "@/contexts/arbo-context";
 import { useArboDataInsights } from "@/hooks/useArboDataInsights";
-import { RechartsVisualization } from "../analyze/recharts/recharts-visualization";
 
 export default function ArbovirusDashboard() {
   // Need to make the visualizations dynamic. Unsure how to do this well using CSS.
@@ -41,7 +41,18 @@ export default function ArbovirusDashboard() {
 
     return (
       <CardContent className={"px-0 h-full flex flex-col"}>
-        <RechartsVisualization visualizationInformation={visualizationInformation} />
+        <div className="flex py-4">
+          <h3 className="w-full text-center text-lg">
+            {visualizationInformation.displayName}
+          </h3>
+          <button 
+            onClick={() => router.push(`visualizations?visualization=${getVisualizationInformationFromVisualizationId({ visualizationId }).urlParameter}&referrerRoute=/pathogen/arbovirus/dashboard`)}
+            aria-label="See visualization in fullscreen"
+          >
+            <ZoomIn />
+          </button>
+        </div>
+        {renderVisualization()}
       </CardContent>
     );
   }, [router, filteredData, getNumberOfUniqueValuesForField])

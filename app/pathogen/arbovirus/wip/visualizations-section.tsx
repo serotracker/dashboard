@@ -29,9 +29,7 @@ export const VisualizationsSection = () => {
 
     const renderVisualizationList = useCallback((visualizationList: Array<VisualizationInformation & {className: string}>) => {
       return visualizationList.map((visualizationInformation, index) => (
-        <div key={visualizationInformation.id} className={cn(visualizationInformation.className, index != 0 ? 'mt-14' : undefined)}>
-          <RechartsVisualization visualizationInformation={visualizationInformation} />
-        </div>
+        <RechartsVisualization visualizationInformation={visualizationInformation} className={cn(visualizationInformation.className, index != 0 ? 'mt-14' : undefined)} />
       ));
     }, []);
 
