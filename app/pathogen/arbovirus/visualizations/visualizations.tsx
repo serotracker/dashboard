@@ -107,7 +107,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
       VisualizationUrlParameter["estimate-count-by-un-region-and-arbovirus"],
     displayName:
       VisualizationDisplayName["Estimate count by UN region and arbovirus"],
-    renderVisualization: (ref) => EstimateCountByUnRegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED, ref })
+    renderVisualization: (ref) => EstimateCountByUnRegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
   [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: {
     id: VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION,
