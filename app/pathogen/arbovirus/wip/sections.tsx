@@ -1,9 +1,5 @@
-import { RefObject } from "react";
 import { ArbovirusMap } from "../dashboard/(map)/ArbovirusMap";
 import { ArboDataTable } from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
-import { VisualizationId, addToVisualizationInformation } from "../visualizations/visualizations";
-import { ZoomIn } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { VisualizationsSection } from "./visualizations-section";
 import { RenderScrollSectionContentFunction } from "@/components/ui/scroll-section-group/scroll-section-group";
 

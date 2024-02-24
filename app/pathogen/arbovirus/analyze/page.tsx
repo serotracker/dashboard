@@ -7,30 +7,21 @@ import { ArboDataTable } from "@/app/pathogen/arbovirus/analyze/ArboDataTable";
 import clsx from "clsx";
 import { CardConfiguration, CardStyle, CardType, getConfigurationForCard } from "@/components/ui/card-collection/card-collection-types";
 import { CardCollection } from "@/components/ui/card-collection/card-collection";
-import { VisualizationId, addToVisualizationInformation } from "../visualizations/visualizations";
-import { ZoomIn } from "lucide-react";
+import { VisualizationId, VisualizationInformation, addToVisualizationInformation } from "../visualizations/visualizations";
 import { useRouter } from "next/navigation";
 import { ArboContext } from "@/contexts/arbo-context";
 import { useArboDataInsights } from "@/hooks/useArboDataInsights";
+import { RechartsVisualization } from "./recharts/recharts-visualization";
 
 const VisualizationCard = (props: {
-  title: string;
-  children: React.ReactNode;
-  height?: string;
-  renderIcons: () => React.ReactNode;
-}) => {
-  return (
-    <Card className={clsx("mb-4 mr-4 p-4 pt-0", props.height ?? "h-full sm:h-3/4 2xl:h-1/2 relative")}>
-      <CardContent className={"px-0 h-full flex flex-col"}>
-        <div className="flex py-4">
-          <h3 className="w-full text-center text-lg">{props.title}</h3>
-          {props.renderIcons()}
-        </div>
-        {props.children}
-      </CardContent>
-    </Card>
-  );
-};
+  visualizationInformation: VisualizationInformation & { height: string | undefined }
+}) => (
+  <Card className={clsx("mb-4 mr-4 p-4 pt-0", props.visualizationInformation.height ?? "h-full sm:h-3/4 2xl:h-1/2 relative")}>
+    <CardContent className={"px-0 h-full flex flex-col"}>
+      <RechartsVisualization visualizationInformation={props.visualizationInformation} />
+    </CardContent>
+  </Card>
+);
 
 export default function ArboAnalyze() {
   const router = useRouter();
@@ -62,19 +53,8 @@ export default function ArboAnalyze() {
         {visualizationsToDisplay.map((visualizationInformation) => (
           <VisualizationCard 
             key={visualizationInformation.id}
-            title={visualizationInformation.displayName}
-            height={visualizationInformation.height}
-            renderIcons={() => 
-              <button
-                onClick={() => router.push(`visualizations?visualization=${visualizationInformation.urlParameter}&referrerRoute=/pathogen/arbovirus/analyze`)}
-                aria-label="See visualization in fullscreen"
-              >
-                <ZoomIn />
-              </button>
-            }
-          >
-            {visualizationInformation.renderVisualization()}
-          </VisualizationCard>
+            visualizationInformation={visualizationInformation}
+          />
         ))}
       </>
     );

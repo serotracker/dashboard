@@ -1,9 +1,8 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { VisualizationId, VisualizationInformation, addToVisualizationInformation } from "../visualizations/visualizations";
-import { ZoomIn } from "lucide-react";
 import { cn } from '@/lib/utils';
-import { RedesignedArbovirusPageSectionUrlParam } from "./sections";
+import { RechartsVisualization } from "../analyze/recharts/recharts-visualization";
 
 export const VisualizationsSection = () => {
     const router = useRouter();
@@ -29,18 +28,9 @@ export const VisualizationsSection = () => {
     ].includes(visualizationInfo.id));
 
     const renderVisualizationList = useCallback((visualizationList: Array<VisualizationInformation & {className: string}>) => {
-      return visualizationList.map((visualization, index) => (
-        <div key={visualization.id} className={cn(visualization.className, index != 0 ? 'mt-14' : undefined)}>
-          <div className="flex py-4">
-            <h3 className="w-full text-center text-lg">{visualization.displayName}</h3>
-            <button
-              onClick={() => router.push(`visualizations?visualization=${visualization.urlParameter}&referrerRoute=/pathogen/arbovirus/wip%3Fsection=${RedesignedArbovirusPageSectionUrlParam.visualizations}`)}
-              aria-label="See visualization in fullscreen"
-            >
-              <ZoomIn />
-            </button>
-          </div>
-          {visualization.renderVisualization()}
+      return visualizationList.map((visualizationInformation, index) => (
+        <div key={visualizationInformation.id} className={cn(visualizationInformation.className, index != 0 ? 'mt-14' : undefined)}>
+          <RechartsVisualization visualizationInformation={visualizationInformation} />
         </div>
       ));
     }, []);
