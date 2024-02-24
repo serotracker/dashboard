@@ -17,7 +17,7 @@ export default function Error({
             <div className='flex justify-center'>
                 <h1 className="mb-0">Oops!</h1>
             </div>
-            <p>Sorry: The website encountered an error trying that operation! It returned this message:</p>
+            <p>The website encountered an error trying that operation! It returned this message:</p>
             <div style={{ color: '#ff0000', backgroundColor: '#f5f5f5' }} className='rounded'>{error.message}</div>
             <p>If you want that operation again, click below!</p>
             <div className='w-full flex justify-center'>
