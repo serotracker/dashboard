@@ -20,7 +20,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import ListItem from "@/components/customs/list-item";
-import { RedesignedArbovirusPageSectionId } from "@/app/constants";
+import { ArbovirusPageSectionId } from "@/app/constants";
 
 type navMenuItem = {
   title: string;
@@ -45,12 +45,12 @@ const serotracker: navMenuItem[] = [
 const arbotracker: navMenuItem[] = [
   {
     title: "Dashboard",
-    href: `/pathogen/arbovirus/dashboard#${RedesignedArbovirusPageSectionId.MAP}`,
+    href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.MAP}`,
     description: "A dashboard for Arbovirus seroprevalence data",
   },
   {
     title: "Analysis",
-    href: `/pathogen/arbovirus/dashboard#${RedesignedArbovirusPageSectionId.TABLE}`,
+    href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.TABLE}`,
     description:
       "A collection of visualizations and tabular data tools for our collection of arbovirus data",
   },
