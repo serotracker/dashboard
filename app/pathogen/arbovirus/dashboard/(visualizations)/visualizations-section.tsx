@@ -55,7 +55,7 @@ export const VisualizationsSection = () => {
         {visualization.renderVisualization()}
       </div>
     ));
-  }, []);
+  }, [ router ]);
 
   return (
     <>
