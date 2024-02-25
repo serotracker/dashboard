@@ -151,11 +151,11 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
             })),
             desiredBucketCount: 10,
             validBucketSizes: [
-              {years: 5},
-              {years: 4},
-              {years: 3},
-              {years: 2},
-              {years: 1}
+              { years: 5 },
+              { years: 4 },
+              { years: 3 },
+              { years: 2 },
+              { years: 1 }
             ]
         }).groupedDataPoints,
       ]
