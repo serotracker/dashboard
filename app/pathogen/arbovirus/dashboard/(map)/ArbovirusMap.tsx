@@ -11,12 +11,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import React, { useContext, useState } from "react";
 import { useArboData } from "@/hooks/useArboData";
 import { ArboContext } from "@/contexts/arbo-context";
-import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
+import { ArboStudyPopupContent } from "./ArboStudyPopupContent";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusFilter } from "./MapArbovirusFilter";
 import { MapExpandPlotsPrompt } from "./MapExpandPlotsPrompt";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
-import { ArboCountryPopupContent } from "../ArboCountryPopUpContent";
+import { ArboCountryPopupContent } from "./ArboCountryPopUpContent";
 import { computeClusterMarkers } from "./arbo-map-cluster-utils";
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
