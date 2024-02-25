@@ -3,6 +3,7 @@ import HomepageMosquitoImage from "../public/HomepageMosquitoImage.jpg";
 import SarsCov2StructureImage from "../public/SarsCov2Structure.png";
 import HomepageSeroTrackerBackgroundImage from "../public/HomepageSeroTrackerBackgroundImage.png";
 import { HomepageTile } from "./homepage-tile";
+import { RedesignedArbovirusPageSectionId } from "./constants";
 
 export default function Home() {
   return (
@@ -41,7 +42,7 @@ export default function Home() {
           subtitle="View over a thousand seroprevalence estimates for arboviruses that span across over seventy countries and seven decades."
           backgroundImage={HomepageMosquitoImage}
           backgroundImageAttribution="By Own scan, slightly modified. Original by Emil August Goeldi (1859 - 1917). - E. A. Goeldi (1905) Os Mosquitos no Pará. Memorias do Museu Goeldi. Pará, Brazil. Figures 3 (left) 1 (middle) and 2 (right) of Plate 1 in the Appendix., Public Domain, https://commons.wikimedia.org/w/index.php?curid=5469706 / Modified to remove faded image of mosquito in top left corner and cropped."
-          route="/pathogen/arbovirus/dashboard"
+          route={`/pathogen/arbovirus/dashboard#${RedesignedArbovirusPageSectionId.MAP}`}
         />
       </div>
     </div>

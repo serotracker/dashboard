@@ -13,7 +13,7 @@ export default function RedesignedArbovirusPage() {
   }
 
   return (
-    <div className="col-span-12 row-span-2 grid gap-0 grid-cols-12 grid-rows-2 grid-flow-col w-screen overflow-hidden border-box -my-4 -ml-4">
+    <div className="col-span-12 row-span-2 grid gap-0 grid-cols-12 grid-rows-2 grid-flow-col w-screen overflow-hidden border-box">
       <div className="overflow-y-scroll col-span-2 h-full row-span-2 border-black border-r-2">
         <Filters
           className="p-4"
