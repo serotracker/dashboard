@@ -52,6 +52,7 @@ const DownloadButton = (props: DownloadButtonProps) => (
     className="mr-4"
     onClick={() => props.downloadVisualization()}
     aria-label="Download visualization"
+    title="Download visualization"
   >
     <DownloadCloud />
   </button>
@@ -73,6 +74,7 @@ const CloseButton = (props: CloseButtonProps) => (
       }
     }}
     aria-label="Close Visualization"
+    title="Close Visualization"
   >
     <X />
   </button>
@@ -91,6 +93,7 @@ const ZoomInButton = (props: ZoomInButtonProps) => (
       )
     }
     aria-label="See visualization in fullscreen"
+    title="See visualization in fullscreen"
   >
     <ZoomIn />
   </button>
