@@ -1,5 +1,5 @@
 import React from "react";
-import { ArboProviders } from "@/contexts/arbo-context";
+import { ArboProviders } from "@/contexts/arbo-context/arbo-context";
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
 import { request } from 'graphql-request';

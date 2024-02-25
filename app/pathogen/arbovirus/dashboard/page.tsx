@@ -13,7 +13,7 @@ import { ZoomIn } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { VisualizationId, getVisualizationInformationFromVisualizationId } from "../visualizations/visualizations";
 import { EstimateCountByUnRegionAndArbovirusGraph } from "../analyze/recharts/estimate-count-by-un-region-and-arbovirus-graph";
-import { ArboContext } from "@/contexts/arbo-context";
+import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { useArboDataInsights } from "@/hooks/useArboDataInsights";
 
 export default function ArbovirusDashboard() {

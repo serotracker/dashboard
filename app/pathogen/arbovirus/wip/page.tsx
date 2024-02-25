@@ -6,6 +6,7 @@ import { VisualizationsSection } from "./visualizations-section";
 import { ArboDataTable } from "../analyze/ArboDataTable";
 import { ArbovirusMap } from "../dashboard/(map)/ArbovirusMap";
 import { RedesignedArbovirusPageSectionId } from "../../../constants";
+import { useContext } from "react";import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 
 export default function RedesignedArbovirusPage() {
   if(process.env.NEXT_PUBLIC_WEBSITE_REDESIGN_ENABLED !== 'true') {

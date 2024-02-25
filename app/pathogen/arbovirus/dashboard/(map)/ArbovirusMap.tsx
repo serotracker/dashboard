@@ -10,7 +10,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import React, { useContext, useState } from "react";
 import { useArboData } from "@/hooks/useArboData";
-import { ArboContext } from "@/contexts/arbo-context";
+import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusFilter } from "./MapArbovirusFilter";

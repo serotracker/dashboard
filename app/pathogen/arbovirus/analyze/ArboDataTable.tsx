@@ -3,7 +3,7 @@
 import { columns } from "@/app/pathogen/arbovirus/analyze/columns";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import React, { useContext } from "react";
-import { ArboContext } from "@/contexts/arbo-context";
+import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 
 //TODO: SeanKennyNF remove this type, the typeguard, and all references to expanding and minimizing visualizations once the redesign is rolled out.
 interface OldArboDataTableProps {
