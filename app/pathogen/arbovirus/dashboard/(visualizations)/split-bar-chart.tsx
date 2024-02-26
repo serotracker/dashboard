@@ -37,7 +37,7 @@ interface SplitBarChartProps<
   };
   subgraphSettings: {
     marginBottom: number
-    secondaryKeyLabel: string
+    tooltipLabel: string
   }
 }
 
@@ -98,7 +98,7 @@ export const SplitBarChart = <
         const dataForInnerGraph = sortedSecondaryKeysForPrimaryKey.map(
           (secondaryKey) => ({
             secondaryKey,
-            [props.subgraphSettings.secondaryKeyLabel]: innerChartDataWithoutPrimaryKey[secondaryKey],
+            [props.subgraphSettings.tooltipLabel]: innerChartDataWithoutPrimaryKey[secondaryKey],
           })
         );
 
@@ -134,7 +134,7 @@ export const SplitBarChart = <
                   formatter={(value) => `${value}%`}
                 />
                 <Bar
-                  dataKey={props.subgraphSettings.secondaryKeyLabel}
+                  dataKey={props.subgraphSettings.tooltipLabel}
                   fill={props.getBarColour(
                     dataGroupedBySecondaryKey.primaryKey
                   )}

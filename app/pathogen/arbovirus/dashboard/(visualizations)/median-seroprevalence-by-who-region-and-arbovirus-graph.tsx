@@ -23,7 +23,7 @@ export const MedianSeroprevalenceByWHORegionAndArbovirusGraph = () => {
       getBarColour={(primaryKey) => barColoursForArboviruses[primaryKey]}
       tickSlantOptions={{ slantValue: 35 }}
       subgraphSettings={{
-        secondaryKeyLabel: 'median',
+        tooltipLabel: 'median',
         marginBottom: 40
       }}
     />
