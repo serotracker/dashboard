@@ -3,7 +3,7 @@
 import { columns } from "@/app/pathogen/sarscov2/analyze/columns";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import React, { useContext } from "react";
-import { SarsCov2Context } from "@/contexts/sarscov2-context";
+import { SarsCov2Context } from "@/contexts/sarscov2-context/sarscov2-context";
 import useSarsCov2Data from "@/hooks/useSarsCov2Data";
 
 export default function SarsCov2DataTable() {

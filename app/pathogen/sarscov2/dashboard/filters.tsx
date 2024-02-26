@@ -7,7 +7,7 @@ import {
   SarsCov2ActionType,
   SarsCov2Context,
   SarsCov2ContextType,
-} from "@/contexts/sarscov2-context";
+} from "@/contexts/sarscov2-context/sarscov2-context";
 import useSarsCov2Data from "@/hooks/useSarsCov2Data";
 
 const addFilterMulti = (
