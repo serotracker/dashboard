@@ -22,6 +22,7 @@ interface StackedBarChartProps<
   TPrimaryGroupingKey extends string,
   TSecondaryGroupingKey extends Exclude<string, "primaryKey">
 > {
+  graphId: string;
   data: TData[];
   primaryGroupingFunction: (data: TData) => TPrimaryGroupingKey;
   primaryGroupingSortFunction?: (
@@ -109,6 +110,7 @@ export const StackedBarChart = <
         <Legend {...legendProps} />
         {allSecondaryKeys.map((secondaryKey) => (
           <Bar
+            key={`${props.graphId}-${secondaryKey}-bar`}
             dataKey={secondaryKey}
             stackId="a"
             fill={props.getBarColour(secondaryKey)}

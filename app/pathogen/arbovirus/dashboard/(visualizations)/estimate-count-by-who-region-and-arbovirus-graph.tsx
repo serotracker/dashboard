@@ -18,6 +18,7 @@ export const EstimateCountByWHORegionAndArbovirusGraph = (
 
   return (
     <StackedBarChart
+      graphId='estimate-count-by-who-region-and-arbovirus-graph'
       data={state.filteredData.filter((dataPoint) => !!dataPoint.unRegion)}
       primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
       secondaryGroupingFunction={(dataPoint) =>
