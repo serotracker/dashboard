@@ -10,9 +10,9 @@ import {
 } from "@/lib/utils";
 import { TimeInterval, doTimeIntervalsOverlap } from "@/lib/date-utils";
 import clsx from "clsx";
-import { SlantedTick, arbovirusesSF, convertArboSFtoArbo, median } from "../recharts";
+import { SlantedTick, arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { pathogenColors } from "../../dashboard/(map)/ArbovirusMap";
+import { pathogenColors } from "../(map)/ArbovirusMap";
 
 type GroupableIntoTimeBuckets = { groupingTimeInterval: TimeInterval };
 

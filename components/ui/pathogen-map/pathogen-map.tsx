@@ -1,7 +1,7 @@
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { useState, useEffect, MutableRefObject, useRef, useMemo } from "react";
-import { Map, Marker, NavigationControl, useMap } from "react-map-gl";
+import { Map, NavigationControl } from "react-map-gl";
 import {
   PathogenMapCursor,
   usePathogenMapMouse,
@@ -17,9 +17,6 @@ import {
   shouldLayerBeUsedForCountryHighlighting,
 } from "./pathogen-map-layer";
 import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-layer";
-import { countryNameToIso31661Alpha3CodeMap, iso31661Alpha3CodeToCountryNameMap } from "@/lib/country-iso-3166-1-alpha-3-codes";
-import { getBoundingBoxCenter, getBoundingBoxFromCountryName } from "@/lib/bounding-boxes";
-import { typedGroupBy } from "@/lib/utils";
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
 
