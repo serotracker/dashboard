@@ -11,12 +11,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import React, { useContext, useState } from "react";
 import { useArboData } from "@/hooks/useArboData";
 import { ArboContext } from "@/contexts/arbo-context";
-import { ArboStudyPopupContent } from "../ArboStudyPopupContent";
+import { ArboStudyPopupContent } from "./ArboStudyPopupContent";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusFilter } from "./MapArbovirusFilter";
-import { MapExpandPlotsPrompt } from "./MapExpandPlotsPrompt";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
-import { ArboCountryPopupContent } from "../ArboCountryPopUpContent";
+import { ArboCountryPopupContent } from "./ArboCountryPopUpContent";
 import { computeClusterMarkers } from "./arbo-map-cluster-utils";
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
@@ -38,23 +37,7 @@ export const pathogenColors: { [key: string]: string } = {
   MAYV: "#c5a3ff",
 };
 
-//TODO: SeanKennyNF remove this type, the typeguard, and all references to expanding and minimizing visualizations once the redesign is rolled out.
-interface OldArbovirusMapProps {
-  areVisualizationsExpanded: boolean;
-  expandVisualizations: () => void;
-  minimizeVisualizations: () => void;
-}
-
-const isOldArbovirusMapProps = (props: ArbovirusMapProps): props is OldArbovirusMapProps =>
-  'areVisualizationsExpanded' in props && typeof props.areVisualizationsExpanded === 'boolean' &&
-  'expandVisualizations' in props && typeof props.expandVisualizations === 'function' &&
-  'minimizeVisualizations' in props && typeof props.minimizeVisualizations === 'function'
-
-type NewArbovirusMapProps = {}
-
-type ArbovirusMapProps = OldArbovirusMapProps | NewArbovirusMapProps;
-
-export function ArbovirusMap(input: ArbovirusMapProps) {
+export function ArbovirusMap() {
   
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const state = useContext(ArboContext);
@@ -63,10 +46,6 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
   if (!data) {
     return <span> Loading... </span>;
   }
-
-  const {expandVisualizations, minimizeVisualizations, areVisualizationsExpanded} = isOldArbovirusMapProps(input) ?
-    {expandVisualizations: input.expandVisualizations, minimizeVisualizations: input.minimizeVisualizations, areVisualizationsExpanded: input.areVisualizationsExpanded} :
-    {expandVisualizations: () => {}, minimizeVisualizations: () => {}, areVisualizationsExpanded: false}
 
   return (
     <>
@@ -152,19 +131,6 @@ export function ArbovirusMap(input: ArbovirusMapProps) {
             </p>
           </CardContent>
         </Card>
-        {
-          isOldArbovirusMapProps(input) && 
-            <MapExpandPlotsPrompt
-          text={areVisualizationsExpanded ? "Hide Figures" : "See Figures"}
-          onClick={
-            areVisualizationsExpanded
-              ? minimizeVisualizations
-              : expandVisualizations
-          }
-        />
-          
-        }
-        
       </div>
     </>
   );

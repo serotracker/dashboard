@@ -1,7 +1,7 @@
 import { typedObjectEntries } from "@/lib/utils";
-import { AntibodyPathogenBar, LegendConfiguration, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "../analyze/recharts";
-import { ChangeInMedianSeroprevalenceOverTimeGraph } from "../analyze/recharts/change-in-median-seroprevalence-over-time-graph";
-import { EstimateCountByUnRegionAndArbovirusGraph } from "../analyze/recharts/estimate-count-by-un-region-and-arbovirus-graph";
+import { AntibodyPathogenBar, LegendConfiguration, MedianSeroPrevByWHOregion, MedianSeroPrevByWHOregionAndAgeGroup, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, WHORegionAndArbovirusBar } from "../dashboard/(visualizations)/recharts";
+import { ChangeInMedianSeroprevalenceOverTimeGraph } from "../dashboard/(visualizations)/change-in-median-seroprevalence-over-time-graph";
+import { EstimateCountByUnRegionAndArbovirusGraph } from "../dashboard/(visualizations)/estimate-count-by-un-region-and-arbovirus-graph";
 
 export enum VisualizationId {
   CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS = "CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS",
