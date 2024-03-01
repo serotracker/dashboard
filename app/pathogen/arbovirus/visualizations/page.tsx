@@ -2,11 +2,8 @@
 
 import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { getVisualizationInformationFromVisualizationUrlParameter, isVisualizationUrlParameter } from "./visualizations";
-import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
-import { isSafeReferrerLink } from "@/utils/referrer-link-util";
 import { Filters } from "../dashboard/filters";
-import { RechartsVisualization } from "../analyze/recharts/recharts-visualization";
+import { RechartsVisualization } from "../dashboard/(visualizations)/recharts-visualization";
 
 export default function VisualizationsPage() {
   const searchParams = useSearchParams();
@@ -25,7 +22,7 @@ export default function VisualizationsPage() {
   }
 
   return (
-    <div className="w-screen overflow-y-hidden grid grid-cols-12 grid-rows-2 -my-4 -ml-4 h-full-screen">
+    <div className="w-screen overflow-y-hidden grid grid-cols-12 grid-rows-2 h-full-screen">
       <Filters className="col-span-2 row-span-2 overflow-y-scroll p-4 border-black border-r-2 h-full" />
       <RechartsVisualization
         className="flex-col flex h-full overflow-y-scroll col-span-10 row-span-2"
