@@ -16,7 +16,7 @@ import {
   Label,
 } from "recharts";
 import _ from "lodash";
-import { pathogenColors } from "../dashboard/(map)/ArbovirusMap";
+import { pathogenColors } from "../(map)/ArbovirusMap";
 import clsx from "clsx";
 
 //Study by who region and pathogen
