@@ -42,7 +42,7 @@ const getAllBoundingBoxesFromSelectedFilters = (
   ];
 };
 
-export const adjustMapPositionStep = (
+export const adjustMapPosition = (
   input: HandleArboFilterUpdateInput
 ): HandleArboFilterUpdateOutput => {
   if (!input.map) {

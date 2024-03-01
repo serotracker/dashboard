@@ -5,7 +5,7 @@ import { MapProvider, MapRef, useMap } from "react-map-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
 import { useArboData } from "@/hooks/useArboData";
-import { filterData } from "./filter-update-steps/apply-new-selected-filters-step";
+import { filterData } from "./filter-update-steps/apply-new-selected-filters";
 import { handleArboFilterUpdate } from "./arbo-filter-update-steps";
 
 export interface ArboContextType extends ArboStateType {

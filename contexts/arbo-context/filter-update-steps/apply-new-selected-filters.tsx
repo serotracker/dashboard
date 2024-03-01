@@ -70,7 +70,7 @@ export function filterData(
   });
 }
 
-export const applyNewSelectedFiltersStep = (
+export const applyNewSelectedFilters = (
   input: HandleArboFilterUpdateInput
 ): HandleArboFilterUpdateOutput => ({
   ...input,

@@ -1,6 +1,6 @@
 import { HandleArboFilterUpdateInput, HandleArboFilterUpdateOutput } from "../arbo-filter-update-steps";
 
-export const addActionToSelectedFiltersStep = (
+export const addActionToSelectedFilters = (
   input: HandleArboFilterUpdateInput
 ): HandleArboFilterUpdateOutput => {
   const newSelectedFilters = {

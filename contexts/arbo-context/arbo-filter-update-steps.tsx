@@ -1,10 +1,10 @@
 import { MapRef } from "react-map-gl"
 import { ArboAction, ArboStateType } from "./arbo-context"
 import { pipe } from "fp-ts/lib/function.js";
-import { adjustMapPositionStep } from "./filter-update-steps/adjust-map-position-step";
+import { adjustMapPosition } from "./filter-update-steps/adjust-map-position";
 import { updatePediatricAgeGroupFilter } from "./filter-update-steps/update-pediatric-age-group-filter";
-import { addActionToSelectedFiltersStep } from "./filter-update-steps/add-action-to-selected-filters-step";
-import { applyNewSelectedFiltersStep } from "./filter-update-steps/apply-new-selected-filters-step";
+import { addActionToSelectedFilters } from "./filter-update-steps/add-action-to-selected-filters";
+import { applyNewSelectedFilters } from "./filter-update-steps/apply-new-selected-filters";
 
 export interface HandleArboFilterUpdateInput {
   state: ArboStateType,
@@ -21,9 +21,9 @@ export interface HandleArboFilterUpdateOutput {
 export const handleArboFilterUpdate = (input: HandleArboFilterUpdateInput): HandleArboFilterUpdateOutput => {
   return pipe(
     input,
-    addActionToSelectedFiltersStep,
-    adjustMapPositionStep,
+    addActionToSelectedFilters,
+    adjustMapPosition,
     updatePediatricAgeGroupFilter,
-    applyNewSelectedFiltersStep
+    applyNewSelectedFilters
   );
 }
