@@ -1,4 +1,4 @@
-export enum RedesignedArbovirusPageSectionId {
+export enum ArbovirusPageSectionId {
   MAP = 'MAP',
   TABLE = 'TABLE',
   VISUALIZATIONS = 'VISUALIZATIONS'
