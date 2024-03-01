@@ -12,11 +12,7 @@ export interface HandleArboFilterUpdateInput {
   map: MapRef | undefined
 }
 
-export interface HandleArboFilterUpdateOutput {
-  state: ArboStateType,
-  action: ArboAction,
-  map: MapRef | undefined
-}
+export type HandleArboFilterUpdateOutput = HandleArboFilterUpdateInput;
 
 export const handleArboFilterUpdate = (input: HandleArboFilterUpdateInput): HandleArboFilterUpdateOutput => {
   return pipe(
