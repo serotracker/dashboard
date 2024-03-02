@@ -2,7 +2,7 @@ import getQueryClient from "@/components/customs/getQueryClient";
 import { notFound } from "next/navigation";
 import request from "graphql-request";
 import { Hydrate, dehydrate } from "@tanstack/react-query";
-import { groupedTeamMembersQuery } from "@/hooks/useGroupedTeamMemberData";
+import { groupedTeamMembers } from "@/hooks/useGroupedTeamMemberData";
 import { AboutPageProvider } from "./about-page-context";
 import { AboutPageSidebar } from "./about-page-sidebar";
 
@@ -22,7 +22,7 @@ export const AboutPageBaseLayout = async (props: AboutPageBaseLayoutProps) => {
 
   await queryClient.prefetchQuery({
     queryKey: ["groupedTeamMembersQuery"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedTeamMembersQuery)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedTeamMembers)
   });
 
   const dehydratedState = dehydrate(queryClient);
