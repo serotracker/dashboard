@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { SplitBarChart } from "./split-bar-chart";
-import { ArboContext } from "@/contexts/arbo-context";
+import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
 

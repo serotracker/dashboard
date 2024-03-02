@@ -4,11 +4,6 @@ import {
   convertArboSFtoArbo,
 } from "./recharts";
 import { ArboContext } from "@/contexts/arbo-context/arbo-context";
-import {
-  typedGroupBy,
-  typedObjectEntries,
-  typedObjectFromEntries,
-} from "@/lib/utils";
 import { UNRegion, getLabelForUNRegion } from "@/lib/un-regions";
 import { LegendConfiguration, StackedBarChart } from "./stacked-bar-chart";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
