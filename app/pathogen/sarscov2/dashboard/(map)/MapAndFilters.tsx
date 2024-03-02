@@ -7,7 +7,7 @@ import { ScrollText } from "lucide-react";
 import useSarsCov2Data from "@/hooks/useSarsCov2Data";
 import {
   SarsCov2Context,
-} from "@/contexts/sarscov2-context";
+} from "@/contexts/sarscov2-context/sarscov2-context";
 import { MarkerCollection, PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapSymbology } from "./map-config";
 import { SarsCov2StudyPopupContent } from "./SarsCov2StudyPopupContent";

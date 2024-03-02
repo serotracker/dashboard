@@ -1,5 +1,5 @@
 import React from "react";
-import { SarsCov2Providers, Hydrate } from "@/contexts/sarscov2-context";
+import { SarsCov2Providers, Hydrate } from "@/contexts/sarscov2-context/sarscov2-context";
 import { dehydrate } from "@tanstack/query-core";
 import getQueryClient from "@/components/customs/getQueryClient";
 import { notFound } from 'next/navigation'
