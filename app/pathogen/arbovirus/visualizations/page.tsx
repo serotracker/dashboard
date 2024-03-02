@@ -2,7 +2,6 @@
 
 import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { getVisualizationInformationFromVisualizationUrlParameter, isVisualizationUrlParameter } from "./visualizations";
-import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import { isSafeReferrerLink } from "@/utils/referrer-link-util";
 import { Filters } from "../dashboard/filters";
@@ -24,7 +23,7 @@ export default function VisualizationsPage() {
   }
 
   return (
-    <div className="w-screen overflow-y-hidden grid grid-cols-12 grid-rows-2 -my-4 -ml-4 h-full-screen">
+    <div className="w-screen overflow-y-hidden grid grid-cols-12 grid-rows-2 h-full-screen">
       <Filters className="col-span-2 row-span-2 overflow-y-scroll p-4 border-black border-r-2 h-full" />
       <div className="flex-col flex h-full overflow-y-scroll col-span-10 row-span-2">
         <div className="flex pt-4 mb-4">

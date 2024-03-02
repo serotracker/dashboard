@@ -4,7 +4,7 @@ import {
   SlantedTick,
   arbovirusesSF,
   convertArboSFtoArbo,
-} from "../recharts";
+} from "./recharts";
 import { ArboContext } from "@/contexts/arbo-context";
 import {
   typedGroupBy,
@@ -22,7 +22,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { pathogenColors } from "../../dashboard/(map)/ArbovirusMap";
+import { pathogenColors } from "../(map)/ArbovirusMap";
 
 interface WhoRegionAndArbovirusBarInput {
   legendConfiguration: LegendConfiguration;
