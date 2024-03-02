@@ -107,9 +107,9 @@ export const SplitBarChart = <
             className={clsx(width, height)}
             key={`${props.graphId}-${dataGroupedBySecondaryKey.primaryKey}`}
           >
-            <h2 className="w-full text-center ">
+            <p className="w-full text-center ">
               {dataGroupedBySecondaryKey.primaryKey}
-            </h2>
+            </p>
             <ResponsiveContainer width="100%" height="90%">
               <BarChart
                 margin={{
