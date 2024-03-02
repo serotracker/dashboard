@@ -1,4 +1,5 @@
 "use client";
+import { TeamMember, TeamMemberGroup } from "@/gql/graphql";
 import { useGroupedTeamMemberData } from "@/hooks/useGroupedTeamMemberData";
 import { faLinkedin, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
@@ -6,22 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Linkedin, Mail, Twitter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-interface TeamInfo {
-  label: string;
-  teamMembers: TeamMember[];
-}
-
-interface TeamMember {
-  firstName: string;
-  lastName: string;
-  email: string | null | undefined;
-  linkedinUrl: string | null | undefined;
-  twitterUrl: string | null | undefined;
-  affiliations: Array<{
-    label: string;
-  }>
-}
 
 interface TeamMemberInfoCardProps {
   teamMember: TeamMember;
@@ -56,7 +41,7 @@ const TeamMemberInfoCard = (props: TeamMemberInfoCardProps) => {
 }
 
 interface TeamInfoCardProps {
-  teamInfo: TeamInfo;
+  teamInfo: TeamMemberGroup;
 }
 
 const TeamCard = (props: TeamInfoCardProps) => {
