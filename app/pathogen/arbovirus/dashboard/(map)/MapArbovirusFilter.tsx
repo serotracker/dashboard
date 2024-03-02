@@ -1,5 +1,5 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { ArboActionType, ArboContext } from "@/contexts/arbo-context";
+import { ArboActionType, ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useContext } from "react";
 import { pathogenColorsTailwind } from "./ArbovirusMap";

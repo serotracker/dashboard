@@ -1,6 +1,6 @@
 "use client";
 
-import { ArboContext } from "@/contexts/arbo-context";
+import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import React, { useContext } from "react";
 import { isAfter, isBefore, startOfYear, addYears, endOfYear, parseISO } from "date-fns";
 import {
