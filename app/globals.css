@@ -26,8 +26,13 @@
 
     --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 100%;
+<<<<<<< HEAD
 
     --secondary: 240 4.8% 95.9%;
+=======
+ 
+    --secondary: 192 42% 53%;
+>>>>>>> 4c56b70 (Landing skeleton pseudo ready)
     --secondary-foreground: 240 5.9% 10%;
 
     --muted: 240 4.8% 95.9%;
