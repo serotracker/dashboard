@@ -120,6 +120,7 @@
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     /* Hide scrollbar for IE, Edge and Firefox */
     .no-scrollbar {
@@ -145,28 +146,10 @@
   }
 
 >>>>>>> c08bad2 (Added in conditional styling to the header)
+=======
+>>>>>>> 19e7c4d (Made some small changes to improv how it all looks)
 }
 
 .mapboxgl-popup-content {
   padding: 0 !important;
-}
-
-@keyframes expandDownwards {
-  from {
-    height: 0;
-  }
-
-  to {
-    height: var(--radix-navigation-menu-viewport-height);
-  }
-}
-
-@keyframes collapseUpwards {
-  from {
-    height: var(--radix-navigation-menu-viewport-height);
-  }
-
-  to {
-    height: 0;
-  }
 }

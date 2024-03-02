@@ -162,6 +162,8 @@ export const Header = () => {
   const [headerBgColor, setHeaderBgColor] = useState("bg-background")
 
 
+  // I wonder if there is a better way to do this without the useEffect. 
+  // Will come back to it because I have spent too much time here already
   useEffect(() => {
     if (pathname.includes('arbovirus')) {
       setTitleSuffix("Arbo");
