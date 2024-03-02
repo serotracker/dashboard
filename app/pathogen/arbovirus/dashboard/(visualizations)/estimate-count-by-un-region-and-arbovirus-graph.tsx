@@ -5,7 +5,7 @@ import {
   arbovirusesSF,
   convertArboSFtoArbo,
 } from "./recharts";
-import { ArboContext } from "@/contexts/arbo-context";
+import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import {
   typedGroupBy,
   typedObjectEntries,

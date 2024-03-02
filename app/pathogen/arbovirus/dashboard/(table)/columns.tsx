@@ -11,6 +11,7 @@ import { DataTableColumnDef } from "@/components/ui/data-table/data-table";
 
 export type Estimate = {
   ageGroup: string;
+  pediatricAgeGroup: string;
   ageMaximum: number;
   ageMinimum: number;
   antibodies: string[];
@@ -297,6 +298,10 @@ export const columns: DataTableColumnDef<Estimate, unknown>[] = [
   {
     accessorKey: "ageGroup",
     header: get_header("Age Group"),
+  },
+  {
+    accessorKey: "pediatricAgeGroup",
+    header: get_header("Pediatric Age Group"),
   },
   // {
   //   accessorKey: "ageMaximum",

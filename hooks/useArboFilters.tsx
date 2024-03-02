@@ -10,6 +10,7 @@ export const arbovirusFiltersQuery = gql`
       assay
       country
       pathogen
+      pediatricAgeGroup
       producer
       sampleFrame
       sex
