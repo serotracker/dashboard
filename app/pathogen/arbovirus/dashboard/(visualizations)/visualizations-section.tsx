@@ -17,7 +17,6 @@ export const VisualizationsSection = () => {
     fieldName: 'whoRegion'
   }) < 2;
 
-  const router = useRouter();
   const allVisualizationInformationWithClassnames = addToVisualizationInformation({
     [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP]: { className: "h-full-screen" },
     [VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS]: { className: "h-half-screen" },
@@ -62,7 +61,7 @@ export const VisualizationsSection = () => {
         }}
       />
     ));
-  }, [ router ]);
+  }, []);
 
   return (
     <>
