@@ -1,6 +1,6 @@
 "use client";
 
-import { ArboContext } from "@/contexts/arbo-context";
+import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { useContext } from "react";
 import {
   BarChart,

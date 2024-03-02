@@ -4,7 +4,7 @@ import { VisualizationId, VisualizationInformation, addToVisualizationInformatio
 import { ZoomIn } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { ArbovirusPageSectionId } from "../../../../constants";
-import { ArboContext } from "@/contexts/arbo-context";
+import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { useArboDataInsights } from "@/hooks/useArboDataInsights";
 
 export const VisualizationsSection = () => {
