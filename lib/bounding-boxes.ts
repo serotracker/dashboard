@@ -1,4 +1,4 @@
-import { typedObjectFromEntries } from "@/utils/typed-library-functions";
+import { typedObjectFromEntries } from "./utils";
 import { UNRegion, getCountryCodesInUNRegion } from "./un-regions";
 
 export type BoundingBox = [number, number, number, number];
