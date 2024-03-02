@@ -26,6 +26,7 @@ module.exports = {
       },
       height: {
         'half-screen': 'calc(50vh - 3rem)',
+        '3/4-screen': 'calc(75vh - 3rem)',
         'full-screen': 'calc(100vh - 3rem)',
       },
       colors: {
