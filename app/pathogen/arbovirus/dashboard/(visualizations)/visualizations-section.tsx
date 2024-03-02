@@ -53,7 +53,7 @@ export const VisualizationsSection = () => {
           },
           zoomInButton: {
             enabled: true,
-            referrerRoute: `/pathogen/arbovirus/wip#${ArbovirusPageSectionId.VISUALIZATIONS}`
+            referrerRoute: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.VISUALIZATIONS}`
           },
           closeButton: {
             enabled: false
