@@ -18,7 +18,7 @@ import {
   ArboActionType,
   ArboContext,
   ArboContextType,
-} from "@/contexts/arbo-context";
+} from "@/contexts/arbo-context/arbo-context";
 import { MultiSelect } from "@/components/customs/multi-select";
 import React, { useContext } from "react";
 import { useArboData } from "@/hooks/useArboData";
@@ -113,6 +113,7 @@ const buildFilterDropdown = (
 
 export enum FilterableField {
   ageGroup = "ageGroup",
+  pediatricAgeGroup = "pediatricAgeGroup",
   sex = "sex",
   country = "country",
   assay = "assay",
@@ -171,11 +172,20 @@ interface FiltersProps {
 }
 
 export function Filters(props: FiltersProps) {
+  const { selectedFilters } = useContext(ArboContext);
+
   const excludedFields = props.excludedFields ?? [];
+
+  const selectedAgeGroups = selectedFilters['ageGroup'] ?? [];
+
+  if(!(selectedAgeGroups.length === 1 && selectedAgeGroups[0] === 'Children and Youth (0-17 years)')) {
+    excludedFields.push(FilterableField.pediatricAgeGroup);
+  }
 
   const state = useContext(ArboContext);
   const demographicFilters = [
     {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
+    {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}},
     {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
     {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}},
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
