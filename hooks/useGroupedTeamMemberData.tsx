@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
 
-export const groupedTeamMembersQuery = gql`
-  query groupedTeamMembersQuery {
+export const groupedTeamMembers = gql`
+  query groupedTeamMembers {
     groupedTeamMembers {
       label
       teamMembers {
@@ -20,7 +20,7 @@ export const groupedTeamMembersQuery = gql`
   }
 `
 
-interface GroupedTeamMembersQuery {
+interface GroupedTeamMembers {
   groupedTeamMembers: Array<{
     label: string;
     teamMembers: Array<{
@@ -37,8 +37,8 @@ interface GroupedTeamMembersQuery {
 }
 
 export function useGroupedTeamMemberData() {
-  return useQuery<GroupedTeamMembersQuery>({
+  return useQuery<GroupedTeamMembers>({
     queryKey: ["groupedTeamMembersQuery"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedTeamMembersQuery)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedTeamMembers)
   });
 }
