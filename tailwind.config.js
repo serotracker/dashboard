@@ -46,9 +46,12 @@ module.exports = {
 >>>>>>> c758c8f (Merged conmflicts and fixed color)
       },
       colors: {
+<<<<<<< HEAD
         abro: "#1F3D0C",
         sc2: "#00008B",
 >>>>>>> 45c0b9c (Merged conmflicts and fixed color)
+=======
+>>>>>>> 993827b (Changed some tailwind var cause arbo and sc2 were not working)
         denv: "#FFADAD",
         zikv: "#A0C4FF",
         chikv: "#9BF6FF",
@@ -63,6 +66,8 @@ module.exports = {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
+        arbovirus: "hsl(var(--arbo))",
+        sc2virus: "hsl(var(--sc2))",
         backgroundHover: "hsl(var(--background-hover))",
         foreground: "hsl(var(--foreground))",
         primary: {
