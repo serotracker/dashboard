@@ -26,6 +26,7 @@ module.exports = {
       },
       height: {
 <<<<<<< HEAD
+<<<<<<< HEAD
         'half-screen': 'calc(50vh - 3.5rem)',
         '3/4-screen': 'calc(75vh - 3.5rem)',
         'full-screen': 'calc(100vh - 3.5rem)',
@@ -41,17 +42,24 @@ module.exports = {
         '3/4-screen': 'calc(75vh - 3rem)',
         'full-screen': 'calc(100vh - 3rem)',
 =======
+=======
+>>>>>>> 3e89894 (Some issue with my ide that does not save tailwindconfigjs propelry)
         'half-screen': 'calc(50vh - 3.5rem)',
+        '3/4-screen': 'calc(75vh - 3.5rem)',
         'full-screen': 'calc(100vh - 3.5rem)',
->>>>>>> c758c8f (Merged conmflicts and fixed color)
       },
       colors: {
+<<<<<<< HEAD
 <<<<<<< HEAD
         abro: "#1F3D0C",
         sc2: "#00008B",
 >>>>>>> 45c0b9c (Merged conmflicts and fixed color)
 =======
 >>>>>>> 993827b (Changed some tailwind var cause arbo and sc2 were not working)
+=======
+        abro: "#1F3D0C",
+        sc2: "#00008B",
+>>>>>>> 3e89894 (Some issue with my ide that does not save tailwindconfigjs propelry)
         denv: "#FFADAD",
         zikv: "#A0C4FF",
         chikv: "#9BF6FF",
@@ -66,8 +74,6 @@ module.exports = {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
-        arbovirus: "hsl(var(--arbo))",
-        sc2virus: "hsl(var(--sc2))",
         backgroundHover: "hsl(var(--background-hover))",
         foreground: "hsl(var(--foreground))",
         primary: {
@@ -113,28 +119,10 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
-        "expand-downwards": {
-          from: {
-            height: 0
-          },
-          to: {
-            height: "var(--radix-navigation-menu-viewport-height)"
-          }
-        },
-        "collapse-upwards": {
-          from: {
-            height: "var(--radix-navigation-menu-viewport-height)",
-          },
-          to: {
-            height: 0
-          }
-        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "expand-downwards": "expand-downwards 0.4s forwards",
-        "collapse-upwards": "collapse-upwards 0.4s forwards"
       },
       typography: {
         DEFAULT: {
