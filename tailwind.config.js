@@ -25,6 +25,7 @@ module.exports = {
         '16': 'repeat(16, minmax(0, 1fr))',
       },
       height: {
+<<<<<<< HEAD
         'half-screen': 'calc(50vh - 3.5rem)',
         '3/4-screen': 'calc(75vh - 3.5rem)',
         'full-screen': 'calc(100vh - 3.5rem)',
@@ -34,6 +35,20 @@ module.exports = {
         arbovirusHover: "hsl(var(--arbo-hover))",
         sc2virus: "hsl(var(--sc2))",
         sc2virusHover: "hsl(var(--sc2-hover))",
+=======
+<<<<<<< HEAD
+        'half-screen': 'calc(50vh - 3rem)',
+        '3/4-screen': 'calc(75vh - 3rem)',
+        'full-screen': 'calc(100vh - 3rem)',
+=======
+        'half-screen': 'calc(50vh - 3.5rem)',
+        'full-screen': 'calc(100vh - 3.5rem)',
+>>>>>>> c758c8f (Merged conmflicts and fixed color)
+      },
+      colors: {
+        abro: "#1F3D0C",
+        sc2: "#00008B",
+>>>>>>> 45c0b9c (Merged conmflicts and fixed color)
         denv: "#FFADAD",
         zikv: "#A0C4FF",
         chikv: "#9BF6FF",
