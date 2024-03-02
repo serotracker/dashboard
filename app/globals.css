@@ -108,36 +108,8 @@
     /* Firefox */
   }
 
-  .animate-expandDownwards {
-    animation: expandDownwards 0.4s forwards
-  }
-
-  .animate-collapseUpwards {
-    animation: collapseUpwards 0.4s forwards
-  }
-
 }
 
 .mapboxgl-popup-content {
   padding: 0 !important;
-}
-
-@keyframes expandDownwards {
-  from {
-    height: 0;
-  }
-
-  to {
-    height: var(--radix-navigation-menu-viewport-height);
-  }
-}
-
-@keyframes collapseUpwards {
-  from {
-    height: var(--radix-navigation-menu-viewport-height);
-  }
-
-  to {
-    height: 0;
-  }
 }
