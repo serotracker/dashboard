@@ -11,16 +11,11 @@ import {
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import ListItem from "@/components/customs/list-item";
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 import { ArbovirusPageSectionId } from "@/app/constants";
-=======
-import { NavigationMenuLink } from "@radix-ui/react-navigation-menu";
->>>>>>> 3e60d6d (Updated the header to have the tracker and about tabs with subtabs)
-=======
+
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
->>>>>>> 8af1dec (Added in conditional styling to the header)
 
 type navMenuItem = {
   title: string;
@@ -55,23 +50,14 @@ const arbotrackerNavitems: navMenuItem[] = [
     description: "A dashboard for Arbovirus seroprevalence data",
   },
   {
-<<<<<<< HEAD
     title: "Analysis",
     href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.TABLE}`,
-=======
-    title: "Data",
-<<<<<<< HEAD
-    href: "/pathogen/arbovirus/dashboard",
->>>>>>> 3e60d6d (Updated the header to have the tracker and about tabs with subtabs)
-=======
-    href: "/pathogen/arbovirus/dashboard/#TABLE",
->>>>>>> 04e95cb (Updated the links to work)
     description:
       "A collection of visualizations and tabular data tools for our collection of arbovirus data",
   },
   {
     title: "Visualizations",
-    href: "/pathogen/arbovirus/dashboard/#VISUALIZATIONS",
+    href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.VISUALIZATIONS}`,
     description:
       "A collection of visualizations and tabular data tools for our collection of arbovirus data",
   },
@@ -128,12 +114,12 @@ export const Header = () => {
   useEffect(() => {
     if (pathname.includes('arbovirus')) {
       setTitleSuffix("Arbo");
-      setTitleSuffixColor("text-green-500");
-      setHeaderBgColor("bg-green-500 delay-150");
+      setTitleSuffixColor("text-arbo");
+      setHeaderBgColor("bg-arbo delay-150");
     } else if (pathname.includes('sarscov2')) {
       setTitleSuffix("SC2");
-      setTitleSuffixColor("text-blue-500");
-      setHeaderBgColor("bg-blue-500 delay-150");
+      setTitleSuffixColor("text-sc2");
+      setHeaderBgColor("bg-sc2 delay-150");
     } else {
       setTitleSuffix("Sero");
       setTitleSuffixColor("text-background");
@@ -142,13 +128,13 @@ export const Header = () => {
   }, [pathname])
 
   return (
-    <header className={cn("flex items-center justify-between transition-colors duration-300 h-12 w-screen px-2 text-white border-b-4 border-white overflow-hidden", headerBgColor)}>
+    <header className={cn("flex items-center justify-between transition-colors duration-300 h-14 w-screen px-2 text-white border-b-4 border-white overflow-hidden", headerBgColor)}>
       <div className="cursor-pointer pl-2">
         <Link href={"/"} className="flex items-center text-h1">
-          <h1>
-            <span className={cn("p-1 mr-1 bg-white transition-colors duration-300", titleSuffixColor)}>{titleSuffix}</span>
+          <h2>
+            <span className={cn("p-1 mr-1 bg-white rounded-md transition-colors duration-300", titleSuffixColor)}>{titleSuffix}</span>
             Tracker
-          </h1>
+          </h2>
         </Link>
       </div>
       <NavigationMenu>

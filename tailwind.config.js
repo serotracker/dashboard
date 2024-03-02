@@ -25,11 +25,18 @@ module.exports = {
         '16': 'repeat(16, minmax(0, 1fr))',
       },
       height: {
+<<<<<<< HEAD
         'half-screen': 'calc(50vh - 3rem)',
         '3/4-screen': 'calc(75vh - 3rem)',
         'full-screen': 'calc(100vh - 3rem)',
+=======
+        'half-screen': 'calc(50vh - 3.5rem)',
+        'full-screen': 'calc(100vh - 3.5rem)',
+>>>>>>> c758c8f (Merged conmflicts and fixed color)
       },
       colors: {
+        abro: "#1F3D0C",
+        sc2: "#00008B",
         denv: "#FFADAD",
         zikv: "#A0C4FF",
         chikv: "#9BF6FF",
