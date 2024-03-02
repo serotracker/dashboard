@@ -111,33 +111,8 @@ export default function Home() {
         </div>
       </div>
       <h3 className="relative flex overflow-x-hidden text-background  bg-white rounded-md px-16">
-        <div className="animate-marquee whitespace-nowrap p-8">
-          <span>
-            We have data from <b>4,742,112</b> Participants accross
-          </span>
-          <span>
-            <b> 253,221 </b> Estimates from
-          </span>
-          <span>
-            <b> 94,213</b> Sources spanning
-          </span>
-          <span>
-            <b> 149</b> countries and territories
-          </span>
-        </div>
-        <div className="absolute top-0 animate-marquee2 whitespace-nowrap py-8 px-4">
-          <span>
-            We have data for <b>4,742,112</b> Participants accross
-          </span>
-          <span>
-            <b> 253,221 </b> Estimates from
-          </span>
-          <span>
-            <b> 94,213</b> Sources spanning
-          </span>
-          <span>
-            <b> 149</b> countries and territories
-          </span>
+        <div className="whitespace-nowrap p-8 text-center">
+            We have data from <b>4,742,112</b> Participants accross <b> 253,221 </b> Estimates from <b> 94,213</b> Sources spanning <b> 149</b> countries and territories
         </div>
       </h3>
       <div className="p-6 w-full bg-background">
