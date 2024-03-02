@@ -1,5 +1,4 @@
 "use client"
-import { notFound } from "next/navigation";
 import React from "react";
 import { Filters } from "./filters";
 import { VisualizationsSection } from "./(visualizations)/visualizations-section";

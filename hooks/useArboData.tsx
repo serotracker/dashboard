@@ -22,6 +22,7 @@ export const arbovirusEstimatesQuery = gql`
       latitude
       longitude
       pathogen
+      pediatricAgeGroup
       producer
       producerOther
       sameFrameTargetGroup
