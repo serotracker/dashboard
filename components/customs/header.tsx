@@ -114,12 +114,12 @@ export const Header = () => {
   useEffect(() => {
     if (pathname.includes('arbovirus')) {
       setTitleSuffix("Arbo");
-      setTitleSuffixColor("text-arbo");
-      setHeaderBgColor("bg-arbo delay-150");
+      setTitleSuffixColor("text-arbovirus");
+      setHeaderBgColor("bg-arbovirus delay-150");
     } else if (pathname.includes('sarscov2')) {
       setTitleSuffix("SC2");
-      setTitleSuffixColor("text-sc2");
-      setHeaderBgColor("bg-sc2 delay-150");
+      setTitleSuffixColor("text-sc2virus");
+      setHeaderBgColor("bg-sc2virus delay-150");
     } else {
       setTitleSuffix("Sero");
       setTitleSuffixColor("text-background");
@@ -128,7 +128,7 @@ export const Header = () => {
   }, [pathname])
 
   return (
-    <header className={cn("flex items-center justify-between transition-colors duration-300 h-14 w-screen px-2 text-white border-b-4 border-white overflow-hidden", headerBgColor)}>
+    <header className={cn("flex items-center  justify-between transition-colors duration-300 h-14 w-screen px-2 text-white border-b-4 border-white overflow-hidden", headerBgColor)}>
       <div className="cursor-pointer pl-2">
         <Link href={"/"} className="flex items-center text-h1">
           <h2>

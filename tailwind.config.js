@@ -35,8 +35,6 @@ module.exports = {
 >>>>>>> c758c8f (Merged conmflicts and fixed color)
       },
       colors: {
-        abro: "#1F3D0C",
-        sc2: "#00008B",
         denv: "#FFADAD",
         zikv: "#A0C4FF",
         chikv: "#9BF6FF",
@@ -51,6 +49,8 @@ module.exports = {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
+        arbovirus: "hsl(var(--arbo))",
+        sc2virus: "hsl(var(--sc2))",
         backgroundHover: "hsl(var(--background-hover))",
         foreground: "hsl(var(--foreground))",
         primary: {
