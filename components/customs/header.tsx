@@ -52,6 +52,7 @@ const serotrackerNavItems: NavMenuItem[] = [
   {
     title: "Dashboard",
     href: "/pathogen/sarscov2/dashboard",
+<<<<<<< HEAD
     description: "A dashboard for Sars Cov 2 seroprevalence data",
   },
   {
@@ -59,6 +60,19 @@ const serotrackerNavItems: NavMenuItem[] = [
     href: "/pathogen/sarscov2/analyze",
     description:
       "A collection of visualizations and tabular data tools for our collection of SarsCov2 data",
+=======
+    description: "A dashboard for arbovirus seroprevalence data",
+  },
+  {
+    title: "Data",
+    href: "/pathogen/sarscov2/dashboard",
+    description: "View or download our entire arbovirus dataset",
+  },
+  {
+    title: "Visualizations",
+    href: "/pathogen/sarscov2/dashboard",
+    description: "A collection of visualizations for our arbovirus dataset",
+>>>>>>> d60bb70 (Returned vis text back to normal)
   },
 ];
 
