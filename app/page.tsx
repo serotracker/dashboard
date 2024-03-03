@@ -84,28 +84,28 @@ export default function Home() {
           <div className="flex w-1/2 flex-col lg:flex-row self-end">
               {/*
               These comments are for tailwindcss to pickup these classes so we do not need to add too many props
-              hover:bg-green-700
-              hover:text-green-700
-              group-hover:text-green-700
+              hover:bg-arbovirus
+              hover:text-arbovirus
+              group-hover:text-arbovirus
             */}
               <TrackerButton
                 titleSuffix="Arbo"
                 description="ArboTracker description"
                 icon={faMosquito}
-                bgColor="bg-green-700"
-                textColor="text-green-700"
+                bgColor="bg-arbovirus"
+                textColor="text-arbovirus"
               />
               {/*
-              hover:bg-blue-700
-              hover:text-blue-700
-              group-hover:text-blue-700
+              hover:bg-sc2virus
+              hover:text-sc2virus
+              group-hover:text-sc2virus
             */}
               <TrackerButton
                 titleSuffix="SC2"
                 description="SeroTracker description"
                 icon={faVirus}
-                bgColor="bg-blue-700"
-                textColor="text-blue-700"
+                bgColor="bg-sc2virus"
+                textColor="text-sc2virus"
               />
             </div>
         </div>
