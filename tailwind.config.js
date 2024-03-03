@@ -33,6 +33,7 @@ module.exports = {
       },
       colors: {
         arbovirus: "hsl(var(--arbo))",
+<<<<<<< HEAD
         arbovirusHover: "hsl(var(--arbo-hover))",
         sc2virus: "hsl(var(--sc2))",
         sc2virusHover: "hsl(var(--sc2-hover))",
@@ -60,6 +61,9 @@ module.exports = {
         abro: "#1F3D0C",
         sc2: "#00008B",
 >>>>>>> 3e89894 (Some issue with my ide that does not save tailwindconfigjs propelry)
+=======
+        sc2virus: "hsl(var(--sc2))",
+>>>>>>> 655e296 (Fixed issues caused by merge)
         denv: "#FFADAD",
         zikv: "#A0C4FF",
         chikv: "#9BF6FF",
@@ -119,10 +123,28 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        "expand-downwards": {
+          from: {
+            height: 0
+          },
+          to: {
+            height: "var(--radix-navigation-menu-viewport-height)"
+          }
+        },
+        "collapse-upwards": {
+          from: {
+            height: "var(--radix-navigation-menu-viewport-height)",
+          },
+          to: {
+            height: 0
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "expand-downwards": "expand-downwards 0.4s forwards",
+        "collapse-upwards": "collapse-upwards 0.4s forwards"
       },
       typography: {
         DEFAULT: {
