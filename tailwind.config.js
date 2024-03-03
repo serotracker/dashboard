@@ -31,7 +31,9 @@ module.exports = {
       },
       colors: {
         arbovirus: "hsl(var(--arbo))",
+        arbovirusHover: "hsl(var(--arbo-hover))",
         sc2virus: "hsl(var(--sc2))",
+        sc2virusHover: "hsl(var(--sc2-hover))",
         denv: "#FFADAD",
         zikv: "#A0C4FF",
         chikv: "#9BF6FF",

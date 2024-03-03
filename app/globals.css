@@ -9,7 +9,10 @@
     --foreground: 0 0% 100%;
 
     --arbo: 149 78% 11%;
+    --arbo-hover: 149 78% 25%;
+
     --sc2: 240 100% 27%;
+    --sc2-hover: 240 100% 41%;
 
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
