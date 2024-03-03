@@ -39,8 +39,8 @@ const getAllBoundingBoxesFromSelectedFilters = (
     );
   const selectedWHORegions = selectedFilters["whoRegion"] ?? [];
   const boundingBoxesFromSelectedWHORegions = selectedWHORegions
-    .map((unRegion) =>
-      isWHORegion(unRegion) ? getBoundingBoxFromWHORegion(unRegion) : undefined
+    .map((whoRegion) =>
+      isWHORegion(whoRegion) ? getBoundingBoxFromWHORegion(whoRegion) : undefined
     )
     .filter(
       (boundingBox: BoundingBox | undefined): boundingBox is BoundingBox =>
