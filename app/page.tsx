@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
 
 interface TrackerButtonProps {
   titleSuffix: string;
@@ -14,21 +15,20 @@ interface TrackerButtonProps {
   icon: IconDefinition;
   textColor: string;
   bgColor: string;
+  href: string;
 }
 
 function TrackerButton(props: TrackerButtonProps) {
   return (
-    <div
+    <Link
       className={cn(
         "w-full rounded-md text-white bg-background flex flex-col mb-4 lg:mb-0 lg:mr-4 lg:last:mr-0 h-full overflow-hidden p-2 transition-all group hover:cursor-pointer",
         `hover:${props.bgColor}`
       )}
+      href={props.href}
     >
-
       <div className={cn("flex justify-between items-center w-full")}>
-        <h3
-          className={cn("p-2 w-full text-white")}
-        >
+        <h3 className={cn("p-2 w-full text-white")}>
           <span
             className={cn(
               "p-1 text-background rounded-md mr-1 bg-white",
@@ -46,7 +46,7 @@ function TrackerButton(props: TrackerButtonProps) {
           className={cn("mr-4 text-white")}
         />
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -82,37 +82,41 @@ export default function Home() {
             </div>
           </div>
           <div className="flex w-1/2 flex-col lg:flex-row self-end">
-              {/*
+            {/*
               These comments are for tailwindcss to pickup these classes so we do not need to add too many props
               hover:bg-arbovirus
               hover:text-arbovirus
               group-hover:text-arbovirus
             */}
-              <TrackerButton
-                titleSuffix="Arbo"
-                description="ArboTracker description"
-                icon={faMosquito}
-                bgColor="bg-arbovirus"
-                textColor="text-arbovirus"
-              />
-              {/*
+            <TrackerButton
+              titleSuffix="Arbo"
+              description="ArboTracker description"
+              icon={faMosquito}
+              bgColor="bg-arbovirus"
+              textColor="text-arbovirus"
+              href={"/pathogen/arbovirus/dashboard"}
+            />
+            {/*
               hover:bg-sc2virus
               hover:text-sc2virus
               group-hover:text-sc2virus
             */}
-              <TrackerButton
-                titleSuffix="SC2"
-                description="SeroTracker description"
-                icon={faVirus}
-                bgColor="bg-sc2virus"
-                textColor="text-sc2virus"
-              />
-            </div>
+            <TrackerButton
+              titleSuffix="SC2"
+              description="SeroTracker description"
+              icon={faVirus}
+              bgColor="bg-sc2virus"
+              textColor="text-sc2virus"
+              href={"/pathogen/sarscov2/dashboard"}
+            />
+          </div>
         </div>
       </div>
       <h3 className="relative flex overflow-x-hidden text-background  bg-white rounded-md px-16">
         <div className="whitespace-nowrap p-8 text-center">
-            We have data from <b>4,742,112</b> Participants accross <b> 253,221 </b> Estimates from <b> 94,213</b> Sources spanning <b> 149</b> countries and territories
+          We have data from <b>4,742,112</b> Participants accross{" "}
+          <b> 253,221 </b> Estimates from <b> 94,213</b> Sources spanning{" "}
+          <b> 149</b> countries and territories
         </div>
       </h3>
       <div className="p-6 w-full bg-background">
@@ -124,14 +128,27 @@ export default function Home() {
             width={150}
             height={100}
           />
-          <Image src={"/WHO-EN-C-H.png"} alt={""} width={150} height={100} />
           <Image
-            src={"/University-Of-Calgary-Logo.png"}
+            src={"/public-health-agency.svg"}
             alt={""}
             width={150}
             height={100}
           />
-          <Image src={"/WHO-EN-C-H.png"} alt={""} width={150} height={100} />
+          <Image src={"/amc-joule.png"} alt={""} width={150} height={100} />
+          <Image src={"/CITF_logo_ENG.svg"} alt={""} width={150} height={100} />
+        </div>
+        <div className="text-white px-8 mt-8 text-justify">
+        <p className="mb-3 font-bold">MAP DISCLAIMER</p>
+        <p>
+          The designations employed and the presentation of the material
+          available on this platform does not imply the expression of any
+          opinion whatsoever on the part of WHO, SeroTracker, or SeroTracker's
+          partners concerning the legal status of any country, territory, city
+          or area or of its authorities, or concerning the delimitation of its
+          frontiers or boundaries. Dotted and dashed lines on maps represent
+          approximate border lines for which there may not yet be full
+          agreement.
+        </p>
         </div>
       </div>
     </div>
