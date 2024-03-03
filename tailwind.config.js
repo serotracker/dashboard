@@ -30,8 +30,8 @@ module.exports = {
         'full-screen': 'calc(100vh - 3.5rem)',
       },
       colors: {
-        abro: "#1F3D0C",
-        sc2: "#00008B",
+        arbovirus: "hsl(var(--arbo))",
+        sc2virus: "hsl(var(--sc2))",
         denv: "#FFADAD",
         zikv: "#A0C4FF",
         chikv: "#9BF6FF",
@@ -91,10 +91,28 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        "expand-downwards": {
+          from: {
+            height: 0
+          },
+          to: {
+            height: "var(--radix-navigation-menu-viewport-height)"
+          }
+        },
+        "collapse-upwards": {
+          from: {
+            height: "var(--radix-navigation-menu-viewport-height)",
+          },
+          to: {
+            height: 0
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "expand-downwards": "expand-downwards 0.4s forwards",
+        "collapse-upwards": "collapse-upwards 0.4s forwards"
       },
       typography: {
         DEFAULT: {
