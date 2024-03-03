@@ -3,12 +3,14 @@ import {
   combineBoundingBoxes,
   getBoundingBoxFromCountryName,
   getBoundingBoxFromUNRegion,
+  getBoundingBoxFromWHORegion,
 } from "@/lib/bounding-boxes";
 import {
   HandleArboFilterUpdateInput,
   HandleArboFilterUpdateOutput,
 } from "../arbo-filter-update-steps";
 import { isUNRegion } from "@/lib/un-regions";
+import { isWHORegion } from "@/lib/who-regions";
 
 interface GetAllBoundingBoxesFromSelectedFiltersInput {
   selectedFilters: Record<string, string[] | undefined>;
@@ -35,10 +37,20 @@ const getAllBoundingBoxesFromSelectedFilters = (
       (boundingBox: BoundingBox | undefined): boundingBox is BoundingBox =>
         !!boundingBox
     );
+  const selectedWHORegions = selectedFilters["whoRegion"] ?? [];
+  const boundingBoxesFromSelectedWHORegions = selectedWHORegions
+    .map((unRegion) =>
+      isWHORegion(unRegion) ? getBoundingBoxFromWHORegion(unRegion) : undefined
+    )
+    .filter(
+      (boundingBox: BoundingBox | undefined): boundingBox is BoundingBox =>
+        !!boundingBox
+    );
 
   return [
     ...boundingBoxesFromSelectedCountries,
     ...boundingBoxesFromSelectedUnRegions,
+    ...boundingBoxesFromSelectedWHORegions
   ];
 };
 
@@ -51,7 +63,8 @@ export const adjustMapPosition = (
 
   if (
     input.action.payload.filter !== "country" &&
-    input.action.payload.filter !== "unRegion"
+    input.action.payload.filter !== "unRegion" &&
+    input.action.payload.filter !== "whoRegion"
   ) {
     return input;
   }
