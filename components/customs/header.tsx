@@ -2,10 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-<<<<<<< HEAD
-=======
+
 import Image from "next/image";
->>>>>>> f27c69d (Removed marquee as it was not working super well)
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,15 +12,16 @@ import {
   NavigationMenuTrigger,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import ListItem from "@/components/customs/list-item";
 =======
 =======
 >>>>>>> 2e63a8f (Removed marquee as it was not working super well)
-  NavigationMenuViewport,
 =======
->>>>>>> f27c69d (Removed marquee as it was not working super well)
+>>>>>>> 8363265 (merged in header changes)
+  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import ListItem from "@/components/customs/list-item";
 <<<<<<< HEAD
