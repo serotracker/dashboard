@@ -189,9 +189,9 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
               className={clsx(width, height)}
               key={`change-in-med-sero-prev-${arbovirus}`}
             >
-              <h2 className="w-full text-center ">
+              <p className="w-full text-center ">
                 {convertArboSFtoArbo(arbovirus as arbovirusesSF)}
-              </h2>
+              </p>
               <ResponsiveContainer width="100%" height="90%">
                 <BarChart
                   margin={{
