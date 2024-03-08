@@ -12,7 +12,7 @@ export enum FAQPageOptionId {
 export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.Element}> = {
   [FAQPageOptionId.WHERE_DOES_SEROTRACKERS_DATA_COME_FROM]: {
     label: "Where does SeroTracker's data come from?",
-    content: <p className='inline'> We collect all seroprevalence data from published peer reviewed research articles, preprints, reports, and media (unpublished grey literature). The source of any individual estimate can be viewed by clicking on the estimate on the map or by referencing the Source column in the table in the dashboard or the url column in a csv downloaded from the table. <Link className="inline text-link underline" target="_blank" href="/pathogen/arbovirus/wip#table">This is a link to the ArboTracker map</Link> and <Link className="inline text-link underline" target="_blank" href="/pathogen/arbovirus/wip#table">this is a link to the ArboTracker data table</Link>.</p>
+    content: <p className='inline'> We collect all seroprevalence data from published peer reviewed research articles, preprints, reports, and media (unpublished grey literature). The source of any individual estimate can be viewed by clicking on the estimate on the map or by referencing the Source column in the table in the dashboard or the url column in a csv downloaded from the table. <Link className="inline text-link underline" target="_blank" href="/pathogen/arbovirus/dashboard#table">This is a link to the ArboTracker map</Link> and <Link className="inline text-link underline" target="_blank" href="/pathogen/arbovirus/dashboard#table">this is a link to the ArboTracker data table</Link>.</p>
   },
   [FAQPageOptionId.HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA]: {
     label: 'How does SeroTracker collect their data?',
@@ -28,7 +28,7 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
   },
   [FAQPageOptionId.CAN_I_DOWNLOAD_SEROTRACKERS_DATA]: {
     label: "Can I download SeroTracker's data for my own analysis?",
-    content: <p className="inline"> Yes, our data is open-source and free for anyone to use. Every data table on the dashboard has a button next to it that allows you to download a csv of the data in the table. <Link className="inline text-link underline" target="_blank" href="/pathogen/arbovirus/wip#table">This is a link to the ArboTracker data table</Link> where it is possible to download a csv containing all of our arbovirus seroprevalence estimates. </p>
+    content: <p className="inline"> Yes, our data is open-source and free for anyone to use. Every data table on the dashboard has a button next to it that allows you to download a csv of the data in the table. <Link className="inline text-link underline" target="_blank" href="/pathogen/arbovirus/dashboard#table">This is a link to the ArboTracker data table</Link> where it is possible to download a csv containing all of our arbovirus seroprevalence estimates. </p>
   },
   [FAQPageOptionId.HOW_HAS_SEROTRACKERS_DATA_BEEN_USED_BY_OTHERS]: {
     label: "How has SeroTracker's data been used by others?",

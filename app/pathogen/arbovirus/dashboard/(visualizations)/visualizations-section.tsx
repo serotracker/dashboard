@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { ArbovirusPageSectionId } from "../../../../constants";
 import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { useArboDataInsights } from "@/hooks/useArboDataInsights";
+import { RechartsVisualization } from "./recharts-visualization";
 
 export const VisualizationsSection = () => {
   const { filteredData } = useContext(ArboContext);
@@ -16,17 +17,17 @@ export const VisualizationsSection = () => {
     fieldName: 'whoRegion'
   }) < 2;
 
-  const router = useRouter();
   const allVisualizationInformationWithClassnames = addToVisualizationInformation({
-    [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP]: { className: "h-full" },
-    [VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS]: { className: "h-1/2" },
-    [VisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS]: { className: "h-1/2" },
-    [VisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE ]: { className: "h-1/2" },
-    [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: { className: "h-full" },
-    [VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS]: { className: "h-1/2" },
-    [VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME]: { className: "h-full 2xl:h-3/4" },
-    [VisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS]: { className: "h-full" },
-    [VisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME]: { className: "h-full" },
+    [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP]: { className: "h-full-screen" },
+    [VisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS]: { className: "h-half-screen" },
+    [VisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS]: { className: "h-half-screen" },
+    [VisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE ]: { className: "h-half-screen" },
+    [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: { className: "h-full-screen" },
+    [VisualizationId.MEDIAN_SEROPREVALENCE_BY_UN_REGION]: { className: "h-full-screen" },
+    [VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS]: { className: "h-half-screen" },
+    [VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME]: { className: "h-full-screen 2xl:h-3/4-screen" },
+    [VisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS]: { className: "h-full-screen" },
+    [VisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME]: { className: "h-full-screen" },
   })
 
   const visualizationsOnLeftSide = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
@@ -35,27 +36,32 @@ export const VisualizationsSection = () => {
     VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME
   ].includes(visualizationInfo.id));
   const visualizationsOnRightSide = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
-    VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION,
+    areLessThanTwoWHORegionsPresentInData ? VisualizationId.MEDIAN_SEROPREVALENCE_BY_UN_REGION : VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION,
     VisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE,
     VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP
   ].includes(visualizationInfo.id));
 
   const renderVisualizationList = useCallback((visualizationList: Array<VisualizationInformation & {className: string}>) => {
-    return visualizationList.map((visualization, index) => (
-      <div key={visualization.id} className={cn(visualization.className, index != 0 ? 'mt-14' : undefined)}>
-        <div className="flex py-4">
-          <h3 className="w-full text-center text-lg">{visualization.displayName}</h3>
-          <button
-            onClick={() => router.push(`visualizations?visualization=${visualization.urlParameter}&referrerRoute=/pathogen/arbovirus/dashboard%23${ArbovirusPageSectionId.VISUALIZATIONS}`)}
-            aria-label="See visualization in fullscreen"
-          >
-            <ZoomIn />
-          </button>
-        </div>
-        {visualization.renderVisualization()}
-      </div>
+    return visualizationList.map((visualizationInformation) => (
+      <RechartsVisualization
+        key={visualizationInformation.id}
+        visualizationInformation={visualizationInformation}
+        className={cn(visualizationInformation.className, 'pb-14')}
+        buttonConfig={{
+          downloadButton: {
+            enabled: true,
+          },
+          zoomInButton: {
+            enabled: true,
+            referrerRoute: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.VISUALIZATIONS}`
+          },
+          closeButton: {
+            enabled: false
+          }
+        }}
+      />
     ));
-  }, [ router ]);
+  }, []);
 
   return (
     <>

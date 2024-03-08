@@ -17,3 +17,7 @@ export const typedObjectFromEntries = <TKey extends string, TValue>(input: [TKey
 export const typedGroupBy = <TKey extends string, TValue>(values: TValue[], groupingFunction: (value: TValue) => TKey): Record<TKey, TValue[]> => {
   return groupBy(values, groupingFunction) as Record<TKey, TValue[]>
 }
+
+export const typedObjectKeys = <TKey extends string>(input: Record<TKey, unknown>): Array<TKey> => {
+  return Object.keys(input) as TKey[];
+}

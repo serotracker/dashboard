@@ -4,36 +4,29 @@ import {
   convertArboSFtoArbo,
 } from "./recharts";
 import { ArboContext } from "@/contexts/arbo-context/arbo-context";
-import { UNRegion, getLabelForUNRegion } from "@/lib/un-regions";
 import { LegendConfiguration, StackedBarChart } from "./stacked-bar-chart";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
 
-interface EstimateCountByUnRegionAndArbovirusGraphProps {
+interface EstimateCountByWHORegionAndArbovirusGraphProps {
   legendConfiguration: LegendConfiguration;
 }
 
-export const EstimateCountByUnRegionAndArbovirusGraph = (
-  props: EstimateCountByUnRegionAndArbovirusGraphProps
+export const EstimateCountByWHORegionAndArbovirusGraph = (
+  props: EstimateCountByWHORegionAndArbovirusGraphProps
 ) => {
   const state = useContext(ArboContext);
 
   return (
     <StackedBarChart
-      graphId='estimate-count-by-un-region-and-arbovirus-graph'
+      graphId='estimate-count-by-who-region-and-arbovirus-graph'
       data={state.filteredData.filter((dataPoint) => !!dataPoint.unRegion)}
-      primaryGroupingFunction={(dataPoint) =>
-        getLabelForUNRegion(dataPoint.unRegion as UNRegion)
-      }
-      primaryGroupingSortFunction={(unRegionA, unRegionB) =>
-        unRegionA.length > unRegionB.length ? 1 : -1
-      }
+      primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
       secondaryGroupingFunction={(dataPoint) =>
         convertArboSFtoArbo(dataPoint.pathogen as arbovirusesSF)
       }
       secondaryGroupingSortFunction={sortArboviruses}
       getBarValue={(data) => data.length}
       legendConfiguration={props.legendConfiguration}
-      tickSlantOptions={{ slantValue: 20 }}
       getBarColour={(secondaryKey) => barColoursForArboviruses[secondaryKey]}
     />
   );
