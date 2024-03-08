@@ -1,5 +1,5 @@
 "use client";
-import { TeamMember, TeamMemberGroup } from "@/gql/graphql";
+import { GroupedTeamMembersQuery } from "@/gql/graphql";
 import { useGroupedTeamMemberData } from "@/hooks/useGroupedTeamMemberData";
 import { faLinkedin, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
@@ -7,6 +7,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Linkedin, Mail, Twitter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+type TeamMember = GroupedTeamMembersQuery['groupedTeamMembers'][number]["teamMembers"][number]
+type TeamMemberGroup = GroupedTeamMembersQuery['groupedTeamMembers'][number]
 
 interface TeamMemberInfoCardProps {
   teamMember: TeamMember;
