@@ -84,15 +84,16 @@
   }
 
   h1 {
-    font-size: 2rem;
+    @apply text-4xl;
   }
-
-  h2{
-    font-size: 1.5rem;
+  h2 {
+    @apply text-3xl;
   }
-
   h3 {
-    font-size: 1.25rem;
+    @apply text-xl;
+  }
+  p {
+    @apply text-base
   }
 }
 
@@ -114,23 +115,5 @@
 
 .mapboxgl-popup-content {
   padding: 0 !important;
-}
-
-@keyframes expandDownwards {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--radix-navigation-menu-viewport-height);
-  }
-}
-
-@keyframes collapseUpwards { 
-  from {
-    height: var(--radix-navigation-menu-viewport-height);
-  }
-  to {
-    height: 0;
-  }
 }
 
