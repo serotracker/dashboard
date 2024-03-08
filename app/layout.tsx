@@ -5,6 +5,7 @@ import { Header } from "@/components/customs/header";
 import React from "react";
 import clsx from "clsx";
 import "mapbox-gl/dist/mapbox-gl.css";
+import ThemeProvider from "@/contexts/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,13 +25,16 @@ export default function RootLayout({
       <head>
         <title>SeroTracker</title>
         <link rel="icon" type="image/svg+xml" href="/SerotrackerLogo.svg" />
-        <link rel="alternate icon" href="/SerotrackerLogo.png" /> {/* Fallback for older browsers */}
+        <link rel="alternate icon" href="/SerotrackerLogo.png" />{" "}
+        {/* Fallback for older browsers */}
       </head>
       <body className={clsx(inter.className, "text-black no-scrollbar")}>
-        <Header />
-        <main className={"h-full-screen w-screen bg-foreground"}>
-          {children}
-        </main>
+        <ThemeProvider>
+          <Header />
+          <main className={"h-full-screen w-screen bg-foreground"}>
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );

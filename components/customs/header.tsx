@@ -126,23 +126,17 @@ export const Header = () => {
   const pathname = usePathname();
   const [titleSuffix, setTitleSuffix] = useState("Sero");
   const [titleSuffixColor, setTitleSuffixColor] = useState("text-background");
-  const [headerBgColor, setHeaderBgColor] = useState("bg-background");
+  const [headerBgColor, setHeaderBgColor] = useState("bg-background delay-150");
 
   // I wonder if there is a better way to do this without the useEffect.
   // Will come back to it because I have spent too much time here already
   useEffect(() => {
     if (pathname.includes("arbovirus")) {
       setTitleSuffix("Arbo");
-      setTitleSuffixColor("text-arbovirus");
-      setHeaderBgColor("bg-arbovirus delay-150");
     } else if (pathname.includes("sarscov2")) {
       setTitleSuffix("SC2");
-      setTitleSuffixColor("text-sc2virus");
-      setHeaderBgColor("bg-sc2virus delay-150");
     } else {
       setTitleSuffix("Sero");
-      setTitleSuffixColor("text-background");
-      setHeaderBgColor("bg-background");
     }
   }, [pathname]);
 
