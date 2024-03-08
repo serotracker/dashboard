@@ -8,19 +8,19 @@ const ListItem = React.forwardRef<
   React.ComponentPropsWithoutRef<"a">
 >(({ className, title, children, href, ...props }, ref) => {
   return (
-    <li>
+    <li className="flex-1">
       <NavigationMenuLink asChild>
         <Link
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors bg-white/10 hover:bg-white/30 hover:text-accent-foreground focus:bg-white/30 focus:text-accent-foreground",
             className,
           )}
           href={href ?? "/error"}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+          <div className="text-sm text-foreground font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-foreground/50">
             {children}
           </p>
         </Link>
