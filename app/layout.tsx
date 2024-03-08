@@ -22,15 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-<<<<<<< HEAD
-<<<<<<< HEAD
         <title>SeroTracker</title>
-=======
-        <title>SeroTracker</title> {/* Make this responsive to the arbo sc2 sero etc */}
->>>>>>> 57a39e1 (Updated the favicon as well as added a title for the website)
-=======
-        <title>SeroTracker</title>
->>>>>>> 19e7c4d (Made some small changes to improv how it all looks)
         <link rel="icon" type="image/svg+xml" href="/SerotrackerLogo.svg" />
         <link rel="alternate icon" href="/SerotrackerLogo.png" /> {/* Fallback for older browsers */}
       </head>

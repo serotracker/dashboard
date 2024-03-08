@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/navigation-menu";
 import ListItem from "@/components/customs/list-item";
 import { ArbovirusPageSectionId } from "@/app/constants";
-import { NavigationMenuLink } from "@radix-ui/react-navigation-menu";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
