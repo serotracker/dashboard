@@ -25,45 +25,15 @@ module.exports = {
         '16': 'repeat(16, minmax(0, 1fr))',
       },
       height: {
-<<<<<<< HEAD
-<<<<<<< HEAD
         'half-screen': 'calc(50vh - 3.5rem)',
         '3/4-screen': 'calc(75vh - 3.5rem)',
         'full-screen': 'calc(100vh - 3.5rem)',
       },
       colors: {
         arbovirus: "hsl(var(--arbo))",
-<<<<<<< HEAD
         arbovirusHover: "hsl(var(--arbo-hover))",
         sc2virus: "hsl(var(--sc2))",
         sc2virusHover: "hsl(var(--sc2-hover))",
-=======
-<<<<<<< HEAD
-        'half-screen': 'calc(50vh - 3rem)',
-        '3/4-screen': 'calc(75vh - 3rem)',
-        'full-screen': 'calc(100vh - 3rem)',
-=======
-=======
->>>>>>> 3e89894 (Some issue with my ide that does not save tailwindconfigjs propelry)
-        'half-screen': 'calc(50vh - 3.5rem)',
-        '3/4-screen': 'calc(75vh - 3.5rem)',
-        'full-screen': 'calc(100vh - 3.5rem)',
-      },
-      colors: {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        abro: "#1F3D0C",
-        sc2: "#00008B",
->>>>>>> 45c0b9c (Merged conmflicts and fixed color)
-=======
->>>>>>> 993827b (Changed some tailwind var cause arbo and sc2 were not working)
-=======
-        abro: "#1F3D0C",
-        sc2: "#00008B",
->>>>>>> 3e89894 (Some issue with my ide that does not save tailwindconfigjs propelry)
-=======
-        sc2virus: "hsl(var(--sc2))",
->>>>>>> 655e296 (Fixed issues caused by merge)
         denv: "#FFADAD",
         zikv: "#A0C4FF",
         chikv: "#9BF6FF",
@@ -138,23 +108,13 @@ module.exports = {
           to: {
             height: 0
           }
-        },
-        "marquee": {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-100%)' },
-        },
-        "marquee2": {
-          '0%': { transform: 'translateX(100%)' },
-          '100%': { transform: 'translateX(0%)' },
-        },
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "expand-downwards": "expand-downwards 0.4s forwards",
-        "collapse-upwards": "collapse-upwards 0.4s forwards",
-        "marquee": 'marquee 25s linear infinite',
-        "marquee2": 'marquee2 25s linear infinite',
+        "collapse-upwards": "collapse-upwards 0.4s forwards"
       },
       typography: {
         DEFAULT: {

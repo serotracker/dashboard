@@ -9,14 +9,10 @@
     --foreground: 0 0% 100%;
 
     --arbo: 149 78% 11%;
-<<<<<<< HEAD
     --arbo-hover: 149 78% 25%;
 
     --sc2: 240 100% 27%;
     --sc2-hover: 240 100% 41%;
-=======
-    --sc2: 240 100% 27%;
->>>>>>> 993827b (Changed some tailwind var cause arbo and sc2 were not working)
 
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -27,8 +23,7 @@
     --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 192 42% 53%;
-
+    --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
 
     --muted: 240 4.8% 95.9%;
@@ -87,26 +82,22 @@
   body {
     @apply bg-background text-foreground;
   }
+
   h1 {
-    @apply text-4xl;
+    font-size: 2rem;
   }
-  h2 {
-    @apply text-3xl;
+
+  h2{
+    font-size: 1.5rem;
   }
+
   h3 {
-    @apply text-xl;
-  }
-  p {
-    @apply text-base
+    font-size: 1.25rem;
   }
 }
 
 @layer utilities {
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c08bad2 (Added in conditional styling to the header)
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -119,38 +110,27 @@
     scrollbar-width: none;
     /* Firefox */
   }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    /* Hide scrollbar for IE, Edge and Firefox */
-    .no-scrollbar {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
-    }
-
-    .animate-expandDownwards {
-      animation: expandDownwards 0.4s forwards
-    }
-    
-    .animate-collapseUpwards {
-      animation: collapseUpwards 0.4s forwards
-    }
->>>>>>> 7850d4b (Updated nav menu to be fulls creen and expand downrads without zoom)
-=======
-  .animate-expandDownwards {
-    animation: expandDownwards 0.4s forwards
-  }
-
-  .animate-collapseUpwards {
-    animation: collapseUpwards 0.4s forwards
-  }
-
->>>>>>> c08bad2 (Added in conditional styling to the header)
-=======
->>>>>>> 19e7c4d (Made some small changes to improv how it all looks)
 }
 
 .mapboxgl-popup-content {
   padding: 0 !important;
 }
+
+@keyframes expandDownwards {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-navigation-menu-viewport-height);
+  }
+}
+
+@keyframes collapseUpwards { 
+  from {
+    height: var(--radix-navigation-menu-viewport-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
