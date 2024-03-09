@@ -1,7 +1,7 @@
 import { arbovirusDataStatistics, arbovirusDataStatisticsQueryKey } from "@/hooks/useArboStatistics";
 import getQueryClient from "./getQueryClient";
 import request from "graphql-request";
-import { ArbovirusDataStatistics } from "@/gql/graphql";
+import { ArbovirusDataStatistics, ArbovirusDataStatisticsQuery } from "@/gql/graphql";
 
 export function formatNumber(num?: number) {
     return (
@@ -12,7 +12,7 @@ export function formatNumber(num?: number) {
 async function ArboStats() {
     const queryClient = getQueryClient();
 
-    const arboDataStats = await queryClient.fetchQuery<ArbovirusDataStatistics>({
+    const arboDataStats = await queryClient.fetchQuery<ArbovirusDataStatisticsQuery>({
       queryKey: [arbovirusDataStatisticsQueryKey],
       queryFn: () =>
         request(
@@ -22,8 +22,8 @@ async function ArboStats() {
     });
 
     return (
-        <h3 className="flex text-background bg-white rounded-md px-16 justify-center p-8 whitespace-nowrap">
-          We have data from {formatNumber(arboDataStats.patricipantCount)} Participants accross {formatNumber(arboDataStats.estimateCount)} Estimates from {formatNumber(arboDataStats.sourceCount)} Sources spanning {formatNumber(arboDataStats.countryCount)} countries and territories
+      <h3 className="flex text-background bg-white rounded-md px-16 justify-center p-8 whitespace-nowrap">
+          We have data from {formatNumber(arboDataStats.arbovirusDataStatistics.patricipantCount)} Participants accross {formatNumber(arboDataStats.arbovirusDataStatistics.estimateCount)} Estimates from {formatNumber(arboDataStats.arbovirusDataStatistics.sourceCount)} Sources spanning {formatNumber(arboDataStats.arbovirusDataStatistics.countryCount)} countries and territories
       </h3>
     )
 }
