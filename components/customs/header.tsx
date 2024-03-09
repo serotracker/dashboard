@@ -58,26 +58,6 @@ const arbotrackerNavitems: NavMenuItem[] = [
   },
 ];
 
-const about: NavMenuItem[] = [
-  {
-    title: "Our Team",
-    href: "/pathogen/TODO",
-    description: "A list of our team members, alumni, stakeholders and other partners",
-  },
-  {
-    title: "Data Extraction",
-    href: "/pathogen/TODO",
-    description:
-      "The process used while extracted data",
-  },
-  {
-    title: "FAQ",
-    href: "/pathogen/TODO",
-    description:
-      "A list of frequently asked questions regarding the data, systematic review and organization",
-  },
-];
-
 const aboutNavItems: NavMenuItem[] = [
   {
     title: "Data Extraction",

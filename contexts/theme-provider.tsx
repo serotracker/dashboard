@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 
 
-function ThemeProvider({children}: {children: React.ReactNode}) {
+export function ThemeProvider({children}: {children: React.ReactNode}) {
     const pathname = usePathname();
 
     useEffect(() => {
@@ -29,4 +29,3 @@ function ThemeProvider({children}: {children: React.ReactNode}) {
     )
 }
 
-export default ThemeProvider;

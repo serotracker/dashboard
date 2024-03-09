@@ -10,14 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ArboStats from "@/components/customs/arboStats";
 import CustomQueryClientProvider from "@/contexts/custom-query-client-provider";
-import getQueryClient from "@/components/customs/getQueryClient";
-import request from "graphql-request";
-import {
-  arbovirusDataStatistics,
-  arbovirusDataStatisticsQueryKey,
-} from "@/hooks/useArboStatistics";
-import { dehydrate } from "@tanstack/react-query";
-import { Hydrate } from "@/contexts/arbo-context/arbo-context";
+
 
 interface TrackerButtonProps {
   titleSuffix: string;
@@ -61,22 +54,9 @@ function TrackerButton(props: TrackerButtonProps) {
 }
 
 export default async function Home() {
-  const queryClient = getQueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: [arbovirusDataStatisticsQueryKey],
-    queryFn: () =>
-      request(
-        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? "",
-        arbovirusDataStatistics
-      ),
-  });
-
-  const dehydratedState = dehydrate(queryClient);
 
   return (
     <CustomQueryClientProvider>
-      <Hydrate state={dehydratedState}>
         <div className="h-full overflow-auto">
           <div
             className="flex w-full h-full-screen bg-no-repeat p-4"
@@ -127,7 +107,7 @@ export default async function Home() {
               hover:text-sc2virus
               group-hover:text-sc2virus
             */}
-                {!process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED ? (
+                {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED ? (
                   <TrackerButton
                     titleSuffix="SC2"
                     description="SeroTracker description"
@@ -193,7 +173,6 @@ export default async function Home() {
             </div>
           </div>
         </div>
-      </Hydrate>
     </CustomQueryClientProvider>
   );
 }
