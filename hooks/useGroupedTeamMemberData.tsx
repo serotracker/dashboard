@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
+import { GroupedTeamMembersQuery } from "@/gql/graphql";
 
-export const groupedTeamMembersQuery = gql`
-  query groupedTeamMembersQuery {
+export const groupedTeamMembers = gql`
+  query groupedTeamMembers {
     groupedTeamMembers {
       label
       teamMembers {
@@ -20,25 +21,9 @@ export const groupedTeamMembersQuery = gql`
   }
 `
 
-interface GroupedTeamMembersQuery {
-  groupedTeamMembers: Array<{
-    label: string;
-    teamMembers: Array<{
-      firstName: string;
-      lastName: string;
-      email: string | null | undefined;
-      linkedinUrl: string | null | undefined;
-      twitterUrl: string | null | undefined;
-      affiliations: Array<{
-        label: string;
-      }>
-    }>
-  }>
-}
-
 export function useGroupedTeamMemberData() {
   return useQuery<GroupedTeamMembersQuery>({
     queryKey: ["groupedTeamMembersQuery"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedTeamMembersQuery)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedTeamMembers)
   });
 }
