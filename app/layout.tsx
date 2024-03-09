@@ -5,7 +5,6 @@ import { Header } from "@/components/customs/header";
 import React from "react";
 import clsx from "clsx";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,12 +21,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <title>SeroTracker</title>
+        <link rel="icon" type="image/svg+xml" href="/SerotrackerLogo.svg" />
+        <link rel="alternate icon" href="/SerotrackerLogo.png" /> {/* Fallback for older browsers */}
+      </head>
       <body className={clsx(inter.className, "text-black no-scrollbar")}>
         <Header />
         <main className={"h-full-screen w-screen bg-foreground"}>
           {children}
         </main>
-        <SpeedInsights />
       </body>
     </html>
   );

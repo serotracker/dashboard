@@ -445,9 +445,9 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
               className={clsx(width, height)}
               key={`med-sero-prev-who-age-${d.arbovirus}`}
             >
-              <h2 className="w-full text-center ">
+              <p className="w-full text-center ">
                 {convertArboSFtoArbo(d.arbovirus)}
-              </h2>
+              </p>
               <ResponsiveContainer width="100%" height="90%">
                 <BarChart
                   margin={{
