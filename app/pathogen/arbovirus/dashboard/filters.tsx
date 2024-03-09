@@ -197,10 +197,10 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
     {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
     {field: FilterableField.whoRegion, label: "WHO Region", valueToLabelMap: {}},
+    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
     {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
     {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
-    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
     {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
