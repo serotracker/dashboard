@@ -142,7 +142,7 @@ export function PathogenMap<
       minZoom={2}
       maxZoom={14}
       interactiveLayerIds={[...layers.map((layer) => layer.id), 'country-highlight-layer']}
-      mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string}
+      mapboxAccessToken={process.env.MAPBOX_API_KEY as string}
       onMouseEnter={onMouseEnter}
       onMouseDown={onMouseDown}
       onMouseLeave={onMouseLeave}
