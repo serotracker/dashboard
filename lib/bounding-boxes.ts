@@ -1,5 +1,6 @@
 import { typedObjectFromEntries } from "./utils";
 import { UNRegion, getCountryCodesInUNRegion } from "./un-regions";
+import { WHORegion, getCountryCodesInWHORegion } from "./who-regions";
 
 export type BoundingBox = [number, number, number, number];
 
@@ -441,4 +442,22 @@ const unRegionBoundingBoxData: Record<UNRegion, BoundingBox> =
 
 export const getBoundingBoxFromUNRegion = (unRegion: UNRegion): BoundingBox => {
   return unRegionBoundingBoxData[unRegion];
+};
+
+const whoRegionBoundingBoxData: Record<WHORegion, BoundingBox> =
+  typedObjectFromEntries(
+    Object.values(WHORegion).map((whoRegion) => [
+      whoRegion,
+      combineBoundingBoxes(
+        getCountryCodesInWHORegion({ whoRegion })
+          .map((countryCode) => alphaTwoCountryCodeBoundingBoxData[countryCode])
+          .filter(
+            <T>(boundingBox: T | undefined): boundingBox is T => !!boundingBox
+          )
+      ),
+    ])
+  );
+
+export const getBoundingBoxFromWHORegion = (whoRegion: WHORegion): BoundingBox => {
+  return whoRegionBoundingBoxData[whoRegion];
 };
