@@ -127,7 +127,7 @@ export default async function Home() {
               hover:text-sc2virus
               group-hover:text-sc2virus
             */}
-                {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED && (
+                {!process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED ? (
                   <TrackerButton
                     titleSuffix="SC2"
                     description="SeroTracker description"
@@ -135,6 +135,15 @@ export default async function Home() {
                     bgColor="bg-sc2virus"
                     textColor="text-sc2virus"
                     href={"/pathogen/sarscov2/dashboard"}
+                  />
+                ) : (
+                  <TrackerButton
+                    titleSuffix="legacy SC2"
+                    description="SeroTracker description"
+                    icon={faVirus}
+                    bgColor="bg-sc2virus"
+                    textColor="text-sc2virus"
+                    href={"https://serotracker.com/en/Explore"}
                   />
                 )}
               </div>
