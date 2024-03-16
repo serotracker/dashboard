@@ -125,7 +125,8 @@ export enum FilterableField {
   start_date = "start_date",
   end_date = "end_date",
   whoRegion = "whoRegion",
-  unRegion = "unRegion"
+  unRegion = "unRegion",
+  serotype = "serotype"
 }
 
 interface FilterSectionProps {
@@ -200,6 +201,7 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
     {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
+    {field: FilterableField.serotype, label: "Serotype", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
 
   // Fetch arbovirus data using the useArboData hook

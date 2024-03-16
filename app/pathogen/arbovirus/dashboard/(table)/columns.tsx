@@ -34,6 +34,7 @@ export type Estimate = {
   sampleSize: number;
   sampleStartDate: string;
   seroprevalence: number;
+  serotype: string;
   sex: string;
   sourceSheetId: string;
   state: string;
@@ -302,6 +303,10 @@ export const columns: DataTableColumnDef<Estimate, unknown>[] = [
   {
     accessorKey: "pediatricAgeGroup",
     header: get_header("Pediatric Age Group"),
+  },
+  {
+    accessorKey: "serotype",
+    header: get_header("Serotype"),
   },
   // {
   //   accessorKey: "ageMaximum",
