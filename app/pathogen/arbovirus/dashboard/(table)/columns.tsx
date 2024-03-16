@@ -306,7 +306,7 @@ export const columns: DataTableColumnDef<Estimate, unknown>[] = [
   },
   {
     accessorKey: "serotype",
-    header: get_header("Serotype"),
+    header: get_header("Serotype (DENV only)"),
   },
   // {
   //   accessorKey: "ageMaximum",

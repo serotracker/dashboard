@@ -183,6 +183,12 @@ export function Filters(props: FiltersProps) {
   if(!(selectedAgeGroups.length === 1 && selectedAgeGroups[0] === 'Children and Youth (0-17 years)')) {
     excludedFields.push(FilterableField.pediatricAgeGroup);
   }
+  
+  const selectedArboVirus = selectedFilters['pathogen'] ?? [];
+
+  if(selectedArboVirus.indexOf("DENV") == -1) {
+    excludedFields.push(FilterableField.serotype)
+  }
 
   const state = useContext(ArboContext);
   const demographicFilters = [
@@ -201,9 +207,9 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
     {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
-    {field: FilterableField.serotype, label: "Serotype", valueToLabelMap: {}}
+    {field: FilterableField.serotype, label: "Serotype (DENV only)", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
-
+  console.log(studyInformationFilters.map((field) => field.field))
   // Fetch arbovirus data using the useArboData hook
   const { data } = useArboData();
 
