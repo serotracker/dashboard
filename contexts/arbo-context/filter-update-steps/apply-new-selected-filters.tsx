@@ -13,6 +13,12 @@ export function filterData(
   // while filtering the data we take each item and check if it is passes the test for each and every one of the filters. 
   return data.filter((item: any) => {
     return filterKeys.every((key: string) => {
+      /* If no pathogen is selected, we don't want to see any data */
+      if (key === "pathogen"){
+        if(filters[key].length == 0){
+          return false;
+        }
+      }
       if (!filters[key].length) return true;
 
       switch (key) {
