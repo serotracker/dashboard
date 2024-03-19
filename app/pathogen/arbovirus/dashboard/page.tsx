@@ -9,29 +9,29 @@ import { ArbovirusPageSectionId } from "../../../constants";
 export default function ArbovirusDashboardPage() {
   return (
     <div className="col-span-12 row-span-2 grid gap-0 grid-cols-12 grid-rows-2 grid-flow-col w-screen overflow-hidden border-box">
-      <div className="overflow-y-scroll col-span-2 h-full row-span-2 border-black border-r-2">
+      <div className="overflow-y-scroll col-span-2 h-full row-span-2 border-y">
         <Filters
-          className="p-4"
+          className="p-4 border-background"
         />
       </div>
       <div
-        className={"overflow-y-scroll snap-y scroll-smooth col-span-10 row-span-2"}
+        className={"overflow-y-scroll snap-y scroll-smooth col-span-10 row-span-2 px-4"}
       >
         <section
           id={ArbovirusPageSectionId.MAP}
-          className="w-full h-[95%] snap-start snap-always scroll-smooth overflow-hidden relative row-span-2 border-black border-b-2"
+          className="w-full h-[95%] scroll-smooth overflow-hidden relative row-span-2 mt-4 rounded-md"
         >
           <ArbovirusMap />
         </section>
         <section
           id={ArbovirusPageSectionId.TABLE}
-          className="w-full h-[95%] snap-start snap-always scroll-smooth overflow-scroll border-black border-b-2"
+          className="w-full h-fit scroll-smooth mt-4"
         >
           <ArboDataTable />
         </section>
         <section
           id={ArbovirusPageSectionId.VISUALIZATIONS}
-          className="w-full snap-start snap-always scroll-smooth grid-cols-2 grid-rows-1 grid overflow-y-visible gap-y-6 pr-4"
+          className="w-full grid-cols-2 grid-rows-1 grid overflow-y-visible gap-y-6 mt-4"
         >
           <VisualizationsSection />
         </section>
