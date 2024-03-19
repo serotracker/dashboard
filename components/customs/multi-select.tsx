@@ -19,7 +19,6 @@ interface MultiSelectProps {
   optionToLabelMap: Record<string, string | undefined>;
   selected: string[];
   handleOnChange: (selected: string[]) => void;
-  backgroundColor?: string;
 }
 
 const createMultiSelectOptionList = (options: string[], optionToLabelMap: Record<string, string | undefined>) => {
@@ -33,7 +32,7 @@ const createMultiSelectOptionList = (options: string[], optionToLabelMap: Record
 
 export function MultiSelect(props: MultiSelectProps) {
   // TODO: I wonder if there is a way to make the background color dynamic based on the page we are on so this does not need to prop drilled
-  const { heading, selected, handleOnChange, optionToLabelMap, backgroundColor = 'bg-background hover:bg-backgroundHover' } = props;
+  const { heading, selected, handleOnChange, optionToLabelMap} = props;
   const options = createMultiSelectOptionList(props.options, optionToLabelMap);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -91,7 +90,7 @@ export function MultiSelect(props: MultiSelectProps) {
               <div className="flex gap-1 flex-wrap">
               {createMultiSelectOptionList(selected, optionToLabelMap).map((selectedOption) => {
               return (
-                <Badge className={cn("rounded-sm hover:bg-backgroundHover p-1", backgroundColor)} key={selectedOption.value}>
+                <Badge className={cn("rounded-sm hover:bg-backgroundHover p-1 bg-background")} key={selectedOption.value}>
                   {selectedOption.label}
                   <button
                     className="ml-1 ring-offset-background outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -106,7 +105,7 @@ export function MultiSelect(props: MultiSelectProps) {
                     }}
                     onClick={() => handleUnselect(selectedOption)}
                   >
-                    <X className={cn("h-3 w-3 text-foreground", `hover:${backgroundColor}`)} />
+                    <X className={cn("h-3 w-3 p-0.5 rounded-sm text-foreground hover:bg-background")} />
                   </button>
                 </Badge>
               );

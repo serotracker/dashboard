@@ -30,7 +30,7 @@ export default async function ArboLayout({
   
   const dehydratedState = dehydrate(queryClient);
 
-  if(!process.env.SARS_COV_2_TRACKER_ENABLED) {
+  if(!process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED) {
     return notFound();
   }
 
