@@ -27,6 +27,7 @@ import { DatePicker } from "@/components/ui/datepicker";
 import { parseISO } from "date-fns";
 import { useArboFilters } from "@/hooks/useArboFilters";
 import { UNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
+import { MapArbovirusFilter } from "./(map)/MapArbovirusFilter";
 
 interface FieldInformation {
   field: FilterableField;
@@ -196,7 +197,7 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.whoRegion, label: "WHO Region", valueToLabelMap: {}},
     {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
     {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
-    {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
+    // {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
     {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
     {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
@@ -216,33 +217,35 @@ export function Filters(props: FiltersProps) {
       }, // Include an empty object as payload
     });
   };
-
   if (filterData) {
     return (
       <div className={props.className}>
-        <FilterSection
-          headerText="Demographic"
-          headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
-          allFieldInformation={demographicFilters}
-          state={state}
-          filters={filterData.arbovirusFilterOptions}
-          data={data}
-        />
-        <FilterSection
-          headerText="Study Information"
-          headerTooltipText="Filter on different types of study based metadata"
-          allFieldInformation={studyInformationFilters}
-          state={state}
-          filters={filterData.arbovirusFilterOptions}
-          data={data}
-        />
-        <div>
-          <button
-            className="w-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 font-bold py-2 px-15 rounded"
-            onClick={resetFilters}
-          >
-            Reset Filters
-          </button>
+        <MapArbovirusFilter records={data.arbovirusEstimates} className="fixed p-2 z-10"/>
+        <div className="pt-[20em]">
+          <FilterSection
+            headerText="Demographic"
+            headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
+            allFieldInformation={demographicFilters}
+            state={state}
+            filters={filterData.arbovirusFilterOptions}
+            data={data}
+          />
+          <FilterSection
+            headerText="Study Information"
+            headerTooltipText="Filter on different types of study based metadata"
+            allFieldInformation={studyInformationFilters}
+            state={state}
+            filters={filterData.arbovirusFilterOptions}
+            data={data}
+          />
+          <div>
+            <button
+              className="w-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 font-bold py-2 px-15 rounded"
+              onClick={resetFilters}
+            >
+              Reset Filters
+            </button>
+          </div>
         </div>
       </div>
     );

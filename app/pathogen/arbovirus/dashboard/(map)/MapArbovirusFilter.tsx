@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useContext } from "react";
 import { pathogenColorsTailwind } from "./ArbovirusMap";
 import { Button } from "@/components/ui/button";
+import SectionHeader from "@/components/customs/SectionHeader";
 
 interface MapArbovirusFilterProps {
   records: unknown[];
@@ -47,61 +48,61 @@ export const MapArbovirusFilter = ({ records, className }: MapArbovirusFilterPro
 
   return (
     <Card className={className}>
-      <CardHeader className={"py-3"}>
-        <p>Arboviruses</p>
-      </CardHeader>
-      <CardContent className={"flex justify-center flex-col pb-3"}>
-        {pathogenOrder.map((pathogenAbbreviation: string) => {
-          // Map abbreviations to full names
-          const pathogenFullName =
-            pathogenAbbreviation === "ZIKV"
-              ? "Zika Virus"
-              : pathogenAbbreviation === "DENV"
-              ? "Dengue Virus"
-              : pathogenAbbreviation === "CHIKV"
-              ? "Chikungunya Virus"
-              : pathogenAbbreviation === "YF"
-              ? "Yellow Fever"
-              : pathogenAbbreviation === "WNV"
-              ? "West Nile Virus"
-              : pathogenAbbreviation === "MAYV"
-              ? "Mayaro Virus"
-              : pathogenAbbreviation;
+      <SectionHeader header_text="Arboviruses" tooltip_text="Filler text here"/>
+      <div className="p-2">
+        <CardContent className={"flex justify-center flex-col pb-3"}>
+          {pathogenOrder.map((pathogenAbbreviation: string) => {
+            // Map abbreviations to full names
+            const pathogenFullName =
+              pathogenAbbreviation === "ZIKV"
+                ? "Zika Virus"
+                : pathogenAbbreviation === "DENV"
+                ? "Dengue Virus"
+                : pathogenAbbreviation === "CHIKV"
+                ? "Chikungunya Virus"
+                : pathogenAbbreviation === "YF"
+                ? "Yellow Fever"
+                : pathogenAbbreviation === "WNV"
+                ? "West Nile Virus"
+                : pathogenAbbreviation === "MAYV"
+                ? "Mayaro Virus"
+                : pathogenAbbreviation;
 
-          return (
-            <div
-              key={pathogenAbbreviation}
-              className="items-top flex space-x-2 my-1"
-            >
-              <Checkbox
-                id={`checkbox-${pathogenAbbreviation}`}
-                className={pathogenColorsTailwind[pathogenAbbreviation]}
-                checked={
-                  state.selectedFilters["pathogen"]
-                    ? state.selectedFilters["pathogen"].includes(
-                        pathogenAbbreviation
-                      )
-                    : false
-                }
-                onCheckedChange={(checked: boolean) => {
-                  handleOnClickCheckbox(pathogenAbbreviation, checked);
-                }}
-              />
-              <div className="grid gap-1.5 leading-none">
-                <label
-                  htmlFor={`checkbox-${pathogenAbbreviation}`}
-                  className={
-                    "text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            return (
+              <div
+                key={pathogenAbbreviation}
+                className="items-top flex space-x-2 my-1"
+              >
+                <Checkbox
+                  id={`checkbox-${pathogenAbbreviation}`}
+                  className={pathogenColorsTailwind[pathogenAbbreviation]}
+                  checked={
+                    state.selectedFilters["pathogen"]
+                      ? state.selectedFilters["pathogen"].includes(
+                          pathogenAbbreviation
+                        )
+                      : false
                   }
-                >
-                  {pathogenFullName}
-                </label>
+                  onCheckedChange={(checked: boolean) => {
+                    handleOnClickCheckbox(pathogenAbbreviation, checked);
+                  }}
+                />
+                <div className="grid gap-1.5 leading-none">
+                  <label
+                    htmlFor={`checkbox-${pathogenAbbreviation}`}
+                    className={
+                      "text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    }
+                  >
+                    {pathogenFullName}
+                  </label>
+                </div>
               </div>
-            </div>
-          );
-        })}
-        <Button className="mt-2" variant={'ghost'} onClick={clearAllHandler}>Clear all</Button>
-      </CardContent>
+            );
+          })}
+          <Button className="mt-2" variant={'ghost'} onClick={clearAllHandler}>Clear all</Button>
+        </CardContent>
+      </div>
     </Card>
   );
 };

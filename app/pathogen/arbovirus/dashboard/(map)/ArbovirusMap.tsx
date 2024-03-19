@@ -110,7 +110,6 @@ export function ArbovirusMap() {
         onClose={() => setStudySubmissionPromptVisibility(false)}
         className={"absolute bottom-1 inset-x-0 mx-auto text-center w-1/2"}
       />
-      <MapArbovirusFilter records={data.arbovirusEstimates} className={"absolute bottom-1 right-1"} />
       <div className={"absolute top-1 left-1 p-2"}>
         <Card className={"mb-1"}>
           <CardContent className={"flex w-fit p-2"}>
