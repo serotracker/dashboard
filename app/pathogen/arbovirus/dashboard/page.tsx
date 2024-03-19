@@ -19,19 +19,31 @@ export default function ArbovirusDashboardPage() {
       >
         <section
           id={ArbovirusPageSectionId.MAP}
+<<<<<<< HEAD
           className="w-full h-[95%] scroll-smooth overflow-hidden relative row-span-2 mt-4 rounded-md border border-background"
+=======
+          className="w-full h-[95%] scroll-smooth overflow-hidden relative row-span-2 mt-4 rounded-md"
+>>>>>>> 90b856e (Improved UI for dashboard)
         >
           <ArbovirusMap />
         </section>
         <section
           id={ArbovirusPageSectionId.TABLE}
+<<<<<<< HEAD
           className="w-full h-fit scroll-smooth mt-4 border border-background rounded-md px-4"
+=======
+          className="w-full h-fit scroll-smooth mt-4"
+>>>>>>> 90b856e (Improved UI for dashboard)
         >
           <ArboDataTable />
         </section>
         <section
           id={ArbovirusPageSectionId.VISUALIZATIONS}
+<<<<<<< HEAD
           className="w-full grid-cols-2 grid-rows-1 grid overflow-y-visible gap-6 mt-4"
+=======
+          className="w-full grid-cols-2 grid-rows-1 grid overflow-y-visible gap-y-6 mt-4"
+>>>>>>> 90b856e (Improved UI for dashboard)
         >
           <VisualizationsSection />
         </section>

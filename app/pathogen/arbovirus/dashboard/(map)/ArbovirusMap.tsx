@@ -108,7 +108,11 @@ export function ArbovirusMap() {
       <MapArbovirusStudySubmissionPrompt 
         hidden={!isStudySubmissionPromptVisible}
         onClose={() => setStudySubmissionPromptVisibility(false)}
+<<<<<<< HEAD
         className={"absolute bottom-1 left-1 mx-auto w-1/2 text-center bg-white/60 backdrop-blur-md"}
+=======
+        className={"absolute bottom-1 left-1 mx-auto w-1/2 text-center"}
+>>>>>>> 90b856e (Improved UI for dashboard)
       />
       <MapArbovirusFilter records={data.arbovirusEstimates} className={"absolute bottom-1 right-1 bg-white/60 backdrop-blur-md"} />
       <div className={"absolute top-1 left-1 p-2 "}>
