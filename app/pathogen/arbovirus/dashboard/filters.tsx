@@ -34,8 +34,11 @@ interface FieldInformation {
   valueToLabelMap: Record<string, string | undefined>;
 }
 
-// Function to add or update filters with multiple values
-const addFilterMulti = (
+/**
+ * Function to add or update filters with multiple values
+ * 
+ */
+const sendFilterChangeDispatch = (
   value: string[],
   newFilter: string,
   state: ArboContextType,
@@ -74,7 +77,7 @@ const buildFilterDropdown = (
         <DatePicker
           onChange={(date) => {
             const dateString = date?.toISOString();
-            addFilterMulti(dateString ? [dateString] : [], filter, state, data);
+            sendFilterChangeDispatch(dateString ? [dateString] : [], filter, state, data);
           }}
           labelText={placeholder}
           date={
@@ -100,7 +103,7 @@ const buildFilterDropdown = (
     return (
       <div className="pb-3" key={filter}>
         <MultiSelect
-          handleOnChange={(value) => addFilterMulti(value, filter, state, data)}
+          handleOnChange={(value) => sendFilterChangeDispatch(value, filter, state, data)}
           heading={placeholder}
           selected={state.selectedFilters[filter] ?? []}
           options={sortedOptions}
@@ -115,6 +118,8 @@ export enum FilterableField {
   ageGroup = "ageGroup",
   pediatricAgeGroup = "pediatricAgeGroup",
   sex = "sex",
+  whoRegion = "whoRegion",
+  unRegion = "unRegion",
   country = "country",
   assay = "assay",
   producer = "producer",
@@ -122,9 +127,7 @@ export enum FilterableField {
   antibody = "antibody",
   pathogen = "pathogen",
   start_date = "start_date",
-  end_date = "end_date",
-  whoRegion = "whoRegion",
-  unRegion = "unRegion"
+  end_date = "end_date"
 }
 
 interface FilterSectionProps {
@@ -193,10 +196,10 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
     {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
     {field: FilterableField.whoRegion, label: "WHO Region", valueToLabelMap: {}},
+    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
     {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
     {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
-    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
     {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
