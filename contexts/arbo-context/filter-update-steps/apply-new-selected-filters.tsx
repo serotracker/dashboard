@@ -11,6 +11,12 @@ export function filterData(
 
   return data.filter((item: any) => {
     return filterKeys.every((key: string) => {
+      /* If no pathogen is selected, we don't want to see any data */
+      if (key === "pathogen"){
+        if(filters[key].length == 0){
+          return false;
+        }
+      }
       if (!filters[key].length) return true;
 
       if (key === "end_date") {
