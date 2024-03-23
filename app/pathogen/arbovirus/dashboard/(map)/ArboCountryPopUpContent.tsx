@@ -67,10 +67,9 @@ export function ArboCountryPopupContent({ record }: ArboCountryPopupContentProps
 
           
           return (
-            <div className="flex w-full mb-2">
+            <div className="flex w-full mb-2" key={`pop-up-content-${shortformArbovirus}`}>
               <div className={`w-2 mr-2`} style={{backgroundColor: pathogenColors[shortformArbovirus]}}/>
               <CountryPopUpContentRow
-                key={`pop-up-content-${shortformArbovirus}`}
                 title={`${convertArboSFtoArbo(shortformArbovirus)} estimates`}
                 content={dataPointsForArbovirus.length.toString()} />
             </div>

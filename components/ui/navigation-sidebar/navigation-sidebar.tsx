@@ -49,7 +49,7 @@ export const NavigationSidebar = <TSidebarValue extends string>(
     if(option) {
       setCurrentSidebarOption(option.value)
     }
-  }, [pathname])
+  }, [pathname, props.options])
 
   // Very unlikely situation -- if happening this means there is a logical error in the code
   if(!props.options.find(option => option.route === pathname)) {

@@ -62,7 +62,7 @@ export function MultiSelect(props: MultiSelectProps) {
         }
       }
     },
-    [],
+    [handleOnChange, selected],
   );
 
   const selectables = options.filter(
