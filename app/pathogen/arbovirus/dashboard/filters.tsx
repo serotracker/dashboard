@@ -26,7 +26,8 @@ import SectionHeader from "@/components/customs/SectionHeader";
 import { DatePicker } from "@/components/ui/datepicker";
 import { parseISO } from "date-fns";
 import { useArboFilters } from "@/hooks/useArboFilters";
-import { UNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
+import { unRegionEnumToLabelMap } from "@/lib/un-regions";
+import { Button } from "@/components/ui/button";
 
 interface FieldInformation {
   field: FilterableField;
@@ -146,12 +147,10 @@ const FilterSection = ({
 }: FilterSectionProps) => {
   return (
     <div className="p-0">
-      <div>
         <SectionHeader
           header_text={headerText}
           tooltip_text={headerTooltipText}
         />
-      </div>
       {allFieldInformation.map((fieldInformation) => {
         return buildFilterDropdown(
           fieldInformation.field,
@@ -236,12 +235,13 @@ export function Filters(props: FiltersProps) {
           data={data}
         />
         <div>
-          <button
-            className="w-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 font-bold py-2 px-15 rounded"
+          <Button
+            className="w-full"
             onClick={resetFilters}
+            variant={"outline"}
           >
             Reset Filters
-          </button>
+          </Button>
         </div>
       </div>
     );
