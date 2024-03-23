@@ -25,11 +25,7 @@ export const RechartsVisualization = (props: RechartsVisualizationProps) => {
   const closeButtonId = `${props.visualizationInformation.id}-close-icon`
 
   return (
-<<<<<<< HEAD
     <div className={cn(props.className, 'flex flex-col rounded-md border border-background my-4 p-2')} ref={ref}>
-=======
-    <div className={cn(props.className, 'flex flex-col rounded-md border mx-2 my-4 p-2')} ref={ref}>
->>>>>>> 90b856e (Improved UI for dashboard)
       <VisualizationHeader
         visualizationInformation={props.visualizationInformation}
         downloadVisualization={() => downloadVisualization({
