@@ -1,4 +1,4 @@
-"use client";
+import React from "react";
 import {
   Accordion,
   AccordionContent,
@@ -16,8 +16,8 @@ export default function FAQPage() {
   }));
 
   return (
-    <div className="mx-4">
-      <h1 className="text-3xl mt-5 mb-3.5"> Frequently Asked Questions </h1>
+    <>
+      <h2 className="mb-4"> Frequently Asked Questions </h2>
       <Accordion type="single" collapsible={true}>
         {options.map((option) => (
           <AccordionItem key={option.id} value={option.id} >
@@ -30,6 +30,6 @@ export default function FAQPage() {
           </AccordionItem>
         ))}
       </Accordion>
-    </div>
+    </>
   );
 }

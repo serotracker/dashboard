@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   Root as NavigationMenuRoot,
@@ -9,7 +9,7 @@ import {
   Trigger as NavigationMenuTrigger,
   Link as NavigationMenuLink,
 } from "@radix-ui/react-navigation-menu";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface NavigationSidebarOptionData<TSidebarValue extends string> {
@@ -20,7 +20,7 @@ interface NavigationSidebarOptionData<TSidebarValue extends string> {
 
 interface NavigationMenuProps<TSidebarValue extends string> {
   options: Array<NavigationSidebarOptionData<TSidebarValue>>;
-  selectedValue: TSidebarValue | undefined;
+  selectedValue?: TSidebarValue;
 }
 
 interface NavigationSidebarOptionProps<TSidebarValue extends string> {
@@ -42,6 +42,21 @@ export const NavigationSidebar = <TSidebarValue extends string>(
   props: NavigationMenuProps<TSidebarValue>
 ): React.ReactNode => {
   const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const option = props.options.find(option => option.route === pathname);
+    if(option) {
+      setCurrentSidebarOption(option.value)
+    }
+  }, [pathname])
+
+  // Very unlikely situation -- if happening this means there is a logical error in the code
+  if(!props.options.find(option => option.route === pathname)) {
+    router.push(props.options[0].route);
+  }
+
+  const [currentSidebarOption, setCurrentSidebarOption] = React.useState<TSidebarValue>(props.selectedValue ?? props.options.find(option => option.route === pathname)?.value ?? props.options[0].value);
 
   return (
     <NavigationMenuRoot orientation="vertical">
@@ -53,11 +68,14 @@ export const NavigationSidebar = <TSidebarValue extends string>(
             >
               <NavigationMenuLink
                 className="w-full"
-                onSelect={() => router.push(option.route)}
+                onSelect={() => {
+                  setCurrentSidebarOption(option.value);
+                  router.push(option.route)
+                }}
               >
                 <NavigationSidebarOption
                   option={option}
-                  isSelected={props.selectedValue === option.value}
+                  isSelected={currentSidebarOption === option.value}
                 />
               </NavigationMenuLink>
             </NavigationMenuTrigger>
