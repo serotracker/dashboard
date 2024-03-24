@@ -60,6 +60,7 @@ const DownloadButton = (props: DownloadButtonProps) => (
 
 const CloseButton = (props: CloseButtonProps) => (
   <button
+    id={props.configuration.id}
     className="mr-4"
     hidden={
       !props.configuration.referrerRoute ||

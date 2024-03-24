@@ -21,3 +21,30 @@ export const typedGroupBy = <TKey extends string, TValue>(values: TValue[], grou
 export const typedObjectKeys = <TKey extends string>(input: Record<TKey, unknown>): Array<TKey> => {
   return Object.keys(input) as TKey[];
 }
+
+interface MixColoursInput {
+  zeroValuedColourHexCode: string;
+  oneValuedColourHexCode: string;
+  value: number
+}
+
+export const mixColours = (input: MixColoursInput): string => {
+  const zeroValuedColourRGB = [
+    parseInt(input.zeroValuedColourHexCode.substring(1,3), 16),
+    parseInt(input.zeroValuedColourHexCode.substring(3,5), 16),
+    parseInt(input.zeroValuedColourHexCode.substring(5,7), 16)
+  ];
+  const oneValuedColourRGB = [
+    parseInt(input.oneValuedColourHexCode.substring(1,3), 16),
+    parseInt(input.oneValuedColourHexCode.substring(3,5), 16),
+    parseInt(input.oneValuedColourHexCode.substring(5,7), 16)
+  ];
+
+  const mixedColourRGB = [
+    Math.round((oneValuedColourRGB[0] * input.value) + (zeroValuedColourRGB[0] * (1 - input.value))),
+    Math.round((oneValuedColourRGB[1] * input.value) + (zeroValuedColourRGB[1] * (1 - input.value))),
+    Math.round((oneValuedColourRGB[2] * input.value) + (zeroValuedColourRGB[2] * (1 - input.value)))
+  ]
+
+  return `#${mixedColourRGB[0].toString(16)}${mixedColourRGB[1].toString(16)}${mixedColourRGB[2].toString(16)}`
+}
