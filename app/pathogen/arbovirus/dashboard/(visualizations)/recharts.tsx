@@ -268,6 +268,7 @@ type AgeGroup =
   | "Children and Youth (0-17 years)"
   | "Seniors (65+ years)"
   | "Multiple groups";
+export const allAgeGroups = ["Adults (18-64 years)", "Children and Youth (0-17 years)", "Seniors (65+ years)", "Multiple groups"]
 
 interface SlantedTickProps {
   x: number,
