@@ -57,6 +57,11 @@ export function filterData(
         // Check for any overlap in the sampling period
         return itemEndDate >= filterStartDate;
       }
+
+      if (key === "serotype" && item["pathogen"] !== "DENV") {
+        return true;
+      }
+
       if (key === "antibody") {
         return item["antibodies"].some((element: string) =>
           filters[key].includes(element)
