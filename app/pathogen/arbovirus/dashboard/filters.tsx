@@ -208,7 +208,6 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
     {field: FilterableField.serotype, label: "Serotype (DENV only)", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
-  console.log(studyInformationFilters.map((field) => field.field))
   // Fetch arbovirus data using the useArboData hook
   const { data } = useArboData();
 
