@@ -51,7 +51,6 @@ const buildFilterDropdown = (
           selected={state.selectedFilters[filter] ?? []}
           options={filterOptions.filter((assay: string) => assay != null)}
           optionToLabelMap={{}}
-          backgroundColor="bg-sc2virus hover:bg-sc2virusHover"
         />
       </div>
   );

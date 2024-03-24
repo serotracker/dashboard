@@ -105,7 +105,6 @@ const buildFilterDropdown = (
           selected={state.selectedFilters[filter] ?? []}
           options={sortedOptions}
           optionToLabelMap={optionToLabelMap}
-          backgroundColor="bg-arbovirus hover:bg-arbovirusHover"
         />
       </div>
     );
