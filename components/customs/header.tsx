@@ -142,7 +142,7 @@ export const Header = () => {
           </h2>
         </Link>
       </div>
-      <NavigationMenu>
+      <NavigationMenu className="z-50">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger className="bg-transparent">

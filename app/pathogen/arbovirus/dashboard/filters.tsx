@@ -27,11 +27,13 @@ import { DatePicker } from "@/components/ui/datepicker";
 import { parseISO } from "date-fns";
 import { useArboFilters } from "@/hooks/useArboFilters";
 import { UNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
+import { MapArbovirusFilter } from "./(map)/MapArbovirusFilter";
 
 interface FieldInformation {
   field: FilterableField;
   label: string;
   valueToLabelMap: Record<string, string | undefined>;
+  className?: string;
 }
 
 // Function to add or update filters with multiple values
@@ -58,7 +60,8 @@ const buildFilterDropdown = (
   state: ArboContextType,
   filterOptions: string[],
   data: any,
-  optionToLabelMap: Record<string, string | undefined>
+  optionToLabelMap: Record<string, string | undefined>,
+  className: string
 ) => {
   const sortedOptions = filterOptions
     ? filterOptions
@@ -70,7 +73,7 @@ const buildFilterDropdown = (
     filter === FilterableField.end_date
   ) {
     return (
-      <div className="pb-3" key={filter}>
+      <div className={className} key={filter}>
         <DatePicker
           onChange={(date) => {
             const dateString = date?.toISOString();
@@ -98,7 +101,7 @@ const buildFilterDropdown = (
     );
   } else {
     return (
-      <div className="pb-3" key={filter}>
+      <div className={className} key={filter}>
         <MultiSelect
           handleOnChange={(value) => addFilterMulti(value, filter, state, data)}
           heading={placeholder}
@@ -153,13 +156,18 @@ const FilterSection = ({
         />
       </div>
       {allFieldInformation.map((fieldInformation) => {
+        let className = "pb-3"
+        if (fieldInformation.className) {
+          className = fieldInformation.className
+        }
         return buildFilterDropdown(
           fieldInformation.field,
           fieldInformation.label,
           state,
           filters[fieldInformation.field],
           data ? data.arbovirusEstimates : [],
-          fieldInformation.valueToLabelMap
+          fieldInformation.valueToLabelMap,
+          className=className
         );
       })}
     </div>
@@ -195,7 +203,7 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.whoRegion, label: "WHO Region", valueToLabelMap: {}},
     {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
     {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
-    {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
+    {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}, className: "hidden"},
     {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
     {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
@@ -215,10 +223,12 @@ export function Filters(props: FiltersProps) {
       }, // Include an empty object as payload
     });
   };
-
   if (filterData) {
     return (
       <div className={props.className}>
+        <div className="sticky p-2 z-10 top-0 w-full bg-white">
+          <MapArbovirusFilter records={data.arbovirusEstimates} className="p-2"/>
+        </div>
         <FilterSection
           headerText="Demographic"
           headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
