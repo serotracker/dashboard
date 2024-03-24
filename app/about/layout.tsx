@@ -43,8 +43,8 @@ export default async function AboutPageBaseLayout (props: AboutPageBaseLayoutPro
             <NavigationSidebar
               options={[
                 {
-                  label: "Data Extraction",
-                  route: "/about/data-extraction",
+                  label: "About Our Data",
+                  route: "/about/about-our-data",
                   value: AboutPageSidebarOption.DATA_EXTRACTION,
                 },
                 {
