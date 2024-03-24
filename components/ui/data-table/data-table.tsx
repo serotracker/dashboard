@@ -115,35 +115,35 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
 
   return (
     <div>
-      <div className="flex items-center justify-between py-4">
-        <h2>
-          <b>Explore arbovirus seroprevalence estimates in our database</b>
-        </h2>
+      <div className="flex items-center justify-between py-4 px-2">
+        <h3>
+          Explore arbovirus seroprevalence estimates in our database
+        </h3>
         <div className="flex">
           <Button
             variant="outline"
-            className="bg-foreground mx-2 whitespace-nowrap"
+            className="mx-2 whitespace-nowrap"
             onClick={getAllVisibleData}
           >
             Download CSV
           </Button>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild className="bg-foreground">
+            <DropdownMenuTrigger asChild>
               <Button variant="outline" className="mx-2 whitespace-nowrap">
                 Columns
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-foreground">
+            <DropdownMenuContent align="end" className="p-2">
               <Button
                 variant="outline"
-                className="ml-auto bg-white"
+                className="mr-2 mb-2"
                 onClick={handleSelectAll}
               >
                 Select All
               </Button>
               <Button
                 variant="outline"
-                className="ml-auto bg-white"
+                className="mb-2"
                 onClick={handleClearAll}
               >
                 Clear All
@@ -170,7 +170,6 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
           </DropdownMenu>
         </div>
       </div>
-      <div className="rounded-md border">
         <Table className="border-separate border-spacing-0">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -221,11 +220,9 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
             )}
           </TableBody>
         </Table>
-      </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredRowModel().rows.length} row(s)
         </div>
         <div className="space-x-2">
           <Button
