@@ -62,7 +62,7 @@ export function MultiSelect(props: MultiSelectProps) {
         }
       }
     },
-    [],
+    [handleOnChange, selected],
   );
 
   const selectables = options.filter(
@@ -75,7 +75,7 @@ export function MultiSelect(props: MultiSelectProps) {
         onKeyDown={handleKeyDown}
         className="overflow-visible bg-transparent"
       >
-        <div className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+        <div className="group border border-b-2 border-background px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring">
           <div className="flex flex-col gap-1 flex-wrap">
             {/* Avoid having the "Search" Icon */}
             {selectables.length > 0 && <CommandPrimitive.Input

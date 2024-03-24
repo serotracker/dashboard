@@ -83,8 +83,8 @@ export default async function Home() {
             backgroundImage: `url(${SeroMap.src})`,
           }}
         >
-          <div className="flex flex-col justify-between w-full rounded-md p-4 mb-4 h-1/2 text-background bg-white/90">
-            <div className="w-full">
+          <div className="flex flex-col w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
+            <div className="w-full h-fit">
               <h1 className=" w-fit p-2 rounded-md">SeroTracker</h1>
               <h3 className="rounded-md p-2">
                 Your Go to Source for COVID-19 and Arbovirus Seroprevalence Data
