@@ -52,7 +52,7 @@ export default function DataExtractionPage() {
       </div>
       <h2 className={headerClassname}>About ArboTracker</h2>
       <div className="mb-4">
-        <p> ArboTracker data was collected through a systematic review of published arbovirus seroprevalence studies in collaboration with partners at the University of Colorado and Heidelberg University. The search feeding the current dashboard was conducted on March 13, 2023. Data was extracted by researchers at Heidelberg University for each source's estimate(s) and certain relevant subgroups. Additional relevant data was extracted by researchers at SeroTracker. Full methods are available in our protocol. </p>
+        <p> ArboTracker data was collected through a systematic review of published arbovirus seroprevalence studies in collaboration with partners at the University of Colorado and Heidelberg University. The search feeding the current dashboard was conducted on March 13, 2023. Data was extracted by researchers at Heidelberg University for each source&apos;s estimate(s) and certain relevant subgroups. Additional relevant data was extracted by researchers at SeroTracker. Full methods are available in our protocol. </p>
       </div>
       <div className="mb-4">
         <p className='inline'> We produce data for both academic and public use on our dashboard. We aim to update our search strategy and dashboard in May 2024 to capture additional data. For further information beyond the following high-level summary, please see our </p>
