@@ -20,7 +20,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2 mb-2">
       <h2 className="text-lg">{header_text}</h2>
       <div className="relative inline-block">
         {/* Tooltip */}

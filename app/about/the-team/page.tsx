@@ -1,11 +1,11 @@
 "use client";
+
+import React from "react";
 import { GroupedTeamMembersQuery } from "@/gql/graphql";
 import { useGroupedTeamMemberData } from "@/hooks/useGroupedTeamMemberData";
 import { faLinkedin, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Linkedin, Mail, Twitter } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 type TeamMember = GroupedTeamMembersQuery['groupedTeamMembers'][number]["teamMembers"][number]
@@ -18,7 +18,7 @@ interface TeamMemberInfoCardProps {
 const TeamMemberInfoCard = (props: TeamMemberInfoCardProps) => {
   return (
     <div> 
-      <b> {`${props.teamMember.firstName} ${props.teamMember.lastName}`} </b>
+      <p className="font-semibold"> {`${props.teamMember.firstName} ${props.teamMember.lastName}`} </p>
       {props.teamMember.affiliations.map((affiliation) => 
         <p key={`${props.teamMember.firstName}-${props.teamMember.lastName}-${affiliation.label}`}> {affiliation.label} </p>
       )}
@@ -49,9 +49,9 @@ interface TeamInfoCardProps {
 
 const TeamCard = (props: TeamInfoCardProps) => {
   return (
-    <div className="mb-6">
-      <h2 className="italic text-3xl mt-7 mb-5"> {props.teamInfo.label} </h2>
-      <div className='grid grid-cols-3 gap-x-4 gap-y-6'>
+    <div className="mb-4 py-2">
+      <h3 className="my-4 border-b border-background"> {props.teamInfo.label} </h3>
+      <div className='grid grid-cols-4 gap-x-2 gap-y-6'>
         {props.teamInfo.teamMembers.map((teamMember) =>
           <TeamMemberInfoCard key={`${teamMember.firstName}-${teamMember.lastName}`} teamMember={teamMember} />
         )}
@@ -64,11 +64,11 @@ export default function TeamPage() {
   const { data } = useGroupedTeamMemberData();
 
   return (
-    <div className='mb-6'>
-      <h1 className="font-bold text-4xl mt-4"> Our Team </h1>
+    <>
+      <h2 className="mb-4"> Our Team </h2>
       {(data?.groupedTeamMembers ?? []).map((team) => 
         <TeamCard teamInfo={team} key={team.label} />
       )}
-    </div>
+    </>
   );
 }

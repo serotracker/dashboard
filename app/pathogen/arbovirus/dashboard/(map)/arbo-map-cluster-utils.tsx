@@ -15,13 +15,13 @@ export function createDonutChartAndHoverPopup(props: {
   const offsets: number[] = [];
   const counts = [
     props.properties.ZIKV,
-    props.properties.CHIKV,
     props.properties.DENV,
-    props.properties.MAYV,
+    props.properties.CHIKV,
     props.properties.YF,
     props.properties.WNV,
+    props.properties.MAYV,
   ];
-  const arboColorNames = ["ZIKV", "CHIKV", "DENV", "MAYV", "YF", "WNV"];
+  const arboColorNames = ["ZIKV",  "DENV", "CHIKV", "YF", "WNV", "MAYV"];
   let total = 0;
   for (const count of counts) {
     offsets.push(total);
@@ -38,7 +38,7 @@ export function createDonutChartAndHoverPopup(props: {
   // TODO: need to add in popup HTML: <div style="font-size: 1rem">${props.properties.country}</div>
 
   let popupHTML = `
-    <div style="display: flex; flex-direction: column; padding: 1rem;">
+    <div style="display: flex; flex-direction: column; padding: 1rem;" class=\"bg-white/60 backdrop-blur-md\">
         <div style="display: flex; flex-direction: column; padding-bottom: 0.5rem">
             <div style="font-size: 1.125rem; font-weight: bold;">Estimate Count</div>
         </div>
@@ -46,32 +46,32 @@ export function createDonutChartAndHoverPopup(props: {
             <div style="display: flex; flex-direction: column;">`;
   if (props.properties.ZIKV > 0)
     popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["ZIKV"]}">ZIKV</div>`;
+    if (props.properties.DENV > 0)
+    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["DENV"]}">DENV</div>`;
   if (props.properties.CHIKV > 0)
     popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["CHIKV"]}">CHIKV</div>`;
-  if (props.properties.DENV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["DENV"]}">DENV</div>`;
-  if (props.properties.MAYV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["MAYV"]}">MAYV</div>`;
-  if (props.properties.YF > 0)
+    if (props.properties.YF > 0)
     popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["YF"]}">YF</div>`;
   if (props.properties.WNV > 0)
     popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["WNV"]}">WNV</div>`;
+  if (props.properties.MAYV > 0)
+    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["MAYV"]}">MAYV</div>`;
   popupHTML += `</div>
             <div style="display: flex; flex-direction: column;">`;
 
   if (props.properties.ZIKV > 0)
     popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.ZIKV}</div>`;
+    if (props.properties.DENV > 0)
+    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.DENV}</div>`;
   if (props.properties.CHIKV > 0)
     popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.CHIKV}</div>`;
-  if (props.properties.DENV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.DENV}</div>`;
-  if (props.properties.MAYV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.MAYV}</div>`;
-  if (props.properties.YF > 0)
+    if (props.properties.YF > 0)
     popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.YF}</div>`;
   if (props.properties.WNV > 0)
     popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.WNV}</div>`;
-
+  if (props.properties.MAYV > 0)
+    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.MAYV}</div>`;
+  
   popupHTML += `</div>
         </div>
         <div style="font-size: 0.875rem; font-weight: 300; text: center">Click to zoom in</div>
@@ -80,8 +80,19 @@ export function createDonutChartAndHoverPopup(props: {
 
   // Cannot use the react-gl Popup method as we need to use useRef to access the underlying method
   // and we cannot do that when these popups are loaded dynamically and not statically.
+  const popupOffsets: {[key: string]: [number, number]} = {
+    'top': [0, piChartOuterRadius],
+    'top-left': [0, piChartOuterRadius],
+    'top-right': [0, piChartOuterRadius],
+    'bottom': [0, -piChartOuterRadius],
+    'bottom-left': [0, -piChartOuterRadius],
+    'bottom-right': [0, -piChartOuterRadius],
+    'left': [piChartOuterRadius, 0],
+    'right': [-piChartOuterRadius, 0]
+};
+
   const popup = new mapboxgl.Popup({
-    offset: [0, -7],
+    offset: popupOffsets,
     closeOnClick: false,
   });
 
@@ -117,7 +128,7 @@ export function createDonutChartAndHoverPopup(props: {
           `map-cluster-svg-path-${i}`
         )
       )}
-      <circle cx={piChartOuterRadius} cy={piChartOuterRadius} r={piChartInnerRadius} fill="white" />
+      <circle cx={piChartOuterRadius} cy={piChartOuterRadius} r={piChartInnerRadius} fill="white"/>
       <text dominantBaseline="central" transform={`translate(${piChartOuterRadius}, ${piChartOuterRadius})`}>
         {total.toLocaleString()}
       </text>
