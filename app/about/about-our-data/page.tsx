@@ -46,6 +46,18 @@ export default function DataExtractionPage() {
       <div className="mb-4">
         <p className='inline'>To make us aware of new arbovirus seroprevalence studies or arbovirus studies that we have not yet captured, please fill out </p>
         <Link className='inline text-link' href='https://forms.gle/pKNiMiMYr6hiKnXx8'>this form.</Link>
+        <p className='inline'>For SARS-CoV-2 submissions, please use </p>
+        <Link className='inline text-link' href='https://docs.google.com/forms/d/e/1FAIpQLSdvNJReektutfMT-5bOTjfnvaY_pMAy8mImpQBAW-3v7_B2Bg/viewform'>this form</Link>
+        <p className='inline'> - however please see our FAQ for our frequency of data updates for this dataset.</p>
+      </div>
+      <h2 className={headerClassname}>About ArboTracker</h2>
+      <div className="mb-4">
+        <p> ArboTracker data was collected through a systematic review of published arbovirus seroprevalence studies in collaboration with partners at the University of Colorado and Heidelberg University. The search feeding the current dashboard was conducted on March 13, 2023. Data was extracted by researchers at Heidelberg University for each source&apos;s estimate(s) and certain relevant subgroups. Additional relevant data was extracted by researchers at SeroTracker. Full methods are available in our protocol. </p>
+      </div>
+      <div className="mb-4">
+        <p className='inline'> We produce data for both academic and public use on our dashboard. We aim to update our search strategy and dashboard in May 2024 to capture additional data. For further information beyond the following high-level summary, please see our </p>
+        <Link className='inline text-link' href='https://docs.google.com/document/d/1bdePf81TemPkRqfOKWA4z3-Le0TSbl4BrZ8jTVD5IiE/edit?usp=sharing'>study protocol</Link>
+        <p className='inline'> and supplementary methods for a detailed explanation of our research processes. </p>
       </div>
     </>
   );

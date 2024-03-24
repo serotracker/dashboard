@@ -60,8 +60,8 @@ const arbotrackerNavitems: NavMenuItem[] = [
 
 const aboutNavItems: NavMenuItem[] = [
   {
-    title: "Data Extraction",
-    href: "/about/data-extraction",
+    title: "About Our Data",
+    href: "/about/about-our-data",
     description: "The process used to extract the data",
   },
   {

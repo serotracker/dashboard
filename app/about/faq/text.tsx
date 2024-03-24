@@ -1,37 +1,42 @@
 import Link from "next/link";
 
 export enum FAQPageOptionId {
-  WHERE_DOES_SEROTRACKERS_DATA_COME_FROM = 'WHERE_DOES_SEROTRACKERS_DATA_COME_FROM',
   HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA = 'HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA',
-  HOW_DOES_SEROTRACKER_EXTRACT_DATA = 'HOW_DOES_SEROTRACKER_EXTRACT_DATA',
-  HOW_DOES_SEROTRACKERS_DATA_SHOW_UP_ON_THE_MAP = 'HOW_DOES_SEROTRACKERS_DATA_SHOW_UP_ON_THE_MAP',
-  CAN_I_DOWNLOAD_SEROTRACKERS_DATA = 'CAN_I_DOWNLOAD_SEROTRACKERS_DATA',
-  HOW_HAS_SEROTRACKERS_DATA_BEEN_USED_BY_OTHERS = 'HOW_HAS_SEROTRACKERS_DATA_BEEN_USED_BY_OTHERS'
+  HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED = 'HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED',
+  WHERE_DOES_ARBOTRACKER_DATA_COME_FROM = 'WHERE_DOES_ARBOTRACKER_DATA_COME_FROM',
+  HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES = 'HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES',
+  HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED = 'HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED',
+  HOW_DOES_ARBOTRACKER_DATA_SHOW_UP_ON_THE_MAP = 'HOW_DOES_ARBOTRACKER_DATA_SHOW_UP_ON_THE_MAP',
+  CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS = 'CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS'
 }
 
 export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.Element}> = {
-  [FAQPageOptionId.WHERE_DOES_SEROTRACKERS_DATA_COME_FROM]: {
-    label: "Where does SeroTracker's data come from?",
-    content: <p className='inline'> We collect all seroprevalence data from published peer reviewed research articles, preprints, reports, and media (unpublished grey literature). The source of any individual estimate can be viewed by clicking on the estimate on the map or by referencing the Source column in the table in the dashboard or the url column in a csv downloaded from the table. <Link className="inline text-link underline" target="_blank" href="/pathogen/arbovirus/dashboard#table">This is a link to the ArboTracker map</Link> and <Link className="inline text-link underline" target="_blank" href="/pathogen/arbovirus/dashboard#table">this is a link to the ArboTracker data table</Link>.</p>
-  },
   [FAQPageOptionId.HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA]: {
     label: 'How does SeroTracker collect their data?',
-    content: <p className='inline'> We conduct regular searches of several databases including Medline, EMBASE, Web of Science, and Europe PMC and targeted google searches. In addition, anyone can submit arbovirus-related sources for us to screen and include in our review by filling out <Link className="inline text-link underline" target="_blank" href="https://forms.gle/pKNiMiMYr6hiKnXx8">this form</Link>. </p>
+    content: <p className='inline'> We conduct ad-hoc searches of several databases including Medline, EMBASE, Web of Science, and Europe PMC and targeted google searches. In addition, anyone can submit studies for us to screen and include in our review by filling out <Link className="inline text-link underline" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSdvNJReektutfMT-5bOTjfnvaY_pMAy8mImpQBAW-3v7_B2Bg/viewform">this form</Link>. </p>
   },
-  [FAQPageOptionId.HOW_DOES_SEROTRACKER_EXTRACT_DATA]: {
-    label: 'How does SeroTracker extract data from their sources?',
-    content: <p className="inline"> We have an extensive research team trained in health sciences and epidemiology who manually reviews articles and records seroprevalence estimates into a data management platform called Airtable. </p>
+  [FAQPageOptionId.HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED]: {
+    label: 'How often is SeroTracker data updated?',
+    content: <p className='inline'> SeroTracker data was last updated in late 2023. Going forward, our team will scan new literature on an ad-hoc basis and add data.</p>
   },
-  [FAQPageOptionId.HOW_DOES_SEROTRACKERS_DATA_SHOW_UP_ON_THE_MAP]: {
-    label: 'How does SeroTracker’s data show up on the map?',
-    content: <p className="inline"> Data inputted into Airtable is automatically run through a software pipeline that cleans it and computes additional information (e.g. a study’s geographic coordinates). The outputs of the pipeline are then stored in a separate database, which is queried by vercel.serotracker.com to serve the map, data tables, and data visualizations. Our data pipeline code is open source and can be found <Link className="inline text-link underline" target="_blank" href="https://github.com/serotracker/iit-backend-v2">here</Link>.</p>
+  [FAQPageOptionId.WHERE_DOES_ARBOTRACKER_DATA_COME_FROM]: {
+    label: 'How often is ArboTracker data updated?',
+    content: <p className='inline'> We conducted a search for published articles on March 13, 2023 of several databases including Web of Science, Google Scholar, LILACS, and PubMed. We aim to update our search to include unpublished grey literature in May 2024. In addition, anyone can submit sources for us to screen and include in our review by filling out <Link className="inline text-link underline" target="_blank" href='https://forms.gle/pKNiMiMYr6hiKnXx8'>this form</Link>.</p>
   },
-  [FAQPageOptionId.CAN_I_DOWNLOAD_SEROTRACKERS_DATA]: {
-    label: "Can I download SeroTracker's data for my own analysis?",
-    content: <p className="inline"> Yes, our data is open-source and free for anyone to use. Every data table on the dashboard has a button next to it that allows you to download a csv of the data in the table. <Link className="inline text-link underline" target="_blank" href="/pathogen/arbovirus/dashboard#table">This is a link to the ArboTracker data table</Link> where it is possible to download a csv containing all of our arbovirus seroprevalence estimates. </p>
+  [FAQPageOptionId.HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES]: {
+    label: 'How is the data extracted from sources?',
+    content: <p className='inline'> We have an extensive research team trained in health sciences and epidemiology who manually reviews articles and records seroprevalence estimates into a data management platform called Airtable.</p>
   },
-  [FAQPageOptionId.HOW_HAS_SEROTRACKERS_DATA_BEEN_USED_BY_OTHERS]: {
-    label: "How has SeroTracker's data been used by others?",
-    content: <p className="inline"> SeroTracker data is used by many public health professionals and health agencies such as the World Health Organization and Public Health Agency of Canada, among others. <Link className="inline text-link underline" target="_blank" href="https://www.medrxiv.org/content/10.1101/2020.11.17.20233460v2">Our most recent publication</Link> analyzes global SARS-CoV-2 seroprevalence from January - December, 2020. </p>
+  [FAQPageOptionId.HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED]: {
+    label: 'How often is ArboTracker data updated?',
+    content: <p className='inline'> The search feeding the current dashboard was conducted on March 13, 2023. We aim to update our search strategy and dashboard in May 2024 to capture additional data.</p>
+  },
+  [FAQPageOptionId.HOW_DOES_ARBOTRACKER_DATA_SHOW_UP_ON_THE_MAP]: {
+    label: 'How does ArboTracker data show up on the map?',
+    content: <p className='inline'> Data inputted into Airtable is automatically run through a software pipeline that cleans it and computes additional information (e.g. a study’s geographic coordinates). The outputs of the pipeline are then stored in a separate database, which is queried by <Link className="inline text-link underline" target="_blank" href="https://serotracker.vercel.app/">serotracker.vercel.app</Link> to serve the map, data tables, and data visualizations. Our data pipeline code is open source and can be found <Link className="inline text-link underline" target="_blank" href="https://github.com/serotracker/iit-backend-v2">here</Link>. </p>
+  },
+  [FAQPageOptionId.CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS]: {
+    label: 'Can I download ArboTracker data for my own analysis?',
+    content: <p className='inline'> Yes, our data is open-source and free for anyone to use. Every data table on the dashboard has a button next to it that allows you to download a csv of the data in the table. <Link className="inline text-link underline" target="_blank" href="https://serotracker.vercel.app/pathogen/arbovirus/dashboard#TABLE">This is a link to the ArboTracker data table where it is possible to download a csv containing all of our arbovirus seroprevalence estimates</Link>. </p>
   },
 }
