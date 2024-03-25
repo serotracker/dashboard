@@ -46,8 +46,8 @@ export function DatePicker({
           variant={"outline"}
           className={cn(
             "w-full justify-between text-left font-normal",
-            !date && "text-muted-foreground",
-            "bg-white border border-gray-300"
+            !date ? "text-muted-foreground" : "text-black",
+            "bg-white border border-background border-b-2 hover:text-white"
           )}
         >
           <div className="flex justify-start text-left font-normal">

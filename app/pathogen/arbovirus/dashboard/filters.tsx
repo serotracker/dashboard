@@ -19,6 +19,12 @@ import {
   ArboContext,
   ArboContextType,
 } from "@/contexts/arbo-context/arbo-context";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { MultiSelect } from "@/components/customs/multi-select";
 import React, { useContext } from "react";
 import { useArboData } from "@/hooks/useArboData";
@@ -26,12 +32,14 @@ import SectionHeader from "@/components/customs/SectionHeader";
 import { DatePicker } from "@/components/ui/datepicker";
 import { parseISO } from "date-fns";
 import { useArboFilters } from "@/hooks/useArboFilters";
-import { UNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
+import { unRegionEnumToLabelMap } from "@/lib/un-regions";
+import { Button } from "@/components/ui/button";
 
 interface FieldInformation {
   field: FilterableField;
   label: string;
   valueToLabelMap: Record<string, string | undefined>;
+  tooltipContent?: React.ReactNode;
 }
 
 // Function to add or update filters with multiple values
@@ -51,6 +59,45 @@ const addFilterMulti = (
   });
 };
 
+interface FieldTooltipProps {
+  tooltipContent: React.ReactNode,
+  className?: string,
+}
+
+const FilterTooltip = (props: FieldTooltipProps): React.ReactNode => {
+  return (
+    <div className={props.className}>
+      <TooltipProvider delayDuration={0}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div
+              className="h-5 w-5 text-gray-500 cursor-pointer"
+            >
+              &#9432;
+            </div>
+          </TooltipTrigger>
+          <TooltipContent
+            style={{
+              position: "absolute",
+              top: "50px", // position below the trigger
+              left:"-120px",
+              minWidth: "230px",
+              paddingTop: 0,
+              paddingBottom: 0,
+            }}
+          >
+            <div
+              className="bg-background w-full h-full p-4 rounded text-white"
+            >
+              {props.tooltipContent}
+            </div>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
+  )
+}
+
 // Function to build a filter dropdown
 const buildFilterDropdown = (
   filter: string,
@@ -58,7 +105,8 @@ const buildFilterDropdown = (
   state: ArboContextType,
   filterOptions: string[],
   data: any,
-  optionToLabelMap: Record<string, string | undefined>
+  optionToLabelMap: Record<string, string | undefined>,
+  tooltipContent: React.ReactNode | undefined,
 ) => {
   const sortedOptions = filterOptions
     ? filterOptions
@@ -70,7 +118,7 @@ const buildFilterDropdown = (
     filter === FilterableField.end_date
   ) {
     return (
-      <div className="pb-3" key={filter}>
+      <div className="pb-3 flex" key={filter}>
         <DatePicker
           onChange={(date) => {
             const dateString = date?.toISOString();
@@ -94,11 +142,12 @@ const buildFilterDropdown = (
             });
           }}
         />
+        {tooltipContent && <FilterTooltip className='pl-2' tooltipContent={tooltipContent} />}
       </div>
     );
   } else {
     return (
-      <div className="pb-3" key={filter}>
+      <div className="pb-3 flex" key={filter}>
         <MultiSelect
           handleOnChange={(value) => addFilterMulti(value, filter, state, data)}
           heading={placeholder}
@@ -106,6 +155,7 @@ const buildFilterDropdown = (
           options={sortedOptions}
           optionToLabelMap={optionToLabelMap}
         />
+        {tooltipContent && <FilterTooltip className='pl-2' tooltipContent={tooltipContent} />}
       </div>
     );
   }
@@ -147,12 +197,10 @@ const FilterSection = ({
 }: FilterSectionProps) => {
   return (
     <div className="p-0">
-      <div>
         <SectionHeader
           header_text={headerText}
           tooltip_text={headerTooltipText}
         />
-      </div>
       {allFieldInformation.map((fieldInformation) => {
         return buildFilterDropdown(
           fieldInformation.field,
@@ -160,7 +208,8 @@ const FilterSection = ({
           state,
           filters[fieldInformation.field],
           data ? data.arbovirusEstimates : [],
-          fieldInformation.valueToLabelMap
+          fieldInformation.valueToLabelMap,
+          fieldInformation.tooltipContent
         );
       })}
     </div>
@@ -199,7 +248,16 @@ export function Filters(props: FiltersProps) {
   const studyInformationFilters = [
     {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
     {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
-    {field: FilterableField.whoRegion, label: "WHO Region", valueToLabelMap: {}},
+    {field: FilterableField.whoRegion, label: "WHO Region", valueToLabelMap: {}, tooltipContent:
+      <div>
+        <p> AFR: African Region </p>
+        <p> AMR: Region of the Americas </p>
+        <p> EMR: Eastern Mediterranean Region </p>
+        <p> EUR: European Region </p>
+        <p> SEAR: South-East Asia Region </p>
+        <p> WPR: Western Pacific Region </p>
+      </div>
+    },
     {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
     {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
     {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
@@ -243,12 +301,13 @@ export function Filters(props: FiltersProps) {
           data={data}
         />
         <div>
-          <button
-            className="w-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 font-bold py-2 px-15 rounded"
+          <Button
+            className="w-full"
             onClick={resetFilters}
+            variant={"outline"}
           >
             Reset Filters
-          </button>
+          </Button>
         </div>
       </div>
     );

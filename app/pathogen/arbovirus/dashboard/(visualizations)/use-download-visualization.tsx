@@ -32,6 +32,13 @@ export const useDownloadVisualization = (input: UseDownloadVisualizationInput): 
             return false;
           }
 
+          const elementClassnameString = (input as HTMLElement)['className'] ?? ''
+          const elementClassnames = typeof elementClassnameString === 'string' && !!elementClassnameString ? elementClassnameString.split(" ") : []
+
+          if(elementClassnames.includes('ignore-for-visualization-download')) {
+            return false;
+          }
+
           return true;
         }
       })
