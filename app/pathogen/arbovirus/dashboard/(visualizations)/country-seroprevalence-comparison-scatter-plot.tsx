@@ -18,10 +18,6 @@ import { typedObjectKeys } from "@/lib/utils";
 import { ContentType } from "recharts/types/component/Tooltip";
 
 const CustomTooltip: ContentType<string, string> = ({ active, payload, label }) => {
-  console.log('payload', payload)
-  console.log('active', active)
-  console.log('label', label)
-
   if (active && payload && payload.length) {
     const seroprevalencePayload = payload.find((element) => element.name === 'seroprevalence')?.payload;
 
