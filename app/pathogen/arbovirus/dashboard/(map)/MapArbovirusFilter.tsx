@@ -49,8 +49,8 @@ export const MapArbovirusFilter = ({ records, className }: MapArbovirusFilterPro
   return (
     <Card className={className}>
       <SectionHeader header_text="Arboviruses" tooltip_text="Filler text here"/>
-      <div className="p-2">
-        <CardContent className={"flex justify-center flex-col pb-3"}>
+      <div>
+        <CardContent className={"flex justify-center flex-col pb-1"}>
           {pathogenOrder.map((pathogenAbbreviation: string) => {
             // Map abbreviations to full names
             const pathogenFullName =
@@ -71,7 +71,7 @@ export const MapArbovirusFilter = ({ records, className }: MapArbovirusFilterPro
             return (
               <div
                 key={pathogenAbbreviation}
-                className="items-top flex space-x-2 my-1"
+                className="items-top flex space-x-1 my-1"
               >
                 <Checkbox
                   id={`checkbox-${pathogenAbbreviation}`}
@@ -91,7 +91,7 @@ export const MapArbovirusFilter = ({ records, className }: MapArbovirusFilterPro
                   <label
                     htmlFor={`checkbox-${pathogenAbbreviation}`}
                     className={
-                      "text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      "text-xs leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     }
                   >
                     {pathogenFullName}
@@ -100,7 +100,6 @@ export const MapArbovirusFilter = ({ records, className }: MapArbovirusFilterPro
               </div>
             );
           })}
-          <Button className="mt-2" variant={'ghost'} onClick={clearAllHandler}>Clear all</Button>
         </CardContent>
       </div>
     </Card>
