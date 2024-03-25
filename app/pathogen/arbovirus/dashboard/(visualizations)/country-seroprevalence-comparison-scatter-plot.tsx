@@ -17,7 +17,7 @@ import uniq from "lodash/uniq";
 import { typedObjectKeys } from "@/lib/utils";
 import { ContentType } from "recharts/types/component/Tooltip";
 
-const CustomTooltip: ContentType<string, string> = ({ active, payload, label }) => {
+const CountrySeroprevalenceComparisonScatterPlotTooltip: ContentType<string, string> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     const seroprevalencePayload = payload.find((element) => element.name === 'seroprevalence')?.payload;
 
@@ -192,7 +192,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
                 position: "insideLeft",
               }}
             />
-            <Tooltip content={CustomTooltip}/>
+            <Tooltip content={CountrySeroprevalenceComparisonScatterPlotTooltip}/>
             <Scatter data={dataGroupedByCountry[country]} fill="#8884d8">
               <ErrorBar dataKey="seroprevalenceError" width={0} direction="x" />
             </Scatter>
