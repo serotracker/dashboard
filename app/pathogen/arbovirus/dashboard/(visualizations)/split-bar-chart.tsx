@@ -30,7 +30,7 @@ interface SplitBarChartProps<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  getBarValue: (data: TData[]) => number;
+  transformOutputValue: (data: TData[]) => number;
   getBarColour: (primaryKey: TPrimaryGroupingKey) => string;
   tickSlantOptions?: {
     slantValue: number;
@@ -54,7 +54,7 @@ export const SplitBarChart = <
     primaryGroupingSortFunction: props.primaryGroupingSortFunction,
     secondaryGroupingFunction: props.secondaryGroupingFunction,
     secondaryGroupingSortFunction: props.secondaryGroupingSortFunction,
-    getBarValue: props.getBarValue,
+    transformOutputValue: props.transformOutputValue,
   });
 
   let xAxisProps: XAxisProps = {

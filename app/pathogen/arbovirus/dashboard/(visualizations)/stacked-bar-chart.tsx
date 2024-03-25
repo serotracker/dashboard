@@ -34,7 +34,7 @@ interface StackedBarChartProps<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  getBarValue: (data: TData[]) => number;
+  transformOutputValue: (data: TData[]) => number;
   getBarColour: (secondaryKey: TSecondaryGroupingKey) => string;
   tickSlantOptions?: {
     slantValue: number;
@@ -73,7 +73,7 @@ export const StackedBarChart = <
     primaryGroupingSortFunction: props.primaryGroupingSortFunction,
     secondaryGroupingFunction: props.secondaryGroupingFunction,
     secondaryGroupingSortFunction: props.secondaryGroupingSortFunction,
-    getBarValue: props.getBarValue,
+    transformOutputValue: props.transformOutputValue,
   });
 
   let xAxisProps: XAxisProps = {

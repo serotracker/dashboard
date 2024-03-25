@@ -8,7 +8,8 @@ import {
 interface GroupDataForRechartsInput<
   TData,
   TPrimaryGroupingKey extends string,
-  TSecondaryGroupingKey extends Exclude<string, "primaryKey">
+  TSecondaryGroupingKey extends Exclude<string, "primaryKey">,
+  TOutput
 > {
   data: TData[];
   primaryGroupingFunction: (data: TData) => TPrimaryGroupingKey;
@@ -21,16 +22,17 @@ interface GroupDataForRechartsInput<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  getBarValue: (data: TData[]) => number;
+  transformOutputValue: (data: TData[]) => TOutput;
 }
 
 interface GroupDataForRechartsOutput<
   TPrimaryGroupingKey extends string,
-  TSecondaryGroupingKey extends Exclude<string, "primaryKey">
+  TSecondaryGroupingKey extends Exclude<string, "primaryKey">,
+  TOutput
 > {
   rechartsData: ({ primaryKey: TPrimaryGroupingKey } & Record<
     TSecondaryGroupingKey,
-    number
+    TOutput
   >)[];
   allSecondaryKeys: TSecondaryGroupingKey[];
 }
@@ -38,14 +40,16 @@ interface GroupDataForRechartsOutput<
 export const groupDataForRecharts = <
   TData,
   TPrimaryGroupingKey extends string,
-  TSecondaryGroupingKey extends Exclude<string, "primaryKey">
+  TSecondaryGroupingKey extends Exclude<string, "primaryKey">,
+  TOutput
 >(
   input: GroupDataForRechartsInput<
     TData,
     TPrimaryGroupingKey,
-    TSecondaryGroupingKey
+    TSecondaryGroupingKey,
+    TOutput
   >
-): GroupDataForRechartsOutput<TPrimaryGroupingKey, TSecondaryGroupingKey> => {
+): GroupDataForRechartsOutput<TPrimaryGroupingKey, TSecondaryGroupingKey, TOutput> => {
   const dataGroupedByPrimaryKey = typedGroupBy(
     input.data,
     input.primaryGroupingFunction
@@ -79,7 +83,7 @@ export const groupDataForRecharts = <
       typedObjectEntries(dataGroupedBySecondaryKey).map(
         ([secondaryKey, dataForSecondaryKey]) => [
           secondaryKey,
-          input.getBarValue(dataForSecondaryKey),
+          input.transformOutputValue(dataForSecondaryKey),
         ]
       )
     );

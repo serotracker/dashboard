@@ -7,6 +7,8 @@ import {
 } from "../../visualizations/visualizations";
 import { isSafeReferrerLink } from "@/utils/referrer-link-util";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { ArboContext } from "@/contexts/arbo-context/arbo-context";
+import { useContext } from "react";
 
 interface DisabledButtonConfig {
   enabled: false;
@@ -108,11 +110,12 @@ interface VisualizationHeaderProps {
 
 export const VisualizationHeader = (props: VisualizationHeaderProps) => {
   const router = useRouter();
+  const state = useContext(ArboContext);
 
   return (
     <div className="flex py-4">
       <h3 className="w-full text-center text-lg">
-        {props.visualizationInformation.displayName}
+        {props.visualizationInformation.getDisplayName({data: state.filteredData})}
       </h3>
       {props.buttonConfiguration.downloadButton.enabled && (
         <DownloadButton
