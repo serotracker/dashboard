@@ -105,7 +105,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
           countryA !== countryA ? (countryA < countryB ? -1 : 1) : 0,
         transformOutputValue: (data) => data,
       }),
-    [state.filteredData, stateFilteredDataWithEstimateNumbers]
+    [stateFilteredDataWithEstimateNumbers]
   );
 
   const pathogensAvailable = useMemo(
@@ -127,7 +127,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
       <div>
         <p>
           This graph cannot be shown when the data contains more than one
-          arbovirus. If you're interested in generating this graph, please use
+          arbovirus. If you&apos;re interested in generating this graph, please use
           the filter to the left to filter out data.
         </p>
       </div>
@@ -139,7 +139,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
       <div>
         <p>
           This graph cannot be shown when the data contains more than two
-          countries. If you're interested in generating this graph, please use
+          countries. If you&apos;re interested in generating this graph, please use
           the filter to the left to filter out data.
         </p>
       </div>
