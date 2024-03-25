@@ -157,7 +157,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
           <ScatterChart
             width={730}
             height={250}
-            margin={{ bottom: 16, left: 8, top: 50, right: 10 }}
+            margin={{ bottom: 40, left: 8, top: 50, right: 10 }}
           >
             <text
               x='50%'
