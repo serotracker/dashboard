@@ -193,7 +193,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
               }}
             />
             <Tooltip content={CountrySeroprevalenceComparisonScatterPlotTooltip}/>
-            <Scatter data={dataGroupedByCountry[country]} fill="#8884d8">
+            <Scatter data={dataGroupedByCountry[country]} fill="#000000">
               <ErrorBar dataKey="seroprevalenceError" width={0} direction="x" />
             </Scatter>
           </ScatterChart>
