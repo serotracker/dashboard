@@ -12,10 +12,12 @@ export function filterData(
   return data.filter((item: any) => {
     return filterKeys.every((key: string) => {
       /* If no pathogen is selected, we don't want to see any data */
-      if (key === "pathogen"){
-        if(filters[key].length == 0){
-          return false;
-        }
+      if (key === "pathogen" && filters[key].length == 0 ){
+        return false;
+      }
+      /* Ignore pediatric age group for non pediatric age groups. */
+      if (key === "pediatricAgeGroup" && item["ageGroup"] !== "Children and Youth (0-17 years)"){
+        return true;
       }
       if (!filters[key].length) return true;
 

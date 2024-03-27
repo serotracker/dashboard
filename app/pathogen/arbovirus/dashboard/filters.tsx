@@ -227,8 +227,8 @@ export function Filters(props: FiltersProps) {
   const excludedFields = props.excludedFields ?? [];
 
   const selectedAgeGroups = selectedFilters['ageGroup'] ?? [];
-
-  if(!(selectedAgeGroups.length === 1 && selectedAgeGroups[0] === 'Children and Youth (0-17 years)')) {
+  /* If the 0-17 filter is not selected, don't show pediatric age group.*/
+  if(!selectedAgeGroups.includes('Children and Youth (0-17 years)')) {
     excludedFields.push(FilterableField.pediatricAgeGroup);
   }
   
