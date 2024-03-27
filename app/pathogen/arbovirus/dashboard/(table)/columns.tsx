@@ -57,6 +57,7 @@ export const columns: DataTableColumnDef<Estimate, unknown>[] = [
   {
     accessorKey: "estimateId",
     header: get_header("Estimate ID"),
+    enableHiding: false,
     cell: ({ row }) => {
       const url: string = row.getValue("url");
 
