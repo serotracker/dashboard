@@ -5,6 +5,7 @@ import { adjustMapPosition } from "./filter-update-steps/adjust-map-position";
 import { updatePediatricAgeGroupFilter } from "./filter-update-steps/update-pediatric-age-group-filter";
 import { addActionToSelectedFilters } from "./filter-update-steps/add-action-to-selected-filters";
 import { applyNewSelectedFilters } from "./filter-update-steps/apply-new-selected-filters";
+import { updateSerotypeFilter } from "./filter-update-steps/update-serotype-filter";
 
 export interface HandleArboFilterUpdateInput {
   state: ArboStateType,
@@ -20,6 +21,7 @@ export const handleArboFilterUpdate = (input: HandleArboFilterUpdateInput): Hand
     addActionToSelectedFilters,
     adjustMapPosition,
     updatePediatricAgeGroupFilter,
+    updateSerotypeFilter,
     applyNewSelectedFilters
   );
 }

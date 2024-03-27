@@ -11,8 +11,8 @@ export const updatePediatricAgeGroupFilter = (
   }
 
   const selectedAgeGroups = input.state.selectedFilters['ageGroup'] ?? [];
-
-  if(selectedAgeGroups.length === 1 && selectedAgeGroups[0] === 'Children and Youth (0-17 years)') {
+  
+  if(selectedAgeGroups.includes('Children and Youth (0-17 years)')) {
     return input;
   }
 
