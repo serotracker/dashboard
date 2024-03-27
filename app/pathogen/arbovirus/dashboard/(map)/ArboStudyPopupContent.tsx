@@ -99,7 +99,7 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
       {/*SeroPrev section*/}
       <div className={`flex justify-between bg-${record.pathogen.toLowerCase()} w-full py-2 px-4`}>
         <div className={"font-semibold"}>
-          {"Seroprevalence"}: <b> {`${(record.seroprevalence * 100).toFixed(1)}% (Arbovirus: ${pathogenFullString(record.pathogen)})`}</b>
+          {"Seroprevalence"}: <b> {`${(record.seroprevalence * 100).toFixed(1)}%${ record.seroprevalenceStudy95CILower && record.seroprevalenceStudy95CIUpper ? ` [95% CI ${(record.seroprevalenceStudy95CILower * 100).toFixed(1)}%-${(record.seroprevalenceStudy95CIUpper * 100).toFixed(1)}%] `: " "}(Arbovirus: ${pathogenFullString(record.pathogen)})`}</b>
         </div>
       </div>
       {/*Content section*/}
