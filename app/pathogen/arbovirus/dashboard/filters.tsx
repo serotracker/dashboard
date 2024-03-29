@@ -25,7 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Select } from "@/components/customs/multi-select";
+import { Select } from "@/components/customs/select";
 import React, { useContext } from "react";
 import { useArboData } from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";

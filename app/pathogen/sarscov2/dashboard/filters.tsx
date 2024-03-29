@@ -1,6 +1,6 @@
 "use client";
 
-import { Select } from "@/components/customs/multi-select";
+import { Select } from "@/components/customs/select";
 import React, { useContext } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
