@@ -92,7 +92,6 @@ export function ArbovirusMap() {
           
             return <ArboStudyPopupContent record={input.data} />
           }}
-        
           dataPoints={state.filteredData}
           clusterProperties={{
             ZIKV: ["+", ["case", ["==", ["get", "pathogen"], "ZIKV"], 1, 0]],

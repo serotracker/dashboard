@@ -1,7 +1,7 @@
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { useState, useEffect, MutableRefObject, useRef, useMemo } from "react";
-import { Map, NavigationControl } from "react-map-gl";
+import { Layer, Map, NavigationControl, Source } from "react-map-gl";
 import {
   PathogenMapCursor,
   usePathogenMapMouse,
@@ -19,6 +19,8 @@ import {
 import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-layer";
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
+import { EsmMapSourceAndLayer } from "./esm-maps";
+import { layer } from "@fortawesome/fontawesome-svg-core";
 
 export interface MarkerCollection {
   [key: string]: JSX.Element;
@@ -46,6 +48,8 @@ interface PathogenMapProps<
     map: mapboxgl.Map;
   }) => MarkerCollection;
 }
+
+
 
 export function PathogenMap<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
@@ -106,8 +110,6 @@ export function PathogenMap<
     return;
   }
 
-
-
   const onRender = (event: mapboxgl.MapboxEvent) => {
     const map = event.target;
     if (map) {
@@ -149,6 +151,7 @@ export function PathogenMap<
       onRender={onRender}
     >
       <NavigationControl showCompass={false} />
+      <EsmMapSourceAndLayer popupLayerId={layerForCountryHighlighting?.id}/>
       <PathogenCountryHighlightLayer
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
         dataPoints={dataPoints}

@@ -19,6 +19,7 @@ interface MultiSelectProps {
   optionToLabelMap: Record<string, string | undefined>;
   selected: string[];
   handleOnChange: (selected: string[]) => void;
+  singleSelect?: boolean // Multi is the default
 }
 
 const createMultiSelectOptionList = (options: string[], optionToLabelMap: Record<string, string | undefined>) => {
@@ -32,7 +33,7 @@ const createMultiSelectOptionList = (options: string[], optionToLabelMap: Record
 
 export function MultiSelect(props: MultiSelectProps) {
   // TODO: I wonder if there is a way to make the background color dynamic based on the page we are on so this does not need to prop drilled
-  const { heading, selected, handleOnChange, optionToLabelMap} = props;
+  const { heading, selected, handleOnChange, optionToLabelMap, singleSelect} = props;
   const options = createMultiSelectOptionList(props.options, optionToLabelMap);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -133,8 +134,9 @@ export function MultiSelect(props: MultiSelectProps) {
                           // and isn't recognized as a selectable option as a result. This is the same for the toLowerCase().
                           (option) => option.label.trim().toLowerCase() === value.trim().toLowerCase(),
                         );
-                        if (newValue)
-                          handleOnChange([...selected, newValue.value]);
+                        if (newValue) {
+                          singleSelect ? handleOnChange([newValue.value]) : handleOnChange([...selected, newValue.value]);
+                        }
                       }}
                       className={"cursor-pointer"}
                     >

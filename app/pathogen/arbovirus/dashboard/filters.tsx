@@ -157,6 +157,7 @@ const buildFilterDropdown = (
           selected={state.selectedFilters[filter] ?? []}
           options={sortedOptions}
           optionToLabelMap={optionToLabelMap}
+          singleSelect={filter === FilterableField.esm}
         />
         {tooltipContent && <FilterTooltip className='pl-2' tooltipContent={tooltipContent} />}
       </div>
@@ -168,6 +169,7 @@ export enum FilterableField {
   ageGroup = "ageGroup",
   pediatricAgeGroup = "pediatricAgeGroup",
   sex = "sex",
+  esm = "esm",
   whoRegion = "whoRegion",
   unRegion = "unRegion",
   country = "country",
@@ -236,6 +238,15 @@ export function Filters(props: FiltersProps) {
 
   const state = useContext(ArboContext);
   const demographicFilters = [
+    {field: FilterableField.esm, label: "Environmental Suitability Map", valueToLabelMap: {
+        "zika": "Zika",
+        "dengue2015": "Dengue 2015",
+        "dengue2050": "Dengue 2050 (Projected)",
+    }, tooltipContent:
+      <p>
+        This is a single select dropdown. Selecting any one of the options will display the corresponding environmental suitability map. Additionally it will also filter the data to only show estimates for the respective pathogen.
+      </p>
+  },
     {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
     {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}},
     {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
@@ -285,7 +296,7 @@ export function Filters(props: FiltersProps) {
           headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
           allFieldInformation={demographicFilters}
           state={state}
-          filters={filterData.arbovirusFilterOptions}
+          filters={{...filterData.arbovirusFilterOptions, esm: ["zika", "dengue2015", "dengue2050"]}}
           data={data}
         />
         <FilterSection
