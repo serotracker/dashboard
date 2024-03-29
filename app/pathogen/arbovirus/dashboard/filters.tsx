@@ -25,7 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { MultiSelect } from "@/components/customs/multi-select";
+import { Select } from "@/components/customs/multi-select";
 import React, { useContext } from "react";
 import { useArboData } from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";
@@ -151,7 +151,7 @@ const buildFilterDropdown = (
   } else {
     return (
       <div className="pb-3 flex" key={filter}>
-        <MultiSelect
+        <Select
           handleOnChange={(value) => sendFilterChangeDispatch(value, filter, state, data)}
           heading={placeholder}
           selected={state.selectedFilters[filter] ?? []}

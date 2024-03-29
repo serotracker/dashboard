@@ -31,7 +31,7 @@ const createMultiSelectOptionList = (options: string[], optionToLabelMap: Record
   });
 };
 
-export function MultiSelect(props: MultiSelectProps) {
+export function Select(props: MultiSelectProps) {
   // TODO: I wonder if there is a way to make the background color dynamic based on the page we are on so this does not need to prop drilled
   const { heading, selected, handleOnChange, optionToLabelMap, singleSelect} = props;
   const options = createMultiSelectOptionList(props.options, optionToLabelMap);

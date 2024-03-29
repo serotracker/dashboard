@@ -1,6 +1,6 @@
 "use client";
 
-import { MultiSelect } from "@/components/customs/multi-select";
+import { Select } from "@/components/customs/multi-select";
 import React, { useContext } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -42,7 +42,7 @@ const buildFilterDropdown = (
 
   return (
       <div className="pb-3" key={filter}>
-        <MultiSelect
+        <Select
         key={filter}
           handleOnChange={(value) =>
             addFilterMulti(value, filter, state, data)
