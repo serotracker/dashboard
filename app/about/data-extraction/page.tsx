@@ -1,15 +1,15 @@
-"use client";
+import React from "react";
 import Link from "next/link";
 import { Sponsors } from "./sponsors";
 
 export default function DataExtractionPage() {
-  const headerClassname = 'text-3xl font-bold mt-5 mb-4';
+  const headerClassname = 'my-8';
 
   return (
-    <div className="m-4">
-      <h2 className={headerClassname}>About SeroTracker</h2>
+    <>
+      <h2 className={"mb-8"}>About SeroTracker</h2>
       <div className="mb-4">
-        <b className="inline">SeroTracker synthesizes findings from thousands of seroprevalence studies worldwide, providing a data platform and interactive dashboard for pathogen serosurveillance. </b>
+        <p className="inline font-semibold">SeroTracker synthesizes findings from thousands of seroprevalence studies worldwide, providing a data platform and interactive dashboard for pathogen serosurveillance. </p>
         <p className="inline">Confirmed cases are just the tip of the iceberg - they undercount the true number of infections because people may have asymptomatic infections or lack access to diagnostic testing. In contrast, seroprevalence studies measure antibodies against a particular pathogen in the population. Because people with these antibodies have been previously infected or vaccinated, these studies are crucial to understanding the true extent of a pandemic and in measuring population antibody levels.</p>
       </div>
       <Sponsors className="mb-4" />
@@ -47,6 +47,6 @@ export default function DataExtractionPage() {
         <p className='inline'>To make us aware of new arbovirus seroprevalence studies or arbovirus studies that we have not yet captured, please fill out </p>
         <Link className='inline text-link' href='https://forms.gle/pKNiMiMYr6hiKnXx8'>this form.</Link>
       </div>
-    </div>
+    </>
   );
 }

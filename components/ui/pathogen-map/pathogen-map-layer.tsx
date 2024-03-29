@@ -50,7 +50,7 @@ export function PathogenMapSourceAndLayer<
       data={geojsonData}
       cluster
       clusterMaxZoom={6}
-      clusterMinPoints={10}
+      clusterMinPoints={2}
       clusterRadius={100}
       clusterProperties={clusterProperties}
     >

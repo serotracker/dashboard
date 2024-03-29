@@ -48,7 +48,7 @@ export function PathogenMapPopup<
     // offset needs to reduce exponentially with zoom -- higher zoom x smaller offset
     let mapZoom = map.getZoom();
 
-    return 80 / Math.pow(2, mapZoom);
+    return 120 / Math.pow(2, mapZoom);
   };
 
   if (popUpInfo.visible === false) {
