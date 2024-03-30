@@ -163,7 +163,7 @@ export const Header = () => {
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          {process.env.NEXT_PUBLIC_ABOUT_PAGE_ENABLED && <NavigationMenuItem>
+          <NavigationMenuItem>
             <NavigationMenuTrigger className="bg-transparent">
               About
             </NavigationMenuTrigger>
@@ -172,7 +172,7 @@ export const Header = () => {
                 <TabGroup title={"About"} navItems={aboutNavItems} />
               </div>
             </NavigationMenuContent>
-          </NavigationMenuItem>}
+          </NavigationMenuItem>
         </NavigationMenuList>
         <NavigationMenuViewport
           className={cn("transition-colors duration-300", headerBgColor)}
