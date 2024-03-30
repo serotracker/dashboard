@@ -9,6 +9,12 @@ import { isSafeReferrerLink } from "@/utils/referrer-link-util";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { useContext } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface DisabledButtonConfig {
   enabled: false;
@@ -112,10 +118,41 @@ export const VisualizationHeader = (props: VisualizationHeaderProps) => {
   const router = useRouter();
   const state = useContext(ArboContext);
 
+  const titleTooltip = props.visualizationInformation.titleTooltipText ? (
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div
+            className="h-5 w-5 text-gray-500 cursor-pointer inline ml-2 ignore-for-visualization-download"
+          >
+            &#9432;
+          </div>
+        </TooltipTrigger>
+        <TooltipContent
+          style={{
+            position: "absolute",
+            top: "50px", // position below the trigger
+            left:"-120px",
+            minWidth: "230px", // Set a minimum width
+            paddingTop: 0,
+            paddingBottom: 0,
+          }}
+        >
+          <div
+            className="bg-background w-full p-4 rounded text-white"
+          >
+            {props.visualizationInformation.titleTooltipText ?? 'N/A'}
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ) : null
+
   return (
     <div className="flex py-4">
-      <h3 className="w-full text-center text-lg">
+      <h3 className="w-full text-center text-lg inline">
         {props.visualizationInformation.getDisplayName({data: state.filteredData})}
+        {titleTooltip}
       </h3>
       {props.buttonConfiguration.downloadButton.enabled && (
         <DownloadButton

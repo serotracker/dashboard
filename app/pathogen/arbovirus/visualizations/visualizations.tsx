@@ -56,6 +56,7 @@ export interface VisualizationInformation {
   id: VisualizationId;
   urlParameter: VisualizationUrlParameter;
   getDisplayName: (input: GetDisplayNameInput) => string;
+  titleTooltipText?: string;
   renderVisualization: () => React.ReactNode;
 }
 
@@ -157,6 +158,7 @@ const allVisualizationInformation: Record<VisualizationId, VisualizationInformat
 
       return `${convertArboSFtoArbo(selectedPathogen)} study estimates with 95% CIs`;
     },
+    titleTooltipText: '95% confidence intervals were calculated using the Clopper-Pearson method if not reported in the source.',
     renderVisualization: CountrySeroprevalenceComparisonScatterPlot
   },
 }
