@@ -15,7 +15,7 @@ import {
   
     const selectedArboVirus = input.state.selectedFilters['pathogen'] ?? [];
   
-    if(selectedArboVirus.indexOf("DENV") != -1) {
+    if(!selectedArboVirus.includes("DENV")) {
         return input
     }
     

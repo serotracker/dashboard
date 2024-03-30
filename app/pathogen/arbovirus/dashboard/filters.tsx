@@ -234,7 +234,7 @@ export function Filters(props: FiltersProps) {
   
   const selectedArboVirus = selectedFilters['pathogen'] ?? [];
 
-  if(selectedArboVirus.indexOf("DENV") == -1) {
+  if(!selectedArboVirus.includes("DENV")) {
     excludedFields.push(FilterableField.serotype)
   }
 
