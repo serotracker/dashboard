@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useCallback } from "react";
 
 import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import {
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/table";
 import { WHORegion } from "@/lib/who-regions";
 import { Button } from "@/components/ui/button";
+import { mkConfig, generateCsv, download } from "export-to-csv";
 
 enum AgeGroup {
   "Adults (18-64 years)" = "Adults (18-64 years)",
@@ -75,7 +76,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
                 ([whoRegion, dataPoints]) => [
                   whoRegion,
                   typedGroupBy(
-                    dataPoints,
+                    dataPoints.filter((dataPoint) => Object.values(AgeGroup).includes(dataPoint.ageGroup)),
                     (dataPoint) => dataPoint.ageGroup as AgeGroup
                   ),
                 ]
@@ -97,6 +98,30 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     [currentlySelectedArbovirus, tableDatasets]
   );
 
+  const downloadCsv = useCallback(() => {
+    const dataForCsv = typedObjectKeys(tableDatasets).flatMap((arbovirus) =>
+      typedObjectKeys(tableDatasets[arbovirus]).flatMap((whoRegion) =>
+        typedObjectKeys(tableDatasets[arbovirus][whoRegion]).map(
+          (ageGroup) => ({
+            "Arbovirus": arbovirus,
+            "Age Group": ageGroup,
+            "WHO Region": whoRegion,
+            "Median Seroprevalence": `${median(
+              tableDatasets[arbovirus][whoRegion][ageGroup].map((dataPoint) => dataPoint.seroprevalence * 100)
+            ).toFixed(1)}%`,
+          })
+        )
+      )
+    )
+
+    const csvConfig = mkConfig({
+      useKeysAsHeaders: true,
+      filename: 'median-seroprevalence-by-who-region-and-age-group'
+    });
+    const csv = generateCsv(csvConfig)(dataForCsv);
+    download(csvConfig)(csv);
+  }, [tableDatasets]);
+
   return (
     <div className="p-2">
       <div className="flex justify-between mb-2 ignore-for-visualization-download">
@@ -104,6 +129,14 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
           {convertArboSFtoArbo(currentlySelectedArbovirus)}
         </h2>
         <div className="space-x-2 justify-between">
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-white"
+            onClick={() => downloadCsv()}
+          >
+            Download CSV
+          </Button>
           <Button
             variant="outline"
             size="sm"
