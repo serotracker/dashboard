@@ -5,9 +5,9 @@ import { Layer, Source } from "react-map-gl";
 type Esms = "zika" | "dengue2015" | "dengue2050";
 
 const esmIds: Record<Esms, string> = {
-  zika: "zika_esm_source",
-  dengue2015: "dengue_2015_esm_source",
-  dengue2050: "dengue_2050_esm_source",
+  zika: "zika_esm_layer",
+  dengue2015: "dengue_2015_esm_layer",
+  dengue2050: "dengue_2050_esm_layer",
 };
 
 const esmUrls: Record<Esms, string> = {
@@ -30,7 +30,7 @@ export function EsmMapSourceAndLayer(props: {popupLayerId?: string}) {
       url={esmUrls[selectedEsms as Esms]}
     >
       <Layer
-        id={"zika_esm_source"}
+        id={esmIds[selectedEsms as Esms]}
         type="raster"
         source="esm_source"
         minzoom={0}

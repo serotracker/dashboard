@@ -1,7 +1,7 @@
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { useState, useEffect, MutableRefObject, useRef, useMemo } from "react";
-import { Layer, Map, NavigationControl, Source } from "react-map-gl";
+import { Map, NavigationControl } from "react-map-gl";
 import {
   PathogenMapCursor,
   usePathogenMapMouse,
@@ -20,7 +20,6 @@ import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-laye
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
 import { EsmMapSourceAndLayer } from "./esm-maps";
-import { layer } from "@fortawesome/fontawesome-svg-core";
 
 export interface MarkerCollection {
   [key: string]: JSX.Element;
