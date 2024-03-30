@@ -80,13 +80,13 @@ export default async function Home() {
     <CustomQueryClientProvider>
       <div className="h-full overflow-auto">
         <div
-          className="flex w-full h-full-screen bg-no-repeat p-4"
+          className="flex w-full h-full-screen bg-no-repeat bg-cover bg-center p-4 overflow-auto"
           style={{
             backgroundImage: `url(${SeroMap.src})`,
           }}
         >
           <div className="flex flex-col w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
-            <div className="w-full h-fit mb-2 md:mb-0">
+            <div className="w-full h-fit mb-2 lg:mb-0">
               <h1 className=" w-fit p-2 rounded-md">SeroTracker</h1>
               <h3 className="rounded-md p-2">
                 Your Go to Source for COVID-19 and Arbovirus Seroprevalence Data
@@ -107,7 +107,7 @@ export default async function Home() {
                 <p>Checkout our dashboards below!</p>
               </div>
             </div>
-            <div className="flex w-full md:w-1/2 flex-col lg:flex-row self-end">
+            <div className="flex w-full lg:w-1/2 flex-col lg:flex-row self-end">
               {/*
               These comments are for tailwindcss to pickup these classes so we do not need to add too many props
               hover:bg-arbovirus
@@ -149,32 +149,32 @@ export default async function Home() {
             </div>
           </div>
         </div>
-        <h3 className="flex text-background bg-white rounded-md md:px-16 justify-center p-8 w-full">
+        <h3 className="flex text-background bg-white rounded-md lg:px-16 justify-center p-8 w-full">
           {`We have data from ${formatNumber(4642)} seroprevalence studies in ${formatNumber(148)} countries and territories including ${formatNumber(38260890)} participants across both our dashboards`}
         </h3>
         <div className="p-8 w-full bg-background">
-          <div className="bg-white rounded-md w-full flex justify-between px-8 lg:px-16 py-4 lg:py-6 items-center flex-wrap lg:flex-nowrap">
-            <Image className={"p-2 md:p-0"} src={"/WHO-EN-C-H.png"} alt={""} width={150} height={100} />
+          <div className="bg-white rounded-md w-full flex justify-center lg:justify-between px-8 lg:px-16 py-4 lg:py-6 items-center flex-wrap lg:flex-nowrap">
+            <Image className={"p-2 lg:p-0"} src={"/WHO-EN-C-H.png"} alt={""} width={200} height={100} />
             <Image
-            className={"p-2 md:p-0"}
+            className={"p-2 lg:p-0"}
               src={"/University-Of-Calgary-Logo.png"}
               alt={""}
-              width={150}
+              width={200}
               height={100}
             />
             <Image
-            className={"p-2 md:p-0"}
+            className={"p-2 lg:p-0"}
               src={"/public-health-agency.svg"}
               alt={""}
-              width={150}
+              width={200}
               height={100}
             />
-            <Image className={"p-2 md:p-0"} src={"/amc-joule.png"} alt={""} width={150} height={100} />
+            <Image className={"p-2 lg:p-0"} src={"/amc-joule.png"} alt={""} width={200} height={100} />
             <Image
-            className={"p-2 md:p-0"}
+            className={"p-2 lg:p-0"}
               src={"/CITF_logo_ENG.svg"}
               alt={""}
-              width={150}
+              width={200}
               height={100}
             />
           </div>
