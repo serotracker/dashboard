@@ -35,6 +35,7 @@ import { useArboFilters } from "@/hooks/useArboFilters";
 import { unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { Button } from "@/components/ui/button";
 import { MapArbovirusFilter } from "./(map)/MapArbovirusFilter";
+import { cn } from "@/lib/utils";
 
 interface FieldInformation {
   field: FilterableField;
@@ -122,7 +123,7 @@ const buildFilterDropdown = (
     filter === FilterableField.end_date
   ) {
     return (
-      <div className="pb-3 flex" key={filter}>
+      <div className="pb-3 flex w-1/2 md:w-1/3 lg:w-full px-2 lg:px-0" key={filter}>
         <DatePicker
           onChange={(date) => {
             const dateString = date?.toISOString();
@@ -151,7 +152,7 @@ const buildFilterDropdown = (
     );
   } else {
     return (
-      <div className="pb-3 flex" key={filter}>
+      <div className="pb-3 flex w-1/2 md:w-1/3 lg:w-full px-2 lg:px-0" key={filter}>
         <Select
           handleOnChange={(value) => sendFilterChangeDispatch(value, filter, state, data)}
           heading={placeholder}
@@ -207,7 +208,8 @@ const FilterSection = ({
           header_text={headerText}
           tooltip_text={headerTooltipText}
         />
-      {allFieldInformation.map((fieldInformation) => {
+        <div className="flex flex-row lg:flex-col flex-wrap">
+        {allFieldInformation.map((fieldInformation) => {
         return buildFilterDropdown(
           fieldInformation.field,
           fieldInformation.label,
@@ -218,6 +220,7 @@ const FilterSection = ({
           fieldInformation.tooltipContent
         );
       })}
+        </div>
     </div>
   );
 };
