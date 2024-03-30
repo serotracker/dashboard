@@ -99,16 +99,14 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
   );
 
   const downloadCsv = useCallback(() => {
-    const dataForCsv = typedObjectKeys(tableDatasets).flatMap((arbovirus) =>
-      typedObjectKeys(tableDatasets[arbovirus]).flatMap((whoRegion) =>
-        typedObjectKeys(tableDatasets[arbovirus][whoRegion]).map(
-          (ageGroup) => ({
+    const dataForCsv = typedObjectEntries(tableDatasets).flatMap(([arbovirus, dataForArbovirus]) =>
+      typedObjectEntries(dataForArbovirus).flatMap(([whoRegion, dataForWhoRegion]) =>
+        typedObjectEntries(dataForWhoRegion).map(
+          ([ageGroup, data]) => ({
             "Arbovirus": arbovirus,
             "Age Group": ageGroup,
             "WHO Region": whoRegion,
-            "Median Seroprevalence": `${median(
-              tableDatasets[arbovirus][whoRegion][ageGroup].map((dataPoint) => dataPoint.seroprevalence * 100)
-            ).toFixed(1)}%`,
+            "Median Seroprevalence": `${median(data.map((dataPoint) => dataPoint.seroprevalence * 100)).toFixed(1)}%`,
           })
         )
       )
