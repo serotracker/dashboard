@@ -8,12 +8,12 @@ import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
 import { cn } from "@/lib/utils";
 
-export type MultiSelectOption = {
+export type SelectOption = {
   label: string; // As we see
   value: string; // All lower case
 };
 
-interface MultiSelectProps {
+interface SelectProps {
   heading: string;
   options: string[];
   optionToLabelMap: Record<string, string | undefined>;
@@ -22,7 +22,7 @@ interface MultiSelectProps {
   singleSelect?: boolean // Multi is the default
 }
 
-const createMultiSelectOptionList = (options: string[], optionToLabelMap: Record<string, string | undefined>) => {
+const createSelectOptionList = (options: string[], optionToLabelMap: Record<string, string | undefined>) => {
   return options.map((option: string) => {
     return {
       label: optionToLabelMap[option] ?? option,
@@ -31,16 +31,16 @@ const createMultiSelectOptionList = (options: string[], optionToLabelMap: Record
   });
 };
 
-export function Select(props: MultiSelectProps) {
+export function Select(props: SelectProps) {
   // TODO: I wonder if there is a way to make the background color dynamic based on the page we are on so this does not need to prop drilled
   const { heading, selected, handleOnChange, optionToLabelMap, singleSelect} = props;
-  const options = createMultiSelectOptionList(props.options, optionToLabelMap);
+  const options = createSelectOptionList(props.options, optionToLabelMap);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState("");
 
-  const handleUnselect = (option: MultiSelectOption) => {
+  const handleUnselect = (option: SelectOption) => {
     handleOnChange(
       selected.filter((s) => {
         return s !== option.value;
@@ -89,7 +89,7 @@ export function Select(props: MultiSelectProps) {
                 className="bg-transparent outline-none placeholder:text-muted-foreground w-full flex-1 inline pb-1 mb-1 border-b-2"
               />}
               <div className="flex gap-1 flex-wrap">
-              {createMultiSelectOptionList(selected, optionToLabelMap).map((selectedOption) => {
+              {createSelectOptionList(selected, optionToLabelMap).map((selectedOption) => {
               return (
                 <Badge className={cn("rounded-sm hover:bg-backgroundHover p-1 bg-background")} key={selectedOption.value}>
                   {selectedOption.label}
