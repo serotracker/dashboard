@@ -31,10 +31,6 @@ export default async function AboutPageBaseLayout (props: AboutPageBaseLayoutPro
 
   const dehydratedState = dehydrate(queryClient);
 
-  if (process.env.NEXT_PUBLIC_ABOUT_PAGE_ENABLED !== "true") {
-    return notFound();
-  }
-
   return (
     <AboutPageProvider>
       <Hydrate state={dehydratedState}>
@@ -43,8 +39,8 @@ export default async function AboutPageBaseLayout (props: AboutPageBaseLayoutPro
             <NavigationSidebar
               options={[
                 {
-                  label: "Data Extraction",
-                  route: "/about/data-extraction",
+                  label: "About Our Data",
+                  route: "/about/about-our-data",
                   value: AboutPageSidebarOption.DATA_EXTRACTION,
                 },
                 {
