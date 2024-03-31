@@ -305,6 +305,11 @@ export function Filters(props: FiltersProps) {
   if (filterData) {
     return (
       <div className={props.className}>
+        <MapArbovirusFilter 
+          data={data} 
+          state={state} 
+          className={"p-0"} 
+        />
         <FilterSection
           headerText="Date"
           headerTooltipText="Filter on sample start and end date."
@@ -328,11 +333,6 @@ export function Filters(props: FiltersProps) {
           state={state}
           filters={{...filterData.arbovirusFilterOptions, esm: ["zika", "dengue2015", "dengue2050"]}}
           data={data}
-        />
-        <MapArbovirusFilter 
-          data={data} 
-          state={state} 
-          className={"p-0"} 
         />
         <FilterSection
           headerText="Test Information"
