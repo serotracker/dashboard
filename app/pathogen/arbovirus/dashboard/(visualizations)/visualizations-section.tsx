@@ -37,7 +37,9 @@ export const VisualizationsSection = () => {
   ].includes(visualizationInfo.id));
   const visualizationsOnRightSide = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
     areLessThanTwoWHORegionsPresentInData ? VisualizationId.MEDIAN_SEROPREVALENCE_BY_UN_REGION : VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION,
-    VisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE,
+    VisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE
+  ].includes(visualizationInfo.id));
+  const fullscreenVisualizationsAtTheBottom = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
     VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP
   ].includes(visualizationInfo.id));
 
@@ -70,6 +72,9 @@ export const VisualizationsSection = () => {
       </div>
       <div className="col-start-2 col-end-2 row-span-1">
         {renderVisualizationList(visualizationsOnRightSide)}
+      </div>
+      <div className="col-start-1 col-end-3 row-span-1">
+        {renderVisualizationList(fullscreenVisualizationsAtTheBottom)}
       </div>
     </>
   );
