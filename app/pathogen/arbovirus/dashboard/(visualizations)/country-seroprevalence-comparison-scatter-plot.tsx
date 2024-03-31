@@ -177,7 +177,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
             >
               <Label
                 value="Seroprevalence"
-                offset={-8}
+                offset={0}
                 position="insideBottom"
               />
             </XAxis>
