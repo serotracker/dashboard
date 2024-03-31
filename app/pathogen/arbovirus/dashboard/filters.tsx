@@ -263,13 +263,6 @@ export function Filters(props: FiltersProps) {
       </div>},
     {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
-].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
-
-  const demographicFilters = [
-    {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
-    {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}},
-    {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
-    {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}},
     {field: FilterableField.esm, label: "Environmental Suitability Map", valueToLabelMap: {
       "zika": "Zika",
       "dengue2015": "Dengue 2015",
@@ -279,15 +272,19 @@ export function Filters(props: FiltersProps) {
         This is a single select dropdown. Selecting any one of the options will display the corresponding environmental suitability map. Additionally it will also filter the data to only show estimates for the respective pathogen.
       </p>
   },
+].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
+
+  const demographicFilters = [
+    {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
+    {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}},
+    {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
+    {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}},
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
 
   const testInformationFilters = [
     {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
     {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
     {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
-    {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
-    {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
-    {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
     {field: FilterableField.serotype, label: "Serotype (DENV only)", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
   // Fetch arbovirus data using the useArboData hook
