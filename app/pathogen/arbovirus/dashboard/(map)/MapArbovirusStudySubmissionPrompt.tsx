@@ -26,7 +26,7 @@ export const MapArbovirusStudySubmissionPrompt = ({
       </CardHeader>
       <CardContent className={"p-2"}>
         <p className="inline"> Are we missing an arbovirus seroprevalence study that we should include? Submit it to us via </p>
-        <Link className="inline text-link underline text-end" target="_blank" href="https://forms.gle/pKNiMiMYr6hiKnXx8">this form</Link>
+        <Link className="inline text-link underline text-end" target="_blank" rel="noopener noreferrer" href="https://forms.gle/pKNiMiMYr6hiKnXx8">this form</Link>
         
       </CardContent>
     </Card>

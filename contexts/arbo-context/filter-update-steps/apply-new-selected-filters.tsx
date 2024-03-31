@@ -9,67 +9,88 @@ export function filterData(
 ): any[] {
   const filterKeys = Object.keys(filters);
 
+  // So over here we have data and filters. we extract the filter keys. thenw e filter the data
+  // while filtering the data we take each item and check if it is passes the test for each and every one of the filters. 
   return data.filter((item: any) => {
     return filterKeys.every((key: string) => {
       /* If no pathogen is selected, we don't want to see any data */
-      if (key === "pathogen"){
-        if(filters[key].length == 0){
-          return false;
-        }
+      if (key === "pathogen" && filters[key].length == 0 ){
+        return false;
+      }
+      /* Ignore pediatric age group for non pediatric age groups. */
+      if (key === "pediatricAgeGroup" && item["ageGroup"] !== "Children and Youth (0-17 years)"){
+        return true;
       }
       if (!filters[key].length) return true;
 
-      if (key === "end_date") {
-        const filterEndDate = new Date(filters["end_date"][0]);
-        const filterStartDate = new Date(filters["start_date"][0]);
+      switch (key) {
+        case "start_date": {
+          const filterStartDate = new Date(filters["start_date"][0]);
 
-        if (isNaN(filterEndDate.getTime())) {
-          return true; // Handle invalid date
+          if (isNaN(filterStartDate.getTime())) {
+            return true; // Handle invalid date
+          }
+
+          const itemStartDate = new Date(item.sampleStartDate);
+          let itemEndDate = new Date(item.sampleEndDate);
+
+          // Check if the end date is before the start date (Fix for particular yellow fever studies in central africa that have start date 2009 and end date for 1969)
+          if (itemEndDate < itemStartDate) {
+            // Set the end date to be the same or 1 month after the start date
+            itemEndDate = new Date(itemStartDate);
+            itemEndDate.setMonth(itemEndDate.getMonth() + 1);
+          }
+
+          // Check for any overlap in the sampling period
+          return itemEndDate >= filterStartDate;
         }
+        case "end_date": {
+          const filterEndDate = new Date(filters["end_date"][0]);
+          const filterStartDate = new Date(filters["start_date"][0]);
 
-        const itemStartDate = new Date(item.sampleStartDate);
-        const itemEndDate = new Date(item.sampleEndDate);
+          if (isNaN(filterEndDate.getTime())) {
+            return true; // Handle invalid date
+          }
 
-        // Check for any overlap in the sampling period
-        return (
-          itemEndDate <= filterEndDate ||
-          (itemEndDate >= filterEndDate && itemStartDate < filterEndDate)
-        );
-      }
+          const itemStartDate = new Date(item.sampleStartDate);
+          const itemEndDate = new Date(item.sampleEndDate);
 
-      if (key === "start_date") {
-        const filterStartDate = new Date(filters["start_date"][0]);
-
-        if (isNaN(filterStartDate.getTime())) {
-          return true; // Handle invalid date
-        }
-
-        const itemStartDate = new Date(item.sampleStartDate);
-        let itemEndDate = new Date(item.sampleEndDate);
-
-        // Check if the end date is before the start date (Fix for particular yellow fever studies in central africa that have start date 2009 and end date for 1969)
-        if (itemEndDate < itemStartDate) {
-          // Set the end date to be the same or 1 month after the start date
-          itemEndDate = new Date(itemStartDate);
-          itemEndDate.setMonth(itemEndDate.getMonth() + 1);
-        }
-
-        // Check for any overlap in the sampling period
-        return itemEndDate >= filterStartDate;
-      }
-      if (key === "antibody") {
-        return item["antibodies"].some((element: string) =>
-          filters[key].includes(element)
-        );
-      } else {
-        if (Array.isArray(item[key])) {
-          // If item[key] is an array, check if any element of item[key] is included in filters[key]
-          return item[key].some((element: string) =>
+          // Check for any overlap in the sampling period
+          return (
+            itemEndDate <= filterEndDate ||
+            (itemEndDate >= filterEndDate && itemStartDate < filterEndDate));
+        } 
+        case "antibody": {
+          return item["antibodies"].some((element: string) =>
             filters[key].includes(element)
           );
-        } else {
-          // If item[key] is a string, check if it's included in filters[key]
-          return filters[key].includes(item[key]);
+        }
+        case "country":  
+        case "unRegion": 
+        case "whoRegion": {
+          return filters["country"]?.includes(item["country"]) || filters["unRegion"]?.includes(item["unRegion"]) || filters["whoRegion"]?.includes(item["whoRegion"]);
+        }
+        case "esm": {
+          switch(filters["esm"][0]){
+            case "zika": 
+              return item["pathogen"] === "ZIKV";
+            case "dengue2015":
+            case "dengue2050":
+              return item["pathogen"] === "DENV";
+            default:
+              return true;
+          }
+        }
+        default: {
+          if (Array.isArray(item[key])) {
+            // If item[key] is an array, check if any element of item[key] is included in filters[key]
+            return item[key].some((element: string) =>
+              filters[key].includes(element)
+            );
+          } else {
+            // If item[key] is a string, check if it's included in filters[key]
+            return filters[key].includes(item[key]);
+          }
         }
       }
     });

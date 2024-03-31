@@ -34,6 +34,7 @@ export type Estimate = {
   sampleSize: number;
   sampleStartDate: string;
   seroprevalence: number;
+  serotype: string;
   sex: string;
   sourceSheetId: string;
   state: string;
@@ -129,11 +130,11 @@ export const columns: DataTableColumnDef<Estimate, unknown>[] = [
     header: get_header("Seroprevalence"),
     cell: ({ row }) => {
       const seroprevalence = row.getValue("seroprevalence");
-      if (typeof seroprevalence === 'number') {
+      if (typeof seroprevalence === 'number' && seroprevalence*100 >= 0.05) {
         return `${(seroprevalence * 100).toFixed(1)}%`;
       } else if (typeof seroprevalence === 'string') {
         const seroprevalenceNumber = parseFloat(seroprevalence);
-        if (!isNaN(seroprevalenceNumber)) {
+        if (!isNaN(seroprevalenceNumber) && seroprevalenceNumber*100 >= 0.05) {
           return `${(seroprevalenceNumber * 100).toFixed(1)}%`;
         }
       }
@@ -303,6 +304,10 @@ export const columns: DataTableColumnDef<Estimate, unknown>[] = [
   {
     accessorKey: "pediatricAgeGroup",
     header: get_header("Pediatric Age Group"),
+  },
+  {
+    accessorKey: "serotype",
+    header: get_header("Serotype (DENV only)"),
   },
   // {
   //   accessorKey: "ageMaximum",

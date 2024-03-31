@@ -25,7 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { MultiSelect } from "@/components/customs/multi-select";
+import { Select } from "@/components/customs/select";
 import React, { useContext } from "react";
 import { useArboData } from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";
@@ -42,8 +42,11 @@ interface FieldInformation {
   tooltipContent?: React.ReactNode;
 }
 
-// Function to add or update filters with multiple values
-const addFilterMulti = (
+/**
+ * Function to add or update filters with multiple values
+ * 
+ */
+const sendFilterChangeDispatch = (
   value: string[],
   newFilter: string,
   state: ArboContextType,
@@ -122,7 +125,7 @@ const buildFilterDropdown = (
         <DatePicker
           onChange={(date) => {
             const dateString = date?.toISOString();
-            addFilterMulti(dateString ? [dateString] : [], filter, state, data);
+            sendFilterChangeDispatch(dateString ? [dateString] : [], filter, state, data);
           }}
           labelText={placeholder}
           date={
@@ -148,12 +151,13 @@ const buildFilterDropdown = (
   } else {
     return (
       <div className="pb-3 flex" key={filter}>
-        <MultiSelect
-          handleOnChange={(value) => addFilterMulti(value, filter, state, data)}
+        <Select
+          handleOnChange={(value) => sendFilterChangeDispatch(value, filter, state, data)}
           heading={placeholder}
           selected={state.selectedFilters[filter] ?? []}
           options={sortedOptions}
           optionToLabelMap={optionToLabelMap}
+          singleSelect={filter === FilterableField.esm}
         />
         {tooltipContent && <FilterTooltip className='pl-2' tooltipContent={tooltipContent} />}
       </div>
@@ -165,6 +169,9 @@ export enum FilterableField {
   ageGroup = "ageGroup",
   pediatricAgeGroup = "pediatricAgeGroup",
   sex = "sex",
+  esm = "esm",
+  whoRegion = "whoRegion",
+  unRegion = "unRegion",
   country = "country",
   assay = "assay",
   producer = "producer",
@@ -173,8 +180,7 @@ export enum FilterableField {
   pathogen = "pathogen",
   start_date = "start_date",
   end_date = "end_date",
-  whoRegion = "whoRegion",
-  unRegion = "unRegion"
+  serotype = "serotype"
 }
 
 interface FilterSectionProps {
@@ -226,13 +232,28 @@ export function Filters(props: FiltersProps) {
   const excludedFields = props.excludedFields ?? [];
 
   const selectedAgeGroups = selectedFilters['ageGroup'] ?? [];
-
-  if(!(selectedAgeGroups.length === 1 && selectedAgeGroups[0] === 'Children and Youth (0-17 years)')) {
+  /* If the 0-17 filter is not selected, don't show pediatric age group.*/
+  if(!selectedAgeGroups.includes('Children and Youth (0-17 years)')) {
     excludedFields.push(FilterableField.pediatricAgeGroup);
+  }
+  
+  const selectedArboVirus = selectedFilters['pathogen'] ?? [];
+
+  if(!selectedArboVirus.includes("DENV")) {
+    excludedFields.push(FilterableField.serotype)
   }
 
   const state = useContext(ArboContext);
   const demographicFilters = [
+    {field: FilterableField.esm, label: "Environmental Suitability Map", valueToLabelMap: {
+        "zika": "Zika",
+        "dengue2015": "Dengue 2015",
+        "dengue2050": "Dengue 2050 (Projected)",
+    }, tooltipContent:
+      <p>
+        This is a single select dropdown. Selecting any one of the options will display the corresponding environmental suitability map. Additionally it will also filter the data to only show estimates for the respective pathogen.
+      </p>
+  },
     {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
     {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}},
     {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
@@ -241,6 +262,7 @@ export function Filters(props: FiltersProps) {
   const studyInformationFilters = [
     {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
     {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
+    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.whoRegion, label: "WHO Region", valueToLabelMap: {}, tooltipContent:
       <div>
         <p> AFR: African Region </p>
@@ -254,11 +276,10 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
     {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
     {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
-    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
     {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
+    {field: FilterableField.serotype, label: "Serotype (DENV only)", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
-
   // Fetch arbovirus data using the useArboData hook
   const { data } = useArboData();
 
@@ -282,7 +303,7 @@ export function Filters(props: FiltersProps) {
           headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
           allFieldInformation={demographicFilters}
           state={state}
-          filters={filterData.arbovirusFilterOptions}
+          filters={{...filterData.arbovirusFilterOptions, esm: ["zika", "dengue2015", "dengue2050"]}}
           data={data}
         />
         <FilterSection
