@@ -11,8 +11,8 @@ interface ArboBannerProps {
 
 export const ArboBanner = ({className}: ArboBannerProps) => {
     const state = useContext(ArboContext);
+    
     const downloadData = () => {
-        //console.log(state.filteredData)
         const csvConfig = mkConfig({
             useKeysAsHeaders: true,
             filename: "arbotracker_filtered_dataset",
