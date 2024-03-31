@@ -25,7 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { MultiSelect } from "@/components/customs/multi-select";
+import { Select } from "@/components/customs/select";
 import React, { useContext } from "react";
 import { useArboData } from "@/hooks/useArboData";
 import SectionHeader from "@/components/customs/SectionHeader";
@@ -152,12 +152,13 @@ const buildFilterDropdown = (
   } else {
     return (
       <div className="pb-3 flex" key={filter}>
-        <MultiSelect
+        <Select
           handleOnChange={(value) => sendFilterChangeDispatch(value, filter, state, data)}
           heading={placeholder}
           selected={state.selectedFilters[filter] ?? []}
           options={sortedOptions}
           optionToLabelMap={optionToLabelMap}
+          singleSelect={filter === FilterableField.esm}
         />
         {tooltipContent && <FilterTooltip className='pl-2' tooltipContent={tooltipContent} />}
       </div>
@@ -169,6 +170,7 @@ export enum FilterableField {
   ageGroup = "ageGroup",
   pediatricAgeGroup = "pediatricAgeGroup",
   sex = "sex",
+  esm = "esm",
   whoRegion = "whoRegion",
   unRegion = "unRegion",
   country = "country",
@@ -267,16 +269,27 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
     {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}},
     {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
-    {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}}
+    {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}},
+    {field: FilterableField.esm, label: "Environmental Suitability Map", valueToLabelMap: {
+      "zika": "Zika",
+      "dengue2015": "Dengue 2015",
+      "dengue2050": "Dengue 2050 (Projected)",
+    }, tooltipContent:
+      <p>
+        This is a single select dropdown. Selecting any one of the options will display the corresponding environmental suitability map. Additionally it will also filter the data to only show estimates for the respective pathogen.
+      </p>
+  },
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
 
   const testInformationFilters = [
     {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
     {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
     {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
+    {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
+    {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
+    {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
     {field: FilterableField.serotype, label: "Serotype (DENV only)", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
-
   // Fetch arbovirus data using the useArboData hook
   const { data } = useArboData();
 
@@ -316,7 +329,7 @@ export function Filters(props: FiltersProps) {
           headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
           allFieldInformation={demographicFilters}
           state={state}
-          filters={filterData.arbovirusFilterOptions}
+          filters={{...filterData.arbovirusFilterOptions, esm: ["zika", "dengue2015", "dengue2050"]}}
           data={data}
         />
         <MapArbovirusFilter 

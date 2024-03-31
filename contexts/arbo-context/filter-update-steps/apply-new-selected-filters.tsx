@@ -70,6 +70,17 @@ export function filterData(
         case "whoRegion": {
           return filters["country"]?.includes(item["country"]) || filters["unRegion"]?.includes(item["unRegion"]) || filters["whoRegion"]?.includes(item["whoRegion"]);
         }
+        case "esm": {
+          switch(filters["esm"][0]){
+            case "zika": 
+              return item["pathogen"] === "ZIKV";
+            case "dengue2015":
+            case "dengue2050":
+              return item["pathogen"] === "DENV";
+            default:
+              return true;
+          }
+        }
         default: {
           if (Array.isArray(item[key])) {
             // If item[key] is an array, check if any element of item[key] is included in filters[key]
