@@ -23,7 +23,7 @@ export const MapShadingLegend = ({className}: MapShadingLegendProps) => {
                     return (
                     <div className="items-center flex space-x-2 my-1" key={index}>
                         <div
-                            className={`w-[1em] ${color} h-[1em] border-2`}
+                            className={`w-[1em] ${color} h-[1em] border-2 border-gray-500`}
                             style={{ backgroundColor: color}}
                         ></div>
                         <p>{description}</p>
