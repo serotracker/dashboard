@@ -1,3 +1,4 @@
+import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { lastIndexOf } from "lodash";
 
@@ -8,8 +9,8 @@ interface MapShadingLegendProps {
 
 export const MapShadingLegend = ({className}: MapShadingLegendProps) => {
     const shadingLegendElements: {color: string, description: string}[] = [
-        {color: "blue", description: "Seroprevalence estimates"},
-        {color: "red", description: "No Seroprevalence estimates"}
+        {color: MapSymbology.CountryFeature.HasData.Color, description: "Seroprevalence estimates"},
+        {color: MapSymbology.CountryFeature.Default.Color, description: "No Seroprevalence estimates"}
     ]
 
     return (
@@ -22,7 +23,7 @@ export const MapShadingLegend = ({className}: MapShadingLegendProps) => {
                     return (
                     <div className="items-center flex space-x-2 my-1" key={index}>
                         <div
-                            className={`w-[1em] ${color} h-[1em]`}
+                            className={`w-[1em] ${color} h-[1em] border-2`}
                             style={{ backgroundColor: color}}
                         ></div>
                         <p>{description}</p>
