@@ -20,6 +20,7 @@ import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-laye
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
 import { MapControlContext } from "@/contexts/map-control-provider";
+import { EsmMapSourceAndLayer } from "./esm-maps";
 
 export interface MarkerCollection {
   [key: string]: JSX.Element;
@@ -48,6 +49,8 @@ interface PathogenMapProps<
     estimateGroupingPopupDisabled: boolean;
   }) => MarkerCollection;
 }
+
+
 
 export function PathogenMap<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
@@ -91,7 +94,6 @@ export function PathogenMap<
     {}
   );
   const [markersOnScreen, setMarkersOnScreen] = useState<MarkerCollection>({});
-  const [markersOnScreen, setMarkersOnScreen] = useState<MarkerCollection>({});
 
   const { cursor, onMouseLeave, onMouseEnter, onMouseDown } =
     usePathogenMapMouse({
@@ -111,8 +113,6 @@ export function PathogenMap<
   if (!mapStyle) {
     return;
   }
-
-
 
   const onRender = (event: mapboxgl.MapboxEvent) => {
     const map = event.target;
@@ -158,6 +158,7 @@ export function PathogenMap<
       onRender={onRender}
     >
       <NavigationControl showCompass={false} />
+      <EsmMapSourceAndLayer popupLayerId={layerForCountryHighlighting?.id}/>
       <PathogenCountryHighlightLayer
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
         dataPoints={dataPoints}

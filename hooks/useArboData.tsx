@@ -36,6 +36,7 @@ export const arbovirusEstimatesQuery = gql`
       seroprevalenceStudy95CIUpper
       seroprevalenceCalculated95CILower
       seroprevalenceCalculated95CIUpper
+      serotype
       sex
       sourceSheetId
       sourceSheetName

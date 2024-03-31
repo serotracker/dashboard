@@ -27,7 +27,8 @@ export const VisualizationsSection = () => {
     [VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS]: { className: "h-half-screen" },
     [VisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME]: { className: "h-full-screen 2xl:h-3/4-screen" },
     [VisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS]: { className: "h-full-screen" },
-    [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP]: { className: "h-full-screen" },
+    [VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP]: { className: "" },
+    [VisualizationId.COUNTRY_SEROPREVALENCE_COMPARISON_SCATTER_PLOT]: {className: "h-full-screen"}
   })
 
   const visualizationsOnLeftSide = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
@@ -38,6 +39,9 @@ export const VisualizationsSection = () => {
   const visualizationsOnRightSide = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
     areLessThanTwoWHORegionsPresentInData ? VisualizationId.MEDIAN_SEROPREVALENCE_BY_UN_REGION : VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION,
     VisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE,
+    VisualizationId.COUNTRY_SEROPREVALENCE_COMPARISON_SCATTER_PLOT
+  ].includes(visualizationInfo.id));
+  const fullscreenVisualizationsAtTheBottom = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
     VisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP
   ].includes(visualizationInfo.id));
 
@@ -70,6 +74,9 @@ export const VisualizationsSection = () => {
       </div>
       <div className="col-start-2 col-end-2 row-span-1">
         {renderVisualizationList(visualizationsOnRightSide)}
+      </div>
+      <div className="col-start-1 col-end-3 row-span-1">
+        {renderVisualizationList(fullscreenVisualizationsAtTheBottom)}
       </div>
     </>
   );
