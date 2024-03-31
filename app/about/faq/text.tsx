@@ -13,7 +13,7 @@ export enum FAQPageOptionId {
 export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.Element}> = {
   [FAQPageOptionId.HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA]: {
     label: 'How does SeroTracker collect their data?',
-    content: <p className='inline'> We conduct ad-hoc searches of several databases including Medline, EMBASE, Web of Science, and Europe PMC and targeted google searches. In addition, anyone can submit studies for us to screen and include in our review by filling out <Link className="inline text-link underline" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSdvNJReektutfMT-5bOTjfnvaY_pMAy8mImpQBAW-3v7_B2Bg/viewform">this form</Link>. </p>
+    content: <p className='inline'> We conduct ad-hoc searches of several databases including Medline, EMBASE, Web of Science, and Europe PMC and targeted google searches. In addition, anyone can submit studies for us to screen and include in our review by filling out <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://docs.google.com/forms/d/e/1FAIpQLSdvNJReektutfMT-5bOTjfnvaY_pMAy8mImpQBAW-3v7_B2Bg/viewform">this form</Link>. </p>
   },
   [FAQPageOptionId.HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED]: {
     label: 'How often is SeroTracker data updated?',
@@ -21,7 +21,7 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
   },
   [FAQPageOptionId.WHERE_DOES_ARBOTRACKER_DATA_COME_FROM]: {
     label: 'How often is ArboTracker data updated?',
-    content: <p className='inline'> We conducted a search for published articles on March 13, 2023 of several databases including Web of Science, Google Scholar, LILACS, and PubMed. We aim to update our search to include unpublished grey literature in May 2024. In addition, anyone can submit sources for us to screen and include in our review by filling out <Link className="inline text-link underline" target="_blank" href='https://forms.gle/pKNiMiMYr6hiKnXx8'>this form</Link>.</p>
+    content: <p className='inline'> We conducted a search for published articles on March 13, 2023 of several databases including Web of Science, Google Scholar, LILACS, and PubMed. We aim to update our search to include unpublished grey literature in May 2024. In addition, anyone can submit sources for us to screen and include in our review by filling out <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href='https://forms.gle/pKNiMiMYr6hiKnXx8'>this form</Link>.</p>
   },
   [FAQPageOptionId.HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES]: {
     label: 'How is the data extracted from sources?',
@@ -33,10 +33,10 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
   },
   [FAQPageOptionId.HOW_DOES_ARBOTRACKER_DATA_SHOW_UP_ON_THE_MAP]: {
     label: 'How does ArboTracker data show up on the map?',
-    content: <p className='inline'> Data inputted into Airtable is automatically run through a software pipeline that cleans it and computes additional information (e.g. a study’s geographic coordinates). The outputs of the pipeline are then stored in a separate database, which is queried by <Link className="inline text-link underline" target="_blank" href="https://serotracker.vercel.app/">serotracker.vercel.app</Link> to serve the map, data tables, and data visualizations. Our data pipeline code is open source and can be found <Link className="inline text-link underline" target="_blank" href="https://github.com/serotracker/iit-backend-v2">here</Link>. </p>
+    content: <p className='inline'> Data inputted into Airtable is automatically run through a software pipeline that cleans it and computes additional information (e.g. a study’s geographic coordinates). The outputs of the pipeline are then stored in a separate database, which is queried by <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://serotracker.vercel.app/">serotracker.vercel.app</Link> to serve the map, data tables, and data visualizations. Our data pipeline code is open source and can be found <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://github.com/serotracker/iit-backend-v2">here</Link>. </p>
   },
   [FAQPageOptionId.CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS]: {
     label: 'Can I download ArboTracker data for my own analysis?',
-    content: <p className='inline'> Yes, our data is open-source and free for anyone to use. Every data table on the dashboard has a button next to it that allows you to download a csv of the data in the table. <Link className="inline text-link underline" target="_blank" href="https://serotracker.vercel.app/pathogen/arbovirus/dashboard#TABLE">This is a link to the ArboTracker data table where it is possible to download a csv containing all of our arbovirus seroprevalence estimates</Link>. </p>
+    content: <p className='inline'> Yes, our data is open-source and free for anyone to use. Every data table on the dashboard has a button next to it that allows you to download a csv of the data in the table. <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://serotracker.vercel.app/pathogen/arbovirus/dashboard#TABLE">This is a link to the ArboTracker data table where it is possible to download a csv containing all of our arbovirus seroprevalence estimates</Link>. </p>
   },
 }
