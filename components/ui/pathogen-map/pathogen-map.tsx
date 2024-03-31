@@ -1,7 +1,7 @@
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { useState, useEffect, MutableRefObject, useRef, useMemo, useContext } from "react";
-import { Map, NavigationControl } from "react-map-gl";
+import { Map, NavigationControl, useMap } from "react-map-gl";
 import {
   PathogenMapCursor,
   usePathogenMapMouse,
@@ -69,8 +69,7 @@ export function PathogenMap<
   >({ visible: false, properties: null, layerId: null });
   const { setPopUpInfoForCountryHighlightLayer } = useCountryHighlightLayer();
   const { estimateGroupingPopupDisabled } = useContext(MapControlContext);
-
-  console.log('estimateGroupingPopupDisabled', estimateGroupingPopupDisabled);
+  const { arboMap } = useMap();
 
   // TODO: might be possible to get rid of this
   const layerForCountryHighlighting = layers.find(layer => shouldLayerBeUsedForCountryHighlighting(layer));
@@ -110,6 +109,25 @@ export function PathogenMap<
     );
   }, []);
 
+  useEffect(() => {
+    console.log('arboMap', arboMap)
+    console.log('estimateGroupingPopupDisabled', estimateGroupingPopupDisabled)
+
+    if(arboMap) {
+      const newMarkers = computeClusterMarkers({
+        features: arboMap?.querySourceFeatures(sourceId),
+        markers: {},
+        map: arboMap.getMap(),
+        estimateGroupingPopupDisabled
+      });
+
+      console.log('newMarkers', newMarkers);
+
+      setMarkersOnScreen(newMarkers);
+    }
+
+  }, [estimateGroupingPopupDisabled])
+
   if (!mapStyle) {
     return;
   }
@@ -127,8 +145,6 @@ export function PathogenMap<
         estimateGroupingPopupDisabled
       });
 
-      console.log('newMarkers', newMarkers);
-      
       // Only update the state if newMarkers is different from markersOnScreen
       if (!isEqual(newMarkers, markersOnScreen)) {
         setMarkersOnScreen(newMarkers);

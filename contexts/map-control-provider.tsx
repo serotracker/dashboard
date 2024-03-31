@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 
 interface MapControlContextType {
   estimateGroupingPopupDisabled: boolean;
@@ -36,13 +36,38 @@ export function MapControlProvider({
     temporaryEstimateGroupingPopupDisables,
     setTemporaryEstimateGroupingPopupDisables,
   ] = useState<TemporaryEstimateGroupingPopupDisable[]>([]);
+  const temporaryEstimateGroupingPopupDisablesRef = useRef<TemporaryEstimateGroupingPopupDisable[]>([])
+
+  useEffect(() => {
+    temporaryEstimateGroupingPopupDisablesRef.current = temporaryEstimateGroupingPopupDisables
+  }, [temporaryEstimateGroupingPopupDisables])
+
+  const handle = (id: string) => {
+    console.log(temporaryEstimateGroupingPopupDisablesRef.current)
+    const disableWithId = temporaryEstimateGroupingPopupDisablesRef.current.find(
+      ({ id: elementId }) => id === elementId
+    );
+
+    if (
+      disableWithId &&
+      temporaryEstimateGroupingPopupDisablesRef.current.length === 1
+    ) {
+      setMapControlState({
+        estimateGroupingPopupDisabled: false,
+      });
+    }
+
+    setTemporaryEstimateGroupingPopupDisables((currentValue) =>
+      currentValue.filter(({ id: elementId }) => id !== elementId)
+    );
+  }
 
   const temporarilyDisableEstimateGroupingPopup = (
     input: TemporarilyDisableEstimateGroupingPopupInput
   ) => {
     const id = crypto.randomUUID();
 
-    setTemporaryEstimateGroupingPopupDisables((currentValue) => [
+    setTemporaryEstimateGroupingPopupDisables(currentValue => [
       ...currentValue,
       { id },
     ]);
@@ -51,24 +76,7 @@ export function MapControlProvider({
       estimateGroupingPopupDisabled: true,
     });
 
-    setTimeout(() => {
-      const disableWithId = temporaryEstimateGroupingPopupDisables.find(
-        ({ id: elementId }) => id === elementId
-      );
-
-      if (
-        disableWithId &&
-        temporaryEstimateGroupingPopupDisables.length === 1
-      ) {
-        setMapControlState({
-          estimateGroupingPopupDisabled: false,
-        });
-      }
-
-      setTemporaryEstimateGroupingPopupDisables((currentValue) =>
-        currentValue.filter(({ id: elementId }) => id === elementId)
-      );
-    }, input.milliseconds);
+    setTimeout(handle, input.milliseconds, id);
   };
 
   return (
