@@ -34,6 +34,7 @@ import { parseISO } from "date-fns";
 import { useArboFilters } from "@/hooks/useArboFilters";
 import { unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { Button } from "@/components/ui/button";
+import { MapArbovirusFilter } from "./(map)/MapArbovirusFilter";
 
 interface FieldInformation {
   field: FilterableField;
@@ -280,6 +281,11 @@ export function Filters(props: FiltersProps) {
   if (filterData) {
     return (
       <div className={props.className}>
+        <MapArbovirusFilter 
+          data={data} 
+          state={state} 
+          className={"p-0"} 
+        />
         <FilterSection
           headerText="Demographic"
           headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
