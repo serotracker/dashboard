@@ -5,6 +5,7 @@ import { VisualizationsSection } from "./(visualizations)/visualizations-section
 import { ArboDataTable } from "./(table)/ArboDataTable";
 import { ArbovirusMap } from "./(map)/ArbovirusMap";
 import { ArbovirusPageSectionId } from "../../../constants";
+import { ArboBanner } from "./(banner)/ArboBanner";
 
 export default function ArbovirusDashboardPage() {
   return (
@@ -17,6 +18,7 @@ export default function ArbovirusDashboardPage() {
       <div
         className={"overflow-y-scroll snap-y scroll-smooth col-span-10 row-span-2 px-4"}
       >
+        <ArboBanner className="w-full border border-background rounded-md items-center p-2 mt-4 flex justify-between"/>
         <section
           id={ArbovirusPageSectionId.MAP}
           className="w-full h-[95%] scroll-smooth overflow-hidden relative row-span-2 mt-4 rounded-md border border-background"
