@@ -13,6 +13,7 @@ export const arbovirusFiltersQuery = gql`
       pediatricAgeGroup
       producer
       sampleFrame
+      serotype
       sex
       unRegion
       whoRegion

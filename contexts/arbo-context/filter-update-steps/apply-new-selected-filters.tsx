@@ -14,10 +14,12 @@ export function filterData(
   return data.filter((item: any) => {
     return filterKeys.every((key: string) => {
       /* If no pathogen is selected, we don't want to see any data */
-      if (key === "pathogen"){
-        if(filters[key].length == 0){
-          return false;
-        }
+      if (key === "pathogen" && filters[key].length == 0 ){
+        return false;
+      }
+      /* Ignore pediatric age group for non pediatric age groups. */
+      if (key === "pediatricAgeGroup" && item["ageGroup"] !== "Children and Youth (0-17 years)"){
+        return true;
       }
       if (!filters[key].length) return true;
 
@@ -67,6 +69,17 @@ export function filterData(
         case "unRegion": 
         case "whoRegion": {
           return filters["country"]?.includes(item["country"]) || filters["unRegion"]?.includes(item["unRegion"]) || filters["whoRegion"]?.includes(item["whoRegion"]);
+        }
+        case "esm": {
+          switch(filters["esm"][0]){
+            case "zika": 
+              return item["pathogen"] === "ZIKV";
+            case "dengue2015":
+            case "dengue2050":
+              return item["pathogen"] === "DENV";
+            default:
+              return true;
+          }
         }
         default: {
           if (Array.isArray(item[key])) {
