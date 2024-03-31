@@ -63,12 +63,12 @@ const getMedianSeroprevalenceInformationFromData = (
           value: seroprevalenceNumber / 100,
         })
       : "#ffffff";
-  
+
   return {
     seroprevalenceNumber,
     seroprevalencePercentageString,
-    backgroundColourHexCode
-  }
+    backgroundColourHexCode,
+  };
 };
 
 export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
@@ -115,18 +115,19 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
           ([arbovirus, dataGroupedByWHORegion]) => [
             arbovirus,
             typedObjectFromEntries(
-              typedObjectEntries(dataGroupedByWHORegion).map(
-                ([whoRegion, dataPoints]) => [
+              typedObjectEntries(dataGroupedByWHORegion)
+                .filter(([whoRegion, dataPoints]) =>
+                  Object.values(WHORegion).includes(whoRegion)
+                )
+                .map(([whoRegion, dataPoints]) => [
                   whoRegion,
                   typedGroupBy(
                     dataPoints.filter((dataPoint) =>
-                      Object.values(AgeGroup).includes(dataPoint.ageGroup) &&
-                      Object.values(WHORegion).includes(dataPoint.whoRegion)
+                      Object.values(AgeGroup).includes(dataPoint.ageGroup)
                     ),
                     (dataPoint) => dataPoint.ageGroup as AgeGroup
                   ),
-                ]
-              )
+                ])
             ),
           ]
         )
@@ -151,13 +152,19 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
           ([whoRegion, dataForWhoRegion]) => ({
             Arbovirus: arbovirus,
             "WHO Region": whoRegion,
-            ...Object.values(AgeGroup).map((ageGroup) => {
-              const columnName = `Median Seroprevalence (${ageGroup})`
-              const { seroprevalencePercentageString: columnValue } = getMedianSeroprevalenceInformationFromData({data: dataForWhoRegion[ageGroup]})
-              return {[columnName]: columnValue}
-            }).reduce((a, b) => ({...a, ...b}))
-        })
-    ));
+            ...Object.values(AgeGroup)
+              .map((ageGroup) => {
+                const columnName = `Median Seroprevalence (${ageGroup})`;
+                const { seroprevalencePercentageString: columnValue } =
+                  getMedianSeroprevalenceInformationFromData({
+                    data: dataForWhoRegion[ageGroup],
+                  });
+                return { [columnName]: columnValue };
+              })
+              .reduce((a, b) => ({ ...a, ...b })),
+          })
+        )
+    );
 
     const csvConfig = mkConfig({
       useKeysAsHeaders: true,
@@ -229,11 +236,13 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
                   !!datasetToDisplay && !!datasetToDisplay[whoRegion]
                     ? datasetToDisplay[whoRegion][ageGroup]
                     : [];
-                
+
                 const {
                   seroprevalencePercentageString,
-                  backgroundColourHexCode
-                } = getMedianSeroprevalenceInformationFromData({data: dataForCell})
+                  backgroundColourHexCode,
+                } = getMedianSeroprevalenceInformationFromData({
+                  data: dataForCell,
+                });
 
                 return (
                   <TableCell
