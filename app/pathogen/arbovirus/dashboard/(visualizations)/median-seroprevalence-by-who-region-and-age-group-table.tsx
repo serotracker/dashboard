@@ -178,7 +178,12 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="p-2">
             {pathogenOrder.map((pathogen) => 
-              <DropdownMenuItem onSelect={() => setSelectedArbovirus(pathogen)} disabled={selectedArbovirus === pathogen} asChild>
+              <DropdownMenuItem
+                key={`median-seroprevalence-by-who-region-and-age-group-table-dropdown-item-${pathogen}`}
+                onSelect={() => setSelectedArbovirus(pathogen)}
+                disabled={selectedArbovirus === pathogen}
+                asChild
+              >
                 <button className="w-full hover:cursor-pointer">
                   {convertArboSFtoArbo(pathogen)}
                 </button>
