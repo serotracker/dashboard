@@ -152,7 +152,6 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
           width={countriesAvailable.length === 1 ? "100%" : "50%"}
           key={`country-seroprevalence-comparison-scatter-plot-${country}`}
           height={"100%"}
-          className={index > 0 ? "pl-4" : ""}
         >
           <ScatterChart
             width={730}
@@ -177,7 +176,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
             >
               <Label
                 value="Seroprevalence"
-                offset={0}
+                offset={-8}
                 position="insideBottom"
               />
             </XAxis>
@@ -190,6 +189,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
               label={{
                 value: "Study estimates",
                 angle: -90,
+                offset: 40,
                 position: "insideLeft",
               }}
             />
