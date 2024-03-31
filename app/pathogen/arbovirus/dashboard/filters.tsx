@@ -179,7 +179,8 @@ export enum FilterableField {
   antibody = "antibody",
   pathogen = "pathogen",
   start_date = "start_date",
-  end_date = "end_date"
+  end_date = "end_date",
+  serotype = "serotype"
 }
 
 interface FilterSectionProps {
@@ -231,9 +232,15 @@ export function Filters(props: FiltersProps) {
   const excludedFields = props.excludedFields ?? [];
 
   const selectedAgeGroups = selectedFilters['ageGroup'] ?? [];
-
-  if(!(selectedAgeGroups.length === 1 && selectedAgeGroups[0] === 'Children and Youth (0-17 years)')) {
+  /* If the 0-17 filter is not selected, don't show pediatric age group.*/
+  if(!selectedAgeGroups.includes('Children and Youth (0-17 years)')) {
     excludedFields.push(FilterableField.pediatricAgeGroup);
+  }
+  
+  const selectedArboVirus = selectedFilters['pathogen'] ?? [];
+
+  if(!selectedArboVirus.includes("DENV")) {
+    excludedFields.push(FilterableField.serotype)
   }
 
   const state = useContext(ArboContext);
@@ -271,8 +278,8 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
     {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
     {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
+    {field: FilterableField.serotype, label: "Serotype (DENV only)", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
-
   // Fetch arbovirus data using the useArboData hook
   const { data } = useArboData();
 
