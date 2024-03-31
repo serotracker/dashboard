@@ -186,6 +186,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
               type="number"
               domain={[0, stateFilteredDataWithEstimateNumbers.length + 1]}
               allowDataOverflow={true}
+              tick={false}
               label={{
                 value: "Study estimates",
                 angle: -90,
