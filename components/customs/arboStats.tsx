@@ -5,7 +5,7 @@ import { ArbovirusDataStatistics, ArbovirusDataStatisticsQuery } from "@/gql/gra
 
 export function formatNumber(num?: number) {
     return (
-      <b className="px-1">{num?.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') ?? 0}</b>
+      num?.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') ?? 0
       );
 }
 
