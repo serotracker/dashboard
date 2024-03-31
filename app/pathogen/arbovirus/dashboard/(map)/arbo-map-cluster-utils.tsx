@@ -11,6 +11,7 @@ export function createDonutChartAndHoverPopup(props: {
   properties: any;
   map: mapboxgl.Map;
   coords: [number, number];
+  estimateGroupingPopupDisabled: boolean;
 }) {
   const offsets: number[] = [];
   const counts = [
@@ -98,12 +99,16 @@ export function createDonutChartAndHoverPopup(props: {
 
   const onMouseEnter = (event: any) => {
     event.target.style.cursor = "zoom-in";
-    popup.setLngLat(props.coords).setHTML(popupHTML).addTo(props.map);
+    if(props.estimateGroupingPopupDisabled === false) {
+      popup.setLngLat(props.coords).setHTML(popupHTML).addTo(props.map);
+    }
   };
 
   const onMouseLeave = (event: any) => {
     event.target.style.cursor = "";
-    popup.remove();
+    if(props.estimateGroupingPopupDisabled === false) {
+      popup.remove();
+    }
   };
 
   return (
@@ -201,6 +206,7 @@ export function computeClusterMarkers(props: {
   features: mapboxgl.MapboxGeoJSONFeature[];
   markers: MarkerCollection;
   map: mapboxgl.Map;
+  estimateGroupingPopupDisabled: boolean;
 }): MarkerCollection {
   const newMarkers: MarkerCollection = {};
   // for every cluster on the screen, create an HTML marker for it (if we didn't yet),
@@ -220,6 +226,7 @@ export function computeClusterMarkers(props: {
             properties: properties,
             map: props.map,
             coords: [coords[0], coords[1]],
+            estimateGroupingPopupDisabled: props.estimateGroupingPopupDisabled
           });
           marker = props.markers[id] = createClusterPointMarker({
             element: el,

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   NavigationMenu,
@@ -14,6 +15,9 @@ import ListItem from "@/components/customs/list-item";
 import { ArbovirusPageSectionId } from "@/app/constants";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { MapControlContext } from "@/contexts/map-control-provider";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { Router } from "lucide-react";
 
 type NavMenuItem = {
   title: string;
@@ -84,6 +88,9 @@ interface TabGroupProps {
 }
 
 function TabGroup(props: TabGroupProps) {
+  const { temporarilyDisableEstimateGroupingPopup } = useContext(MapControlContext);
+  const router = useRouter();
+
   return (
     <div className="flex flex-col w-full lg:w-1/2 px-2 mb-2 md:mb-0">
       <h2 className="mb-2">{props.title}</h2>
@@ -93,6 +100,10 @@ function TabGroup(props: TabGroupProps) {
             key={`${props.title}-${navItem.title}`}
             title={navItem.title}
             href={navItem.href}
+            onClick={() => {
+              temporarilyDisableEstimateGroupingPopup({milliseconds: 1000});
+              router.push(navItem.href);
+            }}
           >
             {navItem.description}
           </ListItem>
@@ -107,6 +118,8 @@ export const Header = () => {
   const [titleSuffix, setTitleSuffix] = useState("Sero");
   const [titleSuffixColor, setTitleSuffixColor] = useState("text-background");
   const [headerBgColor, setHeaderBgColor] = useState("bg-background delay-150");
+  const { temporarilyDisableEstimateGroupingPopup } = useContext(MapControlContext);
+  const router = useRouter();
 
   // I wonder if there is a better way to do this without the useEffect.
   // Will come back to it because I have spent too much time here already

@@ -1,6 +1,6 @@
 import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
-import { useState, useEffect, MutableRefObject, useRef, useMemo } from "react";
+import { useState, useEffect, MutableRefObject, useRef, useMemo, useContext } from "react";
 import { Map, NavigationControl } from "react-map-gl";
 import {
   PathogenMapCursor,
@@ -19,6 +19,7 @@ import {
 import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-layer";
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
+import { MapControlContext } from "@/contexts/map-control-provider";
 
 export interface MarkerCollection {
   [key: string]: JSX.Element;
@@ -44,6 +45,7 @@ interface PathogenMapProps<
     features: mapboxgl.MapboxGeoJSONFeature[];
     markers: MarkerCollection;
     map: mapboxgl.Map;
+    estimateGroupingPopupDisabled: boolean;
   }) => MarkerCollection;
 }
 
@@ -63,6 +65,9 @@ export function PathogenMap<
     PopupInfo<TPathogenDataPointProperties>
   >({ visible: false, properties: null, layerId: null });
   const { setPopUpInfoForCountryHighlightLayer } = useCountryHighlightLayer();
+  const { estimateGroupingPopupDisabled } = useContext(MapControlContext);
+
+  console.log('estimateGroupingPopupDisabled', estimateGroupingPopupDisabled);
 
   // TODO: might be possible to get rid of this
   const layerForCountryHighlighting = layers.find(layer => shouldLayerBeUsedForCountryHighlighting(layer));
@@ -85,6 +90,7 @@ export function PathogenMap<
   const markersRef: MutableRefObject<MarkerCollection> = useRef<MarkerCollection>(
     {}
   );
+  const [markersOnScreen, setMarkersOnScreen] = useState<MarkerCollection>({});
   const [markersOnScreen, setMarkersOnScreen] = useState<MarkerCollection>({});
 
   const { cursor, onMouseLeave, onMouseEnter, onMouseDown } =
@@ -117,8 +123,11 @@ export function PathogenMap<
       const newMarkers = computeClusterMarkers({
         features,
         markers: markersRef.current,
-        map
+        map,
+        estimateGroupingPopupDisabled
       });
+
+      console.log('newMarkers', newMarkers);
       
       // Only update the state if newMarkers is different from markersOnScreen
       if (!isEqual(newMarkers, markersOnScreen)) {

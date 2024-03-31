@@ -6,6 +6,7 @@ import React from "react";
 import clsx from "clsx";
 import "mapbox-gl/dist/mapbox-gl.css";
 import {ThemeProvider} from "@/contexts/theme-provider";
+import { MapControlProvider } from "@/contexts/map-control-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,10 +31,12 @@ export default function RootLayout({
       </head>
       <body className={clsx(inter.className, "text-black no-scrollbar")}>
         <ThemeProvider>
-          <Header />
-          <main className={"h-full-screen w-screen bg-foreground"}>
-            {children}
-          </main>
+          <MapControlProvider>
+            <Header />
+            <main className={"h-full-screen w-screen bg-foreground"}>
+              {children}
+            </main>
+          </MapControlProvider>
         </ThemeProvider>
       </body>
     </html>
