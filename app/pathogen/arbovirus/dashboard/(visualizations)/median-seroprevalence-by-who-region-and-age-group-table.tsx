@@ -20,6 +20,12 @@ import {
 import { WHORegion } from "@/lib/who-regions";
 import { Button } from "@/components/ui/button";
 import { mkConfig, generateCsv, download } from "export-to-csv";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 enum AgeGroup {
   "Adults (18-64 years)" = "Adults (18-64 years)",
@@ -81,7 +87,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     "WNV",
     "MAYV",
   ];
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedArbovirus, setSelectedArbovirus] = useState<arbovirusesSF>(pathogenOrder[0]);
 
   const datasetGroupedByArbovirus = useMemo(
     () =>
@@ -135,14 +141,9 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     [datasetGroupedByArbovirusAndWhoRegion]
   );
 
-  const currentlySelectedArbovirus = useMemo(
-    () => pathogenOrder[currentIndex],
-    [pathogenOrder, currentIndex]
-  );
-
   const datasetToDisplay = useMemo(
-    () => tableDatasets[currentlySelectedArbovirus],
-    [currentlySelectedArbovirus, tableDatasets]
+    () => tableDatasets[selectedArbovirus],
+    [selectedArbovirus, tableDatasets]
   );
 
   const downloadCsv = useCallback(() => {
@@ -177,9 +178,27 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
   return (
     <div className="p-2">
       <div className="flex justify-between mb-2 ignore-for-visualization-download">
-        <h2 className="text-center">
-          {convertArboSFtoArbo(currentlySelectedArbovirus)}
-        </h2>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="mx-2 whitespace-nowrap text-white ignore-for-visualization-download">
+              Currently viewing: {convertArboSFtoArbo(selectedArbovirus)}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="p-2">
+            {pathogenOrder.map((pathogen) => 
+              <DropdownMenuItem
+                key={`median-seroprevalence-by-who-region-and-age-group-table-dropdown-item-${pathogen}`}
+                onSelect={() => setSelectedArbovirus(pathogen)}
+                disabled={selectedArbovirus === pathogen}
+                asChild
+              >
+                <button className="w-full hover:cursor-pointer">
+                  {convertArboSFtoArbo(pathogen)}
+                </button>
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
         <div className="space-x-2 justify-between">
           <Button
             variant="outline"
@@ -188,24 +207,6 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
             onClick={() => downloadCsv()}
           >
             Download CSV
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-white"
-            onClick={() => setCurrentIndex(currentIndex - 1)}
-            disabled={currentIndex === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-white"
-            onClick={() => setCurrentIndex(currentIndex + 1)}
-            disabled={currentIndex === pathogenOrder.length - 1}
-          >
-            Next
           </Button>
         </div>
       </div>
