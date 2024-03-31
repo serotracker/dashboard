@@ -243,16 +243,13 @@ export function Filters(props: FiltersProps) {
   }
 
   const state = useContext(ArboContext);
-  const demographicFilters = [
-    {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
-    {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}},
-    {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
-    {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}},
+
+  const dateFilters = [
+    {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
+    {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
-  const studyInformationFilters = [
-    {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
-    {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
-    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
+
+  const studyInfoFilters = [
     {field: FilterableField.whoRegion, label: "WHO Region", valueToLabelMap: {}, tooltipContent:
       <div>
         <p> AFR: African Region </p>
@@ -261,15 +258,25 @@ export function Filters(props: FiltersProps) {
         <p> EUR: European Region </p>
         <p> SEAR: South-East Asia Region </p>
         <p> WPR: Western Pacific Region </p>
-      </div>
-    },
+      </div>},
+    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
+].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
+
+  const demographicFilters = [
+    {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
+    {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}},
+    {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
+    {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}}
+  ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
+
+  const testInformationFilters = [
+    {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
+    {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
     {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
-    {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
-    {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
-    {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
     {field: FilterableField.serotype, label: "Serotype (DENV only)", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
+
   // Fetch arbovirus data using the useArboData hook
   const { data } = useArboData();
 
@@ -288,10 +295,21 @@ export function Filters(props: FiltersProps) {
   if (filterData) {
     return (
       <div className={props.className}>
-        <MapArbovirusFilter 
-          data={data} 
-          state={state} 
-          className={"p-0"} 
+        <FilterSection
+          headerText="Date"
+          headerTooltipText="Filter on sample start and end date."
+          allFieldInformation={dateFilters}
+          state={state}
+          filters={filterData.arbovirusFilterOptions}
+          data={data}
+        />
+        <FilterSection
+          headerText="Study Location"
+          headerTooltipText="Filter on where the study was conducted."
+          allFieldInformation={studyInfoFilters}
+          state={state}
+          filters={filterData.arbovirusFilterOptions}
+          data={data}
         />
         <FilterSection
           headerText="Demographic"
@@ -301,10 +319,15 @@ export function Filters(props: FiltersProps) {
           filters={filterData.arbovirusFilterOptions}
           data={data}
         />
+        <MapArbovirusFilter 
+          data={data} 
+          state={state} 
+          className={"p-0"} 
+        />
         <FilterSection
-          headerText="Study Information"
-          headerTooltipText="Filter on different types of study based metadata"
-          allFieldInformation={studyInformationFilters}
+          headerText="Test Information"
+          headerTooltipText="Filter on information related to what the study measured."
+          allFieldInformation={testInformationFilters}
           state={state}
           filters={filterData.arbovirusFilterOptions}
           data={data}
