@@ -47,9 +47,6 @@ export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilte
   return (
     <div className={className}>
       <SectionHeader header_text="Arboviruses" tooltip_text="Filter on arbovirus strain."/>
-      {/* <h2 className="text-lg">
-        Arboviruses
-      </h2> */}
       <div className={"flex justify-center flex-col pb-3"}>
         {pathogenOrder.map((pathogenAbbreviation: string) => {
           // Map abbreviations to full names
