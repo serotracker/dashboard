@@ -17,43 +17,35 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
   header_text,
   tooltip_text,
 }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2 mb-2">
       <h2 className="text-lg">{header_text}</h2>
       <div className="relative inline-block">
-        {/* Tooltip */}
-        <TooltipProvider>
+        <TooltipProvider delayDuration={0}>
           <Tooltip>
-            {/* Tooltip Trigger */}
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <div
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
                 className="h-5 w-5 text-gray-500 cursor-pointer"
               >
                 &#9432;
               </div>
             </TooltipTrigger>
-            {/* Tooltip Content */}
-            {showTooltip && (
-              <TooltipContent
-                style={{
-                  position: "absolute",
-                  top: "50px", // position below the trigger
-                  left:"-120px",
-                  minWidth: "230px", // Set a minimum width
-                }}
+            <TooltipContent
+              style={{
+                position: "absolute",
+                top: "50px", // position below the trigger
+                left:"-120px",
+                minWidth: "230px", // Set a minimum width
+                paddingTop: 0,
+                paddingBottom: 0,
+              }}
+            >
+              <div
+                className="bg-background w-full p-4 rounded text-white"
               >
-                <div
-                  className="bg-background w-full p-4 rounded text-white"
-                  // style={{ maxWidth: "250px" }}
-                >
-                  {tooltip_text}
-                </div>
-              </TooltipContent>
-            )}
+                {tooltip_text}
+              </div>
+            </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>

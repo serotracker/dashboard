@@ -60,8 +60,8 @@ const arbotrackerNavitems: NavMenuItem[] = [
 
 const aboutNavItems: NavMenuItem[] = [
   {
-    title: "Data Extraction",
-    href: "/about/data-extraction",
+    title: "About Our Data",
+    href: "/about/about-our-data",
     description: "The process used to extract the data",
   },
   {
@@ -85,7 +85,7 @@ interface TabGroupProps {
 
 function TabGroup(props: TabGroupProps) {
   return (
-    <div className="flex flex-col w-2/4 md:2/5 px-2">
+    <div className="flex flex-col w-full lg:w-1/2 px-2 mb-2 md:mb-0">
       <h2 className="mb-2">{props.title}</h2>
       <ul className="flex flex-row space-x-2">
         {props.navItems.map((navItem: NavMenuItem) => (
@@ -123,7 +123,7 @@ export const Header = () => {
   return (
     <header
       className={cn(
-        "flex items-center  justify-between transition-colors duration-300 h-14 w-screen px-2 text-white border-b-4 border-white overflow-hidden",
+        "flex items-center justify-between transition-colors duration-300 h-14 w-screen px-2 text-white overflow-hidden",
         headerBgColor
       )}
     >
@@ -149,7 +149,7 @@ export const Header = () => {
               Trackers
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <div className="p-4 flex justify-center w-full">
+              <div className="p-4 flex flex-col lg:flex-row justify-center w-full">
                 {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED && (
                   <TabGroup
                     title={"SC2Tracker"}
@@ -163,7 +163,7 @@ export const Header = () => {
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          {process.env.NEXT_PUBLIC_ABOUT_PAGE_ENABLED && <NavigationMenuItem>
+          <NavigationMenuItem>
             <NavigationMenuTrigger className="bg-transparent">
               About
             </NavigationMenuTrigger>
@@ -172,7 +172,7 @@ export const Header = () => {
                 <TabGroup title={"About"} navItems={aboutNavItems} />
               </div>
             </NavigationMenuContent>
-          </NavigationMenuItem>}
+          </NavigationMenuItem>
         </NavigationMenuList>
         <NavigationMenuViewport
           className={cn("transition-colors duration-300", headerBgColor)}

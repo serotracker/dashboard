@@ -16,17 +16,18 @@ export const MapArbovirusStudySubmissionPrompt = ({
 }: MapArbovirusStudySubmissionPromptProps) => {
   return (
     <Card className={cn(className, hidden ? "hidden" : undefined)}>
-      <CardHeader className={"p-2 flex flex-row space-y-0"}>
-        <h3 className={"w-full text-center text-lg"}>
+      <CardHeader className={"p-2 pb-0 flex flex-row space-y-0"}>
+        <p className={"w-full text-lg"}>
           Submit a source to us!
-        </h3>
+        </p>
         <button className={"rounded-full hover:bg-gray-100 m-0 absolute right-2 top-2 p-1"} onClick={() => onClose()} aria-label="Close pop-up">
           <X />
         </button>
       </CardHeader>
-      <CardContent className={"p-2 pt-0"}>
+      <CardContent className={"p-2"}>
         <p className="inline"> Are we missing an arbovirus seroprevalence study that we should include? Submit it to us via </p>
-        <Link className="inline text-link underline" target="_blank" href="https://forms.gle/pKNiMiMYr6hiKnXx8">this form</Link>
+        <Link className="inline text-link underline text-end" target="_blank" rel="noopener noreferrer" href="https://forms.gle/pKNiMiMYr6hiKnXx8">this form</Link>
+        
       </CardContent>
     </Card>
   );

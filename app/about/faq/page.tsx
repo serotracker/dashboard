@@ -1,4 +1,4 @@
-"use client";
+import React from "react";
 import {
   Accordion,
   AccordionContent,
@@ -16,10 +16,14 @@ export default function FAQPage() {
   }));
 
   return (
-    <div className="mx-4">
-      <h1 className="text-3xl mt-5 mb-3.5"> Frequently Asked Questions </h1>
+    <>
+      <h2 className="mb-4 border-b border-black"> Frequently Asked Questions </h2>
+      <h2 className="mt-8 mb-2"> SeroTracker </h2>
       <Accordion type="single" collapsible={true}>
-        {options.map((option) => (
+        {options.filter((option) => [
+          FAQPageOptionId.HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA,
+          FAQPageOptionId.HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED
+        ].includes(option.id)).map((option) => (
           <AccordionItem key={option.id} value={option.id} >
             <AccordionTrigger>
               {option.label}
@@ -30,6 +34,25 @@ export default function FAQPage() {
           </AccordionItem>
         ))}
       </Accordion>
-    </div>
+      <h2 className="mt-8 mb-2"> ArboTracker </h2>
+      <Accordion type="single" collapsible={true}>
+        {options.filter((option) => [
+          FAQPageOptionId.WHERE_DOES_ARBOTRACKER_DATA_COME_FROM,
+          FAQPageOptionId.HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES,
+          FAQPageOptionId.HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED,
+          FAQPageOptionId.HOW_DOES_ARBOTRACKER_DATA_SHOW_UP_ON_THE_MAP,
+          FAQPageOptionId.CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS
+        ].includes(option.id)).map((option) => (
+          <AccordionItem key={option.id} value={option.id} >
+            <AccordionTrigger>
+              {option.label}
+            </AccordionTrigger>
+            <AccordionContent>
+              {option.content}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </>
   );
 }

@@ -9,7 +9,7 @@ interface PopUpContentRowProps {
 
 export const PopUpContentRow = (props: PopUpContentRowProps): React.ReactNode => {
   return (
-    <div className={"flex justify-between mb-2"}>
+    <div className={"flex justify-between items-center mb-2 w-full mr-2"}>
       <div className={"text-md font-semibold"}>{props.title}</div>
       <div className={"w-2/3"}>{props.content}</div>
     </div>
@@ -84,7 +84,7 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
   const antibodiesArray = Array.isArray(record.antibodies) ? record.antibodies : [];
 
   return (
-    <div className="w-[460px] bg-white pt-2">
+    <div className="w-[460px] bg-white/60 backdrop-blur-md pt-2 rounded-lg">
       {/*Header section*/}
       <div className={"py-2 px-4"}>
         <div className="text-lg font-bold">
@@ -99,7 +99,7 @@ export function ArboStudyPopupContent({ record }: ArboStudyPopupContentProps) {
       {/*SeroPrev section*/}
       <div className={`flex justify-between bg-${record.pathogen.toLowerCase()} w-full py-2 px-4`}>
         <div className={"font-semibold"}>
-          {"Seroprevalence"}: <b> {`${(record.seroprevalence * 100).toFixed(1)}% (Arbovirus: ${pathogenFullString(record.pathogen)})`}</b>
+          {"Seroprevalence"}: <b> {`${(record.seroprevalence * 100).toFixed(1)}%${ record.seroprevalenceStudy95CILower && record.seroprevalenceStudy95CIUpper ? ` [95% CI ${(record.seroprevalenceStudy95CILower * 100).toFixed(1)}%-${(record.seroprevalenceStudy95CIUpper * 100).toFixed(1)}%] `: " "}(Arbovirus: ${pathogenFullString(record.pathogen)})`}</b>
         </div>
       </div>
       {/*Content section*/}
