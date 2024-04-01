@@ -19,7 +19,7 @@ export const useDataTableStyles = <TData, TValue>(input: useDataStylesInput<TDat
     const { columnId } = input;
 
     const baseClassnameForHeader = "border-b bg-white whitespace-nowrap";
-    const classnameForLeftColumnFixation = "sticky left-0 border-r";
+    const classnameForLeftColumnFixation = "lg:sticky lg:left-0 lg:border-r";
 
     const columnDefinition = columns.find((column) => column.accessorKey === columnId);
 
@@ -36,7 +36,7 @@ export const useDataTableStyles = <TData, TValue>(input: useDataStylesInput<TDat
     const { columnId } = input;
 
     const baseClassnameForHeader = "border-b bg-white group-hover:bg-zinc-100 whitespace-nowrap";
-    const classnameForLeftColumnFixation = "sticky left-0 border-r";
+    const classnameForLeftColumnFixation = "lg:sticky lg:left-0 lg:border-r";
 
     const columnDefinition = columns.find((column) => column.accessorKey === columnId);
 
