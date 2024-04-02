@@ -94,6 +94,7 @@ export function createDonutChartAndHoverPopup(props: {
   const popup = new mapboxgl.Popup({
     offset: popupOffsets,
     closeOnClick: false,
+    focusAfterOpen: false
   });
 
   const onMouseEnter = (event: any) => {
