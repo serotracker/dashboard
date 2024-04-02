@@ -270,9 +270,8 @@ export function Filters(props: FiltersProps) {
     }, tooltipContent:
       <p>
         This is a single select dropdown. Selecting any one of the options will display the corresponding environmental suitability map. Additionally it will also filter the data to only show estimates for the respective pathogen.
-      </p>
-  },
-].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
+      </p>},
+  ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
 
   const demographicFilters = [
     {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
