@@ -18,7 +18,7 @@ export default function ArbovirusDashboardPage() {
       <div
         className={"overflow-y-scroll snap-y scroll-smooth col-span-10 row-span-2 px-4"}
       >
-        <ArboBanner className="w-full border border-background rounded-md items-center p-2 mt-4 flex justify-between"/>
+        <ArboBanner/>
         <section
           id={ArbovirusPageSectionId.MAP}
           className="w-full h-[95%] scroll-smooth overflow-hidden relative row-span-2 mt-4 rounded-md border border-background"

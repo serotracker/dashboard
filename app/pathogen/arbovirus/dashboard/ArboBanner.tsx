@@ -5,11 +5,8 @@ import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { Button } from "@/components/ui/button";
 import { download, generateCsv, mkConfig } from "export-to-csv";
 
-interface ArboBannerProps {
-    className?: string;
-  }
 
-export const ArboBanner = ({className}: ArboBannerProps) => {
+export const ArboBanner = () => {
     const state = useContext(ArboContext);
     
     const downloadData = () => {
@@ -22,7 +19,7 @@ export const ArboBanner = ({className}: ArboBannerProps) => {
     }
 
     return (
-      <div className={className}>
+      <div className="w-full border border-background rounded-md items-center p-2 mt-4 flex justify-between">
         <p className="text-sm">
             ArboTracker is a dashboard and platform for Arbovirus serosurveys. 
             We conduct an ongoing systematic review to track serosurveys 
