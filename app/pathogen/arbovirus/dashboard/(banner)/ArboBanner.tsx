@@ -29,7 +29,7 @@ export const ArboBanner = ({className}: ArboBannerProps) => {
             (antibody testing-based surveillance efforts) around the world and 
             visualize findings on this dashboard.
         </p>
-        <Button className="w-[30%]" onClick={downloadData}>
+        <Button className="w-[30%] bg-background" onClick={downloadData}>
             Download CSV
         </Button>
       </div>
