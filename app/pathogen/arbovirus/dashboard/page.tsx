@@ -5,7 +5,7 @@ import { VisualizationsSection } from "./(visualizations)/visualizations-section
 import { ArboDataTable } from "./(table)/ArboDataTable";
 import { ArbovirusMap } from "./(map)/ArbovirusMap";
 import { ArbovirusPageSectionId } from "../../../constants";
-import { ArboBanner } from "./(banner)/ArboBanner";
+import { ArboBanner } from "./ArboBanner";
 
 export default function ArbovirusDashboardPage() {
   return (
