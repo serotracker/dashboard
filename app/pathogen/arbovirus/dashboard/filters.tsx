@@ -322,7 +322,7 @@ export function Filters(props: FiltersProps) {
           headerTooltipText="Filter on where the study was conducted."
           allFieldInformation={studyInfoFilters}
           state={state}
-          filters={filterData.arbovirusFilterOptions}
+          filters={{...filterData.arbovirusFilterOptions, esm: ["zika", "dengue2015", "dengue2050"]}}
           data={data}
         />
         <FilterSection
@@ -330,7 +330,7 @@ export function Filters(props: FiltersProps) {
           headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
           allFieldInformation={demographicFilters}
           state={state}
-          filters={{...filterData.arbovirusFilterOptions, esm: ["zika", "dengue2015", "dengue2050"]}}
+          filters={filterData.arbovirusFilterOptions}
           data={data}
         />
         <FilterSection
