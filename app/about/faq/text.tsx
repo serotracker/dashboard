@@ -3,6 +3,7 @@ import Link from "next/link";
 export enum FAQPageOptionId {
   HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA = 'HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA',
   HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED = 'HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED',
+  CAN_I_PARTNER_WITH_SEROTRACKER = 'CAN_I_PARTNER_WITH_SEROTRACKER',
   WHERE_DOES_ARBOTRACKER_DATA_COME_FROM = 'WHERE_DOES_ARBOTRACKER_DATA_COME_FROM',
   HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES = 'HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES',
   HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED = 'HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED',
@@ -18,6 +19,18 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
   [FAQPageOptionId.HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED]: {
     label: 'How often is SeroTracker data updated?',
     content: <p className='inline'> SeroTracker data was last updated in late 2023. Going forward, our team will scan new literature on an ad-hoc basis and add data.</p>
+  },
+  [FAQPageOptionId.CAN_I_PARTNER_WITH_SEROTRACKER]: {
+    label: 'Can I partner with SeroTracker to build my own dashboard or connect features to an existing dashboard?',
+    content: (
+      <>
+        <p className='inline'> Yes, the SeroTracker approach and our streamlined pipeline can be adapted to make research data useful across health-related topics. Please contact Mairéad Whelan at </p>
+        <Link className="inline text-link" href="mailto:mairead.whelan@ucalgary.ca">mairead.whelan@ucalgary.ca</Link>
+        <p className='inline'> and Harriet Ware at </p>
+        <Link className="inline text-link" href="mailto:ware.harriet@gmail.com">ware.harriet@gmail.com</Link>
+        <p className='inline'> to learn more about partnership options.</p>
+      </>
+    )
   },
   [FAQPageOptionId.WHERE_DOES_ARBOTRACKER_DATA_COME_FROM]: {
     label: 'How often is ArboTracker data updated?',
