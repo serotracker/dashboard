@@ -89,6 +89,7 @@ export const SponsorBanner = (props: SponsorBannerProps) => (
       return (
         <Link
           href={sponsorInformation.link}
+          key={sponsor}
           target="__blank"
           rel="noopener noreferrer"
           className="flex my-4 justify-center"
