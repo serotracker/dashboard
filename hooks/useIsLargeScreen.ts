@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo } from 'react';
 // Checks if the screen width is greater than 1024px
 export const useIsLargeScreen = () => {
