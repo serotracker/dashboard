@@ -1,6 +1,7 @@
 import { MapRef, Popup, useMap } from "react-map-gl";
 
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
+import { Browser, detectBrowser } from "@/lib/detect-browser";
 
 interface PopupContentGeneratorInput<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
@@ -88,6 +89,7 @@ export function PathogenMapPopup<
       anchor="top"
       latitude={latitude}
       longitude={longitude}
+      className={detectBrowser() === Browser.CHROME ? "[&>*]:!bg-transparent" : ""}
       onOpen={() => {
         map?.flyTo({
           center: {
