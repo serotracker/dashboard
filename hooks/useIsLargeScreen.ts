@@ -1,8 +1,19 @@
-'use client'
+import { useState, useEffect,  useMemo} from 'react';
 
-import { useMemo } from 'react';
-// Checks if the screen width is greater than 1024px
+// Checks if the screen width is greater than 1024px (Need the useEffect to ensure it only happens on mount - useMemo broke the build)
 export const useIsLargeScreen = () => {
-  const isLargeScreen = useMemo(() => window.innerWidth > 1024, [window.innerWidth])
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsLargeScreen(window.innerWidth > 1024);
+    };
+
+    checkScreenSize(); // Check on initial render
+
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
   return isLargeScreen;
 };
