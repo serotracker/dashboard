@@ -21,7 +21,8 @@ export default function FAQPage() {
       <Accordion type="single" collapsible={true}>
         {options.filter((option) => [
           FAQPageOptionId.HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA,
-          FAQPageOptionId.HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED
+          FAQPageOptionId.HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED,
+          FAQPageOptionId.CAN_I_PARTNER_WITH_SEROTRACKER
         ].includes(option.id)).map((option) => (
           <AccordionItem key={option.id} value={option.id} >
             <AccordionTrigger className="text-left">
