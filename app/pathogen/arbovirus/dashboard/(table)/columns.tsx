@@ -8,6 +8,7 @@ import validator from "validator";
 import Link from "next/link";
 import { TranslateDate } from "@/utils/translate-util/translate-service";
 import { DataTableColumnDef } from "@/components/ui/data-table/data-table";
+import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
 
 export type Estimate = {
   ageGroup: string;
@@ -58,6 +59,7 @@ export const columns: DataTableColumnDef<Estimate, unknown>[] = [
   {
     accessorKey: "estimateId",
     header: get_header("Estimate ID"),
+    
     enableHiding: false,
     cell: ({ row }) => {
       const url: string = row.getValue("url");
