@@ -10,7 +10,7 @@ interface SponsorsProps {
 }
 
 export const Sponsors = (props: SponsorsProps) => (
-  <div className={cn("flex justify-around", props.className)}>
+  <div className={cn("flex justify-around flex-wrap", props.className)}>
     <Link href="https://www.covid19immunitytaskforce.ca/" target="__blank" rel="noopener noreferrer" className="flex my-4 justify-center">
       <Image src={"https://www.covid19immunitytaskforce.ca/wp-content/themes/pena-lite-child/CITF_logo_ENG.svg"} alt={"COVID-19 Immunity Task Force Logo"} className="flex object-contain" width={120} height={36}/>
     </Link>
