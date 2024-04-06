@@ -1,18 +1,17 @@
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { ArboActionType, ArboContext } from "@/contexts/arbo-context/arbo-context";
+import { ArboActionType, ArboContextType } from "@/contexts/arbo-context/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useContext } from "react";
 import { pathogenColorsTailwind } from "./ArbovirusMap";
 import { Button } from "@/components/ui/button";
+import SectionHeader from "@/components/customs/SectionHeader";
 
 interface MapArbovirusFilterProps {
-  records: unknown[];
   className?: string;
+  state: ArboContextType;
+  data: any;
 }
 
-export const MapArbovirusFilter = ({ records, className }: MapArbovirusFilterProps) => {
-  const state = useContext(ArboContext);
-
+export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilterProps) => {
+  const records = data.arbovirusEstimates;
   const pathogenOrder = ["ZIKV", "DENV", "CHIKV", "YF", "WNV", "MAYV"];
 
   const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
@@ -46,11 +45,9 @@ export const MapArbovirusFilter = ({ records, className }: MapArbovirusFilterPro
   };
 
   return (
-    <Card className={className}>
-      <CardHeader className={"py-3"}>
-        <p>Arboviruses</p>
-      </CardHeader>
-      <CardContent className={"flex justify-center flex-col pb-3"}>
+    <div className={className}>
+      <SectionHeader header_text="Arboviruses" tooltip_text="Filter on arbovirus strain."/>
+      <div className={"flex justify-center flex-col pb-3"}>
         {pathogenOrder.map((pathogenAbbreviation: string) => {
           // Map abbreviations to full names
           const pathogenFullName =
@@ -100,8 +97,8 @@ export const MapArbovirusFilter = ({ records, className }: MapArbovirusFilterPro
             </div>
           );
         })}
-        <Button className="mt-2" variant={'ghost'} onClick={clearAllHandler}>Clear all</Button>
-      </CardContent>
-    </Card>
+        <Button className="mt-2" variant={'ghost'} onClick={clearAllHandler}>Clear all viruses</Button>
+      </div>
+    </div>
   );
 };

@@ -82,7 +82,7 @@ const sponsorToInformationMap: Record<Sponsor, SponsorInformation> = {
 };
 
 export const SponsorBanner = (props: SponsorBannerProps) => (
-  <div className={cn("flex justify-around", props.className)}>
+  <div className={cn("flex justify-around flex-wrap", props.className)}>
     {props.sponsors.map((sponsor) => {
       const sponsorInformation = sponsorToInformationMap[sponsor];
 

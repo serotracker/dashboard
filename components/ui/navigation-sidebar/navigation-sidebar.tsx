@@ -60,7 +60,7 @@ export const NavigationSidebar = <TSidebarValue extends string>(
 
   return (
     <NavigationMenuRoot orientation="vertical">
-      <NavigationMenuList>
+      <NavigationMenuList className="flex lg:flex-col">
         {props.options.map((option) => (
           <NavigationMenuItem key={option.value} className="m-4">
             <NavigationMenuTrigger
