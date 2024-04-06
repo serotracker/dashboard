@@ -34,6 +34,7 @@ import { parseISO } from "date-fns";
 import { useArboFilters } from "@/hooks/useArboFilters";
 import { unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { Button } from "@/components/ui/button";
+import { MapArbovirusFilter } from "./(map)/MapArbovirusFilter";
 
 interface FieldInformation {
   field: FilterableField;
@@ -244,25 +245,13 @@ export function Filters(props: FiltersProps) {
   }
 
   const state = useContext(ArboContext);
-  const demographicFilters = [
-    {field: FilterableField.esm, label: "Environmental Suitability Map", valueToLabelMap: {
-        "zika": "Zika",
-        "dengue2015": "Dengue 2015",
-        "dengue2050": "Dengue 2050 (Projected)",
-    }, tooltipContent:
-      <p>
-        This is a single select dropdown. Selecting any one of the options will display the corresponding environmental suitability map. Additionally it will also filter the data to only show estimates for the respective pathogen.
-      </p>
-  },
-    {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
-    {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}},
-    {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
-    {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}},
+
+  const dateFilters = [
+    {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
+    {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
-  const studyInformationFilters = [
-    {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
-    {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
-    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
+
+  const studyInfoFilters = [
     {field: FilterableField.whoRegion, label: "WHO Region", valueToLabelMap: {}, tooltipContent:
       <div>
         <p> AFR: African Region </p>
@@ -271,13 +260,30 @@ export function Filters(props: FiltersProps) {
         <p> EUR: European Region </p>
         <p> SEAR: South-East Asia Region </p>
         <p> WPR: Western Pacific Region </p>
-      </div>
-    },
+      </div>},
+    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
+    {field: FilterableField.esm, label: "Environmental Suitability Map", valueToLabelMap: {
+      "zika": "Zika",
+      "dengue2015": "Dengue 2015",
+      "dengue2050": "Dengue 2050 (Projected)",
+    }, tooltipContent:
+      <p>
+        This is a single select dropdown. Selecting any one of the options will display the corresponding environmental suitability map. Additionally it will also filter the data to only show estimates for the respective pathogen.
+      </p>},
+  ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
+
+  const demographicFilters = [
+    {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
+    {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}},
+    {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
+    {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}},
+  ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
+
+  const testInformationFilters = [
+    {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
+    {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
     {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
-    {field: FilterableField.pathogen, label: "Arbovirus", valueToLabelMap: {}},
-    {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
-    {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}},
     {field: FilterableField.serotype, label: "Serotype (DENV only)", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
   // Fetch arbovirus data using the useArboData hook
@@ -298,18 +304,39 @@ export function Filters(props: FiltersProps) {
   if (filterData) {
     return (
       <div className={props.className}>
+        <MapArbovirusFilter 
+          data={data} 
+          state={state} 
+          className={"p-0"} 
+        />
         <FilterSection
-          headerText="Demographic"
-          headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
-          allFieldInformation={demographicFilters}
+          headerText="Date"
+          headerTooltipText="Filter on sample start and end date."
+          allFieldInformation={dateFilters}
+          state={state}
+          filters={filterData.arbovirusFilterOptions}
+          data={data}
+        />
+        <FilterSection
+          headerText="Study Location"
+          headerTooltipText="Filter on where the study was conducted."
+          allFieldInformation={studyInfoFilters}
           state={state}
           filters={{...filterData.arbovirusFilterOptions, esm: ["zika", "dengue2015", "dengue2050"]}}
           data={data}
         />
         <FilterSection
-          headerText="Study Information"
-          headerTooltipText="Filter on different types of study based metadata"
-          allFieldInformation={studyInformationFilters}
+          headerText="Demographic"
+          headerTooltipText="Filter on demographic variables, including population group, sex, and age group."
+          allFieldInformation={demographicFilters}
+          state={state}
+          filters={filterData.arbovirusFilterOptions}
+          data={data}
+        />
+        <FilterSection
+          headerText="Test Information"
+          headerTooltipText="Filter on information related to what the study measured."
+          allFieldInformation={testInformationFilters}
           state={state}
           filters={filterData.arbovirusFilterOptions}
           data={data}

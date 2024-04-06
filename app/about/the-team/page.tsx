@@ -17,7 +17,7 @@ interface TeamMemberInfoCardProps {
 
 const TeamMemberInfoCard = (props: TeamMemberInfoCardProps) => {
   return (
-    <div> 
+    <div className="mb-4 lg:mb-0"> 
       <p className="font-semibold"> {`${props.teamMember.firstName} ${props.teamMember.lastName}`} </p>
       {props.teamMember.affiliations.map((affiliation) => 
         <p key={`${props.teamMember.firstName}-${props.teamMember.lastName}-${affiliation.label}`}> {affiliation.label} </p>
@@ -49,9 +49,9 @@ interface TeamInfoCardProps {
 
 const TeamCard = (props: TeamInfoCardProps) => {
   return (
-    <div className="mb-4 py-2">
+    <div className="mb-0 lg:mb-4 py-2">
       <h3 className="my-4 border-b border-background"> {props.teamInfo.label} </h3>
-      <div className='grid grid-cols-4 gap-x-2 gap-y-6'>
+      <div className='flex-col flex lg:grid lg:grid-cols-4 lg:gap-x-2 lg:gap-y-6'>
         {props.teamInfo.teamMembers.map((teamMember) =>
           <TeamMemberInfoCard key={`${teamMember.firstName}-${teamMember.lastName}`} teamMember={teamMember} />
         )}

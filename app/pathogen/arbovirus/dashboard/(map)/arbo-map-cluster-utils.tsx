@@ -96,6 +96,7 @@ export function createDonutChartAndHoverPopup(props: {
     offset: popupOffsets,
     className: detectBrowser() === Browser.CHROME ? "[&>*]:!bg-transparent" : "",
     closeOnClick: false,
+    focusAfterOpen: false
   });
 
   const onMouseEnter = (event: any) => {
