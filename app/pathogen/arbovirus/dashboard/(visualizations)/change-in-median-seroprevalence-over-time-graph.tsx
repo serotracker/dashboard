@@ -13,6 +13,7 @@ import clsx from "clsx";
 import { SlantedTick, arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { pathogenColors } from "../(map)/ArbovirusMap";
+import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
 
 type GroupableIntoTimeBuckets = { groupingTimeInterval: TimeInterval };
 
@@ -162,6 +163,8 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
     )
   );
 
+ const isLargeScreen = useIsLargeScreen();
+
   return (
     <div className="h-full flex flex-col">
       <div className="h-full flex flex-row flex-wrap">
@@ -176,13 +179,12 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
 
           const numberOfSubgraphsDisplayed = Object.keys(dataGroupedByArbovirus).length;
 
-          const width = numberOfSubgraphsDisplayed < 3 ? "w-full" : "w-1/2";
+          const width = numberOfSubgraphsDisplayed < 3 ? "w-full" : "w-1/2 lg:w-1/3";
           const height =
             numberOfSubgraphsDisplayed === 1
               ? "h-full"
-              : numberOfSubgraphsDisplayed < 5
-              ? "h-1/2"
-              : "h-1/3";
+              : "h-1/3 lg:h-1/2"
+            
 
           return (
             <div
@@ -211,6 +213,7 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
                     dataKey="intervalAsString"
                     interval={0}
                     tick={(props) => SlantedTick({...props, tickSlant: 35 })}
+                    hide={!isLargeScreen}
                   />
                   <YAxis
                     domain={[0, 100]}

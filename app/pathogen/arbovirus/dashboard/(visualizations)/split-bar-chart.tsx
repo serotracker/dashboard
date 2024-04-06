@@ -12,6 +12,7 @@ import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
 import { SlantedTick } from "./recharts";
 import clsx from "clsx";
 import { typedObjectKeys } from "@/lib/utils";
+import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
 
 interface SplitBarChartProps<
   TData,
@@ -71,16 +72,20 @@ export const SplitBarChart = <
     };
   }
 
+  const isLargeScreen = useIsLargeScreen();
+
   return (
     <div className="h-full flex flex-row flex-wrap">
       {rechartsData.map((dataGroupedBySecondaryKey, index) => {
-        const width = rechartsData.length < 3 ? "w-full" : "w-1/2";
+        const width = rechartsData.length < 3 ? "w-full" : "w-1/2 lg:w-1/3";
         const height =
           rechartsData.length === 1
             ? "h-full"
             : rechartsData.length < 5
-            ? "h-1/2"
-            : "h-1/3";
+            ? "h-full"
+            : "h-1/3 lg:h-1/2"
+
+
 
         const { primaryKey: _, ...innerChartDataWithoutPrimaryKey } =
           dataGroupedBySecondaryKey;
@@ -123,7 +128,7 @@ export const SplitBarChart = <
                 data={dataForInnerGraph}
               >
                 <CartesianGrid />
-                <XAxis {...xAxisProps} />
+                <XAxis {...xAxisProps} hide={!isLargeScreen}/>
                 <YAxis
                   domain={[0, 100]}
                   hide={index % 2 != 0}

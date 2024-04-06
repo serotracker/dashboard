@@ -47,7 +47,7 @@ export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilte
   return (
     <div className={className}>
       <SectionHeader header_text="Arboviruses" tooltip_text="Filter on arbovirus strain."/>
-      <div className={"flex justify-center flex-col pb-3"}>
+      <div className={"flex justify-between lg:justify-center flex-wrap lg:flex-col pb-3"}>
         {pathogenOrder.map((pathogenAbbreviation: string) => {
           // Map abbreviations to full names
           const pathogenFullName =
@@ -68,7 +68,7 @@ export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilte
           return (
             <div
               key={pathogenAbbreviation}
-              className="items-top flex space-x-2 my-1"
+              className="items-top flex space-x-2 my-1 mb-2"
             >
               <Checkbox
                 id={`checkbox-${pathogenAbbreviation}`}
@@ -97,7 +97,7 @@ export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilte
             </div>
           );
         })}
-        <Button className="mt-2" variant={'ghost'} onClick={clearAllHandler}>Clear all viruses</Button>
+        <Button className="mt-2 w-full" variant={'ghost'} onClick={clearAllHandler}>Clear all viruses</Button>
       </div>
     </div>
   );

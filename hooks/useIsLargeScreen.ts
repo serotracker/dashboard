@@ -1,19 +1,6 @@
-import { useState, useEffect } from 'react';
-
+import { useMemo } from 'react';
 // Checks if the screen width is greater than 1024px
 export const useIsLargeScreen = () => {
-  const [isLargeScreen, setIsLargeScreen] = useState(false);
-
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsLargeScreen(window.innerWidth > 1024);
-    };
-
-    checkScreenSize(); // Check on initial render
-
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
-
+  const isLargeScreen = useMemo(() => window.innerWidth > 1024, [window.innerWidth])
   return isLargeScreen;
 };
