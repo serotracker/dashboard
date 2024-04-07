@@ -1,5 +1,6 @@
 import { pathogenColors } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
 import { MarkerCollection } from "@/components/ui/pathogen-map/pathogen-map";
+import { Browser, detectBrowser } from "@/lib/detect-browser";
 import mapboxgl from "mapbox-gl";
 import React from "react";
 import { Marker, MarkerEvent, useMap } from "react-map-gl";
@@ -93,7 +94,9 @@ export function createDonutChartAndHoverPopup(props: {
 
   const popup = new mapboxgl.Popup({
     offset: popupOffsets,
+    className: detectBrowser() === Browser.CHROME ? "[&>*]:!bg-transparent" : "",
     closeOnClick: false,
+    focusAfterOpen: false
   });
 
   const onMouseEnter = (event: any) => {

@@ -34,8 +34,8 @@ export default async function AboutPageBaseLayout (props: AboutPageBaseLayoutPro
   return (
     <AboutPageProvider>
       <Hydrate state={dehydratedState}>
-        <div className="grid col-span-12 grid-cols-12 grid-rows-2 grid-flow-col w-full h-full">
-          <div className="col-span-2 h-full row-span-2">
+        <div className="flex flex-col lg:grid lg:col-span-12 lg:grid-cols-12 lg:grid-rows-2 lg:grid-flow-col w-full h-full">
+          <div className="lg:col-span-2 lg:h-full lg:row-span-2 border-b border-background lg:border-b-0">
             <NavigationSidebar
               options={[
                 {
@@ -55,9 +55,8 @@ export default async function AboutPageBaseLayout (props: AboutPageBaseLayoutPro
                 },
               ]}
             />
-            ;
           </div>
-          <div className="col-span-8 h-full row-span-2 overflow-y-scroll p-12">
+          <div className="lg:col-span-8 h-full lg:row-span-2 overflow-y-scroll p-12">
               {props.children}
           </div>
         </div>

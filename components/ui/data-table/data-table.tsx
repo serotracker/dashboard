@@ -119,14 +119,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
         <h3>
           Explore arbovirus seroprevalence estimates in our database
         </h3>
-        <div className="flex">
-          <Button
-            variant="outline"
-            className="mx-2 whitespace-nowrap"
-            onClick={getAllVisibleData}
-          >
-            Download CSV
-          </Button>
+        <div className="flex flex-col lg:flex-row">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="mx-2 whitespace-nowrap">

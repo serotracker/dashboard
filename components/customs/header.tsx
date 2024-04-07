@@ -49,7 +49,7 @@ const arbotrackerNavitems: NavMenuItem[] = [
   {
     title: "Data",
     href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.TABLE}`,
-    description: "View or download our entire arbovirus dataset",
+    description: "View our entire arbovirus dataset",
   },
   {
     title: "Visualizations",
@@ -142,7 +142,7 @@ export const Header = () => {
           </h2>
         </Link>
       </div>
-      <NavigationMenu>
+      <NavigationMenu className="z-50">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger className="bg-transparent">

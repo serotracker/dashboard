@@ -17,15 +17,15 @@ export default function FAQPage() {
 
   return (
     <>
-      <h2 className="mb-4 border-b border-black"> Frequently Asked Questions </h2>
-      <h2 className="mt-8 mb-2"> SeroTracker </h2>
+      <h2 className="mb-4"> SeroTracker </h2>
       <Accordion type="single" collapsible={true}>
         {options.filter((option) => [
           FAQPageOptionId.HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA,
-          FAQPageOptionId.HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED
+          FAQPageOptionId.HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED,
+          FAQPageOptionId.CAN_I_PARTNER_WITH_SEROTRACKER
         ].includes(option.id)).map((option) => (
           <AccordionItem key={option.id} value={option.id} >
-            <AccordionTrigger>
+            <AccordionTrigger className="text-left">
               {option.label}
             </AccordionTrigger>
             <AccordionContent>
@@ -44,7 +44,7 @@ export default function FAQPage() {
           FAQPageOptionId.CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS
         ].includes(option.id)).map((option) => (
           <AccordionItem key={option.id} value={option.id} >
-            <AccordionTrigger>
+            <AccordionTrigger className="text-left">
               {option.label}
             </AccordionTrigger>
             <AccordionContent>

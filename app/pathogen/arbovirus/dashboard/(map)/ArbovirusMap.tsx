@@ -13,10 +13,10 @@ import { useArboData } from "@/hooks/useArboData";
 import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { ArboStudyPopupContent } from "./ArboStudyPopupContent";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
-import { MapArbovirusFilter } from "./MapArbovirusFilter";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
 import { ArboCountryPopupContent } from "./ArboCountryPopUpContent";
 import { computeClusterMarkers } from "./arbo-map-cluster-utils";
+import { MapShadingLegend } from "./MapShadingLegend";
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
   ZIKV: "data-[state=checked]:bg-zikv",
@@ -92,7 +92,6 @@ export function ArbovirusMap() {
           
             return <ArboStudyPopupContent record={input.data} />
           }}
-        
           dataPoints={state.filteredData}
           clusterProperties={{
             ZIKV: ["+", ["case", ["==", ["get", "pathogen"], "ZIKV"], 1, 0]],
@@ -110,7 +109,7 @@ export function ArbovirusMap() {
         onClose={() => setStudySubmissionPromptVisibility(false)}
         className={"absolute bottom-1 left-1 mx-auto w-1/2 text-center bg-white/60 backdrop-blur-md"}
       />
-      <MapArbovirusFilter records={data.arbovirusEstimates} className={"absolute bottom-1 right-1 bg-white/60 backdrop-blur-md"} />
+      <MapShadingLegend className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"} />
       <div className={"absolute top-1 left-1 p-2 "}>
         <Card className={"mb-1 bg-white/60 backdrop-blur-md"}>
           <CardContent className={"flex w-fit p-2"}>
