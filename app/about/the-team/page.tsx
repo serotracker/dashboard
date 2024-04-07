@@ -29,7 +29,7 @@ const TeamMemberInfoCard = (props: TeamMemberInfoCardProps) => {
         <p className="font-semibold"> {`${props.teamMember.firstName} ${props.teamMember.lastName}`} </p>
         <div>
           {props.teamMember.additionalSymbols.map((symbolName) => (
-            <div className="rounded-full bg-arbovirus">
+            <div className="rounded-full bg-arbovirus" key={`${props.teamMember.firstName}-${props.teamMember.lastName}-${symbolName}`}>
               <FontAwesomeIcon
                 icon={teamMemberSymbolToFontAwesomeIconMap[symbolName]}
                 width={24}
