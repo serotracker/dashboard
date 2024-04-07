@@ -72,7 +72,7 @@ const aboutNavItems: NavMenuItem[] = [
   },
   {
     title: "SeroTracker Team",
-    href: "/about/serotracker-team",
+    href: "/about/the-team",
     description:
       "A list of our team members, alumni, stakeholders and other partners",
   },
