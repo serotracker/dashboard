@@ -89,7 +89,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     "WNV",
     "MAYV",
   ];
-  const [_selectedArbovirus, setSelectedArbovirus] = useState<arbovirusesSF>(pathogenOrder[0]);
+  const [userArbovirusSelection, setUserArbovirusSelection] = useState<arbovirusesSF>(pathogenOrder[0]);
 
   const datasetGroupedByArbovirus = useMemo(
     () =>
@@ -148,12 +148,12 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
       return "N/A"
     }
 
-    if(typedObjectKeys(tableDatasets).includes(_selectedArbovirus)) {
-      return _selectedArbovirus;
+    if(typedObjectKeys(tableDatasets).includes(userArbovirusSelection)) {
+      return userArbovirusSelection;
     }
 
     return typedObjectKeys(tableDatasets)[0]
-  }, [_selectedArbovirus, tableDatasets])
+  }, [userArbovirusSelection, tableDatasets])
 
   const datasetToDisplay = useMemo(
     () => selectedArbovirus !== 'N/A' ? tableDatasets[selectedArbovirus] : {} as Record<WHORegion, Record<AgeGroup, any[]>>,
@@ -229,7 +229,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
               .map((pathogen) => 
                 <DropdownMenuItem
                   key={`median-seroprevalence-by-who-region-and-age-group-table-dropdown-item-${pathogen}`}
-                  onSelect={() => setSelectedArbovirus(pathogen)}
+                  onSelect={() => setUserArbovirusSelection(pathogen)}
                   disabled={selectedArbovirus === pathogen}
                   asChild
                 >
