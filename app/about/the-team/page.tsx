@@ -1,11 +1,14 @@
 "use client";
 
 import React from "react";
-import { GroupedTeamMembersQuery } from "@/gql/graphql";
+import { GroupedTeamMembersQuery, TeamMemberSymbol } from "@/gql/graphql";
 import { useGroupedTeamMemberData } from "@/hooks/useGroupedTeamMemberData";
 import { faLinkedin, faTwitter } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMosquito,
+} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
 type TeamMember = GroupedTeamMembersQuery['groupedTeamMembers'][number]["teamMembers"][number]
@@ -15,10 +18,28 @@ interface TeamMemberInfoCardProps {
   teamMember: TeamMember;
 }
 
+const teamMemberSymbolToFontAwesomeIconMap: {[key in TeamMemberSymbol]: IconDefinition} = {
+  [TeamMemberSymbol.ArbotrackerSymbol]: faMosquito
+}
+
 const TeamMemberInfoCard = (props: TeamMemberInfoCardProps) => {
   return (
-    <div className="mb-4 lg:mb-0"> 
-      <p className="font-semibold"> {`${props.teamMember.firstName} ${props.teamMember.lastName}`} </p>
+    <div className="mb-4 lg:mb-0 mr-4"> 
+      <div className="flex justify-between">
+        <p className="font-semibold"> {`${props.teamMember.firstName} ${props.teamMember.lastName}`} </p>
+        <div>
+          {props.teamMember.additionalSymbols.map((symbolName) => (
+            <div className="rounded-full bg-arbovirus">
+              <FontAwesomeIcon
+                icon={teamMemberSymbolToFontAwesomeIconMap[symbolName]}
+                width={24}
+                height={24}
+                className={"text-white"}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
       {props.teamMember.affiliations.map((affiliation) => 
         <p key={`${props.teamMember.firstName}-${props.teamMember.lastName}-${affiliation.label}`}> {affiliation.label} </p>
       )}
@@ -65,7 +86,7 @@ export default function TeamPage() {
 
   return (
     <>
-      <h2 className="mb-4"> Our Team </h2>
+      <h2 className="mb-4"> SeroTracker Team </h2>
       {(data?.groupedTeamMembers ?? []).map((team) => 
         <TeamCard teamInfo={team} key={team.label} />
       )}
