@@ -1,4 +1,5 @@
 import { useContext, useMemo, useState, useCallback } from "react";
+import uniq from "lodash/uniq";
 
 import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import {
@@ -7,6 +8,7 @@ import {
   typedObjectEntries,
   typedObjectFromEntries,
   typedObjectKeys,
+  cn
 } from "@/lib/utils";
 import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
 import {
@@ -87,7 +89,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     "WNV",
     "MAYV",
   ];
-  const [selectedArbovirus, setSelectedArbovirus] = useState<arbovirusesSF>(pathogenOrder[0]);
+  const [_selectedArbovirus, setSelectedArbovirus] = useState<arbovirusesSF>(pathogenOrder[0]);
 
   const datasetGroupedByArbovirus = useMemo(
     () =>
@@ -141,19 +143,56 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     [datasetGroupedByArbovirusAndWhoRegion]
   );
 
+  const selectedArbovirus = useMemo(() => {
+    if(typedObjectKeys(tableDatasets).length === 0) {
+      return "N/A"
+    }
+
+    if(typedObjectKeys(tableDatasets).includes(_selectedArbovirus)) {
+      return _selectedArbovirus;
+    }
+
+    return typedObjectKeys(tableDatasets)[0]
+  }, [_selectedArbovirus, tableDatasets])
+
   const datasetToDisplay = useMemo(
-    () => tableDatasets[selectedArbovirus],
+    () => selectedArbovirus !== 'N/A' ? tableDatasets[selectedArbovirus] : {} as Record<WHORegion, Record<AgeGroup, any[]>>,
     [selectedArbovirus, tableDatasets]
   );
 
+  const ageGroupToSortOrderMap: {[key in AgeGroup]: number } = {
+    [AgeGroup["Children and Youth (0-17 years)"]]: 1,
+    [AgeGroup["Adults (18-64 years)"]]: 2,
+    [AgeGroup["Seniors (65+ years)"]]: 3,
+    [AgeGroup["Multiple groups"]]: 4
+  }
+
+  const arbovirusToSortOrderMap: Record<arbovirusesSF, number> = {
+    "ZIKV": 1,
+    "DENV": 2,
+    "CHIKV": 3,
+    "YF": 4,
+    "WNV": 5,
+    "MAYV": 6
+  }
+
+  const allIncludedAgeGroupsInDatasetToDisplay = useMemo(() => 
+    uniq(typedObjectEntries(datasetToDisplay ?? {}).flatMap(([whoRegion, dataForWhoRegion]) => typedObjectKeys(dataForWhoRegion)))
+  , [datasetToDisplay])
+
   const downloadCsv = useCallback(() => {
-    const dataForCsv = typedObjectEntries(tableDatasets).flatMap(
+    const allIncludedAgeGroups = uniq(typedObjectEntries(tableDatasets ?? {}).flatMap(([arbovirus, dataForArbovirus]) =>
+      typedObjectEntries(dataForArbovirus).flatMap(([whoRegion, dataForWhoRegion]) => typedObjectKeys(dataForWhoRegion))
+    ))
+
+    const dataForCsv = typedObjectEntries(tableDatasets ?? {}).flatMap(
       ([arbovirus, dataForArbovirus]) =>
         typedObjectEntries(dataForArbovirus).flatMap(
           ([whoRegion, dataForWhoRegion]) => ({
             Arbovirus: arbovirus,
             "WHO Region": whoRegion,
-            ...Object.values(AgeGroup)
+            ...allIncludedAgeGroups
+              .sort((a,b) => ageGroupToSortOrderMap[a] - ageGroupToSortOrderMap[b])
               .map((ageGroup) => {
                 const columnName = `Median Seroprevalence (${ageGroup})`;
                 const { seroprevalencePercentageString: columnValue } =
@@ -181,29 +220,32 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="mx-2 whitespace-nowrap text-white ignore-for-visualization-download">
-              Currently viewing: {convertArboSFtoArbo(selectedArbovirus)}
+              Currently viewing: {selectedArbovirus !== 'N/A' ? convertArboSFtoArbo(selectedArbovirus) : 'N/A'}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="p-2">
-            {pathogenOrder.map((pathogen) => 
-              <DropdownMenuItem
-                key={`median-seroprevalence-by-who-region-and-age-group-table-dropdown-item-${pathogen}`}
-                onSelect={() => setSelectedArbovirus(pathogen)}
-                disabled={selectedArbovirus === pathogen}
-                asChild
-              >
-                <button className="w-full hover:cursor-pointer">
-                  {convertArboSFtoArbo(pathogen)}
-                </button>
-              </DropdownMenuItem>
-            )}
+            {typedObjectKeys(tableDatasets ?? {})
+              .sort((a,b) => arbovirusToSortOrderMap[a] - arbovirusToSortOrderMap[b])
+              .map((pathogen) => 
+                <DropdownMenuItem
+                  key={`median-seroprevalence-by-who-region-and-age-group-table-dropdown-item-${pathogen}`}
+                  onSelect={() => setSelectedArbovirus(pathogen)}
+                  disabled={selectedArbovirus === pathogen}
+                  asChild
+                >
+                  <button className="w-full hover:cursor-pointer">
+                    {convertArboSFtoArbo(pathogen)}
+                  </button>
+                </DropdownMenuItem>
+              )
+            }
           </DropdownMenuContent>
         </DropdownMenu>
         <div className="space-x-2 justify-between">
           <Button
             variant="outline"
             size="sm"
-            className="text-white"
+            className={cn("text-white", typedObjectKeys(tableDatasets ?? {}).length === 0 ? 'hidden' : '')}
             onClick={() => downloadCsv()}
           >
             Download CSV
@@ -214,7 +256,9 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
         <TableHeader>
           <TableRow>
             <TableHead className="border-l border-b border-t bg-white whitespace-nowrap" />
-            {Object.values(AgeGroup).map((ageGroup) => (
+            {(allIncludedAgeGroupsInDatasetToDisplay ?? [])
+              .sort((a,b) => ageGroupToSortOrderMap[a] - ageGroupToSortOrderMap[b])
+              .map((ageGroup) => (
               <TableHead
                 className="border bg-white whitespace-nowrap"
                 key={`median-seroprevalence-by-who-region-and-age-group-table-${ageGroup}-header`}
@@ -225,36 +269,41 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Object.values(WHORegion).map((whoRegion) => (
+          {typedObjectKeys(datasetToDisplay ?? {})
+            .sort()
+            .map((whoRegion) => (
             <TableRow
               key={`median-seroprevalence-by-who-region-and-age-group-table-${whoRegion}-row`}
             >
               <TableCell className="border-l border-b bg-white group-hover:bg-zinc-100 whitespace-nowrap">
                 {whoRegion}
               </TableCell>
-              {Object.values(AgeGroup).map((ageGroup) => {
-                const dataForCell =
-                  !!datasetToDisplay && !!datasetToDisplay[whoRegion]
-                    ? datasetToDisplay[whoRegion][ageGroup]
-                    : [];
+              {(allIncludedAgeGroupsInDatasetToDisplay ?? [])
+                .sort((a,b) => ageGroupToSortOrderMap[a] - ageGroupToSortOrderMap[b])
+                .map((ageGroup) => {
+                  const dataForCell =
+                    !!datasetToDisplay && !!datasetToDisplay[whoRegion]
+                      ? datasetToDisplay[whoRegion][ageGroup]
+                      : [];
 
-                const {
-                  seroprevalencePercentageString,
-                  backgroundColourHexCode,
-                } = getMedianSeroprevalenceInformationFromData({
-                  data: dataForCell,
-                });
+                  const {
+                    seroprevalencePercentageString,
+                    backgroundColourHexCode,
+                  } = getMedianSeroprevalenceInformationFromData({
+                    data: dataForCell,
+                  });
 
-                return (
-                  <TableCell
-                    className="border-l border-r border-b bg-white group-hover:bg-zinc-100 whitespace-nowrap"
-                    key={`median-seroprevalence-by-who-region-and-age-group-table-${whoRegion}-${ageGroup}-cell`}
-                    style={{ backgroundColor: backgroundColourHexCode }}
-                  >
-                    {seroprevalencePercentageString}
-                  </TableCell>
-                );
-              })}
+                  return (
+                    <TableCell
+                      className="border-l border-r border-b bg-white group-hover:bg-zinc-100 whitespace-nowrap"
+                      key={`median-seroprevalence-by-who-region-and-age-group-table-${whoRegion}-${ageGroup}-cell`}
+                      style={{ backgroundColor: backgroundColourHexCode }}
+                    >
+                      {seroprevalencePercentageString}
+                    </TableCell>
+                  );
+                }
+              )}
             </TableRow>
           ))}
         </TableBody>
