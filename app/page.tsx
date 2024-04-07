@@ -97,7 +97,7 @@ export default async function Home() {
                   Arbovirus seroprevalence studies worldwide, collect and
                   standardize the data we extract from them, provide useful
                   analytics on the data and extract monthly insights relating to
-                  tredns and patterns we find in the data
+                  trends and patterns we find in the data
                 </p>
                 <p className=" w-fit mb-2">
                   We conduct an ongoing systematic review to track serosurveys

@@ -36,6 +36,7 @@ import { unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { Button } from "@/components/ui/button";
 import { MapArbovirusFilter } from "./(map)/MapArbovirusFilter";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface FieldInformation {
   field: FilterableField;
@@ -254,6 +255,8 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
 
+  const isEsmMapSelected = selectedFilters.esm?.length === 1;
+
   const studyInfoFilters = [
     {field: FilterableField.whoRegion, label: "WHO Region", valueToLabelMap: {}, tooltipContent:
       <div>
@@ -267,12 +270,13 @@ export function Filters(props: FiltersProps) {
     {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
     {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
     {field: FilterableField.esm, label: "Environmental Suitability Map", valueToLabelMap: {
-      "zika": "Zika",
+      "zika": "Zika 2016",
       "dengue2015": "Dengue 2015",
       "dengue2050": "Dengue 2050 (Projected)",
     }, tooltipContent:
       <p>
-        This is a single select dropdown. Selecting any one of the options will display the corresponding environmental suitability map. Additionally it will also filter the data to only show estimates for the respective pathogen.
+       This is a single-select dropdown representing environmental suitability for relevant vector species per pathogen. 
+       {isEsmMapSelected && (<p>This map is sourced from this <Link rel="noopener noreferrer" target="_blank" href={isEsmMapSelected ? state.selectedFilters.esm.includes('dengue2015') || state.selectedFilters.esm.includes('dengue2050') ? 'https://doi.org/10.1038/s41564-019-0476-8' : 'http://dx.doi.org/10.7554/eLife.15272.001' : ''} className={"underline hover:text-gray-300"}>article</Link></p>)}
       </p>},
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
 
@@ -338,7 +342,7 @@ export function Filters(props: FiltersProps) {
         />
         <FilterSection
           headerText="Test Information"
-          headerTooltipText="Filter on information related to what the study measured."
+          headerTooltipText="Filter according to serological measurement methods."
           allFieldInformation={testInformationFilters}
           state={state}
           filters={filterData.arbovirusFilterOptions}
