@@ -49,7 +49,7 @@ const arbotrackerNavitems: NavMenuItem[] = [
   {
     title: "Data",
     href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.TABLE}`,
-    description: "View or download our entire arbovirus dataset",
+    description: "View our entire arbovirus dataset",
   },
   {
     title: "Visualizations",
