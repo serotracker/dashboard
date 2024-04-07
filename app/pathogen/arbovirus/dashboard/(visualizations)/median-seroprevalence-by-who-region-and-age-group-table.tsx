@@ -218,7 +218,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     <div className="p-2">
       <div className="flex justify-between mb-2 ignore-for-visualization-download">
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger disabled={typedObjectKeys(tableDatasets ?? {}).length < 2} asChild>
             <Button variant="outline" size="sm" className="mx-2 whitespace-nowrap text-white ignore-for-visualization-download">
               Currently viewing: {selectedArbovirus !== 'N/A' ? convertArboSFtoArbo(selectedArbovirus) : 'N/A'}
             </Button>
