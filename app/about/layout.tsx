@@ -49,8 +49,8 @@ export default async function AboutPageBaseLayout (props: AboutPageBaseLayoutPro
                   value: AboutPageSidebarOption.FAQ,
                 },
                 {
-                  label: "The Team",
-                  route: "/about/the-team",
+                  label: "SeroTracker Team",
+                  route: "/about/serotracker-team",
                   value: AboutPageSidebarOption.THE_TEAM,
                 },
               ]}
