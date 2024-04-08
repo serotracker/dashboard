@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { Button } from "@/components/ui/button";
 import { download, generateCsv, mkConfig } from "export-to-csv";
+import Link from "next/link";
 
 
 export const ArboBanner = () => {
@@ -23,7 +24,7 @@ export const ArboBanner = () => {
       <div className="w-full h-fit relative row-span-2 rounded-md mt-4 border border-background p-4">
         <p>
             ArboTracker is a dashboard and platform for Arbovirus serosurveys. 
-            We conduct an ongoing systematic review to track serosurveys 
+            We conduct an <Link href={"/about/about-our-data"} className={"underline text-link"}>ongoing systematic review</Link> to track serosurveys 
             (antibody testing-based surveillance efforts) around the world and 
             visualize findings on this dashboard.
         </p>
