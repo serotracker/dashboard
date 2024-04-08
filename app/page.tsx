@@ -138,7 +138,7 @@ export default async function Home() {
                 />
               ) : (
                 <TrackerButton
-                  titleSuffix="legacy SC2"
+                  titleSuffix="Original SC2"
                   description="SeroTracker description"
                   icon={faVirus}
                   bgColor="bg-sc2virus"
