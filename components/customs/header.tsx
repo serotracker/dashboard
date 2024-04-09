@@ -71,7 +71,7 @@ const aboutNavItems: NavMenuItem[] = [
       "A list of frequently asked questions regarding the data, systematic review and organization",
   },
   {
-    title: "Our Team",
+    title: "SeroTracker Team",
     href: "/about/the-team",
     description:
       "A list of our team members, alumni, stakeholders and other partners",

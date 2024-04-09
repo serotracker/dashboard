@@ -16,6 +16,7 @@ export const groupedTeamMembers = gql`
         affiliations {
           label
         }
+        additionalSymbols
       }
     }
   }
