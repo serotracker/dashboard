@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React from "react";
 import { Filters } from "./filters";
@@ -10,27 +10,24 @@ import { ArboBanner } from "./ArboBanner";
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
 
 export default function ArbovirusDashboardPage() {
-
   const isLargeScreen = useIsLargeScreen();
 
   return (
     <div className="col-span-12 grid gap-0 grid-cols-12 grid-rows-4 lg:grid-rows-2 row-span-2 grid-flow-col w-screen overflow-hidden border-box">
-      <div className="overflow-y-scroll col-span-12 row-span-1 lg:col-span-2 lg:row-span-4 h-full border-b border-background lg:border-b-0">
-        <Filters
-          className="p-4 border-background"
-        />
-      </div>
+      <Filters className="p-4 border-background overflow-y-scroll col-span-12 row-span-1 lg:col-span-2 lg:row-span-2 border-b lg:border-b-0" />
       <div
-        className={"overflow-y-scroll snap-y scroll-smooth row-span-3 col-span-12 lg:col-span-10 lg:row-span-2 px-4"}
+        className={
+          "overflow-y-scroll snap-y scroll-smooth row-span-3 col-span-12 lg:col-span-10 lg:row-span-2 px-4"
+        }
       >
         {!isLargeScreen && (
-          <section
-          className="w-full h-fit relative row-span-2 rounded-md mt-4 border border-background p-4"
-        >
-          We suggest viewing our dashboard on a larger screen or in landscape mode for the best experience. Support for smaller devices is coming soon!
-        </section>
+          <section className="w-full h-fit relative row-span-2 rounded-md mt-4 border border-background p-4">
+            We suggest viewing our dashboard on a larger screen or in landscape
+            mode for the best experience. Support for smaller devices is coming
+            soon!
+          </section>
         )}
-        <ArboBanner/>
+        <ArboBanner />
         <section
           id={ArbovirusPageSectionId.MAP}
           className="w-full h-[95%] scroll-smooth overflow-hidden relative row-span-2 mt-4 rounded-md border border-background"
@@ -51,5 +48,5 @@ export default function ArbovirusDashboardPage() {
         </section>
       </div>
     </div>
-  )
+  );
 }
