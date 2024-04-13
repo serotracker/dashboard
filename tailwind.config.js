@@ -108,13 +108,74 @@ module.exports = {
           to: {
             height: 0
           }
-        }
+        },
+        "toast-hide": {
+          from: {
+            opacity: 1
+          },
+          to: {
+            opacity: 0
+          }
+          // "0%": { opacity: 1 },
+          // "100%": { opacity: 0 },
+        },
+        "toast-slide-in-right": {
+          // "0%": { transform: `translateX(calc(100% + 1rem))` },
+          // "100%": { transform: "translateX(0)" },
+          from: {
+            transform: 'translateX(calc(100% + 1rem))'
+          },
+          to: {
+            transform: "translateX(0)"
+          }
+        },
+        "toast-slide-in-bottom": {
+          // "0%": { transform: `translateY(calc(100% + 1rem))` },
+          // "100%": { transform: "translateY(0)" },
+          from: {
+            transform: 'translateY(calc(100% + 1rem))'
+          },
+          to: {
+            transform: "translateY(0)"
+          }
+        },
+        "toast-swipe-out-x": {
+          // "0%": { transform: "translateX(var(--radix-toast-swipe-end-x))" },
+          // "100%": {
+          //   transform: `translateX(calc(100% + 1rem))`,
+          // },
+          from: {
+            transform: "translateX(25px)"
+          },
+          to: {
+            transform: `translateX(calc(100% + 1rem))`,
+          },
+        },
+        "toast-swipe-out-y": {
+          // "0%": { transform: "translateY(var(--radix-toast-swipe-end-y))" },
+          // "100%": {
+          //   transform: `translateY(calc(100% + 1rem))`,
+          // },
+          from: {
+            transform: "translateY(25px)"
+          },
+          to: {
+            transform: "translateY(calc(100% + 1rem))",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "expand-downwards": "expand-downwards 0.4s forwards",
-        "collapse-upwards": "collapse-upwards 0.4s forwards"
+        "collapse-upwards": "collapse-upwards 0.4s forwards",
+        "toast-hide": "toast-hide 100ms ease-in forwards",
+        "toast-slide-in-right":
+          "toast-slide-in-right 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "toast-slide-in-bottom":
+          "toast-slide-in-bottom 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "toast-swipe-out-x": "toast-swipe-out-x 100ms ease-out forwards",
+        "toast-swipe-out-y": "toast-swipe-out-y 100ms ease-out forwards",
       },
       typography: {
         DEFAULT: {

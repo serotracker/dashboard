@@ -7,6 +7,7 @@ import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
 import { useArboData } from "@/hooks/useArboData";
 import { filterData } from "./filter-update-steps/apply-new-selected-filters";
 import { handleArboFilterUpdate } from "./arbo-filter-update-steps";
+import { ToastProvider } from "../toast-provider";
 
 export interface ArboContextType extends ArboStateType {
   dispatch: React.Dispatch<ArboAction>;
@@ -87,11 +88,13 @@ export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
   });
 
   return (
-    <MapProvider>
-      <QueryClientProvider client={queryClient}>
-        <FilteredDataProvider>{children}</FilteredDataProvider>
-      </QueryClientProvider>
-    </MapProvider>
+    <ToastProvider>
+      <MapProvider>
+        <QueryClientProvider client={queryClient}>
+          <FilteredDataProvider>{children}</FilteredDataProvider>
+        </QueryClientProvider>
+      </MapProvider>
+    </ToastProvider>
   );
 };
 
