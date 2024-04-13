@@ -3,6 +3,8 @@ import React, { useState, useCallback, createContext } from "react";
 import { typedObjectEntries, typedObjectFromEntries } from "@/lib/utils";
 import * as RadixUIToast from "@radix-ui/react-toast";
 import { cn } from "@/lib/utils";
+import { Toast } from "@/components/customs/toast";
+import { Breakpoint, useBreakpoint } from "@/hooks/useBreakpoint";
 
 export enum ToastId {
   DOWNLOAD_CSV_CITATION_TOAST = "DOWNLOAD_CSV_CITATION_TOAST",
@@ -10,16 +12,21 @@ export enum ToastId {
 
 interface ToastInformation {
   openByDefault: boolean;
-  title: string;
-  message: string;
+  title: React.ReactNode;
+  message: React.ReactNode;
 }
 
 const toastInformation: Record<ToastId, ToastInformation> = {
   [ToastId.DOWNLOAD_CSV_CITATION_TOAST]: {
     openByDefault: false,
-    title: "Citation Copied!",
-    message:
-      "Our suggested citation for the CSV file has been copied to your clipboard.",
+    title: <p className="font-bold mb-2"> Citation Copied!</p>,
+    message: (
+      <>
+        <p className="inline">Our suggested citation for the CSV file has been copied to your clipboard (</p>
+        <p className="inline italic">Ware H*, Whelan M*, Ranka H, Roell Y, Aktar S, Kenny S, Pinno E, SeroTracker Research Team, Bobrovitz N**, Arora RK**, Jaenisch T**. ArboTracker: A Dashboard and Data Platform for arbovirus serosurveys (2024); Website, accessible via www.new.SeroTracker.com</p>
+        <p className="inline">).</p>
+      </>
+    )
   },
 };
 
@@ -35,44 +42,13 @@ const initialToastContext = {
 
 export const ToastContext = createContext<ToastContextType>(initialToastContext);
 
-interface ToastProps {
-  open: boolean;
-  setOpen: (input: boolean) => void;
-  title: string;
-  message: string;
-}
-
-export const Toast = (props: ToastProps) => {
-  return (
-    <>
-      <RadixUIToast.Root
-        open={props.open}
-        onOpenChange={props.setOpen}
-        className="data-[state=open]:animate-toast-slide-in-right data-[state=closed]:animate-toast-hide bg-white border-solid border-2 p-4"
-        //className={cn(
-        //  "data-[state=open]:animate-toast-slide-in-right",
-        //  "data-[state=closed]:animate-toast-hide",
-        //  "bg-white border-solid border-2 p-4"
-        //  // "data-[swipe=move]:animate-toast-swipe-out-x",
-        //  // "data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:duration-200 data-[swipe=cancel]:ease-[ease]",
-        //)}
-      >
-        <RadixUIToast.Title> {props.title} </RadixUIToast.Title>
-        <RadixUIToast.Description asChild>
-          <p> {props.message} </p>
-        </RadixUIToast.Description>
-      </RadixUIToast.Root>
-      <RadixUIToast.Viewport className="fixed right-2 bottom-2"/>
-    </>
-  )
-}
-
-
 interface ToastState {
   open: boolean;
 }
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
+  const { getCurrentBreakpoint } = useBreakpoint();
+
   const [allToastStates, setAllToastStates] = React.useState<
     Record<ToastId, ToastState>
   >(
@@ -120,12 +96,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       <RadixUIToast.Provider
-        swipeDirection="right"
-        duration={3000}
+        swipeDirection= {[Breakpoint.XS, Breakpoint.SM, Breakpoint.MD].includes(getCurrentBreakpoint()) ? "down" : "right"}
       >
         {children}
         {typedObjectEntries(allToastStates).map(([toastId, toastState]) => (
           <Toast
+            key={toastId}
             open={toastState.open}
             setOpen={(input: boolean) => {
               input ? openToast({ toastId }) : closeToast({ toastId });

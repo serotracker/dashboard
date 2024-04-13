@@ -116,12 +116,8 @@ module.exports = {
           to: {
             opacity: 0
           }
-          // "0%": { opacity: 1 },
-          // "100%": { opacity: 0 },
         },
         "toast-slide-in-right": {
-          // "0%": { transform: `translateX(calc(100% + 1rem))` },
-          // "100%": { transform: "translateX(0)" },
           from: {
             transform: 'translateX(calc(100% + 1rem))'
           },
@@ -130,8 +126,6 @@ module.exports = {
           }
         },
         "toast-slide-in-bottom": {
-          // "0%": { transform: `translateY(calc(100% + 1rem))` },
-          // "100%": { transform: "translateY(0)" },
           from: {
             transform: 'translateY(calc(100% + 1rem))'
           },
@@ -140,24 +134,16 @@ module.exports = {
           }
         },
         "toast-swipe-out-x": {
-          // "0%": { transform: "translateX(var(--radix-toast-swipe-end-x))" },
-          // "100%": {
-          //   transform: `translateX(calc(100% + 1rem))`,
-          // },
           from: {
-            transform: "translateX(25px)"
+            transform: "translateX(var(--radix-toast-swipe-end-x))"
           },
           to: {
             transform: `translateX(calc(100% + 1rem))`,
           },
         },
         "toast-swipe-out-y": {
-          // "0%": { transform: "translateY(var(--radix-toast-swipe-end-y))" },
-          // "100%": {
-          //   transform: `translateY(calc(100% + 1rem))`,
-          // },
           from: {
-            transform: "translateY(25px)"
+            transform: "translateY(var(--radix-toast-swipe-end-y))"
           },
           to: {
             transform: "translateY(calc(100% + 1rem))",
