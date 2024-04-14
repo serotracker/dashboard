@@ -44,55 +44,48 @@ const CountrySeroprevalenceComparisonScatterPlotTooltip: ContentType<string, str
 export const CountrySeroprevalenceComparisonScatterPlot = () => {
   const state = useContext(ArboContext);
 
-  const stateFilteredDataWithEstimateNumbers = useMemo(
-    () =>
-      state.filteredData
-        .filter(
-          (dataPoint) =>
-            dataPoint.seroprevalenceCalculated95CILower &&
-            dataPoint.seroprevalenceCalculated95CIUpper
-        )
-        .sort(
-          (dataPointA, dataPointB) =>
-            dataPointA.seroprevalence - dataPointB.seroprevalence
-        )
-        .map((dataPoint, index) => ({
-          ...dataPoint,
-          estimateNumber: index + 1,
-        }))
-        .map((dataPoint) => ({
-          ...dataPoint,
-          seroprevalence: parseFloat(
-            (dataPoint.seroprevalence * 100).toFixed(1)
-          ),
-          seroprevalenceCalculated95CILower: parseFloat(
-            (dataPoint.seroprevalenceCalculated95CILower * 100).toFixed(1)
-          ),
-          seroprevalenceCalculated95CIUpper: parseFloat(
-            (dataPoint.seroprevalenceCalculated95CIUpper * 100).toFixed(1)
-          ),
-          seroprevalenceError: [
-            parseFloat(
-              (
-                dataPoint.seroprevalence * 100 -
-                dataPoint.seroprevalenceCalculated95CILower * 100
-              ).toFixed(1)
-            ),
-            parseFloat(
-              (
-                dataPoint.seroprevalenceCalculated95CIUpper * 100 -
-                dataPoint.seroprevalence * 100
-              ).toFixed(1)
-            ),
-          ],
-        })),
-    [state.filteredData]
-  );
+  const dataWithCIs = useMemo(() => state.filteredData.filter((dataPoint) => dataPoint.seroprevalenceCalculated95CILower && dataPoint.seroprevalenceCalculated95CIUpper), [state.filteredData])
+  const allArbovirusesInData = useMemo(() => uniq(dataWithCIs.map((dataPoint) => dataPoint.pathogen)), [dataWithCIs]);
+
+  const { chartArbovirusDropdown, selectedArbovirus } = useChartArbovirusDropdown({
+    possibleArboviruses: allArbovirusesInData
+  });
+
+  const dataForArbovirusWithCIs = useMemo(() => dataWithCIs
+    .filter((dataPoint) => dataPoint.pathogen === selectedArbovirus)
+    .sort((dataPointA, dataPointB) => dataPointA.seroprevalence - dataPointB.seroprevalence)
+    .map((dataPoint, index) => ({ ...dataPoint, estimateNumber: index + 1 }))
+    .map((dataPoint) => ({
+      ...dataPoint,
+      seroprevalence: parseFloat(
+        (dataPoint.seroprevalence * 100).toFixed(1)
+      ),
+      seroprevalenceCalculated95CILower: parseFloat(
+        (dataPoint.seroprevalenceCalculated95CILower * 100).toFixed(1)
+      ),
+      seroprevalenceCalculated95CIUpper: parseFloat(
+        (dataPoint.seroprevalenceCalculated95CIUpper * 100).toFixed(1)
+      ),
+      seroprevalenceError: [
+        parseFloat(
+          (
+            dataPoint.seroprevalence * 100 -
+            dataPoint.seroprevalenceCalculated95CILower * 100
+          ).toFixed(1)
+        ),
+        parseFloat(
+          (
+            dataPoint.seroprevalenceCalculated95CIUpper * 100 -
+            dataPoint.seroprevalence * 100
+          ).toFixed(1)
+        ),
+      ]
+    })), [dataWithCIs, selectedArbovirus])
 
   const { rechartsData } = useMemo(
     () =>
       groupDataForRecharts({
-        data: stateFilteredDataWithEstimateNumbers,
+        data: dataForArbovirusWithCIs,
         primaryGroupingFunction: (dataPoint) =>
           dataPoint.pathogen as arbovirusesSF,
         primaryGroupingSortFunction: (pathogenA, pathogenB) =>
@@ -102,12 +95,8 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
           countryA !== countryA ? (countryA < countryB ? -1 : 1) : 0,
         transformOutputValue: (data) => data,
       }),
-    [stateFilteredDataWithEstimateNumbers]
+    [dataForArbovirusWithCIs]
   );
-
-  const { chartArbovirusDropdown, selectedArbovirus } = useChartArbovirusDropdown({
-    possibleArboviruses: rechartsData.map(({ primaryKey }) => primaryKey)
-  });
 
   const dataForArbovirus = useMemo(() => 
     rechartsData.find((element) => element.primaryKey === selectedArbovirus),
@@ -170,7 +159,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
                 <YAxis
                   dataKey="estimateNumber"
                   type="number"
-                  domain={[0, (dataForArbovirus ? countriesAvailable.flatMap((country) => dataForArbovirus[country]) : []).length + 2]}
+                  domain={[0, (dataForArbovirus ? countriesAvailable.flatMap((country) => dataForArbovirus[country]) : []).length + 1]}
                   allowDataOverflow={true}
                   tick={false}
                   label={{
