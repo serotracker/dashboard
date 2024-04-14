@@ -170,7 +170,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
                 <YAxis
                   dataKey="estimateNumber"
                   type="number"
-                  domain={[0, (dataForArbovirus ? countriesAvailable.flatMap((country) => dataForArbovirus[country]) : []).length + 1]}
+                  domain={[0, (dataForArbovirus ? countriesAvailable.flatMap((country) => dataForArbovirus[country]) : []).length + 2]}
                   allowDataOverflow={true}
                   tick={false}
                   label={{
