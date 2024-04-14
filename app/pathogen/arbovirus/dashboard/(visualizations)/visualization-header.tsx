@@ -57,7 +57,7 @@ interface AllButtonConfigurations {
 const DownloadButton = (props: DownloadButtonProps) => (
   <button
     id={props.configuration.id}
-    className="mr-4"
+    className="mr-2 p-2 hover:bg-gray-100 rounded-full"
     onClick={() => props.downloadVisualization()}
     aria-label="Download visualization"
     title="Download visualization"
@@ -69,7 +69,7 @@ const DownloadButton = (props: DownloadButtonProps) => (
 const CloseButton = (props: CloseButtonProps) => (
   <button
     id={props.configuration.id}
-    className="mr-4"
+    className="mr-2 p-2 hover:bg-gray-100 rounded-full"
     hidden={
       !props.configuration.referrerRoute ||
       !isSafeReferrerLink(props.configuration.referrerRoute)
@@ -103,6 +103,7 @@ const ZoomInButton = (props: ZoomInButtonProps) => (
     }
     aria-label="See visualization in fullscreen"
     title="See visualization in fullscreen"
+    className="p-2 hover:bg-gray-100 rounded-full"
   >
     <ZoomIn />
   </button>
