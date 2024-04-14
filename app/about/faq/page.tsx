@@ -41,7 +41,7 @@ export default function FAQPage() {
           FAQPageOptionId.HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES,
           FAQPageOptionId.HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED,
           FAQPageOptionId.HOW_DOES_ARBOTRACKER_DATA_SHOW_UP_ON_THE_MAP,
-          // FAQPageOptionId.CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS
+          FAQPageOptionId.CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS
         ].includes(option.id)).map((option) => (
           <AccordionItem key={option.id} value={option.id} >
             <AccordionTrigger className="text-left">
