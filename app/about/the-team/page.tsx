@@ -64,6 +64,22 @@ const TeamMemberInfoCard = (props: TeamMemberInfoCardProps) => {
   )
 }
 
+interface TeamCardHeaderProps {
+  label: string;
+}
+
+const TeamCardHeader = (props: TeamCardHeaderProps) => {
+  if(props.label === 'ArboTracker Collaborating Partners') {
+    return <h2 className="my-4 pb-2 border-b border-background"> {props.label} </h2>;
+  }
+
+  if(props.label === 'SeroTracker Alumni') {
+    return <h3 className="my-4 border-b mt-32 border-background"> {props.label} </h3>;
+  }
+
+  return <h3 className="my-4 border-b border-background"> {props.label} </h3>;
+}
+
 interface TeamInfoCardProps {
   teamInfo: TeamMemberGroup;
 }
@@ -71,7 +87,7 @@ interface TeamInfoCardProps {
 const TeamCard = (props: TeamInfoCardProps) => {
   return (
     <div className="mb-0 lg:mb-4 py-2">
-      <h3 className="my-4 border-b border-background"> {props.teamInfo.label} </h3>
+      <TeamCardHeader label={props.teamInfo.label}/>
       <div className='flex-col flex lg:grid lg:grid-cols-4 lg:gap-x-2 lg:gap-y-6'>
         {props.teamInfo.teamMembers.map((teamMember) =>
           <TeamMemberInfoCard key={`${teamMember.firstName}-${teamMember.lastName}`} teamMember={teamMember} />
