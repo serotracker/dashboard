@@ -77,13 +77,13 @@ export const SplitBarChart = <
   return (
     <div className="h-full flex flex-row flex-wrap">
       {rechartsData.map((dataGroupedBySecondaryKey, index) => {
-        const width = rechartsData.length < 3 ? "w-full" : "w-1/2 lg:w-1/3";
+        const width = rechartsData.length < 3 ? "w-full" : "w-1/2";
         const height =
           rechartsData.length === 1
             ? "h-full"
             : rechartsData.length < 5
-            ? "h-full"
-            : "h-1/3 lg:h-1/2"
+            ? "h-1/2"
+            : "h-1/3";
 
 
 

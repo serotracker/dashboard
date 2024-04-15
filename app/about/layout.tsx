@@ -9,7 +9,7 @@ import { NavigationSidebar } from "@/components/ui/navigation-sidebar/navigation
 export enum AboutPageSidebarOption {
   DATA_EXTRACTION = "DATA_EXTRACTION",
   FAQ = "FAQ",
-  THE_TEAM = "THE_TEAM",
+  SEROTRACKER_TEAM = "SEROTRACKER_TEAM",
 }
 
 interface AboutPageBaseLayoutProps {
@@ -49,9 +49,9 @@ export default async function AboutPageBaseLayout (props: AboutPageBaseLayoutPro
                   value: AboutPageSidebarOption.FAQ,
                 },
                 {
-                  label: "The Team",
+                  label: "SeroTracker Team",
                   route: "/about/the-team",
-                  value: AboutPageSidebarOption.THE_TEAM,
+                  value: AboutPageSidebarOption.SEROTRACKER_TEAM,
                 },
               ]}
             />

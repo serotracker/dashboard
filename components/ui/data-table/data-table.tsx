@@ -9,6 +9,7 @@ import {
   VisibilityState,
   getFilteredRowModel,
 } from "@tanstack/table-core";
+import * as Toast from "@radix-ui/react-toast";
 import { ColumnDef, flexRender, useReactTable } from "@tanstack/react-table";
 import {
   Table,
@@ -18,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
+import React, { useContext } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -28,10 +29,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import { useDataTableStyles } from "./use-data-table-styles";
+import { ToastContext, ToastId } from "@/contexts/toast-provider";
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
-  fixed?: boolean,
-  accessorKey: string,
+  fixed?: boolean;
+  accessorKey: string;
 };
 
 interface DataTableProps<TData, TValue> {
@@ -44,6 +46,9 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
+  const { openToast } = useContext(ToastContext);
+
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
@@ -116,10 +121,27 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   return (
     <div>
       <div className="flex items-center justify-between py-4 px-2">
-        <h3>
-          Explore arbovirus seroprevalence estimates in our database
-        </h3>
+        <h3>Explore arbovirus seroprevalence estimates in our database</h3>
         <div className="flex flex-col lg:flex-row">
+          <Button
+            variant="outline"
+            className="mx-2 whitespace-nowrap"
+            onClick={getAllVisibleData}
+          >
+            Download CSV
+          </Button>
+          <Button
+            variant="outline"
+            className="mx-2 whitespace-nowrap"
+            onClick={() => {
+              navigator.clipboard.writeText(
+                "Ware H*, Whelan M*, Ranka H, Roell Y, Aktar S, Kenny S, Pinno E, SeroTracker Research Team, Bobrovitz N**, Arora RK**, Jaenisch T**. ArboTracker: A Dashboard and Data Platform for arbovirus serosurveys (2024); Website, accessible via www.new.SeroTracker.com."
+              );
+              openToast({ toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST });
+            }}
+          >
+            Get Citation for CSV
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="mx-2 whitespace-nowrap">
@@ -163,56 +185,60 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
           </DropdownMenu>
         </div>
       </div>
-        <Table className="border-separate border-spacing-0">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  const className = generateClassnameForHeader({ columnId: header.column.id });
+      <Table className="border-separate border-spacing-0">
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                const className = generateClassnameForHeader({
+                  columnId: header.column.id,
+                });
 
-                  return (
-                    <TableHead key={header.id} className={className}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                return (
+                  <TableHead key={header.id} className={className}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell
+                    key={cell.id}
+                    className={generateClassnameForCell({
+                      columnId: cell.column.id,
+                    })}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
               </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className={generateClassnameForCell({ columnId: cell.column.id })}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={props.columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={props.columns.length}
+                className="h-24 text-center"
+              >
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredRowModel().rows.length} row(s)

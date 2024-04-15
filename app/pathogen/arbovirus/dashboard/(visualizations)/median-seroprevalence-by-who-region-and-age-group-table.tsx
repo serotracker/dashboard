@@ -28,6 +28,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useChartArbovirusDropdown } from "./chart-arbovirus-dropdown";
 
 enum AgeGroup {
   "Adults (18-64 years)" = "Adults (18-64 years)",
@@ -81,15 +82,6 @@ const getMedianSeroprevalenceInformationFromData = (
 
 export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
   const state = useContext(ArboContext);
-  const pathogenOrder: arbovirusesSF[] = [
-    "ZIKV",
-    "DENV",
-    "CHIKV",
-    "YF",
-    "WNV",
-    "MAYV",
-  ];
-  const [userArbovirusSelection, setUserArbovirusSelection] = useState<arbovirusesSF>(pathogenOrder[0]);
 
   const datasetGroupedByArbovirus = useMemo(
     () =>
@@ -143,17 +135,9 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     [datasetGroupedByArbovirusAndWhoRegion]
   );
 
-  const selectedArbovirus = useMemo(() => {
-    if(typedObjectKeys(tableDatasets).length === 0) {
-      return "N/A"
-    }
-
-    if(typedObjectKeys(tableDatasets).includes(userArbovirusSelection)) {
-      return userArbovirusSelection;
-    }
-
-    return typedObjectKeys(tableDatasets)[0]
-  }, [userArbovirusSelection, tableDatasets])
+  const { chartArbovirusDropdown, selectedArbovirus } = useChartArbovirusDropdown({
+    possibleArboviruses: typedObjectKeys(tableDatasets)
+  });
 
   const datasetToDisplay = useMemo(
     () => selectedArbovirus !== 'N/A' ? tableDatasets[selectedArbovirus] : {} as Record<WHORegion, Record<AgeGroup, any[]>>,
@@ -165,15 +149,6 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     [AgeGroup["Adults (18-64 years)"]]: 2,
     [AgeGroup["Seniors (65+ years)"]]: 3,
     [AgeGroup["Multiple groups"]]: 4
-  }
-
-  const arbovirusToSortOrderMap: Record<arbovirusesSF, number> = {
-    "ZIKV": 1,
-    "DENV": 2,
-    "CHIKV": 3,
-    "YF": 4,
-    "WNV": 5,
-    "MAYV": 6
   }
 
   const allIncludedAgeGroupsInDatasetToDisplay = useMemo(() => 
@@ -217,30 +192,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
   return (
     <div className="p-2">
       <div className="flex justify-between mb-2 ignore-for-visualization-download">
-        <DropdownMenu>
-          <DropdownMenuTrigger disabled={typedObjectKeys(tableDatasets ?? {}).length < 2} asChild>
-            <Button variant="outline" size="sm" className="mx-2 whitespace-nowrap text-white ignore-for-visualization-download">
-              Currently viewing: {selectedArbovirus !== 'N/A' ? convertArboSFtoArbo(selectedArbovirus) : 'N/A'}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="p-2">
-            {typedObjectKeys(tableDatasets ?? {})
-              .sort((a,b) => arbovirusToSortOrderMap[a] - arbovirusToSortOrderMap[b])
-              .map((pathogen) => 
-                <DropdownMenuItem
-                  key={`median-seroprevalence-by-who-region-and-age-group-table-dropdown-item-${pathogen}`}
-                  onSelect={() => setUserArbovirusSelection(pathogen)}
-                  disabled={selectedArbovirus === pathogen}
-                  asChild
-                >
-                  <button className="w-full hover:cursor-pointer">
-                    {convertArboSFtoArbo(pathogen)}
-                  </button>
-                </DropdownMenuItem>
-              )
-            }
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {chartArbovirusDropdown}
         <div className="space-x-2 justify-between">
           <Button
             variant="outline"
