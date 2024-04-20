@@ -120,19 +120,19 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
 
   return (
     <div>
-      <div className="flex items-center justify-between py-4 px-2">
-        <h3>Explore arbovirus seroprevalence estimates in our database</h3>
-        <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between py-4 px-2">
+        <h3 className="text-center">Explore arbovirus seroprevalence estimates in our database</h3>
+        <div className="flex flex-row mt-2">
           <Button
             variant="outline"
-            className="mx-2 whitespace-nowrap"
+            className="mx-2 whitespace-nowrap w-full"
             onClick={getAllVisibleData}
           >
             Download CSV
           </Button>
           <Button
             variant="outline"
-            className="mx-2 whitespace-nowrap"
+            className="mx-2 whitespace-nowrap w-full"
             onClick={() => {
               navigator.clipboard.writeText(
                 "Ware H*, Whelan M*, Ranka H, Roell Y, Aktar S, Kenny S, Pinno E, SeroTracker Research Team, Bobrovitz N**, Arora RK**, Jaenisch T**. ArboTracker: A Dashboard and Data Platform for arbovirus serosurveys (2024); Website, accessible via www.new.SeroTracker.com."
@@ -143,7 +143,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
             Get Citation for CSV
           </Button>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild className="w-full">
               <Button variant="outline" className="mx-2 whitespace-nowrap">
                 Columns
               </Button>

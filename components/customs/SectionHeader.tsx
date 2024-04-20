@@ -18,7 +18,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
   tooltip_text,
 }) => {
   return (
-    <div className="flex items-center space-x-2 mb-2">
+    <div className="flex items-center justify-between space-x-2 mb-2">
       <h2 className="text-lg">{header_text}</h2>
       <div className="relative inline-block">
         <TooltipProvider delayDuration={0}>

@@ -37,6 +37,7 @@ import { Button } from "@/components/ui/button";
 import { MapArbovirusFilter } from "./(map)/MapArbovirusFilter";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { cx } from "class-variance-authority";
 
 interface FieldInformation {
   field: FilterableField;
@@ -70,7 +71,7 @@ interface FieldTooltipProps {
   className?: string,
 }
 
-const FilterTooltip = (props: FieldTooltipProps): React.ReactNode => {
+export const FilterTooltip = (props: FieldTooltipProps): React.ReactNode => {
   return (
     <div className={props.className}>
       <TooltipProvider delayDuration={0}>
@@ -161,8 +162,8 @@ const buildFilterDropdown = (
           options={sortedOptions}
           optionToLabelMap={optionToLabelMap}
           singleSelect={filter === FilterableField.esm}
+          tooltipContent={tooltipContent}
         />
-        {tooltipContent && <FilterTooltip className='pl-2' tooltipContent={tooltipContent} />}
       </div>
     );
   }

@@ -107,7 +107,7 @@ export default async function Home() {
                 <p>Checkout our dashboards below!</p>
               </div>
             </div>
-            <div className="flex w-full lg:w-1/2 flex-col lg:flex-row self-end">
+            <div className="flex w-full lg:w-2/3 flex-col lg:flex-row self-end">
               {/*
               These comments are for tailwindcss to pickup these classes so we do not need to add too many props
               hover:bg-arbovirus
@@ -129,7 +129,7 @@ export default async function Home() {
             */}
               {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED ? (
                 <TrackerButton
-                  titleSuffix="SC2"
+                  titleSuffix="Original Sars-Cov-2"
                   description="SeroTracker description"
                   icon={faVirus}
                   bgColor="bg-sc2virus"

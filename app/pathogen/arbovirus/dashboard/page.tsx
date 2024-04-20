@@ -17,7 +17,7 @@ export default function ArbovirusDashboardPage() {
       <Filters className="p-4 border-background overflow-y-scroll col-span-12 row-span-1 lg:col-span-2 lg:row-span-2 border-b lg:border-b-0" />
       <div
         className={
-          "overflow-y-scroll snap-y scroll-smooth row-span-3 col-span-12 lg:col-span-10 lg:row-span-2 px-4"
+          "overflow-y-scroll snap-y scroll-smooth row-span-3 col-span-12 lg:col-span-10 lg:row-span-2 px-4 lg:pl-0"
         }
       >
         {!isLargeScreen && (
