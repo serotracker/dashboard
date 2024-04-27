@@ -42,7 +42,7 @@ export const ArboBanner = () => {
         }}>
           Get Citation for CSV
         </Button>
-        <Link href="https://drive.google.com/file/d/1cLslLkwI57f2oKI45utkKdOtlW9ZCWpm/view" target="__blank" rel="noopener noreferrer">
+        <Link href="https://drive.google.com/file/d/1cLslLkwI57f2oKI45utkKdOtlW9ZCWpm/view?usp=sharing" target="__blank" rel="noopener noreferrer">
           <Button className="w-[30%] bg-background hover:bg-backgroundHover ml-2">
             Watch Our Tutorial for the Dashboard
           </Button>
