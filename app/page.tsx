@@ -85,6 +85,7 @@ export default async function Home() {
             backgroundImage: `url(${SeroMap.src})`,
           }}
         >
+          <div className="flex flex-col items-center">
           <div className="flex flex-col w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
             <div className="w-full h-fit mb-2 lg:mb-0">
               <h1 className=" w-fit p-2 rounded-md">SeroTracker</h1>
@@ -147,6 +148,16 @@ export default async function Home() {
                 />
               )}
             </div>
+          </div>
+          <div className="flex flex-col w-1/2 rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
+            <p className='mb-2'> This quick tutorial covers some of the basic functionalities of the dashboard </p>
+            <iframe
+              src="https://drive.google.com/file/d/1cLslLkwI57f2oKI45utkKdOtlW9ZCWpm/preview"
+              className="aspect-video border-2 border-solid border-background rounded-sm"
+              allow="autoplay"
+              allowFullScreen={true}
+            />
+          </div>
           </div>
         </div>
         <h3 className="flex text-background bg-white rounded-md lg:px-16 justify-center p-8 w-full">
