@@ -11,9 +11,9 @@ import {
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import ListItem from "@/components/customs/list-item";
-import { ArbovirusPageSectionId } from "@/app/constants";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 
 type NavMenuItem = {
   title: string;
@@ -43,17 +43,17 @@ const serotrackerNavItems: NavMenuItem[] = [
 const arbotrackerNavitems: NavMenuItem[] = [
   {
     title: "Dashboard",
-    href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.MAP}`,
+    href: `/pathogen/arbovirus/dashboard#${DashboardSectionId.MAP}`,
     description: "A dashboard for arbovirus seroprevalence data",
   },
   {
     title: "Data",
-    href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.TABLE}`,
+    href: `/pathogen/arbovirus/dashboard#${DashboardSectionId.TABLE}`,
     description: "View or download our entire arbovirus dataset",
   },
   {
     title: "Visualizations",
-    href: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.VISUALIZATIONS}`,
+    href: `/pathogen/arbovirus/dashboard#${DashboardSectionId.VISUALIZATIONS}`,
     description: "A collection of visualizations for our arbovirus dataset",
   },
 ];
