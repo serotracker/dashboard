@@ -109,55 +109,56 @@ export default async function Home() {
                 <p>Check our dashboards using the buttons to the right or view our short tutorial on how to use the dashboard!</p>
               </div>
             </div>
-            <div className="col-span-1 col-start-3 col-end-4 row-span-1">
+            <div className="col-span-2 col-start-3 col-end-5 row-span-1">
               <iframe
                 src="https://drive.google.com/file/d/1cLslLkwI57f2oKI45utkKdOtlW9ZCWpm/preview"
                 className="aspect-video w-full"
                 allow="autoplay"
                 allowFullScreen={true}
               />
-            </div>
-            <div className="col-span-1 col-start-4 col-end-4 row-span-1 h-full pl-4">
-              {/*
-              These comments are for tailwindcss to pickup these classes so we do not need to add too many props
-              hover:bg-arbovirus
-              hover:text-arbovirus
-              group-hover:text-arbovirus
-            */}
-              <TrackerButton
-                titleSuffix="Arbo"
-                description="ArboTracker description"
-                icon={faMosquito}
-                bgColor="bg-arbovirus"
-                textColor="text-arbovirus"
-                href={"/pathogen/arbovirus/dashboard"}
-              />
-              {/*
-              hover:bg-sc2virus
-              hover:text-sc2virus
-              group-hover:text-sc2virus
-            */}
-              {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED ? (
+              <div className="flex">
+                {/*
+                These comments are for tailwindcss to pickup these classes so we do not need to add too many props
+                hover:bg-arbovirus
+                hover:text-arbovirus
+                group-hover:text-arbovirus
+                */}
                 <TrackerButton
-                  titleSuffix="SC2"
-                  description="SeroTracker description"
-                  icon={faVirus}
-                  bgColor="bg-sc2virus"
-                  textColor="text-sc2virus"
-                  href={"/pathogen/sarscov2/dashboard"}
+                  titleSuffix="Arbo"
+                  description="ArboTracker description"
+                  icon={faMosquito}
+                  bgColor="bg-arbovirus"
+                  textColor="text-arbovirus"
+                  href={"/pathogen/arbovirus/dashboard"}
                   className="mt-4"
                 />
-              ) : (
-                <TrackerButton
-                  titleSuffix="Original SARS-CoV-2"
-                  description="SeroTracker description"
-                  icon={faVirus}
-                  bgColor="bg-sc2virus"
-                  textColor="text-sc2virus"
-                  href={"https://serotracker.com/en/Explore"}
-                  className="mt-4"
-                />
-              )}
+                {/*
+                hover:bg-sc2virus
+                hover:text-sc2virus
+                group-hover:text-sc2virus
+                */}
+                {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED ? (
+                  <TrackerButton
+                    titleSuffix="SC2"
+                    description="SeroTracker description"
+                    icon={faVirus}
+                    bgColor="bg-sc2virus"
+                    textColor="text-sc2virus"
+                    href={"/pathogen/sarscov2/dashboard"}
+                    className="mt-4"
+                  />
+                ) : (
+                  <TrackerButton
+                    titleSuffix="Original SARS-CoV-2"
+                    description="SeroTracker description"
+                    icon={faVirus}
+                    bgColor="bg-sc2virus"
+                    textColor="text-sc2virus"
+                    href={"https://serotracker.com/en/Explore"}
+                    className="mt-4"
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
