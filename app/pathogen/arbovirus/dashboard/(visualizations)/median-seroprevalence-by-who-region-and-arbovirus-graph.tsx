@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { SplitBarChart } from "./split-bar-chart";
-import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 export const MedianSeroprevalenceByWHORegionAndArbovirusGraph = () => {
   const state = useContext(ArboContext);

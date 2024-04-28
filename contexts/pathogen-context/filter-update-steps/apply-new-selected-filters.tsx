@@ -1,7 +1,7 @@
 import {
-  HandleArboFilterUpdateInput,
-  HandleArboFilterUpdateOutput,
-} from "../arbo-filter-update-steps";
+  HandleFilterUpdateInput,
+  HandleFilterUpdateOutput,
+} from "../../pathogen-context/filter-update-steps";
 
 export function filterData(
   data: any[],
@@ -98,8 +98,8 @@ export function filterData(
 }
 
 export const applyNewSelectedFilters = (
-  input: HandleArboFilterUpdateInput
-): HandleArboFilterUpdateOutput => ({
+  input: HandleFilterUpdateInput
+): HandleFilterUpdateOutput => ({
   ...input,
   state: {
     ...input.state,

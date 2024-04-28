@@ -2,8 +2,7 @@
 
 import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ArboContext } from "@/contexts/arbo-context/arbo-context";
-import { lastIndexOf } from "lodash";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { useContext } from "react";
 
 interface MapShadingLegendProps {

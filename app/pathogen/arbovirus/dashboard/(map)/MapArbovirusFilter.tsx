@@ -1,12 +1,12 @@
-import { ArboActionType, ArboContextType } from "@/contexts/arbo-context/arbo-context";
 import { Checkbox } from "@/components/ui/checkbox";
 import { pathogenColorsTailwind } from "./ArbovirusMap";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "@/components/customs/SectionHeader";
+import { PathogenContextType, PathogenContextActionType } from "@/contexts/pathogen-context/pathogen-context";
 
 interface MapArbovirusFilterProps {
   className?: string;
-  state: ArboContextType;
+  state: PathogenContextType;
   data: any;
 }
 
@@ -24,7 +24,7 @@ export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilte
     }
 
     state.dispatch({
-      type: ArboActionType.UPDATE_FILTER,
+      type: PathogenContextActionType.UPDATE_FILTER,
       payload: {
         data: records,
         filter: "pathogen",
@@ -35,7 +35,7 @@ export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilte
 
   const clearAllHandler = () => {
     state.dispatch({
-      type: ArboActionType.UPDATE_FILTER,
+      type: PathogenContextActionType.UPDATE_FILTER,
       payload: {
         data: records,
         filter: "pathogen",

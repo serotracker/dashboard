@@ -1,8 +1,8 @@
-import { HandleArboFilterUpdateInput, HandleArboFilterUpdateOutput } from "../arbo-filter-update-steps";
+import { HandleFilterUpdateInput, HandleFilterUpdateOutput } from "../../pathogen-context/filter-update-steps";
 
 export const addActionToSelectedFilters = (
-  input: HandleArboFilterUpdateInput
-): HandleArboFilterUpdateOutput => {
+  input: HandleFilterUpdateInput
+): HandleFilterUpdateOutput => {
   const newSelectedFilters = {
     ...input.state.selectedFilters,
     [input.action.payload.filter]: input.action.payload.value,

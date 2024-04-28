@@ -1,11 +1,11 @@
 import {
-  HandleArboFilterUpdateInput,
-  HandleArboFilterUpdateOutput,
-} from "../arbo-filter-update-steps";
+  HandleFilterUpdateInput,
+  HandleFilterUpdateOutput,
+} from "../../pathogen-context/filter-update-steps";
 
 export const updatePediatricAgeGroupFilter = (
-  input: HandleArboFilterUpdateInput
-): HandleArboFilterUpdateOutput => {
+  input: HandleFilterUpdateInput
+): HandleFilterUpdateOutput => {
   if(input.action.payload.filter !== 'ageGroup') {
     return input;
   }

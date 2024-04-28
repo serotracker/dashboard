@@ -1,63 +1,55 @@
 "use client";
-
-import React, { createContext, useReducer, useEffect } from "react";
-import { MapProvider, MapRef, useMap } from "react-map-gl";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Hydrate as RQHydrate, HydrateProps } from "@tanstack/react-query";
-import { useArboData } from "@/hooks/useArboData";
-import { filterData } from "./filter-update-steps/apply-new-selected-filters";
-import { handleArboFilterUpdate } from "./arbo-filter-update-steps";
 import { ToastProvider } from "../toast-provider";
+import { MapProvider, MapRef, useMap } from "react-map-gl";
+import { Context, createContext, useEffect, useReducer } from "react";
+import { filterData } from "./filter-update-steps/apply-new-selected-filters";
+import { handleFilterUpdate } from "./filter-update-steps";
+import { useArboData } from "@/hooks/useArboData";
 
-export interface ArboContextType extends ArboStateType {
-  dispatch: React.Dispatch<ArboAction>;
+export interface PathogenContextType extends PathogenContextState {
+  dispatch: React.Dispatch<PathogenContextAction>;
 }
 
-export interface ArboStateType {
+export interface PathogenContextState {
   filteredData: any[];
   selectedFilters: { [key: string]: string[] };
   dataFiltered: boolean;
 }
 
-export interface ArboAction {
-  type: ArboActionType;
+export interface PathogenContextAction {
+  type: PathogenContextActionType;
   payload: any;
 }
-export enum ArboActionType {
+
+export enum PathogenContextActionType {
   UPDATE_FILTER = "UPDATE_FILTER",
   INITIAL_DATA_FETCH = "INITIAL_DATA_FETCH",
   ADD_FILTERS_TO_MAP = "ADD_FILTERS_TO_MAP",
   RESET_FILTERS = "RESET_FILTERS",
 }
 
-export const initialState: ArboStateType = {
-  filteredData: [],
-  selectedFilters: {
-    ["pathogen"]: ["DENV", "ZIKV", "CHIKV", "YF", "WNV", "MAYV"],
-  },
-  dataFiltered: false,
-};
-
-export const arboReducer = (
-  state: ArboStateType,
-  action: ArboAction,
+export const pathogenReducer = (
+  state: PathogenContextState,
+  action: PathogenContextAction,
+  initialState: PathogenContextState,
   map: MapRef | undefined
 ) => {
   switch (action.type) {
-    case ArboActionType.UPDATE_FILTER:
-      return handleArboFilterUpdate({
+    case PathogenContextActionType.UPDATE_FILTER:
+      return handleFilterUpdate({
         state,
         action,
         map
       }).state;
-    case ArboActionType.INITIAL_DATA_FETCH:
+    case PathogenContextActionType.INITIAL_DATA_FETCH:
       return {
         ...state,
         filteredData: action.payload.data,
         selectedFilters: initialState.selectedFilters,
         dataFiltered: false,
       };
-    case ArboActionType.RESET_FILTERS:
+    case PathogenContextActionType.RESET_FILTERS:
       return {
         ...state,
         filteredData: filterData(action.payload.data, {}),
@@ -70,14 +62,13 @@ export const arboReducer = (
   }
 };
 
-export const ArboContext = createContext<ArboContextType>({
-  ...initialState,
-  dispatch: (obj) => {
-    console.debug("dispatch not initialized", obj);
-  },
-});
+interface PathogenProvidersProps {
+  children: React.ReactNode;
+  initialState: PathogenContextState
+  context: Context<PathogenContextType>
+}
 
-export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
+export const PathogenProviders = (props: PathogenProvidersProps) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -91,19 +82,27 @@ export const ArboProviders = ({ children }: { children: React.ReactNode }) => {
     <ToastProvider>
       <MapProvider>
         <QueryClientProvider client={queryClient}>
-          <FilteredDataProvider>{children}</FilteredDataProvider>
+          <FilteredDataProvider initialState={props.initialState} context={props.context}>
+            {props.children}
+          </FilteredDataProvider>
         </QueryClientProvider>
       </MapProvider>
     </ToastProvider>
   );
 };
 
-const FilteredDataProvider = ({ children }: { children: React.ReactNode }) => {
+interface FilteredDataProviderProps {
+  children: React.ReactNode;
+  initialState: PathogenContextState;
+  context: Context<PathogenContextType>
+}
+
+const FilteredDataProvider = (props: FilteredDataProviderProps) => {
   const { arboMap } = useMap();
   const [state, dispatch] = useReducer(
-    (state: ArboStateType, action: ArboAction) =>
-      arboReducer(state, action, arboMap),
-    initialState
+    (state: PathogenContextState, action: PathogenContextAction) =>
+      pathogenReducer(state, action, props.initialState, arboMap),
+    props.initialState
   );
   const dataQuery = useArboData();
 
@@ -119,19 +118,15 @@ const FilteredDataProvider = ({ children }: { children: React.ReactNode }) => {
       dataQuery.data.arbovirusEstimates.length > 0
     ) {
       dispatch({
-        type: ArboActionType.INITIAL_DATA_FETCH,
+        type: PathogenContextActionType.INITIAL_DATA_FETCH,
         payload: { data: dataQuery.data.arbovirusEstimates },
       });
     }
   }, [dataQuery]);
 
   return (
-    <ArboContext.Provider value={{ ...state, dispatch: dispatch }}>
-      {children}
-    </ArboContext.Provider>
+    <props.context.Provider value={{ ...state, dispatch: dispatch }}>
+      {props.children}
+    </props.context.Provider>
   );
 };
-
-export function Hydrate(props: HydrateProps) {
-  return <RQHydrate {...props} />;
-}

@@ -1,4 +1,4 @@
-import { ArboContext } from "@/contexts/arbo-context/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { useContext } from "react";
 import { Layer, Source } from "react-map-gl";
 

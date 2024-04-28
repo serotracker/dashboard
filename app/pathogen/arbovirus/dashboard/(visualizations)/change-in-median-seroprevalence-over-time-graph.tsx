@@ -1,6 +1,5 @@
 "use client";
 
-import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import React, { useContext } from "react";
 import { isAfter, isBefore, startOfYear, addYears, endOfYear, parseISO } from "date-fns";
 import {
@@ -14,6 +13,7 @@ import { SlantedTick, arbovirusesSF, convertArboSFtoArbo, median } from "./recha
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { pathogenColors } from "../(map)/ArbovirusMap";
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 type GroupableIntoTimeBuckets = { groupingTimeInterval: TimeInterval };
 

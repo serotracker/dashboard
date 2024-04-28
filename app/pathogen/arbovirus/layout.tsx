@@ -1,10 +1,10 @@
 import React from "react";
-import { ArboProviders } from "@/contexts/arbo-context/arbo-context";
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
 import { request } from 'graphql-request';
 import { arbovirusEstimatesQuery } from "@/hooks/useArboData";
 import { arbovirusFiltersQuery } from "@/hooks/useArboFilters";
+import { ArboProviders } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 export default async function ArboLayout({
   children,
