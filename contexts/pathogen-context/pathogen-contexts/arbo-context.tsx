@@ -3,6 +3,8 @@ import { createContext, useEffect } from "react";
 import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
 import { useArboData } from "@/hooks/useArboData";
 
+export type ArbovirusEstimate = any;
+
 const initialArboContextState = {
   filteredData: [],
   selectedFilters: {
@@ -11,14 +13,14 @@ const initialArboContextState = {
   dataFiltered: false,
 }
 
-export const ArboContext = createContext<PathogenContextType<any>>({
+export const ArboContext = createContext<PathogenContextType<ArbovirusEstimate>>({
   ...initialArboContextState,
   dispatch: (obj) => {
     console.debug("dispatch not initialized", obj);
   },
 });
 
-const ArboDataFetcher = (props: PathogenDataFetcherProps<any>): React.ReactNode => {
+const ArboDataFetcher = (props: PathogenDataFetcherProps<ArbovirusEstimate>): React.ReactNode => {
   const dataQuery = useArboData();
 
   useEffect(() => {

@@ -3,9 +3,9 @@ import {
   HandleFilterUpdateOutput,
 } from "../../pathogen-context/filter-update-steps";
 
-export const updatePediatricAgeGroupFilter = (
-  input: HandleFilterUpdateInput
-): HandleFilterUpdateOutput => {
+export const updatePediatricAgeGroupFilter = <TData extends Record<string, unknown>>(
+  input: HandleFilterUpdateInput<TData>
+): HandleFilterUpdateOutput<TData> => {
   if(input.action.payload.filter !== 'ageGroup') {
     return input;
   }

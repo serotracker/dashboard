@@ -97,9 +97,9 @@ export function filterData(
   });
 }
 
-export const applyNewSelectedFilters = (
-  input: HandleFilterUpdateInput
-): HandleFilterUpdateOutput => ({
+export const applyNewSelectedFilters = <TData extends Record<string, unknown>>(
+  input: HandleFilterUpdateInput<TData>
+): HandleFilterUpdateOutput<TData> => ({
   ...input,
   state: {
     ...input.state,

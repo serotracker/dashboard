@@ -54,9 +54,9 @@ const getAllBoundingBoxesFromSelectedFilters = (
   ];
 };
 
-export const adjustMapPosition = (
-  input: HandleFilterUpdateInput
-): HandleFilterUpdateOutput => {
+export const adjustMapPosition = <TData extends Record<string, unknown>>(
+  input: HandleFilterUpdateInput<TData>
+): HandleFilterUpdateOutput<TData> => {
   if (!input.map) {
     return input;
   }

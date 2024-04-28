@@ -3,10 +3,11 @@ import { pathogenColorsTailwind } from "./ArbovirusMap";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "@/components/customs/SectionHeader";
 import { PathogenContextType, PathogenContextActionType } from "@/contexts/pathogen-context/pathogen-context";
+import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 interface MapArbovirusFilterProps {
   className?: string;
-  state: PathogenContextType;
+  state: PathogenContextType<ArbovirusEstimate>;
   data: any;
 }
 

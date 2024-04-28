@@ -1,34 +1,34 @@
 import {
-    HandleFilterUpdateInput,
-    HandleFilterUpdateOutput,
-  } from "../../pathogen-context/filter-update-steps";
+  HandleFilterUpdateInput,
+  HandleFilterUpdateOutput,
+} from "../../pathogen-context/filter-update-steps";
   
-  /*
-  If you deselect DENV, we need to wipe the serotype filter.
-  */
-  export const updateSerotypeFilter = (
-    input: HandleFilterUpdateInput
-  ): HandleFilterUpdateOutput => {
-    if(input.action.payload.filter !== 'pathogen') {
-      return input;
-    }
+/*
+If you deselect DENV, we need to wipe the serotype filter.
+*/
+export const updateSerotypeFilter = <TData extends Record<string, unknown>>(
+  input: HandleFilterUpdateInput<TData>
+): HandleFilterUpdateOutput<TData> => {
+  if(input.action.payload.filter !== 'pathogen') {
+    return input;
+  }
   
-    const selectedArboVirus = input.state.selectedFilters['pathogen'] ?? [];
+  const selectedArboVirus = input.state.selectedFilters['pathogen'] ?? [];
   
-    if(!selectedArboVirus.includes("DENV")) {
-        return input
-    }
-    
+  if(!selectedArboVirus.includes("DENV")) {
+      return input
+  }
   
-    return {
-      ...input,
-      state: {
-        ...input.state,
-        selectedFilters: {
-          ...input.state.selectedFilters,
-          serotype: []
-        }
+  
+  return {
+    ...input,
+    state: {
+      ...input.state,
+      selectedFilters: {
+        ...input.state.selectedFilters,
+        serotype: []
       }
     }
-  };
+  }
+};
   

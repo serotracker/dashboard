@@ -30,10 +30,9 @@ import { useArboFilters } from "@/hooks/useArboFilters";
 import { unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { Button } from "@/components/ui/button";
 import { MapArbovirusFilter } from "./(map)/MapArbovirusFilter";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { 
-  ArboContext
+  ArboContext, ArbovirusEstimate
 } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { PathogenContextActionType, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 
@@ -51,7 +50,7 @@ interface FieldInformation {
 const sendFilterChangeDispatch = (
   value: string[],
   newFilter: string,
-  state: PathogenContextType,
+  state: PathogenContextType<ArbovirusEstimate>,
   data: any
 ) => {
   state.dispatch({
@@ -107,7 +106,7 @@ const FilterTooltip = (props: FieldTooltipProps): React.ReactNode => {
 const buildFilterDropdown = (
   filter: string,
   placeholder: string,
-  state: PathogenContextType,
+  state: PathogenContextType<ArbovirusEstimate>,
   filterOptions: string[],
   data: any,
   optionToLabelMap: Record<string, string | undefined>,
@@ -188,7 +187,7 @@ export enum FilterableField {
 interface FilterSectionProps {
   headerText: string;
   headerTooltipText: string;
-  state: PathogenContextType;
+  state: PathogenContextType<ArbovirusEstimate>;
   allFieldInformation: FieldInformation[];
   filters: any;
   data: any;
