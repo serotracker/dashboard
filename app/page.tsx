@@ -27,14 +27,16 @@ interface TrackerButtonProps {
   textColor: string;
   bgColor: string;
   href: string;
+  className?: string
 }
 
 function TrackerButton(props: TrackerButtonProps) {
   return (
     <Link
       className={cn(
-        "w-full rounded-md text-white bg-background flex flex-col mb-4 lg:mb-0 lg:mr-4 lg:last:mr-0 h-full overflow-hidden p-2 transition-all group hover:cursor-pointer",
-        `hover:${props.bgColor}`
+        "w-full rounded-md text-white bg-background flex flex-col mb-4 lg:mb-0 lg:mr-4 lg:last:mr-0 overflow-hidden p-2 transition-all group hover:cursor-pointer",
+        `hover:${props.bgColor}`,
+        props.className
       )}
       href={props.href}
     >
@@ -85,12 +87,12 @@ export default async function Home() {
             backgroundImage: `url(${SeroMap.src})`,
           }}
         >
-          <div className="flex flex-col w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
-            <div className="w-full h-fit mb-2 lg:mb-0">
+          <div className="grid grid-cols-4 w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
+            <div className="col-span-2 col-start-1 col-end-3 row-span-1 h-full">
               <h1 className=" w-fit p-2 rounded-md">SeroTracker</h1>
-              <h3 className="rounded-md p-2">
-                Your Go to Source for COVID-19 and Arbovirus Seroprevalence Data
-              </h3>
+                <h3 className="rounded-md p-2">
+                  Your Go to Source for COVID-19 and Arbovirus Seroprevalence Data
+                </h3>
               <div className="p-2 rounded-md">
                 <p className=" w-fit mb-2">
                   We synthesize findings from thousands of COVID-19 and
@@ -104,10 +106,18 @@ export default async function Home() {
                   (antibody testing-based surveillance efforts) around the world
                   and visualize findings on this dashboard.
                 </p>
-                <p>Checkout our dashboards below!</p>
+                <p>Check our dashboards using the buttons to the right or view our short tutorial on how to use the dashboard!</p>
               </div>
             </div>
-            <div className="flex w-full lg:w-1/2 flex-col lg:flex-row self-end">
+            <div className="col-span-1 col-start-3 col-end-4 row-span-1">
+              <iframe
+                src="https://drive.google.com/file/d/1cLslLkwI57f2oKI45utkKdOtlW9ZCWpm/preview"
+                className="aspect-video w-full"
+                allow="autoplay"
+                allowFullScreen={true}
+              />
+            </div>
+            <div className="col-span-1 col-start-4 col-end-4 row-span-1 h-full pl-4">
               {/*
               These comments are for tailwindcss to pickup these classes so we do not need to add too many props
               hover:bg-arbovirus
@@ -135,6 +145,7 @@ export default async function Home() {
                   bgColor="bg-sc2virus"
                   textColor="text-sc2virus"
                   href={"/pathogen/sarscov2/dashboard"}
+                  className="mt-4"
                 />
               ) : (
                 <TrackerButton
@@ -144,6 +155,7 @@ export default async function Home() {
                   bgColor="bg-sc2virus"
                   textColor="text-sc2virus"
                   href={"https://serotracker.com/en/Explore"}
+                  className="mt-4"
                 />
               )}
             </div>
