@@ -5,6 +5,7 @@ import { request } from 'graphql-request';
 import { arbovirusEstimatesQuery } from "@/hooks/useArboData";
 import { arbovirusFiltersQuery } from "@/hooks/useArboFilters";
 import { ArboProviders } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
 
 export default async function ArboLayout({
   children,
@@ -25,14 +26,10 @@ export default async function ArboLayout({
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <div
-      className={
-        "grid gap-4 grid-cols-12 grid-rows-2 grid-flow-col w-full h-full overflow-hidden border-box"
-      }
-    >
+    <GenericPathogenPageLayout>
       <ArboProviders>
         <Hydrate state={dehydratedState}>{children}</Hydrate>
       </ArboProviders>
-    </div>
+    </GenericPathogenPageLayout>
   );
 }
