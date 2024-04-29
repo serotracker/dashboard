@@ -1,8 +1,5 @@
-"use client";
 import { useCallback, useContext } from "react";
-import { useRouter } from "next/navigation";
 import { VisualizationId, VisualizationInformation, addToVisualizationInformation } from "../../visualizations/visualizations";
-import { ZoomIn } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { useArboDataInsights } from "@/hooks/useArboDataInsights";
 import { RechartsVisualization } from "./recharts-visualization";
