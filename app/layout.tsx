@@ -28,10 +28,10 @@ export default function RootLayout({
         <link rel="alternate icon" href="/SerotrackerLogo.png" />{" "}
         {/* Fallback for older browsers */}
       </head>
-      <body className={clsx(inter.className, "text-black no-scrollbar")}>
+      <body className={clsx(inter.className, "text-black no-scrollbar overflow-y-hidden")}>
         <ThemeProvider>
           <Header />
-          <main className={"h-full-screen w-screen bg-foreground"}>
+          <main className={"h-full-screen w-screen bg-foreground top-14 fixed"}>
             {children}
           </main>
         </ThemeProvider>
