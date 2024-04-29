@@ -1,3 +1,4 @@
+"use server";
 import React from "react";
 
 import { GenericPathogenDashboardPage } from "../../generic-pathogen-dashboard-page";
