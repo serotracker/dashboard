@@ -1,8 +1,12 @@
 import React from "react";
-import { SarsCov2Providers, Hydrate } from "@/contexts/sarscov2-context/sarscov2-context";
-import { dehydrate } from "@tanstack/query-core";
+import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
+import { request } from 'graphql-request';
 import { notFound } from 'next/navigation'
+import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
+import { SarsCov2Providers } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { sarsCov2Estimates } from "@/hooks/useNewSarsCov2Data";
+import { sarsCov2Filters } from "@/hooks/useSarsCov2Filters";
 
 export default async function ArboLayout({
   children,
@@ -10,24 +14,16 @@ export default async function ArboLayout({
   children: React.ReactNode;
 }) {
   const queryClient = getQueryClient();
-  //TODO: this segment is technically repeated in useSarsCov2Data.tsx. It should be refactored to be DRY.
-  console.time("prefetchQuerySero");
+
   await queryClient.prefetchQuery({
-    queryKey: ["SarsCov2Records"],
-    queryFn: () =>
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sarscov2/records`, { cache: 'no-store' }).then(
-        (response) => response.json(),
-      ),
+    queryKey: ["sarsCov2Estimates"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Estimates)
   });
   await queryClient.prefetchQuery({
-    queryKey: ["SarsCov2Filters"],
-    queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sarscov2/filter_options`).then(
-        (response) => response.json()
-      ),
+    queryKey: ["sarsCov2FilterOptions"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Filters)
   });
-  console.timeEnd("prefetchQuerySero");
-  
+
   const dehydratedState = dehydrate(queryClient);
 
   if(!process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED) {
@@ -35,14 +31,10 @@ export default async function ArboLayout({
   }
 
   return (
-    <div
-      className={
-        "grid gap-4 grid-cols-12 grid-rows-2 grid-flow-col w-full h-full overflow-hidden p-4 border-box"
-      }
-    >
+    <GenericPathogenPageLayout>
       <SarsCov2Providers>
         <Hydrate state={dehydratedState}>{children}</Hydrate>
       </SarsCov2Providers>
-    </div>
+    </GenericPathogenPageLayout>
   );
 }
