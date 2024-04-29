@@ -1,12 +1,10 @@
 import { useCallback, useContext } from "react";
-import { useRouter } from "next/navigation";
 import { VisualizationId, VisualizationInformation, addToVisualizationInformation } from "../../visualizations/visualizations";
-import { ZoomIn } from "lucide-react";
 import { cn } from '@/lib/utils';
-import { ArbovirusPageSectionId } from "../../../../constants";
 import { useArboDataInsights } from "@/hooks/useArboDataInsights";
 import { RechartsVisualization } from "./recharts-visualization";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 
 export const VisualizationsSection = () => {
   const { filteredData } = useContext(ArboContext);
@@ -57,7 +55,7 @@ export const VisualizationsSection = () => {
           },
           zoomInButton: {
             enabled: true,
-            referrerRoute: `/pathogen/arbovirus/dashboard#${ArbovirusPageSectionId.VISUALIZATIONS}`
+            referrerRoute: `/pathogen/arbovirus/dashboard#${DashboardSectionId.VISUALIZATIONS}`
           },
           closeButton: {
             enabled: false
