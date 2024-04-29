@@ -15,11 +15,6 @@
 "use client";
 
 import {
-  ArboActionType,
-  ArboContext,
-  ArboContextType,
-} from "@/contexts/arbo-context/arbo-context";
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -35,8 +30,11 @@ import { useArboFilters } from "@/hooks/useArboFilters";
 import { unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { Button } from "@/components/ui/button";
 import { MapArbovirusFilter } from "./(map)/MapArbovirusFilter";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { 
+  ArboContext, ArbovirusEstimate
+} from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { PathogenContextActionType, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 
 interface FieldInformation {
   field: FilterableField;
@@ -52,11 +50,11 @@ interface FieldInformation {
 const sendFilterChangeDispatch = (
   value: string[],
   newFilter: string,
-  state: ArboContextType,
+  state: PathogenContextType<ArbovirusEstimate>,
   data: any
 ) => {
   state.dispatch({
-    type: ArboActionType.UPDATE_FILTER,
+    type: PathogenContextActionType.UPDATE_FILTER,
     payload: {
       filter: newFilter,
       value: value,
@@ -108,7 +106,7 @@ const FilterTooltip = (props: FieldTooltipProps): React.ReactNode => {
 const buildFilterDropdown = (
   filter: string,
   placeholder: string,
-  state: ArboContextType,
+  state: PathogenContextType<ArbovirusEstimate>,
   filterOptions: string[],
   data: any,
   optionToLabelMap: Record<string, string | undefined>,
@@ -139,7 +137,7 @@ const buildFilterDropdown = (
           }
           clearDateFilter={() => {
             state.dispatch({
-              type: ArboActionType.UPDATE_FILTER,
+              type: PathogenContextActionType.UPDATE_FILTER,
               payload: {
                 filter: filter,
                 value: [],
@@ -189,7 +187,7 @@ export enum FilterableField {
 interface FilterSectionProps {
   headerText: string;
   headerTooltipText: string;
-  state: ArboContextType;
+  state: PathogenContextType<ArbovirusEstimate>;
   allFieldInformation: FieldInformation[];
   filters: any;
   data: any;
@@ -301,7 +299,7 @@ export function Filters(props: FiltersProps) {
   const resetFilters = () => {
     // Dispatch action to reset filters
     state.dispatch({
-      type: ArboActionType.RESET_FILTERS,
+      type: PathogenContextActionType.RESET_FILTERS,
       payload: {
         data: data ? data.arbovirusEstimates : [],
       }, // Include an empty object as payload

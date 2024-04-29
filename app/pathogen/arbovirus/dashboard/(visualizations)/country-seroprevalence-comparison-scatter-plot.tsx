@@ -1,5 +1,4 @@
 import { useContext, useMemo } from "react";
-import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { arbovirusesSF } from "./recharts";
 import {
   CartesianGrid,
@@ -17,6 +16,7 @@ import uniq from "lodash/uniq";
 import { typedObjectKeys } from "@/lib/utils";
 import { ContentType } from "recharts/types/component/Tooltip";
 import { useChartArbovirusDropdown } from "./chart-arbovirus-dropdown";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 const CountrySeroprevalenceComparisonScatterPlotTooltip: ContentType<string, string> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
