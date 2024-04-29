@@ -123,7 +123,7 @@ export const Header = () => {
   return (
     <header
       className={cn(
-        "flex items-center justify-between transition-colors duration-300 h-14 w-screen px-2 text-white overflow-hidden",
+        "flex items-center justify-between transition-colors duration-300 h-14 w-screen px-2 text-white overflow-hidden fixed z-10",
         headerBgColor
       )}
     >
