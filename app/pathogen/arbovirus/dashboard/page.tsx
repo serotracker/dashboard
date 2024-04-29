@@ -1,5 +1,4 @@
-"use server";
-
+"use client";
 import React from "react";
 import { Filters } from "./filters";
 import { VisualizationsSection } from "./(visualizations)/visualizations-section";
