@@ -24,18 +24,18 @@ type NavMenuItem = {
 const serotrackerNavItems: NavMenuItem[] = [
   {
     title: "Dashboard",
-    href: "/pathogen/sarscov2/dashboard",
+    href: `/pathogen/sarscov2/dashboard#${DashboardSectionId.MAP}`,
     description: "A dashboard for Sars Cov 2 seroprevalence data",
   },
   {
     title: "Data",
-    href: "/pathogen/sarscov2/dashboard",
+    href: `/pathogen/sarscov2/dashboard#${DashboardSectionId.TABLE}`,
     description: "View or download our entire Sars Cov 2 dataset",
 
   },
   {
     title: "Visualizations",
-    href: "/pathogen/sarscov2/dashboard",
+    href: `/pathogen/sarscov2/dashboard#${DashboardSectionId.VISUALIZATIONS}`,
     description: "A collection of visualizations for our Sars Cov 2 dataset",
   },
 ];
