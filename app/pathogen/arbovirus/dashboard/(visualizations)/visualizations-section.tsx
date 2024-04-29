@@ -1,3 +1,4 @@
+"use client";
 import { useCallback, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { VisualizationId, VisualizationInformation, addToVisualizationInformation } from "../../visualizations/visualizations";
