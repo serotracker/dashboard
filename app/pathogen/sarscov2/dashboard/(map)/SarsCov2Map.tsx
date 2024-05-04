@@ -17,8 +17,6 @@ export function SarsCov2Map() {
     return <span> Loading... </span>;
   }
 
-  console.log(state.filteredData)
-
   return (
     <>
       <div className={"w-full h-full p-0"}>
