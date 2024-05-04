@@ -158,6 +158,7 @@ export type SarsCov2Estimate = {
   sex?: Maybe<Scalars['String']['output']>;
   sourceType?: Maybe<Scalars['String']['output']>;
   state?: Maybe<Scalars['String']['output']>;
+  studyName: Scalars['String']['output'];
   testType: Array<Scalars['String']['output']>;
   unRegion?: Maybe<UnRegion>;
   whoRegion?: Maybe<WhoRegion>;
