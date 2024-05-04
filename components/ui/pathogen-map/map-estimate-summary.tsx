@@ -11,7 +11,7 @@ export const MapEstimateSummary = (props: MapEstimateSummaryProps) => (
         <p className={"ml-1 font-medium"}>
           <b>{props.filteredData.length}</b>
           &nbsp;Estimates displayed from&nbsp;
-          <b>{Array.from(new Set(props.filteredData.map((item: any) => item.sourceSheetName))).length}</b>
+          <b>{Array.from(new Set(props.filteredData.map((item: {sourceSheetName: string}) => item.sourceSheetName))).length}</b>
           &nbsp;unique sources
         </p>
       </CardContent>
