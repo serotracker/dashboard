@@ -6,9 +6,9 @@ import {
   getBoundingBoxFromWHORegion,
 } from "@/lib/bounding-boxes";
 import {
-  HandleArboFilterUpdateInput,
-  HandleArboFilterUpdateOutput,
-} from "../arbo-filter-update-steps";
+  HandleFilterUpdateInput,
+  HandleFilterUpdateOutput,
+} from "../../pathogen-context/filter-update-steps";
 import { isUNRegion } from "@/lib/un-regions";
 import { isWHORegion } from "@/lib/who-regions";
 
@@ -54,9 +54,9 @@ const getAllBoundingBoxesFromSelectedFilters = (
   ];
 };
 
-export const adjustMapPosition = (
-  input: HandleArboFilterUpdateInput
-): HandleArboFilterUpdateOutput => {
+export const adjustMapPosition = <TData extends Record<string, unknown>>(
+  input: HandleFilterUpdateInput<TData>
+): HandleFilterUpdateOutput<TData> => {
   if (!input.map) {
     return input;
   }

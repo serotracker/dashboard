@@ -1,6 +1,5 @@
 "use client";
 
-import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { useContext } from "react";
 import {
   BarChart,
@@ -18,6 +17,7 @@ import {
 import _ from "lodash";
 import { pathogenColors } from "../(map)/ArbovirusMap";
 import clsx from "clsx";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 //Study by who region and pathogen
 

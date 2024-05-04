@@ -3,9 +3,9 @@ import {
   arbovirusesSF,
   convertArboSFtoArbo,
 } from "./recharts";
-import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { LegendConfiguration, StackedBarChart } from "./stacked-bar-chart";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 interface EstimateCountByWHORegionAndArbovirusGraphProps {
   legendConfiguration: LegendConfiguration;

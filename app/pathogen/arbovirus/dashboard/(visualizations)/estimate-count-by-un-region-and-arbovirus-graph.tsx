@@ -3,10 +3,10 @@ import {
   arbovirusesSF,
   convertArboSFtoArbo,
 } from "./recharts";
-import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { UNRegion, getLabelForUNRegion } from "@/lib/un-regions";
 import { LegendConfiguration, StackedBarChart } from "./stacked-bar-chart";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 interface EstimateCountByUnRegionAndArbovirusGraphProps {
   legendConfiguration: LegendConfiguration;

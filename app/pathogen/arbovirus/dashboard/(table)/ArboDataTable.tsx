@@ -2,8 +2,8 @@
 
 import { DataTable } from "@/components/ui/data-table/data-table";
 import React, { useContext } from "react";
-import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { columns } from "./columns";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 export const ArboDataTable = () => {
   const state = useContext(ArboContext);

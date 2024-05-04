@@ -1,7 +1,6 @@
 import { useContext, useMemo, useCallback } from "react";
 import uniq from "lodash/uniq";
 
-import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import {
   mixColours,
   typedGroupBy,
@@ -23,6 +22,7 @@ import { WHORegion } from "@/lib/who-regions";
 import { Button } from "@/components/ui/button";
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import { useChartArbovirusDropdown } from "./chart-arbovirus-dropdown";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 enum AgeGroup {
   "Adults (18-64 years)" = "Adults (18-64 years)",
@@ -181,7 +181,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     });
     const csv = generateCsv(csvConfig)(dataForCsv);
     download(csvConfig)(csv);
-  }, [tableDatasets]);
+  }, [tableDatasets, ageGroupToSortOrderMap]);
 
   return (
     <div className="p-2">

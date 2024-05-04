@@ -7,7 +7,6 @@ import {
 } from "../../visualizations/visualizations";
 import { isSafeReferrerLink } from "@/utils/referrer-link-util";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
-import { ArboContext } from "@/contexts/arbo-context/arbo-context";
 import { useContext } from "react";
 import {
   Tooltip,
@@ -15,6 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 interface DisabledButtonConfig {
   enabled: false;
