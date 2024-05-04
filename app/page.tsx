@@ -19,6 +19,7 @@ import {
   arbovirusDataStatistics,
 } from "@/hooks/useArboStatistics";
 import request from "graphql-request";
+import { SeroTrackerIntroduction } from "./serotracker-introduction";
 
 interface TrackerButtonProps {
   titleSuffix: string;
@@ -34,7 +35,7 @@ function TrackerButton(props: TrackerButtonProps) {
   return (
     <Link
       className={cn(
-        "w-full rounded-md text-white bg-background flex flex-col mb-4 lg:mb-0 lg:mr-4 lg:last:mr-0 overflow-hidden p-2 transition-all group hover:cursor-pointer",
+        "w-full rounded-md text-white bg-background flex flex-col mb-4 lg:mb-0 mr-4 last:mr-0 overflow-hidden p-2 transition-all group hover:cursor-pointer",
         `hover:${props.bgColor}`,
         props.className
       )}
@@ -76,8 +77,6 @@ export default async function Home() {
         ),
     });
 
-    
-
   return (
     <CustomQueryClientProvider>
       <div className="h-full overflow-auto">
@@ -87,27 +86,9 @@ export default async function Home() {
             backgroundImage: `url(${SeroMap.src})`,
           }}
         >
-          <div className="grid grid-cols-4 w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
+          <div className="md:grid grid-cols-4 w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
             <div className="col-span-2 col-start-1 col-end-3 row-span-1 h-full">
-              <h1 className=" w-fit p-2 rounded-md">SeroTracker</h1>
-                <h3 className="rounded-md p-2">
-                  Your Go to Source for COVID-19 and Arbovirus Seroprevalence Data
-                </h3>
-              <div className="p-2 rounded-md">
-                <p className=" w-fit mb-2">
-                  We synthesize findings from thousands of COVID-19 and
-                  Arbovirus seroprevalence studies worldwide, collect and
-                  standardize the data we extract from them, provide useful
-                  analytics on the data and extract monthly insights relating to
-                  trends and patterns we find in the data
-                </p>
-                <p className=" w-fit mb-2">
-                  We conduct an ongoing systematic review to track serosurveys
-                  (antibody testing-based surveillance efforts) around the world
-                  and visualize findings on this dashboard.
-                </p>
-                <p>Check our dashboards using the buttons to the right or view our short tutorial on how to use the dashboard!</p>
-              </div>
+              <SeroTrackerIntroduction />
             </div>
             <div className="col-span-2 col-start-3 col-end-5 row-span-1">
               <iframe
