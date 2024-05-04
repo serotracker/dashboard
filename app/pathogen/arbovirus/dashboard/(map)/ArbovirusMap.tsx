@@ -94,16 +94,19 @@ export function ArbovirusMap() {
             return <ArboStudyPopupContent record={input.data} />
           }}
           dataPoints={state.filteredData}
-          clusterProperties={{
-            ZIKV: ["+", ["case", ["==", ["get", "pathogen"], "ZIKV"], 1, 0]],
-            CHIKV: ["+", ["case", ["==", ["get", "pathogen"], "CHIKV"], 1, 0]],
-            WNV: ["+", ["case", ["==", ["get", "pathogen"], "WNV"], 1, 0]],
-            DENV: ["+", ["case", ["==", ["get", "pathogen"], "DENV"], 1, 0]],
-            YF: ["+", ["case", ["==", ["get", "pathogen"], "YF"], 1, 0]],
-            MAYV: ["+", ["case", ["==", ["get", "pathogen"], "MAYV"], 1, 0]],
-          }} 
-          computeClusterMarkers={computeClusterMarkers}        
-          />
+          clusteringSettings={{
+            clusteringEnabled: true,
+            clusterProperties: {
+              ZIKV: ["+", ["case", ["==", ["get", "pathogen"], "ZIKV"], 1, 0]],
+              CHIKV: ["+", ["case", ["==", ["get", "pathogen"], "CHIKV"], 1, 0]],
+              WNV: ["+", ["case", ["==", ["get", "pathogen"], "WNV"], 1, 0]],
+              DENV: ["+", ["case", ["==", ["get", "pathogen"], "DENV"], 1, 0]],
+              YF: ["+", ["case", ["==", ["get", "pathogen"], "YF"], 1, 0]],
+              MAYV: ["+", ["case", ["==", ["get", "pathogen"], "MAYV"], 1, 0]],
+            },
+            computeClusterMarkers
+          }}
+        />
       </div>
       <MapArbovirusStudySubmissionPrompt 
         hidden={!isStudySubmissionPromptVisible}
