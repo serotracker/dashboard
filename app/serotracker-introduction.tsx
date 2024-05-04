@@ -1,7 +1,6 @@
 "use client";
 
 import { Breakpoint, useBreakpoint } from "@/hooks/useBreakpoint";
-import { useEffect } from "react";
 
 export const SeroTrackerIntroduction = () => {
   const { 
@@ -12,10 +11,6 @@ export const SeroTrackerIntroduction = () => {
 
   const isEqualToOrLargerThanMdBreakpoint = isGreaterThanOrEqualToBreakpoint(currentBreakpoint, Breakpoint.MD)
   
-  useEffect(() => {
-    console.log(currentBreakpoint)
-  }, [currentBreakpoint])
-
   return (
     <>
       <h1 className=" w-fit p-2 rounded-md">SeroTracker</h1>

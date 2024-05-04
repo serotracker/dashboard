@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState, useCallback } from "react";
+import { useContext, useMemo, useCallback } from "react";
 import uniq from "lodash/uniq";
 
 import { ArboContext } from "@/contexts/arbo-context/arbo-context";
@@ -10,7 +10,7 @@ import {
   typedObjectKeys,
   cn
 } from "@/lib/utils";
-import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
+import { arbovirusesSF, median } from "./recharts";
 import {
   Table,
   TableBody,
@@ -22,12 +22,6 @@ import {
 import { WHORegion } from "@/lib/who-regions";
 import { Button } from "@/components/ui/button";
 import { mkConfig, generateCsv, download } from "export-to-csv";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useChartArbovirusDropdown } from "./chart-arbovirus-dropdown";
 
 enum AgeGroup {
@@ -46,6 +40,13 @@ interface GetMedianSeroprevalenceInformationFromDataOutput {
   seroprevalencePercentageString: string;
   backgroundColourHexCode: string;
 }
+
+const ageGroupToSortOrderMap: {[key in AgeGroup]: number } = {
+  [AgeGroup["Children and Youth (0-17 years)"]]: 1,
+  [AgeGroup["Adults (18-64 years)"]]: 2,
+  [AgeGroup["Seniors (65+ years)"]]: 3,
+  [AgeGroup["Multiple groups"]]: 4
+};
 
 const getMedianSeroprevalenceInformationFromData = (
   input: GetMedianSeroprevalenceInformationFromDataInput
@@ -143,13 +144,6 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     () => selectedArbovirus !== 'N/A' ? tableDatasets[selectedArbovirus] : {} as Record<WHORegion, Record<AgeGroup, any[]>>,
     [selectedArbovirus, tableDatasets]
   );
-
-  const ageGroupToSortOrderMap: {[key in AgeGroup]: number } = {
-    [AgeGroup["Children and Youth (0-17 years)"]]: 1,
-    [AgeGroup["Adults (18-64 years)"]]: 2,
-    [AgeGroup["Seniors (65+ years)"]]: 3,
-    [AgeGroup["Multiple groups"]]: 4
-  }
 
   const allIncludedAgeGroupsInDatasetToDisplay = useMemo(() => 
     uniq(typedObjectEntries(datasetToDisplay ?? {}).flatMap(([whoRegion, dataForWhoRegion]) => typedObjectKeys(dataForWhoRegion)))

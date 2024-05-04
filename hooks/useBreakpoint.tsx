@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export enum Breakpoint {
   "XS" = "XS",
@@ -17,7 +17,11 @@ interface BreakpointFunctionError {
 
 export const useBreakpoint = () => {
   const getCurrentBreakpoint = () => {
-    if(typeof window?.innerWidth === 'undefined') {
+    if(typeof window === 'undefined') {
+      return Breakpoint.UNKNOWN;
+    }
+
+    if(!window?.innerWidth) {
       return Breakpoint.UNKNOWN;
     }
 
@@ -50,7 +54,10 @@ export const useBreakpoint = () => {
 
   const [currentBreakpoint, setCurrentBreakpoint] = useState<Breakpoint>(getCurrentBreakpoint());
 
-  window.addEventListener('resize', () => setCurrentBreakpoint(getCurrentBreakpoint()));
+  useEffect(() => {
+    window.addEventListener('resize', () => setCurrentBreakpoint(getCurrentBreakpoint()));
+    return () => window.removeEventListener('resize', () => setCurrentBreakpoint(getCurrentBreakpoint()));
+  }, []);
 
   const breakpointSizeRanking = {
     [Breakpoint.XS]: 1,
