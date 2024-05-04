@@ -17,6 +17,7 @@ import { ArboCountryPopupContent } from "./ArboCountryPopUpContent";
 import { computeClusterMarkers } from "./arbo-map-cluster-utils";
 import { MapShadingLegend } from "./MapShadingLegend";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
   ZIKV: "data-[state=checked]:bg-zikv",
@@ -110,27 +111,7 @@ export function ArbovirusMap() {
         className={"absolute bottom-1 left-1 mx-auto w-1/2 text-center bg-white/60 backdrop-blur-md"}
       />
       <MapShadingLegend className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"} />
-      <div className={"absolute top-1 left-1 p-2 "}>
-        <Card className={"mb-1 bg-white/60 backdrop-blur-md"}>
-          <CardContent className={"flex w-fit p-2"}>
-            <p className={"ml-1 font-medium"}>
-              <b>{state.filteredData.length}</b> Estimates displayed from{" "}
-              <b>
-                {
-                  Array.from(
-                    new Set(
-                      state.filteredData.map(
-                        (item: any) => item.sourceSheetName
-                      )
-                    )
-                  ).length
-                }
-              </b>{" "}
-              unique sources
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <MapEstimateSummary filteredData={state.filteredData}/>
     </>
   );
 }
