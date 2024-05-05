@@ -3,29 +3,10 @@ import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-contex
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import SectionHeader from "../SectionHeader";
 import React from "react";
+import { FieldInformation } from "./available-filters";
 
-interface FieldInformation {
-  field: FilterableField;
-  label: string;
-  valueToLabelMap: Record<string, string | undefined>;
-  tooltipContent?: React.ReactNode;
-  filterRenderingFunction: FilterRenderingFunction;
-}
 
-interface FilterRenderingFunctionInput {
-  filter: string;
-  placeholder: string;
-  state: PathogenContextType<ArbovirusEstimate>;
-  filterOptions: string[];
-  data: any;
-  optionToLabelMap: Record<string, string | undefined>;
-  tooltipContent: React.ReactNode | undefined;
-  sendFilterChangeDispatch: SendFilterChangeDispatch;
-}
-
-type FilterRenderingFunction = (input: FilterRenderingFunctionInput) => React.ReactNode;
-
-interface FilterSectionProps {
+export interface FilterSectionProps {
   headerText: string;
   headerTooltipText: string;
   state: PathogenContextType<ArbovirusEstimate>;
@@ -50,7 +31,7 @@ export const FilterSection = (props: FilterSectionProps) => (
         filterOptions={props.filters[fieldInformation.field]}
         data={props.data ? props.data.arbovirusEstimates : []}
         optionToLabelMap={fieldInformation.valueToLabelMap}
-        tooltipContent={fieldInformation.tooltipContent}
+        renderTooltipContent={fieldInformation.renderTooltipContent}
         sendFilterChangeDispatch={props.sendFilterChangeDispatch}
       />
     ))}

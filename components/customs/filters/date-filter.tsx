@@ -4,11 +4,12 @@ import { SendFilterChangeDispatch } from "@/app/pathogen/arbovirus/dashboard/fil
 import { DatePicker } from "@/components/ui/datepicker";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import parseISO from "date-fns/parseISO";
+import { TooltipContentRenderingFunction } from "./available-filters";
 
 interface DateFilterProps {
   filter: string;
   placeholder: string;
-  tooltipContent: React.ReactNode | undefined;
+  renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
   state: PathogenContextType<ArbovirusEstimate>,
   data: any
@@ -17,7 +18,7 @@ interface DateFilterProps {
 export const DateFilter = (props: DateFilterProps): React.ReactNode => (
   <GenericFilter
     filter={props.filter}
-    tooltipContent={props.tooltipContent}
+    renderTooltipContent={props.renderTooltipContent}
   >
     <DatePicker
       onChange={(date) => {

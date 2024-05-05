@@ -5,6 +5,7 @@ import { useCallback } from "react";
 
 interface ResetFiltersButtonProps {
   state: PathogenContextType<ArbovirusEstimate>;
+  hidden: boolean;
   data: any;
 }
 
@@ -20,7 +21,7 @@ export const ResetFiltersButton = (props: ResetFiltersButtonProps) => {
   }, [props.state, props.data]);
 
   return (
-    <div>
+    <div className={props.hidden ? "hidden" : ""}>
       <Button
         className="w-full"
         onClick={resetFilters}

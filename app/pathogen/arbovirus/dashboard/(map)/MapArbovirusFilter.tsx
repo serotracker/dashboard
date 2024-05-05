@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import SectionHeader from "@/components/customs/SectionHeader";
 import { PathogenContextType, PathogenContextActionType } from "@/contexts/pathogen-context/pathogen-context";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { cn } from "@/lib/utils";
 
 interface MapArbovirusFilterProps {
   className?: string;
@@ -46,7 +47,7 @@ export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilte
   };
 
   return (
-    <div className={className}>
+    <div className={cn('p-0', className)}>
       <SectionHeader header_text="Arboviruses" tooltip_text="Filter on arbovirus strain."/>
       <div className={"flex justify-between lg:justify-center flex-wrap lg:flex-col pb-3"}>
         {pathogenOrder.map((pathogenAbbreviation: string) => {

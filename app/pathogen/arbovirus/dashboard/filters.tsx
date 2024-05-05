@@ -28,7 +28,7 @@ import { DateFilter } from "@/components/customs/filters/date-filter";
 import { SingleSelectFilter } from "@/components/customs/filters/single-select-filter";
 import { MultiSelectFilter } from "@/components/customs/filters/multi-select-filter";
 import { ResetFiltersButton } from "@/components/customs/filters/reset-filters-button";
-import { FilterSection } from "@/components/customs/filters/filter-section";
+import { FilterSection, FilterSectionProps } from "@/components/customs/filters/filter-section";
 
 interface SendFilterChangeDispatchInput {
   value: string[],
@@ -54,59 +54,6 @@ const sendFilterChangeDispatch = (input: SendFilterChangeDispatchInput) => {
   });
 };
 
-// Function to build a filter dropdown
-const buildFilterDropdown = (
-  filter: string,
-  placeholder: string,
-  state: PathogenContextType<ArbovirusEstimate>,
-  filterOptions: string[],
-  data: any,
-  optionToLabelMap: Record<string, string | undefined>,
-  tooltipContent: React.ReactNode | undefined,
-) => {
-  if (
-    filter === FilterableField.start_date ||
-    filter === FilterableField.end_date
-  ) {
-    return (
-      <DateFilter
-        filter={filter}
-        placeholder={placeholder}
-        tooltipContent={tooltipContent}
-        sendFilterChangeDispatch={sendFilterChangeDispatch}
-        state={state}
-        data={data}
-      />
-    );
-  } else if (filter === FilterableField.esm) {
-    return (
-      <SingleSelectFilter
-        filter={filter}
-        placeholder={placeholder}
-        tooltipContent={tooltipContent}
-        sendFilterChangeDispatch={sendFilterChangeDispatch}
-        state={state}
-        data={data}
-        filterOptions={filterOptions}
-        optionToLabelMap={optionToLabelMap}
-      />
-    )
-  } else {
-    return (
-      <MultiSelectFilter
-        filter={filter}
-        placeholder={placeholder}
-        tooltipContent={tooltipContent}
-        sendFilterChangeDispatch={sendFilterChangeDispatch}
-        state={state}
-        data={data}
-        filterOptions={filterOptions}
-        optionToLabelMap={optionToLabelMap}
-      />
-    )
-  }
-};
-
 export enum FilterableField {
   ageGroup = "ageGroup",
   pediatricAgeGroup = "pediatricAgeGroup",
@@ -123,6 +70,10 @@ export enum FilterableField {
   start_date = "start_date",
   end_date = "end_date",
   serotype = "serotype"
+}
+
+interface FilterStructure {
+  filterSections: FilterSectionProps;
 }
 
 interface FiltersProps {
@@ -207,7 +158,6 @@ export function Filters(props: FiltersProps) {
         <MapArbovirusFilter 
           data={data} 
           state={state} 
-          className={"p-0"} 
         />
         <FilterSection
           headerText="Date"

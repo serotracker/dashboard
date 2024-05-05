@@ -3,6 +3,7 @@ import { Select } from "@/components/customs/select";
 import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { GenericFilter } from "./generic-filter";
+import { TooltipContentRenderingFunction } from "./available-filters";
 
 export enum SelectFilterType {
   SINGLE_SELECT = 'SINGLE_SELECT',
@@ -12,7 +13,7 @@ export enum SelectFilterType {
 export interface SelectFilterProps {
   filter: string;
   placeholder: string;
-  tooltipContent: React.ReactNode | undefined;
+  renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
   state: PathogenContextType<ArbovirusEstimate>;
   data: any;
@@ -24,7 +25,7 @@ export interface SelectFilterProps {
 export const SelectFilter = (props: SelectFilterProps) => (
   <GenericFilter
     filter={props.filter}
-    tooltipContent={props.tooltipContent}
+    renderTooltipContent={props.renderTooltipContent}
   >
     <Select
       handleOnChange={(value) => props.sendFilterChangeDispatch({
