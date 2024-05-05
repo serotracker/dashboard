@@ -51,7 +51,14 @@ export enum FilterableField {
   pathogen = "pathogen",
   start_date = "start_date",
   end_date = "end_date",
-  serotype = "serotype"
+  samplingStartDate = "samplingStartDate",
+  samplingEndDate = "samplingEndDate",
+  serotype = "serotype",
+  scope = "scope",
+  sourceType = "sourceType",
+  antibodies = "antibodies",
+  testType = "testType",
+  isotypes = "isotypes"
 }
 
 const WhoRegionTooltip: TooltipContentRenderingFunction = (input) => (
@@ -123,6 +130,18 @@ export const availableFilters: {[key in FilterableField]: FieldInformation } = {
     valueToLabelMap: {},
     filterRenderingFunction: DateFilter
   },
+  [FilterableField.samplingStartDate]: {
+    field: FilterableField.samplingStartDate,
+    label: "Sampling Start Date",
+    valueToLabelMap: {},
+    filterRenderingFunction: DateFilter
+  },
+  [FilterableField.samplingEndDate]: {
+    field: FilterableField.samplingEndDate,
+    label: "Sampling End Date",
+    valueToLabelMap: {},
+    filterRenderingFunction: DateFilter
+  },
   [FilterableField.whoRegion]: {
     field: FilterableField.whoRegion,
     label: "WHO Region",
@@ -156,6 +175,36 @@ export const availableFilters: {[key in FilterableField]: FieldInformation } = {
   [FilterableField.ageGroup]: {
     field: FilterableField.ageGroup,
     label: "Age Group",
+    valueToLabelMap: {},
+    filterRenderingFunction: MultiSelectFilter
+  },
+  [FilterableField.scope]: {
+    field: FilterableField.scope,
+    label: "Scope of Study",
+    valueToLabelMap: {},
+    filterRenderingFunction: MultiSelectFilter
+  },
+  [FilterableField.sourceType]: {
+    field: FilterableField.sourceType,
+    label: "Source Type",
+    valueToLabelMap: {},
+    filterRenderingFunction: MultiSelectFilter
+  },
+  [FilterableField.antibodies]: {
+    field: FilterableField.antibodies,
+    label: "Antibodies",
+    valueToLabelMap: {},
+    filterRenderingFunction: MultiSelectFilter
+  },
+  [FilterableField.testType]: {
+    field: FilterableField.testType,
+    label: "Test Type",
+    valueToLabelMap: {},
+    filterRenderingFunction: MultiSelectFilter
+  },
+  [FilterableField.isotypes]: {
+    field: FilterableField.isotypes,
+    label: "Isotype",
     valueToLabelMap: {},
     filterRenderingFunction: MultiSelectFilter
   },
