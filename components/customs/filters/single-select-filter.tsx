@@ -1,8 +1,8 @@
 import { SelectFilter, SelectFilterProps, SelectFilterType } from "./select-filter";
 
-type SingleSelectFilterProps = Omit<SelectFilterProps, 'selectFilterType'>
+type SingleSelectFilterProps<TEstimate extends Record<string, unknown>> = Omit<SelectFilterProps<TEstimate>, 'selectFilterType'>
 
-export const SingleSelectFilter = (props: SingleSelectFilterProps) => (
+export const SingleSelectFilter = <TEstimate extends Record<string, unknown>>(props: SingleSelectFilterProps<TEstimate>) => (
   <SelectFilter
     selectFilterType={SelectFilterType.SINGLE_SELECT}
     {...props}
