@@ -52,7 +52,12 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
     FilterableField.sampleFrame
   ].filter((field) => {
     /* If the 0-17 filter is not selected, don't show pediatric age group.*/
-    if(!selectedAgeGroups.includes('Children and Youth (0-17 years)') && field === FilterableField.pediatricAgeGroup) {
+    if(
+      field === FilterableField.pediatricAgeGroup && !(
+        selectedAgeGroups.length === 1 &&
+        selectedAgeGroups[0] === 'Children and Youth (0-17 years)'
+      )
+    ) {
       return false;
     }
 
