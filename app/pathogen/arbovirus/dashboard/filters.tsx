@@ -14,93 +14,45 @@
 
 "use client";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Select } from "@/components/customs/select";
 import React, { useContext } from "react";
 import { useArboData } from "@/hooks/useArboData";
-import SectionHeader from "@/components/customs/SectionHeader";
-import { DatePicker } from "@/components/ui/datepicker";
-import { parseISO } from "date-fns";
 import { useArboFilters } from "@/hooks/useArboFilters";
 import { unRegionEnumToLabelMap } from "@/lib/un-regions";
-import { Button } from "@/components/ui/button";
 import { MapArbovirusFilter } from "./(map)/MapArbovirusFilter";
 import Link from "next/link";
 import { 
   ArboContext, ArbovirusEstimate
 } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { PathogenContextActionType, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
+import { DateFilter } from "@/components/customs/filters/date-filter";
+import { SingleSelectFilter } from "@/components/customs/filters/single-select-filter";
+import { MultiSelectFilter } from "@/components/customs/filters/multi-select-filter";
+import { ResetFiltersButton } from "@/components/customs/filters/reset-filters-button";
+import { FilterSection } from "@/components/customs/filters/filter-section";
 
-interface FieldInformation {
-  field: FilterableField;
-  label: string;
-  valueToLabelMap: Record<string, string | undefined>;
-  tooltipContent?: React.ReactNode;
+interface SendFilterChangeDispatchInput {
+  value: string[],
+  newFilter: string,
+  state: PathogenContextType<ArbovirusEstimate>,
+  data: any
 }
+
+export type SendFilterChangeDispatch = (input: SendFilterChangeDispatchInput) => void;
 
 /**
  * Function to add or update filters with multiple values
  * 
  */
-const sendFilterChangeDispatch = (
-  value: string[],
-  newFilter: string,
-  state: PathogenContextType<ArbovirusEstimate>,
-  data: any
-) => {
-  state.dispatch({
+const sendFilterChangeDispatch = (input: SendFilterChangeDispatchInput) => {
+  input.state.dispatch({
     type: PathogenContextActionType.UPDATE_FILTER,
     payload: {
-      filter: newFilter,
-      value: value,
-      data: data ? data : [],
+      filter: input.newFilter,
+      value: input.value,
+      data: input.data ? input.data : [],
     },
   });
 };
-
-interface FieldTooltipProps {
-  tooltipContent: React.ReactNode,
-  className?: string,
-}
-
-const FilterTooltip = (props: FieldTooltipProps): React.ReactNode => {
-  return (
-    <div className={props.className}>
-      <TooltipProvider delayDuration={0}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div
-              className="h-5 w-5 text-gray-500 cursor-pointer"
-            >
-              &#9432;
-            </div>
-          </TooltipTrigger>
-          <TooltipContent
-            style={{
-              position: "absolute",
-              top: "50px", // position below the trigger
-              left:"-120px",
-              minWidth: "230px",
-              paddingTop: 0,
-              paddingBottom: 0,
-            }}
-          >
-            <div
-              className="bg-background w-full h-full p-4 rounded text-white"
-            >
-              {props.tooltipContent}
-            </div>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </div>
-  )
-}
 
 // Function to build a filter dropdown
 const buildFilterDropdown = (
@@ -112,57 +64,46 @@ const buildFilterDropdown = (
   optionToLabelMap: Record<string, string | undefined>,
   tooltipContent: React.ReactNode | undefined,
 ) => {
-  const sortedOptions = filterOptions
-    ? filterOptions
-        .filter((assay: string | null): assay is string => assay !== null)
-        .sort()
-    : [];
   if (
     filter === FilterableField.start_date ||
     filter === FilterableField.end_date
   ) {
     return (
-      <div className="pb-3 flex w-1/2 md:w-1/3 lg:w-full px-2 lg:px-0" key={filter}>
-        <DatePicker
-          onChange={(date) => {
-            const dateString = date?.toISOString();
-            sendFilterChangeDispatch(dateString ? [dateString] : [], filter, state, data);
-          }}
-          labelText={placeholder}
-          date={
-            state.selectedFilters[filter] &&
-            state.selectedFilters[filter].length > 0
-              ? parseISO(state.selectedFilters[filter][0])
-              : undefined
-          }
-          clearDateFilter={() => {
-            state.dispatch({
-              type: PathogenContextActionType.UPDATE_FILTER,
-              payload: {
-                filter: filter,
-                value: [],
-                data: data ? data : [],
-              },
-            });
-          }}
-        />
-        {tooltipContent && <FilterTooltip className='pl-2' tooltipContent={tooltipContent} />}
-      </div>
+      <DateFilter
+        filter={filter}
+        placeholder={placeholder}
+        tooltipContent={tooltipContent}
+        sendFilterChangeDispatch={sendFilterChangeDispatch}
+        state={state}
+        data={data}
+      />
     );
+  } else if (filter === FilterableField.esm) {
+    return (
+      <SingleSelectFilter
+        filter={filter}
+        placeholder={placeholder}
+        tooltipContent={tooltipContent}
+        sendFilterChangeDispatch={sendFilterChangeDispatch}
+        state={state}
+        data={data}
+        filterOptions={filterOptions}
+        optionToLabelMap={optionToLabelMap}
+      />
+    )
   } else {
     return (
-      <div className="pb-3 flex w-1/2 md:w-1/3 lg:w-full px-2 lg:px-0" key={filter}>
-        <Select
-          handleOnChange={(value) => sendFilterChangeDispatch(value, filter, state, data)}
-          heading={placeholder}
-          selected={state.selectedFilters[filter] ?? []}
-          options={sortedOptions}
-          optionToLabelMap={optionToLabelMap}
-          singleSelect={filter === FilterableField.esm}
-        />
-        {tooltipContent && <FilterTooltip className='pl-2' tooltipContent={tooltipContent} />}
-      </div>
-    );
+      <MultiSelectFilter
+        filter={filter}
+        placeholder={placeholder}
+        tooltipContent={tooltipContent}
+        sendFilterChangeDispatch={sendFilterChangeDispatch}
+        state={state}
+        data={data}
+        filterOptions={filterOptions}
+        optionToLabelMap={optionToLabelMap}
+      />
+    )
   }
 };
 
@@ -183,46 +124,6 @@ export enum FilterableField {
   end_date = "end_date",
   serotype = "serotype"
 }
-
-interface FilterSectionProps {
-  headerText: string;
-  headerTooltipText: string;
-  state: PathogenContextType<ArbovirusEstimate>;
-  allFieldInformation: FieldInformation[];
-  filters: any;
-  data: any;
-}
-
-const FilterSection = ({
-  headerText,
-  headerTooltipText,
-  allFieldInformation,
-  state,
-  filters,
-  data,
-}: FilterSectionProps) => {
-  return (
-    <div className="p-0">
-        <SectionHeader
-          header_text={headerText}
-          tooltip_text={headerTooltipText}
-        />
-        <div className="flex flex-row lg:flex-col flex-wrap">
-        {allFieldInformation.map((fieldInformation) => {
-        return buildFilterDropdown(
-          fieldInformation.field,
-          fieldInformation.label,
-          state,
-          filters[fieldInformation.field],
-          data ? data.arbovirusEstimates : [],
-          fieldInformation.valueToLabelMap,
-          fieldInformation.tooltipContent
-        );
-      })}
-        </div>
-    </div>
-  );
-};
 
 interface FiltersProps {
   excludedFields?: FilterableField[];
@@ -249,8 +150,8 @@ export function Filters(props: FiltersProps) {
   const state = useContext(ArboContext);
 
   const dateFilters = [
-    {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}},
-    {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}}
+    {field: FilterableField.start_date, label: "Sampling Start Date", valueToLabelMap: {}, filterRenderingFunction: DateFilter},
+    {field: FilterableField.end_date, label: "Sampling End Date", valueToLabelMap: {}, filterRenderingFunction: DateFilter}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
 
   const isEsmMapSelected = selectedFilters.esm?.length === 1;
@@ -264,9 +165,11 @@ export function Filters(props: FiltersProps) {
         <p> EUR: European Region </p>
         <p> SEAR: South-East Asia Region </p>
         <p> WPR: Western Pacific Region </p>
-      </div>},
-    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap },
-    {field: FilterableField.country, label: "Country", valueToLabelMap: {}},
+      </div>,
+      filterRenderingFunction: MultiSelectFilter
+    },
+    {field: FilterableField.unRegion, label: "UN Region", valueToLabelMap: unRegionEnumToLabelMap, filterRenderingFunction: MultiSelectFilter},
+    {field: FilterableField.country, label: "Country", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter},
     {field: FilterableField.esm, label: "Environmental Suitability Map", valueToLabelMap: {
       "zika": "Zika 2016",
       "dengue2015": "Dengue 2015",
@@ -275,36 +178,28 @@ export function Filters(props: FiltersProps) {
       <p>
        This is a single-select dropdown representing environmental suitability for relevant vector species per pathogen. 
        {isEsmMapSelected && (<p>This map is sourced from this <Link rel="noopener noreferrer" target="_blank" href={isEsmMapSelected ? state.selectedFilters.esm.includes('dengue2015') || state.selectedFilters.esm.includes('dengue2050') ? 'https://doi.org/10.1038/s41564-019-0476-8' : 'http://dx.doi.org/10.7554/eLife.15272.001' : ''} className={"underline hover:text-gray-300"}>article</Link></p>)}
-      </p>},
+      </p>,
+    filterRenderingFunction: SingleSelectFilter
+    },
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
 
   const demographicFilters = [
-    {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}},
-    {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}},
-    {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}},
-    {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}},
+    {field: FilterableField.ageGroup, label: "Age Group", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter},
+    {field: FilterableField.pediatricAgeGroup, label: "Pediatric Age Group", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter},
+    {field: FilterableField.sex, label: "Sex", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter},
+    {field: FilterableField.sampleFrame, label: "Sample Frame", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter},
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
 
   const testInformationFilters = [
-    {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}},
-    {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}},
-    {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}},
-    {field: FilterableField.serotype, label: "Serotype (DENV only)", valueToLabelMap: {}}
+    {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter},
+    {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter},
+    {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter},
+    {field: FilterableField.serotype, label: "Serotype (DENV only)", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter}
   ].filter((fieldInformation) => !excludedFields.includes(fieldInformation.field));
   // Fetch arbovirus data using the useArboData hook
   const { data } = useArboData();
 
   const { data: filterData } = useArboFilters();
-
-  const resetFilters = () => {
-    // Dispatch action to reset filters
-    state.dispatch({
-      type: PathogenContextActionType.RESET_FILTERS,
-      payload: {
-        data: data ? data.arbovirusEstimates : [],
-      }, // Include an empty object as payload
-    });
-  };
 
   if (filterData) {
     return (
@@ -320,6 +215,7 @@ export function Filters(props: FiltersProps) {
           allFieldInformation={dateFilters}
           state={state}
           filters={filterData.arbovirusFilterOptions}
+          sendFilterChangeDispatch={sendFilterChangeDispatch}
           data={data}
         />
         <FilterSection
@@ -328,6 +224,7 @@ export function Filters(props: FiltersProps) {
           allFieldInformation={studyInfoFilters}
           state={state}
           filters={{...filterData.arbovirusFilterOptions, esm: ["zika", "dengue2015", "dengue2050"]}}
+          sendFilterChangeDispatch={sendFilterChangeDispatch}
           data={data}
         />
         <FilterSection
@@ -336,6 +233,7 @@ export function Filters(props: FiltersProps) {
           allFieldInformation={demographicFilters}
           state={state}
           filters={filterData.arbovirusFilterOptions}
+          sendFilterChangeDispatch={sendFilterChangeDispatch}
           data={data}
         />
         <FilterSection
@@ -344,17 +242,13 @@ export function Filters(props: FiltersProps) {
           allFieldInformation={testInformationFilters}
           state={state}
           filters={filterData.arbovirusFilterOptions}
+          sendFilterChangeDispatch={sendFilterChangeDispatch}
           data={data}
         />
-        <div>
-          <Button
-            className="w-full"
-            onClick={resetFilters}
-            variant={"outline"}
-          >
-            Reset Filters
-          </Button>
-        </div>
+        <ResetFiltersButton
+          state={state}
+          data={data}
+        />
       </div>
     );
   } else return <div>Filters Loading...</div>;
