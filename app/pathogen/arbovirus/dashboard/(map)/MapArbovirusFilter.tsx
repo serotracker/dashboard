@@ -10,7 +10,7 @@ import { FilterableField } from "@/components/customs/filters/available-filters"
 interface MapArbovirusFilterProps<TEstimate extends Record<string, unknown>> {
   className?: string;
   state: PathogenContextType<TEstimate>;
-  data: any;
+  data: TEstimate[];
   sendFilterChangeDispatch: SendFilterChangeDispatch;
 }
 

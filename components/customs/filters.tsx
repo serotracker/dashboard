@@ -41,8 +41,8 @@ interface FiltersProps<TEstimate extends Record<string, unknown>> {
   includedFilters: FilterableField[];
   filterSections: FilterSectionConfiguration[]
   state: PathogenContextType<TEstimate>;
-  filterData: any;
-  data: any;
+  filterData: Record<string, string[] | undefined>;
+  data: TEstimate[];
   resetAllFiltersButtonEnabled: boolean;
   className?: string;
 }
@@ -59,7 +59,7 @@ export const Filters = <TEstimate extends Record<string, unknown>>(props: Filter
           placeholder={fieldInformation.label}
           state={props.state}
           filterOptions={props.filterData[fieldInformation.field] ?? []}
-          data={props.data ? props.data.arbovirusEstimates : []}
+          data={props.data ? props.data : []}
           optionToLabelMap={fieldInformation.valueToLabelMap}
           renderTooltipContent={fieldInformation.renderTooltipContent}
           sendFilterChangeDispatch={sendFilterChangeDispatch}
@@ -74,7 +74,7 @@ export const Filters = <TEstimate extends Record<string, unknown>>(props: Filter
           headerTooltipText={filterSection.headerTooltipText}
           allFieldInformation={filterSection.includedFilters.map((filter) => availableFilters[filter])}
           state={props.state}
-          filters={props.filterData.arbovirusFilterOptions}
+          filters={props.filterData}
           sendFilterChangeDispatch={sendFilterChangeDispatch}
           data={props.data}
         />

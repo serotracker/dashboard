@@ -10,7 +10,7 @@ export interface FilterSectionProps<TEstimate extends Record<string, unknown>> {
   state: PathogenContextType<TEstimate>;
   allFieldInformation: FieldInformation[];
   filters: any;
-  data: any;
+  data: TEstimate[];
   sendFilterChangeDispatch: SendFilterChangeDispatch;
 }
 
@@ -28,7 +28,7 @@ export const FilterSection = <TEstimate extends Record<string, unknown>>(props: 
         placeholder={fieldInformation.label}
         state={props.state}
         filterOptions={props.filters[fieldInformation.field] ?? []}
-        data={props.data ? props.data.arbovirusEstimates : []}
+        data={props.data ? props.data : []}
         optionToLabelMap={fieldInformation.valueToLabelMap}
         renderTooltipContent={fieldInformation.renderTooltipContent}
         sendFilterChangeDispatch={props.sendFilterChangeDispatch}

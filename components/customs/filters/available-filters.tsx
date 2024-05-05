@@ -27,7 +27,7 @@ interface FilterRenderingFunctionInput<TEstimate extends Record<string, unknown>
   placeholder: string;
   state: PathogenContextType<TEstimate>;
   filterOptions: string[];
-  data: any;
+  data: TEstimate[];
   optionToLabelMap: Record<string, string | undefined>;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;

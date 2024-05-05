@@ -15,7 +15,7 @@ export interface SelectFilterProps<TEstimate extends Record<string, unknown>> {
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
   state: PathogenContextType<TEstimate>;
-  data: any;
+  data: TEstimate[];
   selectFilterType: SelectFilterType;
   filterOptions: Array<string | undefined | null>;
   optionToLabelMap: Record<string, string | undefined>;

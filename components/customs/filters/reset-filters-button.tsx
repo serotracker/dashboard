@@ -5,7 +5,7 @@ import { useCallback } from "react";
 interface ResetFiltersButtonProps<TEstimate extends Record<string, unknown>> {
   state: PathogenContextType<TEstimate>;
   hidden: boolean;
-  data: any;
+  data: TEstimate[];
 }
 
 export const ResetFiltersButton = <TEstimate extends Record<string, unknown>>(props: ResetFiltersButtonProps<TEstimate>) => {
@@ -14,7 +14,7 @@ export const ResetFiltersButton = <TEstimate extends Record<string, unknown>>(pr
     props.state.dispatch({
       type: PathogenContextActionType.RESET_FILTERS,
       payload: {
-        data: props.data ? props.data.arbovirusEstimates : [],
+        data: props.data ? props.data : [],
       }
     });
   }, [props.state, props.data]);

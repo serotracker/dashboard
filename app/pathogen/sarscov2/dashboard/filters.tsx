@@ -29,8 +29,6 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
 
   const demographicFilters = [
     FilterableField.ageGroup,
-    FilterableField.sex,
-    FilterableField.sampleFrame
   ];
 
   const testInformationFilters = [
@@ -51,7 +49,7 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
     includedFilters: studyLocationFilters
   }, {
     headerText: 'Demographic',
-    headerTooltipText: 'Filter on demographic variables, including population group, sex, and age group.',
+    headerTooltipText: 'Filter on demographic variables.',
     includedFilters: demographicFilters
   }, {
     headerText: 'Test Information',
@@ -62,11 +60,23 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   return (
     <Filters
       className={props.className}
-      includedFilters={[ FilterableField.pathogen ]}
+      includedFilters={[]}
       filterSections={filterSections}
       state={state}
-      filterData={filterData?.sarsCov2FilterOptions}
-      data={data}
+      filterData={
+        filterData?.sarsCov2FilterOptions ? {
+          whoRegion: filterData.sarsCov2FilterOptions.whoRegion,
+          unRegion: filterData.sarsCov2FilterOptions.unRegion,
+          country: filterData.sarsCov2FilterOptions.country,
+          ageGroup: filterData.sarsCov2FilterOptions.ageGroup,
+          scope: filterData.sarsCov2FilterOptions.scope,
+          sourceType: filterData.sarsCov2FilterOptions.sourceType,
+          antibodies: filterData.sarsCov2FilterOptions.antibodies,
+          testType: filterData.sarsCov2FilterOptions.testType,
+          isotypes: filterData.sarsCov2FilterOptions.isotypes
+        } : {}
+      }
+      data={data?.sarsCov2Estimates ?? []}
       resetAllFiltersButtonEnabled={true}
     />
   )

@@ -98,17 +98,14 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
       filterSections={filterSections}
       state={state}
       filterData={{
-        ...filterData,
-        arbovirusFilterOptions: {
-          ...filterData.arbovirusFilterOptions,
-          esm: [
-            'dengue2015',
-            'dengue2050',
-            'zika'
-          ]
-        }
+        ...filterData.arbovirusFilterOptions,
+        esm: [
+          'dengue2015',
+          'dengue2050',
+          'zika'
+        ]
       }}
-      data={data}
+      data={data.arbovirusEstimates}
       resetAllFiltersButtonEnabled={true}
     />
   )
