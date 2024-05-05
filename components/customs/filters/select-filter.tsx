@@ -1,9 +1,9 @@
-import { SendFilterChangeDispatch } from "@/app/pathogen/arbovirus/dashboard/filters";
 import { Select } from "@/components/customs/select";
 import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { GenericFilter } from "./generic-filter";
 import { TooltipContentRenderingFunction } from "./available-filters";
+import { SendFilterChangeDispatch } from "../filters";
 
 export enum SelectFilterType {
   SINGLE_SELECT = 'SINGLE_SELECT',
@@ -25,6 +25,7 @@ export interface SelectFilterProps {
 export const SelectFilter = (props: SelectFilterProps) => (
   <GenericFilter
     filter={props.filter}
+    state={props.state}
     renderTooltipContent={props.renderTooltipContent}
   >
     <Select

@@ -5,15 +5,17 @@ import SectionHeader from "@/components/customs/SectionHeader";
 import { PathogenContextType, PathogenContextActionType } from "@/contexts/pathogen-context/pathogen-context";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { cn } from "@/lib/utils";
+import { SendFilterChangeDispatch } from "@/components/customs/filters";
+import { FilterableField } from "@/components/customs/filters/available-filters";
 
 interface MapArbovirusFilterProps {
   className?: string;
   state: PathogenContextType<ArbovirusEstimate>;
   data: any;
+  sendFilterChangeDispatch: SendFilterChangeDispatch;
 }
 
-export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilterProps) => {
-  const records = data.arbovirusEstimates;
+export const MapArbovirusFilter = ({ className, state, data, sendFilterChangeDispatch }: MapArbovirusFilterProps) => {
   const pathogenOrder = ["ZIKV", "DENV", "CHIKV", "YF", "WNV", "MAYV"];
 
   const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
@@ -25,25 +27,21 @@ export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilte
       value.splice(value.indexOf(pathogen), 1);
     }
 
-    state.dispatch({
-      type: PathogenContextActionType.UPDATE_FILTER,
-      payload: {
-        data: records,
-        filter: "pathogen",
-        value: value,
-      },
-    });
+    sendFilterChangeDispatch({
+      value: value,
+      newFilter: FilterableField.pathogen,
+      state: state,
+      data: data
+    })
   };
 
   const clearAllHandler = () => {
-    state.dispatch({
-      type: PathogenContextActionType.UPDATE_FILTER,
-      payload: {
-        data: records,
-        filter: "pathogen",
-        value: [],
-      },
-    });
+    sendFilterChangeDispatch({
+      value: [],
+      newFilter: FilterableField.pathogen,
+      state: state,
+      data: data
+    })
   };
 
   return (

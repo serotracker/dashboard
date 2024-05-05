@@ -1,8 +1,7 @@
-import { FilterableField } from "@/app/pathogen/arbovirus/dashboard/filters";
 import { PathogenContextActionType, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { ResetFiltersButton } from "./filters/reset-filters-button";
-import { availableFilters } from "./filters/available-filters";
+import { FilterableField, availableFilters } from "./filters/available-filters";
 import { FilterSection } from "./filters/filter-section";
 
 interface SendFilterChangeDispatchInput {
@@ -57,7 +56,7 @@ export const Filters = (props: FiltersProps) => {
             filter={fieldInformation.field}
             placeholder={fieldInformation.label}
             state={props.state}
-            filterOptions={props.filterData[fieldInformation.field]}
+            filterOptions={props.filterData[fieldInformation.field] ?? []}
             data={props.data ? props.data.arbovirusEstimates : []}
             optionToLabelMap={fieldInformation.valueToLabelMap}
             renderTooltipContent={fieldInformation.renderTooltipContent}

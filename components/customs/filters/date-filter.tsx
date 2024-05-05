@@ -1,10 +1,10 @@
 import { PathogenContextActionType, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { GenericFilter } from "./generic-filter";
-import { SendFilterChangeDispatch } from "@/app/pathogen/arbovirus/dashboard/filters";
 import { DatePicker } from "@/components/ui/datepicker";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import parseISO from "date-fns/parseISO";
 import { TooltipContentRenderingFunction } from "./available-filters";
+import { SendFilterChangeDispatch } from "../filters";
 
 interface DateFilterProps {
   filter: string;
@@ -18,6 +18,7 @@ interface DateFilterProps {
 export const DateFilter = (props: DateFilterProps): React.ReactNode => (
   <GenericFilter
     filter={props.filter}
+    state={props.state}
     renderTooltipContent={props.renderTooltipContent}
   >
     <DatePicker

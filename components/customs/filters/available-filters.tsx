@@ -1,4 +1,3 @@
-import { SendFilterChangeDispatch } from "@/app/pathogen/arbovirus/dashboard/filters";
 import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { DateFilter } from "./date-filter";
@@ -8,6 +7,7 @@ import { SingleSelectFilter } from "./single-select-filter";
 import Link from "next/link";
 import { useMemo } from "react";
 import { MapArbovirusFilter } from "@/app/pathogen/arbovirus/dashboard/(map)/MapArbovirusFilter";
+import { SendFilterChangeDispatch } from "../filters";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -65,15 +65,15 @@ const WhoRegionTooltip: TooltipContentRenderingFunction = (input) => (
   </div>
 )
 
+const esmValueToLink: Record<string, string | undefined> = {
+  'dengue2015': 'https://doi.org/10.1038/s41564-019-0476-8',
+  'dengue2050': 'https://doi.org/10.1038/s41564-019-0476-8',
+  'zika': 'http://dx.doi.org/10.7554/eLife.15272.001'
+}
+
 const EnvironmentalSuitabilityMapTooltip: TooltipContentRenderingFunction = (input) => {
   const isEsmMapSelected = input.state.selectedFilters.esm?.length === 1;
 
-  const esmValueToLink: Record<string, string | undefined> = {
-    'dengue2015': 'https://doi.org/10.1038/s41564-019-0476-8',
-    'dengue2050': 'https://doi.org/10.1038/s41564-019-0476-8',
-    'zika': 'http://dx.doi.org/10.7554/eLife.15272.001'
-  }
-  
   const filterLink = useMemo(() => {
     if(!isEsmMapSelected) {
       return ''

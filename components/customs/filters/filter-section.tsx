@@ -1,9 +1,9 @@
-import { FilterableField, SendFilterChangeDispatch } from "@/app/pathogen/arbovirus/dashboard/filters";
 import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import SectionHeader from "../SectionHeader";
 import React from "react";
 import { FieldInformation } from "./available-filters";
+import { SendFilterChangeDispatch } from "../filters";
 
 
 export interface FilterSectionProps {
@@ -25,10 +25,11 @@ export const FilterSection = (props: FilterSectionProps) => (
     <div className="flex flex-row lg:flex-col flex-wrap">
     {props.allFieldInformation.map((fieldInformation) => (
       <fieldInformation.filterRenderingFunction
+        key={fieldInformation.field}
         filter={fieldInformation.field}
         placeholder={fieldInformation.label}
         state={props.state}
-        filterOptions={props.filters[fieldInformation.field]}
+        filterOptions={props.filters[fieldInformation.field] ?? []}
         data={props.data ? props.data.arbovirusEstimates : []}
         optionToLabelMap={fieldInformation.valueToLabelMap}
         renderTooltipContent={fieldInformation.renderTooltipContent}
