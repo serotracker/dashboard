@@ -89,7 +89,7 @@ const EnvironmentalSuitabilityMapTooltip: TooltipContentRenderingFunction = (inp
      This is a single-select dropdown representing environmental suitability for relevant vector species per pathogen. 
      {isEsmMapSelected && (
       <>
-        <p className="inline">This map is sourced from this </p>
+        <p className="inline"> This map is sourced from this </p>
         <Link
           rel="noopener noreferrer"
           target="_blank"

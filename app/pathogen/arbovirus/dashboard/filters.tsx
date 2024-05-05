@@ -21,7 +21,11 @@ import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-
 import { Filters } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
 
-export const ArbovirusFilters = () => {
+interface ArbovirusFiltersProps {
+  className?: string;
+}
+
+export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   const state = useContext(ArboContext);
   const { data } = useArboData();
   const { data: filterData } = useArboFilters();
@@ -86,11 +90,10 @@ export const ArbovirusFilters = () => {
     headerTooltipText: 'Filter according to serological measurement methods.',
     includedFilters: testInformationFilters
   }];
-  
-  console.log(filterData)
 
   return (
     <Filters
+      className={props.className}
       includedFilters={[ FilterableField.pathogen ]}
       filterSections={filterSections}
       state={state}
