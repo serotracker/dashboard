@@ -1,6 +1,5 @@
 import { Select } from "@/components/customs/select";
 import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
-import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { GenericFilter } from "./generic-filter";
 import { TooltipContentRenderingFunction } from "./available-filters";
 import { SendFilterChangeDispatch } from "../filters";
@@ -10,19 +9,19 @@ export enum SelectFilterType {
   MULTI_SELECT = 'MULTI_SELECT',
 }
 
-export interface SelectFilterProps {
+export interface SelectFilterProps<TEstimate extends Record<string, unknown>> {
   filter: string;
   placeholder: string;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
-  state: PathogenContextType<ArbovirusEstimate>;
+  state: PathogenContextType<TEstimate>;
   data: any;
   selectFilterType: SelectFilterType;
   filterOptions: Array<string | undefined | null>;
   optionToLabelMap: Record<string, string | undefined>;
 }
 
-export const SelectFilter = (props: SelectFilterProps) => (
+export const SelectFilter = <TEstimate extends Record<string, unknown>>(props: SelectFilterProps<TEstimate>) => (
   <GenericFilter
     filter={props.filter}
     state={props.state}

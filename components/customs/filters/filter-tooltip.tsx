@@ -6,15 +6,14 @@ import {
 } from "@/components/ui/tooltip";
 import { TooltipContentRenderingFunction } from "./available-filters";
 import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
-import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
-interface FieldTooltipProps {
+interface FieldTooltipProps<TEstimate extends Record<string, unknown>> {
   renderTooltipContent: TooltipContentRenderingFunction;
-  state: PathogenContextType<ArbovirusEstimate>;
+  state: PathogenContextType<TEstimate>;
   className?: string;
 }
 
-export const FilterTooltip = (props: FieldTooltipProps): React.ReactNode => (
+export const FilterTooltip = <TEstimate extends Record<string, unknown>>(props: FieldTooltipProps<TEstimate>): React.ReactNode => (
   <div className={props.className}>
     <TooltipProvider delayDuration={0}>
       <Tooltip>

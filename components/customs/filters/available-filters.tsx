@@ -1,5 +1,4 @@
 import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
-import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { DateFilter } from "./date-filter";
 import { MultiSelectFilter } from "./multi-select-filter";
 import { unRegionEnumToLabelMap } from "@/lib/un-regions";
@@ -17,16 +16,16 @@ export interface FieldInformation {
   filterRenderingFunction: FilterRenderingFunction;
 }
 
-interface RenderTooltipContentInput {
-  state: PathogenContextType<ArbovirusEstimate>;
+interface RenderTooltipContentInput<TEstimate extends Record<string, unknown>> {
+  state: PathogenContextType<TEstimate>;
 }
 
-export type TooltipContentRenderingFunction = ((input: RenderTooltipContentInput) => React.ReactNode);
+export type TooltipContentRenderingFunction = <TEstimate extends Record<string, unknown>>(input: RenderTooltipContentInput<TEstimate>) => React.ReactNode;
 
-interface FilterRenderingFunctionInput {
+interface FilterRenderingFunctionInput<TEstimate extends Record<string, unknown>> {
   filter: string;
   placeholder: string;
-  state: PathogenContextType<ArbovirusEstimate>;
+  state: PathogenContextType<TEstimate>;
   filterOptions: string[];
   data: any;
   optionToLabelMap: Record<string, string | undefined>;
@@ -34,7 +33,7 @@ interface FilterRenderingFunctionInput {
   sendFilterChangeDispatch: SendFilterChangeDispatch;
 }
 
-type FilterRenderingFunction = (input: FilterRenderingFunctionInput) => React.ReactNode;
+type FilterRenderingFunction = <TEstimate extends Record<string, unknown>>(input: FilterRenderingFunctionInput<TEstimate>) => React.ReactNode;
 
 export enum FilterableField {
   ageGroup = "ageGroup",
@@ -226,8 +225,28 @@ export const availableFilters: {[key in FilterableField]: FieldInformation } = {
     valueToLabelMap: {},
     filterRenderingFunction: MultiSelectFilter
   },
-  [FilterableField.assay]: {field: FilterableField.assay, label: "Assay", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter},
-  [FilterableField.producer]: {field: FilterableField.producer, label: "Assay Producer", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter},
-  [FilterableField.antibody]: {field: FilterableField.antibody, label: "Antibody", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter},
-  [FilterableField.serotype]: {field: FilterableField.serotype, label: "Serotype (DENV only)", valueToLabelMap: {}, filterRenderingFunction: MultiSelectFilter}
+  [FilterableField.assay]: {
+    field: FilterableField.assay,
+    label: "Assay",
+    valueToLabelMap: {},
+    filterRenderingFunction: MultiSelectFilter
+  },
+  [FilterableField.producer]: {
+    field: FilterableField.producer,
+    label: "Assay Producer",
+    valueToLabelMap: {},
+    filterRenderingFunction: MultiSelectFilter
+  },
+  [FilterableField.antibody]: {
+    field: FilterableField.antibody,
+    label: "Antibody",
+    valueToLabelMap: {},
+    filterRenderingFunction: MultiSelectFilter
+  },
+  [FilterableField.serotype]: {
+    field: FilterableField.serotype,
+    label: "Serotype (DENV only)",
+    valueToLabelMap: {},
+    filterRenderingFunction: MultiSelectFilter
+  }
 }

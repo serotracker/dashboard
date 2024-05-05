@@ -2,20 +2,24 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { pathogenColorsTailwind } from "./ArbovirusMap";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "@/components/customs/SectionHeader";
-import { PathogenContextType, PathogenContextActionType } from "@/contexts/pathogen-context/pathogen-context";
-import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { cn } from "@/lib/utils";
 import { SendFilterChangeDispatch } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
 
-interface MapArbovirusFilterProps {
+interface MapArbovirusFilterProps<TEstimate extends Record<string, unknown>> {
   className?: string;
-  state: PathogenContextType<ArbovirusEstimate>;
+  state: PathogenContextType<TEstimate>;
   data: any;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
 }
 
-export const MapArbovirusFilter = ({ className, state, data, sendFilterChangeDispatch }: MapArbovirusFilterProps) => {
+export const MapArbovirusFilter = <TEstimate extends Record<string, unknown>>({
+  className,
+  state,
+  data,
+  sendFilterChangeDispatch
+}: MapArbovirusFilterProps<TEstimate>) => {
   const pathogenOrder = ["ZIKV", "DENV", "CHIKV", "YF", "WNV", "MAYV"];
 
   const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
