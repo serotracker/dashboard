@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   Label,
 } from "recharts";
-import { groupDataForRecharts } from "./group-data-for-recharts";
+import { groupDataForRecharts } from "../../../../../components/customs/visualizations/group-data-for-recharts";
 import uniq from "lodash/uniq";
 import { typedObjectKeys } from "@/lib/utils";
 import { ContentType } from "recharts/types/component/Tooltip";

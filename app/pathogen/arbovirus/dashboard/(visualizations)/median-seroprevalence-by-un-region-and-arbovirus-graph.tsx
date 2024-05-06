@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SplitBarChart } from "./split-bar-chart";
+import { SplitBarChart } from "../../../../../components/customs/visualizations/split-bar-chart";
 import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
 import { UNRegion, getLabelForUNRegion } from "@/lib/un-regions";

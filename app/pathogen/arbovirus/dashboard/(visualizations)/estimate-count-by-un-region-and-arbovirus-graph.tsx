@@ -4,7 +4,7 @@ import {
   convertArboSFtoArbo,
 } from "./recharts";
 import { UNRegion, getLabelForUNRegion } from "@/lib/un-regions";
-import { LegendConfiguration, StackedBarChart } from "./stacked-bar-chart";
+import { LegendConfiguration, StackedBarChart } from "../../../../../components/customs/visualizations/stacked-bar-chart";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 

@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { groupDataForRecharts } from "./group-data-for-recharts";
 import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
-import { SlantedTick } from "./recharts";
+import { SlantedTick } from "../../../app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 
 export enum LegendConfiguration {
   RIGHT_ALIGNED = 'RIGHT_ALIGNED',

@@ -10,7 +10,7 @@ const initialSarsCov2ContextState = {
   dataFiltered: false,
 }
 
-type SarsCov2Estimate = SarsCov2EstimatesQuery['sarsCov2Estimates'][number];
+export type SarsCov2Estimate = SarsCov2EstimatesQuery['sarsCov2Estimates'][number];
 
 export const SarsCov2Context = createContext<PathogenContextType<SarsCov2Estimate>>({
   ...initialSarsCov2ContextState,
