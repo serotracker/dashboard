@@ -21,12 +21,12 @@ interface AreaChartProps<
 > {
   graphId: string;
   data: TData[];
-  primaryGroupingFunction: (data: TData) => TPrimaryGroupingKey;
+  primaryGroupingFunction: (data: TData) => TPrimaryGroupingKey | TPrimaryGroupingKey[];
   primaryGroupingSortFunction?: (
     a: TPrimaryGroupingKey,
     b: TPrimaryGroupingKey
   ) => number;
-  secondaryGroupingFunction: (data: TData) => TSecondaryGroupingKey;
+  secondaryGroupingFunction: (data: TData) => TSecondaryGroupingKey | TSecondaryGroupingKey[];
   secondaryGroupingSortFunction?: (
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
