@@ -6,10 +6,12 @@ import { SarsCov2Estimate } from '@/contexts/pathogen-context/pathogen-contexts/
 import { PublishedStudiesByGdbRegionGraph } from "../dashboard/(visualizations)/published-studies-by-gbd-region";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { CumulativeNumberOfSerosurveysPublishedOverTime } from "../dashboard/(visualizations)/cumulative-number-of-serosurveys-published-over-time";
+import { ModelledSeroprevalenceByWhoRegionGraph } from "../dashboard/(visualizations)/modelled-seroprevalence-by-who-region";
 
 export enum SarsCov2VisualizationId {
   PUBLISHED_STUDY_COUNT_BY_GBD_REGION = "PUBLISHED_STUDY_COUNT_BY_GBD_REGION",
-  CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME = 'CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME'
+  CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME = 'CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME',
+  MODELLED_SEROPREVALENCE_BY_WHO_REGION = "MODELLED_SEROPREVALENCE_BY_WHO_REGION"
 }
 
 export const isSarsCov2VisualizationId = (
@@ -19,7 +21,8 @@ export const isSarsCov2VisualizationId = (
 
 export enum SarsCov2VisualizationUrlParameter {
   "published-study-count-by-gbd-region" = "published-study-count-by-gbd-region",
-  "cumulative-number-of-serosurveys-published-over-time" = "cumulative-number-of-serosurveys-published-over-time"
+  "cumulative-number-of-serosurveys-published-over-time" = "cumulative-number-of-serosurveys-published-over-time",
+  "modelled-seroprevalence-by-who-region" = "modelled-seroprevalence-by-who-region"
 }
 
 export type SarsCov2VisualizationInformation = VisualizationInformation<
@@ -51,6 +54,15 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
       ],
     getDisplayName: () => "Cumulative Number Serosurveys Published Over Time",
     renderVisualization: () => CumulativeNumberOfSerosurveysPublishedOverTime()
+  },
+  [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION]: {
+    id: SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION,
+    urlParameter:
+      SarsCov2VisualizationUrlParameter[
+        "modelled-seroprevalence-by-who-region"
+      ],
+    getDisplayName: () => "Modelled Seroprevalence Globally by WHO Region",
+    renderVisualization: () => ModelledSeroprevalenceByWhoRegionGraph({legendConfiguration: LegendConfiguration.RIGHT_ALIGNED})
   },
 }
 
