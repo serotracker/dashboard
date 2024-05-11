@@ -33,7 +33,7 @@ export const EstimateCountByUnRegionAndArbovirusGraph = (
       secondaryGroupingSortFunction={sortArboviruses}
       transformOutputValue={(data) => data.length}
       legendConfiguration={props.legendConfiguration}
-      tickSlantOptions={{ slantValue: 20 }}
+      xAxisTickSettings={{ slantValue: 20 }}
       getBarColour={(secondaryKey) => barColoursForArboviruses[secondaryKey]}
     />
   );

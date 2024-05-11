@@ -24,7 +24,7 @@ export const MedianSeroprevalenceByUnRegionAndArbovirusGraph = () => {
       }
       transformOutputValue={(data) => parseFloat(median(data.map((dataPoint) => dataPoint.seroprevalence * 100)).toFixed(1))}
       getBarColour={(primaryKey) => barColoursForArboviruses[primaryKey]}
-      tickSlantOptions={{ slantValue: 20 }}
+      xAxisTickSettings={{ slantValue: 20 }}
       subgraphSettings={{
         tooltipLabel: 'median',
         marginBottom: 70,

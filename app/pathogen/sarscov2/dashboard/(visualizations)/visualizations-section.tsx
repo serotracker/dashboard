@@ -13,7 +13,7 @@ export const SarsCov2VisualizationsSection = () => {
     allVisualizationInformation: sarsCov2VisualizationInformation
   })
 
-  const visualizationsOnLeftSide = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
+  const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
     SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION
   ].includes(visualizationInfo.id));
 
@@ -42,8 +42,8 @@ export const SarsCov2VisualizationsSection = () => {
 
   return (
     <>
-      <div className="col-span-2 lg:col-span-1 lg:col-start-1 lg:col-end-1 row-span-2 lg:row-span-1">
-        {renderVisualizationList(visualizationsOnLeftSide)}
+      <div className="col-start-1 col-end-3 row-span-1">
+        {renderVisualizationList(visualizations)}
       </div>
     </>
   );

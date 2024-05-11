@@ -9,10 +9,10 @@ import {
 } from "recharts";
 import { groupDataForRecharts } from "./group-data-for-recharts";
 import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
-import { SlantedTick } from "../../../app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import clsx from "clsx";
 import { typedObjectKeys } from "@/lib/utils";
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
+import { CustomXAxisTick } from "./custom-x-axis-tick";
 
 interface SplitBarChartProps<
   TData,
@@ -33,8 +33,9 @@ interface SplitBarChartProps<
   ) => number;
   transformOutputValue: (data: TData[]) => number;
   getBarColour: (primaryKey: TPrimaryGroupingKey) => string;
-  tickSlantOptions?: {
-    slantValue: number;
+  xAxisTickSettings?: {
+    slantValue?: number;
+    idealMaximumCharactersPerLine?: number;
   };
   subgraphSettings: {
     marginBottom: number
@@ -62,13 +63,17 @@ export const SplitBarChart = <
     dataKey: "secondaryKey",
     interval: 0,
   };
-  const { tickSlantOptions } = props;
+  const { xAxisTickSettings } = props;
 
-  if (tickSlantOptions) {
+  if (xAxisTickSettings) {
     xAxisProps = {
       ...xAxisProps,
       tick: (tickProps) =>
-        SlantedTick({ ...tickProps, tickSlant: tickSlantOptions.slantValue }),
+        CustomXAxisTick({
+          ...tickProps,
+          tickSlant: xAxisTickSettings.slantValue,
+          idealMaximumCharactersPerLine: xAxisTickSettings.idealMaximumCharactersPerLine
+        }),
     };
   }
 

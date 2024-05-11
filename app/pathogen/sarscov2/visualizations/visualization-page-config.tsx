@@ -37,7 +37,7 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
       SarsCov2VisualizationUrlParameter[
         "published-study-count-by-gbd-region"
       ],
-    getDisplayName: () => "Cumulative estimate count over time by arbovirus",
+    getDisplayName: () => "Published Studies per GBD Region",
     renderVisualization: () => PublishedStudiesByGdbRegionGraph({legendConfiguration: LegendConfiguration.RIGHT_ALIGNED})
   },
 }
