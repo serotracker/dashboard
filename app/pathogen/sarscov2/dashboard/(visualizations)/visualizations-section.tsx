@@ -9,12 +9,14 @@ export const SarsCov2VisualizationsSection = () => {
   const allVisualizationInformationWithClassnames = addToVisualizationInformation({
     additionalInformation: {
       [SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION]: { className: "h-full-screen" },
+      [SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME]: { className: "h-full-screen" },
     },
     allVisualizationInformation: sarsCov2VisualizationInformation
   })
 
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
-    SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION
+    SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION,
+    SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME
   ].includes(visualizationInfo.id));
 
   const renderVisualizationList = useCallback((visualizationList: Array<SarsCov2VisualizationInformation & {className: string}>) => {
