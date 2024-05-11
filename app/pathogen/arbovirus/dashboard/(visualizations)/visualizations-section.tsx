@@ -5,7 +5,7 @@ import { RechartsVisualization } from "../../../../../components/customs/visuali
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { ArbovirusVisualizationId, ArbovirusVisualizationInformation, arbovirusVisualizationInformation, getUrlParameterFromVisualizationId } from "../../visualizations/page";
+import { ArbovirusVisualizationId, ArbovirusVisualizationInformation, arbovirusVisualizationInformation, getUrlParameterFromVisualizationId } from "../../visualizations/visualization-page-config";
 
 export const ArbovirusVisualizationsSection = () => {
   const { filteredData } = useContext(ArboContext);

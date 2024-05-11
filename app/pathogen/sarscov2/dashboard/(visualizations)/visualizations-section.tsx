@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { RechartsVisualization } from "../../../../../components/customs/visualizations/recharts-visualization";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { SarsCov2VisualizationId, SarsCov2VisualizationInformation, getUrlParameterFromVisualizationId, sarsCov2VisualizationInformation } from "@/app/pathogen/sarscov2/visualizations/page"
+import { SarsCov2VisualizationId, SarsCov2VisualizationInformation, getUrlParameterFromVisualizationId, sarsCov2VisualizationInformation } from "../../visualizations/visualization-page-config";
 
 export const SarsCov2VisualizationsSection = () => {
   const allVisualizationInformationWithClassnames = addToVisualizationInformation({
