@@ -33,6 +33,9 @@ interface AreaChartProps<
   ) => number;
   transformOutputValue: (data: TData[]) => number;
   getBarColour: (secondaryKey: TSecondaryGroupingKey) => string;
+  xAxisTickSettings?: {
+    interval?: number;
+  };
 }
 
 export const AreaChart = <
@@ -53,7 +56,7 @@ export const AreaChart = <
 
   let xAxisProps: XAxisProps = {
     dataKey: "primaryKey",
-    interval: 0,
+    interval: props.xAxisTickSettings?.interval !== undefined ? props.xAxisTickSettings.interval : undefined,
   };
 
   return (
