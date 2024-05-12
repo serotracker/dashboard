@@ -8,7 +8,7 @@ import { SarsCov2Providers } from "@/contexts/pathogen-context/pathogen-contexts
 import { sarsCov2Estimates } from "@/hooks/useNewSarsCov2Data";
 import { sarsCov2Filters } from "@/hooks/useSarsCov2Filters";
 
-export default async function ArboLayout({
+export default async function SarsCov2Layout({
   children,
 }: {
   children: React.ReactNode;
