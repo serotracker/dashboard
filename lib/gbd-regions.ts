@@ -33,3 +33,9 @@ export const gbdSubRegionToLabelMap = {
   [GbdSubRegion.SubSaharanAfricaSubregionSouthern]: "Southern Sub-Saharan Africa",
   [GbdSubRegion.SubSaharanAfricaSubregionWestern]: "Western Sub-Saharan Africa"
 };
+
+export const isGbdSuperRegion = (gbdSuperRegion: string): gbdSuperRegion is GbdSuperRegion =>
+  Object.values(GbdSuperRegion).some((element) => element === gbdSuperRegion);
+
+export const isGbdSubRegion = (gbdSubRegion: string): gbdSubRegion is GbdSubRegion =>
+  Object.values(GbdSubRegion).some((element) => element === gbdSubRegion);

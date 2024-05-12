@@ -2,6 +2,8 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { gbdSubRegionToLabelMap, gbdSuperRegionToLabelMap, isGbdSubRegion, isGbdSuperRegion } from "@/lib/gbd-regions";
+import { getLabelForUNRegion, isUNRegion } from "@/lib/un-regions";
 import { useContext } from "react";
 
 const sarsCov2ColumnConfiguration = [{
@@ -15,6 +17,21 @@ const sarsCov2ColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'whoRegion',
   label: 'WHO Region',
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'unRegion',
+  label: 'UN Region',
+  valueToDisplayLabel: (unRegion: string) => isUNRegion(unRegion) ? getLabelForUNRegion(unRegion) : unRegion
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'gbdSuperRegion',
+  label: 'GBD Super Region',
+  valueToDisplayLabel: (gbdSuperRegion: string) => isGbdSuperRegion(gbdSuperRegion) ? gbdSuperRegionToLabelMap[gbdSuperRegion] : gbdSuperRegion
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'gbdSubRegion',
+  label: 'GBD Sub Region',
+  valueToDisplayLabel: (gbdSubRegion: string) => isGbdSubRegion(gbdSubRegion) ? gbdSubRegionToLabelMap[gbdSubRegion] : gbdSubRegion
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'riskOfBias',

@@ -26,18 +26,19 @@ export interface DataTableColumnConfigurationEntryBase {
   isSortable?: boolean;
   isHideable?: boolean;
   isFixed?: boolean;
+  valueToDisplayLabel?: (input: string) => string | undefined;
 }
 
 export type StandardDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.STANDARD;
 }
 
-export type LinkDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type LinkDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {
   type: DataTableColumnConfigurationEntryType.LINK;
   fieldNameForLink: string;
 }
 
-export type LinkButtonDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type LinkButtonDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {
   type: DataTableColumnConfigurationEntryType.LINK_BUTTON;
   fieldNameForLink: string;
 }
@@ -54,15 +55,15 @@ export type ColouredPillListDataTableColumnConfigurationEntry = DataTableColumnC
   defaultColourSchemeClassname: string;
 }
 
-export type PercentageDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type PercentageDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE;
 }
 
-export type DateDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type DateDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {
   type: DataTableColumnConfigurationEntryType.DATE;
 }
 
-export type BooleanDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type BooleanDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {
   type: DataTableColumnConfigurationEntryType.BOOLEAN;
 }
 

@@ -20,7 +20,7 @@ export const getDataTableColouredPillColumnConfiguration = (input: GetDataTableC
             input.columnConfiguration.valueToColourSchemeClassnameMap[value] ?? input.columnConfiguration.defaultColourSchemeClassname
           )}
         >
-          {value}
+          {input.columnConfiguration.valueToDisplayLabel ? input.columnConfiguration.valueToDisplayLabel(value) ?? value : value}
         </div>
       )
     };
