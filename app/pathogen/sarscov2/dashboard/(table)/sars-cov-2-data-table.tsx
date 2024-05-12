@@ -26,6 +26,24 @@ const sarsCov2ColumnConfiguration = [{
     'Total Antibody': 'bg-pink-400'
   },
   defaultColourSchemeClassname: 'bg-sky-100'
+}, {
+  type: DataTableColumnConfigurationEntryType.DATE as const,
+  fieldName: 'samplingStartDate',
+  label: 'Sampling Start Date',
+  isHideable: true,
+  isFixed: false
+}, {
+  type: DataTableColumnConfigurationEntryType.DATE as const,
+  fieldName: 'samplingStartDate',
+  label: 'Sampling End Date',
+  isHideable: true,
+  isFixed: false
+}, {
+  type: DataTableColumnConfigurationEntryType.DATE as const,
+  fieldName: 'publicationDate',
+  label: 'Publication Date',
+  isHideable: true,
+  isFixed: false
 }];
 
 export const SarsCov2DataTable = () => {

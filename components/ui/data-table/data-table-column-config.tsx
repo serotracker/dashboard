@@ -1,5 +1,6 @@
 import { DataTableColumnDef } from "./data-table";
 import { getDataTableColouredPillListColumnConfiguration } from "./data-table-column-configurations/data-table-coloured-pill-list-column-configuration";
+import { getDataTableDateColumnConfiguration } from "./data-table-column-configurations/data-table-date-column-configuration";
 import { getDataTableStandardColumnConfiguration } from "./data-table-column-configurations/data-table-standard-column-configuration";
 
 export enum DataTableColumnConfigurationEntryType {
@@ -24,15 +25,9 @@ export type StandardDataTableColumnConfigurationEntry = DataTableColumnConfigura
   type: DataTableColumnConfigurationEntryType.STANDARD;
 }
 
-const isStandardDataTableColumnConfigurationEntry = (configurationEntry: DataTableColumnConfigurationEntry):
-  configurationEntry is StandardDataTableColumnConfigurationEntry => configurationEntry.type === DataTableColumnConfigurationEntryType.STANDARD;
-
 export type LinkDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.LINK;
 }
-
-const isLinkDataTableColumnConfigurationEntry = (configurationEntry: DataTableColumnConfigurationEntry):
-  configurationEntry is LinkDataTableColumnConfigurationEntry => configurationEntry.type === DataTableColumnConfigurationEntryType.LINK;
 
 type LinkButtonDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.LINK_BUTTON;
@@ -53,7 +48,7 @@ type PercentageDataTableColumnConfigurationEntry = DataTableColumnConfigurationE
   type: DataTableColumnConfigurationEntryType.PERCENTAGE;
 }
 
-type DateDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type DateDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.DATE;
 }
 
@@ -85,6 +80,9 @@ export const columnConfigurationToColumnDefinitions = (
       }
       if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST) {
         return getDataTableColouredPillListColumnConfiguration({columnConfiguration: columnConfigurationEntry});
+      }
+      if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.DATE) {
+        return getDataTableDateColumnConfiguration({columnConfiguration: columnConfigurationEntry});
       }
     })
     .filter(<T extends unknown>(element: T | undefined): element is T => !!element)
