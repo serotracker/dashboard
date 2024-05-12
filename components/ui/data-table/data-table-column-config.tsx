@@ -7,6 +7,7 @@ import { getDataTableLinkButtonColumnConfiguration } from "./data-table-column-c
 import { getDataTableLinkColumnConfiguration } from "./data-table-column-configurations/data-table-link-column-configuration";
 import { getDataTableStandardColumnConfiguration } from "./data-table-column-configurations/data-table-standard-column-configuration";
 import { getDataTablePercentageColumnConfiguration } from "./data-table-column-configurations/date-table-percentage-column-configuration";
+import { getDataTableBooleanColumnConfiguration } from './data-table-column-configurations/data-table-boolean-column-configuration';
 
 export enum DataTableColumnConfigurationEntryType {
   STANDARD = "STANDARD",
@@ -15,6 +16,7 @@ export enum DataTableColumnConfigurationEntryType {
   COLOURED_PILL = "COLOURED_PILL",
   COLOURED_PILL_LIST = "COLOURED_PILL_LIST",
   PERCENTAGE = "PERCENTAGE",
+  BOOLEAN = "BOOLEAN",
   DATE = "DATE"
 }
 
@@ -60,6 +62,10 @@ export type DateDataTableColumnConfigurationEntry = DataTableColumnConfiguration
   type: DataTableColumnConfigurationEntryType.DATE;
 }
 
+export type BooleanDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+  type: DataTableColumnConfigurationEntryType.BOOLEAN;
+}
+
 export type DataTableColumnConfigurationEntry = 
   | StandardDataTableColumnConfigurationEntry
   | LinkDataTableColumnConfigurationEntry
@@ -67,7 +73,8 @@ export type DataTableColumnConfigurationEntry =
   | ColouredPillDataTableColumnConfigurationEntry
   | ColouredPillListDataTableColumnConfigurationEntry
   | PercentageDataTableColumnConfigurationEntry
-  | DateDataTableColumnConfigurationEntry;
+  | DateDataTableColumnConfigurationEntry
+  | BooleanDataTableColumnConfigurationEntry;
 
 interface ColumnConfigurationToColumnDefinitionInput {
   columnConfiguration: Array<DataTableColumnConfigurationEntry>
@@ -98,6 +105,9 @@ export const columnConfigurationToColumnDefinitions = (
       }
       if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.PERCENTAGE) {
         return getDataTablePercentageColumnConfiguration({columnConfiguration: columnConfigurationEntry});
+      }
+      if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.BOOLEAN) {
+        return getDataTableBooleanColumnConfiguration({columnConfiguration: columnConfigurationEntry});
       }
 
       assertNever(columnConfigurationEntry);

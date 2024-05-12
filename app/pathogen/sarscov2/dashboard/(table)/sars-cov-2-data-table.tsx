@@ -5,6 +5,13 @@ import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/s
 import { useContext } from "react";
 
 const sarsCov2ColumnConfiguration = [{
+  type: DataTableColumnConfigurationEntryType.LINK as const,
+  fieldName: 'estimateName',
+  label: 'Estimate Name',
+  isHideable: false,
+  isFixed: true,
+  fieldNameForLink: 'url'
+}, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'whoRegion',
   label: 'WHO Region',
@@ -20,6 +27,10 @@ const sarsCov2ColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'scope',
   label: 'Scope',
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'country',
+  label: 'Country',
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'isotypes',
@@ -51,6 +62,14 @@ const sarsCov2ColumnConfiguration = [{
   fieldName: 'sex',
   label: 'Sex',
 }, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'ageGroup',
+  label: 'Age Group',
+}, {
+  type: DataTableColumnConfigurationEntryType.BOOLEAN as const,
+  fieldName: 'isWHOUnityAligned',
+  label: 'Unity Aligned?',
+}, {
   type: DataTableColumnConfigurationEntryType.DATE as const,
   fieldName: 'samplingStartDate',
   label: 'Sampling Start Date',
@@ -62,6 +81,12 @@ const sarsCov2ColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.DATE as const,
   fieldName: 'publicationDate',
   label: 'Publication Date',
+}, {
+  type: DataTableColumnConfigurationEntryType.LINK_BUTTON as const,
+  fieldName: 'url',
+  label: 'Source',
+  fieldNameForLink: 'url',
+  isSortable: false
 }];
 
 export const SarsCov2DataTable = () => {
