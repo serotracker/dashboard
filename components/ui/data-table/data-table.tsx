@@ -147,7 +147,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
         Get Citation for CSV
       </Button>
     )
-  }, [csvCitationConfiguration])
+  }, [csvCitationConfiguration, openToast])
 
   return (
     <div>
