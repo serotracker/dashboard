@@ -22,12 +22,12 @@ const generateTimeBucketsForEstimate = (input: GenerateTimeBucketForEstimateInpu
 }
 
 const barColoursForWhoRegions: Record<WhoRegion, string> = {
-  [WhoRegion.Afr]: "#bae3b1",
-  [WhoRegion.Amr]: "#c6e0f1",
-  [WhoRegion.Emr]: "#b6d7d3",
-  [WhoRegion.Eur]: "#e5aabf",
-  [WhoRegion.Sear]: "#e7d3ca",
-  [WhoRegion.Wpr]: "#d6d0cd",
+  [WhoRegion.Afr]: "#e15759",
+  [WhoRegion.Amr]: "#59a14f",
+  [WhoRegion.Emr]: "#f1ce63",
+  [WhoRegion.Eur]: "#f28e2b",
+  [WhoRegion.Sear]: "#d37295",
+  [WhoRegion.Wpr]: "#4e79a7",
 };
 
 interface ModelledSeroprevalenceByWhoRegionGraphProps {
