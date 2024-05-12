@@ -1,4 +1,5 @@
 import { DataTableColumnDef } from "./data-table";
+import { getDataTableColouredPillListColumnConfiguration } from "./data-table-column-configurations/data-table-coloured-pill-list-column-configuration";
 import { getDataTableStandardColumnConfiguration } from "./data-table-column-configurations/data-table-standard-column-configuration";
 
 export enum DataTableColumnConfigurationEntryType {
@@ -39,12 +40,13 @@ type LinkButtonDataTableColumnConfigurationEntry = DataTableColumnConfigurationE
 
 type ColouredPillDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL;
-  colour: string;
+  colourSchemeClassname: string;
 }
 
-type ColouredPillListDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type ColouredPillListDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST;
-  valueToColourMap: Record<string, string | unknown>;
+  valueToColourSchemeClassnameMap: Record<string, string | unknown>;
+  defaultColourSchemeClassname: string;
 }
 
 type PercentageDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
@@ -80,6 +82,9 @@ export const columnConfigurationToColumnDefinitions = (
     .map((columnConfigurationEntry) => {
       if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.STANDARD) {
         return getDataTableStandardColumnConfiguration({columnConfiguration: columnConfigurationEntry});
+      }
+      if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST) {
+        return getDataTableColouredPillListColumnConfiguration({columnConfiguration: columnConfigurationEntry});
       }
     })
     .filter(<T extends unknown>(element: T | undefined): element is T => !!element)

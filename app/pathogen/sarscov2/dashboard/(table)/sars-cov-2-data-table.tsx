@@ -10,6 +10,22 @@ const sarsCov2ColumnConfiguration = [{
   label: 'WHO Region',
   isHideable: true,
   isFixed: false
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+  fieldName: 'isotypes',
+  label: 'Isotype',
+  isHideable: true,
+  isFixed: false,
+  valueToColourSchemeClassnameMap: {
+    'IgA': 'bg-blue-700 text-white',
+    'IgD': 'bg-black text-white',
+    'IgE': 'bg-green-200',
+    'IgG': 'bg-yellow-400',
+    'IgM': 'bg-orange-300',
+    'Neutralizing': 'bg-purple-700 text-white',
+    'Total Antibody': 'bg-pink-400'
+  },
+  defaultColourSchemeClassname: 'bg-sky-100'
 }];
 
 export const SarsCov2DataTable = () => {
