@@ -8,32 +8,22 @@ const sarsCov2ColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'whoRegion',
   label: 'WHO Region',
-  isHideable: true,
-  isFixed: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'riskOfBias',
   label: 'Risk of Bias',
-  isHideable: true,
-  isFixed: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'sourceType',
   label: 'Source Type',
-  isHideable: true,
-  isFixed: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'scope',
   label: 'Scope',
-  isHideable: true,
-  isFixed: false
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'isotypes',
   label: 'Isotype',
-  isHideable: true,
-  isFixed: false,
   valueToColourSchemeClassnameMap: {
     'IgA': 'bg-blue-700 text-white',
     'IgD': 'bg-black text-white',
@@ -48,44 +38,30 @@ const sarsCov2ColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
   fieldName: 'seroprevalence',
   label: 'Seroprevalence',
-  isHideable: true,
-  isFixed: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'numeratorValue',
   label: 'Numerator Value',
-  isHideable: true,
-  isFixed: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'denominatorValue',
   label: 'Sample Size',
-  isHideable: true,
-  isFixed: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'sex',
   label: 'Sex',
-  isHideable: true,
-  isFixed: false
 }, {
   type: DataTableColumnConfigurationEntryType.DATE as const,
   fieldName: 'samplingStartDate',
   label: 'Sampling Start Date',
-  isHideable: true,
-  isFixed: false
 }, {
   type: DataTableColumnConfigurationEntryType.DATE as const,
   fieldName: 'samplingEndDate',
   label: 'Sampling End Date',
-  isHideable: true,
-  isFixed: false
 }, {
   type: DataTableColumnConfigurationEntryType.DATE as const,
   fieldName: 'publicationDate',
   label: 'Publication Date',
-  isHideable: true,
-  isFixed: false
 }];
 
 export const SarsCov2DataTable = () => {
