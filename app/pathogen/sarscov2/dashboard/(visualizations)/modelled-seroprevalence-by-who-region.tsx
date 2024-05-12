@@ -38,11 +38,17 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
   const state = useContext(SarsCov2Context);
 
   const consideredData = useMemo(() => state.filteredData
-    .filter((dataPoint: SarsCov2Estimate): dataPoint is Omit<SarsCov2Estimate, "samplingMidDate">
+    .filter((dataPoint: SarsCov2Estimate): dataPoint is Omit<SarsCov2Estimate, "samplingMidDate"|"whoRegion"|"denominatorValue"|"numeratorValue">
       & {
         samplingMidDate: NonNullable<SarsCov2Estimate["samplingStartDate"]>;
         whoRegion: NonNullable<SarsCov2Estimate["whoRegion"]>;
-      } => !!dataPoint.samplingMidDate && !!dataPoint.whoRegion
+        denominatorValue: NonNullable<SarsCov2Estimate["denominatorValue"]>;
+        numeratorValue: NonNullable<SarsCov2Estimate["numeratorValue"]>;
+      } => 
+        !!dataPoint.samplingMidDate
+        && !!dataPoint.whoRegion
+        && dataPoint.denominatorValue !== null && dataPoint.denominatorValue !== undefined
+        && dataPoint.numeratorValue !== null && dataPoint.numeratorValue !== undefined
     ).map((dataPoint) => ({
       ...dataPoint,
       samplingMidDate: parseISO(dataPoint.samplingMidDate),
@@ -64,10 +70,11 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
           numeratorValue: accumulator.numeratorValue + currentValue.numeratorValue,
         }), {denominatorValue: 0, numeratorValue: 0})
 
-        return denominatorValue > 0 ? numeratorValue / denominatorValue : 0
+        return denominatorValue > 0 ? parseFloat(((numeratorValue * 100) / denominatorValue).toFixed(1)) : 0
       }}
       getLineColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
       legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
+      percentageFormattingEnabled={true}
     />
   );
 }

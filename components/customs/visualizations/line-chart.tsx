@@ -33,11 +33,13 @@ interface LineChartProps<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
+  secondaryGroupingKeyToLabel?: (input: TSecondaryGroupingKey) => string;
   transformOutputValue: (data: TData[]) => number;
   getLineColour: (secondaryKey: TSecondaryGroupingKey) => string;
   xAxisTickSettings?: {
     interval?: number;
   };
+  percentageFormattingEnabled?: boolean;
   legendConfiguration: LegendConfiguration;
 }
 
@@ -95,14 +97,19 @@ export const LineChart = <
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis {...xAxisProps} />
-        <YAxis />
-        <Tooltip itemStyle={{"color": "black"}} />
+        <YAxis
+          {...(props.percentageFormattingEnabled ? {tickFormatter: (tick) => `${tick}%`} : {})}
+        />
+        <Tooltip
+          itemStyle={{"color": "black"}}
+          {...(props.percentageFormattingEnabled ? {formatter: (value) => `${value}%`} : {})}
+        />
         <Legend {...legendProps} />
         {allSecondaryKeys.map((secondaryKey) => (
           <Line
             key={secondaryKey}
             type="monotone"
-            dataKey={secondaryKey}
+            dataKey={props.secondaryGroupingKeyToLabel ? props.secondaryGroupingKeyToLabel(secondaryKey) : secondaryKey}
             stroke={props.getLineColour(secondaryKey)}
           />
         ))}

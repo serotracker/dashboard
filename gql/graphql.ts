@@ -143,7 +143,7 @@ export type SarsCov2Estimate = {
   countryPeopleFullyVaccinatedPerHundred?: Maybe<Scalars['Float']['output']>;
   countryPeopleVaccinatedPerHundred?: Maybe<Scalars['Float']['output']>;
   countryPositiveCasesPerMillionPeople?: Maybe<Scalars['Float']['output']>;
-  denominatorValue: Scalars['Int']['output'];
+  denominatorValue?: Maybe<Scalars['Int']['output']>;
   gbdSubRegion?: Maybe<GbdSubRegion>;
   gbdSuperRegion?: Maybe<GbdSuperRegion>;
   id: Scalars['String']['output'];
@@ -151,7 +151,7 @@ export type SarsCov2Estimate = {
   isotypes: Array<Scalars['String']['output']>;
   latitude: Scalars['Float']['output'];
   longitude: Scalars['Float']['output'];
-  numeratorValue: Scalars['Int']['output'];
+  numeratorValue?: Maybe<Scalars['Int']['output']>;
   populationGroup?: Maybe<Scalars['String']['output']>;
   publicationDate?: Maybe<Scalars['String']['output']>;
   riskOfBias?: Maybe<Scalars['String']['output']>;
@@ -159,7 +159,7 @@ export type SarsCov2Estimate = {
   samplingMidDate?: Maybe<Scalars['String']['output']>;
   samplingStartDate?: Maybe<Scalars['String']['output']>;
   scope?: Maybe<Scalars['String']['output']>;
-  seroprevalence: Scalars['Float']['output'];
+  seroprevalence?: Maybe<Scalars['Float']['output']>;
   sex?: Maybe<Scalars['String']['output']>;
   sourceType?: Maybe<Scalars['String']['output']>;
   state?: Maybe<Scalars['String']['output']>;
@@ -261,7 +261,7 @@ export type GroupedTeamMembersQuery = { __typename?: 'Query', groupedTeamMembers
 export type SarsCov2EstimatesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SarsCov2EstimatesQuery = { __typename?: 'Query', sarsCov2Estimates: Array<{ __typename?: 'SarsCov2Estimate', antibodies: Array<string>, isotypes: Array<string>, isWHOUnityAligned: boolean, testType: Array<string>, sourceType?: string | null, riskOfBias?: string | null, populationGroup?: string | null, sex?: string | null, ageGroup?: string | null, country: string, countryAlphaTwoCode: string, countryAlphaThreeCode: string, whoRegion?: WhoRegion | null, unRegion?: UnRegion | null, gbdSuperRegion?: GbdSuperRegion | null, gbdSubRegion?: GbdSubRegion | null, state?: string | null, studyName: string, scope?: string | null, city?: string | null, id: string, latitude: number, longitude: number, samplingStartDate?: string | null, samplingEndDate?: string | null, samplingMidDate?: string | null, publicationDate?: string | null, countryPeopleVaccinatedPerHundred?: number | null, countryPeopleFullyVaccinatedPerHundred?: number | null, countryPositiveCasesPerMillionPeople?: number | null, denominatorValue: number, numeratorValue: number, seroprevalence: number }> };
+export type SarsCov2EstimatesQuery = { __typename?: 'Query', sarsCov2Estimates: Array<{ __typename?: 'SarsCov2Estimate', antibodies: Array<string>, isotypes: Array<string>, isWHOUnityAligned: boolean, testType: Array<string>, sourceType?: string | null, riskOfBias?: string | null, populationGroup?: string | null, sex?: string | null, ageGroup?: string | null, country: string, countryAlphaTwoCode: string, countryAlphaThreeCode: string, whoRegion?: WhoRegion | null, unRegion?: UnRegion | null, gbdSuperRegion?: GbdSuperRegion | null, gbdSubRegion?: GbdSubRegion | null, state?: string | null, studyName: string, scope?: string | null, city?: string | null, id: string, latitude: number, longitude: number, samplingStartDate?: string | null, samplingEndDate?: string | null, samplingMidDate?: string | null, publicationDate?: string | null, countryPeopleVaccinatedPerHundred?: number | null, countryPeopleFullyVaccinatedPerHundred?: number | null, countryPositiveCasesPerMillionPeople?: number | null, denominatorValue?: number | null, numeratorValue?: number | null, seroprevalence?: number | null }> };
 
 export type SarsCov2FilterOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
