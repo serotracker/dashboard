@@ -57,7 +57,7 @@ export const SarsCov2DataTable = () => {
 
   return (
     <DataTable
-      columns={columnConfigurationToColumnDefinitions({ columnConfiguration: sarsCov2ColumnConfiguration } )}
+      columns={columnConfigurationToColumnDefinitions({ columnConfiguration: sarsCov2ColumnConfiguration })}
       data={state.filteredData}
     />
   )

@@ -13,8 +13,8 @@ export const getDataTableDateColumnConfiguration = (input: GetDataTableDateColum
   accessorKey: input.columnConfiguration.fieldName,
   header: getDataTableHeaderComponent({ columnName: input.columnConfiguration.label }),
   sortingFn: (rowA: Row<Record<string, unknown>>, rowB: Row<Record<string, unknown>>, columnId: string) => {
-    const rowADate = rowA.original['fieldName'];
-    const rowBDate = rowA.original['fieldName'];
+    const rowADate = rowA.original[input.columnConfiguration.fieldName];
+    const rowBDate = rowA.original[input.columnConfiguration.fieldName];
 
     if(!rowADate || typeof rowADate !== 'string'){
       return -1
@@ -27,7 +27,7 @@ export const getDataTableDateColumnConfiguration = (input: GetDataTableDateColum
     return parseISO(rowADate).getTime() - parseISO(rowBDate).getTime();
   },
   cell: ({ row }) => {
-    const date = row.original['fieldName'];
+    const date = row.original[input.columnConfiguration.fieldName];
 
     if(!date || typeof date !== 'string') {
       return 'N/A';
