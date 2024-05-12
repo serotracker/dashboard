@@ -27,6 +27,12 @@ const sarsCov2ColumnConfiguration = [{
   },
   defaultColourSchemeClassname: 'bg-sky-100'
 }, {
+  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+  fieldName: 'seroprevalence',
+  label: 'Seroprevalence',
+  isHideable: true,
+  isFixed: false
+}, {
   type: DataTableColumnConfigurationEntryType.DATE as const,
   fieldName: 'samplingStartDate',
   label: 'Sampling Start Date',

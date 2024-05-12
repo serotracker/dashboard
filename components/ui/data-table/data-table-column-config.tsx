@@ -2,6 +2,7 @@ import { DataTableColumnDef } from "./data-table";
 import { getDataTableColouredPillListColumnConfiguration } from "./data-table-column-configurations/data-table-coloured-pill-list-column-configuration";
 import { getDataTableDateColumnConfiguration } from "./data-table-column-configurations/data-table-date-column-configuration";
 import { getDataTableStandardColumnConfiguration } from "./data-table-column-configurations/data-table-standard-column-configuration";
+import { getDataTablePercentageColumnConfiguration } from "./data-table-column-configurations/date-table-percentage-column-configuration";
 
 export enum DataTableColumnConfigurationEntryType {
   STANDARD = "STANDARD",
@@ -10,8 +11,7 @@ export enum DataTableColumnConfigurationEntryType {
   COLOURED_PILL = "COLOURED_PILL",
   COLOURED_PILL_LIST = "COLOURED_PILL_LIST",
   PERCENTAGE = "PERCENTAGE",
-  DATE = "DATE",
-  CUSTOM = "CUSTOM",
+  DATE = "DATE"
 }
 
 export interface DataTableColumnConfigurationEntryBase {
@@ -44,16 +44,12 @@ export type ColouredPillListDataTableColumnConfigurationEntry = DataTableColumnC
   defaultColourSchemeClassname: string;
 }
 
-type PercentageDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type PercentageDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE;
 }
 
 export type DateDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.DATE;
-}
-
-type CustomDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
-  type: DataTableColumnConfigurationEntryType.CUSTOM;
 }
 
 export type DataTableColumnConfigurationEntry = 
@@ -63,8 +59,7 @@ export type DataTableColumnConfigurationEntry =
   | ColouredPillDataTableColumnConfigurationEntry
   | ColouredPillListDataTableColumnConfigurationEntry
   | PercentageDataTableColumnConfigurationEntry
-  | DateDataTableColumnConfigurationEntry
-  | CustomDataTableColumnConfigurationEntry;
+  | DateDataTableColumnConfigurationEntry;
 
 interface ColumnConfigurationToColumnDefinitionInput {
   columnConfiguration: Array<DataTableColumnConfigurationEntry>
@@ -83,6 +78,9 @@ export const columnConfigurationToColumnDefinitions = (
       }
       if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.DATE) {
         return getDataTableDateColumnConfiguration({columnConfiguration: columnConfigurationEntry});
+      }
+      if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.PERCENTAGE) {
+        return getDataTablePercentageColumnConfiguration({columnConfiguration: columnConfigurationEntry});
       }
     })
     .filter(<T extends unknown>(element: T | undefined): element is T => !!element)

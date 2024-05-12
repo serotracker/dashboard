@@ -13,23 +13,26 @@ export const getDataTableDateColumnConfiguration = (input: GetDataTableDateColum
   accessorKey: input.columnConfiguration.fieldName,
   header: getDataTableHeaderComponent({ columnName: input.columnConfiguration.label }),
   sortingFn: (rowA: Row<Record<string, unknown>>, rowB: Row<Record<string, unknown>>, columnId: string) => {
-    if(!rowA.original.samplingStartDate){
+    const rowADate = rowA.original['fieldName'];
+    const rowBDate = rowA.original['fieldName'];
+
+    if(!rowADate || typeof rowADate !== 'string'){
       return -1
     }
 
-    if(!rowB.original.samplingStartDate){
+    if(!rowBDate || typeof rowBDate !== 'string'){
       return 1
     }
 
-    return parseISO(rowA.original.samplingStartDate as string).getTime() - parseISO(rowB.original.samplingStartDate as string).getTime();
+    return parseISO(rowADate).getTime() - parseISO(rowBDate).getTime();
   },
   cell: ({ row }) => {
-    const samplingStartDate = row.original.samplingStartDate;
+    const date = row.original['fieldName'];
 
-    if(!samplingStartDate) {
+    if(!date || typeof date !== 'string') {
       return 'N/A';
     }
 
-    return TranslateDate(samplingStartDate as string);
+    return TranslateDate(date);
   }
 });
