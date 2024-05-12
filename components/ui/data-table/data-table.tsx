@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -36,12 +36,25 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   accessorKey: string;
 };
 
+interface CsvCitationConfigurationDisabled {
+  enabled: false;
+}
+
+interface CsvCitationConfigurationEnabled {
+  enabled: true;
+  citationText: string;
+  toastId: ToastId;
+}
+
 interface DataTableProps<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];
+  csvFilename: string;
+  csvCitationConfiguration: CsvCitationConfigurationDisabled | CsvCitationConfigurationEnabled;
   data: TData[];
 }
 
 export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
+  const { csvCitationConfiguration } = props;
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -93,10 +106,9 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
         });
         return newObj;
       });
-    // TODO: FIX THIS FILENAME
     const csvConfig = mkConfig({
       useKeysAsHeaders: true,
-      filename: "arbotracker_dataset",
+      filename: props.csvFilename
     });
     let csv = generateCsv(csvConfig)(newArrayWithSubsetAttributes);
     download(csvConfig)(csv);
@@ -118,6 +130,25 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
     setAllColumnVisibility(false);
   };
 
+  const citationButton = useMemo(() => {
+    if(csvCitationConfiguration.enabled === false) {
+      return null;
+    }
+
+    return (
+      <Button
+        variant="outline"
+        className="mx-2 whitespace-nowrap"
+        onClick={() => {
+          navigator.clipboard.writeText(csvCitationConfiguration.citationText);
+          openToast({ toastId: csvCitationConfiguration.toastId });
+        }}
+      >
+        Get Citation for CSV
+      </Button>
+    )
+  }, [csvCitationConfiguration])
+
   return (
     <div>
       <div className="flex items-center justify-between py-4 px-2">
@@ -130,18 +161,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
           >
             Download CSV
           </Button>
-          <Button
-            variant="outline"
-            className="mx-2 whitespace-nowrap"
-            onClick={() => {
-              navigator.clipboard.writeText(
-                "Ware H*, Whelan M*, Ranka H, Roell Y, Aktar S, Kenny S, Pinno E, SeroTracker Research Team, Bobrovitz N**, Arora RK**, Jaenisch T**. ArboTracker: A Dashboard and Data Platform for arbovirus serosurveys (2024); Website, accessible via www.new.SeroTracker.com."
-              );
-              openToast({ toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST });
-            }}
-          >
-            Get Citation for CSV
-          </Button>
+          {citationButton}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="mx-2 whitespace-nowrap">

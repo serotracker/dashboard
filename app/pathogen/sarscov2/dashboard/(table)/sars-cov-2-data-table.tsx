@@ -11,6 +11,24 @@ const sarsCov2ColumnConfiguration = [{
   isHideable: true,
   isFixed: false
 }, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'riskOfBias',
+  label: 'Risk of Bias',
+  isHideable: true,
+  isFixed: false
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'sourceType',
+  label: 'Source Type',
+  isHideable: true,
+  isFixed: false
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'scope',
+  label: 'Scope',
+  isHideable: true,
+  isFixed: false
+}, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'isotypes',
   label: 'Isotype',
@@ -33,6 +51,24 @@ const sarsCov2ColumnConfiguration = [{
   isHideable: true,
   isFixed: false
 }, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'numeratorValue',
+  label: 'Numerator Value',
+  isHideable: true,
+  isFixed: false
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'denominatorValue',
+  label: 'Sample Size',
+  isHideable: true,
+  isFixed: false
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'sex',
+  label: 'Sex',
+  isHideable: true,
+  isFixed: false
+}, {
   type: DataTableColumnConfigurationEntryType.DATE as const,
   fieldName: 'samplingStartDate',
   label: 'Sampling Start Date',
@@ -40,7 +76,7 @@ const sarsCov2ColumnConfiguration = [{
   isFixed: false
 }, {
   type: DataTableColumnConfigurationEntryType.DATE as const,
-  fieldName: 'samplingStartDate',
+  fieldName: 'samplingEndDate',
   label: 'Sampling End Date',
   isHideable: true,
   isFixed: false
@@ -58,6 +94,10 @@ export const SarsCov2DataTable = () => {
   return (
     <DataTable
       columns={columnConfigurationToColumnDefinitions({ columnConfiguration: sarsCov2ColumnConfiguration })}
+      csvFilename="sarscov2tracker_dataset"
+      csvCitationConfiguration={{
+        enabled: false
+      }}
       data={state.filteredData}
     />
   )

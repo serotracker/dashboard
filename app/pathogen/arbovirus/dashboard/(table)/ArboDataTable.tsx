@@ -4,6 +4,7 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import React, { useContext } from "react";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
+import { ToastId } from "@/contexts/toast-provider";
 
 const arboColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -119,6 +120,12 @@ export const ArboDataTable = () => {
     return (
       <DataTable
         columns={columnConfigurationToColumnDefinitions({ columnConfiguration: arboColumnConfiguration })}
+        csvFilename="arbotracker_dataset"
+        csvCitationConfiguration={{
+          enabled: true,
+          citationText: "Ware H*, Whelan M*, Ranka H, Roell Y, Aktar S, Kenny S, Pinno E, SeroTracker Research Team, Bobrovitz N**, Arora RK**, Jaenisch T**. ArboTracker: A Dashboard and Data Platform for arbovirus serosurveys (2024); Website, accessible via www.new.SeroTracker.com.",
+          toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST
+        }}
         data={state.filteredData}
       />
     );
