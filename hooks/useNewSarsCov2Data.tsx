@@ -39,6 +39,8 @@ export const sarsCov2Estimates = gql`
       denominatorValue
       numeratorValue
       seroprevalence
+      estimateName
+      url
     }
   }
 `

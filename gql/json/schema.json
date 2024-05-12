@@ -1439,6 +1439,18 @@
             "deprecationReason": null
           },
           {
+            "name": "estimateName",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "gbdSubRegion",
             "description": null,
             "args": [],
@@ -1741,6 +1753,18 @@
             "type": {
               "kind": "ENUM",
               "name": "UNRegion",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "url",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
               "ofType": null
             },
             "isDeprecated": false,
