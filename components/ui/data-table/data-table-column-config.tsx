@@ -1,6 +1,10 @@
+import { assertNever } from 'assert-never';
 import { DataTableColumnDef } from "./data-table";
+import { getDataTableColouredPillColumnConfiguration } from "./data-table-column-configurations/data-table-coloured-pill-column-configuration";
 import { getDataTableColouredPillListColumnConfiguration } from "./data-table-column-configurations/data-table-coloured-pill-list-column-configuration";
 import { getDataTableDateColumnConfiguration } from "./data-table-column-configurations/data-table-date-column-configuration";
+import { getDataTableLinkButtonColumnConfiguration } from "./data-table-column-configurations/data-table-link-button-column-configuration";
+import { getDataTableLinkColumnConfiguration } from "./data-table-column-configurations/data-table-link-column-configuration";
 import { getDataTableStandardColumnConfiguration } from "./data-table-column-configurations/data-table-standard-column-configuration";
 import { getDataTablePercentageColumnConfiguration } from "./data-table-column-configurations/date-table-percentage-column-configuration";
 
@@ -27,15 +31,18 @@ export type StandardDataTableColumnConfigurationEntry = DataTableColumnConfigura
 
 export type LinkDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.LINK;
+  fieldNameForLink: string;
 }
 
-type LinkButtonDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type LinkButtonDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.LINK_BUTTON;
+  fieldNameForLink: string;
 }
 
-type ColouredPillDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type ColouredPillDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL;
-  colourSchemeClassname: string;
+  valueToColourSchemeClassnameMap: Record<string, string | unknown>;
+  defaultColourSchemeClassname: string;
 }
 
 export type ColouredPillListDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
@@ -76,12 +83,23 @@ export const columnConfigurationToColumnDefinitions = (
       if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST) {
         return getDataTableColouredPillListColumnConfiguration({columnConfiguration: columnConfigurationEntry});
       }
+      if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.COLOURED_PILL) {
+        return getDataTableColouredPillColumnConfiguration({columnConfiguration: columnConfigurationEntry});
+      }
+      if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.LINK) {
+        return getDataTableLinkColumnConfiguration({columnConfiguration: columnConfigurationEntry});
+      }
+      if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.LINK_BUTTON) {
+        return getDataTableLinkButtonColumnConfiguration({columnConfiguration: columnConfigurationEntry});
+      }
       if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.DATE) {
         return getDataTableDateColumnConfiguration({columnConfiguration: columnConfigurationEntry});
       }
       if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.PERCENTAGE) {
         return getDataTablePercentageColumnConfiguration({columnConfiguration: columnConfigurationEntry});
       }
+
+      assertNever(columnConfigurationEntry);
     })
     .filter(<T extends unknown>(element: T | undefined): element is T => !!element)
 }

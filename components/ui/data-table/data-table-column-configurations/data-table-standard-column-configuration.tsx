@@ -9,4 +9,6 @@ interface GetDataTableStandardColumnConfigurationInput {
 export const getDataTableStandardColumnConfiguration = (input: GetDataTableStandardColumnConfigurationInput): DataTableColumnDef<Record<string, unknown>, unknown> => ({
   accessorKey: input.columnConfiguration.fieldName,
   header: getDataTableHeaderComponent({ columnName: input.columnConfiguration.label }),
+  enableHiding: input.columnConfiguration.isHideable,
+  fixed: input.columnConfiguration.isFixed
 });

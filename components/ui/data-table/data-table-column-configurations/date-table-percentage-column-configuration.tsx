@@ -30,5 +30,7 @@ export const getDataTablePercentageColumnConfiguration = (input: GetDataTablePer
     }
 
     return `${(valueAsNumber * 100).toFixed(1)}%`;
-  }
+  },
+  enableHiding: input.columnConfiguration.isHideable,
+  fixed: input.columnConfiguration.isFixed
 });

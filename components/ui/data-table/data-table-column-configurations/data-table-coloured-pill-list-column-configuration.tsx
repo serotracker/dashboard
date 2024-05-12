@@ -28,5 +28,7 @@ export const getDataTableColouredPillListColumnConfiguration = (input: GetDataTa
     };
 
     return 'N/A';
-  }
+  },
+  enableHiding: input.columnConfiguration.isHideable,
+  fixed: input.columnConfiguration.isFixed
 });

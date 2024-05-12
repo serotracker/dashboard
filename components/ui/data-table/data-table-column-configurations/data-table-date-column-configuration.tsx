@@ -34,5 +34,7 @@ export const getDataTableDateColumnConfiguration = (input: GetDataTableDateColum
     }
 
     return TranslateDate(date);
-  }
+  },
+  enableHiding: input.columnConfiguration.isHideable,
+  fixed: input.columnConfiguration.isFixed
 });
