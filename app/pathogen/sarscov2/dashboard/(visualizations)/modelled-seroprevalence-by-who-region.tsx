@@ -5,26 +5,20 @@ import { LineChart } from "@/components/customs/visualizations/line-chart";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
 import { dateToMonthCount, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
-import { generateRange } from "@/lib/utils";
 import { WhoRegion } from "@/gql/graphql";
 
 interface GenerateTimeBucketForEstimateInput {
-  estimate: Omit<SarsCov2Estimate, 'samplingStartDate'|'samplingEndDate'> & {samplingStartDate: Date, samplingEndDate: Date};
+  estimate: Omit<SarsCov2Estimate, 'samplingMidDate'> & {samplingMidDate: Date};
 }
 
 const generateTimeBucketsForEstimate = (input: GenerateTimeBucketForEstimateInput): string[] => {
-  const samplingStartDateMonthCount = dateToMonthCount(input.estimate.samplingStartDate);
-  const samplingEndDateMonthCount = dateToMonthCount(input.estimate.samplingEndDate);
+  const samplingMidDateMonthCount = dateToMonthCount(input.estimate.samplingMidDate);
 
-  if(samplingStartDateMonthCount >= samplingEndDateMonthCount) {
-    return [ monthCountToMonthYearString(samplingStartDateMonthCount) ];
-  }
-
-  return generateRange({
-    startInclusive: samplingStartDateMonthCount,
-    endInclusive: samplingEndDateMonthCount,
-    stepSize: 1
-  }).map((monthCount) => monthCountToMonthYearString(monthCount));
+  return [
+    monthCountToMonthYearString(samplingMidDateMonthCount - 1),
+    monthCountToMonthYearString(samplingMidDateMonthCount),
+    monthCountToMonthYearString(samplingMidDateMonthCount + 1)
+  ]
 }
 
 const barColoursForWhoRegions: Record<WhoRegion, string> = {
@@ -44,16 +38,14 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
   const state = useContext(SarsCov2Context);
 
   const consideredData = useMemo(() => state.filteredData
-    .filter((dataPoint: SarsCov2Estimate): dataPoint is Omit<SarsCov2Estimate, "samplingStartDate" | "samplingEndDate">
+    .filter((dataPoint: SarsCov2Estimate): dataPoint is Omit<SarsCov2Estimate, "samplingMidDate">
       & {
-        samplingStartDate: NonNullable<SarsCov2Estimate["samplingStartDate"]>;
-        samplingEndDate: NonNullable<SarsCov2Estimate["samplingEndDate"]>;
+        samplingMidDate: NonNullable<SarsCov2Estimate["samplingStartDate"]>;
         whoRegion: NonNullable<SarsCov2Estimate["whoRegion"]>;
-      } => !!dataPoint.samplingStartDate && !!dataPoint.samplingEndDate && !!dataPoint.whoRegion
+      } => !!dataPoint.samplingMidDate && !!dataPoint.whoRegion
     ).map((dataPoint) => ({
       ...dataPoint,
-      samplingEndDate: parseISO(dataPoint.samplingEndDate),
-      samplingStartDate: parseISO(dataPoint.samplingStartDate)
+      samplingMidDate: parseISO(dataPoint.samplingMidDate),
     })),
     [state.filteredData]
   );
