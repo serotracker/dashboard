@@ -1,6 +1,7 @@
 import { DataTableColumnDef } from "../data-table";
-import { PercentageDataTableColumnConfigurationEntry } from "../data-table-column-config";
-import { getDataTableHeaderComponent } from "../data-table-header";
+import { DataTableColumnConfigurationEntryType, PercentageDataTableColumnConfigurationEntry } from "../data-table-column-config";
+import { getSortableColumnDataTableHeaderComponent } from "../sortable-column-data-table-header";
+import { getDataTableStandardColumnConfiguration } from "./data-table-standard-column-configuration";
 
 interface GetDataTablePercentageColumnConfigurationInput {
   columnConfiguration: PercentageDataTableColumnConfigurationEntry;
@@ -19,8 +20,7 @@ const valueToNumber = (value: unknown): number | "N/A" => {
 }
 
 export const getDataTablePercentageColumnConfiguration = (input: GetDataTablePercentageColumnConfigurationInput): DataTableColumnDef<Record<string, unknown>, unknown> => ({
-  accessorKey: input.columnConfiguration.fieldName,
-  header: getDataTableHeaderComponent({ columnName: input.columnConfiguration.label }),
+  ...getDataTableStandardColumnConfiguration({columnConfiguration: {...input.columnConfiguration, type: DataTableColumnConfigurationEntryType.STANDARD }}),
   cell: ({ row }) => {
     const value = row.getValue(input.columnConfiguration.fieldName);
     const valueAsNumber = valueToNumber(value);
@@ -31,6 +31,4 @@ export const getDataTablePercentageColumnConfiguration = (input: GetDataTablePer
 
     return `${(valueAsNumber * 100).toFixed(1)}%`;
   },
-  enableHiding: input.columnConfiguration.isHideable,
-  fixed: input.columnConfiguration.isFixed
 });

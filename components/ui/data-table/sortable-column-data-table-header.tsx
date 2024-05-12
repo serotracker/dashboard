@@ -2,11 +2,11 @@ import { HeaderContext } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 
-interface DataTableHeaderProps {
+interface SortableColumnDataTableHeaderComponentProps {
   columnName: string
 }
 
-export const getDataTableHeaderComponent = <TEstimate extends Record<string, unknown>>(props: DataTableHeaderProps) => {
+export const getSortableColumnDataTableHeaderComponent = <TEstimate extends Record<string, unknown>>(props: SortableColumnDataTableHeaderComponentProps) => {
   const HeaderComponent: React.FC<HeaderContext<TEstimate, unknown>> = ({ column }) => (
     <Button
       variant="ghost"

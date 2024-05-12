@@ -1,18 +1,18 @@
 import { Row } from "@tanstack/react-table";
 import parseISO from "date-fns/parseISO";
 import { DataTableColumnDef } from "../data-table";
-import { DateDataTableColumnConfigurationEntry } from "../data-table-column-config";
-import { getDataTableHeaderComponent } from "../data-table-header";
+import { DataTableColumnConfigurationEntryType, DateDataTableColumnConfigurationEntry } from "../data-table-column-config";
+import { getSortableColumnDataTableHeaderComponent } from "../sortable-column-data-table-header";
 import { TranslateDate } from "@/utils/translate-util/translate-service";
+import { getDataTableStandardColumnConfiguration } from "./data-table-standard-column-configuration";
 
 interface GetDataTableDateColumnConfigurationInput {
   columnConfiguration: DateDataTableColumnConfigurationEntry;
 }
 
 export const getDataTableDateColumnConfiguration = (input: GetDataTableDateColumnConfigurationInput): DataTableColumnDef<Record<string, unknown>, unknown> => ({
-  accessorKey: input.columnConfiguration.fieldName,
-  header: getDataTableHeaderComponent({ columnName: input.columnConfiguration.label }),
-  sortingFn: (rowA: Row<Record<string, unknown>>, rowB: Row<Record<string, unknown>>, columnId: string) => {
+  ...getDataTableStandardColumnConfiguration({columnConfiguration: {...input.columnConfiguration, type: DataTableColumnConfigurationEntryType.STANDARD }}),
+  sortingFn: (rowA: Row<Record<string, unknown>>, rowB: Row<Record<string, unknown>>) => {
     const rowADate = rowA.original[input.columnConfiguration.fieldName];
     const rowBDate = rowA.original[input.columnConfiguration.fieldName];
 
@@ -35,6 +35,4 @@ export const getDataTableDateColumnConfiguration = (input: GetDataTableDateColum
 
     return TranslateDate(date);
   },
-  enableHiding: input.columnConfiguration.isHideable,
-  fixed: input.columnConfiguration.isFixed
 });

@@ -1,6 +1,6 @@
 import { DataTableColumnDef } from "../data-table";
 import { StandardDataTableColumnConfigurationEntry } from "../data-table-column-config";
-import { getDataTableHeaderComponent } from "../data-table-header";
+import { getSortableColumnDataTableHeaderComponent } from "../sortable-column-data-table-header";
 
 interface GetDataTableStandardColumnConfigurationInput {
   columnConfiguration: StandardDataTableColumnConfigurationEntry;
@@ -8,7 +8,7 @@ interface GetDataTableStandardColumnConfigurationInput {
 
 export const getDataTableStandardColumnConfiguration = (input: GetDataTableStandardColumnConfigurationInput): DataTableColumnDef<Record<string, unknown>, unknown> => ({
   accessorKey: input.columnConfiguration.fieldName,
-  header: getDataTableHeaderComponent({ columnName: input.columnConfiguration.label }),
-  enableHiding: input.columnConfiguration.isHideable,
-  fixed: input.columnConfiguration.isFixed
+  header: (input.columnConfiguration.isSortable === undefined || input.columnConfiguration.isSortable === true) ? getSortableColumnDataTableHeaderComponent({ columnName: input.columnConfiguration.label }) : input.columnConfiguration.label,
+  enableHiding: input.columnConfiguration.isHideable ?? true,
+  fixed: input.columnConfiguration.isFixed ?? false
 });

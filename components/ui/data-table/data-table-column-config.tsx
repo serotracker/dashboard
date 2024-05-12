@@ -21,8 +21,9 @@ export enum DataTableColumnConfigurationEntryType {
 export interface DataTableColumnConfigurationEntryBase {
   fieldName: string;
   label: string;
-  isHideable: boolean;
-  isFixed: boolean;
+  isSortable?: boolean;
+  isHideable?: boolean;
+  isFixed?: boolean;
 }
 
 export type StandardDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {

@@ -1,16 +1,16 @@
 import validator from "validator";
 import Link from "next/link";
 import { DataTableColumnDef } from "../data-table";
-import { LinkDataTableColumnConfigurationEntry } from "../data-table-column-config";
-import { getDataTableHeaderComponent } from "../data-table-header";
+import { DataTableColumnConfigurationEntryType, LinkDataTableColumnConfigurationEntry } from "../data-table-column-config";
+import { getSortableColumnDataTableHeaderComponent } from "../sortable-column-data-table-header";
+import { getDataTableStandardColumnConfiguration } from "./data-table-standard-column-configuration";
 
 interface GetDataTableLinkColumnConfigurationInput {
   columnConfiguration: LinkDataTableColumnConfigurationEntry;
 }
 
 export const getDataTableLinkColumnConfiguration = (input: GetDataTableLinkColumnConfigurationInput): DataTableColumnDef<Record<string, unknown>, unknown> => ({
-  accessorKey: input.columnConfiguration.fieldName,
-  header: getDataTableHeaderComponent({ columnName: input.columnConfiguration.label }),
+  ...getDataTableStandardColumnConfiguration({columnConfiguration: {...input.columnConfiguration, type: DataTableColumnConfigurationEntryType.STANDARD }}),
   cell: ({ row }) => {
     const link = row.getValue(input.columnConfiguration.fieldNameForLink);
 
@@ -26,6 +26,4 @@ export const getDataTableLinkColumnConfiguration = (input: GetDataTableLinkColum
     return <p> {row.getValue(input.columnConfiguration.fieldName)} </p>
     
   },
-  enableHiding: input.columnConfiguration.isHideable,
-  fixed: input.columnConfiguration.isFixed
 });

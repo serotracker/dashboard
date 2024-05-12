@@ -1,17 +1,15 @@
 import validator from "validator";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DataTableColumnDef } from "../data-table";
-import { LinkButtonDataTableColumnConfigurationEntry } from "../data-table-column-config";
-import { getDataTableHeaderComponent } from "../data-table-header";
+import { DataTableColumnConfigurationEntryType, LinkButtonDataTableColumnConfigurationEntry } from "../data-table-column-config";
+import { getDataTableStandardColumnConfiguration } from "./data-table-standard-column-configuration";
 
 interface GetDataTableLinkButtonColumnConfigurationInput {
   columnConfiguration: LinkButtonDataTableColumnConfigurationEntry;
 }
 
 export const getDataTableLinkButtonColumnConfiguration = (input: GetDataTableLinkButtonColumnConfigurationInput): DataTableColumnDef<Record<string, unknown>, unknown> => ({
-  accessorKey: input.columnConfiguration.fieldName,
-  header: getDataTableHeaderComponent({ columnName: input.columnConfiguration.label }),
+  ...getDataTableStandardColumnConfiguration({columnConfiguration: {...input.columnConfiguration, type: DataTableColumnConfigurationEntryType.STANDARD }}),
   cell: ({ row }) => {
     const link = row.getValue(input.columnConfiguration.fieldNameForLink);
 
@@ -26,6 +24,4 @@ export const getDataTableLinkButtonColumnConfiguration = (input: GetDataTableLin
     return <p> URL unavailable </p>
     
   },
-  enableHiding: input.columnConfiguration.isHideable,
-  fixed: input.columnConfiguration.isFixed
 });

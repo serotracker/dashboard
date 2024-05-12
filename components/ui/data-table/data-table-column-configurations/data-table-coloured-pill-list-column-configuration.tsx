@@ -1,15 +1,15 @@
 import { cn } from "@/lib/utils";
 import { DataTableColumnDef } from "../data-table";
-import { ColouredPillListDataTableColumnConfigurationEntry } from "../data-table-column-config";
-import { getDataTableHeaderComponent } from "../data-table-header";
+import { ColouredPillListDataTableColumnConfigurationEntry, DataTableColumnConfigurationEntryType } from "../data-table-column-config";
+import { getSortableColumnDataTableHeaderComponent } from "../sortable-column-data-table-header";
+import { getDataTableStandardColumnConfiguration } from "./data-table-standard-column-configuration";
 
 interface GetDataTableColouredPillListColumnConfigurationInput {
   columnConfiguration: ColouredPillListDataTableColumnConfigurationEntry;
 }
 
 export const getDataTableColouredPillListColumnConfiguration = (input: GetDataTableColouredPillListColumnConfigurationInput): DataTableColumnDef<Record<string, unknown>, unknown> => ({
-  accessorKey: input.columnConfiguration.fieldName,
-  header: getDataTableHeaderComponent({ columnName: input.columnConfiguration.label }),
+  ...getDataTableStandardColumnConfiguration({columnConfiguration: {...input.columnConfiguration, type: DataTableColumnConfigurationEntryType.STANDARD }}),
   cell: ({ row }) => {
     const values = row.getValue(input.columnConfiguration.fieldName);
     if (Array.isArray(values) && values.length > 0) {
@@ -28,7 +28,5 @@ export const getDataTableColouredPillListColumnConfiguration = (input: GetDataTa
     };
 
     return 'N/A';
-  },
-  enableHiding: input.columnConfiguration.isHideable,
-  fixed: input.columnConfiguration.isFixed
+  }
 });
