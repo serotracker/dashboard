@@ -105,11 +105,9 @@ export default function MapAndFilters() {
                 // Convert this to some kind of unique identifier returned from the backend once the SARSCoV2 API returns unique ids.
                 id: `${dataPoint.pin_latitude}-${dataPoint.pin_longitude}-${dataPoint.studyName}`
               }))} 
-              clusterProperties={{}} 
+              clusteringSettings={{clusteringEnabled: false}} 
               sourceId={"sarscov2-[GENERATE-SOURCE-ID]"} 
-              computeClusterMarkers={function (props: { features: MapboxGeoJSONFeature[]; markers: MarkerCollection; map: Map; }): MarkerCollection {
-                throw new Error("Function not implemented.");
-              } }            />
+            />
           </div>
           <Card className={"absolute bottom-1 right-1 "}>
             <CardHeader className={"py-3"}>
