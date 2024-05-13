@@ -103,6 +103,7 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
       state={state}
       filterData={filterData?.arbovirusFilterOptions ? {
         ...filterData.arbovirusFilterOptions,
+        // Filters that don't exist in the backend (such as the ESM filter) need to have their avaiable options added manually
         esm: [
           'dengue2015',
           'dengue2050',
