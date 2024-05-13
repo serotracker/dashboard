@@ -1,112 +1,83 @@
 "use client";
 
-import { Select } from "@/components/customs/select";
 import React, { useContext } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  SarsCov2ActionType,
-  SarsCov2Context,
-  SarsCov2ContextType,
-} from "@/contexts/sarscov2-context/sarscov2-context";
-import useSarsCov2Data from "@/hooks/useSarsCov2Data";
+import { Filters } from "@/components/customs/filters";
+import { FilterableField } from "@/components/customs/filters/available-filters";
+import { useNewSarsCov2Data } from "@/hooks/useNewSarsCov2Data";
+import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { useSarsCov2Filters } from "@/hooks/useSarsCov2Filters";
 
-const addFilterMulti = (
-  value: string[],
-  newFilter: string,
-  state: SarsCov2ContextType,
-  data: any
-) => {
-  state.dispatch({
-    type: SarsCov2ActionType.UPDATE_FILTER,
-    payload: {
-      filter: newFilter,
-      value: value,
-      // Consider making this a static list synced with the backend so that context is static and we do not need to do this. 
-      data: data ? data : [],
-    },
-  });
-};
+interface SarsCov2FiltersProps {
+  className?: string;
+}
 
-const getHeader = (filterKey: string) => {
-  const filterHeader = filterKey.replaceAll("_", " ");
-  return filterHeader.charAt(0).toUpperCase() + filterHeader.slice(1);
-};
+export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
+  const state = useContext(SarsCov2Context);
+  const { data } = useNewSarsCov2Data();
+  const { data: filterData } = useSarsCov2Filters();
 
-const buildFilterDropdown = (
-  filter: string,
-  placeholder: string,
-  state: SarsCov2ContextType,
-  filterOptions: string[],
-  data: any
-) => {
+  const dateFilters = [
+    FilterableField.samplingStartDate,
+    FilterableField.samplingEndDate
+  ]
+
+  const studyLocationFilters = [
+    FilterableField.whoRegion,
+    FilterableField.unRegion,
+    FilterableField.country,
+  ];
+
+  const demographicFilters = [
+    FilterableField.ageGroup,
+  ];
+
+  const testInformationFilters = [
+    FilterableField.scope,
+    FilterableField.sourceType,
+    FilterableField.antibodies,
+    FilterableField.testType,
+    FilterableField.isotypes
+  ];
+
+  const filterSections = [{
+    headerText: 'Date',
+    headerTooltipText: 'Filter on sample start and end date.',
+    includedFilters: dateFilters
+  }, {
+    headerText: 'Study Location',
+    headerTooltipText: 'Filter on where the study was conducted.',
+    includedFilters: studyLocationFilters
+  }, {
+    headerText: 'Demographic',
+    headerTooltipText: 'Filter on demographic variables.',
+    includedFilters: demographicFilters
+  }, {
+    headerText: 'Test Information',
+    headerTooltipText: 'Filter according to serological measurement methods.',
+    includedFilters: testInformationFilters
+  }];
 
   return (
-      <div className="pb-3" key={filter}>
-        <Select
-        key={filter}
-          handleOnChange={(value) =>
-            addFilterMulti(value, filter, state, data)
-          }
-          heading={placeholder}
-          selected={state.selectedFilters[filter] ?? []}
-          options={filterOptions.filter((assay: string) => assay != null)}
-          optionToLabelMap={{}}
-        />
-      </div>
-  );
-};
-
-export function Filters() {
-  const state = useContext(SarsCov2Context);
-
-  const { data } = useSarsCov2Data();
-
-  const filters = useQuery({
-    queryKey: ["SarsCov2Filters"],
-    queryFn: () =>
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sarscov2/filter_options`).then(
-        (response) => response.json()
-      ),
-  });
-
-  if (filters.isSuccess && !filters.isLoading && !filters.isError) {
-
-    return (
-      <div>
-        <div className="p-0">
-          {filters.isSuccess &&
-            filters.data &&
-            Object.keys(filters.data).map((key) => {
-              if (key === "population_group") {
-                const options = filters.data[key].map((option: any) => {
-                  return option.english;
-                });
-                return (
-                  <div key={key}>
-                    {buildFilterDropdown(
-                      key,
-                      getHeader(key),
-                      state,
-                      options,
-                      data ? data.records : []
-                    )}
-                  </div>
-                );
-              }
-              return (
-                <div key={key}>
-                  {buildFilterDropdown(
-                    key,
-                    getHeader(key),
-                    state,
-                    filters.data[key],
-                    data ? data.records : []
-                  )}
-                </div>
-              );
-            })}
-        </div>
-      </div>
-    );
-  } else return <div>Filters Loading...</div>;
+    <Filters
+      className={props.className}
+      includedFilters={[]}
+      filterSections={filterSections}
+      state={state}
+      filterData={
+        filterData?.sarsCov2FilterOptions ? {
+          whoRegion: filterData.sarsCov2FilterOptions.whoRegion,
+          unRegion: filterData.sarsCov2FilterOptions.unRegion,
+          country: filterData.sarsCov2FilterOptions.country,
+          ageGroup: filterData.sarsCov2FilterOptions.ageGroup,
+          scope: filterData.sarsCov2FilterOptions.scope,
+          sourceType: filterData.sarsCov2FilterOptions.sourceType,
+          antibodies: filterData.sarsCov2FilterOptions.antibodies,
+          testType: filterData.sarsCov2FilterOptions.testType,
+          isotypes: filterData.sarsCov2FilterOptions.isotypes
+        } : {}
+      }
+      data={data?.sarsCov2Estimates ?? []}
+      resetAllFiltersButtonEnabled={true}
+    />
+  )
 }
