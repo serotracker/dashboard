@@ -63,6 +63,36 @@ const sarsCov2ColumnConfiguration = [{
   },
   defaultColourSchemeClassname: 'bg-sky-100'
 }, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+  fieldName: 'antibodies',
+  label: 'Antibodies',
+  valueToColourSchemeClassnameMap: {
+    'Envelope protein': 'bg-blue-700 text-white',
+    'Membrane protein': 'bg-pink-400',
+    'Multiplex': 'bg-green-200',
+    'Nucleocapsid (N-protein)': 'bg-yellow-400',
+    'Spike': 'bg-purple-700 text-white',
+    'Whole-virus antigen': 'bg-orange-300'
+  },
+  defaultColourSchemeClassname: 'bg-sky-100'
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+  fieldName: 'testType',
+  label: 'Test Type',
+  valueToColourSchemeClassnameMap: {
+    'CGIA/RDT': 'bg-blue-700 text-white',
+    'CLIA': 'bg-green-200',
+    'CMIA': 'bg-pink-400',
+    'ELISA': 'bg-black text-white',
+    'IFA': 'bg-red-500',
+    'LFIA': 'bg-fuchsia-300',
+    'Luminex': 'bg-green-700 text-white',
+    'Multiple Types': 'bg-yellow-400',
+    'Neutralization': 'bg-purple-700 text-white',
+    'Neutralization Assay': 'bg-orange-300'
+  },
+  defaultColourSchemeClassname: 'bg-sky-100'
+}, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
   fieldName: 'seroprevalence',
   label: 'Seroprevalence',
