@@ -27,6 +27,7 @@ export interface DataTableColumnConfigurationEntryBase {
   isHideable?: boolean;
   isFixed?: boolean;
   valueToDisplayLabel?: (input: string) => string | undefined;
+  valueSortingFunction?: (valueA: string, valueB: string) => number;
 }
 
 export type StandardDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
@@ -59,8 +60,9 @@ export type PercentageDataTableColumnConfigurationEntry = Omit<DataTableColumnCo
   type: DataTableColumnConfigurationEntryType.PERCENTAGE;
 }
 
-export type DateDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {
+export type DateDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'|'valueSortingFunction'> & {
   type: DataTableColumnConfigurationEntryType.DATE;
+  valueSortingFunction?: undefined;
 }
 
 export type BooleanDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {

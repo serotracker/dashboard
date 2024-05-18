@@ -6,6 +6,26 @@ import { gbdSubRegionToLabelMap, gbdSuperRegionToLabelMap, isGbdSubRegion, isGbd
 import { getLabelForUNRegion, isUNRegion } from "@/lib/un-regions";
 import { useContext } from "react";
 
+const ageGroupToSortOrderMap: Record<string, number | undefined> = {
+  'Children and Youth (0-17 years)': 1,
+  'Adults (18-64 years)': 2,
+  'Seniors (65+ years)': 3,
+  'Multiple groups': 4
+};
+
+const riskOfBiasToSortOrderMap: Record<string, number | undefined> = {
+  'Missing': 1,
+  'High': 2,
+  'Moderate': 3,
+  'Low': 4,
+};
+
+const scopeToSortOrderMap: Record<string, number | undefined> = {
+  'Local': 1,
+  'Regional': 2,
+  'National': 3
+};
+
 const sarsCov2ColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
   fieldName: 'estimateName',
@@ -36,6 +56,7 @@ const sarsCov2ColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'riskOfBias',
   label: 'Risk of Bias',
+  valueSortingFunction: (riskOfBiasA: string, riskOfBiasB: string) => (riskOfBiasToSortOrderMap[riskOfBiasA] ?? 0) - (riskOfBiasToSortOrderMap[riskOfBiasB] ?? 0)
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'sourceType',
@@ -44,6 +65,7 @@ const sarsCov2ColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'scope',
   label: 'Scope',
+  valueSortingFunction: (scopeA: string, scopeB: string) => (scopeToSortOrderMap[scopeA] ?? 0) - (scopeToSortOrderMap[scopeB] ?? 0)
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'country',
@@ -112,6 +134,7 @@ const sarsCov2ColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'ageGroup',
   label: 'Age Group',
+  valueSortingFunction: (ageGroupA: string, ageGroupB: string) => (ageGroupToSortOrderMap[ageGroupA] ?? 0) - (ageGroupToSortOrderMap[ageGroupB] ?? 0)
 }, {
   type: DataTableColumnConfigurationEntryType.BOOLEAN as const,
   fieldName: 'isWHOUnityAligned',
