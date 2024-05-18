@@ -31,6 +31,22 @@ export interface PathogenDataPointPropertiesBase {
   longitude: number | undefined;
 }
 
+interface ClusteringEnabledSettings {
+  clusteringEnabled: true,
+  computeClusterMarkers: (props: {
+    features: mapboxgl.MapboxGeoJSONFeature[];
+    markers: MarkerCollection;
+    map: mapboxgl.Map;
+  }) => MarkerCollection;
+  clusterProperties: { [key: string]: any };
+}
+
+interface ClusteringDisabledSettings {
+  clusteringEnabled: false,
+}
+
+export type ClusteringSettings = ClusteringEnabledSettings | ClusteringDisabledSettings;
+
 interface PathogenMapProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
@@ -39,13 +55,8 @@ interface PathogenMapProps<
   layers: PathogenMapLayerInfo[];
   generatePopupContent: PopupContentGenerator<TPathogenDataPointProperties>;
   dataPoints: (TPathogenDataPointProperties & { country: string })[];
-  clusterProperties: { [key: string]: any };
+  clusteringSettings: ClusteringSettings;
   sourceId: string;
-  computeClusterMarkers: (props: {
-    features: mapboxgl.MapboxGeoJSONFeature[];
-    markers: MarkerCollection;
-    map: mapboxgl.Map;
-  }) => MarkerCollection;
 }
 
 
@@ -58,9 +69,8 @@ export function PathogenMap<
   generatePopupContent,
   layers,
   dataPoints,
-  clusterProperties,
+  clusteringSettings,
   sourceId,
-  computeClusterMarkers
 }: PathogenMapProps<TPathogenDataPointProperties>) {
   const [popUpInfo, _setPopUpInfo] = useState<
     PopupInfo<TPathogenDataPointProperties>
@@ -113,17 +123,19 @@ export function PathogenMap<
     const map = event.target;
     if (map) {
       const features = map.querySourceFeatures(sourceId);
+
+      if(clusteringSettings.clusteringEnabled === true) {
+        // This needs to be standardized. How? Can we be type specific probable not? 
+        const newMarkers = clusteringSettings.computeClusterMarkers({
+          features,
+          markers: markersRef.current,
+          map
+        });
       
-      // This needs to be standardized. How? Can we be type specific probable not? 
-      const newMarkers = computeClusterMarkers({
-        features,
-        markers: markersRef.current,
-        map
-      });
-      
-      // Only update the state if newMarkers is different from markersOnScreen
-      if (!isEqual(newMarkers, markersOnScreen)) {
-        setMarkersOnScreen(newMarkers);
+        // Only update the state if newMarkers is different from markersOnScreen
+        if (!isEqual(newMarkers, markersOnScreen)) {
+          setMarkersOnScreen(newMarkers);
+        }
       }
     }
   }
@@ -155,7 +167,7 @@ export function PathogenMap<
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
         dataPoints={dataPoints}
       />
-      <PathogenMapSourceAndLayer layers={layers} dataPoints={dataPoints} clusterProperties={clusterProperties} sourceId={sourceId}/>
+      <PathogenMapSourceAndLayer layers={layers} dataPoints={dataPoints} clusteringSettings={clusteringSettings} sourceId={sourceId}/>
       <PathogenMapPopup
         mapId={id}
         popUpInfo={popUpInfo}

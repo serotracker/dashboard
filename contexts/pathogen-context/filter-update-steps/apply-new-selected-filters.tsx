@@ -44,9 +44,43 @@ export function filterData(
           // Check for any overlap in the sampling period
           return itemEndDate >= filterStartDate;
         }
+        case "samplingStartDate": {
+          const filterStartDate = new Date(filters["samplingStartDate"][0]);
+
+          if (isNaN(filterStartDate.getTime())) {
+            return true; // Handle invalid date
+          }
+
+          const itemStartDate = new Date(item.samplingStartDate);
+          let itemEndDate = new Date(item.samplingEndDate);
+
+          // Check if the end date is before the start date (Fix for particular yellow fever studies in central africa that have start date 2009 and end date for 1969)
+          if (itemEndDate < itemStartDate) {
+            // Set the end date to be the same or 1 month after the start date
+            itemEndDate = new Date(itemStartDate);
+            itemEndDate.setMonth(itemEndDate.getMonth() + 1);
+          }
+
+          // Check for any overlap in the sampling period
+          return itemEndDate >= filterStartDate;
+        }
         case "end_date": {
           const filterEndDate = new Date(filters["end_date"][0]);
-          const filterStartDate = new Date(filters["start_date"][0]);
+
+          if (isNaN(filterEndDate.getTime())) {
+            return true; // Handle invalid date
+          }
+
+          const itemStartDate = new Date(item.samplingStartDate);
+          let itemEndDate = new Date(item.samplingEndDate);
+
+          // Check for any overlap in the sampling period
+          return (
+            itemEndDate <= filterEndDate ||
+            (itemEndDate >= filterEndDate && itemStartDate < filterEndDate));
+        } 
+        case "samplingEndDate": {
+          const filterEndDate = new Date(filters["samplingEndDate"][0]);
 
           if (isNaN(filterEndDate.getTime())) {
             return true; // Handle invalid date
