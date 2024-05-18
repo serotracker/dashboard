@@ -16,9 +16,9 @@ export type SelectOption = {
 
 interface SelectProps {
   heading: string;
-  options: (string)[];
+  options: string[];
   optionToLabelMap: Record<string, string | undefined>;
-  selected: string[];
+  selected: (string | boolean)[];
   handleOnChange: (selected: string[]) => void;
   singleSelect?: boolean // Multi is the default
 }
@@ -32,8 +32,11 @@ const createSelectOptionList = (options: (string)[], optionToLabelMap: Record<st
 
 export function Select(props: SelectProps) {
   // TODO: I wonder if there is a way to make the background color dynamic based on the page we are on so this does not need to prop drilled
-  const { heading, selected, handleOnChange, optionToLabelMap, singleSelect} = props;
+  const { heading, handleOnChange, optionToLabelMap, singleSelect} = props;
   const options = createSelectOptionList(props.options, optionToLabelMap);
+  const selected = props.selected
+    .map((selectedOption) => selectedOption === true ? BooleanSelectOptionString.TRUE : selectedOption) 
+    .map((selectedOption) => selectedOption === false ? BooleanSelectOptionString.FALSE : selectedOption)
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
