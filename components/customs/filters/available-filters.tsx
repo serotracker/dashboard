@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { MapArbovirusFilter } from "@/app/pathogen/arbovirus/dashboard/(map)/MapArbovirusFilter";
 import { SendFilterChangeDispatch } from "../filters";
+import { BooleanSelectFilter } from "./boolean-select-filter";
+import { BooleanSelectOptionString } from "./select-filter";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -52,6 +54,7 @@ export enum FilterableField {
   end_date = "end_date",
   samplingStartDate = "samplingStartDate",
   samplingEndDate = "samplingEndDate",
+  isWHOUnityAligned = "isWHOUnityAligned",
   serotype = "serotype",
   scope = "scope",
   sourceType = "sourceType",
@@ -140,6 +143,15 @@ export const availableFilters: {[key in FilterableField]: FieldInformation } = {
     label: "Sampling End Date",
     valueToLabelMap: {},
     filterRenderingFunction: DateFilter
+  },
+  [FilterableField.isWHOUnityAligned]: {
+    field: FilterableField.isWHOUnityAligned,
+    label: "WHO Unity Alignment",
+    valueToLabelMap: {
+      [BooleanSelectOptionString.TRUE]: 'WHO Unity Aligned Only',
+      [BooleanSelectOptionString.FALSE]: 'Non-WHO Unity Aligned Only'
+    } as const,
+    filterRenderingFunction: BooleanSelectFilter
   },
   [FilterableField.whoRegion]: {
     field: FilterableField.whoRegion,

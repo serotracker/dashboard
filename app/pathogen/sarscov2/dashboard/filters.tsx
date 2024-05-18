@@ -60,7 +60,7 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   return (
     <Filters
       className={props.className}
-      includedFilters={[]}
+      includedFilters={[ FilterableField.isWHOUnityAligned ]}
       filterSections={filterSections}
       state={state}
       filterData={

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
 import { cn } from "@/lib/utils";
+import { BooleanSelectOptionString } from "./filters/select-filter";
 
 export type SelectOption = {
   label: string; // As we see
@@ -15,20 +16,18 @@ export type SelectOption = {
 
 interface SelectProps {
   heading: string;
-  options: string[];
+  options: (string)[];
   optionToLabelMap: Record<string, string | undefined>;
   selected: string[];
   handleOnChange: (selected: string[]) => void;
   singleSelect?: boolean // Multi is the default
 }
 
-const createSelectOptionList = (options: string[], optionToLabelMap: Record<string, string | undefined>) => {
-  return options.map((option: string) => {
-    return {
-      label: optionToLabelMap[option] ?? option,
-      value: option,
-    };
-  });
+const createSelectOptionList = (options: (string)[], optionToLabelMap: Record<string, string | undefined>) => {
+  return options.map((option: string) => ({
+    label: optionToLabelMap[option] ?? option,
+    value: option,
+  }));
 };
 
 export function Select(props: SelectProps) {
