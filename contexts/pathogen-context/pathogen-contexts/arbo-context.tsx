@@ -1,8 +1,9 @@
 "use client";
-import { createContext, useEffect } from "react";
+import { createContext, useEffect, useMemo } from "react";
 import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
 import { useArboData } from "@/hooks/useArboData";
 import { useArboFilters } from "@/hooks/useArboFilters";
+import { CountryDataContext } from "../country-information-context";
 
 export type ArbovirusEstimate = any;
 
@@ -49,6 +50,26 @@ const ArboDataFetcher = (props: PathogenDataFetcherProps<ArbovirusEstimate>): Re
   )
 }
 
+const CountryDataProvider = (props: {children: React.ReactNode}) => {
+  const { data: filterData } = useArboFilters();
+  const value = useMemo(() =>
+    filterData?.arbovirusFilterOptions.countryIdentifiers.map(({
+      name,
+      alphaTwoCode,
+      alphaThreeCode
+    }) => ({
+      countryName: name,
+      countryAlphaTwoCode: alphaTwoCode,
+      countryAlphaThreeCode: alphaThreeCode
+    })) ?? []
+  , [filterData])
+
+  return (
+    <CountryDataContext.Provider value={value}>
+      {props.children}
+    </CountryDataContext.Provider>)
+}
+
 interface ArboProvidersProps {
   children: React.ReactNode;
 }
@@ -58,16 +79,7 @@ export const ArboProviders = (props: ArboProvidersProps) => {
     <PathogenProviders
       children={props.children}
       initialState={initialArboContextState}
-      //getCountryData={() => useArboFilters().data?.arbovirusFilterOptions.countryIdentifiers.map(({
-      //  name,
-      //  alphaTwoCode,
-      //  alphaThreeCode
-      //}) => ({
-      //  countryName: name,
-      //  countryAlphaTwoCode: alphaTwoCode,
-      //  countryAlphaThreeCode: alphaThreeCode
-      //})) ?? []}
-      getCountryData={() => []}
+      countryDataProvider={CountryDataProvider}
       context={ArboContext}
       mapId={'arboMap'}
       dataFetcher={ArboDataFetcher}

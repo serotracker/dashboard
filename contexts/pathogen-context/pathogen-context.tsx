@@ -5,7 +5,7 @@ import { MapProvider, MapRef, useMap } from "react-map-gl";
 import React, { Context, Dispatch, useReducer } from "react";
 import { filterData } from "./filter-update-steps/apply-new-selected-filters";
 import { handleFilterUpdate } from "./filter-update-steps";
-import { CountryNameProvider } from "./country-name-context";
+import { CountryInformationProvider } from "./country-information-context";
 
 export interface PathogenContextType<TData extends Record<string, unknown>> extends PathogenContextState<TData> {
   dispatch: React.Dispatch<PathogenContextAction>;
@@ -67,7 +67,7 @@ interface PathogenProvidersProps<TData extends Record<string, unknown>> {
   children: React.ReactNode;
   mapId: string;
   dataFetcher: (props: PathogenDataFetcherProps<TData>) => React.ReactNode;
-  getCountryData: () => Array<{countryName: string, countryAlphaTwoCode: string, countryAlphaThreeCode: string}>
+  countryDataProvider: (props: {children: React.ReactNode}) => React.ReactNode;
   initialState: PathogenContextState<TData>
   context: Context<PathogenContextType<TData>>
 }
@@ -92,11 +92,11 @@ export const PathogenProviders = <TData extends Record<string, unknown>>(props: 
             mapId={props.mapId}
             dataFetcher={props.dataFetcher}
           >
-            <CountryNameProvider
-              getCountryData={props.getCountryData}
-            >
-              {props.children}
-            </CountryNameProvider>
+            <props.countryDataProvider>
+              <CountryInformationProvider>
+                {props.children}
+              </CountryInformationProvider>
+            </props.countryDataProvider>
           </FilteredDataProvider>
         </QueryClientProvider>
       </MapProvider>
