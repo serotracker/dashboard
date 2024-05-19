@@ -18,10 +18,10 @@ export const arbovirusFiltersQuery = gql`
       unRegion
       whoRegion
       countryIdentifiers {
-				name
-				alphaTwoCode
-				alphaThreeCode
-			}
+        name
+        alphaTwoCode
+        alphaThreeCode
+      }
     }
   }
 `
