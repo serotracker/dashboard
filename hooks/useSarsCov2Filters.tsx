@@ -7,7 +7,6 @@ export const sarsCov2Filters = gql`
   query sarsCov2FilterOptions {
     sarsCov2FilterOptions {
       ageGroup
-      country
       scope
       sourceType
       riskOfBias
@@ -16,6 +15,11 @@ export const sarsCov2Filters = gql`
       antibodies
       isotypes
       testType
+      countryIdentifiers {
+				name
+				alphaTwoCode
+				alphaThreeCode
+			}
     }
   }
 `

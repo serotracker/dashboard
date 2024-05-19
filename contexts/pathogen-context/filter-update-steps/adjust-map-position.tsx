@@ -1,7 +1,7 @@
 import {
   BoundingBox,
   combineBoundingBoxes,
-  getBoundingBoxFromCountryName,
+  getBoundingBoxFromCountryAlphaTwoCode,
   getBoundingBoxFromUNRegion,
   getBoundingBoxFromWHORegion,
 } from "@/lib/bounding-boxes";
@@ -21,9 +21,9 @@ const getAllBoundingBoxesFromSelectedFilters = (
 ): BoundingBox[] => {
   const { selectedFilters } = input;
 
-  const selectedCountries = selectedFilters["country"] ?? [];
-  const boundingBoxesFromSelectedCountries = selectedCountries
-    .map((countryName) => getBoundingBoxFromCountryName(countryName))
+  const selectedCountryAlphaTwoCodes = selectedFilters["countryAlphaTwoCode"] ?? [];
+  const boundingBoxesFromSelectedCountries = selectedCountryAlphaTwoCodes
+    .map((countryAlphaTwoCode) => getBoundingBoxFromCountryAlphaTwoCode(countryAlphaTwoCode))
     .filter(
       (boundingBox: BoundingBox | undefined): boundingBox is BoundingBox =>
         !!boundingBox
@@ -62,7 +62,7 @@ export const adjustMapPosition = <TData extends Record<string, unknown>>(
   }
 
   if (
-    input.action.payload.filter !== "country" &&
+    input.action.payload.filter !== "countryAlphaTwoCode" &&
     input.action.payload.filter !== "unRegion" &&
     input.action.payload.filter !== "whoRegion"
   ) {

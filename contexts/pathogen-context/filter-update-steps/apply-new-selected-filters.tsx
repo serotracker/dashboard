@@ -99,10 +99,10 @@ export function filterData(
             filters[key].includes(element)
           );
         }
-        case "country":  
+        case "countryAlphaTwoCode":  
         case "unRegion": 
         case "whoRegion": {
-          return filters["country"]?.includes(item["country"]) || filters["unRegion"]?.includes(item["unRegion"]) || filters["whoRegion"]?.includes(item["whoRegion"]);
+          return filters["countryAlphaTwoCode"]?.includes(item["countryAlphaTwoCode"]) || filters["unRegion"]?.includes(item["unRegion"]) || filters["whoRegion"]?.includes(item["whoRegion"]);
         }
         case "esm": {
           switch(filters["esm"][0]){

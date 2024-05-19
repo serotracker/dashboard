@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
+import { ArbovirusFilterOptionsQuery } from "@/gql/graphql";
 
 export const arbovirusFiltersQuery = gql`
   query arbovirusFilterOptions {
@@ -8,7 +9,6 @@ export const arbovirusFiltersQuery = gql`
       ageGroup
       antibody
       assay
-      country
       pathogen
       pediatricAgeGroup
       producer
@@ -17,12 +17,17 @@ export const arbovirusFiltersQuery = gql`
       sex
       unRegion
       whoRegion
+      countryIdentifiers {
+				name
+				alphaTwoCode
+				alphaThreeCode
+			}
     }
   }
 `
 
 export function useArboFilters() {
-  return useQuery<any>({
+  return useQuery<ArbovirusFilterOptionsQuery>({
     queryKey: ["arbovirusFiltersQuery"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
   });

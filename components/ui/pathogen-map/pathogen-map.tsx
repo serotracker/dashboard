@@ -54,7 +54,7 @@ interface PathogenMapProps<
   baseCursor: PathogenMapCursor;
   layers: PathogenMapLayerInfo[];
   generatePopupContent: PopupContentGenerator<TPathogenDataPointProperties>;
-  dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string })[];
+  dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
   clusteringSettings: ClusteringSettings;
   sourceId: string;
 }

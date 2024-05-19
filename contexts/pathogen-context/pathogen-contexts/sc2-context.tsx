@@ -3,6 +3,7 @@ import { createContext, useEffect } from "react";
 import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
 import { useSarsCov2Data } from "@/hooks/useSarsCov2Data";
 import { SarsCov2EstimatesQuery } from "@/gql/graphql";
+import { useSarsCov2Filters } from "@/hooks/useSarsCov2Filters";
 
 const initialSarsCov2ContextState = {
   filteredData: [],
@@ -48,6 +49,16 @@ export const SarsCov2Providers = (props: SarsCov2ProvidersProps) => {
       children={props.children}
       initialState={initialSarsCov2ContextState}
       context={SarsCov2Context}
+      //getCountryData={() => useSarsCov2Filters()?.data?.sarsCov2FilterOptions.countryIdentifiers.map(({
+      //  name,
+      //  alphaTwoCode,
+      //  alphaThreeCode
+      //}) => ({
+      //  countryName: name,
+      //  countryAlphaTwoCode: alphaTwoCode,
+      //  countryAlphaThreeCode: alphaThreeCode
+      //})) ?? []}
+      getCountryData={() => []}
       mapId={"sarsCov2Map"}
       dataFetcher={SarsCov2DataFetcher}
     />

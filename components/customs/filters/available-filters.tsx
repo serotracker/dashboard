@@ -44,7 +44,7 @@ export enum FilterableField {
   esm = "esm",
   whoRegion = "whoRegion",
   unRegion = "unRegion",
-  country = "country",
+  countryAlphaTwoCode = "countryAlphaTwoCode",
   assay = "assay",
   producer = "producer",
   sampleFrame = "sampleFrame",
@@ -186,8 +186,8 @@ export const availableFilters: {[key in FilterableField]: FieldInformation } = {
     valueToLabelMap: unRegionEnumToLabelMap,
     filterRenderingFunction: MultiSelectFilter
   },
-  [FilterableField.country]: {
-    field: FilterableField.country,
+  [FilterableField.countryAlphaTwoCode]: {
+    field: FilterableField.countryAlphaTwoCode,
     label: "Country",
     valueToLabelMap: {},
     filterRenderingFunction: MultiSelectFilter

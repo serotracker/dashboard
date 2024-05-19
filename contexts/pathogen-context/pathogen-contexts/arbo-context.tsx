@@ -2,6 +2,7 @@
 import { createContext, useEffect } from "react";
 import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
 import { useArboData } from "@/hooks/useArboData";
+import { useArboFilters } from "@/hooks/useArboFilters";
 
 export type ArbovirusEstimate = any;
 
@@ -57,6 +58,16 @@ export const ArboProviders = (props: ArboProvidersProps) => {
     <PathogenProviders
       children={props.children}
       initialState={initialArboContextState}
+      //getCountryData={() => useArboFilters().data?.arbovirusFilterOptions.countryIdentifiers.map(({
+      //  name,
+      //  alphaTwoCode,
+      //  alphaThreeCode
+      //}) => ({
+      //  countryName: name,
+      //  countryAlphaTwoCode: alphaTwoCode,
+      //  countryAlphaThreeCode: alphaThreeCode
+      //})) ?? []}
+      getCountryData={() => []}
       context={ArboContext}
       mapId={'arboMap'}
       dataFetcher={ArboDataFetcher}

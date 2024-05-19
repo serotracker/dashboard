@@ -1,14 +1,13 @@
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { VisiblePopupInfo } from "./pathogen-map-popup";
-import { getBoundingBoxCenter, getBoundingBoxFromCountryName } from "@/lib/bounding-boxes";
+import { getBoundingBoxCenter, getBoundingBoxFromCountryAlphaTwoCode } from "@/lib/bounding-boxes";
 
 interface SetPopUpInfoForCountryHighlightLayerInput<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
   newPopUpInfo: VisiblePopupInfo<TPathogenDataPointProperties>;
   setPopUpInfo: (input: VisiblePopupInfo<TPathogenDataPointProperties>) => void;
-  dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string })[];
-
+  dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
 }
 
 export const useCountryHighlightLayer = () => {
@@ -26,8 +25,9 @@ export const useCountryHighlightLayer = () => {
       }
 
       const countryName = dataForCountry[0].country
+      const countryAlphaTwoCode = dataForCountry[0].countryAlphaTwoCode
 
-      const countryBoundingBox = getBoundingBoxFromCountryName(countryName);
+      const countryBoundingBox = getBoundingBoxFromCountryAlphaTwoCode(countryAlphaTwoCode);
 
       if(!countryBoundingBox) {
         return;

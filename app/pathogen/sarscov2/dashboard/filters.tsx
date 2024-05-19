@@ -30,7 +30,7 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   const studyLocationFilters = [
     FilterableField.whoRegion,
     FilterableField.unRegion,
-    FilterableField.country,
+    FilterableField.countryAlphaTwoCode,
   ];
 
   const demographicFilters = [
@@ -77,14 +77,14 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
         filterData?.sarsCov2FilterOptions ? {
           whoRegion: filterData.sarsCov2FilterOptions.whoRegion,
           unRegion: filterData.sarsCov2FilterOptions.unRegion,
-          country: filterData.sarsCov2FilterOptions.country,
           ageGroup: filterData.sarsCov2FilterOptions.ageGroup,
           scope: filterData.sarsCov2FilterOptions.scope,
           sourceType: filterData.sarsCov2FilterOptions.sourceType,
           riskOfBias: filterData.sarsCov2FilterOptions.riskOfBias,
           antibodies: filterData.sarsCov2FilterOptions.antibodies,
           testType: filterData.sarsCov2FilterOptions.testType,
-          isotypes: filterData.sarsCov2FilterOptions.isotypes
+          isotypes: filterData.sarsCov2FilterOptions.isotypes,
+          countryAlphaTwoCode: filterData.sarsCov2FilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode)
         } : {}
       }
       data={data?.sarsCov2Estimates ?? []}

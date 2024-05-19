@@ -41,7 +41,7 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   const studyLocationFilters = [
     FilterableField.whoRegion,
     FilterableField.unRegion,
-    FilterableField.country,
+    FilterableField.countryAlphaTwoCode,
     FilterableField.esm,
   ];
 
@@ -103,12 +103,21 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
       filterSections={filterSections}
       state={state}
       filterData={filterData?.arbovirusFilterOptions ? {
-        ...filterData.arbovirusFilterOptions,
+        whoRegion: filterData.arbovirusFilterOptions.whoRegion,
+        unRegion: filterData.arbovirusFilterOptions.unRegion,
+        countryAlphaTwoCode: filterData.arbovirusFilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode),
         esm: [
           'dengue2015',
           'dengue2050',
           'zika'
-        ]
+        ],
+        ageGroup: filterData.arbovirusFilterOptions.ageGroup,
+        sex: filterData.arbovirusFilterOptions.sex,
+        sampleFrame: filterData.arbovirusFilterOptions.sampleFrame,
+        assay: filterData.arbovirusFilterOptions.assay,
+        producer: filterData.arbovirusFilterOptions.producer,
+        antibody: filterData.arbovirusFilterOptions.antibody,
+        serotype: filterData.arbovirusFilterOptions.serotype,
       } : {}}
       data={data?.arbovirusEstimates ?? []}
       resetAllFiltersButtonEnabled={true}
