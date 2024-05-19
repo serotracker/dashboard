@@ -57,7 +57,8 @@ const CountryDataProvider = (props: {children: React.ReactNode}) => {
   return (
     <CountryDataContext.Provider value={value}>
       {props.children}
-    </CountryDataContext.Provider>)
+    </CountryDataContext.Provider>
+  )
 }
 
 interface SarsCov2ProvidersProps {
