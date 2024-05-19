@@ -15,6 +15,8 @@ export const arbovirusEstimatesQuery = gql`
       city
       state
       country
+      countryAlphaTwoCode
+      countryAlphaThreeCode
       createdAt
       estimateId
       id
