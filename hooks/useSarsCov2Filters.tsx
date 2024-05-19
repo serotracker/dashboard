@@ -16,10 +16,10 @@ export const sarsCov2Filters = gql`
       isotypes
       testType
       countryIdentifiers {
-				name
-				alphaTwoCode
-				alphaThreeCode
-			}
+        name
+        alphaTwoCode
+        alphaThreeCode
+      }
     }
   }
 `
