@@ -1,7 +1,7 @@
-import { VisualizationInformation } from "../../visualizations/visualizations";
-import { ButtonConfig, CloseButtonAdditionalButtonConfig, DownloadButtonAdditionalButtonConfig, VisualizationHeader, ZoomInButtonAdditionalButtonConfig } from "./visualization-header";
+import { ButtonConfig, CloseButtonAdditionalButtonConfig, DownloadButtonAdditionalButtonConfig, GetUrlParameterFromVisualizationIdFunction, VisualizationHeader, ZoomInButtonAdditionalButtonConfig } from "./visualization-header";
 import { useDownloadVisualization } from "./use-download-visualization";
 import { cn } from "@/lib/utils";
+import { VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 
 interface RechartsVisualizationButtonConfig {
   zoomInButton: ButtonConfig<ZoomInButtonAdditionalButtonConfig>;
@@ -9,13 +9,32 @@ interface RechartsVisualizationButtonConfig {
   closeButton: ButtonConfig<CloseButtonAdditionalButtonConfig>;
 }
 
-interface RechartsVisualizationProps {
-  visualizationInformation: VisualizationInformation;
+interface RechartsVisualizationProps<
+  TVisualizationId extends string,
+  TVisualizationUrlParameter extends string,
+  TEstimate extends Record<string, unknown>
+> {
+  visualizationInformation: VisualizationInformation<
+    TVisualizationId,
+    TVisualizationUrlParameter,
+    TEstimate
+  >;
   buttonConfig: RechartsVisualizationButtonConfig;
   className?: string;
+  getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
 }
 
-export const RechartsVisualization = (props: RechartsVisualizationProps) => {
+export const RechartsVisualization = <
+  TVisualizationId extends string,
+  TVisualizationUrlParameter extends string,
+  TEstimate extends Record<string, unknown>
+>(
+  props: RechartsVisualizationProps<
+    TVisualizationId,
+    TVisualizationUrlParameter,
+    TEstimate
+  >
+) => {
   const { ref, downloadVisualization } = useDownloadVisualization({
     visualizationId: props.visualizationInformation.id
   });
@@ -31,6 +50,7 @@ export const RechartsVisualization = (props: RechartsVisualizationProps) => {
         downloadVisualization={() => downloadVisualization({
           elementIdsToIgnore: [downloadButtonId, zoomInButtonId, closeButtonId]
         })}
+        getUrlParameterFromVisualizationId={props.getUrlParameterFromVisualizationId}
         buttonConfiguration={{
           zoomInButton: {
             ...props.buttonConfig.zoomInButton,

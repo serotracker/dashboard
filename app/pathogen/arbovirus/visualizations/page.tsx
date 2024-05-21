@@ -1,45 +1,16 @@
 "use client"
 
-import { notFound, useRouter, useSearchParams } from "next/navigation";
-import { getVisualizationInformationFromVisualizationUrlParameter, isVisualizationUrlParameter } from "./visualizations";
-import { RechartsVisualization } from "../dashboard/(visualizations)/recharts-visualization";
 import { ArbovirusFilters } from "../dashboard/filters";
+import { GenericPathogenVisualizationsPage } from "../../generic-pathogen-visualizations-page";
+import { arbovirusVisualizationInformationArray, getUrlParameterFromVisualizationId, isArbovirusVisualizationUrlParameter } from './visualization-page-config';
 
 export default function VisualizationsPage() {
-  const searchParams = useSearchParams();
-  const visualizationUrlParameter = searchParams.get('visualization');
-  const referrerRoute = searchParams.get('referrerRoute');
-  const router = useRouter();
-  
-  if(!visualizationUrlParameter || !isVisualizationUrlParameter(visualizationUrlParameter)) {
-    return notFound()
-  }
-
-  const visualizationInformation = getVisualizationInformationFromVisualizationUrlParameter({ visualizationUrlParameter });
-
-  if(!visualizationInformation) {
-    return notFound()
-  }
-
   return (
-    <div className="w-screen overflow-y-hidden grid grid-cols-12 grid-rows-2 h-full-screen">
-      <ArbovirusFilters className="col-span-2 row-span-2 overflow-y-scroll p-4 border-black border-r-2 h-full" />
-      <RechartsVisualization
-        className="flex-col flex h-full overflow-y-scroll col-span-10 row-span-2"
-        visualizationInformation={visualizationInformation}
-        buttonConfig={{
-          downloadButton: {
-            enabled: true,
-          },
-          zoomInButton: {
-            enabled: false,
-          },
-          closeButton: {
-            enabled: true,
-            referrerRoute
-          }
-        }}
-      />
-    </div>
-  )
+    <GenericPathogenVisualizationsPage
+      isValidVisualizationUrlParameter={isArbovirusVisualizationUrlParameter}
+      getVisualizationInformationFromVisualizationUrlParameter={(urlParameter) => arbovirusVisualizationInformationArray.find((element) => urlParameter === element.urlParameter)}
+      filtersComponent={ArbovirusFilters}
+      getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
+    />
+  );
 }

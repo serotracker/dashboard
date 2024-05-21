@@ -1,10 +1,5 @@
 import { ZoomIn, DownloadCloud, X } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import {
-  VisualizationId,
-  VisualizationInformation,
-  getVisualizationInformationFromVisualizationId,
-} from "../../visualizations/visualizations";
+import { useRouter } from "next/navigation";
 import { isSafeReferrerLink } from "@/utils/referrer-link-util";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { useContext } from "react";
@@ -15,6 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 
 interface DisabledButtonConfig {
   enabled: false;
@@ -32,10 +28,14 @@ export type ZoomInButtonAdditionalButtonConfig = { referrerRoute: string };
 export type DownloadButtonAdditionalButtonConfig = {};
 export type CloseButtonAdditionalButtonConfig = { referrerRoute: string | undefined | null };
 
-interface ZoomInButtonProps {
+export type GetUrlParameterFromVisualizationIdFunction<TVisualizationId extends string, TVisualizationUrlParameter extends string> =
+  (input: {visualizationId: TVisualizationId}) => {urlParameter: TVisualizationUrlParameter};
+
+interface ZoomInButtonProps<TVisualizationId extends string, TVisualizationUrlParameter extends string> {
   configuration: EnabledButtonConfig<ZoomInButtonAdditionalButtonConfig> & { id: string };
-  visualizationId: VisualizationId;
+  visualizationId: TVisualizationId;
   router: AppRouterInstance;
+  getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
 }
 
 interface DownloadButtonProps {
@@ -89,13 +89,18 @@ const CloseButton = (props: CloseButtonProps) => (
   </button>
 );
 
-const ZoomInButton = (props: ZoomInButtonProps) => (
+const ZoomInButton = <
+  TVisualizationId extends string,
+  TVisualizationUrlParameter extends string
+>(
+  props: ZoomInButtonProps<TVisualizationId, TVisualizationUrlParameter>
+) => (
   <button
     id={props.configuration.id}
     onClick={() =>
       props.router.push(
         `visualizations?visualization=${
-          getVisualizationInformationFromVisualizationId({
+          props.getUrlParameterFromVisualizationId({
             visualizationId: props.visualizationId,
           }).urlParameter
         }&referrerRoute=${props.configuration.referrerRoute}`
@@ -109,13 +114,32 @@ const ZoomInButton = (props: ZoomInButtonProps) => (
   </button>
 );
 
-interface VisualizationHeaderProps {
-  visualizationInformation: VisualizationInformation;
+interface VisualizationHeaderProps<
+  TVisualizationId extends string,
+  TVisualizationUrlParameter extends string,
+  TEstimate extends Record<string, unknown>
+> {
+  visualizationInformation: VisualizationInformation<
+    TVisualizationId,
+    TVisualizationUrlParameter,
+    TEstimate
+  >;
+  getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
   downloadVisualization: () => void;
   buttonConfiguration: AllButtonConfigurations;
 }
 
-export const VisualizationHeader = (props: VisualizationHeaderProps) => {
+export const VisualizationHeader = <
+  TVisualizationId extends string,
+  TVisualizationUrlParameter extends string,
+  TEstimate extends Record<string, unknown>
+>(
+  props: VisualizationHeaderProps<
+    TVisualizationId,
+    TVisualizationUrlParameter,
+    TEstimate
+  >
+) => {
   const router = useRouter();
   const state = useContext(ArboContext);
 
@@ -171,6 +195,7 @@ export const VisualizationHeader = (props: VisualizationHeaderProps) => {
         <ZoomInButton
           router={router}
           configuration={props.buttonConfiguration.zoomInButton}
+          getUrlParameterFromVisualizationId={props.getUrlParameterFromVisualizationId}
           visualizationId={props.visualizationInformation.id}
         />
       )}

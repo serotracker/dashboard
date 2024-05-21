@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { VisualizationsSection } from "./(visualizations)/visualizations-section";
+import { ArbovirusVisualizationsSection } from "./(visualizations)/visualizations-section";
 import { ArboDataTable } from "./(table)/ArboDataTable";
 import { ArbovirusMap } from "./(map)/ArbovirusMap";
 import { ArboBanner } from "./ArboBanner";
@@ -14,7 +14,7 @@ export default function ArbovirusDashboardPage() {
       filtersComponent={ArbovirusFilters}
       mapSectionComponent={ArbovirusMap}
       dataSectionComponent={ArboDataTable}
-      visualizationsSectionComponent={VisualizationsSection}
+      visualizationsSectionComponent={ArbovirusVisualizationsSection}
     />
   );
 }
