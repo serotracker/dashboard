@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   Bar,
   BarChart,
@@ -10,7 +11,8 @@ import {
 } from "recharts";
 import { groupDataForRecharts } from "./group-data-for-recharts";
 import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
-import { SlantedTick } from "./recharts";
+import { typedObjectKeys } from '@/lib/utils';
+import { CustomXAxisTick } from './custom-x-axis-tick';
 
 export enum LegendConfiguration {
   RIGHT_ALIGNED = 'RIGHT_ALIGNED',
@@ -25,19 +27,22 @@ interface StackedBarChartProps<
   graphId: string;
   data: TData[];
   primaryGroupingFunction: (data: TData) => TPrimaryGroupingKey;
+  primaryGroupingKeyToLabel?: (input: TPrimaryGroupingKey) => string;
   primaryGroupingSortFunction?: (
     a: TPrimaryGroupingKey,
     b: TPrimaryGroupingKey
   ) => number;
   secondaryGroupingFunction: (data: TData) => TSecondaryGroupingKey;
+  secondaryGroupingKeyToLabel?: (input: TSecondaryGroupingKey) => string;
   secondaryGroupingSortFunction?: (
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
   transformOutputValue: (data: TData[]) => number;
   getBarColour: (secondaryKey: TSecondaryGroupingKey) => string;
-  tickSlantOptions?: {
-    slantValue: number;
+  xAxisTickSettings?: {
+    slantValue?: number;
+    idealMaximumCharactersPerLine?: number;
   };
   legendConfiguration: LegendConfiguration;
 }
@@ -80,22 +85,38 @@ export const StackedBarChart = <
     dataKey: "primaryKey",
     interval: 0,
   };
-  const { tickSlantOptions } = props;
+  const { xAxisTickSettings, primaryGroupingKeyToLabel, secondaryGroupingKeyToLabel } = props;
 
-  if (tickSlantOptions) {
+  if (xAxisTickSettings) {
     xAxisProps = {
       ...xAxisProps,
       tick: (tickProps) =>
-        SlantedTick({ ...tickProps, tickSlant: tickSlantOptions.slantValue }),
+        CustomXAxisTick({
+          ...tickProps,
+          tickSlant: xAxisTickSettings.slantValue,
+          idealMaximumCharactersPerLine: xAxisTickSettings.idealMaximumCharactersPerLine
+        }),
     };
   }
+
+  const rechartsDataUsingLabels: Array<
+    Record<'primaryKey', string> & Record<string, number | undefined>
+  > = useMemo(() => rechartsData.map((dataPoint) => (
+    Object.fromEntries(typedObjectKeys(dataPoint).map((dataPointKey) => {
+      if(dataPointKey === 'primaryKey') {
+        return ['primaryKey', primaryGroupingKeyToLabel ? primaryGroupingKeyToLabel(dataPoint['primaryKey']) : dataPoint['primaryKey']]
+      }
+
+      return [secondaryGroupingKeyToLabel ? secondaryGroupingKeyToLabel(dataPointKey) : dataPointKey, dataPoint[dataPointKey]]
+    }))
+  )), [rechartsData, primaryGroupingKeyToLabel, secondaryGroupingKeyToLabel])
 
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
       <BarChart
         width={730}
         height={250}
-        data={rechartsData}
+        data={rechartsDataUsingLabels}
         margin={{
           top: 0,
           right: 20,
@@ -111,7 +132,7 @@ export const StackedBarChart = <
         {allSecondaryKeys.map((secondaryKey) => (
           <Bar
             key={`${props.graphId}-${secondaryKey}-bar`}
-            dataKey={secondaryKey}
+            dataKey={props.secondaryGroupingKeyToLabel ? props.secondaryGroupingKeyToLabel(secondaryKey) : secondaryKey}
             stackId="a"
             fill={props.getBarColour(secondaryKey)}
           />

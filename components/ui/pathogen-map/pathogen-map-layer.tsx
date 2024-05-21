@@ -1,5 +1,5 @@
 import { Layer, Source } from "react-map-gl";
-import { PathogenDataPointPropertiesBase } from "./pathogen-map";
+import { ClusteringSettings, PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { PathogenMapCursor } from "./use-pathogen-map-mouse";
 import cluster from "cluster";
 
@@ -24,13 +24,13 @@ export interface PathogenMapLayerProps<
 > {
   layers: PathogenMapLayerInfo[];
   dataPoints: (TPathogenDataPointProperties & { country: string })[];
-  clusterProperties: { [key: string]: any };
+  clusteringSettings: ClusteringSettings;
   sourceId: string;
 }
 
 export function PathogenMapSourceAndLayer<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
->({ layers, dataPoints, clusterProperties, sourceId }: PathogenMapLayerProps<TPathogenDataPointProperties>) {
+>({ layers, dataPoints, clusteringSettings, sourceId }: PathogenMapLayerProps<TPathogenDataPointProperties>) {
   const geojsonData = {
     type: "FeatureCollection" as const,
     features: dataPoints.map((dataPoint) => ({
@@ -43,16 +43,20 @@ export function PathogenMapSourceAndLayer<
     })),
   };
 
+  const sourceClusteringProps = clusteringSettings.clusteringEnabled === true ? {
+    cluster: true,
+    clusterMaxZoom: 6,
+    clusterMinPoints: 2,
+    clusterRadius: 100,
+    clusterProperties: clusteringSettings.clusterProperties
+  } : {}
+
   return (
     <Source
       id={sourceId}
       type="geojson"
       data={geojsonData}
-      cluster
-      clusterMaxZoom={6}
-      clusterMinPoints={2}
-      clusterRadius={100}
-      clusterProperties={clusterProperties}
+      {...sourceClusteringProps}
     >
       {layers.map((layer) => {
         return layer.type === "symbol" ? (

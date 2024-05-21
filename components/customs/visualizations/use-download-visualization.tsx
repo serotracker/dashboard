@@ -1,10 +1,9 @@
 import { MutableRefObject, useRef, useState } from 'react';
 import domtoimage from "dom-to-image";
 import fileDownload from "js-file-download";
-import { VisualizationId } from '../../visualizations/visualizations';
 
-interface UseDownloadVisualizationInput {
-  visualizationId: VisualizationId;
+interface UseDownloadVisualizationInput<TVisualizationId extends string> {
+  visualizationId: TVisualizationId;
 }
 
 interface UseDownloadVisualizationOutput {
@@ -16,7 +15,7 @@ interface DownloadVisualizationInput {
   elementIdsToIgnore: string[]
 }
 
-export const useDownloadVisualization = (input: UseDownloadVisualizationInput): UseDownloadVisualizationOutput => {
+export const useDownloadVisualization = <TVisualizationId extends string>(input: UseDownloadVisualizationInput<TVisualizationId>): UseDownloadVisualizationOutput => {
   const ref = useRef<HTMLDivElement>(null);
 
   const downloadVisualization = (functionInput: DownloadVisualizationInput) => {

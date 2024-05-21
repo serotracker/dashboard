@@ -23,6 +23,8 @@ export const sarsCov2Estimates = gql`
       gbdSuperRegion
       gbdSubRegion
       state
+      studyName
+      scope
       city
       id
       latitude

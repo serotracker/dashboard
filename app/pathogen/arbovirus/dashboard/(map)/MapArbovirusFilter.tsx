@@ -2,17 +2,24 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { pathogenColorsTailwind } from "./ArbovirusMap";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "@/components/customs/SectionHeader";
-import { PathogenContextType, PathogenContextActionType } from "@/contexts/pathogen-context/pathogen-context";
-import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
+import { cn } from "@/lib/utils";
+import { SendFilterChangeDispatch } from "@/components/customs/filters";
+import { FilterableField } from "@/components/customs/filters/available-filters";
 
-interface MapArbovirusFilterProps {
+interface MapArbovirusFilterProps<TEstimate extends Record<string, unknown>> {
   className?: string;
-  state: PathogenContextType<ArbovirusEstimate>;
-  data: any;
+  state: PathogenContextType<TEstimate>;
+  data: TEstimate[];
+  sendFilterChangeDispatch: SendFilterChangeDispatch;
 }
 
-export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilterProps) => {
-  const records = data.arbovirusEstimates;
+export const MapArbovirusFilter = <TEstimate extends Record<string, unknown>>({
+  className,
+  state,
+  data,
+  sendFilterChangeDispatch
+}: MapArbovirusFilterProps<TEstimate>) => {
   const pathogenOrder = ["ZIKV", "DENV", "CHIKV", "YF", "WNV", "MAYV"];
 
   const handleOnClickCheckbox = (pathogen: string, checked: boolean) => {
@@ -24,29 +31,25 @@ export const MapArbovirusFilter = ({ className, state, data }: MapArbovirusFilte
       value.splice(value.indexOf(pathogen), 1);
     }
 
-    state.dispatch({
-      type: PathogenContextActionType.UPDATE_FILTER,
-      payload: {
-        data: records,
-        filter: "pathogen",
-        value: value,
-      },
-    });
+    sendFilterChangeDispatch({
+      value: value,
+      newFilter: FilterableField.pathogen,
+      state: state,
+      data: data
+    })
   };
 
   const clearAllHandler = () => {
-    state.dispatch({
-      type: PathogenContextActionType.UPDATE_FILTER,
-      payload: {
-        data: records,
-        filter: "pathogen",
-        value: [],
-      },
-    });
+    sendFilterChangeDispatch({
+      value: [],
+      newFilter: FilterableField.pathogen,
+      state: state,
+      data: data
+    })
   };
 
   return (
-    <div className={className}>
+    <div className={cn('p-0', className)}>
       <SectionHeader header_text="Arboviruses" tooltip_text="Filter on arbovirus strain."/>
       <div className={"flex justify-between lg:justify-center flex-wrap lg:flex-col pb-3"}>
         {pathogenOrder.map((pathogenAbbreviation: string) => {

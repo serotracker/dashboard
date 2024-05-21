@@ -18,6 +18,7 @@ import _ from "lodash";
 import { pathogenColors } from "../(map)/ArbovirusMap";
 import clsx from "clsx";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { CustomXAxisTick } from "@/components/customs/visualizations/custom-x-axis-tick";
 
 //Study by who region and pathogen
 
@@ -269,34 +270,6 @@ type AgeGroup =
   | "Seniors (65+ years)"
   | "Multiple groups";
 
-interface SlantedTickProps {
-  x: number,
-  y: number,
-  payload: {
-    value: string
-  },
-  tickSlant: number
-}
-
-export function SlantedTick(props: SlantedTickProps) {
-  const { x, y, payload } = props;
-
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <text
-        x={0}
-        y={0}
-        dy={16}
-        textAnchor="end"
-        fill="#666"
-        transform={`rotate(-${props.tickSlant})`}
-      >
-        {payload.value}
-      </text>
-    </g>
-  );
-}
-
 const ageGroupColorMappings: Record<AgeGroup, string> = {
   "Adults (18-64 years)": "#f55c7a",
   "Children and Youth (0-17 years)": "#f68c70",
@@ -471,7 +444,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
                   <XAxis
                     dataKey="region"
                     interval={0}
-                    tick={(props) => SlantedTick({...props, tickSlant: 35 })}
+                    tick={(props) => CustomXAxisTick({...props, tickSlant: 35 })}
                   />
                   <YAxis
                     domain={[0, 100]}

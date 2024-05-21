@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { usePathname, useRouter } from 'next/navigation';
 
-const NotFoundUI: React.FC = () => {
+export const NotFound = (): React.ReactNode => {
     const router = useRouter();
     const currentPage = usePathname();
     return (
@@ -22,4 +22,4 @@ const NotFoundUI: React.FC = () => {
     )
 };
 
-export default NotFoundUI
+export default NotFound

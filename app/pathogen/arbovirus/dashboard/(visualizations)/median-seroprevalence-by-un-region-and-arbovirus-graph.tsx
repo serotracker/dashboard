@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SplitBarChart } from "./split-bar-chart";
+import { SplitBarChart } from "../../../../../components/customs/visualizations/split-bar-chart";
 import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
 import { UNRegion, getLabelForUNRegion } from "@/lib/un-regions";
@@ -24,7 +24,7 @@ export const MedianSeroprevalenceByUnRegionAndArbovirusGraph = () => {
       }
       transformOutputValue={(data) => parseFloat(median(data.map((dataPoint) => dataPoint.seroprevalence * 100)).toFixed(1))}
       getBarColour={(primaryKey) => barColoursForArboviruses[primaryKey]}
-      tickSlantOptions={{ slantValue: 20 }}
+      xAxisTickSettings={{ slantValue: 20 }}
       subgraphSettings={{
         tooltipLabel: 'median',
         marginBottom: 70,

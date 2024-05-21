@@ -9,11 +9,12 @@ import {
 } from "@/lib/utils";
 import { TimeInterval, doTimeIntervalsOverlap } from "@/lib/date-utils";
 import clsx from "clsx";
-import { SlantedTick, arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
+import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { pathogenColors } from "../(map)/ArbovirusMap";
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { CustomXAxisTick } from "@/components/customs/visualizations/custom-x-axis-tick";
 
 type GroupableIntoTimeBuckets = { groupingTimeInterval: TimeInterval };
 
@@ -212,7 +213,7 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
                   <XAxis
                     dataKey="intervalAsString"
                     interval={0}
-                    tick={(props) => SlantedTick({...props, tickSlant: 35 })}
+                    tick={(props) => CustomXAxisTick({...props, tickSlant: 35 })}
                     hide={!isLargeScreen}
                   />
                   <YAxis
