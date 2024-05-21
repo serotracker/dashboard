@@ -12,19 +12,19 @@ export const PopUpContentLocationRow = (props: PopUpContentLocationRowProps) => 
   const { cityName, stateName, countryName } = props;
 
   const content = useMemo(() => {
-    if(props.cityName && props.stateName) {
-      return `${props.cityName.trim()}, ${props.stateName.trim()}, ${props.countryName.trim()}`
+    if(cityName && stateName) {
+      return `${cityName.trim()}, ${stateName.trim()}, ${countryName.trim()}`
     }
 
-    if(props.cityName && !props.stateName) {
-      return `${props.cityName.trim()}, ${props.countryName.trim()}`
+    if(cityName && !stateName) {
+      return `${cityName.trim()}, ${countryName.trim()}`
     }
 
-    if(!props.cityName && props.stateName) {
-      return `${props.stateName.trim()}, ${props.countryName.trim()}`
+    if(!cityName && stateName) {
+      return `${stateName.trim()}, ${countryName.trim()}`
     }
 
-    return `${props.countryName.trim()}`
+    return `${countryName.trim()}`
   }, [cityName, stateName, countryName]);
 
   return (

@@ -1,6 +1,5 @@
 import { typedGroupBy } from "@/lib/utils"
 import { ShortformArbovirus, convertArboSFtoArbo } from "../(visualizations)/recharts"
-import { PopUpContentRow } from "./ArboStudyPopupContent";
 import { pathogenColors } from "./ArbovirusMap";
 
 interface ArboCountryPopupContentProps {

@@ -76,7 +76,7 @@ export const GenericMapPopUp = (props: GenericMapPopUpProps) => {
       {props.topBannerConfiguration.enabled === true && <GenericMapPopUpBanner {...props.topBannerConfiguration}/>}
       <div className={"py-2 px-4 max-h-[250px] overflow-auto"}>
         {props.rows.map((row) => 
-          <PopUpContentRow {...row} />
+          <PopUpContentRow key={row.title} {...row} />
         )}
       </div>
       {props.bottomBannerConfiguration.enabled === true && <GenericMapPopUpBanner {...props.bottomBannerConfiguration}/>}

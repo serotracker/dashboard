@@ -88,7 +88,13 @@ export function SarsCov2Map() {
           clusteringSettings={{
             clusteringEnabled: false
           }}
-          generatePopupContent={(estimate) => <SarsCov2EstimatePopupContent estimate={estimate.data} />}
+          generatePopupContent={(record) => {
+            if(record.layerId === 'country-highlight-layer') {
+              return <p> TODO </p>
+            }
+
+            return <SarsCov2EstimatePopupContent estimate={record.data} />
+          }}
           dataPoints={state.filteredData}
           />
       </div>

@@ -22,15 +22,15 @@ export const PopUpContentDateRangeRow = (props: PopUpContentDateRangeRowProps) =
 
   const content = useMemo(() => {
     if(dateRangeStart && dateRangeEnd) {
-      return `${formatDate(dateRangeStart)} - ${formatDate(dateRangeEnd)}`
+      return `${formatDate(dateRangeStart)} to ${formatDate(dateRangeEnd)}`
     }
 
     if(dateRangeStart && !dateRangeEnd) {
-      return `${formatDate(dateRangeStart)} - unspecified`
+      return `${formatDate(dateRangeStart)} to an unspecified date`
     }
 
     if(!dateRangeStart && dateRangeEnd) {
-      return `unspecified - ${formatDate(dateRangeEnd)}`
+      return `an unspecified date - ${formatDate(dateRangeEnd)}`
     }
 
     return "-"

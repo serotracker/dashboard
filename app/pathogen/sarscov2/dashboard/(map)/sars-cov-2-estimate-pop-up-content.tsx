@@ -13,7 +13,7 @@ const riskOfBiasToColourClassnameMap: Record<string, string | undefined> = {
 };
 
 export const SarsCov2EstimatePopupContent = (props: SarsCov2EstimatePopupContentProps) => {
-  const { 
+  const {
     scope,
     riskOfBias,
     denominatorValue: sampleSize,
