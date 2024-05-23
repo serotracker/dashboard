@@ -124,6 +124,7 @@ interface VisualizationHeaderProps<
     TVisualizationUrlParameter,
     TEstimate
   >;
+  data: TEstimate[];
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
   downloadVisualization: () => void;
   buttonConfiguration: AllButtonConfigurations;
@@ -176,7 +177,7 @@ export const VisualizationHeader = <
   return (
     <div className="flex py-4">
       <h3 className="w-full text-center text-lg inline">
-        {props.visualizationInformation.getDisplayName({data: state.filteredData})}
+        {props.visualizationInformation.getDisplayName({ data: props.data })}
         {titleTooltip}
       </h3>
       {props.buttonConfiguration.downloadButton.enabled && (

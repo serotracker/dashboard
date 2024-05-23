@@ -78,6 +78,7 @@ interface GenericPathogenVisualizationsPageProps<
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>
 > {
+  data: TEstimate[];
   isValidVisualizationUrlParameter:
     (visualizationUrlParameter: string) => visualizationUrlParameter is TVisualizationUrlParameter;
   getVisualizationInformationFromVisualizationUrlParameter:
@@ -114,6 +115,7 @@ export const GenericPathogenVisualizationsPage = <
       <props.filtersComponent className="col-span-2 row-span-2 overflow-y-scroll p-4 border-black border-r-2 h-full" />
       <RechartsVisualization
         className="flex-col flex h-full overflow-y-scroll col-span-10 row-span-2"
+        data={[]}
         visualizationInformation={visualizationInformation}
         getUrlParameterFromVisualizationId={props.getUrlParameterFromVisualizationId}
         buttonConfig={{

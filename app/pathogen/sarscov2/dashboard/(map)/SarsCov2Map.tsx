@@ -8,6 +8,7 @@ import { MapShadingLegend } from "@/app/pathogen/arbovirus/dashboard/(map)/MapSh
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { MapSymbology } from "./map-config";
 import { SarsCov2EstimatePopupContent } from "./sars-cov-2-estimate-pop-up-content";
+import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
 
 export function SarsCov2Map() {
   const state = useContext(SarsCov2Context);
@@ -88,12 +89,12 @@ export function SarsCov2Map() {
           clusteringSettings={{
             clusteringEnabled: false
           }}
-          generatePopupContent={(record) => {
-            if(record.layerId === 'country-highlight-layer') {
+          generatePopupContent={(input) => {
+            if(isPopupCountryHighlightLayerContentGeneratorInput(input)) {
               return <p> TODO </p>
             }
-
-            return <SarsCov2EstimatePopupContent estimate={record.data} />
+          
+            return <SarsCov2EstimatePopupContent estimate={input.data} />
           }}
           dataPoints={state.filteredData}
           />

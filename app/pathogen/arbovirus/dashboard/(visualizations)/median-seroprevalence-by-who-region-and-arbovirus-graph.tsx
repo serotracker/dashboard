@@ -10,7 +10,7 @@ export const MedianSeroprevalenceByWHORegionAndArbovirusGraph = () => {
   return (
     <SplitBarChart
       graphId="median-seroprevalence-by-who-region"
-      data={state.filteredData.filter((dataPoint) => !!dataPoint.whoRegion)}
+      data={state.filteredData.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'whoRegion'> & {whoRegion: NonNullable<typeof dataPoint['whoRegion']>} => !!dataPoint.whoRegion)}
       primaryGroupingFunction={(dataPoint) =>
         convertArboSFtoArbo(dataPoint.pathogen as arbovirusesSF)
       }
@@ -19,7 +19,7 @@ export const MedianSeroprevalenceByWHORegionAndArbovirusGraph = () => {
       secondaryGroupingSortFunction={(whoRegionA, whoRegionB) =>
         whoRegionA > whoRegionB ? 1 : -1
       }
-      transformOutputValue={(data) => parseFloat(median(data.map((dataPoint) => dataPoint.seroprevalence * 100)).toFixed(1))}
+      transformOutputValue={(data) => parseFloat(median(data.map((dataPoint) => dataPoint.seroprevalence as number * 100)).toFixed(1))}
       getBarColour={(primaryKey) => barColoursForArboviruses[primaryKey]}
       xAxisTickSettings={{ slantValue: 35 }}
       subgraphSettings={{

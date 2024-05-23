@@ -117,7 +117,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
                   whoRegion,
                   typedGroupBy(
                     dataPoints.filter((dataPoint) =>
-                      Object.values(AgeGroup).includes(dataPoint.ageGroup)
+                      Object.values(AgeGroup).some((element) => dataPoint.ageGroup === element)
                     ),
                     (dataPoint) => dataPoint.ageGroup as AgeGroup
                   ),

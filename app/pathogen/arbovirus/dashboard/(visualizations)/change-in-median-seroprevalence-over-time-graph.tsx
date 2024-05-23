@@ -143,7 +143,12 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
         arbovirus,
         groupDataPointsIntoTimeBuckets({
           dataPoints: dataPointsForAParticularArbovirus
-            .filter((dataPoint) => dataPoint.sampleStartDate && dataPoint.sampleEndDate)
+            .filter((dataPoint):
+              dataPoint is Omit<typeof dataPoint, 'sampleStartDate'|'sampleEndDate'|'seroprevalence'> & {
+                seroprevalence: NonNullable<(typeof dataPoint)['seroprevalence']>
+                sampleStartDate: NonNullable<(typeof dataPoint)['sampleStartDate']>
+                sampleEndDate: NonNullable<(typeof dataPoint)['sampleEndDate']>
+              } => !!dataPoint.sampleStartDate && !!dataPoint.sampleEndDate)
             .map((dataPoint) => ({
               ...dataPoint,
               groupingTimeInterval: {

@@ -48,11 +48,20 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
   const allArbovirusesInData = useMemo(() => uniq(dataWithCIs.map((dataPoint) => dataPoint.pathogen)), [dataWithCIs]);
 
   const { chartArbovirusDropdown, selectedArbovirus } = useChartArbovirusDropdown({
-    possibleArboviruses: allArbovirusesInData
+    possibleArboviruses: allArbovirusesInData as any
   });
 
   const dataForArbovirusWithCIs = useMemo(() => dataWithCIs
     .filter((dataPoint) => dataPoint.pathogen === selectedArbovirus)
+    .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'seroprevalence'|'seroprevalenceCalculated95CILower'|'seroprevalenceCalculated95CIUpper'> & {
+      seroprevalence: NonNullable<(typeof dataPoint)['seroprevalence']>;
+      seroprevalenceCalculated95CILower: NonNullable<(typeof dataPoint)['seroprevalenceCalculated95CILower']>;
+      seroprevalenceCalculated95CIUpper: NonNullable<(typeof dataPoint)['seroprevalenceCalculated95CIUpper']>;
+    } => 
+      (dataPoint.seroprevalence !== undefined && dataPoint.seroprevalence !== null) &&
+      (dataPoint.seroprevalenceCalculated95CILower !== undefined && dataPoint.seroprevalenceCalculated95CILower !== null) &&
+      (dataPoint.seroprevalenceCalculated95CIUpper !== undefined && dataPoint.seroprevalenceCalculated95CIUpper !== null)
+    )
     .sort((dataPointA, dataPointB) => dataPointA.seroprevalence - dataPointB.seroprevalence)
     .map((dataPoint, index) => ({ ...dataPoint, estimateNumber: index + 1 }))
     .map((dataPoint) => ({

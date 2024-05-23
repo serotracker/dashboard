@@ -37,7 +37,7 @@ export const ArbovirusEstimatePopupContent = (props: ArbovirusEstimatePopupConte
   } = props.estimate; 
 
   const topBannerText = useMemo(() => {
-    const seroprevalencePercentageText = `Seroprevalence: ${(seroprevalence * 100).toFixed(1)}%`;
+    const seroprevalencePercentageText = seroprevalence ? `Seroprevalence: ${(seroprevalence * 100).toFixed(1)}%` : 'N/A';
     const arbovirusText = `(Arbovirus: ${pathogenFullString(pathogen)})`;
 
     if(!seroprevalenceStudy95CILower || !seroprevalenceStudy95CIUpper) {
@@ -54,10 +54,12 @@ export const ArbovirusEstimatePopupContent = (props: ArbovirusEstimatePopupConte
       headerConfiguration={{
         text: `${pathogenFullString(props.estimate.pathogen)} Estimate`
       }}
-      subtitleConfiguration={{
+      subtitleConfiguration={props.estimate.sourceSheetName ? {
         enabled: true,
         text: props.estimate.sourceSheetName,
         link: props.estimate.url ?? undefined
+      } : {
+        enabled: false
       }}
       topBannerConfiguration={{
         enabled: true,

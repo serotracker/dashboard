@@ -20,7 +20,7 @@ export const EstimateCountByUnRegionAndArbovirusGraph = (
   return (
     <StackedBarChart
       graphId='estimate-count-by-un-region-and-arbovirus-graph'
-      data={state.filteredData.filter((dataPoint) => !!dataPoint.unRegion)}
+      data={state.filteredData.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'unRegion'> & {unRegion: NonNullable<typeof dataPoint['unRegion']>} => !!dataPoint.unRegion)}
       primaryGroupingFunction={(dataPoint) =>
         getLabelForUNRegion(dataPoint.unRegion as UNRegion)
       }

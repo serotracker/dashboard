@@ -19,7 +19,7 @@ export const EstimateCountByWHORegionAndArbovirusGraph = (
   return (
     <StackedBarChart
       graphId='estimate-count-by-who-region-and-arbovirus-graph'
-      data={state.filteredData.filter((dataPoint) => !!dataPoint.unRegion)}
+      data={state.filteredData.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'whoRegion'> & {whoRegion: NonNullable<typeof dataPoint['whoRegion']>} => !!dataPoint.whoRegion)}
       primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
       secondaryGroupingFunction={(dataPoint) =>
         convertArboSFtoArbo(dataPoint.pathogen as arbovirusesSF)

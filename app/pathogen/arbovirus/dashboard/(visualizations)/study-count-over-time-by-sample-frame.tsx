@@ -43,7 +43,7 @@ const getLatestSamplingEndDateFromData = (input: GetLatestSamplingEndDateFromDat
 }
 
 interface GetEightMostCommonSampleFramesFromDataInput {
-  data: Array<Omit<ArbovirusEstimate, 'sampleFrame'> & { sampleFrame: NonNullable<ArbovirusEstimate["sampleFrame"]> }>;
+  data: Array<{ sampleFrame: NonNullable<ArbovirusEstimate["sampleFrame"]> }>;
 }
 
 const getEightMostCommonSampleFramesFromData = (input: GetEightMostCommonSampleFramesFromDataInput): string[] => {

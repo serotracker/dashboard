@@ -4,6 +4,7 @@ import { RechartsVisualization } from "../../../../../components/customs/visuali
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { SarsCov2VisualizationId, SarsCov2VisualizationInformation, getUrlParameterFromVisualizationId, sarsCov2VisualizationInformation } from "../../visualizations/visualization-page-config";
+import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
 
 export const SarsCov2VisualizationsSection = () => {
   const allVisualizationInformationWithClassnames = addToVisualizationInformation({
@@ -21,10 +22,13 @@ export const SarsCov2VisualizationsSection = () => {
     SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION
   ].includes(visualizationInfo.id));
 
+  const { filteredData } = useContext(SarsCov2Context);
+
   const renderVisualizationList = useCallback((visualizationList: Array<SarsCov2VisualizationInformation & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}
+        data={filteredData}
         visualizationInformation={visualizationInformation}
         className={cn(visualizationInformation.className, 'pb-14')}
         buttonConfig={{

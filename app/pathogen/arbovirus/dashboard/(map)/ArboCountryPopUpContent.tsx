@@ -9,7 +9,7 @@ interface ArboCountryPopupContentProps {
     countryName: string,
     latitude: string,
     longitude: string,
-    dataPoints: { pathogen: ShortformArbovirus }[],
+    dataPoints: { pathogen: string }[],
   }
 }
 
