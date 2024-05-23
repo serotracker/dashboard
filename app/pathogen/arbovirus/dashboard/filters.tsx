@@ -34,6 +34,10 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   const selectedAgeGroups = state.selectedFilters['ageGroup'] ?? [];
   const selectedArboviruses = state.selectedFilters['pathogen'] ?? [];
 
+  const arbovirusFilters = [
+    FilterableField.pathogen
+  ]
+
   const dateFilters = [
     FilterableField.start_date,
     FilterableField.end_date
@@ -80,6 +84,10 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   });
 
   const filterSections = [{
+    headerText: 'Arboviruses',
+    headerTooltipText: 'Filter on arbovirus strain.',
+    includedFilters: arbovirusFilters
+  }, {
     headerText: 'Date',
     headerTooltipText: 'Filter on sample start and end date.',
     includedFilters: dateFilters
@@ -100,7 +108,7 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   return (
     <Filters
       className={props.className}
-      includedFilters={[ FilterableField.pathogen ]}
+      includedFilters={[]}
       filterSections={filterSections}
       state={state}
       filterData={filterData?.arbovirusFilterOptions ? {

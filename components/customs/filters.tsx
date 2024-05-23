@@ -70,6 +70,7 @@ export const Filters = <TEstimate extends Record<string, unknown>>(props: Filter
             sendFilterChangeDispatch={sendFilterChangeDispatch}
             optionSortingFunction={fieldInformation.optionSortingFunction}
             optionToColourClassnameMap={fieldInformation.optionToColourClassnameMap ?? {}}
+            clearAllButtonText={fieldInformation.clearAllButtonText ?? 'Clear All'}
           />
         )
       })}

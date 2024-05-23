@@ -10,9 +10,10 @@ import { BooleanSelectFilter } from "./boolean-select-filter";
 import { BooleanSelectOptionString } from "./select-filter";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
 import { Arbovirus } from "@/gql/graphql";
-import { arboShortformToFullNameMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
+import { arboShortformToFullNameMap, arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
 import { pathogenColorsTailwind } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
+import { typedObjectEntries, typedObjectFromEntries } from "@/lib/utils";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -22,6 +23,7 @@ export interface FieldInformation {
   optionSortingFunction?: (a: string, b:string) => number;
   renderTooltipContent?: TooltipContentRenderingFunction
   filterRenderingFunction: FilterRenderingFunction;
+  clearAllButtonText?: string;
 }
 
 interface RenderTooltipContentInput<TEstimate extends Record<string, unknown>> {
@@ -41,6 +43,7 @@ interface FilterRenderingFunctionInput<TEstimate extends Record<string, unknown>
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
   optionToColourClassnameMap: Record<string, string | undefined>;
+  clearAllButtonText: string;
 }
 
 type FilterRenderingFunction = <TEstimate extends Record<string, unknown>>(input: FilterRenderingFunctionInput<TEstimate>) => React.ReactNode;
@@ -149,8 +152,7 @@ export const useAvailableFilters = () => {
     [FilterableField.pathogen]: {
       field: FilterableField.pathogen,
       label: "Arbovirus",
-      valueToLabelMap: arboShortformToFullNameMap,
-      renderTooltipContent: () => <p>Filter on arbovirus strain.</p>,
+      valueToLabelMap: arboShortformToFullNamePlusVirusMap,
       optionToColourClassnameMap: pathogenColorsTailwind,
       optionSortingFunction: (optionA, optionB) => 
         (filterArbovirusToSortOrderMap[optionA] ?? 0) - (filterArbovirusToSortOrderMap[optionB] ?? 0),

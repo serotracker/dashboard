@@ -10,12 +10,12 @@ import {
 //interface of expected props
 interface SectionHeaderProps {
   headerText: string;
-  tooltipContent: React.ReactNode;
+  tooltipText: React.ReactNode;
 }
 
 const SectionHeader: React.FC<SectionHeaderProps> = ({
   headerText,
-  tooltipContent,
+  tooltipText,
 }) => {
   return (
     <div className="flex items-center space-x-2 mb-2">
@@ -43,7 +43,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
               <div
                 className="bg-background w-full p-4 rounded text-white"
               >
-                {tooltipContent}
+                {tooltipText}
               </div>
             </TooltipContent>
           </Tooltip>

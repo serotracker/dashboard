@@ -18,7 +18,7 @@ export const FilterSection = <TEstimate extends Record<string, unknown>>(props: 
   <div className="p-0">
     <SectionHeader
       headerText={props.headerText}
-      tooltipContent={props.headerTooltipText}
+      tooltipText={props.headerTooltipText}
     />
     <div className="flex flex-row lg:flex-col flex-wrap">
     {props.allFieldInformation.map((fieldInformation) => (
@@ -34,6 +34,7 @@ export const FilterSection = <TEstimate extends Record<string, unknown>>(props: 
         sendFilterChangeDispatch={props.sendFilterChangeDispatch}
         optionSortingFunction={fieldInformation.optionSortingFunction}
         optionToColourClassnameMap={fieldInformation.optionToColourClassnameMap ?? {}}
+        clearAllButtonText={fieldInformation.clearAllButtonText ?? 'Clear All'}
       />
     ))}
     </div>

@@ -46,6 +46,15 @@ export const arboShortformToFullNameMap: {[key in Arbovirus]: arboviruses} = {
   [Arbovirus.Mayv]: "Mayaro"
 }
 
+export const arboShortformToFullNamePlusVirusMap: {[key in Arbovirus]: string} = {
+  [Arbovirus.Denv]: "Dengue Virus",
+  [Arbovirus.Zikv]: "Zika Virus",
+  [Arbovirus.Chikv]: "Chikungunya Virus",
+  [Arbovirus.Yf]: "Yellow Fever",
+  [Arbovirus.Wnv]: "West Nile Virus",
+  [Arbovirus.Mayv]: "Mayaro Virus"
+}
+
 export const convertArboSFtoArbo = (arbo: Arbovirus): arboviruses => {
   return arboShortformToFullNameMap[arbo];
 };
