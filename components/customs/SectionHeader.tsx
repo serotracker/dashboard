@@ -10,7 +10,7 @@ import {
 //interface of expected props
 interface SectionHeaderProps {
   headerText: string;
-  tooltipText: React.ReactNode;
+  tooltipText: string;
 }
 
 const SectionHeader: React.FC<SectionHeaderProps> = ({
