@@ -69,7 +69,7 @@ export const ArbovirusVisualizationsSection = () => {
         getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
       />
     ));
-  }, []);
+  }, [filteredData]);
 
   return (
     <>

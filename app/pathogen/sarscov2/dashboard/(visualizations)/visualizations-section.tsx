@@ -46,7 +46,7 @@ export const SarsCov2VisualizationsSection = () => {
         getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
       />
     ));
-  }, []);
+  }, [filteredData]);
 
   return (
     <>
