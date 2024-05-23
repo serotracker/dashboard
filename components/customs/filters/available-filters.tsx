@@ -5,16 +5,21 @@ import { unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { SingleSelectFilter } from "./single-select-filter";
 import Link from "next/link";
 import { useContext, useMemo } from "react";
-import { MapArbovirusFilter } from "@/app/pathogen/arbovirus/dashboard/(map)/MapArbovirusFilter";
 import { SendFilterChangeDispatch } from "../filters";
 import { BooleanSelectFilter } from "./boolean-select-filter";
 import { BooleanSelectOptionString } from "./select-filter";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
+import { Arbovirus } from "@/gql/graphql";
+import { arboShortformToFullNameMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
+import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
+import { pathogenColorsTailwind } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
 
 export interface FieldInformation {
   field: FilterableField;
   label: string;
   valueToLabelMap: Record<string, string | undefined>;
+  optionToColourClassnameMap?: Record<string, string | undefined>;
+  optionSortingFunction?: (a: string, b:string) => number;
   renderTooltipContent?: TooltipContentRenderingFunction
   filterRenderingFunction: FilterRenderingFunction;
 }
@@ -32,8 +37,10 @@ interface FilterRenderingFunctionInput<TEstimate extends Record<string, unknown>
   filterOptions: string[];
   data: TEstimate[];
   optionToLabelMap: Record<string, string | undefined>;
+  optionSortingFunction: ((a: string, b: string) => number) | undefined;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
+  optionToColourClassnameMap: Record<string, string | undefined>;
 }
 
 type FilterRenderingFunction = <TEstimate extends Record<string, unknown>>(input: FilterRenderingFunctionInput<TEstimate>) => React.ReactNode;
@@ -126,6 +133,15 @@ const EnvironmentalSuitabilityMapTooltip: TooltipContentRenderingFunction = (inp
   )
 }
 
+const filterArbovirusToSortOrderMap: Record<Arbovirus, number> & Record<string, number | undefined> = {
+  [Arbovirus.Zikv]: 1,
+  [Arbovirus.Denv]: 2,
+  [Arbovirus.Chikv]: 3,
+  [Arbovirus.Yf]: 4,
+  [Arbovirus.Wnv]: 5,
+  [Arbovirus.Mayv]: 6,
+}
+
 export const useAvailableFilters = () => {
   const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
 
@@ -133,8 +149,12 @@ export const useAvailableFilters = () => {
     [FilterableField.pathogen]: {
       field: FilterableField.pathogen,
       label: "Arbovirus",
-      valueToLabelMap: {},
-      filterRenderingFunction: MapArbovirusFilter
+      valueToLabelMap: arboShortformToFullNameMap,
+      renderTooltipContent: () => <p>Filter on arbovirus strain.</p>,
+      optionToColourClassnameMap: pathogenColorsTailwind,
+      optionSortingFunction: (optionA, optionB) => 
+        (filterArbovirusToSortOrderMap[optionA] ?? 0) - (filterArbovirusToSortOrderMap[optionB] ?? 0),
+      filterRenderingFunction: ColouredCheckboxFilter
     },
     [FilterableField.start_date]: {
       field: FilterableField.start_date,

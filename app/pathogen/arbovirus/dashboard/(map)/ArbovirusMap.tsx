@@ -19,14 +19,15 @@ import { MapShadingLegend } from "./MapShadingLegend";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
+import { Arbovirus } from "@/gql/graphql";
 
-export const pathogenColorsTailwind: { [key: string]: string } = {
-  ZIKV: "data-[state=checked]:bg-zikv",
-  CHIKV: "data-[state=checked]:bg-chikv",
-  WNV: "data-[state=checked]:bg-wnv",
-  DENV: "data-[state=checked]:bg-denv",
-  YF: "data-[state=checked]:bg-yf",
-  MAYV: "data-[state=checked]:bg-mayv",
+export const pathogenColorsTailwind: { [key in Arbovirus]: string } = {
+  [Arbovirus.Zikv]: "data-[state=checked]:bg-zikv",
+  [Arbovirus.Chikv]: "data-[state=checked]:bg-chikv",
+  [Arbovirus.Wnv]: "data-[state=checked]:bg-wnv",
+  [Arbovirus.Denv]: "data-[state=checked]:bg-denv",
+  [Arbovirus.Yf]: "data-[state=checked]:bg-yf",
+  [Arbovirus.Mayv]: "data-[state=checked]:bg-mayv",
 };
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?

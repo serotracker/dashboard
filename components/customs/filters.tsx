@@ -50,6 +50,8 @@ interface FiltersProps<TEstimate extends Record<string, unknown>> {
 export const Filters = <TEstimate extends Record<string, unknown>>(props: FiltersProps<TEstimate>) => {
   const { availableFilters } = useAvailableFilters();
 
+  console.log('props.filterData', props.filterData);
+
   return (
     <div className={props.className}>
       {props.includedFilters.map((includedFilter) => {
@@ -66,6 +68,8 @@ export const Filters = <TEstimate extends Record<string, unknown>>(props: Filter
             optionToLabelMap={fieldInformation.valueToLabelMap}
             renderTooltipContent={fieldInformation.renderTooltipContent}
             sendFilterChangeDispatch={sendFilterChangeDispatch}
+            optionSortingFunction={fieldInformation.optionSortingFunction}
+            optionToColourClassnameMap={fieldInformation.optionToColourClassnameMap ?? {}}
           />
         )
       })}

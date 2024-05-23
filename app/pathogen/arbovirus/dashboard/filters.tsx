@@ -20,6 +20,7 @@ import { useArboFilters } from "@/hooks/useArboFilters";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { Filters } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
+import { Arbovirus } from "@/gql/graphql";
 
 interface ArbovirusFiltersProps {
   className?: string;
@@ -110,6 +111,14 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
           'dengue2015',
           'dengue2050',
           'zika'
+        ],
+        pathogen: [
+          Arbovirus.Zikv,
+          Arbovirus.Denv,
+          Arbovirus.Chikv,
+          Arbovirus.Yf,
+          Arbovirus.Wnv,
+          Arbovirus.Mayv
         ],
         ageGroup: filterData.arbovirusFilterOptions.ageGroup,
         sex: filterData.arbovirusFilterOptions.sex,

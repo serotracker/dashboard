@@ -50,7 +50,7 @@ export const MapArbovirusFilter = <TEstimate extends Record<string, unknown>>({
 
   return (
     <div className={cn('p-0', className)}>
-      <SectionHeader header_text="Arboviruses" tooltip_text="Filter on arbovirus strain."/>
+      <SectionHeader headerText="Arboviruses" tooltipContent="Filter on arbovirus strain."/>
       <div className={"flex justify-between lg:justify-center flex-wrap lg:flex-col pb-3"}>
         {pathogenOrder.map((pathogenAbbreviation: string) => {
           // Map abbreviations to full names

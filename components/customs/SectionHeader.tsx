@@ -9,17 +9,17 @@ import {
 
 //interface of expected props
 interface SectionHeaderProps {
-  header_text: string;
-  tooltip_text: string;
+  headerText: string;
+  tooltipContent: React.ReactNode;
 }
 
 const SectionHeader: React.FC<SectionHeaderProps> = ({
-  header_text,
-  tooltip_text,
+  headerText,
+  tooltipContent,
 }) => {
   return (
     <div className="flex items-center space-x-2 mb-2">
-      <h2 className="text-lg">{header_text}</h2>
+      <h2 className="text-lg">{headerText}</h2>
       <div className="relative inline-block">
         <TooltipProvider delayDuration={0}>
           <Tooltip>
@@ -43,7 +43,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
               <div
                 className="bg-background w-full p-4 rounded text-white"
               >
-                {tooltip_text}
+                {tooltipContent}
               </div>
             </TooltipContent>
           </Tooltip>
