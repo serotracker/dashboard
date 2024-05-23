@@ -34,7 +34,7 @@ export const FilterSection = <TEstimate extends Record<string, unknown>>(props: 
         sendFilterChangeDispatch={props.sendFilterChangeDispatch}
         optionSortingFunction={fieldInformation.optionSortingFunction}
         optionToColourClassnameMap={fieldInformation.optionToColourClassnameMap ?? {}}
-        clearAllButtonText={fieldInformation.clearAllButtonText ?? 'Clear All'}
+        clearAllButtonText={fieldInformation.clearAllButtonText ?? 'Clear all'}
       />
     ))}
     </div>

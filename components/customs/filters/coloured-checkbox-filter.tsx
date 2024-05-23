@@ -20,7 +20,7 @@ export interface ColouredCheckboxFilterProps<TEstimate extends Record<string, un
 
 export const ColouredCheckboxFilter = <TEstimate extends Record<string, unknown>>(props: ColouredCheckboxFilterProps<TEstimate>) => {
   const handleOnClickCheckbox = (option: string, checked: boolean) => {
-    const value = props.state.selectedFilters[props.filter];
+    const value = props.state.selectedFilters[props.filter] ?? [];
 
     if (checked) {
       value.push(option);
@@ -57,7 +57,7 @@ export const ColouredCheckboxFilter = <TEstimate extends Record<string, unknown>
           >
             <Checkbox
               id={`checkbox-${option}`}
-              className={props.optionToColourClassnameMap[option] ?? 'bg-sky-100'}
+              className={props.optionToColourClassnameMap[option] ?? 'data-[state=checked]:bg-sky-100'}
               checked={
                 props.state.selectedFilters[props.filter]
                   ? props.state.selectedFilters[props.filter].includes(
@@ -82,7 +82,7 @@ export const ColouredCheckboxFilter = <TEstimate extends Record<string, unknown>
           </div>
         ))
       }
-      <Button className="mt-2 w-full" variant={'ghost'} onClick={clearAllHandler}>Clear all viruses</Button>
+      <Button className="mt-2 w-full" variant={'ghost'} onClick={clearAllHandler}> {props.clearAllButtonText} </Button>
     </div>
   );
 };

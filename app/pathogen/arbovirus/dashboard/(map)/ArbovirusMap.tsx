@@ -21,15 +21,6 @@ import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-su
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
 import { Arbovirus } from "@/gql/graphql";
 
-export const pathogenColorsTailwind: { [key in Arbovirus]: string } = {
-  [Arbovirus.Zikv]: "data-[state=checked]:bg-zikv",
-  [Arbovirus.Chikv]: "data-[state=checked]:bg-chikv",
-  [Arbovirus.Wnv]: "data-[state=checked]:bg-wnv",
-  [Arbovirus.Denv]: "data-[state=checked]:bg-denv",
-  [Arbovirus.Yf]: "data-[state=checked]:bg-yf",
-  [Arbovirus.Mayv]: "data-[state=checked]:bg-mayv",
-};
-
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: { [key: string]: string } = {
   ZIKV: "#A0C4FF",

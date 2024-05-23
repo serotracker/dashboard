@@ -10,10 +10,8 @@ import { BooleanSelectFilter } from "./boolean-select-filter";
 import { BooleanSelectOptionString } from "./select-filter";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
 import { Arbovirus } from "@/gql/graphql";
-import { arboShortformToFullNameMap, arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
+import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
-import { pathogenColorsTailwind } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
-import { typedObjectEntries, typedObjectFromEntries } from "@/lib/utils";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -145,6 +143,33 @@ const filterArbovirusToSortOrderMap: Record<Arbovirus, number> & Record<string, 
   [Arbovirus.Mayv]: 6,
 }
 
+const pathogenColorsTailwind: { [key in Arbovirus]: string } = {
+  [Arbovirus.Zikv]: "data-[state=checked]:bg-zikv",
+  [Arbovirus.Chikv]: "data-[state=checked]:bg-chikv",
+  [Arbovirus.Wnv]: "data-[state=checked]:bg-wnv",
+  [Arbovirus.Denv]: "data-[state=checked]:bg-denv",
+  [Arbovirus.Yf]: "data-[state=checked]:bg-yf",
+  [Arbovirus.Mayv]: "data-[state=checked]:bg-mayv",
+};
+
+const scopeToSortOrderMap: Record<string, number | undefined> = {
+  'National': 1,
+  'Regional': 2,
+  'Local': 3
+};
+
+const scopeColorsTailwind: Record<string, string | undefined> = {
+  "Local": "data-[state=checked]:bg-local-study",
+  "Regional": "data-[state=checked]:bg-regional-study",
+  "National": "data-[state=checked]:bg-national-study",
+};
+
+const scopeToLabelForFilter: Record<string, string | undefined> = {
+  "Local": "Local Studies",
+  "Regional": "Regional Studies",
+  "National": "Country/Territory-Wide Studies",
+};
+
 export const useAvailableFilters = () => {
   const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
 
@@ -156,7 +181,8 @@ export const useAvailableFilters = () => {
       optionToColourClassnameMap: pathogenColorsTailwind,
       optionSortingFunction: (optionA, optionB) => 
         (filterArbovirusToSortOrderMap[optionA] ?? 0) - (filterArbovirusToSortOrderMap[optionB] ?? 0),
-      filterRenderingFunction: ColouredCheckboxFilter
+      filterRenderingFunction: ColouredCheckboxFilter,
+      clearAllButtonText: 'Clear all viruses'
     },
     [FilterableField.start_date]: {
       field: FilterableField.start_date,
@@ -238,8 +264,12 @@ export const useAvailableFilters = () => {
     [FilterableField.scope]: {
       field: FilterableField.scope,
       label: "Scope of Study",
-      valueToLabelMap: {},
-      filterRenderingFunction: MultiSelectFilter
+      valueToLabelMap: scopeToLabelForFilter,
+      optionToColourClassnameMap: scopeColorsTailwind,
+      optionSortingFunction: (optionA, optionB) => 
+        (scopeToSortOrderMap[optionA] ?? 0) - (scopeToSortOrderMap[optionB] ?? 0),
+      filterRenderingFunction: ColouredCheckboxFilter,
+      clearAllButtonText: 'Clear all scopes'
     },
     [FilterableField.sourceType]: {
       field: FilterableField.sourceType,
