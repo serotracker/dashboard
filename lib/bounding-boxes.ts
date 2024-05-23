@@ -1,5 +1,7 @@
+import { UnRegion } from "@/gql/graphql";
+
 import { typedObjectFromEntries } from "./utils";
-import { UNRegion, getCountryCodesInUNRegion } from "./un-regions";
+import { getCountryCodesInUNRegion } from "./un-regions";
 import { WHORegion, getCountryCodesInWHORegion } from "./who-regions";
 
 export type BoundingBox = [number, number, number, number];
@@ -230,9 +232,9 @@ export const getBoundingBoxFromCountryAlphaTwoCode = (
   return alphaTwoCountryCodeBoundingBoxData[countryAlphaTwoCode];
 };
 
-const unRegionBoundingBoxData: Record<UNRegion, BoundingBox> =
+const unRegionBoundingBoxData: Record<UnRegion, BoundingBox> =
   typedObjectFromEntries(
-    Object.values(UNRegion).map((unRegion) => [
+    Object.values(UnRegion).map((unRegion) => [
       unRegion,
       combineBoundingBoxes(
         getCountryCodesInUNRegion({ unRegion })
@@ -244,7 +246,7 @@ const unRegionBoundingBoxData: Record<UNRegion, BoundingBox> =
     ])
   );
 
-export const getBoundingBoxFromUNRegion = (unRegion: UNRegion): BoundingBox => {
+export const getBoundingBoxFromUNRegion = (unRegion: UnRegion): BoundingBox => {
   return unRegionBoundingBoxData[unRegion];
 };
 

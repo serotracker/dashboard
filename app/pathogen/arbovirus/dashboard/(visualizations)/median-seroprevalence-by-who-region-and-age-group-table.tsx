@@ -9,7 +9,7 @@ import {
   typedObjectKeys,
   cn
 } from "@/lib/utils";
-import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
+import { median } from "./recharts";
 import {
   Table,
   TableBody,
@@ -78,11 +78,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
   const state = useContext(ArboContext);
 
   const datasetGroupedByArbovirus = useMemo(
-    () =>
-      typedGroupBy(
-        state.filteredData,
-        (dataPoint) => dataPoint.pathogen as arbovirusesSF
-      ),
+    () => typedGroupBy( state.filteredData, (dataPoint) => dataPoint.pathogen),
     [state.filteredData]
   );
 

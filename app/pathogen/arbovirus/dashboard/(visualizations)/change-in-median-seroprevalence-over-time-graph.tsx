@@ -6,10 +6,11 @@ import {
   typedGroupBy,
   typedObjectEntries,
   typedObjectFromEntries,
+  typedObjectKeys,
 } from "@/lib/utils";
 import { TimeInterval, doTimeIntervalsOverlap } from "@/lib/date-utils";
 import clsx from "clsx";
-import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
+import { convertArboSFtoArbo, median } from "./recharts";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { pathogenColors } from "../(map)/ArbovirusMap";
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
@@ -144,8 +145,7 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
         groupDataPointsIntoTimeBuckets({
           dataPoints: dataPointsForAParticularArbovirus
             .filter((dataPoint):
-              dataPoint is Omit<typeof dataPoint, 'sampleStartDate'|'sampleEndDate'|'seroprevalence'> & {
-                seroprevalence: NonNullable<(typeof dataPoint)['seroprevalence']>
+              dataPoint is Omit<typeof dataPoint, 'sampleStartDate'|'sampleEndDate'> & {
                 sampleStartDate: NonNullable<(typeof dataPoint)['sampleStartDate']>
                 sampleEndDate: NonNullable<(typeof dataPoint)['sampleEndDate']>
               } => !!dataPoint.sampleStartDate && !!dataPoint.sampleEndDate)
@@ -174,7 +174,7 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
   return (
     <div className="h-full flex flex-col">
       <div className="h-full flex flex-row flex-wrap">
-        {Object.keys(dataGroupedByArbovirusThenByTimeBucket).map((arbovirus, index) => {
+        {typedObjectKeys(dataGroupedByArbovirusThenByTimeBucket).map((arbovirus, index) => {
           const dataForArbovirus = dataGroupedByArbovirusThenByTimeBucket[arbovirus].map(({interval, dataPoints}) => ({
             intervalAsString: interval.intervalStartDate.getFullYear() !== interval.intervalEndDate.getFullYear() ?
               `${interval.intervalStartDate.getFullYear()}-${interval.intervalEndDate.getFullYear()}` :
@@ -198,7 +198,7 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
               key={`change-in-med-sero-prev-${arbovirus}`}
             >
               <p className="w-full text-center ">
-                {convertArboSFtoArbo(arbovirus as arbovirusesSF)}
+                {convertArboSFtoArbo(arbovirus)}
               </p>
               <ResponsiveContainer width="100%" height="90%">
                 <BarChart

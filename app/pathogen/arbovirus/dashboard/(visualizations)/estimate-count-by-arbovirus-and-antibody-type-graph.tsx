@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { LegendConfiguration, StackedBarChart } from "@/components/customs/visualizations/stacked-bar-chart";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
-import { arbovirusesSF, convertArboSFtoArbo } from "./recharts";
+import { convertArboSFtoArbo } from "./recharts";
 import { sortArboviruses } from "./rechart-utils";
 import { generateRandomColour } from "@/lib/utils";
 
@@ -25,7 +25,7 @@ export const EstimateCountByArbovirusAndAntibodyTypeGraph = (props: EstimateCoun
       data={state.filteredData
         .map((dataPoint) => ({...dataPoint, antibodyKey: dataPoint.antibodies.sort((antibodyA: string, antibodyB: string) => antibodyA > antibodyB ? 1 : -1).join(', ')}))
         .filter((dataPoint) => !!dataPoint.antibodyKey)}
-      primaryGroupingFunction={(dataPoint) => convertArboSFtoArbo(dataPoint.pathogen as arbovirusesSF)}
+      primaryGroupingFunction={(dataPoint) => convertArboSFtoArbo(dataPoint.pathogen)}
       primaryGroupingSortFunction={sortArboviruses}
       secondaryGroupingFunction={(dataPoint) => dataPoint.antibodyKey}
       secondaryGroupingSortFunction={(antibodyKeyA, antibodyKeyB) => antibodyKeyA > antibodyKeyB ? 1 : -1}

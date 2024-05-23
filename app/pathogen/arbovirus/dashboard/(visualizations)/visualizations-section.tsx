@@ -51,7 +51,7 @@ export const ArbovirusVisualizationsSection = () => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}
-        data={[]}
+        data={filteredData}
         visualizationInformation={visualizationInformation}
         className={cn(visualizationInformation.className, 'pb-14')}
         buttonConfig={{

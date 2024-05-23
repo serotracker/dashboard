@@ -1,6 +1,6 @@
 import uniq from 'lodash/uniq';
 import { VisualizationInformation } from "../../generic-pathogen-visualizations-page";
-import { StudyCountOverTime, Top10CountriesByPathogenStudyCount, arbovirusesSF, convertArboSFtoArbo } from "../dashboard/(visualizations)/recharts";
+import { StudyCountOverTime, Top10CountriesByPathogenStudyCount, convertArboSFtoArbo } from "../dashboard/(visualizations)/recharts";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { EstimateCountByWHORegionAndArbovirusGraph } from "../dashboard/(visualizations)/estimate-count-by-who-region-and-arbovirus-graph";
 import { EstimateCountByUnRegionAndArbovirusGraph } from "../dashboard/(visualizations)/estimate-count-by-un-region-and-arbovirus-graph";
@@ -147,7 +147,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     urlParameter:
       ArbovirusVisualizationUrlParameter['country-seroprevalence-comparison-scatter-plot'],
     getDisplayName: (input) => {
-      const allPathogensInData = uniq(input.data.map((dataPoint) => dataPoint.pathogen as arbovirusesSF));
+      const allPathogensInData = uniq(input.data.map((dataPoint) => dataPoint.pathogen));
 
       if(allPathogensInData.length !== 1) {
         return "Estimates with 95% CIs";

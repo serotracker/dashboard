@@ -77,7 +77,7 @@ export type ArbovirusEstimate = {
   sourceSheetId?: Maybe<Scalars['String']['output']>;
   sourceSheetName?: Maybe<Scalars['String']['output']>;
   state?: Maybe<Scalars['String']['output']>;
-  unRegion?: Maybe<Scalars['String']['output']>;
+  unRegion?: Maybe<UnRegion>;
   url?: Maybe<Scalars['String']['output']>;
   whoRegion?: Maybe<Scalars['String']['output']>;
 };
@@ -262,7 +262,7 @@ export enum WhoRegion {
 export type ArbovirusEstimatesQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ArbovirusEstimatesQueryQuery = { __typename?: 'Query', arbovirusEstimates: Array<{ __typename?: 'ArbovirusEstimate', ageGroup?: string | null, ageMaximum?: number | null, ageMinimum?: number | null, antibodies: Array<string>, antigen?: string | null, assay?: string | null, assayOther?: string | null, city?: string | null, state?: string | null, country: string, countryAlphaTwoCode: string, countryAlphaThreeCode: string, createdAt: string, estimateId?: string | null, id: string, inclusionCriteria?: string | null, latitude: number, longitude: number, pathogen: Arbovirus, pediatricAgeGroup?: string | null, producer?: string | null, producerOther?: string | null, sameFrameTargetGroup?: string | null, sampleEndDate?: string | null, sampleFrame?: string | null, sampleNumerator?: number | null, sampleSize: number, sampleStartDate?: string | null, seroprevalence: number, seroprevalenceStudy95CILower?: number | null, seroprevalenceStudy95CIUpper?: number | null, seroprevalenceCalculated95CILower?: number | null, seroprevalenceCalculated95CIUpper?: number | null, serotype: Array<string>, sex?: string | null, sourceSheetId?: string | null, sourceSheetName?: string | null, unRegion?: string | null, url?: string | null, whoRegion?: string | null }> };
+export type ArbovirusEstimatesQueryQuery = { __typename?: 'Query', arbovirusEstimates: Array<{ __typename?: 'ArbovirusEstimate', ageGroup?: string | null, ageMaximum?: number | null, ageMinimum?: number | null, antibodies: Array<string>, antigen?: string | null, assay?: string | null, assayOther?: string | null, city?: string | null, state?: string | null, country: string, countryAlphaTwoCode: string, countryAlphaThreeCode: string, createdAt: string, estimateId?: string | null, id: string, inclusionCriteria?: string | null, latitude: number, longitude: number, pathogen: Arbovirus, pediatricAgeGroup?: string | null, producer?: string | null, producerOther?: string | null, sameFrameTargetGroup?: string | null, sampleEndDate?: string | null, sampleFrame?: string | null, sampleNumerator?: number | null, sampleSize: number, sampleStartDate?: string | null, seroprevalence: number, seroprevalenceStudy95CILower?: number | null, seroprevalenceStudy95CIUpper?: number | null, seroprevalenceCalculated95CILower?: number | null, seroprevalenceCalculated95CIUpper?: number | null, serotype: Array<string>, sex?: string | null, sourceSheetId?: string | null, sourceSheetName?: string | null, unRegion?: UnRegion | null, url?: string | null, whoRegion?: string | null }> };
 
 export type ArbovirusFilterOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 

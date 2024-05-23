@@ -37,7 +37,7 @@ export const ArbovirusEstimatePopupContent = (props: ArbovirusEstimatePopupConte
   } = props.estimate; 
 
   const topBannerText = useMemo(() => {
-    const seroprevalencePercentageText = seroprevalence ? `Seroprevalence: ${(seroprevalence * 100).toFixed(1)}%` : 'N/A';
+    const seroprevalencePercentageText = `Seroprevalence: ${(seroprevalence * 100).toFixed(1)}%`;
     const arbovirusText = `(Arbovirus: ${pathogenFullString(pathogen)})`;
 
     if(!seroprevalenceStudy95CILower || !seroprevalenceStudy95CIUpper) {

@@ -673,8 +673,8 @@
             "description": null,
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
+              "kind": "ENUM",
+              "name": "UNRegion",
               "ofType": null
             },
             "isDeprecated": false,
