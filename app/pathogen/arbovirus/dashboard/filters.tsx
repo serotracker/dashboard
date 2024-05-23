@@ -108,7 +108,6 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   return (
     <Filters
       className={props.className}
-      includedFilters={[]}
       filterSections={filterSections}
       state={state}
       filterData={filterData?.arbovirusFilterOptions ? {
