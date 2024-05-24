@@ -6,7 +6,6 @@ import { GbdSubRegion, WhoRegion } from "@/gql/graphql";
 import { gbdSubRegionToLabelMap, gbdSuperRegionToLabelMap, isGbdSubRegion, isGbdSuperRegion } from "@/lib/gbd-regions";
 import { getLabelForUNRegion, isUNRegion } from "@/lib/un-regions";
 import { useContext } from "react";
-import { scopeToRibbonColourClassname } from "../(map)/sars-cov-2-country-pop-up-content";
 
 const ageGroupToSortOrderMap: Record<string, number | undefined> = {
   'Children and Youth (0-17 years)': 1,
