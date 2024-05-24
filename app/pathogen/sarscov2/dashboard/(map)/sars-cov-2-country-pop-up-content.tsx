@@ -3,6 +3,7 @@ import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment
 import { PopUpContentRowType, PopupContentTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import { typedGroupBy } from "@/lib/utils";
 import { scopeToSortOrderMap } from "@/components/customs/filters/available-filters";
+import { SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
 
 interface SarsCov2CountryPopupContentProps {
   record: {
@@ -11,7 +12,7 @@ interface SarsCov2CountryPopupContentProps {
     countryName: string,
     latitude: string,
     longitude: string,
-    dataPoints: { scope?: string | undefined | null }[],
+    dataPoints: Pick<SarsCov2Estimate, 'scope' | 'denominatorValue'>[],
   }
 }
 
@@ -39,23 +40,35 @@ export const SarsCov2CountryPopupContent = (props: SarsCov2CountryPopupContentPr
       }}
       topBannerConfiguration={{
         enabled: true,
-        label: "Total\u00A0Estimates",
+        label: "Total Estimates".replace(' ', '\u00A0'),
         value: allDataPointsWithScopes.length.toString(),
         valueTextAlignment: PopupContentTextAlignment.RIGHT,
         bannerColourClassname: "bg-gray-200"
       }}
-      rows={allScopesPresentInData
-        .sort((scopeA, scopeB) => (scopeToSortOrderMap[scopeA] ?? 0) - (scopeToSortOrderMap[scopeB] ?? 0))
-        .map((scope) => ({
-          title: `${scope.replace(' ', '\u00A0')}\u00A0estimates`,
-          type: PopUpContentRowType.NUMBER,
-          value: dataGroupedByScope[scope].length,
-          contentTextAlignment: PopupContentTextAlignment.RIGHT,
-          ribbonConfiguration: {
-            ribbonColourClassname: scopeToRibbonColourClassname[scope] ?? 'bg-gray-200'
+      rows={
+        [
+          {
+            title: 'Antibody Tests Administered'.replace(' ', '\u00A0'),
+            type: PopUpContentRowType.NUMBER as const,
+            value: props.record.dataPoints
+              .map((dataPoint) => (dataPoint.denominatorValue ?? 0))
+              .reduce((accumulator, value) => accumulator + value, 0),
+            contentTextAlignment: PopupContentTextAlignment.RIGHT,
+            rightPaddingEnabled: false
           },
-          rightPaddingEnabled: false
-        }))
+          ...allScopesPresentInData
+            .sort((scopeA, scopeB) => (scopeToSortOrderMap[scopeA] ?? 0) - (scopeToSortOrderMap[scopeB] ?? 0))
+            .map((scope) => ({
+              title: `${scope} estimates`.replace(' ', '\u00A0'),
+              type: PopUpContentRowType.NUMBER as const,
+              value: dataGroupedByScope[scope].length,
+              contentTextAlignment: PopupContentTextAlignment.RIGHT,
+              ribbonConfiguration: {
+                ribbonColourClassname: scopeToRibbonColourClassname[scope] ?? 'bg-gray-200'
+              },
+              rightPaddingEnabled: false
+            })),
+        ]
       }
       bottomBannerConfiguration={{
         enabled: false
