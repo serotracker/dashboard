@@ -16,7 +16,7 @@ interface SarsCov2CountryPopupContentProps {
   }
 }
 
-const scopeToRibbonColourClassname: Record<string, string | undefined> = {
+export const scopeToRibbonColourClassname: Record<string, string | undefined> = {
   "Local": "bg-local-study",
   "Regional": "bg-regional-study",
   "National": "bg-national-study"
