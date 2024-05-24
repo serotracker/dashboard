@@ -1,4 +1,4 @@
-import { GenericMapPopUp } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
+import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import parseISO from "date-fns/parseISO";
@@ -51,8 +51,10 @@ export const ArbovirusEstimatePopupContent = (props: ArbovirusEstimatePopupConte
 
   return (
     <GenericMapPopUp
+      width={GenericMapPopUpWidth.WIDE}
       headerConfiguration={{
-        text: `${pathogenFullString(props.estimate.pathogen)} Estimate`
+        text: `${pathogenFullString(props.estimate.pathogen)} Estimate`,
+        textAlignment: HeaderConfigurationTextAlignment.LEFT
       }}
       subtitleConfiguration={props.estimate.sourceSheetName ? {
         enabled: true,

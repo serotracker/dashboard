@@ -7,19 +7,17 @@
 
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import React, { useContext, useState } from "react";
 import { useArboData } from "@/hooks/useArboData";
 import { ArbovirusEstimatePopupContent } from "./arbovirus-estimate-pop-up-content";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
-import { ArboCountryPopupContent } from "./ArboCountryPopUpContent";
+import { ArboCountryPopupContent } from "./arbo-country-pop-up-content";
 import { computeClusterMarkers } from "./arbo-map-cluster-utils";
 import { MapShadingLegend } from "./MapShadingLegend";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
-import { Arbovirus } from "@/gql/graphql";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: { [key: string]: string } = {

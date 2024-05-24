@@ -134,7 +134,7 @@ const EnvironmentalSuitabilityMapTooltip: TooltipContentRenderingFunction = (inp
   )
 }
 
-const filterArbovirusToSortOrderMap: Record<Arbovirus, number> & Record<string, number | undefined> = {
+export const filterArbovirusToSortOrderMap: Record<Arbovirus, number> & Record<string, number | undefined> = {
   [Arbovirus.Zikv]: 1,
   [Arbovirus.Denv]: 2,
   [Arbovirus.Chikv]: 3,
