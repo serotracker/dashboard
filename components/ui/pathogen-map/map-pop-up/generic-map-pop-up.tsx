@@ -92,7 +92,8 @@ const GenericMapPopUpRowValueBanner = (props: EnabledBannerRowValueConfiguration
       type={PopUpContentRowType.TEXT}
       text={props.value}
       contentTextAlignment={props.valueTextAlignment}
-      paddingEnabled={false}
+      bottomPaddingEnabled={false}
+      rightPaddingEnabled={false}
       contentBolded={true}
     />
   </div>

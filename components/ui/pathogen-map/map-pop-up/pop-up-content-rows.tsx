@@ -17,7 +17,8 @@ export enum PopUpContentRowType {
 
 export interface PopUpContentRowBaseProps {
   title: string;
-  paddingEnabled?: boolean;
+  bottomPaddingEnabled?: boolean;
+  rightPaddingEnabled?: boolean;
   contentBolded?: boolean;
 }
 
@@ -33,23 +34,36 @@ export enum PopupContentTextAlignment {
   RIGHT = 'RIGHT'
 }
 
+export interface PopUpContentRowRibbonConfiguration {
+  ribbonColourClassname: string
+}
+
 interface GenericPopUpContentRowProps {
   title: string,
   content: JSX.Element | string | string[] | null | undefined,
   textAlignment: PopupContentTextAlignment | undefined;
-  paddingEnabled?: boolean;
+  rightPaddingEnabled?: boolean;
+  bottomPaddingEnabled?: boolean;
   contentBolded?: boolean;
+  ribbonConfiguration?: PopUpContentRowRibbonConfiguration;
 }
 
 export const GenericPopUpContentRow = (props: GenericPopUpContentRowProps): React.ReactNode => (
-  <div className={cn("flex justify-between items-center w-full", (props.paddingEnabled ?? true) ? "mb-2 mr-2" : "")}>
-    <div className={"text-md font-semibold"}>{props.title}</div>
-    <div className={cn(
-      "w-2/3",
-      props.textAlignment === PopupContentTextAlignment.RIGHT ? "text-right" : "",
-      props.contentBolded === true ? "font-semibold" : ""
-    )}>
-      {props.content}
+  <div className={cn(
+    "flex w-full",
+    (props.bottomPaddingEnabled ?? true) ? "mb-2" : "",
+    (props.rightPaddingEnabled ?? true) ? "mr-2" : ""
+  )}>
+    {props.ribbonConfiguration && <div className={cn('w-2 mr-2', props.ribbonConfiguration.ribbonColourClassname)} /> }
+    <div className={cn("flex justify-between items-center w-full")}>
+      <div className={"text-md font-semibold"}>{props.title}</div>
+      <div className={cn(
+        "w-2/3",
+        props.textAlignment === PopupContentTextAlignment.RIGHT ? "text-right" : "",
+        props.contentBolded === true ? "font-semibold" : ""
+      )}>
+        {props.content}
+      </div>
     </div>
   </div>
 )

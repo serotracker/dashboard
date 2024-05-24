@@ -1,6 +1,7 @@
 import {
   GenericPopUpContentRow,
   PopUpContentRowBaseProps,
+  PopUpContentRowRibbonConfiguration,
   PopUpContentRowType,
   PopupContentTextAlignment
 } from "../pop-up-content-rows";
@@ -9,9 +10,7 @@ export type PopUpContentNumberRowProps = PopUpContentRowBaseProps & {
   type: PopUpContentRowType.NUMBER,
   value: number;
   contentTextAlignment?: PopupContentTextAlignment;
-  ribbonConfiguration?: {
-    ribbonColourClassname: string
-  }
+  ribbonConfiguration?: PopUpContentRowRibbonConfiguration;
 }
 
 export const PopUpContentNumberRow = (props: PopUpContentNumberRowProps) => (
@@ -19,7 +18,9 @@ export const PopUpContentNumberRow = (props: PopUpContentNumberRowProps) => (
     title={props.title}
     textAlignment={props.contentTextAlignment}
     content={props.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-    paddingEnabled={props.paddingEnabled}
+    bottomPaddingEnabled={props.bottomPaddingEnabled}
+    rightPaddingEnabled={props.rightPaddingEnabled}
     contentBolded={props.contentBolded}
+    ribbonConfiguration={props.ribbonConfiguration}
   />
 )

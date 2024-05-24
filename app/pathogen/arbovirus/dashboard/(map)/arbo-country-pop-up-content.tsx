@@ -41,10 +41,14 @@ export const ArboCountryPopupContent = ({ record }: ArboCountryPopupContentProps
       rows={allArbovirusesPresentInData
         .sort((arbovirusA, arbovirusB) => filterArbovirusToSortOrderMap[arbovirusA] - filterArbovirusToSortOrderMap[arbovirusB])
         .map((arbovirus) => ({
-          title: `${arboShortformToFullNameMap[arbovirus]}\u00A0estimates`,
+          title: `${arboShortformToFullNameMap[arbovirus].replace(' ', '\u00A0')}\u00A0estimates`,
           type: PopUpContentRowType.NUMBER,
           value: dataGroupedByArbovirus[arbovirus].length,
-          contentTextAlignment: PopupContentTextAlignment.RIGHT
+          contentTextAlignment: PopupContentTextAlignment.RIGHT,
+          ribbonConfiguration: {
+            ribbonColourClassname: `bg-${arbovirus.toLowerCase()}`,
+          },
+          rightPaddingEnabled: false
         }))
       }
       bottomBannerConfiguration={{

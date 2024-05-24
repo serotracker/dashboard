@@ -47,8 +47,10 @@ export const PopUpContentDateRangeRow = (props: PopUpContentDateRangeRowProps) =
       title={props.title}
       textAlignment={props.contentTextAlignment}
       content={content}
-      paddingEnabled={props.paddingEnabled}
+      bottomPaddingEnabled={props.bottomPaddingEnabled}
+      rightPaddingEnabled={props.rightPaddingEnabled}
       contentBolded={props.contentBolded}
+      ribbonConfiguration={undefined}
     />
   )
 }

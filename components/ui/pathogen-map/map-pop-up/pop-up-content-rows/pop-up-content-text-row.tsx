@@ -16,7 +16,9 @@ export const PopUpContentTextRow = (props: PopUpContentTextRowProps) => (
     title={props.title}
     textAlignment={props.contentTextAlignment}
     content={props.text}
-    paddingEnabled={props.paddingEnabled}
+    bottomPaddingEnabled={props.bottomPaddingEnabled}
+    rightPaddingEnabled={props.rightPaddingEnabled}
     contentBolded={props.contentBolded}
+    ribbonConfiguration={undefined}
   />
 )
