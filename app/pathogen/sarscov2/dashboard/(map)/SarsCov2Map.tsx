@@ -9,6 +9,7 @@ import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-su
 import { MapSymbology } from "./map-config";
 import { SarsCov2EstimatePopupContent } from "./sars-cov-2-estimate-pop-up-content";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
+import { SarsCov2CountryPopupContent } from "./sars-cov-2-country-pop-up-content";
 
 export function SarsCov2Map() {
   const state = useContext(SarsCov2Context);
@@ -91,7 +92,7 @@ export function SarsCov2Map() {
           }}
           generatePopupContent={(input) => {
             if(isPopupCountryHighlightLayerContentGeneratorInput(input)) {
-              return <p> TODO </p>
+              return <SarsCov2CountryPopupContent record={input.data} />
             }
           
             return <SarsCov2EstimatePopupContent estimate={input.data} />

@@ -152,7 +152,7 @@ const pathogenColorsTailwind: { [key in Arbovirus]: string } = {
   [Arbovirus.Mayv]: "data-[state=checked]:bg-mayv",
 };
 
-const scopeToSortOrderMap: Record<string, number | undefined> = {
+export const scopeToSortOrderMap: Record<string, number | undefined> = {
   'National': 1,
   'Regional': 2,
   'Local': 3
