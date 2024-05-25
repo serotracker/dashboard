@@ -48,6 +48,6 @@ export const sarsCov2Estimates = gql`
 export function useSarsCov2Data() {
   return useQuery<SarsCov2EstimatesQuery>({
     queryKey: ["sarsCov2Estimates"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Estimates)
+    queryFn: () => request("https://iit-backend-v2-git-made-seroprevalence-manda-7826c9-serotracker.vercel.app/api/graphql" ?? '', sarsCov2Estimates)
   });
 }

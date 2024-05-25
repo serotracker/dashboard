@@ -29,6 +29,6 @@ export const arbovirusFiltersQuery = gql`
 export function useArboFilters() {
   return useQuery<ArbovirusFilterOptionsQuery>({
     queryKey: ["arbovirusFiltersQuery"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
+    queryFn: () => request("https://iit-backend-v2-git-made-seroprevalence-manda-7826c9-serotracker.vercel.app/api/graphql" ?? '', arbovirusFiltersQuery)
   });
 }

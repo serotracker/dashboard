@@ -24,7 +24,7 @@ export default async function AboutPageBaseLayout (props: AboutPageBaseLayoutPro
     queryKey: ["groupedTeamMembersQuery"],
     queryFn: () =>
       request(
-        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? "",
+        "https://iit-backend-v2-git-made-seroprevalence-manda-7826c9-serotracker.vercel.app/api/graphql" ?? "",
         groupedTeamMembers
       ),
   });

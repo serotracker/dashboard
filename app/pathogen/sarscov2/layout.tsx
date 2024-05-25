@@ -17,11 +17,11 @@ export default async function SarsCov2Layout({
 
   await queryClient.prefetchQuery({
     queryKey: ["sarsCov2Estimates"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Estimates)
+    queryFn: () => request("https://iit-backend-v2-git-made-seroprevalence-manda-7826c9-serotracker.vercel.app/api/graphql" ?? '', sarsCov2Estimates)
   });
   await queryClient.prefetchQuery({
     queryKey: ["sarsCov2FilterOptions"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Filters)
+    queryFn: () => request("https://iit-backend-v2-git-made-seroprevalence-manda-7826c9-serotracker.vercel.app/api/graphql" ?? '', sarsCov2Filters)
   });
 
   const dehydratedState = dehydrate(queryClient);

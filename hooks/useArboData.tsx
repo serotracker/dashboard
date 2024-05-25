@@ -53,6 +53,6 @@ export const arbovirusEstimatesQuery = gql`
 export function useArboData() {
   return useQuery<ArbovirusEstimatesQueryQuery>({
     queryKey: ["arbovirusEstimatesQuery"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
+    queryFn: () => request("https://iit-backend-v2-git-made-seroprevalence-manda-7826c9-serotracker.vercel.app/api/graphql" ?? '', arbovirusEstimatesQuery)
   });
 }
