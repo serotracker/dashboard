@@ -70,7 +70,6 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
     FilterableField.antibody,
     FilterableField.serotype
   ].filter((field) => {
-    /* If the 0-17 filter is not selected, don't show pediatric age group.*/
     if(!selectedArboviruses.includes('DENV') && field === FilterableField.serotype) {
       return false;
     }
@@ -106,6 +105,7 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
         whoRegion: filterData.arbovirusFilterOptions.whoRegion,
         unRegion: filterData.arbovirusFilterOptions.unRegion,
         countryAlphaTwoCode: filterData.arbovirusFilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode),
+        // Filters that don't exist in the backend (such as the ESM filter) need to have their avaiable options added manually
         esm: [
           'dengue2015',
           'dengue2050',
