@@ -67,16 +67,6 @@ function TrackerButton(props: TrackerButtonProps) {
 export default async function Home() {
   const queryClient = getQueryClient();
 
-  const arboDataStats =
-    await queryClient.fetchQuery<ArbovirusDataStatisticsQuery>({
-      queryKey: [arbovirusDataStatisticsQueryKey],
-      queryFn: () =>
-        request(
-          process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? "",
-          arbovirusDataStatistics
-        ),
-    });
-
   return (
     <CustomQueryClientProvider>
       <div className="h-full overflow-auto">
