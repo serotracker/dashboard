@@ -2,6 +2,7 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { GbdSubRegion, WhoRegion } from "@/gql/graphql";
 import { gbdSubRegionToLabelMap, gbdSuperRegionToLabelMap, isGbdSubRegion, isGbdSuperRegion } from "@/lib/gbd-regions";
 import { getLabelForUNRegion, isUNRegion } from "@/lib/un-regions";
 import { useContext } from "react";
@@ -34,9 +35,18 @@ const sarsCov2ColumnConfiguration = [{
   isFixed: true,
   fieldNameForLink: 'url'
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'whoRegion',
   label: 'WHO Region',
+  valueToColourSchemeClassnameMap: {
+    [WhoRegion.Afr]: "bg-who-region-afr",
+    [WhoRegion.Amr]: "bg-who-region-amr",
+    [WhoRegion.Emr]: "bg-who-region-emr",
+    [WhoRegion.Eur]: "bg-who-region-eur",
+    [WhoRegion.Sear]: "bg-who-region-sear",
+    [WhoRegion.Wpr]: "bg-who-region-wpr text-white"
+  },
+  defaultColourSchemeClassname: 'bg-sky-100'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'unRegion',
@@ -48,23 +58,59 @@ const sarsCov2ColumnConfiguration = [{
   label: 'GBD Super Region',
   valueToDisplayLabel: (gbdSuperRegion: string) => isGbdSuperRegion(gbdSuperRegion) ? gbdSuperRegionToLabelMap[gbdSuperRegion] : gbdSuperRegion
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'gbdSubRegion',
   label: 'GBD Sub Region',
+  valueToColourSchemeClassnameMap: {
+    [GbdSubRegion.HighIncomeSubregionAsiaPacific]: "bg-gdb-sub-region-high-income-subregion-asia-pacific",
+    [GbdSubRegion.HighIncomeSubregionAustralasia]: "bg-gdb-sub-region-high-income-subregion-australasia text-white",
+    [GbdSubRegion.HighIncomeSubregionNorthAmerica]: "bg-gdb-sub-region-high-income-subregion-north-america",
+    [GbdSubRegion.HighIncomeSubregionSouthernLatinAmerica]: "bg-gdb-sub-region-high-income-subregion-southern-latin-america",
+    [GbdSubRegion.HighIncomeSubregionWesternEurope]: "bg-gdb-sub-region-high-income-subregion-western-europe",
+    [GbdSubRegion.CentralEuropeEasternEuropeAndCentralAsiaSubregionCentralAsia]: "bg-gdb-sub-region-central-europe-eastern-europe-and-central-asia-subregion-central-asia",
+    [GbdSubRegion.CentralEuropeEasternEuropeAndCentralAsiaSubregionCentralEurope]: "bg-gdb-sub-region-central-europe-eastern-europe-and-central-asia-subregion-central-europe",
+    [GbdSubRegion.CentralEuropeEasternEuropeAndCentralAsiaSubregionEasternEurope]: "bg-gdb-sub-region-central-europe-eastern-europe-and-central-asia-subregion-eastern-europe",
+    [GbdSubRegion.SubSaharanAfricaSubregionCentral]: "bg-gdb-sub-region-sub-saharan-africa-subregion-central",
+    [GbdSubRegion.SubSaharanAfricaSubregionEastern]: "bg-gdb-sub-region-sub-saharan-africa-subregion-eastern",
+    [GbdSubRegion.SubSaharanAfricaSubregionSouthern]: "bg-gdb-sub-region-sub-saharan-africa-subregion-southern",
+    [GbdSubRegion.SubSaharanAfricaSubregionWestern]: "bg-gdb-sub-region-sub-saharan-africa-subregion-western",
+    [GbdSubRegion.LatinAmericaAndCaribbeanSubregionAndean]: "bg-gdb-sub-region-latin-america-and-caribbean-subregion-andean",
+    [GbdSubRegion.LatinAmericaAndCaribbeanSubregionCaribbean]: "bg-gdb-sub-region-latin-america-and-caribbean-subregion-caribbean",
+    [GbdSubRegion.LatinAmericaAndCaribbeanSubregionCentral]: "bg-gdb-sub-region-latin-america-and-caribbean-subregion-central",
+    [GbdSubRegion.LatinAmericaAndCaribbeanSubregionTropical]: "bg-gdb-sub-region-latin-america-and-caribbean-subregion-tropical text-white",
+    [GbdSubRegion.SouthAsiaSubregionSouthAsia]: "bg-gdb-sub-region-south-asia-subregion-south-asia",
+    [GbdSubRegion.SouthEastAsiaEastAsiaAndOceaniaSubregionEastAsia]: "bg-gdb-sub-region-south-east-asia-east-asia-and-oceania-subregion-east-asia",
+    [GbdSubRegion.SouthEastAsiaEastAsiaAndOceaniaSubregionOceania]: "bg-gdb-sub-region-south-east-asia-east-asia-and-oceania-subregion-oceania text-white",
+    [GbdSubRegion.SouthEastAsiaEastAsiaAndOceaniaSubregionSouthEastAsia]: "bg-gdb-sub-region-south-east-asia-east-asia-and-oceania-subregion-south-east-asia",
+    [GbdSubRegion.NorthAfricaAndMiddleEastSubregionNorthAfricaAndMiddleEast]: "bg-gdb-sub-region-north-africa-and-middle-east-subregion-north-africa-and-middle-east",
+  },
+  defaultColourSchemeClassname: 'bg-sky-100',
   valueToDisplayLabel: (gbdSubRegion: string) => isGbdSubRegion(gbdSubRegion) ? gbdSubRegionToLabelMap[gbdSubRegion] : gbdSubRegion
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'riskOfBias',
   label: 'Risk of Bias',
+  valueToColourSchemeClassnameMap: {
+    "Low": "bg-risk-of-bias-low",
+    "Moderate": "bg-risk-of-bias-moderate",
+    "High": "bg-risk-of-bias-high",
+  },
+  defaultColourSchemeClassname: 'bg-sky-100',
   valueSortingFunction: (riskOfBiasA: string, riskOfBiasB: string) => (riskOfBiasToSortOrderMap[riskOfBiasA] ?? 0) - (riskOfBiasToSortOrderMap[riskOfBiasB] ?? 0)
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'sourceType',
   label: 'Source Type',
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'scope',
   label: 'Scope',
+  valueToColourSchemeClassnameMap: {
+    "Local": "bg-local-study",
+    "Regional": "bg-regional-study",
+    "National": "bg-national-study text-white"
+  },
+  defaultColourSchemeClassname: 'bg-sky-100',
   valueSortingFunction: (scopeA: string, scopeB: string) => (scopeToSortOrderMap[scopeA] ?? 0) - (scopeToSortOrderMap[scopeB] ?? 0)
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
