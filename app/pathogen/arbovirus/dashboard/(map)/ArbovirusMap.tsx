@@ -10,7 +10,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import React, { useContext, useState } from "react";
 import { useArboData } from "@/hooks/useArboData";
-import { ArboStudyPopupContent } from "./ArboStudyPopupContent";
+import { ArbovirusEstimatePopupContent } from "./arbovirus-estimate-pop-up-content";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
 import { ArboCountryPopupContent } from "./ArboCountryPopUpContent";
@@ -91,7 +91,7 @@ export function ArbovirusMap() {
               return <ArboCountryPopupContent record={input.data} />
             }
           
-            return <ArboStudyPopupContent record={input.data} />
+            return <ArbovirusEstimatePopupContent estimate={input.data} />
           }}
           dataPoints={state.filteredData}
           clusteringSettings={{
