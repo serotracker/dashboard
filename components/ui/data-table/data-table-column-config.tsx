@@ -7,6 +7,7 @@ import { getDataTableLinkButtonColumnConfiguration } from "./data-table-column-c
 import { getDataTableLinkColumnConfiguration } from "./data-table-column-configurations/data-table-link-column-configuration";
 import { getDataTableStandardColumnConfiguration } from "./data-table-column-configurations/data-table-standard-column-configuration";
 import { getDataTablePercentageColumnConfiguration } from "./data-table-column-configurations/date-table-percentage-column-configuration";
+import { getDataTableBooleanColumnConfiguration } from './data-table-column-configurations/data-table-boolean-column-configuration';
 
 export enum DataTableColumnConfigurationEntryType {
   STANDARD = "STANDARD",
@@ -15,6 +16,7 @@ export enum DataTableColumnConfigurationEntryType {
   COLOURED_PILL = "COLOURED_PILL",
   COLOURED_PILL_LIST = "COLOURED_PILL_LIST",
   PERCENTAGE = "PERCENTAGE",
+  BOOLEAN = "BOOLEAN",
   DATE = "DATE"
 }
 
@@ -24,18 +26,20 @@ export interface DataTableColumnConfigurationEntryBase {
   isSortable?: boolean;
   isHideable?: boolean;
   isFixed?: boolean;
+  valueToDisplayLabel?: (input: string) => string | undefined;
+  valueSortingFunction?: (valueA: string, valueB: string) => number;
 }
 
 export type StandardDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.STANDARD;
 }
 
-export type LinkDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type LinkDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {
   type: DataTableColumnConfigurationEntryType.LINK;
   fieldNameForLink: string;
 }
 
-export type LinkButtonDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type LinkButtonDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {
   type: DataTableColumnConfigurationEntryType.LINK_BUTTON;
   fieldNameForLink: string;
 }
@@ -52,12 +56,17 @@ export type ColouredPillListDataTableColumnConfigurationEntry = DataTableColumnC
   defaultColourSchemeClassname: string;
 }
 
-export type PercentageDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type PercentageDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE;
 }
 
-export type DateDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
+export type DateDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'|'valueSortingFunction'> & {
   type: DataTableColumnConfigurationEntryType.DATE;
+  valueSortingFunction?: undefined;
+}
+
+export type BooleanDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {
+  type: DataTableColumnConfigurationEntryType.BOOLEAN;
 }
 
 export type DataTableColumnConfigurationEntry = 
@@ -67,7 +76,8 @@ export type DataTableColumnConfigurationEntry =
   | ColouredPillDataTableColumnConfigurationEntry
   | ColouredPillListDataTableColumnConfigurationEntry
   | PercentageDataTableColumnConfigurationEntry
-  | DateDataTableColumnConfigurationEntry;
+  | DateDataTableColumnConfigurationEntry
+  | BooleanDataTableColumnConfigurationEntry;
 
 interface ColumnConfigurationToColumnDefinitionInput {
   columnConfiguration: Array<DataTableColumnConfigurationEntry>
@@ -98,6 +108,9 @@ export const columnConfigurationToColumnDefinitions = (
       }
       if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.PERCENTAGE) {
         return getDataTablePercentageColumnConfiguration({columnConfiguration: columnConfigurationEntry});
+      }
+      if(columnConfigurationEntry.type === DataTableColumnConfigurationEntryType.BOOLEAN) {
+        return getDataTableBooleanColumnConfiguration({columnConfiguration: columnConfigurationEntry});
       }
 
       assertNever(columnConfigurationEntry);

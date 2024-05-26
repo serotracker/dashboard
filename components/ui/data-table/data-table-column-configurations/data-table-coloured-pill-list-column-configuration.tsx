@@ -22,7 +22,7 @@ export const getDataTableColouredPillListColumnConfiguration = (input: GetDataTa
             )}
             key={value}
         >
-          {value}
+          {input.columnConfiguration.valueToDisplayLabel ? input.columnConfiguration.valueToDisplayLabel(value) ?? value : value}
         </span>
       ))
     };
