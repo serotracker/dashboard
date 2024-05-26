@@ -1,6 +1,6 @@
 import uniq from 'lodash/uniq';
 import { VisualizationInformation } from "../../generic-pathogen-visualizations-page";
-import { AntibodyPathogenBar, StudyCountOverTime, Top10CountriesByPathogenStudyCount, arbovirusesSF, convertArboSFtoArbo } from "../dashboard/(visualizations)/recharts";
+import { StudyCountOverTime, Top10CountriesByPathogenStudyCount, arbovirusesSF, convertArboSFtoArbo } from "../dashboard/(visualizations)/recharts";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { EstimateCountByWHORegionAndArbovirusGraph } from "../dashboard/(visualizations)/estimate-count-by-who-region-and-arbovirus-graph";
 import { EstimateCountByUnRegionAndArbovirusGraph } from "../dashboard/(visualizations)/estimate-count-by-un-region-and-arbovirus-graph";
@@ -13,6 +13,7 @@ import { CountrySeroprevalenceComparisonScatterPlot } from "../dashboard/(visual
 import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
 import { StudyCountOverTimeBySampleFrame } from '../dashboard/(visualizations)/study-count-over-time-by-sample-frame';
+import { EstimateCountByArbovirusAndAntibodyTypeGraph } from '../dashboard/(visualizations)/estimate-count-by-arbovirus-and-antibody-type-graph';
 
 export enum ArbovirusVisualizationId {
   CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS = "CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS",
@@ -84,7 +85,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
         "estimate-count-by-arbovirus-and-antibody-type"
       ],
     getDisplayName: () => "Estimate count by arbovirus & antibody type",
-    renderVisualization: AntibodyPathogenBar
+    renderVisualization: () => EstimateCountByArbovirusAndAntibodyTypeGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
   [ArbovirusVisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS]: {
     id: ArbovirusVisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS,

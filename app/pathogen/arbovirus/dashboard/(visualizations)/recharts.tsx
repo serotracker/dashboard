@@ -73,61 +73,6 @@ interface dataStratifiedByArbovirus {
   Mayaro: number;
 }
 
-export function AntibodyPathogenBar() {
-  const state = useContext(ArboContext);
-
-  const data: {
-    arbovirus: arboviruses;
-    IgG: number;
-    IgM: number;
-    NAb: number;
-    NR: number;
-    "IgG, IgM": number;
-  }[] = [];
-
-  state.filteredData.forEach((d: any) => {
-    const antibody: antibodies = d.antibodies.sort().join(", ");
-    const arbovirus: arboviruses = convertArboSFtoArbo(d.pathogen);
-
-    const existingData = _.find(data, { arbovirus: arbovirus });
-
-    if (existingData) {
-      existingData[antibody]++;
-    } else {
-      data.push({
-        arbovirus: arbovirus,
-        IgG: antibody === "IgG" ? 1 : 0,
-        IgM: antibody === "IgM" ? 1 : 0,
-        NAb: antibody === "NAb" ? 1 : 0,
-        NR: antibody === "NR" ? 1 : 0,
-        "IgG, IgM": antibody === "IgG, IgM" ? 1 : 0,
-      });
-    }
-  });
-
-  return (
-    <ResponsiveContainer width={"100%"} height={"100%"}>
-      <BarChart width={730} height={250} data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="arbovirus" />
-        <YAxis />
-        <Tooltip itemStyle={{"color": "black"}}/>
-        <Legend
-          layout="vertical"
-          verticalAlign="middle"
-          align="right"
-          wrapperStyle={{ right: -10 }}
-        />
-        <Bar dataKey="IgG" stackId="a" fill={"#61f4de"} />
-        <Bar dataKey="IgM" stackId="a" fill={"#65cbe9"} />
-        <Bar dataKey="IgG, IgM" stackId="a" fill={"#6cb6ef"} />
-        <Bar dataKey="NAb" stackId="a" fill={"#6c8dfa"} />
-        <Bar dataKey="NR" stackId="a" fill={"#6e78ff"} />
-      </BarChart>
-    </ResponsiveContainer>
-  );
-}
-
 //Seroprevalence per pathogen, WHO region and age group
 // - Missing region data, need to calculate it, how?
 
