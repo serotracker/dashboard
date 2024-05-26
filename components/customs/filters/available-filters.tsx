@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { MapArbovirusFilter } from "@/app/pathogen/arbovirus/dashboard/(map)/MapArbovirusFilter";
 import { SendFilterChangeDispatch } from "../filters";
+import { BooleanSelectFilter } from "./boolean-select-filter";
+import { BooleanSelectOptionString } from "./select-filter";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -52,6 +54,8 @@ export enum FilterableField {
   end_date = "end_date",
   samplingStartDate = "samplingStartDate",
   samplingEndDate = "samplingEndDate",
+  isWHOUnityAligned = "isWHOUnityAligned",
+  riskOfBias = "riskOfBias",
   serotype = "serotype",
   scope = "scope",
   sourceType = "sourceType",
@@ -69,6 +73,17 @@ const WhoRegionTooltip: TooltipContentRenderingFunction = (input) => (
     <p> SEAR: South-East Asia Region </p>
     <p> WPR: Western Pacific Region </p>
   </div>
+)
+const RiskOfBiasTooltip: TooltipContentRenderingFunction = (input) => (
+  <p>Reflects the extent to which the true prevalence may be different from the estimated prevalence. Estimated by SeroTracker reviewers based on the Joanna Briggs Institute critical appraisal tool for prevalence estimates.</p>
+)
+
+const WhoUnityTooltip: TooltipContentRenderingFunction = (input) => (
+  <>
+    <p className="inline">The WHO developed several standardized generic protocols for robust investigations for COVID-19: </p>
+    <Link className="inline text-link" target="_blank" rel="noopener noreferrer" href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/technical-guidance/early-investigations">the Unity studies</Link>
+    <p className="inline">. SeroTracker is collaborating with the WHO to support and visualize studies aligned with the population-based seroepidemiological Unity protocol.</p>
+  </>
 )
 
 const esmValueToLink: Record<string, string | undefined> = {
@@ -140,6 +155,23 @@ export const availableFilters: {[key in FilterableField]: FieldInformation } = {
     label: "Sampling End Date",
     valueToLabelMap: {},
     filterRenderingFunction: DateFilter
+  },
+  [FilterableField.isWHOUnityAligned]: {
+    field: FilterableField.isWHOUnityAligned,
+    label: "WHO Unity Alignment",
+    valueToLabelMap: {
+      [BooleanSelectOptionString.TRUE]: 'WHO Unity Aligned Only',
+      [BooleanSelectOptionString.FALSE]: 'Non-WHO Unity Aligned Only'
+    } as const,
+    renderTooltipContent: WhoUnityTooltip,
+    filterRenderingFunction: BooleanSelectFilter
+  },
+  [FilterableField.riskOfBias]: {
+    field: FilterableField.riskOfBias,
+    label: "Risk of Bias",
+    valueToLabelMap: {},
+    renderTooltipContent: RiskOfBiasTooltip,
+    filterRenderingFunction: MultiSelectFilter
   },
   [FilterableField.whoRegion]: {
     field: FilterableField.whoRegion,

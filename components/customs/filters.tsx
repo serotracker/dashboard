@@ -4,7 +4,7 @@ import { FilterableField, availableFilters } from "./filters/available-filters";
 import { FilterSection } from "./filters/filter-section";
 
 interface SendFilterChangeDispatchInput<TEstimate extends Record<string, unknown>> {
-  value: string[],
+  value: (string | boolean)[],
   newFilter: string,
   state: PathogenContextType<TEstimate>,
   data: any

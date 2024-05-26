@@ -16,6 +16,12 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   const { data } = useNewSarsCov2Data();
   const { data: filterData } = useSarsCov2Filters();
 
+  const studyInformationFilters = [
+    FilterableField.isWHOUnityAligned,
+    FilterableField.riskOfBias,
+    FilterableField.sourceType
+  ]
+
   const dateFilters = [
     FilterableField.samplingStartDate,
     FilterableField.samplingEndDate
@@ -40,6 +46,10 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   ];
 
   const filterSections = [{
+    headerText: 'Study Information',
+    headerTooltipText: 'Filter on study details, including source type (publication, preprint, news, or report), and alignment with the WHO Unity protocol.',
+    includedFilters: studyInformationFilters
+  }, {
     headerText: 'Date',
     headerTooltipText: 'Filter on sample start and end date.',
     includedFilters: dateFilters
@@ -71,6 +81,7 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
           ageGroup: filterData.sarsCov2FilterOptions.ageGroup,
           scope: filterData.sarsCov2FilterOptions.scope,
           sourceType: filterData.sarsCov2FilterOptions.sourceType,
+          riskOfBias: filterData.sarsCov2FilterOptions.riskOfBias,
           antibodies: filterData.sarsCov2FilterOptions.antibodies,
           testType: filterData.sarsCov2FilterOptions.testType,
           isotypes: filterData.sarsCov2FilterOptions.isotypes

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
 import { cn } from "@/lib/utils";
+import { BooleanSelectOptionString } from "./filters/select-filter";
 
 export type SelectOption = {
   label: string; // As we see
@@ -17,24 +18,25 @@ interface SelectProps {
   heading: string;
   options: string[];
   optionToLabelMap: Record<string, string | undefined>;
-  selected: string[];
+  selected: (string | boolean)[];
   handleOnChange: (selected: string[]) => void;
   singleSelect?: boolean // Multi is the default
 }
 
-const createSelectOptionList = (options: string[], optionToLabelMap: Record<string, string | undefined>) => {
-  return options.map((option: string) => {
-    return {
-      label: optionToLabelMap[option] ?? option,
-      value: option,
-    };
-  });
+const createSelectOptionList = (options: (string)[], optionToLabelMap: Record<string, string | undefined>) => {
+  return options.map((option: string) => ({
+    label: optionToLabelMap[option] ?? option,
+    value: option,
+  }));
 };
 
 export function Select(props: SelectProps) {
   // TODO: I wonder if there is a way to make the background color dynamic based on the page we are on so this does not need to prop drilled
-  const { heading, selected, handleOnChange, optionToLabelMap, singleSelect} = props;
+  const { heading, handleOnChange, optionToLabelMap, singleSelect} = props;
   const options = createSelectOptionList(props.options, optionToLabelMap);
+  const selected = props.selected
+    .map((selectedOption) => selectedOption === true ? BooleanSelectOptionString.TRUE : selectedOption) 
+    .map((selectedOption) => selectedOption === false ? BooleanSelectOptionString.FALSE : selectedOption)
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
