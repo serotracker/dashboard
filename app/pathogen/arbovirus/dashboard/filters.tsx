@@ -70,7 +70,6 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
     FilterableField.antibody,
     FilterableField.serotype
   ].filter((field) => {
-    /* If the 0-17 filter is not selected, don't show pediatric age group.*/
     if(!selectedArboviruses.includes('DENV') && field === FilterableField.serotype) {
       return false;
     }

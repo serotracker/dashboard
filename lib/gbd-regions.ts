@@ -38,4 +38,8 @@ export const isGbdSuperRegion = (gbdSuperRegion: string): gbdSuperRegion is GbdS
   Object.values(GbdSuperRegion).some((element) => element === gbdSuperRegion);
 
 export const isGbdSubRegion = (gbdSubRegion: string): gbdSubRegion is GbdSubRegion =>
+<<<<<<< HEAD
   Object.values(GbdSubRegion).some((element) => element === gbdSubRegion);
+=======
+  Object.values(GbdSubRegion).some((element) => element === gbdSubRegion);
+>>>>>>> 2dc303cf6d03138ce8e7b4a6dbac3f6bb6e3d14e
