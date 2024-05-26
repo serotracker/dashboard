@@ -37,21 +37,26 @@ export type arboviruses =
 
 type antibodies = "IgG" | "IgM" | "NAb" | "NR" | "IgG, IgM";
 
+export const arboShortformToFullNameMap: {[key in Arbovirus]: arboviruses} = {
+  [Arbovirus.Denv]: "Dengue",
+  [Arbovirus.Zikv]: "Zika",
+  [Arbovirus.Chikv]: "Chikungunya",
+  [Arbovirus.Yf]: "Yellow Fever",
+  [Arbovirus.Wnv]: "West Nile",
+  [Arbovirus.Mayv]: "Mayaro"
+}
+
+export const arboShortformToFullNamePlusVirusMap: {[key in Arbovirus]: string} = {
+  [Arbovirus.Denv]: "Dengue Virus",
+  [Arbovirus.Zikv]: "Zika Virus",
+  [Arbovirus.Chikv]: "Chikungunya Virus",
+  [Arbovirus.Yf]: "Yellow Fever",
+  [Arbovirus.Wnv]: "West Nile Virus",
+  [Arbovirus.Mayv]: "Mayaro Virus"
+}
+
 export const convertArboSFtoArbo = (arbo: Arbovirus): arboviruses => {
-  switch (arbo) {
-    case Arbovirus.Denv:
-      return "Dengue";
-    case Arbovirus.Zikv:
-      return "Zika";
-    case Arbovirus.Chikv:
-      return "Chikungunya";
-    case Arbovirus.Yf:
-      return "Yellow Fever";
-    case Arbovirus.Wnv:
-      return "West Nile";
-    case Arbovirus.Mayv:
-      return "Mayaro";
-  }
+  return arboShortformToFullNameMap[arbo];
 };
 
 interface dataStratifiedByArbovirus {

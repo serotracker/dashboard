@@ -20,6 +20,7 @@ import { useArboFilters } from "@/hooks/useArboFilters";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { Filters } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
+import { Arbovirus } from "@/gql/graphql";
 
 interface ArbovirusFiltersProps {
   className?: string;
@@ -32,6 +33,10 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
 
   const selectedAgeGroups = state.selectedFilters['ageGroup'] ?? [];
   const selectedArboviruses = state.selectedFilters['pathogen'] ?? [];
+
+  const arbovirusFilters = [
+    FilterableField.pathogen
+  ]
 
   const dateFilters = [
     FilterableField.start_date,
@@ -78,6 +83,10 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   });
 
   const filterSections = [{
+    headerText: 'Arboviruses',
+    headerTooltipText: 'Filter on arbovirus strain.',
+    includedFilters: arbovirusFilters
+  }, {
     headerText: 'Date',
     headerTooltipText: 'Filter on sample start and end date.',
     includedFilters: dateFilters
@@ -98,7 +107,6 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   return (
     <Filters
       className={props.className}
-      includedFilters={[ FilterableField.pathogen ]}
       filterSections={filterSections}
       state={state}
       filterData={filterData?.arbovirusFilterOptions ? {
@@ -110,6 +118,14 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
           'dengue2015',
           'dengue2050',
           'zika'
+        ],
+        pathogen: [
+          Arbovirus.Zikv,
+          Arbovirus.Denv,
+          Arbovirus.Chikv,
+          Arbovirus.Yf,
+          Arbovirus.Wnv,
+          Arbovirus.Mayv
         ],
         ageGroup: filterData.arbovirusFilterOptions.ageGroup,
         sex: filterData.arbovirusFilterOptions.sex,

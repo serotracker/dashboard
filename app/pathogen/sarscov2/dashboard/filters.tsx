@@ -16,6 +16,10 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   const { data } = useSarsCov2Data();
   const { data: filterData } = useSarsCov2Filters();
 
+  const studyScopeFilters = [
+    FilterableField.scope,
+  ]
+
   const studyInformationFilters = [
     FilterableField.isWHOUnityAligned,
     FilterableField.riskOfBias,
@@ -38,7 +42,6 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   ];
 
   const testInformationFilters = [
-    FilterableField.scope,
     FilterableField.sourceType,
     FilterableField.antibodies,
     FilterableField.testType,
@@ -46,6 +49,10 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   ];
 
   const filterSections = [{
+    headerText: 'Study Scope',
+    headerTooltipText: 'Filter on whether the study is a national study, a regional study, or a local study.',
+    includedFilters: studyScopeFilters
+  }, {
     headerText: 'Study Information',
     headerTooltipText: 'Filter on study details, including source type (publication, preprint, news, or report), and alignment with the WHO Unity protocol.',
     includedFilters: studyInformationFilters
@@ -70,7 +77,6 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   return (
     <Filters
       className={props.className}
-      includedFilters={[]}
       filterSections={filterSections}
       state={state}
       filterData={

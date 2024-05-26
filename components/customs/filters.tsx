@@ -38,7 +38,6 @@ interface FilterSectionConfiguration {
 }
 
 interface FiltersProps<TEstimate extends Record<string, unknown>> {
-  includedFilters: FilterableField[];
   filterSections: FilterSectionConfiguration[]
   state: PathogenContextType<TEstimate>;
   filterData: Record<string, string[] | undefined>;
@@ -52,23 +51,6 @@ export const Filters = <TEstimate extends Record<string, unknown>>(props: Filter
 
   return (
     <div className={props.className}>
-      {props.includedFilters.map((includedFilter) => {
-        const fieldInformation = availableFilters[includedFilter];
-
-        return (
-          <fieldInformation.filterRenderingFunction
-            key={fieldInformation.field}
-            filter={fieldInformation.field}
-            placeholder={fieldInformation.label}
-            state={props.state}
-            filterOptions={props.filterData[fieldInformation.field] ?? []}
-            data={props.data ? props.data : []}
-            optionToLabelMap={fieldInformation.valueToLabelMap}
-            renderTooltipContent={fieldInformation.renderTooltipContent}
-            sendFilterChangeDispatch={sendFilterChangeDispatch}
-          />
-        )
-      })}
       {props.filterSections.map((filterSection) => {
         return (
           <FilterSection

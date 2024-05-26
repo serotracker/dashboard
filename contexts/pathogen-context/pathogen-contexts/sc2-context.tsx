@@ -8,7 +8,9 @@ import { CountryDataContext } from "../country-information-context";
 
 const initialSarsCov2ContextState = {
   filteredData: [],
-  selectedFilters: {},
+  selectedFilters: {
+    ["scope"]: ["National", "Regional", "Local"],
+  },
   dataFiltered: false,
 }
 
