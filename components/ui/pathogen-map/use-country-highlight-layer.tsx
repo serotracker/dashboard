@@ -7,12 +7,7 @@ interface SetPopUpInfoForCountryHighlightLayerInput<
 > {
   newPopUpInfo: VisiblePopupInfo<TPathogenDataPointProperties>;
   setPopUpInfo: (input: VisiblePopupInfo<TPathogenDataPointProperties>) => void;
-<<<<<<< HEAD
   dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
-=======
-  dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string })[];
-
->>>>>>> 2dc303cf6d03138ce8e7b4a6dbac3f6bb6e3d14e
 }
 
 export const useCountryHighlightLayer = () => {
@@ -30,14 +25,9 @@ export const useCountryHighlightLayer = () => {
       }
 
       const countryName = dataForCountry[0].country
-<<<<<<< HEAD
       const countryAlphaTwoCode = dataForCountry[0].countryAlphaTwoCode
 
       const countryBoundingBox = getBoundingBoxFromCountryAlphaTwoCode(countryAlphaTwoCode);
-=======
-
-      const countryBoundingBox = getBoundingBoxFromCountryName(countryName);
->>>>>>> 2dc303cf6d03138ce8e7b4a6dbac3f6bb6e3d14e
 
       if(!countryBoundingBox) {
         return;
