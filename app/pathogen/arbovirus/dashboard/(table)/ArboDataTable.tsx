@@ -111,7 +111,9 @@ const arboColumnConfiguration = [{
   label: 'Source',
   fieldNameForLink: 'url',
   isSortable: false
-}];
+}] as const;
+
+export const arboDataTableRows = arboColumnConfiguration.map(({fieldName}) => fieldName);
 
 export const ArboDataTable = () => {
   const state = useContext(ArboContext);

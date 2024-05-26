@@ -6,7 +6,8 @@ import { download, generateCsv, mkConfig } from "export-to-csv";
 import Link from "next/link";
 import { ToastContext, ToastId } from "@/contexts/toast-provider";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
-
+import { typedObjectFromEntries, typedObjectKeys } from "@/lib/utils";
+import { arboDataTableRows } from "./(table)/ArboDataTable";
 
 export const ArboBanner = () => {
     const state = useContext(ArboContext);
@@ -18,7 +19,22 @@ export const ArboBanner = () => {
         filename: "arbotracker_filtered_dataset",
       });
 
-      const csv = generateCsv(csvConfig)(state.filteredData as any);
+      const csv = generateCsv(csvConfig)(
+        state.filteredData.map((dataPoint) => (
+          typedObjectFromEntries(arboDataTableRows.map((key) => {
+            const value = dataPoint[key]
+
+            if(Array.isArray(value)) {
+              const joinedArrayValue = value.join(";")
+
+              return [key, joinedArrayValue];
+            }
+
+            return [key, value]
+          }))
+        ))
+      );
+
       download(csvConfig)(csv);
     }
 
