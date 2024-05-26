@@ -53,6 +53,6 @@ export const arbovirusEstimatesQuery = gql`
 export function useArboData() {
   return useQuery<ArbovirusEstimatesQueryQuery>({
     queryKey: ["arbovirusEstimatesQuery"],
-    queryFn: () => request('http://99.79.39.159:3000/api/graphql' ?? '', arbovirusEstimatesQuery)
+    queryFn: () => request(process.env.PREVIEW_NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
   });
 }

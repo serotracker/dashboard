@@ -48,6 +48,6 @@ export const sarsCov2Estimates = gql`
 export function useSarsCov2Data() {
   return useQuery<SarsCov2EstimatesQuery>({
     queryKey: ["sarsCov2Estimates"],
-    queryFn: () => request('http://99.79.39.159:3000/api/graphql' ?? '', sarsCov2Estimates)
+    queryFn: () => request(process.env.PREVIEW_NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Estimates)
   });
 }

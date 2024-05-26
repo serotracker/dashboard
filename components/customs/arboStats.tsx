@@ -16,7 +16,7 @@ async function ArboStats() {
       queryKey: [arbovirusDataStatisticsQueryKey],
       queryFn: () =>
         request(
-          'http://99.79.39.159:3000/api/graphql' ?? "",
+          process.env.PREVIEW_NEXT_PUBLIC_API_GRAPHQL_URL ?? "",
           arbovirusDataStatistics
         ),
     });

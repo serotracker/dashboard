@@ -17,11 +17,11 @@ export default async function SarsCov2Layout({
 
   await queryClient.prefetchQuery({
     queryKey: ["sarsCov2Estimates"],
-    queryFn: () => request('http://99.79.39.159:3000/api/graphql' ?? '', sarsCov2Estimates)
+    queryFn: () => request(process.env.PREVIEW_NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Estimates)
   });
   await queryClient.prefetchQuery({
     queryKey: ["sarsCov2FilterOptions"],
-    queryFn: () => request('http://99.79.39.159:3000/api/graphql' ?? '', sarsCov2Filters)
+    queryFn: () => request(process.env.PREVIEW_NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Filters)
   });
 
   const dehydratedState = dehydrate(queryClient);

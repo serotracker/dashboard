@@ -19,6 +19,6 @@ export const arbovirusDataStatisticsQueryKey = "arbovirusDataStatistics";
 export function useArboDataStatistics() {
   return useQuery<ArbovirusDataStatistics>({
     queryKey: [arbovirusDataStatisticsQueryKey],
-    queryFn: () => request('http://99.79.39.159:3000/api/graphql' ?? '', arbovirusDataStatistics)
+    queryFn: () => request(process.env.PREVIEW_NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusDataStatistics)
   });
 }
