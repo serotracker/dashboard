@@ -16,7 +16,7 @@ export const ArboBanner = () => {
     const downloadData = () => {
       const csvConfig = mkConfig({
         useKeysAsHeaders: true,
-        filename: "arbotracker_filtered_dataset",
+        filename: "arbotracker_dataset",
       });
 
       const csv = generateCsv(csvConfig)(
