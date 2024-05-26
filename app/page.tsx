@@ -19,6 +19,7 @@ import {
   arbovirusDataStatistics,
 } from "@/hooks/useArboStatistics";
 import request from "graphql-request";
+import { SeroTrackerIntroduction } from "./serotracker-introduction";
 
 interface TrackerButtonProps {
   titleSuffix: string;
@@ -27,14 +28,16 @@ interface TrackerButtonProps {
   textColor: string;
   bgColor: string;
   href: string;
+  className?: string
 }
 
 function TrackerButton(props: TrackerButtonProps) {
   return (
     <Link
       className={cn(
-        "w-full rounded-md text-white bg-background flex flex-col mb-4 lg:mb-0 lg:mr-4 lg:last:mr-0 h-full overflow-hidden p-2 transition-all group hover:cursor-pointer",
-        `hover:${props.bgColor}`
+        "w-full rounded-md text-white bg-background flex flex-col mb-4 lg:mb-0 mr-4 last:mr-0 overflow-hidden p-2 transition-all group hover:cursor-pointer",
+        `hover:${props.bgColor}`,
+        props.className
       )}
       href={props.href}
     >
@@ -74,8 +77,6 @@ export default async function Home() {
         ),
     });
 
-    
-
   return (
     <CustomQueryClientProvider>
       <div className="h-full overflow-auto">
@@ -85,67 +86,60 @@ export default async function Home() {
             backgroundImage: `url(${SeroMap.src})`,
           }}
         >
-          <div className="flex flex-col w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
-            <div className="w-full h-fit mb-2 lg:mb-0">
-              <h1 className=" w-fit p-2 rounded-md">SeroTracker</h1>
-              <h3 className="rounded-md p-2">
-                Your Go to Source for COVID-19 and Arbovirus Seroprevalence Data
-              </h3>
-              <div className="p-2 rounded-md">
-                <p className=" w-fit mb-2">
-                  We synthesize findings from thousands of COVID-19 and
-                  Arbovirus seroprevalence studies worldwide, collect and
-                  standardize the data we extract from them, provide useful
-                  analytics on the data and extract monthly insights relating to
-                  trends and patterns we find in the data
-                </p>
-                <p className=" w-fit mb-2">
-                  We conduct an ongoing systematic review to track serosurveys
-                  (antibody testing-based surveillance efforts) around the world
-                  and visualize findings on this dashboard.
-                </p>
-                <p>Checkout our dashboards below!</p>
-              </div>
+          <div className="md:grid grid-cols-4 w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
+            <div className="col-span-2 col-start-1 col-end-3 row-span-1 h-full">
+              <SeroTrackerIntroduction />
             </div>
-            <div className="flex w-full lg:w-1/2 flex-col lg:flex-row self-end">
-              {/*
-              These comments are for tailwindcss to pickup these classes so we do not need to add too many props
-              hover:bg-arbovirus
-              hover:text-arbovirus
-              group-hover:text-arbovirus
-            */}
-              <TrackerButton
-                titleSuffix="Arbo"
-                description="ArboTracker description"
-                icon={faMosquito}
-                bgColor="bg-arbovirus"
-                textColor="text-arbovirus"
-                href={"/pathogen/arbovirus/dashboard"}
+            <div className="col-span-2 col-start-3 col-end-5 row-span-1">
+              <iframe
+                src="https://drive.google.com/file/d/1cLslLkwI57f2oKI45utkKdOtlW9ZCWpm/preview"
+                className="aspect-video w-full"
+                allow="autoplay"
+                allowFullScreen={true}
               />
-              {/*
-              hover:bg-sc2virus
-              hover:text-sc2virus
-              group-hover:text-sc2virus
-            */}
-              {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED ? (
+              <div className="flex">
+                {/*
+                These comments are for tailwindcss to pickup these classes so we do not need to add too many props
+                hover:bg-arbovirus
+                hover:text-arbovirus
+                group-hover:text-arbovirus
+                */}
                 <TrackerButton
-                  titleSuffix="SC2"
-                  description="SeroTracker description"
-                  icon={faVirus}
-                  bgColor="bg-sc2virus"
-                  textColor="text-sc2virus"
-                  href={"/pathogen/sarscov2/dashboard"}
+                  titleSuffix="Arbo"
+                  description="ArboTracker description"
+                  icon={faMosquito}
+                  bgColor="bg-arbovirus"
+                  textColor="text-arbovirus"
+                  href={"/pathogen/arbovirus/dashboard"}
+                  className="mt-4"
                 />
-              ) : (
-                <TrackerButton
-                  titleSuffix="Original SARS-CoV-2"
-                  description="SeroTracker description"
-                  icon={faVirus}
-                  bgColor="bg-sc2virus"
-                  textColor="text-sc2virus"
-                  href={"https://serotracker.com/en/Explore"}
-                />
-              )}
+                {/*
+                hover:bg-sc2virus
+                hover:text-sc2virus
+                group-hover:text-sc2virus
+                */}
+                {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED ? (
+                  <TrackerButton
+                    titleSuffix="SC2"
+                    description="SeroTracker description"
+                    icon={faVirus}
+                    bgColor="bg-sc2virus"
+                    textColor="text-sc2virus"
+                    href={"/pathogen/sarscov2/dashboard"}
+                    className="mt-4"
+                  />
+                ) : (
+                  <TrackerButton
+                    titleSuffix="Original SARS-CoV-2"
+                    description="SeroTracker description"
+                    icon={faVirus}
+                    bgColor="bg-sc2virus"
+                    textColor="text-sc2virus"
+                    href={"https://serotracker.com/en/Explore"}
+                    className="mt-4"
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>
