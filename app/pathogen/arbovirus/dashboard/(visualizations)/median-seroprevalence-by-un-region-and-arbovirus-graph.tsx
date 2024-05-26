@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { SplitBarChart } from "../../../../../components/customs/visualizations/split-bar-chart";
-import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
+import { convertArboSFtoArbo, median } from "./recharts";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
-import { UNRegion, getLabelForUNRegion } from "@/lib/un-regions";
+import { getLabelForUNRegion } from "@/lib/un-regions";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 export const MedianSeroprevalenceByUnRegionAndArbovirusGraph = () => {
@@ -11,13 +11,13 @@ export const MedianSeroprevalenceByUnRegionAndArbovirusGraph = () => {
   return (
     <SplitBarChart
       graphId="median-seroprevalence-by-un-region"
-      data={state.filteredData.filter((dataPoint) => !!dataPoint.unRegion)}
+      data={state.filteredData.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'unRegion'> & {unRegion: NonNullable<typeof dataPoint['unRegion']>} => !!dataPoint.unRegion)}
       primaryGroupingFunction={(dataPoint) =>
-        convertArboSFtoArbo(dataPoint.pathogen as arbovirusesSF)
+        convertArboSFtoArbo(dataPoint.pathogen)
       }
       primaryGroupingSortFunction={sortArboviruses}
       secondaryGroupingFunction={(dataPoint) =>
-        getLabelForUNRegion(dataPoint.unRegion as UNRegion)
+        getLabelForUNRegion(dataPoint.unRegion)
       }
       secondaryGroupingSortFunction={(unRegionA, unRegionB) =>
         unRegionA.length > unRegionB.length ? 1 : -1

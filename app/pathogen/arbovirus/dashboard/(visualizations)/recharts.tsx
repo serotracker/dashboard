@@ -19,6 +19,7 @@ import { pathogenColors } from "../(map)/ArbovirusMap";
 import clsx from "clsx";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { CustomXAxisTick } from "@/components/customs/visualizations/custom-x-axis-tick";
+import { Arbovirus } from "@/gql/graphql";
 
 //Study by who region and pathogen
 
@@ -26,16 +27,6 @@ import { CustomXAxisTick } from "@/components/customs/visualizations/custom-x-ax
 
 //Study count by pathogen and antibody type
 
-export enum ShortformArbovirus {
-  DENV = "DENV",
-  ZIKV = "ZIKV",
-  CHIKV = "CHIKV",
-  YF = "YF",
-  WNV = "WNV",
-  MAYV = "MAYV",
-}
-
-export type arbovirusesSF = "DENV" | "ZIKV" | "CHIKV" | "YF" | "WNV" | "MAYV";
 export type arboviruses =
   | "Dengue"
   | "Zika"
@@ -46,19 +37,19 @@ export type arboviruses =
 
 type antibodies = "IgG" | "IgM" | "NAb" | "NR" | "IgG, IgM";
 
-export const convertArboSFtoArbo = (arbo: arbovirusesSF): arboviruses => {
+export const convertArboSFtoArbo = (arbo: Arbovirus): arboviruses => {
   switch (arbo) {
-    case "DENV":
+    case Arbovirus.Denv:
       return "Dengue";
-    case "ZIKV":
+    case Arbovirus.Zikv:
       return "Zika";
-    case "CHIKV":
+    case Arbovirus.Chikv:
       return "Chikungunya";
-    case "YF":
+    case Arbovirus.Yf:
       return "Yellow Fever";
-    case "WNV":
+    case Arbovirus.Wnv:
       return "West Nile";
-    case "MAYV":
+    case Arbovirus.Mayv:
       return "Mayaro";
   }
 };
@@ -226,7 +217,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
   const state = useContext(ArboContext);
 
   const seroprevalenceData: {
-    arbovirus: arbovirusesSF;
+    arbovirus: Arbovirus;
     AFR: Record<AgeGroup, number[]>;
     AMR: Record<AgeGroup, number[]>;
     EMR: Record<AgeGroup, number[]>;
@@ -236,7 +227,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
   }[] = [];
 
   const medianData: {
-    arbovirus: arbovirusesSF;
+    arbovirus: Arbovirus;
     data: {
       region: WHORegion;
       "Adults (18-64 years)": string;
@@ -248,7 +239,7 @@ export function MedianSeroPrevByWHOregionAndAgeGroup() {
 
   state.filteredData.forEach((d: any) => {
     const region: WHORegion = d.whoRegion;
-    const arbovirus: arbovirusesSF = d.pathogen;
+    const arbovirus = d.pathogen;
     const seroprevalence = parseFloat(d.seroprevalence);
     const ageGroup: AgeGroup = d.ageGroup ?? "Multiple groups";
 

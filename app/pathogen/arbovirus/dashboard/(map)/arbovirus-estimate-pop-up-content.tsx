@@ -54,10 +54,12 @@ export const ArbovirusEstimatePopupContent = (props: ArbovirusEstimatePopupConte
       headerConfiguration={{
         text: `${pathogenFullString(props.estimate.pathogen)} Estimate`
       }}
-      subtitleConfiguration={{
+      subtitleConfiguration={props.estimate.sourceSheetName ? {
         enabled: true,
         text: props.estimate.sourceSheetName,
         link: props.estimate.url ?? undefined
+      } : {
+        enabled: false
       }}
       topBannerConfiguration={{
         enabled: true,

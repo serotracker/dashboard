@@ -1,6 +1,7 @@
 import { typedGroupBy } from "@/lib/utils"
-import { ShortformArbovirus, convertArboSFtoArbo } from "../(visualizations)/recharts"
+import { convertArboSFtoArbo } from "../(visualizations)/recharts"
 import { pathogenColors } from "./ArbovirusMap";
+import { Arbovirus } from "@/gql/graphql";
 
 interface ArboCountryPopupContentProps {
   record: {
@@ -9,18 +10,18 @@ interface ArboCountryPopupContentProps {
     countryName: string,
     latitude: string,
     longitude: string,
-    dataPoints: { pathogen: ShortformArbovirus }[],
+    dataPoints: { pathogen: Arbovirus }[],
   }
 }
 
-function sortArbovirus(a: ShortformArbovirus, b: ShortformArbovirus) {
+function sortArbovirus(a: Arbovirus, b: Arbovirus) {
   const arbovirusOrder = [
-    ShortformArbovirus.ZIKV,
-    ShortformArbovirus.DENV,
-    ShortformArbovirus.CHIKV,
-    ShortformArbovirus.YF,
-    ShortformArbovirus.WNV,
-    ShortformArbovirus.MAYV,
+    Arbovirus.Zikv,
+    Arbovirus.Denv,
+    Arbovirus.Chikv,
+    Arbovirus.Yf,
+    Arbovirus.Wnv,
+    Arbovirus.Mayv,
   ];
 
   return arbovirusOrder.indexOf(a) - arbovirusOrder.indexOf(b);
@@ -57,7 +58,7 @@ export function ArboCountryPopupContent({ record }: ArboCountryPopupContentProps
         />
       </div>
       <div className={"py-2 px-4 max-h-[250px] overflow-auto"}>
-        {Object.values(ShortformArbovirus).sort(sortArbovirus).map((shortformArbovirus) => {
+        {Object.values(Arbovirus).sort(sortArbovirus).map((shortformArbovirus) => {
           const dataPointsForArbovirus = dataPointsGroupedByArbovirus[shortformArbovirus] ?? [];
 
           if(dataPointsForArbovirus.length === 0) {

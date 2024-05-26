@@ -1,5 +1,5 @@
-import { useContext, useMemo, useState, useCallback } from "react";
-import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
+import { useMemo, useState } from "react";
+import { convertArboSFtoArbo } from "./recharts";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,12 +7,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Arbovirus } from "@/gql/graphql";
 
 interface ChartArbovirusDropdownProps {
-  possibleArboviruses: arbovirusesSF[];
-  selectedArbovirus: arbovirusesSF | "N/A";
-  setUserArbovirusSelection: (input: arbovirusesSF) => void;
-  arbovirusToSortOrderMap: Record<arbovirusesSF, number>;
+  possibleArboviruses: Arbovirus[];
+  selectedArbovirus: Arbovirus | "N/A";
+  setUserArbovirusSelection: (input: Arbovirus) => void;
+  arbovirusToSortOrderMap: Record<Arbovirus, number>;
 }
 
 const ChartArbovirusDropdown = (props: ChartArbovirusDropdownProps) => (
@@ -43,33 +44,33 @@ const ChartArbovirusDropdown = (props: ChartArbovirusDropdownProps) => (
 )
 
 interface UseChartArbovirusDropdownInput {
-  possibleArboviruses: arbovirusesSF[];
+  possibleArboviruses: Arbovirus[];
 }
 
 interface UseChartArbovirusDropdownOutput {
   chartArbovirusDropdown: React.ReactNode;
-  selectedArbovirus: arbovirusesSF | "N/A";
+  selectedArbovirus: Arbovirus | "N/A";
 }
 
 export const useChartArbovirusDropdown = (input: UseChartArbovirusDropdownInput): UseChartArbovirusDropdownOutput => {
-  const pathogenOrder: arbovirusesSF[] = [
-    "ZIKV",
-    "DENV",
-    "CHIKV",
-    "YF",
-    "WNV",
-    "MAYV",
+  const pathogenOrder: Arbovirus[] = [
+    Arbovirus.Zikv,
+    Arbovirus.Denv,
+    Arbovirus.Chikv,
+    Arbovirus.Yf,
+    Arbovirus.Wnv,
+    Arbovirus.Mayv,
   ];
-  const arbovirusToSortOrderMap: Record<arbovirusesSF, number> = {
-    "ZIKV": 1,
-    "DENV": 2,
-    "CHIKV": 3,
-    "YF": 4,
-    "WNV": 5,
-    "MAYV": 6
+  const arbovirusToSortOrderMap: Record<Arbovirus, number> = {
+    [Arbovirus.Zikv]: 1,
+    [Arbovirus.Denv]: 2,
+    [Arbovirus.Chikv]: 3,
+    [Arbovirus.Yf]: 4,
+    [Arbovirus.Wnv]: 5,
+    [Arbovirus.Mayv]: 6,
   }
 
-  const [userArbovirusSelection, setUserArbovirusSelection] = useState<arbovirusesSF>(pathogenOrder[0]);
+  const [userArbovirusSelection, setUserArbovirusSelection] = useState<Arbovirus>(pathogenOrder[0]);
 
   const selectedArbovirus = useMemo(() => {
     if(input.possibleArboviruses.length === 0) {

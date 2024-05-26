@@ -1,8 +1,5 @@
 import { useContext } from "react";
-import {
-  arbovirusesSF,
-  convertArboSFtoArbo,
-} from "./recharts";
+import { convertArboSFtoArbo } from "./recharts";
 import { LegendConfiguration, StackedBarChart } from "../../../../../components/customs/visualizations/stacked-bar-chart";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
@@ -19,11 +16,9 @@ export const EstimateCountByWHORegionAndArbovirusGraph = (
   return (
     <StackedBarChart
       graphId='estimate-count-by-who-region-and-arbovirus-graph'
-      data={state.filteredData.filter((dataPoint) => !!dataPoint.unRegion)}
+      data={state.filteredData.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'whoRegion'> & {whoRegion: NonNullable<typeof dataPoint['whoRegion']>} => !!dataPoint.whoRegion)}
       primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
-      secondaryGroupingFunction={(dataPoint) =>
-        convertArboSFtoArbo(dataPoint.pathogen as arbovirusesSF)
-      }
+      secondaryGroupingFunction={(dataPoint) => convertArboSFtoArbo(dataPoint.pathogen)}
       secondaryGroupingSortFunction={sortArboviruses}
       transformOutputValue={(data) => data.length}
       legendConfiguration={props.legendConfiguration}

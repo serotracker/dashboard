@@ -19,6 +19,7 @@ interface RechartsVisualizationProps<
     TVisualizationUrlParameter,
     TEstimate
   >;
+  data: TEstimate[];
   buttonConfig: RechartsVisualizationButtonConfig;
   className?: string;
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
@@ -47,6 +48,7 @@ export const RechartsVisualization = <
     <div className={cn(props.className, 'flex flex-col rounded-md border border-background my-4 p-2')} ref={ref}>
       <VisualizationHeader
         visualizationInformation={props.visualizationInformation}
+        data={props.data}
         downloadVisualization={() => downloadVisualization({
           elementIdsToIgnore: [downloadButtonId, zoomInButtonId, closeButtonId]
         })}

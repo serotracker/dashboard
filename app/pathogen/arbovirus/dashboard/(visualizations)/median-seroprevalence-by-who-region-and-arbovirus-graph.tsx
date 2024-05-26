@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { SplitBarChart } from "../../../../../components/customs/visualizations/split-bar-chart";
-import { arbovirusesSF, convertArboSFtoArbo, median } from "./recharts";
+import { convertArboSFtoArbo, median } from "./recharts";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
@@ -10,10 +10,8 @@ export const MedianSeroprevalenceByWHORegionAndArbovirusGraph = () => {
   return (
     <SplitBarChart
       graphId="median-seroprevalence-by-who-region"
-      data={state.filteredData.filter((dataPoint) => !!dataPoint.whoRegion)}
-      primaryGroupingFunction={(dataPoint) =>
-        convertArboSFtoArbo(dataPoint.pathogen as arbovirusesSF)
-      }
+      data={state.filteredData.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'whoRegion'> & {whoRegion: NonNullable<typeof dataPoint['whoRegion']>} => !!dataPoint.whoRegion)}
+      primaryGroupingFunction={(dataPoint) => convertArboSFtoArbo(dataPoint.pathogen)}
       primaryGroupingSortFunction={sortArboviruses}
       secondaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
       secondaryGroupingSortFunction={(whoRegionA, whoRegionB) =>

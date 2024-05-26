@@ -1,5 +1,4 @@
 import { useContext, useMemo } from "react";
-import { arbovirusesSF } from "./recharts";
 import {
   CartesianGrid,
   ErrorBar,
@@ -53,6 +52,14 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
 
   const dataForArbovirusWithCIs = useMemo(() => dataWithCIs
     .filter((dataPoint) => dataPoint.pathogen === selectedArbovirus)
+    .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'seroprevalenceCalculated95CILower'|'seroprevalenceCalculated95CIUpper'> & {
+      seroprevalenceCalculated95CILower: NonNullable<(typeof dataPoint)['seroprevalenceCalculated95CILower']>;
+      seroprevalenceCalculated95CIUpper: NonNullable<(typeof dataPoint)['seroprevalenceCalculated95CIUpper']>;
+    } => 
+      (dataPoint.seroprevalence !== undefined && dataPoint.seroprevalence !== null) &&
+      (dataPoint.seroprevalenceCalculated95CILower !== undefined && dataPoint.seroprevalenceCalculated95CILower !== null) &&
+      (dataPoint.seroprevalenceCalculated95CIUpper !== undefined && dataPoint.seroprevalenceCalculated95CIUpper !== null)
+    )
     .sort((dataPointA, dataPointB) => dataPointA.seroprevalence - dataPointB.seroprevalence)
     .map((dataPoint, index) => ({ ...dataPoint, estimateNumber: index + 1 }))
     .map((dataPoint) => ({
@@ -87,10 +94,10 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
       groupDataForRecharts({
         data: dataForArbovirusWithCIs,
         primaryGroupingFunction: (dataPoint) =>
-          dataPoint.pathogen as arbovirusesSF,
+          dataPoint.pathogen,
         primaryGroupingSortFunction: (pathogenA, pathogenB) =>
           pathogenA !== pathogenB ? (pathogenA < pathogenB ? -1 : 1) : 0,
-        secondaryGroupingFunction: (dataPoint) => dataPoint.country as string,
+        secondaryGroupingFunction: (dataPoint) => dataPoint.country,
         secondaryGroupingSortFunction: (countryA, countryB) =>
           countryA !== countryA ? (countryA < countryB ? -1 : 1) : 0,
         transformOutputValue: (data) => data,

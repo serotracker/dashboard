@@ -18,6 +18,7 @@ import { computeClusterMarkers } from "./arbo-map-cluster-utils";
 import { MapShadingLegend } from "./MapShadingLegend";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
+import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
 
 export const pathogenColorsTailwind: { [key: string]: string } = {
   ZIKV: "data-[state=checked]:bg-zikv",
@@ -87,7 +88,7 @@ export function ArbovirusMap() {
             },
           ]}
           generatePopupContent={(input) => {
-            if(input.layerId === 'country-highlight-layer') {
+            if(isPopupCountryHighlightLayerContentGeneratorInput(input)) {
               return <ArboCountryPopupContent record={input.data} />
             }
           

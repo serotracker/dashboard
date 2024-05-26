@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 
 interface MapEstimateSummaryProps {
-  filteredData: Array<{sourceSheetName: string}>
+  filteredData: Array<{sourceSheetName?: string | undefined | null}>
 }
 
 export const MapEstimateSummary = (props: MapEstimateSummaryProps) => (
@@ -11,7 +11,12 @@ export const MapEstimateSummary = (props: MapEstimateSummaryProps) => (
         <p className={"ml-1 font-medium"}>
           <b>{props.filteredData.length}</b>
           &nbsp;Estimates displayed from&nbsp;
-          <b>{Array.from(new Set(props.filteredData.map((item: {sourceSheetName: string}) => item.sourceSheetName))).length}</b>
+          <b>
+            {Array.from(new Set(props.filteredData
+              .filter((item): item is Omit<typeof item, 'sourceSheetName'> & {sourceSheetName: NonNullable<(typeof item)['sourceSheetName']>} => !!item.sourceSheetName)
+              .map((item) => item.sourceSheetName))).length
+            }
+          </b>
           &nbsp;unique sources
         </p>
       </CardContent>

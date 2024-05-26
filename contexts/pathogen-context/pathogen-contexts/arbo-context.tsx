@@ -4,8 +4,9 @@ import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProp
 import { useArboData } from "@/hooks/useArboData";
 import { useArboFilters } from "@/hooks/useArboFilters";
 import { CountryDataContext } from "../country-information-context";
+import { ArbovirusEstimatesQueryQuery } from "@/gql/graphql";
 
-export type ArbovirusEstimate = any;
+export type ArbovirusEstimate = ArbovirusEstimatesQueryQuery['arbovirusEstimates'][number];
 
 const initialArboContextState = {
   filteredData: [],

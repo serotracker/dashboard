@@ -12,7 +12,7 @@ export const ArbovirusVisualizationsSection = () => {
   const { getNumberOfUniqueValuesForField } = useArboDataInsights();
 
   const areLessThanTwoWHORegionsPresentInData = getNumberOfUniqueValuesForField({
-    filteredData: filteredData.filter((dataPoint) => !!dataPoint.whoRegion),
+    filteredData: filteredData.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'whoRegion'> & {whoRegion: NonNullable<typeof dataPoint['whoRegion']>} => !!dataPoint.whoRegion),
     fieldName: 'whoRegion'
   }) < 2;
 
@@ -51,6 +51,7 @@ export const ArbovirusVisualizationsSection = () => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}
+        data={filteredData}
         visualizationInformation={visualizationInformation}
         className={cn(visualizationInformation.className, 'pb-14')}
         buttonConfig={{
@@ -68,7 +69,7 @@ export const ArbovirusVisualizationsSection = () => {
         getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
       />
     ));
-  }, []);
+  }, [filteredData]);
 
   return (
     <>

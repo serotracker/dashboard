@@ -3,12 +3,42 @@ import { MapRef, Popup, useMap } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
 
-interface PopupContentGeneratorInput<
+type PopupEstimateLayerContentGeneratorInput<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
-> {
-  layerId: string;
+> = {
+  layerId: Exclude<string, 'country-highlight-layer'>;
   data: TPathogenDataPointProperties;
 }
+
+export const isPopupEstimateLayerContentGeneratorInput = <
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+>(input: PopupContentGeneratorInput<TPathogenDataPointProperties>):
+  input is PopupEstimateLayerContentGeneratorInput<TPathogenDataPointProperties> => input.layerId !== 'country-highlight-layer';
+
+type PopupCountryHighlightLayerContentGeneratorInput<
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+> = {
+  layerId: 'country-highlight-layer';
+  data: {
+    id: string;
+    alpha3CountryCode: string;
+    countryName: string;
+    latitude: string;
+    longitude: string;
+    dataPoints: TPathogenDataPointProperties[];
+  }
+}
+
+export const isPopupCountryHighlightLayerContentGeneratorInput = <
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+>(input: PopupContentGeneratorInput<TPathogenDataPointProperties>):
+  input is PopupCountryHighlightLayerContentGeneratorInput<TPathogenDataPointProperties> => input.layerId === 'country-highlight-layer';
+
+type PopupContentGeneratorInput<
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+> = 
+  | PopupEstimateLayerContentGeneratorInput<TPathogenDataPointProperties>
+  | PopupCountryHighlightLayerContentGeneratorInput<TPathogenDataPointProperties>;
 
 export type PopupContentGenerator<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase

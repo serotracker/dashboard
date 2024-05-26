@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
+import { ArbovirusEstimatesQueryQuery } from "@/gql/graphql";
 
 export const arbovirusEstimatesQuery = gql`
   query arbovirusEstimatesQuery {
@@ -50,7 +51,7 @@ export const arbovirusEstimatesQuery = gql`
 `
 
 export function useArboData() {
-  return useQuery<any>({
+  return useQuery<ArbovirusEstimatesQueryQuery>({
     queryKey: ["arbovirusEstimatesQuery"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
   });
