@@ -1,6 +1,6 @@
 import { PathogenContextActionType, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { ResetFiltersButton } from "./filters/reset-filters-button";
-import { FilterableField, availableFilters } from "./filters/available-filters";
+import { FilterableField, useAvailableFilters } from "./filters/available-filters";
 import { FilterSection } from "./filters/filter-section";
 
 interface SendFilterChangeDispatchInput<TEstimate extends Record<string, unknown>> {
@@ -47,43 +47,47 @@ interface FiltersProps<TEstimate extends Record<string, unknown>> {
   className?: string;
 }
 
-export const Filters = <TEstimate extends Record<string, unknown>>(props: FiltersProps<TEstimate>) => (
-  <div className={props.className}>
-    {props.includedFilters.map((includedFilter) => {
-      const fieldInformation = availableFilters[includedFilter];
+export const Filters = <TEstimate extends Record<string, unknown>>(props: FiltersProps<TEstimate>) => {
+  const { availableFilters } = useAvailableFilters();
 
-      return (
-        <fieldInformation.filterRenderingFunction
-          key={fieldInformation.field}
-          filter={fieldInformation.field}
-          placeholder={fieldInformation.label}
-          state={props.state}
-          filterOptions={props.filterData[fieldInformation.field] ?? []}
-          data={props.data ? props.data : []}
-          optionToLabelMap={fieldInformation.valueToLabelMap}
-          renderTooltipContent={fieldInformation.renderTooltipContent}
-          sendFilterChangeDispatch={sendFilterChangeDispatch}
-        />
-      )
-    })}
-    {props.filterSections.map((filterSection) => {
-      return (
-        <FilterSection
-          key={filterSection.headerText}
-          headerText={filterSection.headerText}
-          headerTooltipText={filterSection.headerTooltipText}
-          allFieldInformation={filterSection.includedFilters.map((filter) => availableFilters[filter])}
-          state={props.state}
-          filters={props.filterData}
-          sendFilterChangeDispatch={sendFilterChangeDispatch}
-          data={props.data}
-        />
-      )
-    })}
-    <ResetFiltersButton
-      hidden={!props.resetAllFiltersButtonEnabled}
-      state={props.state}
-      data={props.data}
-    />
-  </div>
-)
+  return (
+    <div className={props.className}>
+      {props.includedFilters.map((includedFilter) => {
+        const fieldInformation = availableFilters[includedFilter];
+
+        return (
+          <fieldInformation.filterRenderingFunction
+            key={fieldInformation.field}
+            filter={fieldInformation.field}
+            placeholder={fieldInformation.label}
+            state={props.state}
+            filterOptions={props.filterData[fieldInformation.field] ?? []}
+            data={props.data ? props.data : []}
+            optionToLabelMap={fieldInformation.valueToLabelMap}
+            renderTooltipContent={fieldInformation.renderTooltipContent}
+            sendFilterChangeDispatch={sendFilterChangeDispatch}
+          />
+        )
+      })}
+      {props.filterSections.map((filterSection) => {
+        return (
+          <FilterSection
+            key={filterSection.headerText}
+            headerText={filterSection.headerText}
+            headerTooltipText={filterSection.headerTooltipText}
+            allFieldInformation={filterSection.includedFilters.map((filter) => availableFilters[filter])}
+            state={props.state}
+            filters={props.filterData}
+            sendFilterChangeDispatch={sendFilterChangeDispatch}
+            data={props.data}
+          />
+        )
+      })}
+      <ResetFiltersButton
+        hidden={!props.resetAllFiltersButtonEnabled}
+        state={props.state}
+        data={props.data}
+      />
+    </div>
+  );
+}

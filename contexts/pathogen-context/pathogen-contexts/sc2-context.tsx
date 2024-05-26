@@ -1,8 +1,10 @@
 "use client";
-import { createContext, useEffect } from "react";
+import { createContext, useEffect, useMemo } from "react";
 import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
 import { useSarsCov2Data } from "@/hooks/useSarsCov2Data";
 import { SarsCov2EstimatesQuery } from "@/gql/graphql";
+import { useSarsCov2Filters } from "@/hooks/useSarsCov2Filters";
+import { CountryDataContext } from "../country-information-context";
 
 const initialSarsCov2ContextState = {
   filteredData: [],
@@ -38,6 +40,27 @@ const SarsCov2DataFetcher = (props: PathogenDataFetcherProps<SarsCov2Estimate>):
   )
 }
 
+const CountryDataProvider = (props: {children: React.ReactNode}) => {
+  const { data: filterData } = useSarsCov2Filters();
+  const value = useMemo(() =>
+    filterData?.sarsCov2FilterOptions.countryIdentifiers.map(({
+      name,
+      alphaTwoCode,
+      alphaThreeCode
+    }) => ({
+      countryName: name,
+      countryAlphaTwoCode: alphaTwoCode,
+      countryAlphaThreeCode: alphaThreeCode
+    })) ?? []
+  , [filterData])
+
+  return (
+    <CountryDataContext.Provider value={value}>
+      {props.children}
+    </CountryDataContext.Provider>
+  )
+}
+
 interface SarsCov2ProvidersProps {
   children: React.ReactNode;
 }
@@ -47,6 +70,7 @@ export const SarsCov2Providers = (props: SarsCov2ProvidersProps) => {
     <PathogenProviders
       children={props.children}
       initialState={initialSarsCov2ContextState}
+      countryDataProvider={CountryDataProvider}
       context={SarsCov2Context}
       mapId={"sarsCov2Map"}
       dataFetcher={SarsCov2DataFetcher}
