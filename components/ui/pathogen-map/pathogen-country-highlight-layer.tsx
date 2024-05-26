@@ -1,36 +1,28 @@
 import { Layer, Source } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { PathogenMapLayerInfo } from "./pathogen-map-layer";
 import { useEffect, useState } from "react";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import {
   MapResources,
   MapSymbology,
 } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
-import { countryNameToIso31661Alpha3CodeMap } from "@/lib/country-iso-3166-1-alpha-3-codes";
 
 interface PathogenCountryHighlightLayerProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
   positionedUnderLayerWithId: string | undefined;
-  dataPoints: (TPathogenDataPointProperties & {country : string})[];
+  dataPoints: (TPathogenDataPointProperties & {countryAlphaThreeCode : string})[];
 }
 
 const generatePaintForLayer = <
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 >(input: {
-  dataPoints: (TPathogenDataPointProperties & {country : string})[];
+  dataPoints: (TPathogenDataPointProperties & { countryAlphaThreeCode : string})[];
 }) => {
   const { dataPoints } = input;
 
   const allUniqueCountryCodesWithData = new Set(
-    dataPoints.map((dataPoint) => {
-        return countryNameToIso31661Alpha3CodeMap[dataPoint.country];
-      })
-      .filter(
-        (alpha3CountryCode: string | undefined): alpha3CountryCode is string =>
-          !!alpha3CountryCode
-      ) ?? []
+    dataPoints.map((dataPoint) => dataPoint.countryAlphaThreeCode)
   );
 
   const countryColorsAndOpacities = Array.from(
