@@ -18,7 +18,7 @@ export const ArboBanner = () => {
         filename: "arbotracker_filtered_dataset",
       });
 
-      const csv = generateCsv(csvConfig)(state.filteredData);
+      const csv = generateCsv(csvConfig)(state.filteredData as any);
       download(csvConfig)(csv);
     }
 
