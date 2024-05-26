@@ -6,43 +6,8 @@ import { generateRandomColour, generateRange, typedGroupBy, typedObjectEntries, 
 import { useContext } from "react";
 import parseISO from 'date-fns/parseISO';
 import isAfter from 'date-fns/isAfter';
+import { dateToMonthCount, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
 
-const monthNumberToMonth: Record<number, string | undefined> = {
-  0: 'Jan',
-  1: 'Feb',
-  2: 'Mar',
-  3: 'Apr',
-  4: 'May',
-  5: 'Jun',
-  6: 'Jul',
-  7: 'Aug',
-  8: 'Sep',
-  9: 'Oct',
-  10: 'Nov',
-  11: 'Dec',
-}
-const monthToMonthNumber: Record<string, number | undefined> = {
-  'Jan': 0,
-  'Feb': 1,
-  'Mar': 2,
-  'Apr': 3,
-  'May': 4,
-  'Jun': 5,
-  'Jul': 6,
-  'Aug': 7,
-  'Sep': 8,
-  'Oct': 9,
-  'Nov': 10,
-  'Dec': 11,
-}
-
-const monthCountToString = (monthCount: number): string => {
-  const year = Math.floor(monthCount / 12);
-  const monthNumber = monthCount % 12;
-  const month = monthNumberToMonth[monthNumber] ?? 'UNKNOWN';
-
-  return `${month} ${year}`;
-}
 
 interface GenerateTimeBucketForEstimateInput {
   estimate: Omit<SarsCov2Estimate, 'publicationDate'> & {publicationDate: Date};
@@ -50,17 +15,18 @@ interface GenerateTimeBucketForEstimateInput {
 }
 
 const generateTimeBucketsForEstimate = (input: GenerateTimeBucketForEstimateInput): string[] => {
-  const latestPublicationDateMonthCount = (input.latestPublicationDate.getFullYear() * 12) + input.latestPublicationDate.getMonth();
-  const estimateMonthCount = (input.estimate.publicationDate.getFullYear() * 12) + input.estimate.publicationDate.getMonth();
+  const latestPublicationDateMonthCount = dateToMonthCount(input.latestPublicationDate);
+  const estimateMonthCount = dateToMonthCount(input.estimate.publicationDate);
 
   if(estimateMonthCount >= latestPublicationDateMonthCount) {
-    return [ monthCountToString(estimateMonthCount) ];
+    return [ monthCountToMonthYearString(estimateMonthCount) ];
   }
+
   return generateRange({
     startInclusive: estimateMonthCount,
     endInclusive: latestPublicationDateMonthCount,
     stepSize: 1
-  }).map((monthCount) => monthCountToString(monthCount));
+  }).map((monthCount) => monthCountToMonthYearString(monthCount));
 }
 
 interface GetLatestPublicationDateFromDataInput {
@@ -79,15 +45,6 @@ const getLatestPublicationDateFromData = (input: GetLatestPublicationDateFromDat
   })
   
   return latestPublicationDate;
-}
-
-const timeBucketSortingFunction = (timeBucketA: string, timeBucketB: string) => {
-  const timeBucketAMonth = monthToMonthNumber[timeBucketA.slice(0,3)] ?? 0
-  const timeBucketBMonth = monthToMonthNumber[timeBucketB.slice(0,3)] ?? 0
-  const timeBucketAYear = parseInt(timeBucketA.slice(4,8))
-  const timeBucketBYear = parseInt(timeBucketB.slice(4,8))
-
-  return ((timeBucketAYear * 12) + timeBucketAMonth) - ((timeBucketBYear * 12) + timeBucketBMonth)
 }
 
 interface GetTwelveMostCommonPopulationGroupsFromDataInput {
@@ -173,7 +130,7 @@ export const CumulativeNumberOfSerosurveysPublishedOverTime = () => {
       graphId="cumulative-number-of-sc2-serosurveys-published-over-time"
       data={consideredData}
       primaryGroupingFunction={(dataPoint) => generateTimeBucketsForEstimate({ estimate: dataPoint, latestPublicationDate })}
-      primaryGroupingSortFunction={(timeBucketA, timeBucketB) => timeBucketSortingFunction(timeBucketA, timeBucketB)}
+      primaryGroupingSortFunction={(timeBucketA, timeBucketB) => monthYearStringToMonthCount(timeBucketA) - monthYearStringToMonthCount(timeBucketB)}
       secondaryGroupingFunction={(dataPoint) => twelveMostCommonPopulationGroups.includes(dataPoint.populationGroup) ?  dataPoint.populationGroup : 'Other'}
       secondaryGroupingSortFunction={(populationGroupA, populationGroupB) => (populationGroupToSortOrderMap[populationGroupA] ?? 99) - (populationGroupToSortOrderMap[populationGroupB] ?? 99)}
       transformOutputValue={(data) => uniq(data.map((dataPoint) => dataPoint.studyName)).length}

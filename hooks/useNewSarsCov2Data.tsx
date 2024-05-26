@@ -36,6 +36,9 @@ export const sarsCov2Estimates = gql`
       countryPeopleVaccinatedPerHundred
       countryPeopleFullyVaccinatedPerHundred
       countryPositiveCasesPerMillionPeople
+      denominatorValue
+      numeratorValue
+      seroprevalence
     }
   }
 `
