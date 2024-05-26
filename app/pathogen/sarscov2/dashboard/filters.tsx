@@ -3,7 +3,7 @@
 import React, { useContext } from "react";
 import { Filters } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
-import { useNewSarsCov2Data } from "@/hooks/useNewSarsCov2Data";
+import { useSarsCov2Data } from "@/hooks/useSarsCov2Data";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
 import { useSarsCov2Filters } from "@/hooks/useSarsCov2Filters";
 
@@ -13,7 +13,7 @@ interface SarsCov2FiltersProps {
 
 export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   const state = useContext(SarsCov2Context);
-  const { data } = useNewSarsCov2Data();
+  const { data } = useSarsCov2Data();
   const { data: filterData } = useSarsCov2Filters();
 
   const studyInformationFilters = [

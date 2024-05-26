@@ -5,7 +5,7 @@ import { request } from 'graphql-request';
 import { notFound } from 'next/navigation'
 import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
 import { SarsCov2Providers } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
-import { sarsCov2Estimates } from "@/hooks/useNewSarsCov2Data";
+import { sarsCov2Estimates } from "@/hooks/useSarsCov2Data";
 import { sarsCov2Filters } from "@/hooks/useSarsCov2Filters";
 
 export default async function SarsCov2Layout({

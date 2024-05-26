@@ -1,9 +1,8 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
-import { useNewSarsCov2Data } from "@/hooks/useNewSarsCov2Data";
+import { useSarsCov2Data } from "@/hooks/useSarsCov2Data";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
 import { MapShadingLegend } from "@/app/pathogen/arbovirus/dashboard/(map)/MapShadingLegend";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
@@ -11,7 +10,7 @@ import { MapSymbology } from "./map-config";
 
 export function SarsCov2Map() {
   const state = useContext(SarsCov2Context);
-  const { data } = useNewSarsCov2Data();
+  const { data } = useSarsCov2Data();
 
   if (!data) {
     return <span> Loading... </span>;

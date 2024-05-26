@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useEffect } from "react";
 import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
-import { useNewSarsCov2Data } from "@/hooks/useNewSarsCov2Data";
+import { useSarsCov2Data } from "@/hooks/useSarsCov2Data";
 import { SarsCov2EstimatesQuery } from "@/gql/graphql";
 
 const initialSarsCov2ContextState = {
@@ -20,7 +20,7 @@ export const SarsCov2Context = createContext<PathogenContextType<SarsCov2Estimat
 });
 
 const SarsCov2DataFetcher = (props: PathogenDataFetcherProps<SarsCov2Estimate>): React.ReactNode => {
-  const { data } = useNewSarsCov2Data();
+  const { data } = useSarsCov2Data();
 
   useEffect(() => {
     if (!!data && props.state.filteredData.length === 0 && !props.state.dataFiltered) {
