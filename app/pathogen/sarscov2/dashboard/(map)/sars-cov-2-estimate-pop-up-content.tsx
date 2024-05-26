@@ -1,4 +1,4 @@
-import { GenericMapPopUp } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
+import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import { SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context"
 
@@ -24,8 +24,10 @@ export const SarsCov2EstimatePopupContent = (props: SarsCov2EstimatePopupContent
 
   return (
     <GenericMapPopUp
+      width={GenericMapPopUpWidth.WIDE}
       headerConfiguration={{
-        text: scope ? `${scope} Study` : "Study"
+        text: scope ? `${scope} Study` : "Study",
+        textAlignment: HeaderConfigurationTextAlignment.LEFT
       }}
       subtitleConfiguration={{
         enabled: true,

@@ -1,9 +1,15 @@
 import { useMemo } from "react";
-import { GenericPopUpContentRow, PopUpContentRowBaseProps, PopUpContentRowType } from "../pop-up-content-rows";
+import {
+  GenericPopUpContentRow,
+  PopUpContentRowBaseProps,
+  PopUpContentRowType,
+  PopupContentTextAlignment
+} from "../pop-up-content-rows";
 
 export type PopUpContentColouredPillListRowProps = PopUpContentRowBaseProps & {
   type: PopUpContentRowType.COLOURED_PILL_LIST,
   values: string[];
+  contentTextAlignment?: PopupContentTextAlignment;
   valueToColourClassnameMap: Record<string, string | undefined>;
   defaultColourClassname: string;
 }
@@ -22,7 +28,12 @@ export const PopUpContentColouredPillListRow = (props: PopUpContentColouredPillL
   return (
     <GenericPopUpContentRow
       title={props.title}
+      textAlignment={props.contentTextAlignment}
       content={<> {content} </>}
+      bottomPaddingEnabled={props.bottomPaddingEnabled}
+      rightPaddingEnabled={props.rightPaddingEnabled}
+      contentBolded={props.contentBolded}
+      ribbonConfiguration={undefined}
     />
   );
 }

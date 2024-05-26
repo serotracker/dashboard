@@ -1,11 +1,17 @@
 import { useMemo } from "react";
-import { GenericPopUpContentRow, PopUpContentRowBaseProps, PopUpContentRowType } from "../pop-up-content-rows";
+import {
+  GenericPopUpContentRow,
+  PopUpContentRowBaseProps,
+  PopUpContentRowType,
+  PopupContentTextAlignment
+} from "../pop-up-content-rows";
 
 export type PopUpContentLocationRowProps = PopUpContentRowBaseProps & {
   type: PopUpContentRowType.LOCATION,
   cityName: string | undefined;
   stateName: string | undefined;
   countryName: string;
+  contentTextAlignment?: PopupContentTextAlignment;
 }
 
 export const PopUpContentLocationRow = (props: PopUpContentLocationRowProps) => {
@@ -30,7 +36,12 @@ export const PopUpContentLocationRow = (props: PopUpContentLocationRowProps) => 
   return (
     <GenericPopUpContentRow
       title={props.title}
+      textAlignment={props.contentTextAlignment}
       content={content}
+      bottomPaddingEnabled={props.bottomPaddingEnabled}
+      rightPaddingEnabled={props.rightPaddingEnabled}
+      contentBolded={props.contentBolded}
+      ribbonConfiguration={undefined}
     />
   )
 }

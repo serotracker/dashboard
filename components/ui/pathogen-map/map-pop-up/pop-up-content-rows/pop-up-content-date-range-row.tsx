@@ -1,10 +1,16 @@
 import { useMemo } from "react";
-import { GenericPopUpContentRow, PopUpContentRowBaseProps, PopUpContentRowType } from "../pop-up-content-rows";
+import {
+  GenericPopUpContentRow,
+  PopUpContentRowBaseProps,
+  PopUpContentRowType,
+  PopupContentTextAlignment
+} from "../pop-up-content-rows";
 
 export type PopUpContentDateRangeRowProps = PopUpContentRowBaseProps & {
   type: PopUpContentRowType.DATE_RANGE,
   dateRangeStart: Date | undefined;
   dateRangeEnd: Date | undefined;
+  contentTextAlignment?: PopupContentTextAlignment;
 }
 
 const dateTimeFormat = new Intl.DateTimeFormat('en', {
@@ -39,7 +45,12 @@ export const PopUpContentDateRangeRow = (props: PopUpContentDateRangeRowProps) =
   return (
     <GenericPopUpContentRow
       title={props.title}
+      textAlignment={props.contentTextAlignment}
       content={content}
+      bottomPaddingEnabled={props.bottomPaddingEnabled}
+      rightPaddingEnabled={props.rightPaddingEnabled}
+      contentBolded={props.contentBolded}
+      ribbonConfiguration={undefined}
     />
   )
 }

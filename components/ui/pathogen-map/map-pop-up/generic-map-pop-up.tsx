@@ -1,13 +1,24 @@
 import React from "react";
-import { PopUpContentRow, PopUpContentRowProps } from "./pop-up-content-rows";
+import { PopUpContentRow, PopUpContentRowProps, PopUpContentRowType, PopupContentTextAlignment } from "./pop-up-content-rows";
 import { cn } from "@/lib/utils";
+
+export enum HeaderConfigurationTextAlignment {
+  LEFT = 'LEFT',
+  CENTER = 'CENTER',
+}
 
 interface HeaderConfiguration {
   text: string;
+  textAlignment: HeaderConfigurationTextAlignment;
+}
+
+const headerTextAlignmentToClassnameMap: {[key in HeaderConfigurationTextAlignment]: string} = {
+  [HeaderConfigurationTextAlignment.LEFT]: '',
+  [HeaderConfigurationTextAlignment.CENTER]: 'text-center'
 }
 
 const GenericMapPopUpHeader = (props: HeaderConfiguration): React.ReactNode => (
-  <div className="text-lg font-bold">
+  <div className={cn(headerTextAlignmentToClassnameMap[props.textAlignment], "text-lg font-bold")}>
     {props.text}
   </div>
 );
@@ -33,7 +44,7 @@ const GenericMapPopUpSubtitle = (props: EnabledSubtitleConfiguration): React.Rea
   </div>
 );
 
-interface EnabledBannerConfiguration {
+interface EnabledBannerTextConfiguration {
   enabled: true;
   bannerText: string
   bannerColourClassname: string;
@@ -41,13 +52,29 @@ interface EnabledBannerConfiguration {
   isTextCentered: boolean;
 }
 
+interface EnabledBannerRowValueConfiguration {
+  enabled: true;
+  label: string;
+  value: string;
+  valueTextAlignment: PopupContentTextAlignment | undefined;
+  bannerColourClassname: string;
+}
+
 interface DisabledBannerConfiguration {
   enabled: false;
 }
 
-type BannerConfiguration = EnabledBannerConfiguration | DisabledBannerConfiguration;
+const isEnabledBannerTextConfiguration = (
+  configuration: EnabledBannerTextConfiguration | Omit<EnabledBannerRowValueConfiguration, 'popUpWidth'>
+): configuration is EnabledBannerTextConfiguration => 'bannerText' in configuration;
 
-const GenericMapPopUpBanner = (props: EnabledBannerConfiguration): React.ReactNode => (
+const isEnabledBannerRowValueConfiguration = (
+  configuration: EnabledBannerTextConfiguration | Omit<EnabledBannerRowValueConfiguration, 'popUpWidth'>
+): configuration is Omit<EnabledBannerRowValueConfiguration, 'popUpWidth'> => 'label' in configuration;
+
+type BannerConfiguration = EnabledBannerTextConfiguration | Omit<EnabledBannerRowValueConfiguration, 'popUpWidth'> | DisabledBannerConfiguration;
+
+const GenericMapPopUpTextBanner = (props: EnabledBannerTextConfiguration): React.ReactNode => (
   <div className={cn('flex justify-between w-full py-2 px-4', props.bannerColourClassname)}>
     <div className={cn("w-full", props.isTextBolded ? "font-semibold" : "", props.isTextCentered ? "text-center" : "")}>
       {!!props.isTextBolded
@@ -58,7 +85,32 @@ const GenericMapPopUpBanner = (props: EnabledBannerConfiguration): React.ReactNo
   </div>
 );
 
+const GenericMapPopUpRowValueBanner = (props: EnabledBannerRowValueConfiguration): React.ReactNode => (
+  <div className={cn('flex justify-between w-full py-2 px-4', props.bannerColourClassname)}>
+    <PopUpContentRow
+      title={props.label}
+      type={PopUpContentRowType.TEXT}
+      text={props.value}
+      contentTextAlignment={props.valueTextAlignment}
+      bottomPaddingEnabled={false}
+      rightPaddingEnabled={false}
+      contentBolded={true}
+    />
+  </div>
+);
+
+export enum GenericMapPopUpWidth {
+  THIN = 'THIN',
+  WIDE = 'WIDE'
+}
+
+const widthEnumToWidthClassnameMap: {[key in GenericMapPopUpWidth]: string} = {
+  [GenericMapPopUpWidth.THIN]: 'w-[260px]',
+  [GenericMapPopUpWidth.WIDE]: 'w-[460px]'
+}
+
 interface GenericMapPopUpProps {
+  width: GenericMapPopUpWidth;
   headerConfiguration: HeaderConfiguration;
   subtitleConfiguration: SubtitleConfiguration;
   topBannerConfiguration: BannerConfiguration;
@@ -68,18 +120,20 @@ interface GenericMapPopUpProps {
 
 export const GenericMapPopUp = (props: GenericMapPopUpProps) => {
   return (
-    <div className="w-[460px] bg-white/60 backdrop-blur-md pt-2 rounded-lg">
+    <div className={cn(widthEnumToWidthClassnameMap[props.width],"bg-white/60 backdrop-blur-md pt-2 rounded-lg")}>
       <div className={"py-2 px-4"}>
         <GenericMapPopUpHeader {...props.headerConfiguration} />
         {props.subtitleConfiguration.enabled === true && <GenericMapPopUpSubtitle {...props.subtitleConfiguration}/>}
       </div>
-      {props.topBannerConfiguration.enabled === true && <GenericMapPopUpBanner {...props.topBannerConfiguration}/>}
+      {(props.topBannerConfiguration.enabled === true && isEnabledBannerTextConfiguration(props.topBannerConfiguration)) && <GenericMapPopUpTextBanner {...props.topBannerConfiguration}/>}
+      {(props.topBannerConfiguration.enabled === true && isEnabledBannerRowValueConfiguration(props.topBannerConfiguration)) && <GenericMapPopUpRowValueBanner {...props.topBannerConfiguration}/>}
       <div className={"py-2 px-4 max-h-[250px] overflow-auto"}>
         {props.rows.map((row) => 
           <PopUpContentRow key={row.title} {...row} />
         )}
       </div>
-      {props.bottomBannerConfiguration.enabled === true && <GenericMapPopUpBanner {...props.bottomBannerConfiguration}/>}
+      {(props.bottomBannerConfiguration.enabled === true && isEnabledBannerTextConfiguration(props.bottomBannerConfiguration)) && <GenericMapPopUpTextBanner {...props.bottomBannerConfiguration}/>}
+      {(props.bottomBannerConfiguration.enabled === true && isEnabledBannerRowValueConfiguration(props.bottomBannerConfiguration)) && <GenericMapPopUpRowValueBanner {...props.bottomBannerConfiguration}/>}
     </div>
   );
 }

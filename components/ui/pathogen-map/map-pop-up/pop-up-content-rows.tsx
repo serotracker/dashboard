@@ -4,6 +4,8 @@ import { PopUpContentDateRangeRow, PopUpContentDateRangeRowProps } from "./pop-u
 import { PopUpContentLocationRow, PopUpContentLocationRowProps } from "./pop-up-content-rows/pop-up-content-location-row";
 import { PopUpContentNumberRow, PopUpContentNumberRowProps } from "./pop-up-content-rows/pop-up-content-number-row";
 import { PopUpContentTextRow, PopUpContentTextRowProps } from "./pop-up-content-rows/pop-up-content-text-row";
+import { cn } from "@/lib/utils";
+import { GenericMapPopUpWidth } from "./generic-map-pop-up";
 
 export enum PopUpContentRowType {
   DATE_RANGE = "DATE_RANGE",
@@ -15,6 +17,9 @@ export enum PopUpContentRowType {
 
 export interface PopUpContentRowBaseProps {
   title: string;
+  bottomPaddingEnabled?: boolean;
+  rightPaddingEnabled?: boolean;
+  contentBolded?: boolean;
 }
 
 export type PopUpContentRowProps = 
@@ -24,15 +29,42 @@ export type PopUpContentRowProps =
   | PopUpContentTextRowProps
   | PopUpContentColouredPillListRowProps;
 
+export enum PopupContentTextAlignment {
+  LEFT = 'LEFT',
+  RIGHT = 'RIGHT'
+}
+
+export interface PopUpContentRowRibbonConfiguration {
+  ribbonColourClassname: string
+}
+
 interface GenericPopUpContentRowProps {
   title: string,
-  content: JSX.Element | string | string[] | null | undefined
+  content: JSX.Element | string | string[] | null | undefined,
+  textAlignment: PopupContentTextAlignment | undefined;
+  rightPaddingEnabled?: boolean;
+  bottomPaddingEnabled?: boolean;
+  contentBolded?: boolean;
+  ribbonConfiguration?: PopUpContentRowRibbonConfiguration;
 }
 
 export const GenericPopUpContentRow = (props: GenericPopUpContentRowProps): React.ReactNode => (
-  <div className={"flex justify-between items-center mb-2 w-full mr-2"}>
-    <div className={"text-md font-semibold"}>{props.title}</div>
-    <div className={"w-2/3"}>{props.content}</div>
+  <div className={cn(
+    "flex w-full",
+    (props.bottomPaddingEnabled ?? true) ? "mb-2" : "",
+    (props.rightPaddingEnabled ?? true) ? "mr-2" : ""
+  )}>
+    {props.ribbonConfiguration && <div className={cn('w-2 mr-2', props.ribbonConfiguration.ribbonColourClassname)} /> }
+    <div className={cn("flex justify-between items-center w-full")}>
+      <div className={"text-md font-semibold"}>{props.title}</div>
+      <div className={cn(
+        "w-2/3",
+        props.textAlignment === PopupContentTextAlignment.RIGHT ? "text-right" : "",
+        props.contentBolded === true ? "font-semibold" : ""
+      )}>
+        {props.content}
+      </div>
+    </div>
   </div>
 )
 
