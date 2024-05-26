@@ -22,6 +22,15 @@ export const typedObjectKeys = <TKey extends string>(input: Record<TKey, unknown
   return Object.keys(input) as TKey[];
 }
 
+interface GenerateRangeInput {
+  startInclusive: number,
+  endInclusive: number,
+  stepSize: number
+}
+
+export const generateRange = (input: GenerateRangeInput) =>
+  Array.from({ length: (input.endInclusive - input.startInclusive) / input.stepSize + 1 }, (_, i) => input.startInclusive + i * input.stepSize);
+
 interface MixColoursInput {
   zeroValuedColourHexCode: string;
   oneValuedColourHexCode: string;
@@ -48,3 +57,19 @@ export const mixColours = (input: MixColoursInput): string => {
 
   return `#${mixedColourRGB[0].toString(16)}${mixedColourRGB[1].toString(16)}${mixedColourRGB[2].toString(16)}`
 }
+
+interface GenerateRandomIntegerInput {
+  maximumValueNonInclusive: number;
+}
+
+const generateRandomInteger = (input: GenerateRandomIntegerInput): number => {
+  return Math.floor(Math.random() * input.maximumValueNonInclusive);
+}
+
+const generateRandomRGBValue = (): string => {
+  return generateRandomInteger({ maximumValueNonInclusive: 256 })
+    .toString(16)
+    .padStart(2, '0');
+}
+
+export const generateRandomColour = (): string => [1,2,3].map(() => `${generateRandomRGBValue()}`).join('')

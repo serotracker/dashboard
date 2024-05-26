@@ -32,6 +32,7 @@ export const sarsCov2Estimates = gql`
       samplingStartDate
       samplingEndDate
       samplingMidDate
+      publicationDate
       countryPeopleVaccinatedPerHundred
       countryPeopleFullyVaccinatedPerHundred
       countryPositiveCasesPerMillionPeople

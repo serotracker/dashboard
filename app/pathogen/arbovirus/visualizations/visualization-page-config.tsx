@@ -1,6 +1,6 @@
 import uniq from 'lodash/uniq';
 import { VisualizationInformation } from "../../generic-pathogen-visualizations-page";
-import { AntibodyPathogenBar, StudyCountOverTime, StudyCountOverTimeBySampleFrame, Top10CountriesByPathogenStudyCount, arbovirusesSF, convertArboSFtoArbo } from "../dashboard/(visualizations)/recharts";
+import { AntibodyPathogenBar, StudyCountOverTime, Top10CountriesByPathogenStudyCount, arbovirusesSF, convertArboSFtoArbo } from "../dashboard/(visualizations)/recharts";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { EstimateCountByWHORegionAndArbovirusGraph } from "../dashboard/(visualizations)/estimate-count-by-who-region-and-arbovirus-graph";
 import { EstimateCountByUnRegionAndArbovirusGraph } from "../dashboard/(visualizations)/estimate-count-by-un-region-and-arbovirus-graph";
@@ -12,6 +12,7 @@ import { ChangeInMedianSeroprevalenceOverTimeGraph } from "../dashboard/(visuali
 import { CountrySeroprevalenceComparisonScatterPlot } from "../dashboard/(visualizations)/country-seroprevalence-comparison-scatter-plot";
 import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
+import { StudyCountOverTimeBySampleFrame } from '../dashboard/(visualizations)/study-count-over-time-by-sample-frame';
 
 export enum ArbovirusVisualizationId {
   CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS = "CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS",

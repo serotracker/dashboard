@@ -5,9 +5,11 @@ import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs
 import { SarsCov2Estimate } from '@/contexts/pathogen-context/pathogen-contexts/sc2-context';
 import { PublishedStudiesByGdbRegionGraph } from "../dashboard/(visualizations)/published-studies-by-gbd-region";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
+import { CumulativeNumberOfSerosurveysPublishedOverTime } from "../dashboard/(visualizations)/cumulative-number-of-serosurveys-published-over-time";
 
 export enum SarsCov2VisualizationId {
   PUBLISHED_STUDY_COUNT_BY_GBD_REGION = "PUBLISHED_STUDY_COUNT_BY_GBD_REGION",
+  CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME = 'CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME'
 }
 
 export const isSarsCov2VisualizationId = (
@@ -17,6 +19,7 @@ export const isSarsCov2VisualizationId = (
 
 export enum SarsCov2VisualizationUrlParameter {
   "published-study-count-by-gbd-region" = "published-study-count-by-gbd-region",
+  "cumulative-number-of-serosurveys-published-over-time" = "cumulative-number-of-serosurveys-published-over-time"
 }
 
 export type SarsCov2VisualizationInformation = VisualizationInformation<
@@ -39,6 +42,15 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
       ],
     getDisplayName: () => "Published Studies per GBD Region",
     renderVisualization: () => PublishedStudiesByGdbRegionGraph({legendConfiguration: LegendConfiguration.RIGHT_ALIGNED})
+  },
+  [SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME]: {
+    id: SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME,
+    urlParameter:
+      SarsCov2VisualizationUrlParameter[
+        "cumulative-number-of-serosurveys-published-over-time"
+      ],
+    getDisplayName: () => "Cumulative Number Serosurveys Published Over Time",
+    renderVisualization: () => CumulativeNumberOfSerosurveysPublishedOverTime()
   },
 }
 
