@@ -15,10 +15,10 @@ export default async function SarsCov2Layout({
 }) {
   const queryClient = getQueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ["sarsCov2Estimates"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', sarsCov2Estimates)
-  });
+  //await queryClient.prefetchQuery({
+  //  queryKey: ["sarsCov2Estimates"],
+  //  queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', sarsCov2Estimates)
+  //});
   await queryClient.prefetchQuery({
     queryKey: ["sarsCov2FilterOptions"],
     queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', sarsCov2Filters)
