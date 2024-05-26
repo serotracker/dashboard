@@ -1,7 +1,6 @@
 import { ZoomIn, DownloadCloud, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { isSafeReferrerLink } from "@/utils/referrer-link-util";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { useContext } from "react";
 import {
   Tooltip,
@@ -10,6 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 
 interface DisabledButtonConfig {
