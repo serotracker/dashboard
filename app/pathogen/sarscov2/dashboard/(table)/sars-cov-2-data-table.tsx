@@ -2,7 +2,6 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
-<<<<<<< HEAD
 import { gbdSubRegionToLabelMap, gbdSuperRegionToLabelMap, isGbdSubRegion, isGbdSuperRegion } from "@/lib/gbd-regions";
 import { getLabelForUNRegion, isUNRegion } from "@/lib/un-regions";
 import { useContext } from "react";
@@ -35,17 +34,11 @@ const sarsCov2ColumnConfiguration = [{
   isFixed: true,
   fieldNameForLink: 'url'
 }, {
-=======
-import { useContext } from "react";
-
-const sarsCov2ColumnConfiguration = [{
->>>>>>> d857fc8b6aff271eb0c8c0ffd9f3e15bf95aa2d3
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'whoRegion',
   label: 'WHO Region',
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
-<<<<<<< HEAD
   fieldName: 'unRegion',
   label: 'UN Region',
   valueToDisplayLabel: (unRegion: string) => isUNRegion(unRegion) ? getLabelForUNRegion(unRegion) : unRegion
@@ -64,10 +57,6 @@ const sarsCov2ColumnConfiguration = [{
   fieldName: 'riskOfBias',
   label: 'Risk of Bias',
   valueSortingFunction: (riskOfBiasA: string, riskOfBiasB: string) => (riskOfBiasToSortOrderMap[riskOfBiasA] ?? 0) - (riskOfBiasToSortOrderMap[riskOfBiasB] ?? 0)
-=======
-  fieldName: 'riskOfBias',
-  label: 'Risk of Bias',
->>>>>>> d857fc8b6aff271eb0c8c0ffd9f3e15bf95aa2d3
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'sourceType',
@@ -76,14 +65,11 @@ const sarsCov2ColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'scope',
   label: 'Scope',
-<<<<<<< HEAD
   valueSortingFunction: (scopeA: string, scopeB: string) => (scopeToSortOrderMap[scopeA] ?? 0) - (scopeToSortOrderMap[scopeB] ?? 0)
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'country',
   label: 'Country',
-=======
->>>>>>> d857fc8b6aff271eb0c8c0ffd9f3e15bf95aa2d3
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'isotypes',
@@ -99,7 +85,6 @@ const sarsCov2ColumnConfiguration = [{
   },
   defaultColourSchemeClassname: 'bg-sky-100'
 }, {
-<<<<<<< HEAD
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'antibodies',
   label: 'Antibodies',
@@ -130,8 +115,6 @@ const sarsCov2ColumnConfiguration = [{
   },
   defaultColourSchemeClassname: 'bg-sky-100'
 }, {
-=======
->>>>>>> d857fc8b6aff271eb0c8c0ffd9f3e15bf95aa2d3
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
   fieldName: 'seroprevalence',
   label: 'Seroprevalence',
@@ -148,7 +131,6 @@ const sarsCov2ColumnConfiguration = [{
   fieldName: 'sex',
   label: 'Sex',
 }, {
-<<<<<<< HEAD
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'ageGroup',
   label: 'Age Group',
@@ -158,8 +140,6 @@ const sarsCov2ColumnConfiguration = [{
   fieldName: 'isWHOUnityAligned',
   label: 'Unity Aligned?',
 }, {
-=======
->>>>>>> d857fc8b6aff271eb0c8c0ffd9f3e15bf95aa2d3
   type: DataTableColumnConfigurationEntryType.DATE as const,
   fieldName: 'samplingStartDate',
   label: 'Sampling Start Date',
@@ -171,15 +151,12 @@ const sarsCov2ColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.DATE as const,
   fieldName: 'publicationDate',
   label: 'Publication Date',
-<<<<<<< HEAD
 }, {
   type: DataTableColumnConfigurationEntryType.LINK_BUTTON as const,
   fieldName: 'url',
   label: 'Source',
   fieldNameForLink: 'url',
   isSortable: false
-=======
->>>>>>> d857fc8b6aff271eb0c8c0ffd9f3e15bf95aa2d3
 }];
 
 export const SarsCov2DataTable = () => {
