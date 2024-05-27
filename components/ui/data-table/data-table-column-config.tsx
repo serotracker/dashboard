@@ -80,7 +80,7 @@ export type DataTableColumnConfigurationEntry =
   | BooleanDataTableColumnConfigurationEntry;
 
 interface ColumnConfigurationToColumnDefinitionInput {
-  columnConfiguration: Array<DataTableColumnConfigurationEntry>
+  columnConfiguration: readonly DataTableColumnConfigurationEntry[]
 }
 
 export const columnConfigurationToColumnDefinitions = (
