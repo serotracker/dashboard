@@ -20,9 +20,13 @@ import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-laye
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
 import { EsmMapSourceAndLayer } from "./esm-maps";
+import { WeekNumberLabel } from "react-day-picker";
 
-export interface MarkerCollection {
-  [key: string]: JSX.Element;
+export interface MarkerCollection<TMarkerProperties extends Record<string, unknown>> {
+  [key: string]: {
+    properties: TMarkerProperties;
+    element: JSX.Element;
+  }
 }
 
 export interface PathogenDataPointPropertiesBase {
@@ -31,13 +35,13 @@ export interface PathogenDataPointPropertiesBase {
   longitude: number | undefined;
 }
 
-interface ClusteringEnabledSettings {
+interface ClusteringEnabledSettings<TMarkerProperties extends Record<string, unknown>> {
   clusteringEnabled: true,
   computeClusterMarkers: (props: {
     features: mapboxgl.MapboxGeoJSONFeature[];
-    markers: MarkerCollection;
+    markers: MarkerCollection<TMarkerProperties>;
     map: mapboxgl.Map;
-  }) => MarkerCollection;
+  }) => MarkerCollection<TMarkerProperties>;
   clusterProperties: { [key: string]: any };
 }
 
@@ -45,24 +49,26 @@ interface ClusteringDisabledSettings {
   clusteringEnabled: false,
 }
 
-export type ClusteringSettings = ClusteringEnabledSettings | ClusteringDisabledSettings;
+export type ClusteringSettings<TMarkerProperties extends Record<string, unknown>> = ClusteringEnabledSettings<TMarkerProperties> | ClusteringDisabledSettings;
 
 interface PathogenMapProps<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TMarkerProperties extends Record<string, unknown>
 > {
   id: string;
   baseCursor: PathogenMapCursor;
   layers: PathogenMapLayerInfo[];
   generatePopupContent: PopupContentGenerator<TPathogenDataPointProperties>;
   dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
-  clusteringSettings: ClusteringSettings;
+  clusteringSettings: ClusteringSettings<TMarkerProperties>;
   sourceId: string;
 }
 
 
 
 export function PathogenMap<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TMarkerProperties extends Record<string, unknown>
 >({
   id,
   baseCursor,
@@ -71,7 +77,7 @@ export function PathogenMap<
   dataPoints,
   clusteringSettings,
   sourceId,
-}: PathogenMapProps<TPathogenDataPointProperties>) {
+}: PathogenMapProps<TPathogenDataPointProperties, TMarkerProperties>) {
   const [popUpInfo, _setPopUpInfo] = useState<
     PopupInfo<TPathogenDataPointProperties>
   >({ visible: false, properties: null, layerId: null });
@@ -94,11 +100,7 @@ export function PathogenMap<
     _setPopUpInfo(newPopUpInfo);
   }
 
-  // objects for caching custom markers
-  const markersRef: MutableRefObject<MarkerCollection> = useRef<MarkerCollection>(
-    {}
-  );
-  const [markersOnScreen, setMarkersOnScreen] = useState<MarkerCollection>({});
+  const [markersOnScreen, setMarkersOnScreen] = useState<MarkerCollection<TMarkerProperties>>({});
 
   const { cursor, onMouseLeave, onMouseEnter, onMouseDown } =
     usePathogenMapMouse({
@@ -128,9 +130,11 @@ export function PathogenMap<
         // This needs to be standardized. How? Can we be type specific probable not? 
         const newMarkers = clusteringSettings.computeClusterMarkers({
           features,
-          markers: markersRef.current,
+          markers: markersOnScreen,
           map
         });
+
+        console.log('newMarkers', newMarkers)
       
         // Only update the state if newMarkers is different from markersOnScreen
         if (!isEqual(newMarkers, markersOnScreen)) {
@@ -174,7 +178,7 @@ export function PathogenMap<
         generatePopupContent={generatePopupContent}
       />
       {Object.keys(markersOnScreen).map(
-      (id) => markersOnScreen[id]
+      (id) => markersOnScreen[id]?.element
     )}
     </Map>
   );
