@@ -232,8 +232,6 @@ export function computeClusterMarkers(props: {
   const newMarkers: MarkerCollection<ArbovirusMarkerProperties> = {};
   // for every cluster on the screen, create an HTML marker for it (if we didn't yet),
   // and add it to the map if it's not there already
-  console.log('props.features', props.features)
-
   for (const feature of props.features) {
     // A geometryCollection does not have a coordinate property. Instead it has a collection of geometries.
     // I do not believe we will be dealing with this use case atm

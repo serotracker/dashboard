@@ -134,8 +134,6 @@ export function PathogenMap<
           map
         });
 
-        console.log('newMarkers', newMarkers)
-      
         // Only update the state if newMarkers is different from markersOnScreen
         if (!isEqual(newMarkers, markersOnScreen)) {
           setMarkersOnScreen(newMarkers);
