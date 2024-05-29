@@ -4,13 +4,14 @@ import {
   SortingState,
   getSortedRowModel,
   getCoreRowModel,
+  getExpandedRowModel,
   getPaginationRowModel,
   ColumnFiltersState,
   VisibilityState,
   getFilteredRowModel,
 } from "@tanstack/table-core";
 import * as Toast from "@radix-ui/react-toast";
-import { ColumnDef, flexRender, useReactTable } from "@tanstack/react-table";
+import { ColumnDef, ExpandedState, flexRender, useReactTable } from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -65,6 +66,8 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
+  const [expandedState, setExpandedState] = React.useState<ExpandedState>({});
+
   const table = useReactTable({
     data: props.data,
     columns: props.columns,
@@ -74,12 +77,16 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    getRowCanExpand: () => true,
+    onExpandedChange: setExpandedState,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-    },
+      expanded: expandedState
+    }
   });
 
   const { generateClassnameForCell, generateClassnameForHeader } =
@@ -231,21 +238,44 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    className={generateClassnameForCell({
-                      columnId: cell.column.id,
-                    })}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
+              <>
+                <TableRow
+                  data-state={row.getIsSelected()}
+                  onClick={() => row.getToggleExpandedHandler()()}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className={generateClassnameForCell({
+                        columnId: cell.column.id,
+                      })}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+                {row.getIsExpanded() && 
+                  <TableRow>
+                    <TableCell colSpan={row.getVisibleCells().length} className="p-0">
+                      <div className="block w-auto overflow-x-hidden max-w-[95vw] lg:max-w-[80vw] sticky left-0 p-4 max-h-half-screen overflow-y-scroll">
+                        <p> 
+                        
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse enim nulla, viverra in ultricies nec, viverra nec odio. Aliquam elit felis, tincidunt non risus vitae, pharetra sagittis ipsum. Nunc sit amet blandit lacus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur tempus mi lectus, at porta elit convallis in. Proin a neque justo. Pellentesque vulputate consectetur posuere.
+
+Aenean sit amet vehicula libero, vel porta turpis. Fusce volutpat, arcu sed vehicula sodales, tellus ligula elementum erat, a tempor augue sapien in leo. Mauris accumsan mattis enim ut elementum. Suspendisse quis nulla non lorem vestibulum facilisis. Suspendisse ac pretium velit. Proin luctus leo quis velit ullamcorper interdum non ultricies ligula. Quisque posuere, tortor vitae eleifend commodo, justo ex porttitor ex, sit amet tincidunt odio magna vel dolor. Pellentesque eu nunc ac sapien lacinia dapibus. Donec vitae mattis dolor. Nam rutrum, lacus in luctus tempus, massa risus accumsan dolor, sed iaculis ex erat suscipit lacus. Curabitur auctor scelerisque vestibulum.
+
+Aliquam ut congue sem, id mattis metus. Ut eu quam vel nisi lobortis laoreet. Aliquam iaculis est mi, vitae rhoncus enim ornare non. Praesent libero turpis, rutrum in nisl sit amet, convallis scelerisque orci. Morbi congue facilisis est sit amet tempus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Integer vehicula velit a vestibulum consectetur. Mauris dictum purus non lectus dignissim ultricies. Curabitur vulputate dui at mollis egestas. Sed viverra ex purus, non mattis mi malesuada at. Quisque tempor a purus a iaculis. Curabitur venenatis sapien tortor, et consectetur massa laoreet in. Curabitur ullamcorper tempus pretium. Praesent aliquet ante eu elit tristique tempus. Vivamus sit amet sapien tortor.
+
+Sed luctus in orci tincidunt vulputate. Vestibulum arcu turpis, commodo vel nisl sit amet, laoreet viverra dolor. Phasellus non nibh tortor. Proin volutpat laoreet blandit. Mauris in arcu dapibus, vulputate nisi et, sollicitudin ex. Nulla viverra scelerisque tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec ac enim sit amet lacus tempus aliquam non vel lorem.
+
+Suspendisse vehicula sed mi eu accumsan. Suspendisse lacus sapien, convallis vel ante in, finibus rhoncus justo. Sed tincidunt molestie nisl ut fermentum. Sed dapibus odio in fringilla consectetur. Curabitur et sapien molestie, tempor erat a, egestas enim. Donec et mattis libero. Proin in elit ut nunc scelerisque ultricies a vitae lacus. Nam luctus venenatis ipsum ut placerat. Nunc id sapien arcu. Suspendisse finibus, arcu vitae mattis facilisis, velit lacus sodales ipsum, eget bibendum magna nisi lobortis libero. Nulla dictum mollis condimentum. Sed at tristique justo, aliquet tempor risus. Pellentesque rhoncus elit in odio pharetra, at luctus tellus malesuada. Nunc elementum ante vitae dolor faucibus, eu dapibus ligula feugiat. 
+                        </p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                }
+              </>
             ))
           ) : (
             <TableRow>

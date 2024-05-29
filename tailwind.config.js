@@ -29,6 +29,11 @@ module.exports = {
         '3/4-screen': 'calc(75vh - 3.5rem)',
         'full-screen': 'calc(100vh - 3.5rem)',
       },
+      maxHeight: {
+        'half-screen': 'calc(50vh - 3.5rem)',
+        '3/4-screen': 'calc(75vh - 3.5rem)',
+        'full-screen': 'calc(100vh - 3.5rem)',
+      },
       colors: {
         arbovirus: "hsl(var(--arbo))",
         arbovirusHover: "hsl(var(--arbo-hover))",
