@@ -20,6 +20,7 @@ interface RechartsVisualizationProps<
     TEstimate
   >;
   data: TEstimate[];
+  highlightedDataPoint: TEstimate | undefined;
   buttonConfig: RechartsVisualizationButtonConfig;
   className?: string;
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
@@ -69,7 +70,7 @@ export const RechartsVisualization = <
         }}
       />
       <div className="flex-1">
-        {props.visualizationInformation.renderVisualization()}
+        {props.visualizationInformation.renderVisualization({data: props.data, highlightedDataPoint: props.highlightedDataPoint})}
       </div>
     </div>
   );

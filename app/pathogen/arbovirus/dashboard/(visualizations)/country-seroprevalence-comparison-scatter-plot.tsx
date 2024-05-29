@@ -15,7 +15,7 @@ import uniq from "lodash/uniq";
 import { typedObjectKeys } from "@/lib/utils";
 import { ContentType } from "recharts/types/component/Tooltip";
 import { useChartArbovirusDropdown } from "./chart-arbovirus-dropdown";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 
 const CountrySeroprevalenceComparisonScatterPlotTooltip: ContentType<string, string> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -40,10 +40,15 @@ const CountrySeroprevalenceComparisonScatterPlotTooltip: ContentType<string, str
   return null;
 };
 
-export const CountrySeroprevalenceComparisonScatterPlot = () => {
-  const state = useContext(ArboContext);
+interface CountrySeroprevalenceComparisonScatterPlotProps {
+  data: ArbovirusEstimate[];
+  highlightedDataPoint: ArbovirusEstimate | undefined;
+}
 
-  const dataWithCIs = useMemo(() => state.filteredData.filter((dataPoint) => dataPoint.seroprevalenceCalculated95CILower && dataPoint.seroprevalenceCalculated95CIUpper), [state.filteredData])
+export const CountrySeroprevalenceComparisonScatterPlot = (props: CountrySeroprevalenceComparisonScatterPlotProps) => {
+  const { data, highlightedDataPoint } = props;
+
+  const dataWithCIs = useMemo(() => data.filter((dataPoint) => dataPoint.seroprevalenceCalculated95CILower && dataPoint.seroprevalenceCalculated95CIUpper), [data])
   const allArbovirusesInData = useMemo(() => uniq(dataWithCIs.map((dataPoint) => dataPoint.pathogen)), [dataWithCIs]);
 
   const { chartArbovirusDropdown, selectedArbovirus } = useChartArbovirusDropdown({
@@ -130,59 +135,71 @@ export const CountrySeroprevalenceComparisonScatterPlot = () => {
             </p>
           </div>
         :
-          countriesAvailable.map((country, index) => (
-            <ResponsiveContainer
-              width={countriesAvailable.length === 1 ? "100%" : "50%"}
-              key={`country-seroprevalence-comparison-scatter-plot-${country}`}
-              height={"100%"}
-            >
-              <ScatterChart
-                width={730}
-                height={250}
-                margin={{ bottom: 40, left: 8, top: 50, right: 10 }}
+          countriesAvailable.map((country, index) => {
+            const dataForCountry = dataForArbovirus ? dataForArbovirus[country] : []
+            const highlightedData = dataForCountry.length > 0 && (!!highlightedDataPoint?.estimateId)
+              ? dataForCountry.find((dataPoint) => dataPoint.estimateId === highlightedDataPoint.estimateId)
+              : undefined;
+
+            return (
+              <ResponsiveContainer
+                width={countriesAvailable.length === 1 ? "100%" : "50%"}
+                key={`country-seroprevalence-comparison-scatter-plot-${country}`}
+                height={"100%"}
               >
-                <text
-                  x='50%'
-                  y={20}
-                  fill="black"
-                  textAnchor="middle"
-                  dominantBaseline="central"
+                <ScatterChart
+                  width={730}
+                  height={250}
+                  margin={{ bottom: 40, left: 8, top: 50, right: 10 }}
                 >
-                  <tspan fontSize="20">{country}</tspan>
-                </text>
-                <CartesianGrid />
-                <XAxis
-                  dataKey="seroprevalence"
-                  type="number"
-                  domain={[0, 100]}
-                  unit="%"
-                >
-                  <Label
-                    value="Seroprevalence"
-                    offset={-8}
-                    position="insideBottom"
+                  <text
+                    x='50%'
+                    y={20}
+                    fill="black"
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                  >
+                    <tspan fontSize="20">{country}</tspan>
+                  </text>
+                  <CartesianGrid />
+                  <XAxis
+                    dataKey="seroprevalence"
+                    type="number"
+                    domain={[0, 100]}
+                    unit="%"
+                  >
+                    <Label
+                      value="Seroprevalence"
+                      offset={-8}
+                      position="insideBottom"
+                    />
+                  </XAxis>
+                  <YAxis
+                    dataKey="estimateNumber"
+                    type="number"
+                    domain={[0, (dataForArbovirus ? countriesAvailable.flatMap((country) => dataForArbovirus[country]) : []).length + 1]}
+                    allowDataOverflow={true}
+                    tick={false}
+                    label={{
+                      value: "Study estimates",
+                      angle: -90,
+                      offset: 40,
+                      position: "insideLeft",
+                    }}
                   />
-                </XAxis>
-                <YAxis
-                  dataKey="estimateNumber"
-                  type="number"
-                  domain={[0, (dataForArbovirus ? countriesAvailable.flatMap((country) => dataForArbovirus[country]) : []).length + 1]}
-                  allowDataOverflow={true}
-                  tick={false}
-                  label={{
-                    value: "Study estimates",
-                    angle: -90,
-                    offset: 40,
-                    position: "insideLeft",
-                  }}
-                />
-                <Tooltip content={CountrySeroprevalenceComparisonScatterPlotTooltip}/>
-                <Scatter data={dataForArbovirus ? dataForArbovirus[country] : []} fill="#000000">
-                  <ErrorBar dataKey="seroprevalenceError" width={0} direction="x" />
-                </Scatter>
-              </ScatterChart>
-            </ResponsiveContainer>
-          ))
+                  <Tooltip content={CountrySeroprevalenceComparisonScatterPlotTooltip}/>
+                  <Scatter data={dataForArbovirus ? dataForArbovirus[country] : []} fill="#000000">
+                    <ErrorBar dataKey="seroprevalenceError" width={0} direction="x" />
+                  </Scatter>
+                  {highlightedData && (
+                    <Scatter data={[highlightedData]} fill="#34eb6b">
+                      <ErrorBar dataKey="seroprevalenceError" width={0} direction="x" />
+                    </Scatter>
+                  )}
+                </ScatterChart>
+              </ResponsiveContainer>
+            );
+          })
         }
       </div>
     </div>

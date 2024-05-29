@@ -8,6 +8,11 @@ interface GetDisplayNameInput<TEstimate extends Record<string, unknown>> {
   data: TEstimate[]
 }
 
+interface RenderVisualizationInput<TEstimate extends Record<string, unknown>> {
+  data: TEstimate[];
+  highlightedDataPoint: TEstimate | undefined;
+}
+
 export interface VisualizationInformation<
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
@@ -17,7 +22,7 @@ export interface VisualizationInformation<
   urlParameter: TVisualizationUrlParameter;
   getDisplayName: (input: GetDisplayNameInput<TEstimate>) => string;
   titleTooltipText?: string;
-  renderVisualization: () => React.ReactNode;
+  renderVisualization: (input: RenderVisualizationInput<TEstimate>) => React.ReactNode;
 }
 
 interface FiltersComponentProps {
@@ -116,6 +121,7 @@ export const GenericPathogenVisualizationsPage = <
       <RechartsVisualization
         className="flex-col flex h-full overflow-y-scroll col-span-10 row-span-2"
         data={props.data}
+        highlightedDataPoint={undefined}
         visualizationInformation={visualizationInformation}
         getUrlParameterFromVisualizationId={props.getUrlParameterFromVisualizationId}
         buttonConfig={{
