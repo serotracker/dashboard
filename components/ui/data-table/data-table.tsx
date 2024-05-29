@@ -30,8 +30,6 @@ import {
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import { useDataTableStyles } from "./use-data-table-styles";
 import { ToastContext, ToastId } from "@/contexts/toast-provider";
-import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
-import { ArbovirusVisualizationId, arbovirusVisualizationInformation, getUrlParameterFromVisualizationId } from "@/app/pathogen/arbovirus/visualizations/visualization-page-config";
 import { DataTableStandardRow } from "./data-table-standard-row";
 import { DataTableExpandedRow } from "./data-table-expanded-row";
 import { DataTableExpandedRowContent } from "./data-table-expanded-row-content";
