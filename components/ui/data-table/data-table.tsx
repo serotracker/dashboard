@@ -264,7 +264,7 @@ export function DataTable<TData extends Record<string, unknown>, TValue>(props: 
                         <div
                           className="p-4 border-2 grow"
                         >
-                          <p> {(props.data.filter((dataPoint) => dataPoint.estimateId === '761101_MiamiSchoolOfMed_Ehrenkranz_DENV_age01')?.at(0) as any).inclusionCriteria ?? "No inclusion criteria specified."} </p>
+                          <p> {`${(props.data.filter((dataPoint) => dataPoint.estimateId === '761101_MiamiSchoolOfMed_Ehrenkranz_DENV_age01')?.at(0) as any).inclusionCriteria ?? "No inclusion criteria specified"}. Clicking here will minimize the row.`} </p>
                         </div>
                       </div>
                     </TableCell>
@@ -309,7 +309,7 @@ export function DataTable<TData extends Record<string, unknown>, TValue>(props: 
                           </tr>
 
                           {row.getAllCells().map((cell) => (
-                            <tr>
+                            <tr key={cell.id}>
                               <td className="p-2 border-2"> {cell.column.id} </td>
                               <td className="p-2 border-2">
                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
