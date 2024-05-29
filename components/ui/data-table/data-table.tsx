@@ -10,7 +10,7 @@ import {
   VisibilityState,
   getFilteredRowModel,
 } from "@tanstack/table-core";
-import { ColumnDef, ExpandedState, flexRender, useReactTable } from "@tanstack/react-table";
+import { ColumnDef, ExpandedState, Row, flexRender, useReactTable } from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -32,6 +32,9 @@ import { useDataTableStyles } from "./use-data-table-styles";
 import { ToastContext, ToastId } from "@/contexts/toast-provider";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { ArbovirusVisualizationId, arbovirusVisualizationInformation, getUrlParameterFromVisualizationId } from "@/app/pathogen/arbovirus/visualizations/visualization-page-config";
+import { DataTableStandardRow } from "./data-table-standard-row";
+import { DataTableExpandedRow } from "./data-table-expanded-row";
+import { DataTableExpandedRowContent } from "./data-table-expanded-row-content";
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   fixed?: boolean;
@@ -48,15 +51,26 @@ interface CsvCitationConfigurationEnabled {
   toastId: ToastId;
 }
 
+interface RowExpansionConfigurationDisabled {
+  enabled: false;
+}
+
+export interface RowExpansionConfigurationEnabled<TData extends Record<string, unknown>> {
+  enabled: true;
+  generateExpandedRowStatement: (input: {data: TData[], row: Row<Record<string, unknown>>}) => string;
+  visualization: (props: {className: string, data: TData[], row: Row<Record<string, unknown>>}) => React.ReactNode;
+}
+
 interface DataTableProps<TData extends Record<string, unknown>, TValue> {
-  columns: DataTableColumnDef<TData, TValue>[];
+  columns: DataTableColumnDef<Record<string, unknown>, TValue>[];
   csvFilename: string;
   csvCitationConfiguration: CsvCitationConfigurationDisabled | CsvCitationConfigurationEnabled;
+  rowExpansionConfiguration: RowExpansionConfigurationDisabled | RowExpansionConfigurationEnabled<TData>;
   data: TData[];
 }
 
 export function DataTable<TData extends Record<string, unknown>, TValue>(props: DataTableProps<TData, TValue>) {
-  const { csvCitationConfiguration } = props;
+  const { csvCitationConfiguration, rowExpansionConfiguration } = props;
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -91,7 +105,7 @@ export function DataTable<TData extends Record<string, unknown>, TValue>(props: 
   });
 
   const { generateClassnameForCell, generateClassnameForHeader } =
-    useDataTableStyles<TData, TValue>({ columns: props.columns });
+    useDataTableStyles<Record<string, unknown>, TValue>({ columns: props.columns });
 
   const getAllVisibleData = () => {
     // Get the columns we want in the csv
@@ -240,106 +254,24 @@ export function DataTable<TData extends Record<string, unknown>, TValue>(props: 
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <>
-                {row.getIsExpanded() ? (
-                  <TableRow
-                    data-state={row.getIsSelected()}
-                    onClick={() => row.getToggleExpandedHandler()()}
-                  >
-                    <TableCell colSpan={(row.getVisibleCells().length)} className="p-0">
-                      <div className="
-                        flex
-                        w-auto
-                        overflow-x-hidden
-                        max-w-[95vw]
-                        lg:max-w-[79vw]
-                        sticky
-                        left-0
-                      "
-                      >
-                        <div
-                          className="p-4 border-2"
-                        >
-                          {flexRender(row.getVisibleCells().at(0)?.column.columnDef.cell, row.getVisibleCells().at(0)?.getContext() as any)}
-                        </div>
-                        <div
-                          className="p-4 border-2 grow"
-                        >
-                          <p> {`${(props.data.filter((dataPoint) => dataPoint.estimateId === '761101_MiamiSchoolOfMed_Ehrenkranz_DENV_age01')?.at(0) as any).inclusionCriteria ?? "No inclusion criteria specified"}. Clicking here will minimize the row.`} </p>
-                        </div>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                {(row.getIsExpanded() && rowExpansionConfiguration.enabled == true) ? (
+                  <DataTableExpandedRow
+                    row={row}
+                    data={props.data}
+                    generateExpandedRowStatement={rowExpansionConfiguration.generateExpandedRowStatement}
+                  />
                 ): (
-                  <TableRow
-                    data-state={row.getIsSelected()}
-                    onClick={() => row.getToggleExpandedHandler()()}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className={generateClassnameForCell({
-                          columnId: cell.column.id,
-                        })}
-                      >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
+                  <DataTableStandardRow
+                    row={row}
+                    generateClassnameForCell={generateClassnameForCell}
+                  />
                 )}
-                {row.getIsExpanded() && 
-                  <TableRow>
-                    <TableCell colSpan={row.getVisibleCells().length} className="p-0">
-                      <div className="
-                        flex
-                        w-auto
-                        overflow-x-hidden
-                        max-w-[95vw]
-                        lg:max-w-[80vw]
-                        sticky
-                        left-0
-                        p-4
-                        max-h-half-screen
-                        overflow-y-scroll
-                      "
-                      >
-                        <table className="h-full">
-                          <tr>
-                            <th> Field </th>
-                            <th> Value </th>
-                          </tr>
-
-                          {row.getAllCells().map((cell) => (
-                            <tr key={cell.id}>
-                              <td className="p-2 border-2"> {cell.column.id} </td>
-                              <td className="p-2 border-2">
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              </td>
-                            </tr>
-                          ))}
-                        </table> 
-                        <div className="h-full pl-8 grow">
-                          <RechartsVisualization 
-                            className="h-full-screen"
-                            data={props.data.filter((dataPoint) => dataPoint.country === 'Haiti' && dataPoint.pathogen==='DENV') as any}
-                            highlightedDataPoint={props.data.filter((dataPoint) => dataPoint.estimateId === '761101_MiamiSchoolOfMed_Ehrenkranz_DENV_age01').at(0) as any}
-                            visualizationInformation={arbovirusVisualizationInformation[ArbovirusVisualizationId.COUNTRY_SEROPREVALENCE_COMPARISON_SCATTER_PLOT]}
-                            getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
-                            buttonConfig={{
-                              downloadButton: {
-                                enabled: true,
-                              },
-                              zoomInButton: {
-                                enabled: false,
-                              },
-                              closeButton: {
-                                enabled: false,
-                              }
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                {(row.getIsExpanded() && rowExpansionConfiguration.enabled == true) &&
+                  <DataTableExpandedRowContent
+                    row={row}
+                    data={props.data}
+                    visualization={rowExpansionConfiguration.visualization}
+                  />
                 }
               </>
             ))
