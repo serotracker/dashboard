@@ -22,6 +22,7 @@ export const DataTableExpandedRow = <TData extends Record<string, unknown>>(prop
     <TableRow
       data-state={props.row.getIsSelected()}
       onClick={() => props.row.getToggleExpandedHandler()()}
+      className="cursor-pointer"
     >
       <TableCell colSpan={(props.row.getVisibleCells().length)} className="p-0">
         <div className="

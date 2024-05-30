@@ -15,6 +15,7 @@ export const DataTableStandardRow = <TData extends Record<string, unknown>>(prop
   <TableRow
     data-state={props.row.getIsSelected()}
     onClick={() => props.row.getToggleExpandedHandler()()}
+    className="cursor-pointer"
   >
     {props.row.getVisibleCells().map((cell) => (
       <TableCell
