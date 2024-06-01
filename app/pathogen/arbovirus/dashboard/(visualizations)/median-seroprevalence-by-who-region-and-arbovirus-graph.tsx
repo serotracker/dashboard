@@ -17,7 +17,7 @@ export const MedianSeroprevalenceByWHORegionAndArbovirusGraph = () => {
       secondaryGroupingSortFunction={(whoRegionA, whoRegionB) =>
         whoRegionA > whoRegionB ? 1 : -1
       }
-      transformOutputValue={(data) => parseFloat(median(data.map((dataPoint) => dataPoint.seroprevalence * 100)).toFixed(1))}
+      transformOutputValue={({ data }) => parseFloat(median(data.map((dataPoint) => dataPoint.seroprevalence * 100)).toFixed(1))}
       getBarColour={(primaryKey) => barColoursForArboviruses[primaryKey]}
       xAxisTickSettings={{ slantValue: 35 }}
       subgraphSettings={{

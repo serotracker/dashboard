@@ -74,7 +74,7 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
         "comparing-seroprevalence-positive-cases-and-vaccinations"
       ],
     getDisplayName: () => "Comparing Seroprevalence to Confirmed Cases and Vaccine Coverage Over Time",
-    renderVisualization: () => ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime({legendConfiguration: LegendConfiguration.RIGHT_ALIGNED})
+    renderVisualization: () => ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
 }
 

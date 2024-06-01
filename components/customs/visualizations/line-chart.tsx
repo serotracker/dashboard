@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   BarChart,
   Bar,
@@ -13,8 +14,9 @@ import {
   Label,
   Line,
 } from "recharts";
-import { groupDataForRecharts } from "./group-data-for-recharts";
+import { TransformOutputValueInput, groupDataForRecharts } from "./group-data-for-recharts";
 import { LegendConfiguration } from "./stacked-bar-chart";
+import { typedObjectEntries, typedObjectFromEntries } from '@/lib/utils';
 
 interface LineChartProps<
   TData,
@@ -34,7 +36,10 @@ interface LineChartProps<
     b: TSecondaryGroupingKey
   ) => number;
   secondaryGroupingKeyToLabel?: (input: TSecondaryGroupingKey) => string;
-  transformOutputValue: (data: TData[]) => number;
+  transformOutputValue: (input: TransformOutputValueInput<
+    TData,
+    TSecondaryGroupingKey
+  >) => number;
   getLineColour: (secondaryKey: TSecondaryGroupingKey) => string;
   xAxisTickSettings?: {
     interval?: number;
@@ -50,6 +55,7 @@ export const LineChart = <
 >(
   props: LineChartProps<TData, TPrimaryGroupingKey, TSecondaryGroupingKey>
 ) => {
+  const { secondaryGroupingKeyToLabel } = props;
   const { rechartsData, allSecondaryKeys } = groupDataForRecharts({
     data: props.data,
     primaryGroupingFunction: props.primaryGroupingFunction,
@@ -58,6 +64,20 @@ export const LineChart = <
     secondaryGroupingSortFunction: props.secondaryGroupingSortFunction,
     transformOutputValue: props.transformOutputValue,
   });
+
+  const rechartsDataUsingLabels = useMemo(() => rechartsData.map((element) => ({
+    ...element,
+    ...(secondaryGroupingKeyToLabel ? 
+      allSecondaryKeys
+        .map((secondaryKey) => ({
+          [secondaryGroupingKeyToLabel(secondaryKey)]: element[secondaryKey]
+        }))
+        .reduce((accumulator, value) => ({
+          ...accumulator,
+          ...value
+        }))
+     : {})
+  })), [rechartsData])
 
   let xAxisProps: XAxisProps = {
     dataKey: "primaryKey",
@@ -93,7 +113,7 @@ export const LineChart = <
         }}
         width={730}
         height={500}
-        data={rechartsData}
+        data={rechartsDataUsingLabels}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis {...xAxisProps} />

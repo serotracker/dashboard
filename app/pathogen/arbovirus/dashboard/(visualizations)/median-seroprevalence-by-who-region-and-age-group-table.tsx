@@ -18,11 +18,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { WHORegion } from "@/lib/who-regions";
 import { Button } from "@/components/ui/button";
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import { useChartArbovirusDropdown } from "./chart-arbovirus-dropdown";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { WhoRegion } from "@/gql/graphql";
 
 enum AgeGroup {
   "Adults (18-64 years)" = "Adults (18-64 years)",
@@ -97,7 +97,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
             arbovirus,
             typedGroupBy(
               dataPoints,
-              (dataPoint) => dataPoint.whoRegion as WHORegion
+              (dataPoint) => dataPoint.whoRegion as WhoRegion
             ),
           ]
         )
@@ -114,7 +114,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
             typedObjectFromEntries(
               typedObjectEntries(dataGroupedByWHORegion)
                 .filter(([whoRegion, dataPoints]) =>
-                  Object.values(WHORegion).includes(whoRegion)
+                  Object.values(WhoRegion).includes(whoRegion)
                 )
                 .map(([whoRegion, dataPoints]) => [
                   whoRegion,
@@ -137,7 +137,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
   });
 
   const datasetToDisplay = useMemo(
-    () => selectedArbovirus !== 'N/A' ? tableDatasets[selectedArbovirus] : {} as Record<WHORegion, Record<AgeGroup, any[]>>,
+    () => selectedArbovirus !== 'N/A' ? tableDatasets[selectedArbovirus] : {} as Record<WhoRegion, Record<AgeGroup, any[]>>,
     [selectedArbovirus, tableDatasets]
   );
 

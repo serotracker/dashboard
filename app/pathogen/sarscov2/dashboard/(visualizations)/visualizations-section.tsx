@@ -20,7 +20,8 @@ export const SarsCov2VisualizationsSection = () => {
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
     SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION,
     SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME,
-    SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION
+    SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION,
+    SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS
   ].includes(visualizationInfo.id));
 
   const { filteredData } = useContext(SarsCov2Context);
