@@ -208,8 +208,7 @@ const RegionSelector = (props: RegionSelectorProps) => {
           SecondaryKeyRegionType.GBD_SUPER_REGION,
           SecondaryKeyRegionType.GLOBAL,
           SecondaryKeyRegionType.WHO_REGION,
-          SecondaryKeyRegionType.UN_REGION,
-          'N/A'
+          SecondaryKeyRegionType.UN_REGION
         ]}
         optionToLabelMap={selectedRegionTypeToLabelMap}
         singleSelect={true}
@@ -262,7 +261,46 @@ const getSelectedRegionsFromRegionSelectorState = (state: RegionSelectorState): 
 const regionSelectorStatesToSelectedSecondaryKeys = (
   regionSelectorStates: RegionSelectorState[]
 ): SecondaryKeyFieldsRegionPortion[] => {
-  return [];
+  return regionSelectorStates.flatMap((state) => {
+    if(!state) {
+      return [];
+    }
+    if(state.regionType === SecondaryKeyRegionType.GLOBAL) {
+      return [{ regionType: SecondaryKeyRegionType.GLOBAL }]
+    }
+    if(state.regionType === SecondaryKeyRegionType.COUNTRY) {
+      return state.countryAlphaTwoCodes.map((countryAlphaTwoCode): SecondaryKeyFieldsRegionPortion => ({
+        regionType: SecondaryKeyRegionType.COUNTRY,
+        countryAlphaTwoCode
+      }))
+    }
+    if(state.regionType === SecondaryKeyRegionType.GBD_SUB_REGION) {
+      return state.gbdSubRegions.map((gbdSubRegion): SecondaryKeyFieldsRegionPortion => ({
+        regionType: SecondaryKeyRegionType.GBD_SUB_REGION,
+        gbdSubRegion
+      }))
+    }
+    if(state.regionType === SecondaryKeyRegionType.GBD_SUPER_REGION) {
+      return state.gbdSuperRegions.map((gbdSuperRegion): SecondaryKeyFieldsRegionPortion => ({
+        regionType: SecondaryKeyRegionType.GBD_SUPER_REGION,
+        gbdSuperRegion
+      }))
+    }
+    if(state.regionType === SecondaryKeyRegionType.UN_REGION) {
+      return state.unRegions.map((unRegion): SecondaryKeyFieldsRegionPortion => ({
+        regionType: SecondaryKeyRegionType.UN_REGION,
+        unRegion
+      }))
+    }
+    if(state.regionType === SecondaryKeyRegionType.WHO_REGION) {
+      return state.whoRegions.map((whoRegion): SecondaryKeyFieldsRegionPortion => ({
+        regionType: SecondaryKeyRegionType.WHO_REGION,
+        whoRegion
+      }))
+    }
+
+    assertNever(state)
+  });
 }
 
 interface HandleRegionSelectorDeletionInput {

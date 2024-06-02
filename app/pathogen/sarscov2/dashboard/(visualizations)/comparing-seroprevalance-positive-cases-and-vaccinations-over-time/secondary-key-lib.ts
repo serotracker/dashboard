@@ -52,6 +52,7 @@ type SecondaryKeyFields = SecondaryKeyFieldsRegionPortion & {
 }
 
 interface GetAllSecondaryKeysInput {
+  estimate: Pick<SarsCov2Estimate, 'whoRegion'|'countryAlphaTwoCode'|'unRegion'|'gbdSubRegion'|'gbdSuperRegion'>;
   secondaryKeyRegionPortions: SecondaryKeyFieldsRegionPortion[];
 }
 
@@ -206,6 +207,11 @@ export const useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSecon
 
   const getAllSecondaryKeys = (input: GetAllSecondaryKeysInput): GetAllSecondaryKeysOutput => ({
     secondaryKeyStrings: getAllSecondaryKeyFields(input)
+      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.COUNTRY) || (secondaryKeyFields.countryAlphaTwoCode === input.estimate.countryAlphaTwoCode))
+      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.GBD_SUB_REGION) || (!!input.estimate.gbdSubRegion && secondaryKeyFields.gbdSubRegion === input.estimate.gbdSubRegion))
+      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.GBD_SUPER_REGION) || (!!input.estimate.gbdSuperRegion && secondaryKeyFields.gbdSuperRegion === input.estimate.gbdSuperRegion))
+      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.WHO_REGION) || (!!input.estimate.whoRegion && secondaryKeyFields.whoRegion === input.estimate.whoRegion))
+      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.UN_REGION) || (!!input.estimate.unRegion && secondaryKeyFields.unRegion === input.estimate.unRegion))
       .map((secondaryKeyFields) => secondaryKeyFieldsToSecondaryKeyString(secondaryKeyFields))
   })
 

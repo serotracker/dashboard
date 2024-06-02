@@ -70,7 +70,8 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
           data={consideredData}
           primaryGroupingFunction={(dataPoint) => generateTimeBucketsForEstimate({ estimate: dataPoint })}
           primaryGroupingSortFunction={(timeBucketA, timeBucketB) => monthYearStringToMonthCount(timeBucketA) - monthYearStringToMonthCount(timeBucketB)}
-          secondaryGroupingFunction={() => getAllSecondaryKeys({
+          secondaryGroupingFunction={(dataPoint) => getAllSecondaryKeys({
+            estimate: dataPoint,
             secondaryKeyRegionPortions
           }).secondaryKeyStrings}
           secondaryGroupingKeyToLabel={(secondaryKey) => secondaryKeyStringToLabel(secondaryKey)}
