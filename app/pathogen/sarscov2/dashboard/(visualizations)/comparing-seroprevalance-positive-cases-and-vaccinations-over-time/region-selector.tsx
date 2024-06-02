@@ -330,7 +330,7 @@ const RegionSelectorContainer = (props: RegionSelectorContainerProps) => {
           sortOrder: Math.max(...currentRegionSelectorStates.map(({ sortOrder }) => sortOrder)) + 1,
           state: undefined
         }
-      ]
+      ].sort((a, b) => a.sortOrder - b.sortOrder);
 
       const newSelectedSecondaryKeys = regionSelectorStatesToSelectedSecondaryKeys(
         newRegionSelectorStates.map(({ state }) => state)
@@ -346,7 +346,7 @@ const RegionSelectorContainer = (props: RegionSelectorContainerProps) => {
     setAllRegionSelectorStates((currentRegionSelectorStates) => {
       const newRegionSelectorStates = currentRegionSelectorStates.filter(
         (element) => element.selectorId !== input.regionSelectorState.selectorId
-      );
+      ).sort((a, b) => a.sortOrder - b.sortOrder);
 
       const newSelectedSecondaryKeys = regionSelectorStatesToSelectedSecondaryKeys(
         newRegionSelectorStates.map(({ state }) => state)
@@ -369,7 +369,7 @@ const RegionSelectorContainer = (props: RegionSelectorContainerProps) => {
           sortOrder: selectorElement.sortOrder,
           state: input.newRegionSelectorState
         }] : [])
-      ]
+      ].sort((a, b) => a.sortOrder - b.sortOrder);
 
       const newSelectedSecondaryKeys = regionSelectorStatesToSelectedSecondaryKeys(
         newRegionSelectorStates.map(({ state }) => state)

@@ -40,7 +40,7 @@ interface LineChartProps<
     TData,
     TSecondaryGroupingKey
   >) => number;
-  getLineColour: (secondaryKey: TSecondaryGroupingKey) => string;
+  getLineColour: (secondaryKey: TSecondaryGroupingKey, index: number) => string;
   xAxisTickSettings?: {
     interval?: number;
   };
@@ -125,12 +125,12 @@ export const LineChart = <
           {...(props.percentageFormattingEnabled ? {formatter: (value) => `${value}%`} : {})}
         />
         <Legend {...legendProps} />
-        {allSecondaryKeys.map((secondaryKey) => (
+        {allSecondaryKeys.map((secondaryKey, index) => (
           <Line
             key={secondaryKey}
             type="monotone"
             dataKey={props.secondaryGroupingKeyToLabel ? props.secondaryGroupingKeyToLabel(secondaryKey) : secondaryKey}
-            stroke={props.getLineColour(secondaryKey)}
+            stroke={props.getLineColour(secondaryKey, index)}
           />
         ))}
       </RechartsLineChart>

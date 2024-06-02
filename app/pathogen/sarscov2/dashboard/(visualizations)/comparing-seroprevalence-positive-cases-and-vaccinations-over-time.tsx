@@ -1,5 +1,6 @@
 import { useContext, useMemo } from "react";
 import parseISO from 'date-fns/parseISO';
+import defaultColours from 'tailwindcss/colors'
 
 import { LineChart } from "@/components/customs/visualizations/line-chart";
 import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
@@ -33,6 +34,42 @@ type SarsCov2EstimateWithMidDateCleaned = Omit<SarsCov2Estimate, "samplingMidDat
   samplingMidDate: Date
 }
 
+const indexToColourMap: Record<number, string | undefined> = {
+  0: defaultColours.red[200],
+  1: defaultColours.red[500],
+  2: defaultColours.red[800],
+  3: defaultColours.emerald[200],
+  4: defaultColours.emerald[500],
+  5: defaultColours.emerald[800],
+  6: defaultColours.purple[200],
+  7: defaultColours.purple[500],
+  8: defaultColours.purple[800],
+  9: defaultColours.yellow[200],
+  10: defaultColours.yellow[500],
+  11: defaultColours.yellow[800],
+  12: defaultColours.blue[200],
+  13: defaultColours.blue[500],
+  14: defaultColours.blue[800],
+  15: defaultColours.rose[200],
+  16: defaultColours.rose[500],
+  17: defaultColours.rose[800],
+  18: defaultColours.orange[200],
+  19: defaultColours.orange[500],
+  20: defaultColours.orange[800],
+  21: defaultColours.lime[200],
+  22: defaultColours.lime[500],
+  23: defaultColours.lime[800],
+  24: defaultColours.cyan[200],
+  25: defaultColours.cyan[500],
+  26: defaultColours.cyan[800],
+  27: defaultColours.amber[200],
+  28: defaultColours.amber[500],
+  29: defaultColours.amber[800],
+  30: defaultColours.teal[200],
+  31: defaultColours.teal[500],
+  32: defaultColours.teal[800]
+}
+
 export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
   props: ComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeProps
 ) => {
@@ -61,7 +98,7 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
 
   return (
     <div className="flex h-full">
-      <div className="grow-0 h-full max-w-xs overflow-y-scroll">
+      <div className="grow-0 h-full max-w-xs overflow-y-scroll ignore-for-visualization-download">
         {regionSelector}
       </div>
       <div className="grow h-full">
@@ -116,7 +153,8 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
 
             assertNever(secondaryKeyFields.valueType)
           }}
-          getLineColour={() => generateRandomColour()}
+          secondaryGroupingSortFunction={(secondaryKeyA, secondaryKeyB) => secondaryKeyA > secondaryKeyB ? 1 : -1 }
+          getLineColour={(_secondaryKey, index) => indexToColourMap[index] ?? generateRandomColour()}
           legendConfiguration={props.legendConfiguration}
           percentageFormattingEnabled={true}
         />
