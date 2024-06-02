@@ -9,6 +9,7 @@ import { generateRandomColour } from "@/lib/utils";
 import { SecondaryKeyValueType, secondaryKeyStringToSecondaryKeyFields, useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSecondaryKeyFunctions } from "./comparing-seroprevalance-positive-cases-and-vaccinations-over-time/secondary-key-lib";
 import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import assertNever from "assert-never";
+import { useRegionSelector } from "./comparing-seroprevalance-positive-cases-and-vaccinations-over-time/region-selector";
 
 interface ComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeProps {
   legendConfiguration: LegendConfiguration;
@@ -40,6 +41,10 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
     getAllSecondaryKeys,
     secondaryKeyStringToLabel,
   } = useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSecondaryKeyFunctions()
+  const {
+    regionSelector,
+    secondaryKeyRegionPortions
+  } = useRegionSelector({ maximumRegionSelectorCount: 5 });
 
   const consideredData = useMemo(() => state.filteredData
     .filter((dataPoint: SarsCov2Estimate): dataPoint is Omit<SarsCov2Estimate, "samplingMidDate">
@@ -55,64 +60,67 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
   );
 
   return (
-    <LineChart
-      graphId="comparing-seroprevalence-positive-cases-and-vaccinations"
-      data={consideredData}
-      primaryGroupingFunction={(dataPoint) => generateTimeBucketsForEstimate({ estimate: dataPoint })}
-      primaryGroupingSortFunction={(timeBucketA, timeBucketB) => monthYearStringToMonthCount(timeBucketA) - monthYearStringToMonthCount(timeBucketB)}
-      secondaryGroupingFunction={() => getAllSecondaryKeys({
-        selectedWhoRegions: [],
-        selectedUnRegions: [],
-        selectedCountryAlphaTwoCodes: [],
-        selectedGbdSuperRegions: [],
-        selectedGbdSubRegions: []
-      }).secondaryKeyStrings}
-      secondaryGroupingKeyToLabel={(secondaryKey) => secondaryKeyStringToLabel(secondaryKey)}
-      transformOutputValue={({ data, secondaryGroupingKey }) => {
-        const secondaryKeyFields = secondaryKeyStringToSecondaryKeyFields(secondaryGroupingKey);
+    <div className="flex h-full">
+      <div className="grow-0 h-full max-w-xs overflow-y-scroll">
+        {regionSelector}
+      </div>
+      <div className="grow h-full">
+        <LineChart
+          graphId="comparing-seroprevalence-positive-cases-and-vaccinations"
+          data={consideredData}
+          primaryGroupingFunction={(dataPoint) => generateTimeBucketsForEstimate({ estimate: dataPoint })}
+          primaryGroupingSortFunction={(timeBucketA, timeBucketB) => monthYearStringToMonthCount(timeBucketA) - monthYearStringToMonthCount(timeBucketB)}
+          secondaryGroupingFunction={() => getAllSecondaryKeys({
+            secondaryKeyRegionPortions
+          }).secondaryKeyStrings}
+          secondaryGroupingKeyToLabel={(secondaryKey) => secondaryKeyStringToLabel(secondaryKey)}
+          transformOutputValue={({ data, secondaryGroupingKey }) => {
+            const secondaryKeyFields = secondaryKeyStringToSecondaryKeyFields(secondaryGroupingKey);
 
-        if(secondaryKeyFields.valueType === SecondaryKeyValueType.POSITIVE_CASES) {
-          return parseFloat(median(data
-            .filter((dataPoint): dataPoint is Omit<SarsCov2EstimateWithMidDateCleaned, "countryPositiveCasesPerMillionPeople"> & {
-              countryPositiveCasesPerMillionPeople: NonNullable<SarsCov2EstimateWithMidDateCleaned["countryPositiveCasesPerMillionPeople"]>
-            } =>
-              dataPoint.countryPositiveCasesPerMillionPeople !== null &&
-              dataPoint.countryPositiveCasesPerMillionPeople !== undefined
-            )
-            .map((dataPoint) => (dataPoint.countryPositiveCasesPerMillionPeople / 1_000_000) * 100)
-          ).toFixed(1))
-        }
+            if(secondaryKeyFields.valueType === SecondaryKeyValueType.POSITIVE_CASES) {
+              return parseFloat(median(data
+                .filter((dataPoint): dataPoint is Omit<SarsCov2EstimateWithMidDateCleaned, "countryPositiveCasesPerMillionPeople"> & {
+                  countryPositiveCasesPerMillionPeople: NonNullable<SarsCov2EstimateWithMidDateCleaned["countryPositiveCasesPerMillionPeople"]>
+                } =>
+                  dataPoint.countryPositiveCasesPerMillionPeople !== null &&
+                  dataPoint.countryPositiveCasesPerMillionPeople !== undefined
+                )
+                .map((dataPoint) => (dataPoint.countryPositiveCasesPerMillionPeople / 1_000_000) * 100)
+              ).toFixed(1))
+            }
 
-        if(secondaryKeyFields.valueType === SecondaryKeyValueType.VACCINATIONS) {
-          return parseFloat(median(data
-            .filter((dataPoint): dataPoint is Omit<SarsCov2EstimateWithMidDateCleaned, "countryPeopleVaccinatedPerHundred"> & {
-              countryPeopleVaccinatedPerHundred: NonNullable<SarsCov2EstimateWithMidDateCleaned["countryPeopleVaccinatedPerHundred"]>
-            } =>
-              dataPoint.countryPeopleVaccinatedPerHundred !== null &&
-              dataPoint.countryPeopleVaccinatedPerHundred !== undefined
-            )
-            .map((dataPoint) => (dataPoint.countryPeopleVaccinatedPerHundred / 100) * 100)
-          ).toFixed(1))
-        }
+            if(secondaryKeyFields.valueType === SecondaryKeyValueType.VACCINATIONS) {
+              return parseFloat(median(data
+                .filter((dataPoint): dataPoint is Omit<SarsCov2EstimateWithMidDateCleaned, "countryPeopleVaccinatedPerHundred"> & {
+                  countryPeopleVaccinatedPerHundred: NonNullable<SarsCov2EstimateWithMidDateCleaned["countryPeopleVaccinatedPerHundred"]>
+                } =>
+                  dataPoint.countryPeopleVaccinatedPerHundred !== null &&
+                  dataPoint.countryPeopleVaccinatedPerHundred !== undefined
+                )
+                .map((dataPoint) => (dataPoint.countryPeopleVaccinatedPerHundred / 100) * 100)
+              ).toFixed(1))
+            }
 
-        if(secondaryKeyFields.valueType === SecondaryKeyValueType.SEROPREVALENCE) {
-          return parseFloat(median(data
-            .filter((dataPoint): dataPoint is Omit<SarsCov2EstimateWithMidDateCleaned, "seroprevalence"> & {
-              seroprevalence: NonNullable<SarsCov2EstimateWithMidDateCleaned["seroprevalence"]>
-            } =>
-              dataPoint.seroprevalence !== null &&
-              dataPoint.seroprevalence !== undefined
-            )
-            .map((dataPoint) => (dataPoint.seroprevalence) * 100)
-          ).toFixed(1))
-        }
+            if(secondaryKeyFields.valueType === SecondaryKeyValueType.SEROPREVALENCE) {
+              return parseFloat(median(data
+                .filter((dataPoint): dataPoint is Omit<SarsCov2EstimateWithMidDateCleaned, "seroprevalence"> & {
+                  seroprevalence: NonNullable<SarsCov2EstimateWithMidDateCleaned["seroprevalence"]>
+                } =>
+                  dataPoint.seroprevalence !== null &&
+                  dataPoint.seroprevalence !== undefined
+                )
+                .map((dataPoint) => (dataPoint.seroprevalence) * 100)
+              ).toFixed(1))
+            }
 
-        assertNever(secondaryKeyFields.valueType)
-      }}
-      getLineColour={() => generateRandomColour()}
-      legendConfiguration={props.legendConfiguration}
-      percentageFormattingEnabled={true}
-    />
+            assertNever(secondaryKeyFields.valueType)
+          }}
+          getLineColour={() => generateRandomColour()}
+          legendConfiguration={props.legendConfiguration}
+          percentageFormattingEnabled={true}
+        />
+      </div>
+    </div>
   );
 
 }

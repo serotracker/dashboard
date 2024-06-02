@@ -68,7 +68,7 @@ export const RechartsVisualization = <
           }
         }}
       />
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-hidden">
         {props.visualizationInformation.renderVisualization()}
       </div>
     </div>

@@ -16,7 +16,7 @@ export enum SecondaryKeyValueType {
 const isSecondaryKeyValueType = (valueType: string): valueType is SecondaryKeyValueType =>
   Object.values(SecondaryKeyValueType).some((element) => element === valueType)
 
-enum SecondaryKeyRegionType {
+export enum SecondaryKeyRegionType {
   GLOBAL = "GLOBAL",
   WHO_REGION = "WHO_REGION",
   UN_REGION = "UN_REGION",
@@ -25,10 +25,10 @@ enum SecondaryKeyRegionType {
   GBD_SUB_REGION = "GBD_SUB_REGION"
 }
 
-const isSecondaryKeyRegionType = (regionType: string): regionType is SecondaryKeyRegionType =>
+export const isSecondaryKeyRegionType = (regionType: string): regionType is SecondaryKeyRegionType =>
   Object.values(SecondaryKeyRegionType).some((element) => element === regionType)
 
-type SecondaryKeyFieldsRegionPortion = {
+export type SecondaryKeyFieldsRegionPortion = {
   regionType: SecondaryKeyRegionType.GLOBAL
 } | {
   regionType: SecondaryKeyRegionType.WHO_REGION,
@@ -52,11 +52,7 @@ type SecondaryKeyFields = SecondaryKeyFieldsRegionPortion & {
 }
 
 interface GetAllSecondaryKeysInput {
-  selectedWhoRegions: WhoRegion[];
-  selectedUnRegions: UnRegion[];
-  selectedCountryAlphaTwoCodes: string[];
-  selectedGbdSuperRegions: GbdSuperRegion[];
-  selectedGbdSubRegions: GbdSubRegion[];
+  secondaryKeyRegionPortions: SecondaryKeyFieldsRegionPortion[];
 }
 
 interface GetAllSecondaryKeysOutput {
@@ -67,47 +63,8 @@ const secondaryKeyStringSeperator = '___'
 
 type SecondaryKeyString = `${SecondaryKeyRegionType}${typeof secondaryKeyStringSeperator}${string}${typeof secondaryKeyStringSeperator}${SecondaryKeyValueType}`
 
-const estimateToSecondaryKeyFields = (input: GetAllSecondaryKeysInput): SecondaryKeyFields[] => {
-  const whoRegionKeyFields = input.selectedWhoRegions.map((whoRegion) => ({
-    regionType: SecondaryKeyRegionType.WHO_REGION as const,
-    whoRegion
-  }));
-
-  const unRegionKeyFields = input.selectedUnRegions.map((unRegion) => ({
-    regionType: SecondaryKeyRegionType.UN_REGION as const,
-    unRegion
-  }));
-
-  const countryKeyFields = input.selectedCountryAlphaTwoCodes.map((countryAlphaTwoCode) => ({
-    regionType: SecondaryKeyRegionType.COUNTRY as const,
-    countryAlphaTwoCode
-  }));
-
-  const gbdSuperRegionKeyFields = input.selectedGbdSuperRegions.map((gbdSuperRegion) => ({
-    regionType: SecondaryKeyRegionType.GBD_SUPER_REGION as const,
-    gbdSuperRegion
-  }));
-
-  const gbdSubRegionKeyFields = input.selectedGbdSubRegions.map((gbdSubRegion) => ({
-    regionType: SecondaryKeyRegionType.GBD_SUB_REGION as const,
-    gbdSubRegion
-  }));
-
-  const secondaryKeyFieldsArray: SecondaryKeyFieldsRegionPortion[] = [
-    ...whoRegionKeyFields,
-    ...unRegionKeyFields,
-    ...countryKeyFields,
-    ...gbdSuperRegionKeyFields,
-    ...gbdSubRegionKeyFields
-  ];
-
-  if(secondaryKeyFieldsArray.length < 2) {
-    secondaryKeyFieldsArray.push({
-      regionType: SecondaryKeyRegionType.GLOBAL as const,
-    })
-  }
-
-  return secondaryKeyFieldsArray.flatMap((secondaryKeyFields) => [
+const getAllSecondaryKeyFields = (input: GetAllSecondaryKeysInput): SecondaryKeyFields[] => {
+  return input.secondaryKeyRegionPortions.flatMap((secondaryKeyFields) => [
     { ...secondaryKeyFields, valueType: SecondaryKeyValueType.VACCINATIONS },
     { ...secondaryKeyFields, valueType: SecondaryKeyValueType.POSITIVE_CASES },
     { ...secondaryKeyFields, valueType: SecondaryKeyValueType.SEROPREVALENCE }
@@ -248,7 +205,7 @@ export const useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSecon
   const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
 
   const getAllSecondaryKeys = (input: GetAllSecondaryKeysInput): GetAllSecondaryKeysOutput => ({
-    secondaryKeyStrings: estimateToSecondaryKeyFields(input)
+    secondaryKeyStrings: getAllSecondaryKeyFields(input)
       .map((secondaryKeyFields) => secondaryKeyFieldsToSecondaryKeyString(secondaryKeyFields))
   })
 

@@ -75,9 +75,9 @@ export const LineChart = <
         .reduce((accumulator, value) => ({
           ...accumulator,
           ...value
-        }))
+        }), {})
      : {})
-  })), [rechartsData])
+  })), [rechartsData, allSecondaryKeys, secondaryGroupingKeyToLabel])
 
   let xAxisProps: XAxisProps = {
     dataKey: "primaryKey",

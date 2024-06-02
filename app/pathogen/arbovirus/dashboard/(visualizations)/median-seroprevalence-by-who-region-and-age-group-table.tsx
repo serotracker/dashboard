@@ -177,7 +177,7 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
     });
     const csv = generateCsv(csvConfig)(dataForCsv);
     download(csvConfig)(csv);
-  }, [tableDatasets, ageGroupToSortOrderMap]);
+  }, [tableDatasets]);
 
   return (
     <div className="p-2">
