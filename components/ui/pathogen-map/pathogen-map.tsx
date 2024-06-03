@@ -20,6 +20,8 @@ import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-laye
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
 import { EsmMapSourceAndLayer } from "./esm-maps";
+import { computeClusterMarkers } from "./map-clustering";
+import { propagateServerField } from "next/dist/server/lib/render-server";
 
 export interface MarkerCollection {
   [key: string]: JSX.Element;
@@ -31,38 +33,39 @@ export interface PathogenDataPointPropertiesBase {
   longitude: number | undefined;
 }
 
-interface ClusteringEnabledSettings {
+interface ClusteringEnabledSettings<TClusterPropertyKey extends string> {
   clusteringEnabled: true,
-  computeClusterMarkers: (props: {
-    features: mapboxgl.MapboxGeoJSONFeature[];
-    markers: MarkerCollection;
-    map: mapboxgl.Map;
-  }) => MarkerCollection;
-  clusterProperties: { [key: string]: any };
+  validClusterPropertyKeys: TClusterPropertyKey[];
+  clusterProperties: Record<TClusterPropertyKey, unknown>;
+  clusterPropertyToColourMap: Record<TClusterPropertyKey, string>;
 }
 
 interface ClusteringDisabledSettings {
   clusteringEnabled: false,
 }
 
-export type ClusteringSettings = ClusteringEnabledSettings | ClusteringDisabledSettings;
+export type ClusteringSettings<TClusterPropertyKey extends string> = 
+  | ClusteringEnabledSettings<TClusterPropertyKey> 
+  | ClusteringDisabledSettings;
 
 interface PathogenMapProps<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TClusterPropertyKey extends string
 > {
   id: string;
   baseCursor: PathogenMapCursor;
   layers: PathogenMapLayerInfo[];
   generatePopupContent: PopupContentGenerator<TPathogenDataPointProperties>;
   dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
-  clusteringSettings: ClusteringSettings;
+  clusteringSettings: ClusteringSettings<TClusterPropertyKey>;
   sourceId: string;
 }
 
 
 
 export function PathogenMap<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TClusterPropertyKey extends string
 >({
   id,
   baseCursor,
@@ -71,7 +74,7 @@ export function PathogenMap<
   dataPoints,
   clusteringSettings,
   sourceId,
-}: PathogenMapProps<TPathogenDataPointProperties>) {
+}: PathogenMapProps<TPathogenDataPointProperties, TClusterPropertyKey>) {
   const [popUpInfo, _setPopUpInfo] = useState<
     PopupInfo<TPathogenDataPointProperties>
   >({ visible: false, properties: null, layerId: null });
@@ -122,12 +125,14 @@ export function PathogenMap<
   const onRender = (event: mapboxgl.MapboxEvent) => {
     const map = event.target;
     if (map) {
-      const features = map.querySourceFeatures(sourceId);
+      const features = map.querySourceFeatures(sourceId) as any;
 
       if(clusteringSettings.clusteringEnabled === true) {
         // This needs to be standardized. How? Can we be type specific probable not? 
-        const newMarkers = clusteringSettings.computeClusterMarkers({
+        const newMarkers = computeClusterMarkers({
           features,
+          validClusterPropertyKeys: clusteringSettings.validClusterPropertyKeys,
+          clusterPropertyToColourMap: clusteringSettings.clusterPropertyToColourMap,
           markers: markersRef.current,
           map
         });

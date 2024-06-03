@@ -3,26 +3,51 @@ import { MarkerCollection } from "@/components/ui/pathogen-map/pathogen-map";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
 import mapboxgl from "mapbox-gl";
 import React from "react";
-import { Marker, MarkerEvent, useMap } from "react-map-gl";
+import { Marker } from "react-map-gl";
 
-// This whole file will be custom for each of the pathogens themselves
+const donutSegment = (
+  start: number,
+  end: number,
+  r: number,
+  r0: number,
+  color: string,
+  key: string
+) => {
+  if (end - start === 1) end -= 0.00001;
+  const a0 = 2 * Math.PI * (start - 0.25);
+  const a1 = 2 * Math.PI * (end - 0.25);
+  const x0 = Math.cos(a0),
+    y0 = Math.sin(a0);
+  const x1 = Math.cos(a1),
+    y1 = Math.sin(a1);
+  const largeArc = end - start > 0.5 ? 1 : 0;
 
-// code for creating an SVG donut chart from feature properties
-export function createDonutChartAndHoverPopup(props: {
-  properties: any;
+  // draw an SVG path
+  return (
+    <path
+      d={`M ${r + r0 * x0} ${r + r0 * y0} L ${r + r * x0} ${
+        r + r * y0
+      } A ${r} ${r} 0 ${largeArc} 1 ${r + r * x1} ${r + r * y1} L ${
+        r + r0 * x1
+      } ${r + r0 * y1} A ${r0} ${r0} 0 ${largeArc} 0 ${r + r0 * x0} ${
+        r + r0 * y0
+      }`}
+      fill={color}
+      key={key}
+    />
+  );
+}
+
+const createDonutChartAndHoverPopup = <TClusterPropertyKey extends string>(props: {
+  properties: Record<TClusterPropertyKey, number>;
+  validClusterPropertyKeys: TClusterPropertyKey[];
+  clusterPropertyToColourMap: Record<TClusterPropertyKey, string>;
   map: mapboxgl.Map;
   coords: [number, number];
-}) {
+}) => {
   const offsets: number[] = [];
-  const counts = [
-    props.properties.ZIKV,
-    props.properties.DENV,
-    props.properties.CHIKV,
-    props.properties.YF,
-    props.properties.WNV,
-    props.properties.MAYV,
-  ];
-  const arboColorNames = ["ZIKV",  "DENV", "CHIKV", "YF", "WNV", "MAYV"];
+  const counts: number[] = props.validClusterPropertyKeys.map((clusterPropertyKey) => props.properties[clusterPropertyKey])
+
   let total = 0;
   for (const count of counts) {
     offsets.push(total);
@@ -45,34 +70,18 @@ export function createDonutChartAndHoverPopup(props: {
         </div>
         <div style="display: flex; flex-direction: row; justify-content: space-between; padding-bottom: 0.5rem">
             <div style="display: flex; flex-direction: column;">`;
-  if (props.properties.ZIKV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["ZIKV"]}">ZIKV</div>`;
-    if (props.properties.DENV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["DENV"]}">DENV</div>`;
-  if (props.properties.CHIKV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["CHIKV"]}">CHIKV</div>`;
-    if (props.properties.YF > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["YF"]}">YF</div>`;
-  if (props.properties.WNV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["WNV"]}">WNV</div>`;
-  if (props.properties.MAYV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["MAYV"]}">MAYV</div>`;
+  props.validClusterPropertyKeys.forEach((clusterPropertyKey) => {
+    if(props.properties[clusterPropertyKey] > 0) {
+      popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${props.clusterPropertyToColourMap[clusterPropertyKey]}">${clusterPropertyKey}</div>`;
+    }
+  })
   popupHTML += `</div>
             <div style="display: flex; flex-direction: column;">`;
-
-  if (props.properties.ZIKV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.ZIKV}</div>`;
-    if (props.properties.DENV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.DENV}</div>`;
-  if (props.properties.CHIKV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.CHIKV}</div>`;
-    if (props.properties.YF > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.YF}</div>`;
-  if (props.properties.WNV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.WNV}</div>`;
-  if (props.properties.MAYV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.MAYV}</div>`;
-  
+  props.validClusterPropertyKeys.forEach((clusterPropertyKey) => {
+    if(props.properties[clusterPropertyKey] > 0) {
+      popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties[clusterPropertyKey]}</div>`;
+    }
+  })
   popupHTML += `</div>
         </div>
         <div style="font-size: 0.875rem; font-weight: 300; text: center">Click to zoom in</div>
@@ -127,7 +136,7 @@ export function createDonutChartAndHoverPopup(props: {
           (offsets[i] + count) / total,
           piChartOuterRadius,
           piChartInnerRadius,
-          pathogenColors[arboColorNames[i]],
+          props.clusterPropertyToColourMap[props.validClusterPropertyKeys[i]],
           `map-cluster-svg-path-${i}`
         )
       )}
@@ -139,46 +148,12 @@ export function createDonutChartAndHoverPopup(props: {
   );
 }
 
-export function donutSegment(
-  start: number,
-  end: number,
-  r: number,
-  r0: number,
-  color: string,
-  key: string
-) {
-  if (end - start === 1) end -= 0.00001;
-  const a0 = 2 * Math.PI * (start - 0.25);
-  const a1 = 2 * Math.PI * (end - 0.25);
-  const x0 = Math.cos(a0),
-    y0 = Math.sin(a0);
-  const x1 = Math.cos(a1),
-    y1 = Math.sin(a1);
-  const largeArc = end - start > 0.5 ? 1 : 0;
-
-  // draw an SVG path
-  return (
-    <path
-      d={`M ${r + r0 * x0} ${r + r0 * y0} L ${r + r * x0} ${
-        r + r * y0
-      } A ${r} ${r} 0 ${largeArc} 1 ${r + r * x1} ${r + r * y1} L ${
-        r + r0 * x1
-      } ${r + r0 * y1} A ${r0} ${r0} 0 ${largeArc} 0 ${r + r0 * x0} ${
-        r + r0 * y0
-      }`}
-      fill={color}
-      key={key}
-    />
-  );
-}
-
-
-export function createClusterPointMarker(props: {
+const createClusterPointMarker = (props: {
   element: React.ReactNode;
   coords: [number, number];
   id: string;
   map: mapboxgl.Map;
-}) {
+}) => {
   const onClick = (event: any) => {
     const coordinates = event.target.getLngLat();
     props.map.flyTo({
@@ -200,8 +175,13 @@ export function createClusterPointMarker(props: {
 }
 
 // markers is a cached collection of already existing markers. 
-export function computeClusterMarkers(props: {
-  features: mapboxgl.MapboxGeoJSONFeature[];
+export function computeClusterMarkers<TClusterPropertyKey extends string>(props: {
+  validClusterPropertyKeys: TClusterPropertyKey[];
+  clusterPropertyToColourMap: Record<TClusterPropertyKey, string>;
+  features: GeoJSON.Feature<
+    GeoJSON.Geometry,
+    { cluster: boolean, cluster_id: string } & Record<TClusterPropertyKey, number>
+  >[];
   markers: MarkerCollection;
   map: mapboxgl.Map;
 }): MarkerCollection {
@@ -223,6 +203,8 @@ export function computeClusterMarkers(props: {
             properties: properties,
             map: props.map,
             coords: [coords[0], coords[1]],
+            validClusterPropertyKeys: props.validClusterPropertyKeys,
+            clusterPropertyToColourMap: props.clusterPropertyToColourMap
           });
           marker = props.markers[id] = createClusterPointMarker({
             element: el,
