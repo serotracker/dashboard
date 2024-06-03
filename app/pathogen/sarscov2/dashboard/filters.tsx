@@ -38,11 +38,12 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   ];
 
   const demographicFilters = [
+    FilterableField.populationGroup,
+    FilterableField.sex,
     FilterableField.ageGroup,
   ];
 
   const testInformationFilters = [
-    FilterableField.sourceType,
     FilterableField.antibodies,
     FilterableField.testType,
     FilterableField.isotypes
