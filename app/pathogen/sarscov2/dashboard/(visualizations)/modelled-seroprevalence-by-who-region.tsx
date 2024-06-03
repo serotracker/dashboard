@@ -34,21 +34,48 @@ interface ModelledSeroprevalenceByWhoRegionGraphProps {
   legendConfiguration: LegendConfiguration;
 }
 
+type AcceptableSarsCov2EstimateWithSeroprevalence = Omit<SarsCov2Estimate, "samplingMidDate"|"whoRegion"|"denominatorValue"|"numeratorValue"|"seroprevalence"> & {
+  samplingMidDate: NonNullable<SarsCov2Estimate["samplingStartDate"]>;
+  whoRegion: NonNullable<SarsCov2Estimate["whoRegion"]>;
+  denominatorValue: NonNullable<SarsCov2Estimate["denominatorValue"]>;
+} & {
+  numeratorValue: SarsCov2Estimate["numeratorValue"];
+  seroprevalence: NonNullable<SarsCov2Estimate["seroprevalence"]>;
+}
+
+const isAcceptableSarsCov2EstimateWithSeroprevalence = (
+  estimate: Omit<AcceptableSarsCov2Estimate, 'samplingMidDate'> & { samplingMidDate: Date }
+): estimate is (Omit<AcceptableSarsCov2EstimateWithSeroprevalence, 'samplingMidDate'> & { samplingMidDate: Date }) =>
+  estimate.seroprevalence !== null && estimate.seroprevalence !== undefined;
+
+type AcceptableSarsCov2EstimateWithNumerator = Omit<SarsCov2Estimate, "samplingMidDate"|"whoRegion"|"denominatorValue"|"numeratorValue"|"seroprevalence"> & {
+  samplingMidDate: NonNullable<SarsCov2Estimate["samplingStartDate"]>;
+  whoRegion: NonNullable<SarsCov2Estimate["whoRegion"]>;
+  denominatorValue: NonNullable<SarsCov2Estimate["denominatorValue"]>;
+} & {
+  numeratorValue: NonNullable<SarsCov2Estimate["numeratorValue"]>;
+  seroprevalence: SarsCov2Estimate["seroprevalence"]
+}
+
+const isAcceptableSarsCov2EstimateWithNumerator = (
+  estimate: Omit<AcceptableSarsCov2Estimate, 'samplingMidDate'> & { samplingMidDate: Date }
+): estimate is (Omit<AcceptableSarsCov2EstimateWithNumerator, 'samplingMidDate'> & { samplingMidDate: Date }) =>
+  estimate.numeratorValue !== null && estimate.numeratorValue !== undefined;
+
+type AcceptableSarsCov2Estimate = AcceptableSarsCov2EstimateWithSeroprevalence | AcceptableSarsCov2EstimateWithNumerator;
+
 export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeroprevalenceByWhoRegionGraphProps) => {
   const state = useContext(SarsCov2Context);
 
   const consideredData = useMemo(() => state.filteredData
-    .filter((dataPoint: SarsCov2Estimate): dataPoint is Omit<SarsCov2Estimate, "samplingMidDate"|"whoRegion"|"denominatorValue"|"numeratorValue">
-      & {
-        samplingMidDate: NonNullable<SarsCov2Estimate["samplingStartDate"]>;
-        whoRegion: NonNullable<SarsCov2Estimate["whoRegion"]>;
-        denominatorValue: NonNullable<SarsCov2Estimate["denominatorValue"]>;
-        numeratorValue: NonNullable<SarsCov2Estimate["numeratorValue"]>;
-      } => 
+    .filter((dataPoint: SarsCov2Estimate): dataPoint is AcceptableSarsCov2Estimate => 
         !!dataPoint.samplingMidDate
         && !!dataPoint.whoRegion
         && dataPoint.denominatorValue !== null && dataPoint.denominatorValue !== undefined
-        && dataPoint.numeratorValue !== null && dataPoint.numeratorValue !== undefined
+        && (
+          (dataPoint.numeratorValue !== null && dataPoint.numeratorValue !== undefined)
+          || (dataPoint.seroprevalence !== null && dataPoint.seroprevalence !== undefined)
+        )
     ).map((dataPoint) => ({
       ...dataPoint,
       samplingMidDate: parseISO(dataPoint.samplingMidDate),
@@ -65,10 +92,16 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
       secondaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
       secondaryGroupingSortFunction={(whoRegionA, whoRegionB) => whoRegionA > whoRegionB ? 1 : -1}
       transformOutputValue={(data) => {
-        const { denominatorValue, numeratorValue } = data.reduce((accumulator, currentValue) => ({
-          denominatorValue: accumulator.denominatorValue + currentValue.denominatorValue,
-          numeratorValue: accumulator.numeratorValue + currentValue.numeratorValue,
-        }), {denominatorValue: 0, numeratorValue: 0})
+        const { denominatorValue, numeratorValue } = data.reduce((accumulator, currentValue) => {
+          const currentValueNumeratorValue = isAcceptableSarsCov2EstimateWithNumerator(currentValue)
+            ? currentValue.numeratorValue
+            : currentValue.seroprevalence * currentValue.denominatorValue;
+
+          return {
+            denominatorValue: accumulator.denominatorValue + currentValue.denominatorValue,
+            numeratorValue: accumulator.numeratorValue + currentValueNumeratorValue,
+          }
+        }, {denominatorValue: 0, numeratorValue: 0})
 
         return denominatorValue > 0 ? parseFloat(((numeratorValue * 100) / denominatorValue).toFixed(1)) : 0
       }}
