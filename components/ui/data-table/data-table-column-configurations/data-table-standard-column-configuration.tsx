@@ -11,6 +11,7 @@ export const getDataTableStandardColumnConfiguration = (input: GetDataTableStand
 
   return {
     accessorKey: input.columnConfiguration.fieldName,
+    headerLabel: input.columnConfiguration.label,
     header: (input.columnConfiguration.isSortable === undefined || input.columnConfiguration.isSortable === true) ? getSortableColumnDataTableHeaderComponent({ columnName: input.columnConfiguration.label }) : input.columnConfiguration.label,
     enableHiding: input.columnConfiguration.isHideable ?? true,
     fixed: input.columnConfiguration.isFixed ?? false,
