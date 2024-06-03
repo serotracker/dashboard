@@ -125,7 +125,10 @@ export function PathogenMap<
   const onRender = (event: mapboxgl.MapboxEvent) => {
     const map = event.target;
     if (map) {
-      const features = map.querySourceFeatures(sourceId) as any;
+      const features = map.querySourceFeatures(sourceId) as any as GeoJSON.Feature<
+        GeoJSON.Geometry,
+        { cluster: boolean, cluster_id: string } & Record<TClusterPropertyKey, number>
+      >[];
 
       if(clusteringSettings.clusteringEnabled === true) {
         // This needs to be standardized. How? Can we be type specific probable not? 
