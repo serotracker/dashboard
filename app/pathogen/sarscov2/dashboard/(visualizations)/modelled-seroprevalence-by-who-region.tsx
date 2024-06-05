@@ -101,6 +101,17 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
         return parseFloat((seroprevalenceDecimalValue * 100).toFixed(1))
       }}
       getLineColour={({ primaryGroupingKey }) => barColoursForWhoRegions[primaryGroupingKey]}
+      bestFitLineSettings={{
+        maximumPolynomialOrder: 2,
+        yAxisDomain: {
+          maximumValue: 100,
+          minimumValue: 0
+        },
+        allowStrictlyIncreasingLinesOnly: true
+      }}
+      formatYAxisValue={({ yAxisValue }) => parseFloat((yAxisValue).toFixed(1))}
+      legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
+      percentageFormattingEnabled={false}
     />
   );
 }

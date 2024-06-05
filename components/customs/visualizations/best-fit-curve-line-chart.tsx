@@ -6,6 +6,15 @@ import { useBestFitCurve } from "./line-fitting/use-best-fit-curve";
 import { LegendConfiguration } from "./stacked-bar-chart";
 import { generateRange } from '@/lib/utils';
 
+interface BestFitLineSettings {
+  maximumPolynomialOrder: number;
+  yAxisDomain: {
+    maximumValue: number;
+    minimumValue: number;
+  }
+  allowStrictlyIncreasingLinesOnly: boolean;
+}
+
 interface BestFitCurveLineChartProps<
   TData extends Record<string, unknown>,
   TPrimaryGroupingKey extends string,
@@ -24,7 +33,11 @@ interface BestFitCurveLineChartProps<
     b: string
   ) => number;
   dataPointToYAxisValue: (input: { dataPoint: TData, primaryGroupingKey: TPrimaryGroupingKey }) => number;
+  formatYAxisValue: (input: { yAxisValue: number}) => number;
   getLineColour: (input: { primaryGroupingKey: TPrimaryGroupingKey }) => string;
+  bestFitLineSettings: BestFitLineSettings;
+  percentageFormattingEnabled?: boolean;
+  legendConfiguration: LegendConfiguration;
 }
 
 export const BestFitCurveLineChart = <
@@ -55,23 +68,20 @@ export const BestFitCurveLineChart = <
 
     const { xAxisValueToYAxisValue } = generateBestFitCurve({
       data: allXAxisAndYAxisValues,
-      maximumPolynomialOrder: 2
+      maximumPolynomialOrder: props.bestFitLineSettings.maximumPolynomialOrder
     });
 
-    const allXAxisValuesForPrimaryKey = uniq(allXAxisAndYAxisValues.map(({xAxisValue}) => xAxisValue));
+    const allXAxisValuesForPrimaryKey = uniq(allXAxisAndYAxisValues.map(({ xAxisValue }) => xAxisValue));
     const smallestXAxisValueForPrimaryKey = Math.min(...allXAxisValuesForPrimaryKey);
     const largestXAxisValueForPrimaryKey = Math.max(...allXAxisValuesForPrimaryKey);
 
-    return generateRange({ startInclusive: smallestXAxisValueForPrimaryKey, endInclusive: largestXAxisValueForPrimaryKey, stepSize: 1})
+    return generateRange({
+        startInclusive: smallestXAxisValueForPrimaryKey,
+        endInclusive: largestXAxisValueForPrimaryKey,
+        stepSize: 1
+      })
       .map((xAxisValue) => {
         let yAxisValue = xAxisValueToYAxisValue({ xAxisValue });
-
-        if(yAxisValue > 100) {
-          return undefined;
-        }
-        if(yAxisValue < 0) {
-          return undefined;
-        }
 
         return {
           secondaryKeyForLineChart: primaryKey,
@@ -79,8 +89,15 @@ export const BestFitCurveLineChart = <
           yAxisValue: yAxisValue
         }
       })
-      .filter(<T extends unknown>(element: T | undefined): element is T => !!element)
+      .filter((element) =>
+        element.yAxisValue <= props.bestFitLineSettings.yAxisDomain.maximumValue &&
+        element.yAxisValue >= props.bestFitLineSettings.yAxisDomain.minimumValue
+      )
       .filter((element, index, array) => {
+        if(!props.bestFitLineSettings.allowStrictlyIncreasingLinesOnly) {
+          return true;
+        }
+
         if(index === 0 && array.length === 1) {
           return true;
         }
@@ -97,7 +114,7 @@ export const BestFitCurveLineChart = <
       .map((element) => ({
         ...element,
         xAxisLabel: props.xAxisValueToLabel({ xAxisValue: element.xAxisValue }),
-        yAxisValue: parseFloat((element.yAxisValue).toFixed(1))
+        yAxisValue: props.formatYAxisValue({ yAxisValue: element.yAxisValue })
       }))
   })
 
@@ -111,8 +128,8 @@ export const BestFitCurveLineChart = <
       secondaryGroupingSortFunction={props.primaryGroupingSortFunction}
       transformOutputValue={({ data }) => data.at(0)?.yAxisValue ?? 0}
       getLineColour={(primaryGroupingKey) => props.getLineColour({ primaryGroupingKey })}
-      legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
-      percentageFormattingEnabled={true}
+      legendConfiguration={props.legendConfiguration}
+      percentageFormattingEnabled={props.percentageFormattingEnabled}
     />
   );
 }
