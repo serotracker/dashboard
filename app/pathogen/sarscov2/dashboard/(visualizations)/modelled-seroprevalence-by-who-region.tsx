@@ -111,7 +111,7 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
       }}
       formatYAxisValue={({ yAxisValue }) => parseFloat((yAxisValue).toFixed(1))}
       legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
-      percentageFormattingEnabled={false}
+      percentageFormattingEnabled={true}
     />
   );
 }
