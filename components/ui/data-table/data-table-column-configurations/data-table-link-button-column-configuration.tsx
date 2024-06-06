@@ -11,25 +11,27 @@ interface GetDataTableLinkButtonColumnConfigurationInput {
 export const getDataTableLinkButtonColumnConfiguration = (input: GetDataTableLinkButtonColumnConfigurationInput): DataTableColumnDef<Record<string, unknown>, unknown> => ({
   ...getDataTableStandardColumnConfiguration({columnConfiguration: {...input.columnConfiguration, type: DataTableColumnConfigurationEntryType.STANDARD }}),
   cell: ({ row }) => {
-    const link = row.getValue(input.columnConfiguration.fieldNameForLink);
+    const unvalidatedUrl = row.getValue(input.columnConfiguration.fieldNameForLink);
 
-    if(!!link && typeof link === 'string' && validator.isURL(link)) {
-      let url: string | undefined = undefined;
+    if(!!unvalidatedUrl && typeof unvalidatedUrl === 'string' && validator.isURL(unvalidatedUrl)) {
+      //validator.isURL has been known to return true for some URLS that are not actually valid so further validation is done.
+      let validatedUrl: string | undefined = undefined;
 
       try {
-        url = new URL(row.getValue(input.columnConfiguration.fieldNameForLink)).hostname;
+        validatedUrl = new URL(unvalidatedUrl).hostname;
       } catch (error) {}
 
-      if(!url) {
+      if(!validatedUrl) {
         try {
-          url = new URL(`https://${row.getValue(input.columnConfiguration.fieldNameForLink)}`).hostname;
+          // There have been instances where the https:// was omitted but the link worked fine otherwise.
+          validatedUrl = new URL(`https://${unvalidatedUrl}`).hostname;
         } catch (error) {}
       }
 
-      if(!!url) {
+      if(!!validatedUrl) {
         return (
-          <Button onClick={() => window.open(url)} className="w-full">
-            {url}
+          <Button onClick={() => window.open(validatedUrl)} className="w-full">
+            {validatedUrl}
           </Button>
         )
       }
