@@ -14,7 +14,8 @@ const arboColumnConfiguration = [{
   label: 'Estimate ID',
   isHideable: false,
   isFixed: true,
-  fieldNameForLink: 'url'
+  fieldNameForLink: 'url',
+  size: 700,
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'pathogen',

@@ -7,7 +7,7 @@ interface GetDataTableStandardColumnConfigurationInput {
 }
 
 export const getDataTableStandardColumnConfiguration = (input: GetDataTableStandardColumnConfigurationInput): DataTableColumnDef<Record<string, unknown>, unknown> => {
-  const { valueSortingFunction } = input.columnConfiguration;
+  const { valueSortingFunction, size } = input.columnConfiguration;
 
   return {
     accessorKey: input.columnConfiguration.fieldName,
@@ -15,6 +15,7 @@ export const getDataTableStandardColumnConfiguration = (input: GetDataTableStand
     enableHiding: input.columnConfiguration.isHideable ?? true,
     fixed: input.columnConfiguration.isFixed ?? false,
     ...(valueSortingFunction ? {sortingFn: (rowA, rowB, columnId) => valueSortingFunction(rowA.getValue(columnId), rowB.getValue(columnId))} : {}),
+    ...(size !== undefined ? { size } : {}),
     cell: ({ row }) => {
       const value = row.getValue(input.columnConfiguration.fieldName);
 

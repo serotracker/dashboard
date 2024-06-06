@@ -16,19 +16,22 @@ export const DataTableExpandedRowContent = <TData extends Record<string, unknown
     <TableRow>
       <TableCell colSpan={props.row.getVisibleCells().length} className="p-0">
         <div className="
-          flex
+          lg:flex
+          block
           w-auto
           overflow-x-hidden
-          max-w-[95vw]
+          max-w-[92vw]
           lg:max-w-[79vw]
           sticky
           left-0
           p-4
           max-h-half-screen
           overflow-y-scroll
+          border-b
+          border-l
         "
         >
-          <table className="h-full">
+          <table className="h-full lg:max-w-[50%] w-full">
             <tr>
               <th> Field </th>
               <th> Value </th>
@@ -43,7 +46,7 @@ export const DataTableExpandedRowContent = <TData extends Record<string, unknown
               </tr>
             ))}
           </table> 
-          <div className="h-full pl-8 grow">
+          <div className="h-full lg:pl-8 grow">
             <props.visualization
               className="h-full-screen"
               data={props.data}
