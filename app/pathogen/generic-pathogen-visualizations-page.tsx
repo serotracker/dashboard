@@ -11,6 +11,7 @@ interface GetDisplayNameInput<TEstimate extends Record<string, unknown>> {
 interface RenderVisualizationInput<TEstimate extends Record<string, unknown>> {
   data: TEstimate[];
   highlightedDataPoint: TEstimate | undefined;
+  hideArbovirusDropdown: boolean | undefined;
 }
 
 export interface VisualizationInformation<
@@ -122,6 +123,7 @@ export const GenericPathogenVisualizationsPage = <
         className="flex-col flex h-full overflow-y-scroll col-span-10 row-span-2"
         data={props.data}
         highlightedDataPoint={undefined}
+        hideArbovirusDropdown={undefined}
         visualizationInformation={visualizationInformation}
         getUrlParameterFromVisualizationId={props.getUrlParameterFromVisualizationId}
         buttonConfig={{

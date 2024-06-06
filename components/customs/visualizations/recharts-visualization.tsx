@@ -21,6 +21,7 @@ interface RechartsVisualizationProps<
   >;
   data: TEstimate[];
   highlightedDataPoint: TEstimate | undefined;
+  hideArbovirusDropdown: boolean | undefined;
   buttonConfig: RechartsVisualizationButtonConfig;
   className?: string;
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
@@ -70,7 +71,11 @@ export const RechartsVisualization = <
         }}
       />
       <div className="flex-1">
-        {props.visualizationInformation.renderVisualization({data: props.data, highlightedDataPoint: props.highlightedDataPoint})}
+        {props.visualizationInformation.renderVisualization({
+          data: props.data,
+          highlightedDataPoint: props.highlightedDataPoint,
+          hideArbovirusDropdown: props.hideArbovirusDropdown
+        })}
       </div>
     </div>
   );

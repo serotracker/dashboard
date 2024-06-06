@@ -150,6 +150,7 @@ export const ArboDataTable = () => {
             dataPoint.country === estimate.country && dataPoint.pathogen === estimate.pathogen)
           }
           highlightedDataPoint={estimate}
+          hideArbovirusDropdown={true}
           visualizationInformation={arbovirusVisualizationInformation[ArbovirusVisualizationId.COUNTRY_SEROPREVALENCE_COMPARISON_SCATTER_PLOT]}
           getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
           buttonConfig={{

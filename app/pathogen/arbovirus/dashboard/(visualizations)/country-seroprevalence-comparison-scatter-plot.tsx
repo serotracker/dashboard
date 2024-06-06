@@ -43,6 +43,7 @@ const CountrySeroprevalenceComparisonScatterPlotTooltip: ContentType<string, str
 interface CountrySeroprevalenceComparisonScatterPlotProps {
   data: ArbovirusEstimate[];
   highlightedDataPoint: ArbovirusEstimate | undefined;
+  hideArbovirusDropdown: boolean | undefined;
 }
 
 export const CountrySeroprevalenceComparisonScatterPlot = (props: CountrySeroprevalenceComparisonScatterPlotProps) => {
@@ -122,7 +123,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = (props: CountrySeropre
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-initial">
+      <div className="flex-initial" hidden={props.hideArbovirusDropdown === true}>
         {chartArbovirusDropdown}
       </div>
       <div className="w-full flex-auto flex">
