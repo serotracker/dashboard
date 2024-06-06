@@ -15,23 +15,23 @@ export const getDataTableLinkButtonColumnConfiguration = (input: GetDataTableLin
 
     if(!!unvalidatedUrl && typeof unvalidatedUrl === 'string' && validator.isURL(unvalidatedUrl)) {
       //validator.isURL has been known to return true for some URLS that are not actually valid so further validation is done.
-      let validatedUrl: string | undefined = undefined;
+      let validatedUrl: URL | undefined = undefined;
 
       try {
-        validatedUrl = new URL(unvalidatedUrl).hostname;
+        validatedUrl = new URL(unvalidatedUrl);
       } catch (error) {}
 
       if(!validatedUrl) {
         try {
           // There have been instances where the https:// was omitted but the link worked fine otherwise.
-          validatedUrl = new URL(`https://${unvalidatedUrl}`).hostname;
+          validatedUrl = new URL(`https://${unvalidatedUrl}`);
         } catch (error) {}
       }
 
       if(!!validatedUrl) {
         return (
           <Button onClick={() => window.open(validatedUrl)} className="w-full">
-            {validatedUrl}
+            {validatedUrl.hostname}
           </Button>
         )
       }
