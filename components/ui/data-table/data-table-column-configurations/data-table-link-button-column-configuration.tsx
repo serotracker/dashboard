@@ -14,11 +14,27 @@ export const getDataTableLinkButtonColumnConfiguration = (input: GetDataTableLin
     const link = row.getValue(input.columnConfiguration.fieldNameForLink);
 
     if(!!link && typeof link === 'string' && validator.isURL(link)) {
-      return (
-        <Button onClick={() => window.open(row.getValue(input.columnConfiguration.fieldNameForLink))} className="w-full">
-          {new URL(row.getValue(input.columnConfiguration.fieldNameForLink)).hostname}
-        </Button>
-      )
+      let url: string | undefined = undefined;
+
+      try {
+        url = new URL(row.getValue(input.columnConfiguration.fieldNameForLink)).hostname;
+      } catch (error) {}
+
+      if(!url) {
+        try {
+          url = new URL(`https://${row.getValue(input.columnConfiguration.fieldNameForLink)}`).hostname;
+        } catch (error) {}
+      }
+
+      if(!!url) {
+        return (
+          <Button onClick={() => window.open(url)} className="w-full">
+            {url}
+          </Button>
+        )
+      }
+
+      return <p> URL unavailable </p>
     }
 
     return <p> URL unavailable </p>
