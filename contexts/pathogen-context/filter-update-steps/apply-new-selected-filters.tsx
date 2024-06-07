@@ -77,8 +77,8 @@ export function filterData(
             return true; // Handle invalid date
           }
 
-          const itemStartDate = new Date(item.samplingStartDate);
-          let itemEndDate = new Date(item.samplingEndDate);
+          const itemStartDate = new Date(item.sampleStartDate);
+          const itemEndDate = new Date(item.sampleEndDate);
 
           // Check for any overlap in the sampling period
           return (
@@ -92,8 +92,8 @@ export function filterData(
             return true; // Handle invalid date
           }
 
-          const itemStartDate = new Date(item.sampleStartDate);
-          const itemEndDate = new Date(item.sampleEndDate);
+          const itemStartDate = new Date(item.samplingStartDate);
+          const itemEndDate = new Date(item.samplingEndDate);
 
           // Check for any overlap in the sampling period
           return (
