@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { GbdSubRegion, GbdSuperRegion, UnRegion, WhoRegion } from "@/gql/graphql";
-import { SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
 import assertNever from "assert-never";
 import { gbdSubRegionToLabelMap, gbdSuperRegionToLabelMap, isGbdSubRegion, isGbdSuperRegion } from "@/lib/gbd-regions";
 import { isUNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
@@ -52,7 +51,13 @@ type SecondaryKeyFields = SecondaryKeyFieldsRegionPortion & {
 }
 
 interface GetAllSecondaryKeysInput {
-  estimate: Pick<SarsCov2Estimate, 'whoRegion'|'countryAlphaTwoCode'|'unRegion'|'gbdSubRegion'|'gbdSuperRegion'>;
+  dataPoint: {
+    alphaTwoCode: string;
+    whoRegion: WhoRegion | undefined;
+    unRegion: UnRegion | undefined;
+    gbdSubRegion: GbdSubRegion | undefined;
+    gbdSuperRegion: GbdSuperRegion | undefined;
+  }
   secondaryKeyRegionPortions: SecondaryKeyFieldsRegionPortion[];
 }
 
@@ -207,11 +212,11 @@ export const useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSecon
 
   const getAllSecondaryKeys = (input: GetAllSecondaryKeysInput): GetAllSecondaryKeysOutput => ({
     secondaryKeyStrings: getAllSecondaryKeyFields(input)
-      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.COUNTRY) || (secondaryKeyFields.countryAlphaTwoCode === input.estimate.countryAlphaTwoCode))
-      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.GBD_SUB_REGION) || (!!input.estimate.gbdSubRegion && secondaryKeyFields.gbdSubRegion === input.estimate.gbdSubRegion))
-      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.GBD_SUPER_REGION) || (!!input.estimate.gbdSuperRegion && secondaryKeyFields.gbdSuperRegion === input.estimate.gbdSuperRegion))
-      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.WHO_REGION) || (!!input.estimate.whoRegion && secondaryKeyFields.whoRegion === input.estimate.whoRegion))
-      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.UN_REGION) || (!!input.estimate.unRegion && secondaryKeyFields.unRegion === input.estimate.unRegion))
+      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.COUNTRY) || (secondaryKeyFields.countryAlphaTwoCode === input.dataPoint.alphaTwoCode))
+      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.GBD_SUB_REGION) || (!!input.dataPoint.gbdSubRegion && secondaryKeyFields.gbdSubRegion === input.dataPoint.gbdSubRegion))
+      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.GBD_SUPER_REGION) || (!!input.dataPoint.gbdSuperRegion && secondaryKeyFields.gbdSuperRegion === input.dataPoint.gbdSuperRegion))
+      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.WHO_REGION) || (!!input.dataPoint.whoRegion && secondaryKeyFields.whoRegion === input.dataPoint.whoRegion))
+      .filter((secondaryKeyFields) => (secondaryKeyFields.regionType !== SecondaryKeyRegionType.UN_REGION) || (!!input.dataPoint.unRegion && secondaryKeyFields.unRegion === input.dataPoint.unRegion))
       .map((secondaryKeyFields) => secondaryKeyFieldsToSecondaryKeyString(secondaryKeyFields))
   })
 

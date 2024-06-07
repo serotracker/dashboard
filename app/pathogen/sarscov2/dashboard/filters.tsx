@@ -3,9 +3,9 @@
 import React, { useContext } from "react";
 import { Filters } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
-import { useSarsCov2Data } from "@/hooks/useSarsCov2Data";
+import { useSarsCov2Data } from "@/hooks/sarscov2/useSarsCov2Data";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
-import { useSarsCov2Filters } from "@/hooks/useSarsCov2Filters";
+import { useSarsCov2Filters } from "@/hooks/sarscov2/useSarsCov2Filters";
 
 interface SarsCov2FiltersProps {
   className?: string;

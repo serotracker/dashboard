@@ -2,8 +2,8 @@ import React from "react";
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
 import { request } from 'graphql-request';
-import { arbovirusEstimatesQuery } from "@/hooks/useArboData";
-import { arbovirusFiltersQuery } from "@/hooks/useArboFilters";
+import { arbovirusEstimatesQuery } from "@/hooks/arbovirus/useArboData";
+import { arbovirusFiltersQuery } from "@/hooks/arbovirus/useArboFilters";
 import { ArboProviders } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
 

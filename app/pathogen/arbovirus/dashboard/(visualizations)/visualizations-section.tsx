@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 import { cn } from '@/lib/utils';
-import { useArboDataInsights } from "@/hooks/useArboDataInsights";
+import { useArboDataInsights } from "@/hooks/arbovirus/useArboDataInsights";
 import { RechartsVisualization } from "../../../../../components/customs/visualizations/recharts-visualization";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
