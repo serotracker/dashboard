@@ -20,17 +20,19 @@ export const shouldLayerBeUsedForCountryHighlighting = (
 };
 
 export interface PathogenMapLayerProps<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TMarkerProperties extends Record<string, unknown>
 > {
   layers: PathogenMapLayerInfo[];
   dataPoints: (TPathogenDataPointProperties & { country: string })[];
-  clusteringSettings: ClusteringSettings;
+  clusteringSettings: ClusteringSettings<TMarkerProperties>;
   sourceId: string;
 }
 
 export function PathogenMapSourceAndLayer<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
->({ layers, dataPoints, clusteringSettings, sourceId }: PathogenMapLayerProps<TPathogenDataPointProperties>) {
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TMarkerProperties extends Record<string, unknown>
+>({ layers, dataPoints, clusteringSettings, sourceId }: PathogenMapLayerProps<TPathogenDataPointProperties, TMarkerProperties>) {
   const geojsonData = {
     type: "FeatureCollection" as const,
     features: dataPoints.map((dataPoint) => ({

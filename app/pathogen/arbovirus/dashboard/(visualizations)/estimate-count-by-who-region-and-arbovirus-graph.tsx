@@ -20,7 +20,7 @@ export const EstimateCountByWHORegionAndArbovirusGraph = (
       primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
       secondaryGroupingFunction={(dataPoint) => convertArboSFtoArbo(dataPoint.pathogen)}
       secondaryGroupingSortFunction={sortArboviruses}
-      transformOutputValue={(data) => data.length}
+      transformOutputValue={({ data }) => data.length}
       legendConfiguration={props.legendConfiguration}
       getBarColour={(secondaryKey) => barColoursForArboviruses[secondaryKey]}
     />

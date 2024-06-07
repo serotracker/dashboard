@@ -96,7 +96,8 @@ const sarsCov2ColumnConfiguration = [{
     "High": "bg-risk-of-bias-high",
   },
   defaultColourSchemeClassname: 'bg-sky-100',
-  valueSortingFunction: (riskOfBiasA: string, riskOfBiasB: string) => (riskOfBiasToSortOrderMap[riskOfBiasA] ?? 0) - (riskOfBiasToSortOrderMap[riskOfBiasB] ?? 0)
+  valueSortingFunction: (riskOfBiasA: string, riskOfBiasB: string) => (riskOfBiasToSortOrderMap[riskOfBiasA] ?? 0) - (riskOfBiasToSortOrderMap[riskOfBiasB] ?? 0),
+  fallbackText: 'Not reported'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'sourceType',
@@ -129,7 +130,8 @@ const sarsCov2ColumnConfiguration = [{
     'Neutralizing': 'bg-purple-700 text-white',
     'Total Antibody': 'bg-pink-400'
   },
-  defaultColourSchemeClassname: 'bg-sky-100'
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'antibodies',
@@ -142,7 +144,8 @@ const sarsCov2ColumnConfiguration = [{
     'Spike': 'bg-purple-700 text-white',
     'Whole-virus antigen': 'bg-orange-300'
   },
-  defaultColourSchemeClassname: 'bg-sky-100'
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'testType',
@@ -159,7 +162,8 @@ const sarsCov2ColumnConfiguration = [{
     'Neutralization': 'bg-purple-700 text-white',
     'Neutralization Assay': 'bg-orange-300'
   },
-  defaultColourSchemeClassname: 'bg-sky-100'
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
   fieldName: 'seroprevalence',
@@ -212,6 +216,7 @@ export const SarsCov2DataTable = () => {
     <DataTable
       columns={columnConfigurationToColumnDefinitions({ columnConfiguration: sarsCov2ColumnConfiguration })}
       csvFilename="sarscov2tracker_dataset"
+      tableHeader="Explore SarsCov2 seroprevalence estimates in our database"
       csvCitationConfiguration={{
         enabled: false
       }}

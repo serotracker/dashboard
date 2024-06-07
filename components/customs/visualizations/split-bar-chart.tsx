@@ -7,7 +7,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { groupDataForRecharts } from "./group-data-for-recharts";
+import { TransformOutputValueInput, groupDataForRecharts } from "./group-data-for-recharts";
 import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
 import clsx from "clsx";
 import { typedObjectKeys } from "@/lib/utils";
@@ -31,7 +31,10 @@ interface SplitBarChartProps<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  transformOutputValue: (data: TData[]) => number;
+  transformOutputValue: (input: TransformOutputValueInput<
+    TData,
+    TSecondaryGroupingKey
+  >) => number;
   getBarColour: (primaryKey: TPrimaryGroupingKey) => string;
   xAxisTickSettings?: {
     slantValue?: number;

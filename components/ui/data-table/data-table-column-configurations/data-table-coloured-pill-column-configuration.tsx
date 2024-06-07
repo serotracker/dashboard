@@ -25,6 +25,6 @@ export const getDataTableColouredPillColumnConfiguration = (input: GetDataTableC
       )
     };
 
-    return 'N/A';
+    return input.columnConfiguration.fallbackText ?? 'N/A';
   },
 });

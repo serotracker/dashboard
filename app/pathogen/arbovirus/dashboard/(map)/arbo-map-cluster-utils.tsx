@@ -1,9 +1,21 @@
 import { pathogenColors } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
 import { MarkerCollection } from "@/components/ui/pathogen-map/pathogen-map";
+import { Arbovirus } from "@/gql/graphql";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
 import mapboxgl from "mapbox-gl";
 import React from "react";
 import { Marker, MarkerEvent, useMap } from "react-map-gl";
+
+type ArbovirusMarkerProperties = Record<string,unknown> & {
+  longitude: number;
+  latitude: number;
+  [Arbovirus.Zikv]: number;
+  [Arbovirus.Denv]: number;
+  [Arbovirus.Chikv]: number;
+  [Arbovirus.Yf]: number;
+  [Arbovirus.Wnv]: number;
+  [Arbovirus.Mayv]: number;
+}
 
 // This whole file will be custom for each of the pathogens themselves
 
@@ -109,34 +121,46 @@ export function createDonutChartAndHoverPopup(props: {
     popup.remove();
   };
 
-  return (
-    <svg
-      width={piChartDiameter}
-      height={piChartDiameter}
-      viewBox={`0 0 ${piChartDiameter} ${piChartDiameter}`}
-      textAnchor="middle"
-      style={{ font: `${fontSize}px sans-serif`, display: "block" }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onMouseDown={(e) => {e.preventDefault(); e.stopPropagation()}}
-      onClick={() => {popup.remove()}}
-    >
-      {counts.map((count, i) =>
-        donutSegment(
-          offsets[i] / total,
-          (offsets[i] + count) / total,
-          piChartOuterRadius,
-          piChartInnerRadius,
-          pathogenColors[arboColorNames[i]],
-          `map-cluster-svg-path-${i}`
-        )
-      )}
-      <circle cx={piChartOuterRadius} cy={piChartOuterRadius} r={piChartInnerRadius} fill="white"/>
-      <text dominantBaseline="central" transform={`translate(${piChartOuterRadius}, ${piChartOuterRadius})`}>
-        {total.toLocaleString()}
-      </text>
-    </svg>
-  );
+  return {
+    properties: {
+      longitude: props.coords[0],
+      latitude: props.coords[1],
+      [Arbovirus.Zikv]: props.properties.ZIKV,
+      [Arbovirus.Denv]: props.properties.DENV,
+      [Arbovirus.Chikv]: props.properties.CHIKV,
+      [Arbovirus.Yf]: props.properties.YF,
+      [Arbovirus.Wnv]: props.properties.WNV,
+      [Arbovirus.Mayv]: props.properties.MAYV,
+    },
+    element: (
+      <svg
+        width={piChartDiameter}
+        height={piChartDiameter}
+        viewBox={`0 0 ${piChartDiameter} ${piChartDiameter}`}
+        textAnchor="middle"
+        style={{ font: `${fontSize}px sans-serif`, display: "block" }}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onMouseDown={(e) => {e.preventDefault(); e.stopPropagation()}}
+        onClick={() => {popup.remove()}}
+      >
+        {counts.map((count, i) =>
+          donutSegment(
+            offsets[i] / total,
+            (offsets[i] + count) / total,
+            piChartOuterRadius,
+            piChartInnerRadius,
+            pathogenColors[arboColorNames[i]],
+            `map-cluster-svg-path-${i}`
+          )
+        )}
+        <circle cx={piChartOuterRadius} cy={piChartOuterRadius} r={piChartInnerRadius} fill="white"/>
+        <text dominantBaseline="central" transform={`translate(${piChartOuterRadius}, ${piChartOuterRadius})`}>
+          {total.toLocaleString()}
+        </text>
+      </svg>
+    )
+  };
 }
 
 export function donutSegment(
@@ -202,10 +226,10 @@ export function createClusterPointMarker(props: {
 // markers is a cached collection of already existing markers. 
 export function computeClusterMarkers(props: {
   features: mapboxgl.MapboxGeoJSONFeature[];
-  markers: MarkerCollection;
+  markers: MarkerCollection<ArbovirusMarkerProperties>;
   map: mapboxgl.Map;
-}): MarkerCollection {
-  const newMarkers: MarkerCollection = {};
+}): MarkerCollection<ArbovirusMarkerProperties> {
+  const newMarkers: MarkerCollection<ArbovirusMarkerProperties> = {};
   // for every cluster on the screen, create an HTML marker for it (if we didn't yet),
   // and add it to the map if it's not there already
   for (const feature of props.features) {
@@ -217,22 +241,37 @@ export function computeClusterMarkers(props: {
       const properties = feature.properties;
       if (properties && properties.cluster && coords.length >= 2) {
         const id = properties.cluster_id;
-        let marker = props.markers[id];
-        if (!marker) {
-          const el = createDonutChartAndHoverPopup({
-            properties: properties,
-            map: props.map,
-            coords: [coords[0], coords[1]],
-          });
-          marker = props.markers[id] = createClusterPointMarker({
-            element: el,
+
+        const { element, properties: markerProperties } = createDonutChartAndHoverPopup({
+          properties: properties,
+          map: props.map,
+          coords: [coords[0], coords[1]],
+        });
+
+        if(
+          !!props.markers[id] &&
+          markerProperties.latitude === props.markers[id].properties.latitude &&
+          markerProperties.longitude === props.markers[id].properties.longitude &&
+          markerProperties[Arbovirus.Zikv] === props.markers[id].properties[Arbovirus.Zikv] &&
+          markerProperties[Arbovirus.Chikv] === props.markers[id].properties[Arbovirus.Chikv] &&
+          markerProperties[Arbovirus.Yf] === props.markers[id].properties[Arbovirus.Yf] &&
+          markerProperties[Arbovirus.Denv] === props.markers[id].properties[Arbovirus.Denv] &&
+          markerProperties[Arbovirus.Mayv] === props.markers[id].properties[Arbovirus.Mayv] &&
+          markerProperties[Arbovirus.Wnv] === props.markers[id].properties[Arbovirus.Wnv]
+        ) {
+          newMarkers[id] = props.markers[id]
+        }
+        else {
+          const marker = createClusterPointMarker({
+            element: element,
             coords: [coords[0], coords[1]],
             id: id,
             map: props.map,
           });
-        }
-        if (marker) {
-          newMarkers[id] = marker;
+          newMarkers[id] = {
+            properties: markerProperties,
+            element: marker
+          }
         }
       }
     } else {

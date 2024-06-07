@@ -28,7 +28,7 @@ export const EstimateCountByUnRegionAndArbovirusGraph = (
         convertArboSFtoArbo(dataPoint.pathogen)
       }
       secondaryGroupingSortFunction={sortArboviruses}
-      transformOutputValue={(data) => data.length}
+      transformOutputValue={({ data }) => data.length}
       legendConfiguration={props.legendConfiguration}
       xAxisTickSettings={{ slantValue: 20 }}
       getBarColour={(secondaryKey) => barColoursForArboviruses[secondaryKey]}

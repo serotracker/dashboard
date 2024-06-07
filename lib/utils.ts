@@ -72,4 +72,4 @@ const generateRandomRGBValue = (): string => {
     .padStart(2, '0');
 }
 
-export const generateRandomColour = (): string => [1,2,3].map(() => `${generateRandomRGBValue()}`).join('')
+export const generateRandomColour = (): string => `#${[1,2,3].map(() => `${generateRandomRGBValue()}`).join('')}`
