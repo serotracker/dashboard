@@ -5,6 +5,14 @@ import {
   typedObjectKeys,
 } from "@/lib/utils";
 
+export interface TransformOutputValueInput<
+  TData,
+  TSecondaryGroupingKey extends Exclude<string, "primaryKey">
+> {
+  data: TData[];
+  secondaryGroupingKey: TSecondaryGroupingKey;
+}
+
 interface GroupDataForRechartsInput<
   TData,
   TPrimaryGroupingKey extends string,
@@ -22,7 +30,10 @@ interface GroupDataForRechartsInput<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  transformOutputValue: (data: TData[]) => TOutput;
+  transformOutputValue: (input: TransformOutputValueInput<
+    TData,
+    TSecondaryGroupingKey
+  >) => TOutput;
 }
 
 interface GroupDataForRechartsOutput<
@@ -105,7 +116,10 @@ export const groupDataForRecharts = <
       typedObjectEntries(dataGroupedBySecondaryKey).map(
         ([secondaryKey, dataForSecondaryKey]) => [
           secondaryKey,
-          input.transformOutputValue(dataForSecondaryKey.map(({dataPoint}) => dataPoint)),
+          input.transformOutputValue({
+            data: dataForSecondaryKey.map(({dataPoint}) => dataPoint),
+            secondaryGroupingKey: secondaryKey
+          }),
         ]
       )
     );

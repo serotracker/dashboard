@@ -64,7 +64,7 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
       primaryGroupingSortFunction={(timeBucketA, timeBucketB) => monthYearStringToMonthCount(timeBucketA) - monthYearStringToMonthCount(timeBucketB)}
       secondaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
       secondaryGroupingSortFunction={(whoRegionA, whoRegionB) => whoRegionA > whoRegionB ? 1 : -1}
-      transformOutputValue={(data) => {
+      transformOutputValue={({ data }) => {
         const { denominatorValue, numeratorValue } = data.reduce((accumulator, currentValue) => ({
           denominatorValue: accumulator.denominatorValue + currentValue.denominatorValue,
           numeratorValue: accumulator.numeratorValue + currentValue.numeratorValue,

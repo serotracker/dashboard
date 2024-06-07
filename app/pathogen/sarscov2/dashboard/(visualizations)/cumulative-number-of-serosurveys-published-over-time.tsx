@@ -133,7 +133,7 @@ export const CumulativeNumberOfSerosurveysPublishedOverTime = () => {
       primaryGroupingSortFunction={(timeBucketA, timeBucketB) => monthYearStringToMonthCount(timeBucketA) - monthYearStringToMonthCount(timeBucketB)}
       secondaryGroupingFunction={(dataPoint) => twelveMostCommonPopulationGroups.includes(dataPoint.populationGroup) ?  dataPoint.populationGroup : 'Other'}
       secondaryGroupingSortFunction={(populationGroupA, populationGroupB) => (populationGroupToSortOrderMap[populationGroupA] ?? 99) - (populationGroupToSortOrderMap[populationGroupB] ?? 99)}
-      transformOutputValue={(data) => uniq(data.map((dataPoint) => dataPoint.studyName)).length}
+      transformOutputValue={({ data }) => uniq(data.map((dataPoint) => dataPoint.studyName)).length}
       getBarColour={(populationGroup) => barColoursForPopulationGroups[populationGroup] ?? generateRandomColour()}
     />
   );

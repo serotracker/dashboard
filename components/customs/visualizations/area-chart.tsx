@@ -12,7 +12,7 @@ import {
   Area,
   Label,
 } from "recharts";
-import { groupDataForRecharts } from "./group-data-for-recharts";
+import { TransformOutputValueInput, groupDataForRecharts } from "./group-data-for-recharts";
 
 interface AreaChartProps<
   TData,
@@ -31,7 +31,10 @@ interface AreaChartProps<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  transformOutputValue: (data: TData[]) => number;
+  transformOutputValue: (input: TransformOutputValueInput<
+    TData,
+    TSecondaryGroupingKey
+  >) => number;
   getBarColour: (secondaryKey: TSecondaryGroupingKey) => string;
   xAxisTickSettings?: {
     interval?: number;
