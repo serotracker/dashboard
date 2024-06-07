@@ -7,11 +7,13 @@ import { PublishedStudiesByGdbRegionGraph } from "../dashboard/(visualizations)/
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { CumulativeNumberOfSerosurveysPublishedOverTime } from "../dashboard/(visualizations)/cumulative-number-of-serosurveys-published-over-time";
 import { ModelledSeroprevalenceByWhoRegionGraph } from "../dashboard/(visualizations)/modelled-seroprevalence-by-who-region";
+import { ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime } from "../dashboard/(visualizations)/comparing-seroprevalence-positive-cases-and-vaccinations-over-time";
 
 export enum SarsCov2VisualizationId {
   PUBLISHED_STUDY_COUNT_BY_GBD_REGION = "PUBLISHED_STUDY_COUNT_BY_GBD_REGION",
   CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME = 'CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME',
-  MODELLED_SEROPREVALENCE_BY_WHO_REGION = "MODELLED_SEROPREVALENCE_BY_WHO_REGION"
+  MODELLED_SEROPREVALENCE_BY_WHO_REGION = "MODELLED_SEROPREVALENCE_BY_WHO_REGION",
+  COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS = "COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS"
 }
 
 export const isSarsCov2VisualizationId = (
@@ -22,7 +24,8 @@ export const isSarsCov2VisualizationId = (
 export enum SarsCov2VisualizationUrlParameter {
   "published-study-count-by-gbd-region" = "published-study-count-by-gbd-region",
   "cumulative-number-of-serosurveys-published-over-time" = "cumulative-number-of-serosurveys-published-over-time",
-  "modelled-seroprevalence-by-who-region" = "modelled-seroprevalence-by-who-region"
+  "modelled-seroprevalence-by-who-region" = "modelled-seroprevalence-by-who-region",
+  "comparing-seroprevalence-positive-cases-and-vaccinations" = "comparing-seroprevalence-positive-cases-and-vaccinations"
 }
 
 export type SarsCov2VisualizationInformation = VisualizationInformation<
@@ -63,6 +66,15 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
       ],
     getDisplayName: () => "Modelled Seroprevalence Globally by WHO Region",
     renderVisualization: () => ModelledSeroprevalenceByWhoRegionGraph({legendConfiguration: LegendConfiguration.RIGHT_ALIGNED})
+  },
+  [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]: {
+    id: SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS,
+    urlParameter:
+      SarsCov2VisualizationUrlParameter[
+        "comparing-seroprevalence-positive-cases-and-vaccinations"
+      ],
+    getDisplayName: () => "Comparing Seroprevalence to Confirmed Cases and Vaccine Coverage Over Time",
+    renderVisualization: () => ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
 }
 

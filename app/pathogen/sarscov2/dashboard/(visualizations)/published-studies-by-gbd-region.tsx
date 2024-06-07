@@ -57,7 +57,7 @@ export const PublishedStudiesByGdbRegionGraph = (props: PublishedStudiesByGdbReg
       primaryGroupingKeyToLabel={(gbdSuperRegion) => gbdSuperRegionToLabelMap[gbdSuperRegion]}
       secondaryGroupingFunction={(dataPoint) => dataPoint.gbdSubRegion}
       secondaryGroupingKeyToLabel={(gbdSubRegion) => gbdSubRegionToLabelMap[gbdSubRegion]}
-      transformOutputValue={(data) => uniq(data.map((dataPoint) => dataPoint.studyName)).length}
+      transformOutputValue={({ data }) => uniq(data.map((dataPoint) => dataPoint.studyName)).length}
       legendConfiguration={props.legendConfiguration}
       xAxisTickSettings={{idealMaximumCharactersPerLine: 10}}
       getBarColour={(gbdSubRegion) => barColoursForGdbSubregions[gbdSubRegion]}

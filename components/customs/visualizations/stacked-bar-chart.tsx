@@ -9,7 +9,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { groupDataForRecharts } from "./group-data-for-recharts";
+import { TransformOutputValueInput, groupDataForRecharts } from "./group-data-for-recharts";
 import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
 import { typedObjectKeys } from '@/lib/utils';
 import { CustomXAxisTick } from './custom-x-axis-tick';
@@ -38,7 +38,10 @@ interface StackedBarChartProps<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  transformOutputValue: (data: TData[]) => number;
+  transformOutputValue: (input: TransformOutputValueInput<
+    TData,
+    TSecondaryGroupingKey
+  >) => number;
   getBarColour: (secondaryKey: TSecondaryGroupingKey) => string;
   xAxisTickSettings?: {
     slantValue?: number;

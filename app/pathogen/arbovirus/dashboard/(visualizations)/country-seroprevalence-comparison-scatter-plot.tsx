@@ -106,7 +106,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = (props: CountrySeropre
         secondaryGroupingFunction: (dataPoint) => dataPoint.country,
         secondaryGroupingSortFunction: (countryA, countryB) =>
           countryA !== countryA ? (countryA < countryB ? -1 : 1) : 0,
-        transformOutputValue: (data) => data,
+        transformOutputValue: ({ data }) => data,
       }),
     [dataForArbovirusWithCIs]
   );
