@@ -117,7 +117,7 @@ const arboColumnConfiguration = [{
   isSortable: false
 }] as const;
 
-export const arboDataTableRows = arboColumnConfiguration.map(({fieldName}) => fieldName);
+export const arboDataTableRows = arboColumnConfiguration.map(({fieldName, label}) => ({fieldName, label}));
 
 export const ArboDataTable = () => {
   const state = useContext(ArboContext);

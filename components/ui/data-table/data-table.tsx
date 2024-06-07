@@ -37,6 +37,7 @@ import { DataTableExpandedRowContent } from "./data-table-expanded-row-content";
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   fixed?: boolean;
   accessorKey: string;
+  headerLabel: string;
 };
 
 interface CsvCitationConfigurationDisabled {
@@ -111,19 +112,20 @@ export function DataTable<TData extends Record<string, unknown>, TValue>(props: 
     let visibleColumns = table
       .getAllColumns()
       .filter((column) => column.getIsVisible());
-    let column_keys: string[] = visibleColumns.map((column) => {
-      return column.id;
-    });
+    let columns = visibleColumns.map((column) => ({
+      accessorKey: column.id,
+      headerLabel: props.columns.find((element) => element.accessorKey === column.id)?.headerLabel ?? 'Unknown Column'
+    }));
     const newArrayWithSubsetAttributes: Record<string, any>[] = table
       .getFilteredRowModel()
       .rows.map((originalObject: any) => {
         const newObj: Record<string, any> = {};
-        column_keys.forEach((attribute) => {
-          let temp_data = originalObject["original"][attribute];
+        columns.forEach(({ accessorKey, headerLabel }) => {
+          let temp_data = originalObject["original"][accessorKey];
           if (Array.isArray(temp_data)) {
             temp_data = temp_data.join(";");
           }
-          newObj[attribute] = temp_data;
+          newObj[headerLabel] = temp_data;
         });
         return newObj;
       });
@@ -218,7 +220,7 @@ export function DataTable<TData extends Record<string, unknown>, TValue>(props: 
                         e.preventDefault();
                       }}
                     >
-                      {column.id}
+                      {props.columns.find((element) => element.accessorKey === column.id)?.headerLabel ?? 'Unknown Column'}
                     </DropdownMenuCheckboxItem>
                   );
                 })}
