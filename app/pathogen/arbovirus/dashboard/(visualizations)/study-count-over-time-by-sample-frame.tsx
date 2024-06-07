@@ -110,7 +110,7 @@ export const StudyCountOverTimeBySampleFrame = () => {
       data={consideredData}
       primaryGroupingFunction={(dataPoint) => generateTimeBucketsForEstimate({ estimate: dataPoint, latestSamplingEndDate })}
       secondaryGroupingFunction={(dataPoint) => eightMostCommonSampleFrames.includes(dataPoint.sampleFrame) ?  dataPoint.sampleFrame : 'Other'}
-      transformOutputValue={(data) => data.length}
+      transformOutputValue={({ data }) => data.length}
       secondaryGroupingSortFunction={(sampleFrameA, sampleFrameB) => (sampleFrameToSortOrderMap[sampleFrameA] ?? 99) - (sampleFrameToSortOrderMap[sampleFrameB] ?? 99)}
       getBarColour={(sampleFrame) => barColoursForSampleFrames[sampleFrame] ?? generateRandomColour()}
     />

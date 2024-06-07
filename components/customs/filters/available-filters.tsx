@@ -70,7 +70,8 @@ export enum FilterableField {
   sourceType = "sourceType",
   antibodies = "antibodies",
   testType = "testType",
-  isotypes = "isotypes"
+  isotypes = "isotypes",
+  populationGroup = "populationGroup"
 }
 
 const WhoRegionTooltip: TooltipContentRenderingFunction = (input) => (
@@ -334,6 +335,12 @@ export const useAvailableFilters = () => {
     [FilterableField.serotype]: {
       field: FilterableField.serotype,
       label: "Serotype (DENV only)",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.populationGroup]: {
+      field: FilterableField.populationGroup,
+      label: "Population group",
       valueToLabelMap: {},
       filterRenderingFunction: MultiSelectFilter
     }

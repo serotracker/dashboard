@@ -50,6 +50,7 @@ interface CsvCitationConfigurationEnabled {
 interface DataTableProps<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];
   csvFilename: string;
+  tableHeader:string;
   csvCitationConfiguration: CsvCitationConfigurationDisabled | CsvCitationConfigurationEnabled;
   data: TData[];
 }
@@ -154,7 +155,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   return (
     <div>
       <div className="flex items-center justify-between py-4 px-2">
-        <h3>Explore arbovirus seroprevalence estimates in our database</h3>
+        <h3>{props.tableHeader}</h3>
         <div className="flex flex-col lg:flex-row">
           <Button
             variant="outline"
