@@ -20,7 +20,9 @@ interface SelectProps {
   optionToLabelMap: Record<string, string | undefined>;
   selected: (string | boolean)[];
   handleOnChange: (selected: string[]) => void;
-  singleSelect?: boolean // Multi is the default
+  singleSelect?: boolean; // Multi is the default
+  className?: string;
+  borderedAreaClassname?: string;
 }
 
 const createSelectOptionList = (options: (string)[], optionToLabelMap: Record<string, string | undefined>) => {
@@ -76,9 +78,12 @@ export function Select(props: SelectProps) {
     <>
       <Command
         onKeyDown={handleKeyDown}
-        className="overflow-visible bg-transparent"
+        className={cn("overflow-visible bg-transparent", props.className)}
       >
-        <div className="group border border-b-2 border-background px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring">
+        <div className={cn(
+          "group border border-b-2 border-background px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring",
+          props.borderedAreaClassname
+        )}>
           <div className="flex flex-col gap-1 flex-wrap">
             {/* Avoid having the "Search" Icon */}
             {selectables.length > 0 && <CommandPrimitive.Input
