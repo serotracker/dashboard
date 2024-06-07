@@ -40,7 +40,8 @@ const arboColumnConfiguration = [{
     'IgAM': 'bg-green-200',
     'NAb': 'bg-yellow-400',
   },
-  defaultColourSchemeClassname: 'bg-sky-100'
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
 }, {
   type: DataTableColumnConfigurationEntryType.DATE as const,
   fieldName: 'sampleStartDate',
