@@ -124,6 +124,7 @@ export const ArboDataTable = () => {
       <DataTable
         columns={columnConfigurationToColumnDefinitions({ columnConfiguration: arboColumnConfiguration })}
         csvFilename="arbotracker_dataset"
+        tableHeader="Explore arbovirus seroprevalence estimates in our database"
         csvCitationConfiguration={{
           enabled: true,
           citationText: "Ware H*, Whelan M*, Ranka H, Roell Y, Aktar S, Kenny S, Pinno E, SeroTracker Research Team, Bobrovitz N**, Arora RK**, Jaenisch T**. ArboTracker: A Dashboard and Data Platform for arbovirus serosurveys (2024); Website, accessible via www.new.SeroTracker.com.",

@@ -216,6 +216,7 @@ export const SarsCov2DataTable = () => {
     <DataTable
       columns={columnConfigurationToColumnDefinitions({ columnConfiguration: sarsCov2ColumnConfiguration })}
       csvFilename="sarscov2tracker_dataset"
+      tableHeader="Explore SarsCov2 seroprevalence estimates in our database"
       csvCitationConfiguration={{
         enabled: false
       }}
