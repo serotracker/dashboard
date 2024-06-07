@@ -1,8 +1,8 @@
-import { UnRegion } from "@/gql/graphql";
+import { UnRegion, WhoRegion } from "@/gql/graphql";
 
 import { typedObjectFromEntries } from "./utils";
 import { getCountryCodesInUNRegion } from "./un-regions";
-import { WHORegion, getCountryCodesInWHORegion } from "./who-regions";
+import { getCountryCodesInWHORegion } from "./who-regions";
 
 export type BoundingBox = [number, number, number, number];
 
@@ -43,7 +43,7 @@ const alphaTwoCountryCodeBoundingBoxData: Record<
   BoundingBox | undefined
 > = {
   AF: [60.53, 29.32, 75.16, 38.49],
-  A0: [11.64, -17.93, 24.08, -4.44],
+  AO: [11.64, -17.93, 24.08, -4.44],
   AL: [19.3, 39.62, 21.02, 42.69],
   AE: [51.58, 22.5, 56.4, 26.06],
   AR: [-73.42, -55.25, -53.63, -21.83],
@@ -250,9 +250,9 @@ export const getBoundingBoxFromUNRegion = (unRegion: UnRegion): BoundingBox => {
   return unRegionBoundingBoxData[unRegion];
 };
 
-const whoRegionBoundingBoxData: Record<WHORegion, BoundingBox> =
+const whoRegionBoundingBoxData: Record<WhoRegion, BoundingBox> =
   typedObjectFromEntries(
-    Object.values(WHORegion).map((whoRegion) => [
+    Object.values(WhoRegion).map((whoRegion) => [
       whoRegion,
       combineBoundingBoxes(
         getCountryCodesInWHORegion({ whoRegion })
@@ -264,6 +264,6 @@ const whoRegionBoundingBoxData: Record<WHORegion, BoundingBox> =
     ])
   );
 
-export const getBoundingBoxFromWHORegion = (whoRegion: WHORegion): BoundingBox => {
+export const getBoundingBoxFromWHORegion = (whoRegion: WhoRegion): BoundingBox => {
   return whoRegionBoundingBoxData[whoRegion];
 };

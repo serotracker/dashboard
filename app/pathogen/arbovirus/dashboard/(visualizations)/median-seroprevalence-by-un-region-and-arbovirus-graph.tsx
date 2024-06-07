@@ -22,7 +22,7 @@ export const MedianSeroprevalenceByUnRegionAndArbovirusGraph = () => {
       secondaryGroupingSortFunction={(unRegionA, unRegionB) =>
         unRegionA.length > unRegionB.length ? 1 : -1
       }
-      transformOutputValue={(data) => parseFloat(median(data.map((dataPoint) => dataPoint.seroprevalence * 100)).toFixed(1))}
+      transformOutputValue={({ data }) => parseFloat(median(data.map((dataPoint) => dataPoint.seroprevalence * 100)).toFixed(1))}
       getBarColour={(primaryKey) => barColoursForArboviruses[primaryKey]}
       xAxisTickSettings={{ slantValue: 20 }}
       subgraphSettings={{

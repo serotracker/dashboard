@@ -29,7 +29,7 @@ export const EstimateCountByArbovirusAndAntibodyTypeGraph = (props: EstimateCoun
       primaryGroupingSortFunction={sortArboviruses}
       secondaryGroupingFunction={(dataPoint) => dataPoint.antibodyKey}
       secondaryGroupingSortFunction={(antibodyKeyA, antibodyKeyB) => antibodyKeyA > antibodyKeyB ? 1 : -1}
-      transformOutputValue={(data) => data.length}
+      transformOutputValue={({ data }) => data.length}
       legendConfiguration={props.legendConfiguration}
       getBarColour={(antibodyKey) => barColoursForSampleFrames[antibodyKey] ?? generateRandomColour()}
       xAxisTickSettings={{
