@@ -4,7 +4,7 @@ interface useDataStylesInput<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];
 }
 
-interface GenerateClassnameForHeaderInput {
+export interface GenerateClassnameForHeaderInput {
   columnId: string;
 }
 

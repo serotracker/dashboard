@@ -28,6 +28,7 @@ export interface DataTableColumnConfigurationEntryBase {
   isFixed?: boolean;
   valueToDisplayLabel?: (input: string) => string | undefined;
   valueSortingFunction?: (valueA: string, valueB: string) => number;
+  size?: number;
 }
 
 export type StandardDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {

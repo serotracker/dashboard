@@ -220,6 +220,9 @@ export const SarsCov2DataTable = () => {
       csvCitationConfiguration={{
         enabled: false
       }}
+      rowExpansionConfiguration={{
+        enabled: false
+      }}
       data={state.filteredData}
     />
   )
