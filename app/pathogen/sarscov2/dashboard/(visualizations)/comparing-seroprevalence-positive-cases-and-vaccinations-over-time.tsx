@@ -6,11 +6,11 @@ import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/p
 import { dateFromYearAndMonth, dateToMonthCount, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { generateRandomColour } from "@/lib/utils";
-import { SecondaryKeyValueType, secondaryKeyStringToSecondaryKeyFields, useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSecondaryKeyFunctions } from "./comparing-seroprevalance-positive-cases-and-vaccinations-over-time/secondary-key-lib";
 import assertNever from "assert-never";
 import { useRegionSelector } from "./comparing-seroprevalance-positive-cases-and-vaccinations-over-time/region-selector";
 import { MonthlySarsCov2CountryInformationContext } from "@/contexts/pathogen-context/pathogen-contexts/monthly-sarscov2-country-information-context";
 import { BestFitCurveLineChart } from "@/components/customs/visualizations/best-fit-curve-line-chart";
+import { SeriesValueType, seriesStringToSeriesFields, useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSeries } from "./comparing-seroprevalance-positive-cases-and-vaccinations-over-time/series-generator";
 
 const indexToColourMap: Record<number, string | undefined> = {
   0: defaultColours.red[200],
@@ -58,12 +58,12 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
   const { filteredData }= useContext(SarsCov2Context);
   const { monthlySarsCov2CountryInformation } = useContext(MonthlySarsCov2CountryInformationContext);
   const {
-    getAllSecondaryKeys,
-    secondaryKeyStringToLabel,
-  } = useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSecondaryKeyFunctions()
+    getAllSeries,
+    seriesStringToLabel,
+  } = useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSeries()
   const {
     regionSelector,
-    secondaryKeyRegionPortions
+    seriesRegionPortions
   } = useRegionSelector({ maximumRegionSelectorCount: 5 });
 
   const consideredEstimateData = useMemo(() => filteredData
@@ -97,8 +97,6 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
     })) ?? []
   , [monthlySarsCov2CountryInformation])
 
-  console.log('consideredCountryData', consideredCountryData)
-
   const consolidatedData = useMemo(() => [
     ...consideredEstimateData,
     ...consideredCountryData,
@@ -113,35 +111,35 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
         <BestFitCurveLineChart
           graphId="comparing-seroprevalence-positive-cases-and-vaccinations"
           data={consolidatedData}
-          primaryGroupingFunction={(dataPoint) => getAllSecondaryKeys({
+          primaryGroupingFunction={(dataPoint) => getAllSeries({
             dataPoint: dataPoint,
-            secondaryKeyRegionPortions
-          }).secondaryKeyStrings}
-          primaryGroupingKeyToLabel={(primaryGroupingKey) => secondaryKeyStringToLabel(primaryGroupingKey)}
+            seriesRegionPortions
+          }).seriesStrings}
+          primaryGroupingKeyToLabel={(primaryGroupingKey) => seriesStringToLabel(primaryGroupingKey)}
           primaryGroupingSortFunction={(primaryGroupingKeyA, primaryGroupingKeyB) => primaryGroupingKeyA > primaryGroupingKeyB ? 1 : -1}
           dataPointToXAxisValue={({ dataPoint }) => dateToMonthCount(dataPoint.date)}
           xAxisValueToLabel={({ xAxisValue }) => monthCountToMonthYearString(xAxisValue)}
           xAxisLabelSortingFunction={(xAxisLabelA, xAxisLabelB) => monthYearStringToMonthCount(xAxisLabelA) - monthYearStringToMonthCount(xAxisLabelB)}
           dataPointToYAxisValue={({dataPoint, primaryGroupingKey}) => {
-            const secondaryKeyFields = secondaryKeyStringToSecondaryKeyFields(primaryGroupingKey);
+            const seriesFields = seriesStringToSeriesFields(primaryGroupingKey);
 
-            if(secondaryKeyFields.valueType === SecondaryKeyValueType.POSITIVE_CASES) {
+            if(seriesFields.valueType === SeriesValueType.POSITIVE_CASES) {
               return dataPoint.positiveCasesPerMillionPeople !== undefined
                 ? (dataPoint.positiveCasesPerMillionPeople / 1_000_000) * 100
                 : undefined
             }
 
-            if(secondaryKeyFields.valueType === SecondaryKeyValueType.VACCINATIONS) {
+            if(seriesFields.valueType === SeriesValueType.VACCINATIONS) {
               return dataPoint.peopleVaccinatedPerHundred;
             }
 
-            if(secondaryKeyFields.valueType === SecondaryKeyValueType.SEROPREVALENCE) {
+            if(seriesFields.valueType === SeriesValueType.SEROPREVALENCE) {
               return dataPoint.seroprevalence !== undefined
                 ? dataPoint.seroprevalence * 100
                 : undefined;
             }
 
-            assertNever(secondaryKeyFields.valueType)
+            assertNever(seriesFields.valueType)
           }}
           formatYAxisValue={({ yAxisValue }) => parseFloat((yAxisValue).toFixed(1))}
           getLineColour={({ index }) => indexToColourMap[index] ?? generateRandomColour() }
