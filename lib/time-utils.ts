@@ -54,7 +54,7 @@ interface DateFromYearAndMonthInput {
   month: Month;
 }
 
-const monthIndexFromMonthMap = {
+export const monthIndexFromMonthMap = {
   [Month.January]: 0,
   [Month.February]: 1,
   [Month.March]: 2,

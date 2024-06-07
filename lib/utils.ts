@@ -73,3 +73,27 @@ const generateRandomRGBValue = (): string => {
 }
 
 export const generateRandomColour = (): string => `#${[1,2,3].map(() => `${generateRandomRGBValue()}`).join('')}`
+
+export const groupByArray = <TGroupingKey extends string, TGroupingValue extends string, TValue extends Record<TGroupingKey, TGroupingValue>>(values: TValue[], groupingKey: TGroupingKey): Array<Record<TGroupingKey, TGroupingValue> & {data: Omit<TValue, TGroupingKey>[]}> => {
+  const valueToGroupingValue = (value: TValue): TGroupingValue => {
+    return value[groupingKey]
+  }
+
+  const groupByWithRecords = typedGroupBy(values, valueToGroupingValue);
+  return typedObjectKeys(groupByWithRecords).map((groupingValue) => {
+    const groupingKeyAndValue = {
+      [groupingKey]: groupingValue
+    } as Record<TGroupingKey, TGroupingValue>
+
+    const groupedData = groupByWithRecords[groupingValue]
+
+    return {
+      ...groupingKeyAndValue,
+      data: groupedData.map((dataPoint) => {
+        const {[groupingKey]: a, ...dataPointWithoutGroupingKey} = dataPoint;
+
+        return dataPointWithoutGroupingKey;
+      })
+    }
+  })
+}
