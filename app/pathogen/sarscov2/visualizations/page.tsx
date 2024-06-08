@@ -1,4 +1,3 @@
-
 "use client"
 
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";

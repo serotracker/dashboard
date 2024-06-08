@@ -13,6 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n  query mersEstimates {\n    mersEstimates {\n      id\n      country\n      countryAlphaTwoCode\n      countryAlphaThreeCode\n      latitude\n      longitude\n      whoRegion\n    }\n  }\n": types.MersEstimatesDocument,
+    "\n  query mersFilterOptions {\n    mersFilterOptions {\n      countryIdentifiers {\n        name\n        alphaTwoCode\n        alphaThreeCode\n      }\n      whoRegion\n    }\n  }\n": types.MersFilterOptionsDocument,
     "\n  query arbovirusEstimatesQuery {\n    arbovirusEstimates {\n      ageGroup\n      ageMaximum\n      ageMinimum\n      antibodies\n      antigen\n      assay\n      assayOther\n      city\n      state\n      country\n      countryAlphaTwoCode\n      countryAlphaThreeCode\n      createdAt\n      estimateId\n      id\n      inclusionCriteria\n      latitude\n      longitude\n      pathogen\n      pediatricAgeGroup\n      producer\n      producerOther\n      sameFrameTargetGroup\n      sampleEndDate\n      sampleFrame\n      sampleNumerator\n      sampleSize\n      sampleStartDate\n      seroprevalence\n      seroprevalenceStudy95CILower\n      seroprevalenceStudy95CIUpper\n      seroprevalenceCalculated95CILower\n      seroprevalenceCalculated95CIUpper\n      serotype\n      sex\n      sourceSheetId\n      sourceSheetName\n      unRegion\n      url\n      whoRegion\n    }\n  }\n": types.ArbovirusEstimatesQueryDocument,
     "\n  query arbovirusFilterOptions {\n    arbovirusFilterOptions {\n      ageGroup\n      antibody\n      assay\n      pathogen\n      pediatricAgeGroup\n      producer\n      sampleFrame\n      serotype\n      sex\n      unRegion\n      whoRegion\n      countryIdentifiers {\n        name\n        alphaTwoCode\n        alphaThreeCode\n      }\n    }\n  }\n": types.ArbovirusFilterOptionsDocument,
     "\n  query arbovirusDataStatistics {\n    arbovirusDataStatistics {\n        patricipantCount,\n        sourceCount,\n        estimateCount,\n        countryCount\n    }\n  }\n": types.ArbovirusDataStatisticsDocument,
@@ -35,6 +37,14 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query mersEstimates {\n    mersEstimates {\n      id\n      country\n      countryAlphaTwoCode\n      countryAlphaThreeCode\n      latitude\n      longitude\n      whoRegion\n    }\n  }\n"): (typeof documents)["\n  query mersEstimates {\n    mersEstimates {\n      id\n      country\n      countryAlphaTwoCode\n      countryAlphaThreeCode\n      latitude\n      longitude\n      whoRegion\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query mersFilterOptions {\n    mersFilterOptions {\n      countryIdentifiers {\n        name\n        alphaTwoCode\n        alphaThreeCode\n      }\n      whoRegion\n    }\n  }\n"): (typeof documents)["\n  query mersFilterOptions {\n    mersFilterOptions {\n      countryIdentifiers {\n        name\n        alphaTwoCode\n        alphaThreeCode\n      }\n      whoRegion\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
