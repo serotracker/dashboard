@@ -21,16 +21,16 @@ export const ArboBanner = () => {
 
       const csv = generateCsv(csvConfig)(
         state.filteredData.map((dataPoint) => (
-          typedObjectFromEntries(arboDataTableRows.map((key) => {
-            const value = dataPoint[key]
+          typedObjectFromEntries(arboDataTableRows.map(({ fieldName, label }) => {
+            const value = dataPoint[fieldName]
 
             if(Array.isArray(value)) {
               const joinedArrayValue = value.join(";")
 
-              return [key, joinedArrayValue];
+              return [label, joinedArrayValue];
             }
 
-            return [key, value]
+            return [label, value]
           }))
         ))
       );

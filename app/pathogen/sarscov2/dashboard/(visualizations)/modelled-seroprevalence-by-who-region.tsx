@@ -35,48 +35,21 @@ interface ModelledSeroprevalenceByWhoRegionGraphProps {
   legendConfiguration: LegendConfiguration;
 }
 
-type AcceptableSarsCov2EstimateWithSeroprevalence = Omit<SarsCov2Estimate, "samplingMidDate"|"whoRegion"|"denominatorValue"|"numeratorValue"|"seroprevalence"> & {
-  samplingMidDate: NonNullable<SarsCov2Estimate["samplingStartDate"]>;
-  whoRegion: NonNullable<SarsCov2Estimate["whoRegion"]>;
-  denominatorValue: NonNullable<SarsCov2Estimate["denominatorValue"]>;
-} & {
-  numeratorValue: SarsCov2Estimate["numeratorValue"];
-  seroprevalence: NonNullable<SarsCov2Estimate["seroprevalence"]>;
-}
-
-const isAcceptableSarsCov2EstimateWithSeroprevalence = (
-  estimate: Omit<AcceptableSarsCov2Estimate, 'samplingMidDate'> & { samplingMidDate: Date }
-): estimate is (Omit<AcceptableSarsCov2EstimateWithSeroprevalence, 'samplingMidDate'> & { samplingMidDate: Date }) =>
-  estimate.seroprevalence !== null && estimate.seroprevalence !== undefined;
-
-type AcceptableSarsCov2EstimateWithNumerator = Omit<SarsCov2Estimate, "samplingMidDate"|"whoRegion"|"denominatorValue"|"numeratorValue"|"seroprevalence"> & {
-  samplingMidDate: NonNullable<SarsCov2Estimate["samplingStartDate"]>;
-  whoRegion: NonNullable<SarsCov2Estimate["whoRegion"]>;
-  denominatorValue: NonNullable<SarsCov2Estimate["denominatorValue"]>;
-} & {
-  numeratorValue: NonNullable<SarsCov2Estimate["numeratorValue"]>;
-  seroprevalence: SarsCov2Estimate["seroprevalence"]
-}
-
-const isAcceptableSarsCov2EstimateWithNumerator = (
-  estimate: Omit<AcceptableSarsCov2Estimate, 'samplingMidDate'> & { samplingMidDate: Date }
-): estimate is (Omit<AcceptableSarsCov2EstimateWithNumerator, 'samplingMidDate'> & { samplingMidDate: Date }) =>
-  estimate.numeratorValue !== null && estimate.numeratorValue !== undefined;
-
-type AcceptableSarsCov2Estimate = AcceptableSarsCov2EstimateWithSeroprevalence | AcceptableSarsCov2EstimateWithNumerator;
-
 export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeroprevalenceByWhoRegionGraphProps) => {
   const state = useContext(SarsCov2Context);
 
   const consideredData = useMemo(() => state.filteredData
-    .filter((dataPoint: SarsCov2Estimate): dataPoint is AcceptableSarsCov2Estimate => 
+    .filter((dataPoint: SarsCov2Estimate): dataPoint is Omit<SarsCov2Estimate, "samplingMidDate"|"whoRegion"|"denominatorValue"|"numeratorValue">
+    & {
+      samplingMidDate: NonNullable<SarsCov2Estimate["samplingStartDate"]>;
+      whoRegion: NonNullable<SarsCov2Estimate["whoRegion"]>;
+      denominatorValue: NonNullable<SarsCov2Estimate["denominatorValue"]>;
+      numeratorValue: NonNullable<SarsCov2Estimate["numeratorValue"]>;
+    } => 
         !!dataPoint.samplingMidDate
         && !!dataPoint.whoRegion
         && dataPoint.denominatorValue !== null && dataPoint.denominatorValue !== undefined
-        && (
-          (dataPoint.numeratorValue !== null && dataPoint.numeratorValue !== undefined)
-          || (dataPoint.seroprevalence !== null && dataPoint.seroprevalence !== undefined)
-        )
+        && dataPoint.numeratorValue !== null && dataPoint.numeratorValue !== undefined
     ).map((dataPoint) => ({
       ...dataPoint,
       samplingMidDate: parseISO(dataPoint.samplingMidDate),
@@ -93,13 +66,9 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
       dataPointToXAxisValue={({ dataPoint }) => dateToMonthCount(dataPoint.samplingMidDate)}
       xAxisValueToLabel={({ xAxisValue }) => monthCountToMonthYearString(xAxisValue)}
       xAxisLabelSortingFunction={(xAxisLabelA, xAxisLabelB) => monthYearStringToMonthCount(xAxisLabelA) - monthYearStringToMonthCount(xAxisLabelB)}
-      dataPointToYAxisValue={({ dataPoint }) => {
-        const seroprevalenceDecimalValue = isAcceptableSarsCov2EstimateWithNumerator(dataPoint)
-          ? dataPoint.numeratorValue / dataPoint.denominatorValue
-          : (dataPoint.seroprevalence * dataPoint.denominatorValue) / dataPoint.denominatorValue
-
-        return parseFloat((seroprevalenceDecimalValue * 100).toFixed(1))
-      }}
+      dataPointToYAxisValue={({ dataPoint }) => 
+        parseFloat(((dataPoint.numeratorValue / dataPoint.denominatorValue) * 100).toFixed(1))
+      }
       getLineColour={({ primaryGroupingKey }) => barColoursForWhoRegions[primaryGroupingKey]}
       bestFitLineSettings={{
         maximumPolynomialOrder: 2,
