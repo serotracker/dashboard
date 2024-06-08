@@ -7,6 +7,8 @@ import { GbdSuperRegion } from "@/gql/graphql";
 import { gbdSuperRegionToLabelMap } from '@/lib/gbd-regions';
 import { MonthlySarsCov2CountryInformationContext } from '@/contexts/pathogen-context/pathogen-contexts/monthly-sarscov2-country-information-context';
 import { pipe } from "fp-ts/lib/function.js";
+import { LineChart } from '@/components/customs/visualizations/line-chart';
+import { LegendConfiguration } from '@/components/customs/visualizations/stacked-bar-chart';
 
 const barColoursForGbdSuperRegions: Record<GbdSuperRegion, string> = {
   [GbdSuperRegion.CentralEuropeEasternEuropeAndCentralAsia]: "#e15759",
@@ -61,12 +63,6 @@ const generateRatioBuckets = (input: GenerateRatioBucketsInput): GenerateRatioBu
   const smallestOrderOfMagnitude = Math.floor(Math.log(smallestExactRatio))
   const largestOrderOfMagnitude = Math.floor(Math.log(largestExactRatio))
 
-  console.log('sortedExactRatiosAscending', sortedExactRatiosAscending);
-  console.log('smallestExactRatio', smallestExactRatio);
-  console.log('largestExactRatio', largestExactRatio);
-  console.log('smallestOrderOfMagnitude', smallestOrderOfMagnitude);
-  console.log('largestOrderOfMagnitude', largestOrderOfMagnitude);
-
   const allOrdersOfMagnitude = generateRange({
     startInclusive: smallestOrderOfMagnitude,
     endInclusive: largestOrderOfMagnitude,
@@ -76,9 +72,9 @@ const generateRatioBuckets = (input: GenerateRatioBucketsInput): GenerateRatioBu
   return {
     dataPoints: input.dataPoints,
     ratioBuckets: allOrdersOfMagnitude.flatMap((orderOfMagnitude) => [
-      (1 * (10 ^ orderOfMagnitude)).toFixed(orderOfMagnitude < 0 ? Math.abs(orderOfMagnitude) : 0),
-      (2 * (10 ^ orderOfMagnitude)).toFixed(orderOfMagnitude < 0 ? Math.abs(orderOfMagnitude) : 0),
-      (5 * (10 ^ orderOfMagnitude)).toFixed(orderOfMagnitude < 0 ? Math.abs(orderOfMagnitude) : 0)
+      (1 * (Math.pow(10, orderOfMagnitude))).toFixed(orderOfMagnitude < 0 ? Math.abs(orderOfMagnitude) : 0),
+      (2 * (Math.pow(10, orderOfMagnitude))).toFixed(orderOfMagnitude < 0 ? Math.abs(orderOfMagnitude) : 0),
+      (5 * (Math.pow(10, orderOfMagnitude))).toFixed(orderOfMagnitude < 0 ? Math.abs(orderOfMagnitude) : 0),
     ])
   };
 }
@@ -135,7 +131,7 @@ export const NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegio
   ), [ consideredData ])
 
   return (
-    <AreaChart
+    <LineChart
       graphId="number-of-infections-per-confirmed-case-at-the-study-midpoint-by-gbd-super-region"
       data={dataPoints}
       primaryGroupingFunction={(dataPoint) => dataPoint.bucket}
@@ -145,7 +141,8 @@ export const NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegio
       secondaryGroupingSortFunction={(gbdSuperRegionA, gbdSuperRegionB) => gbdSuperRegionA > gbdSuperRegionB ? 1 : -1}
       secondaryGroupingKeyToLabel={(gbdSuperRegion) => gbdSuperRegionToLabelMap[gbdSuperRegion]}
       transformOutputValue={({ data }) => data.length}
-      getBarColour={(gbdSuperRegion) => barColoursForGbdSuperRegions[gbdSuperRegion] ?? generateRandomColour()}
+      getLineColour={(gbdSuperRegion) => barColoursForGbdSuperRegions[gbdSuperRegion] ?? generateRandomColour()}
+      legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
     />
   );
 };

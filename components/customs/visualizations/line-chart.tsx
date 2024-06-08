@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { LegendConfiguration } from "./stacked-bar-chart";
 import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from './group-data-for-recharts/group-data-for-recharts-twice';
+import { applyLabelsToGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
 
 interface LineChartProps<
   TData,
@@ -27,6 +28,8 @@ interface LineChartProps<
     a: TPrimaryGroupingKey,
     b: TPrimaryGroupingKey
   ) => number;
+  primaryGroupingKeyToLabel?: (input: TPrimaryGroupingKey) => string;
+  allPrimaryGroups?: TPrimaryGroupingKey[];
   secondaryGroupingFunction: (data: TData) => TSecondaryGroupingKey | TSecondaryGroupingKey[];
   secondaryGroupingSortFunction?: (
     a: TSecondaryGroupingKey,
@@ -52,7 +55,7 @@ export const LineChart = <
 >(
   props: LineChartProps<TData, TPrimaryGroupingKey, TSecondaryGroupingKey>
 ) => {
-  const { secondaryGroupingKeyToLabel } = props;
+  const { secondaryGroupingKeyToLabel, primaryGroupingKeyToLabel, primaryGroupingSortFunction } = props;
   const { rechartsData, allSecondaryKeys } = groupDataForRechartsTwice({
     data: props.data,
     primaryGroupingFunction: props.primaryGroupingFunction,
@@ -62,23 +65,20 @@ export const LineChart = <
     transformOutputValue: props.transformOutputValue,
   });
 
-  const rechartsDataUsingLabels = useMemo(() => rechartsData.map((element) => ({
-    ...element,
-    ...(secondaryGroupingKeyToLabel ? 
-      allSecondaryKeys
-        .map((secondaryKey) => ({
-          [secondaryGroupingKeyToLabel(secondaryKey)]: element[secondaryKey]
-        }))
-        .reduce((accumulator, value) => ({
-          ...accumulator,
-          ...value
-        }), {})
-     : {})
-  })), [rechartsData, allSecondaryKeys, secondaryGroupingKeyToLabel])
+  const { rechartsDataUsingLabels } = useMemo(() => applyLabelsToGroupedRechartsData({
+    rechartsData,
+    primaryGroupingKeyToLabel,
+    secondaryGroupingKeyToLabel
+  }), [rechartsData, primaryGroupingKeyToLabel, secondaryGroupingKeyToLabel]);
 
   let xAxisProps: XAxisProps = {
     dataKey: "primaryKey",
     interval: props.xAxisTickSettings?.interval !== undefined ? props.xAxisTickSettings.interval : undefined,
+    ...(props.allPrimaryGroups ? {
+      ticks: primaryGroupingSortFunction
+        ? props.allPrimaryGroups.sort((primaryGroupA, primaryGroupB) => primaryGroupingSortFunction(primaryGroupA, primaryGroupB))
+        : props.allPrimaryGroups
+    } : {})
   };
 
   const legendProps =
