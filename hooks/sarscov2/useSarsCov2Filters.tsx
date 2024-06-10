@@ -27,6 +27,6 @@ export const sarsCov2Filters = gql`
 export function useSarsCov2Filters() {
   return useQuery<SarsCov2FilterOptionsQuery>({
     queryKey: ["sarsCov2FilterOptions"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', sarsCov2Filters)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Filters)
   });
 }
