@@ -128,6 +128,9 @@ export const GenericPathogenVisualizationsPage = <
           closeButton: {
             enabled: true,
             referrerRoute
+          },
+          customizeButton: {
+            enabled: false
           }
         }}
       />

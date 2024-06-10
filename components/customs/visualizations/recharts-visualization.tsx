@@ -1,4 +1,4 @@
-import { ButtonConfig, CloseButtonAdditionalButtonConfig, DownloadButtonAdditionalButtonConfig, GetUrlParameterFromVisualizationIdFunction, VisualizationHeader, ZoomInButtonAdditionalButtonConfig } from "./visualization-header";
+import { ButtonConfig, CloseButtonAdditionalButtonConfig, CustomizeButtonAdditionalButtonConfig, DownloadButtonAdditionalButtonConfig, GetUrlParameterFromVisualizationIdFunction, VisualizationHeader, ZoomInButtonAdditionalButtonConfig } from "./visualization-header";
 import { useDownloadVisualization } from "./use-download-visualization";
 import { cn } from "@/lib/utils";
 import { VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
@@ -7,6 +7,7 @@ interface RechartsVisualizationButtonConfig {
   zoomInButton: ButtonConfig<ZoomInButtonAdditionalButtonConfig>;
   downloadButton: ButtonConfig<DownloadButtonAdditionalButtonConfig>;
   closeButton: ButtonConfig<CloseButtonAdditionalButtonConfig>;
+  customizeButton: ButtonConfig<CustomizeButtonAdditionalButtonConfig>;
 }
 
 interface RechartsVisualizationProps<
@@ -43,6 +44,7 @@ export const RechartsVisualization = <
   const downloadButtonId = `${props.visualizationInformation.id}-download-icon`
   const zoomInButtonId = `${props.visualizationInformation.id}-zoom-in-icon`
   const closeButtonId = `${props.visualizationInformation.id}-close-icon`
+  const customizeButtonId = `${props.visualizationInformation.id}-customize-icon`
 
   return (
     <div className={cn(props.className, 'flex flex-col rounded-md border border-background my-4 p-2')} ref={ref}>
@@ -65,6 +67,10 @@ export const RechartsVisualization = <
           closeButton: {
             ...props.buttonConfig.closeButton,
             id: closeButtonId
+          },
+          customizeButton: {
+            ...props.buttonConfig.customizeButton,
+            id: customizeButtonId
           }
         }}
       />

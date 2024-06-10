@@ -1,4 +1,4 @@
-import { ZoomIn, DownloadCloud, X } from "lucide-react";
+import { ZoomIn, DownloadCloud, X, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { isSafeReferrerLink } from "@/utils/referrer-link-util";
 import { useContext } from "react";
@@ -27,6 +27,7 @@ export type ButtonConfig<AdditionalButtonInformation> =
 export type ZoomInButtonAdditionalButtonConfig = { referrerRoute: string };
 export type DownloadButtonAdditionalButtonConfig = {};
 export type CloseButtonAdditionalButtonConfig = { referrerRoute: string | undefined | null };
+export type CustomizeButtonAdditionalButtonConfig = { onClick: () => void };
 
 export type GetUrlParameterFromVisualizationIdFunction<TVisualizationId extends string, TVisualizationUrlParameter extends string> =
   (input: {visualizationId: TVisualizationId}) => {urlParameter: TVisualizationUrlParameter};
@@ -48,10 +49,15 @@ interface CloseButtonProps {
   router: AppRouterInstance;
 }
 
+interface CustomizeButtonProps {
+  configuration: EnabledButtonConfig<CustomizeButtonAdditionalButtonConfig> & { id: string };
+}
+
 interface AllButtonConfigurations {
   zoomInButton: ButtonConfig<ZoomInButtonAdditionalButtonConfig> & { id: string };
   downloadButton: ButtonConfig<DownloadButtonAdditionalButtonConfig> & { id: string };
   closeButton: ButtonConfig<CloseButtonAdditionalButtonConfig> & { id: string };
+  customizeButton: ButtonConfig<CustomizeButtonAdditionalButtonConfig> & { id: string };
 }
 
 const DownloadButton = (props: DownloadButtonProps) => (
@@ -113,6 +119,16 @@ const ZoomInButton = <
     <ZoomIn />
   </button>
 );
+
+const CustomizeButton = (props: CustomizeButtonProps) => (
+  <button
+    aria-label="Customize Visualization"
+    title="Customize Visualization"
+    onClick={() => props.configuration.onClick()}
+  >
+    <Settings />
+  </button>
+)
 
 interface VisualizationHeaderProps<
   TVisualizationId extends string,
@@ -198,6 +214,11 @@ export const VisualizationHeader = <
           configuration={props.buttonConfiguration.zoomInButton}
           getUrlParameterFromVisualizationId={props.getUrlParameterFromVisualizationId}
           visualizationId={props.visualizationInformation.id}
+        />
+      )}
+      {props.buttonConfiguration.customizeButton.enabled && (
+        <CustomizeButton
+          configuration={props.buttonConfiguration.customizeButton}
         />
       )}
     </div>

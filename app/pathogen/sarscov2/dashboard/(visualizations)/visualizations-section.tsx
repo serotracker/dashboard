@@ -45,6 +45,9 @@ export const SarsCov2VisualizationsSection = () => {
           },
           closeButton: {
             enabled: false
+          },
+          customizeButton: {
+            enabled: false
           }
         }}
         getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
