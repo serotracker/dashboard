@@ -25,6 +25,6 @@ export const groupedTeamMembers = gql`
 export function useGroupedTeamMemberData() {
   return useQuery<GroupedTeamMembersQuery>({
     queryKey: ["groupedTeamMembersQuery"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', groupedTeamMembers)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedTeamMembers)
   });
 }

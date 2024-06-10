@@ -29,6 +29,6 @@ export const arbovirusFiltersQuery = gql`
 export function useArboFilters() {
   return useQuery<ArbovirusFilterOptionsQuery>({
     queryKey: ["arbovirusFiltersQuery"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
   });
 }

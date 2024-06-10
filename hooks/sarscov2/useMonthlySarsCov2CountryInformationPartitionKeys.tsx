@@ -12,6 +12,6 @@ export const monthlySarsCov2CountryInformationPartitionKeys = gql`
 export function useMonthlySarsCov2CountryInformationPartitionKeys() {
   return useQuery<AllMonthlySarsCov2CountryInformationPartitionKeysQuery>({
     queryKey: ["monthlySarsCov2CountryInformationPartitionKeys"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformationPartitionKeys)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformationPartitionKeys)
   });
 }
