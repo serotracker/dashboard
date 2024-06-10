@@ -18,6 +18,7 @@ export interface VisualizationInformation<
   getDisplayName: (input: GetDisplayNameInput<TEstimate>) => string;
   titleTooltipText?: string;
   renderVisualization: () => React.ReactNode;
+  renderCustomizationModalContent?: () => React.ReactNode;
 }
 
 interface FiltersComponentProps {
@@ -128,9 +129,6 @@ export const GenericPathogenVisualizationsPage = <
           closeButton: {
             enabled: true,
             referrerRoute
-          },
-          customizeButton: {
-            enabled: false
           }
         }}
       />

@@ -1,4 +1,13 @@
-import { ButtonConfig, CloseButtonAdditionalButtonConfig, CustomizeButtonAdditionalButtonConfig, DownloadButtonAdditionalButtonConfig, GetUrlParameterFromVisualizationIdFunction, VisualizationHeader, ZoomInButtonAdditionalButtonConfig } from "./visualization-header";
+import { useState } from "react";
+import {
+  ButtonConfig,
+  CloseButtonAdditionalButtonConfig,
+  CustomizeButtonAdditionalButtonConfig,
+  DownloadButtonAdditionalButtonConfig,
+  GetUrlParameterFromVisualizationIdFunction,
+  VisualizationHeader,
+  ZoomInButtonAdditionalButtonConfig
+} from "./visualization-header";
 import { useDownloadVisualization } from "./use-download-visualization";
 import { cn } from "@/lib/utils";
 import { VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
@@ -21,7 +30,7 @@ interface RechartsVisualizationProps<
     TEstimate
   >;
   data: TEstimate[];
-  buttonConfig: RechartsVisualizationButtonConfig;
+  buttonConfig: Omit<RechartsVisualizationButtonConfig, 'customizeButton'>;
   className?: string;
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
 }
@@ -40,6 +49,11 @@ export const RechartsVisualization = <
   const { ref, downloadVisualization } = useDownloadVisualization({
     visualizationId: props.visualizationInformation.id
   });
+
+  const [
+    customizationModalOpen,
+    setCustomizationModalOpen
+  ] = useState<boolean>(false);
 
   const downloadButtonId = `${props.visualizationInformation.id}-download-icon`
   const zoomInButtonId = `${props.visualizationInformation.id}-zoom-in-icon`
@@ -68,8 +82,12 @@ export const RechartsVisualization = <
             ...props.buttonConfig.closeButton,
             id: closeButtonId
           },
-          customizeButton: {
-            ...props.buttonConfig.customizeButton,
+          customizeButton: true ? {
+            enabled: true,
+            onClick: () => setCustomizationModalOpen(true),
+            id: customizeButtonId
+          } : {
+            enabled: false,
             id: customizeButtonId
           }
         }}

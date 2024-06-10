@@ -64,9 +64,6 @@ export const ArbovirusVisualizationsSection = () => {
           },
           closeButton: {
             enabled: false
-          },
-          customizeButton: {
-            enabled: false
           }
         }}
         getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}

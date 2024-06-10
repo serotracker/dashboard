@@ -158,7 +158,6 @@ export const VisualizationHeader = <
   >
 ) => {
   const router = useRouter();
-  const state = useContext(ArboContext);
 
   const titleTooltip = props.visualizationInformation.titleTooltipText ? (
     <TooltipProvider delayDuration={0}>
