@@ -60,7 +60,7 @@ export function useSarsCov2DataPartitioned(input: UseSarsCov2DataPartitionedInpu
     queries: input.partitionKeys.map(( partitionKey ) =>  ({
       queryKey: ["partitionedSarsCov2Estimates", partitionKey.toString()],
       queryFn: () => request<PartitionedSarsCov2EstimatesQuery, PartitionedSarsCov2EstimatesQueryVariables>(
-        'https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '',
+        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
         partitionedSarsCov2Estimates,
         { input: { partitionKey } }
       ),

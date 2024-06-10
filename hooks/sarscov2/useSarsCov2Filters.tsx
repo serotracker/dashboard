@@ -27,6 +27,6 @@ export const sarsCov2Filters = gql`
 export function useSarsCov2Filters() {
   return useQuery<SarsCov2FilterOptionsQuery>({
     queryKey: ["sarsCov2FilterOptions"],
-    queryFn: () => request('https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '', sarsCov2Filters)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Filters)
   });
 }

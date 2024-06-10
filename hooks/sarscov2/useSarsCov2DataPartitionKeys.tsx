@@ -12,6 +12,6 @@ export const sarsCov2EstimatesPartitionKeys = gql`
 export function useSarsCov2DataPartitionKeys() {
   return useQuery<AllSarsCov2EstimatePartitionKeysQuery>({
     queryKey: ["sarsCov2DataPartitionKeys"],
-    queryFn: () => request('https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '', sarsCov2EstimatesPartitionKeys)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2EstimatesPartitionKeys)
   });
 }

@@ -16,11 +16,11 @@ export default async function ArboLayout({
 
   await queryClient.prefetchQuery({
     queryKey: ["arbovirusEstimatesQuery"],
-    queryFn: () => request('https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '', arbovirusEstimatesQuery)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
   });
   await queryClient.prefetchQuery({
     queryKey: ["arbovirusFiltersQuery"],
-    queryFn: () => request('https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '', arbovirusFiltersQuery)
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
   });
 
   const dehydratedState = dehydrate(queryClient);

@@ -37,7 +37,7 @@ export function useMonthlySarsCov2CountryInformationPartitioned(input: UseMonthl
     queries: input.partitionKeys.map(( partitionKey ) =>  ({
       queryKey: ["partitionedMonthlySarsCov2CountryInformation", partitionKey.toString()],
       queryFn: () => request<PartitionedMonthlySarsCov2CountryInformationQuery, PartitionedMonthlySarsCov2CountryInformationQueryVariables>(
-        'https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '',
+        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
         partitionedMonthlySarsCov2CountryInformation,
         { input: { partitionKey } }
       ),
