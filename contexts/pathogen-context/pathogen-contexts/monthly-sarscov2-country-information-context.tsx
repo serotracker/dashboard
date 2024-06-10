@@ -25,12 +25,12 @@ export type LookupOptimizedSarsCov2CountryInformation = Array<{
 interface MonthlySarsCov2CountryInformationContextType {
   monthlySarsCov2CountryInformation: PartitionedMonthlySarsCov2CountryInformationQuery[
     'partitionedMonthlySarsCov2CountryInformation'
-  ]['monthlySarsCov2CountryInformation'] | undefined;
+  ]['monthlySarsCov2CountryInformation'];
   lookupOptimizedSarsCov2CountryInformation: LookupOptimizedSarsCov2CountryInformation | undefined;
 }
 
 const initialMonthlySarsCov2CountryInformationContext = {
-  monthlySarsCov2CountryInformation: undefined,
+  monthlySarsCov2CountryInformation: [],
   lookupOptimizedSarsCov2CountryInformation: undefined
 };
 

@@ -83,7 +83,7 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
     }))
   , [filteredData])
 
-  const consideredCountryData = useMemo(() => monthlySarsCov2CountryInformation?.monthlySarsCov2CountryInformation
+  const consideredCountryData = useMemo(() => monthlySarsCov2CountryInformation
     .map((countryInformation) => ({
       date: dateFromYearAndMonth({ year: countryInformation.year, month: countryInformation.month }),
       alphaTwoCode: countryInformation.alphaTwoCode,
@@ -94,7 +94,7 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
       unRegion: countryInformation.unRegion ?? undefined,
       gbdSubRegion: countryInformation.gbdSubRegion ?? undefined,
       gbdSuperRegion: countryInformation.gbdSuperRegion ?? undefined
-    })) ?? []
+    }))
   , [monthlySarsCov2CountryInformation])
 
   const consolidatedData = useMemo(() => [
