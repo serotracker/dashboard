@@ -25,6 +25,6 @@ export const monthlySarsCov2CountryInformation = gql`
 export function useMonthlySarsCov2CountryInformation() {
   return useQuery<MonthlySarsCov2CountryInformationQuery>({
     queryKey: ["monthlySarsCov2CountryInformation"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformation)
+    queryFn: () => request('https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '', monthlySarsCov2CountryInformation)
   });
 }

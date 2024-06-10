@@ -23,7 +23,7 @@ export default async function AboutPageBaseLayout(props: AboutPageBaseLayoutProp
     queryKey: ["groupedTeamMembersQuery"],
     queryFn: () =>
       request(
-        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? "",
+        'https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? "",
         groupedTeamMembers
       ),
   });

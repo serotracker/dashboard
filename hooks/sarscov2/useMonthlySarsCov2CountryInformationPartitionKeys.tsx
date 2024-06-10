@@ -12,6 +12,6 @@ export const monthlySarsCov2CountryInformationPartitionKeys = gql`
 export function useMonthlySarsCov2CountryInformationPartitionKeys() {
   return useQuery<AllMonthlySarsCov2CountryInformationPartitionKeysQuery>({
     queryKey: ["monthlySarsCov2CountryInformationPartitionKeys"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformationPartitionKeys)
+    queryFn: () => request('https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '', monthlySarsCov2CountryInformationPartitionKeys)
   });
 }

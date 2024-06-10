@@ -23,19 +23,19 @@ export default async function SarsCov2Layout({
 
   await queryClient.prefetchQuery({
     queryKey: ["monthlySarsCov2CountryInformation"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformation)
+    queryFn: () => request('https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '', monthlySarsCov2CountryInformation)
   });
   await queryClient.prefetchQuery({
     queryKey: ["sarsCov2FilterOptions"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Filters)
+    queryFn: () => request('https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '', sarsCov2Filters)
   });
   await queryClient.prefetchQuery({
     queryKey: ["sarsCov2DataPartitionKeys"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2EstimatesPartitionKeys)
+    queryFn: () => request('https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '', sarsCov2EstimatesPartitionKeys)
   });
   await queryClient.prefetchQuery({
     queryKey: ["monthlySarsCov2CountryInformationPartitionKeys"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformationPartitionKeys)
+    queryFn: () => request('https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '', monthlySarsCov2CountryInformationPartitionKeys)
   });
 
   const allSarsCov2DataPartitionKeys = queryClient.getQueryData<AllSarsCov2EstimatePartitionKeysQuery>(['sarsCov2DataPartitionKeys'])?.allSarsCov2EstimatePartitionKeys ?? [];
@@ -44,7 +44,7 @@ export default async function SarsCov2Layout({
     queryClient.prefetchQuery({
       queryKey: ["partitionedSarsCov2Estimates", partitionKey.toString()],
       queryFn: () => request(
-        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
+        'https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '',
         partitionedSarsCov2Estimates,
         { input: { partitionKey } }
       ),
@@ -57,7 +57,7 @@ export default async function SarsCov2Layout({
     queryClient.prefetchQuery({
       queryKey: ["partitionedMonthlySarsCov2CountryInformation", partitionKey.toString()],
       queryFn: () => request(
-        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
+        'https://iit-backend-v2-git-issue-370-add-partitioned-aad1f1-serotracker.vercel.app/api/graphql' ?? '',
         partitionedMonthlySarsCov2CountryInformation,
         { input: { partitionKey } }
       ),
