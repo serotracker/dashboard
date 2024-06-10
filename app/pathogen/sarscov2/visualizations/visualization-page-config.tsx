@@ -9,6 +9,7 @@ import { CumulativeNumberOfSerosurveysPublishedOverTime } from "../dashboard/(vi
 import { ModelledSeroprevalenceByWhoRegionGraph } from "../dashboard/(visualizations)/modelled-seroprevalence-by-who-region";
 import { ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime } from "../dashboard/(visualizations)/comparing-seroprevalence-positive-cases-and-vaccinations-over-time";
 import { NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegion } from "../dashboard/(visualizations)/number-of-infections-at-midpoint-by-gbd-region";
+import { BestFitLineCustomizationModal } from "../dashboard/(visualizations)/customization-modals/best-fit-line-customization-modal";
 
 export enum SarsCov2VisualizationId {
   PUBLISHED_STUDY_COUNT_BY_GBD_REGION = "PUBLISHED_STUDY_COUNT_BY_GBD_REGION",
@@ -68,7 +69,10 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
         "modelled-seroprevalence-by-who-region"
       ],
     getDisplayName: () => "Modelled Seroprevalence Globally by WHO Region",
-    renderVisualization: () => ModelledSeroprevalenceByWhoRegionGraph({legendConfiguration: LegendConfiguration.RIGHT_ALIGNED})
+    renderVisualization: () => ModelledSeroprevalenceByWhoRegionGraph({legendConfiguration: LegendConfiguration.RIGHT_ALIGNED}),
+    renderCustomizationModalContent: () => BestFitLineCustomizationModal({
+      setIsScatterPlotVisible: () => {}
+    })
   },
   [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]: {
     id: SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS,
@@ -77,7 +81,10 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
         "comparing-seroprevalence-positive-cases-and-vaccinations"
       ],
     getDisplayName: () => "Comparing Seroprevalence to Confirmed Cases and Vaccine Coverage Over Time",
-    renderVisualization: () => ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
+    renderVisualization: () => ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED }),
+    renderCustomizationModalContent: () => BestFitLineCustomizationModal({
+      setIsScatterPlotVisible: () => {}
+    })
   },
   [SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION]: {
     id: SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION,
@@ -86,7 +93,10 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
         "number-of-infections-at-midpoint-by-gbd-region"
       ],
     getDisplayName: () => "Number of Infections per Confirmed Case at the Study Midpoint by GBD Region",
-    renderVisualization: () => NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegion()
+    renderVisualization: () => NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegion(),
+    renderCustomizationModalContent: () => BestFitLineCustomizationModal({
+      setIsScatterPlotVisible: () => {}
+    })
   },
 }
 

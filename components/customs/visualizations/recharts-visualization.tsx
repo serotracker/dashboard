@@ -11,6 +11,7 @@ import {
 import { useDownloadVisualization } from "./use-download-visualization";
 import { cn } from "@/lib/utils";
 import { VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import { X } from "lucide-react";
 
 interface RechartsVisualizationButtonConfig {
   zoomInButton: ButtonConfig<ZoomInButtonAdditionalButtonConfig>;
@@ -61,7 +62,7 @@ export const RechartsVisualization = <
   const customizeButtonId = `${props.visualizationInformation.id}-customize-icon`
 
   return (
-    <div className={cn(props.className, 'flex flex-col rounded-md border border-background my-4 p-2')} ref={ref}>
+    <div className={cn(props.className, 'flex flex-col rounded-md border border-background my-4 p-2 relative')} ref={ref}>
       <VisualizationHeader
         visualizationInformation={props.visualizationInformation}
         data={props.data}
@@ -82,7 +83,7 @@ export const RechartsVisualization = <
             ...props.buttonConfig.closeButton,
             id: closeButtonId
           },
-          customizeButton: true ? {
+          customizeButton: props.visualizationInformation.renderCustomizationModalContent ? {
             enabled: true,
             onClick: () => setCustomizationModalOpen(true),
             id: customizeButtonId
@@ -95,6 +96,24 @@ export const RechartsVisualization = <
       <div className="flex-1 overflow-y-hidden">
         {props.visualizationInformation.renderVisualization()}
       </div>
+      {(customizationModalOpen && props.visualizationInformation.renderCustomizationModalContent) && (
+        <div className="absolute w-full h-full top-0 left-0 p-4 flex items-center justify-center bg-modal-background">
+          <div className="w-full lg:w-1/2 bg-white">
+            <div className="w-full flex justify-between p-2">
+              <div/>
+              <button
+                className="mr-2 p-2 hover:bg-gray-100 rounded-full"
+                onClick={() => setCustomizationModalOpen(false)}
+                aria-label="Close Customization Modal"
+                title="Close Customization Modal"
+              >
+                <X />
+              </button>
+            </div>
+            <props.visualizationInformation.renderCustomizationModalContent/>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

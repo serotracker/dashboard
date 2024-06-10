@@ -124,6 +124,7 @@ const CustomizeButton = (props: CustomizeButtonProps) => (
   <button
     aria-label="Customize Visualization"
     title="Customize Visualization"
+    className="mr-2 p-2 hover:bg-gray-100 rounded-full"
     onClick={() => props.configuration.onClick()}
   >
     <Settings />
@@ -207,17 +208,17 @@ export const VisualizationHeader = <
           configuration={props.buttonConfiguration.closeButton}
         />
       )}
+      {props.buttonConfiguration.customizeButton.enabled && (
+        <CustomizeButton
+          configuration={props.buttonConfiguration.customizeButton}
+        />
+      )}
       {props.buttonConfiguration.zoomInButton.enabled && (
         <ZoomInButton
           router={router}
           configuration={props.buttonConfiguration.zoomInButton}
           getUrlParameterFromVisualizationId={props.getUrlParameterFromVisualizationId}
           visualizationId={props.visualizationInformation.id}
-        />
-      )}
-      {props.buttonConfiguration.customizeButton.enabled && (
-        <CustomizeButton
-          configuration={props.buttonConfiguration.customizeButton}
         />
       )}
     </div>

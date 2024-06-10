@@ -73,6 +73,7 @@ module.exports = {
         "national-study": "#094180",
         "regional-study": "#f19e66",
         "local-study": "#e15759",
+        "modal-background": 'rgba(0,0,0,0.4)',
         link: "#0000EE",
         "linkedin-icon": "#007ebb",
         "email-icon": "#495057",
