@@ -60,7 +60,7 @@ export function useSarsCov2DataPartitioned(input: UseSarsCov2DataPartitionedInpu
     queries: input.partitionKeys.map(( partitionKey ) =>  ({
       queryKey: ["partitionedSarsCov2Estimates", partitionKey.toString()],
       queryFn: () => request<PartitionedSarsCov2EstimatesQuery, PartitionedSarsCov2EstimatesQueryVariables>(
-        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
+        process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '',
         partitionedSarsCov2Estimates,
         { input: { partitionKey } }
       ),

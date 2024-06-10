@@ -25,6 +25,6 @@ export const monthlySarsCov2CountryInformation = gql`
 export function useMonthlySarsCov2CountryInformation() {
   return useQuery<MonthlySarsCov2CountryInformationQuery>({
     queryKey: ["monthlySarsCov2CountryInformation"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformation)
+    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformation)
   });
 }
