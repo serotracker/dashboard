@@ -71,7 +71,9 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
     getDisplayName: () => "Modelled Seroprevalence Globally by WHO Region",
     renderVisualization: () => ModelledSeroprevalenceByWhoRegionGraph({legendConfiguration: LegendConfiguration.RIGHT_ALIGNED}),
     renderCustomizationModalContent: () => BestFitLineCustomizationModal({
-      setIsScatterPlotVisible: () => {}
+      onScatterPointsVisibilityChange: () => {},
+      initialScatterPointVisibility: false,
+      visualizationId: SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION
     })
   },
   [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]: {
@@ -83,7 +85,9 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
     getDisplayName: () => "Comparing Seroprevalence to Confirmed Cases and Vaccine Coverage Over Time",
     renderVisualization: () => ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED }),
     renderCustomizationModalContent: () => BestFitLineCustomizationModal({
-      setIsScatterPlotVisible: () => {}
+      onScatterPointsVisibilityChange: () => {},
+      initialScatterPointVisibility: false,
+      visualizationId: SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS
     })
   },
   [SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION]: {
@@ -95,7 +99,9 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
     getDisplayName: () => "Number of Infections per Confirmed Case at the Study Midpoint by GBD Region",
     renderVisualization: () => NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegion(),
     renderCustomizationModalContent: () => BestFitLineCustomizationModal({
-      setIsScatterPlotVisible: () => {}
+      onScatterPointsVisibilityChange: () => {},
+      initialScatterPointVisibility: false,
+      visualizationId: SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION
     })
   },
 }

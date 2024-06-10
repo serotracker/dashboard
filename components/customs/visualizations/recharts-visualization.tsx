@@ -101,6 +101,7 @@ export const RechartsVisualization = <
           <div className="w-full lg:w-1/2 bg-white">
             <div className="w-full flex justify-between p-2">
               <div/>
+              <h3 className="flex items-center">Customization</h3>
               <button
                 className="mr-2 p-2 hover:bg-gray-100 rounded-full"
                 onClick={() => setCustomizationModalOpen(false)}
