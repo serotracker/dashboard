@@ -2,7 +2,6 @@
 
 import React, { useContext } from "react";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
-import { useSarsCov2Data } from "@/hooks/sarscov2/useSarsCov2Data";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
 import { MapShadingLegend } from "@/app/pathogen/arbovirus/dashboard/(map)/MapShadingLegend";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
@@ -13,9 +12,8 @@ import { SarsCov2CountryPopupContent } from "./sars-cov-2-country-pop-up-content
 
 export function SarsCov2Map() {
   const state = useContext(SarsCov2Context);
-  const { data } = useSarsCov2Data();
 
-  if (!data) {
+  if (state.filteredData.length === 0) {
     return <span> Loading... </span>;
   }
 

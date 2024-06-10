@@ -1,11 +1,12 @@
 "use client";
 import { createContext, useEffect, useMemo } from "react";
 import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
-import { useSarsCov2Data } from "@/hooks/sarscov2/useSarsCov2Data";
 import { SarsCov2EstimatesQuery } from "@/gql/graphql";
 import { useSarsCov2Filters } from "@/hooks/sarscov2/useSarsCov2Filters";
 import { CountryDataContext } from "../country-information-context";
 import { MonthlySarsCov2CountryInformationProvider } from "./monthly-sarscov2-country-information-context";
+import { useSarsCov2DataPartitionKeys } from "@/hooks/sarscov2/useSarsCov2DataPartitionKeys";
+import { useSarsCov2DataPartitioned } from "@/hooks/sarscov2/useSarsCov2DataPartitioned";
 
 const initialSarsCov2ContextState = {
   filteredData: [],
@@ -25,16 +26,22 @@ export const SarsCov2Context = createContext<PathogenContextType<SarsCov2Estimat
 });
 
 const SarsCov2DataFetcher = (props: PathogenDataFetcherProps<SarsCov2Estimate>): React.ReactNode => {
-  const { data } = useSarsCov2Data();
+  const { data: partitionKeyData } = useSarsCov2DataPartitionKeys();
+  const dataArray = useSarsCov2DataPartitioned({ partitionKeys: partitionKeyData?.allSarsCov2EstimatePartitionKeys ?? [] })
 
   useEffect(() => {
-    if (!!data && props.state.filteredData.length === 0 && !props.state.dataFiltered) {
+    if (
+      dataArray.length > 0
+      && dataArray.every((element) => !!element.data)
+      && props.state.filteredData.length === 0
+      && !props.state.dataFiltered
+    ) {
       props.dispatch({
         type: PathogenContextActionType.INITIAL_DATA_FETCH,
-        payload: { data: data.sarsCov2Estimates },
+        payload: { data: dataArray.flatMap((element) => element.data?.partitionedSarsCov2Estimates.sarsCov2Estimates ?? [])},
       });
     }
-  }, [data]);
+  }, [dataArray]);
 
   return (
     <>
