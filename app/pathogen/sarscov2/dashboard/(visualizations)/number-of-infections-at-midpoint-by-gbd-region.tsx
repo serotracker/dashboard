@@ -5,7 +5,7 @@ import { generateRandomColour, generateRange } from "@/lib/utils";
 import { useContext } from "react";
 import { GbdSuperRegion } from "@/gql/graphql";
 import { gbdSuperRegionToLabelMap } from '@/lib/gbd-regions';
-import { MonthlySarsCov2CountryInformationContext } from '@/contexts/pathogen-context/pathogen-contexts/monthly-sarscov2-country-information-context';
+import { MonthlySarsCov2CountryInformationContext } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/monthly-sarscov2-country-information-context";
 import { pipe } from "fp-ts/lib/function.js";
 import { LineChart } from '@/components/customs/visualizations/line-chart';
 import { LegendConfiguration } from '@/components/customs/visualizations/stacked-bar-chart';

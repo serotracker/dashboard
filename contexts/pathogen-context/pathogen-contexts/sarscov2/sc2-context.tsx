@@ -7,6 +7,7 @@ import { CountryDataContext } from "../../country-information-context";
 import { MonthlySarsCov2CountryInformationProvider } from "./monthly-sarscov2-country-information-context";
 import { useSarsCov2DataPartitionKeys } from "@/hooks/sarscov2/useSarsCov2DataPartitionKeys";
 import { useSarsCov2DataPartitioned } from "@/hooks/sarscov2/useSarsCov2DataPartitioned";
+import { ModelledSarsCov2SeroprevalenceProvider } from "./modelled-sarscov2-seroprevalence-context";
 
 const initialSarsCov2ContextState = {
   filteredData: [],
@@ -84,9 +85,11 @@ export const SarsCov2Providers = (props: SarsCov2ProvidersProps) => {
       mapId={"sarsCov2Map"}
       dataFetcher={SarsCov2DataFetcher}
     >
-      <MonthlySarsCov2CountryInformationProvider>
-        {props.children}
-      </MonthlySarsCov2CountryInformationProvider>
+      <ModelledSarsCov2SeroprevalenceProvider>
+        <MonthlySarsCov2CountryInformationProvider>
+          {props.children}
+        </MonthlySarsCov2CountryInformationProvider>
+      </ModelledSarsCov2SeroprevalenceProvider>
     </PathogenProviders>
   )
 }

@@ -4,6 +4,9 @@ import { PopUpContentRowType, PopupContentTextAlignment } from "@/components/ui/
 import { typedGroupBy } from "@/lib/utils";
 import { scopeToSortOrderMap } from "@/components/customs/filters/available-filters";
 import { SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
+import { useContext, useMemo } from "react";
+import { ModelledSarsCov2SeroprevalenceContext } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/modelled-sarscov2-seroprevalence-context";
+import { monthCountToMonthYearString } from "@/lib/time-utils";
 
 interface SarsCov2CountryPopupContentProps {
   record: {
@@ -23,14 +26,42 @@ const scopeToRibbonColourClassname: Record<string, string | undefined> = {
 }
 
 export const SarsCov2CountryPopupContent = (props: SarsCov2CountryPopupContentProps): React.ReactNode => {
+  const { alpha3CountryCode } = props.record;
   const allDataPointsWithScopes = props.record.dataPoints.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'scope'> & {scope: NonNullable<(typeof dataPoint['scope'])>} => !!dataPoint);
 
   const allScopesPresentInData = uniq(allDataPointsWithScopes.map((dataPoint) => dataPoint.scope));
   const dataGroupedByScope = typedGroupBy(allDataPointsWithScopes, (dataPoint) => dataPoint.scope);
 
+  const { countryModelledSeroprevalenceBreakdown } = useContext(ModelledSarsCov2SeroprevalenceContext);
+
+  const modelledSeroprevalenceForCountry = useMemo(() =>
+    countryModelledSeroprevalenceBreakdown[alpha3CountryCode].reduce<{
+      modelledTwentyFivePercentSeroprevalenceMonth: number | undefined
+      modelledFiftyPercentSeroprevalenceMonth: number | undefined
+      modelledSeventyFivePercentSeroprevalenceMonth: number | undefined
+    }>((accumulator, value) => ({
+      modelledTwentyFivePercentSeroprevalenceMonth:
+        accumulator.modelledTwentyFivePercentSeroprevalenceMonth === undefined && value.yAxisValue > 0.25
+          ? value.xAxisValue
+          : accumulator.modelledTwentyFivePercentSeroprevalenceMonth,
+      modelledFiftyPercentSeroprevalenceMonth:
+        accumulator.modelledFiftyPercentSeroprevalenceMonth === undefined && value.yAxisValue > 0.50
+          ? value.xAxisValue
+          : accumulator.modelledFiftyPercentSeroprevalenceMonth,
+      modelledSeventyFivePercentSeroprevalenceMonth:
+        accumulator.modelledSeventyFivePercentSeroprevalenceMonth === undefined && value.yAxisValue > 0.75
+          ? value.xAxisValue
+          : accumulator.modelledSeventyFivePercentSeroprevalenceMonth
+    }), {
+      modelledTwentyFivePercentSeroprevalenceMonth: undefined,
+      modelledFiftyPercentSeroprevalenceMonth: undefined,
+      modelledSeventyFivePercentSeroprevalenceMonth: undefined,
+    })
+  , [countryModelledSeroprevalenceBreakdown, alpha3CountryCode]);
+
   return (
     <GenericMapPopUp
-      width={GenericMapPopUpWidth.THIN}
+      width={GenericMapPopUpWidth.WIDE}
       headerConfiguration={{
         text: props.record.countryName,
         textAlignment: HeaderConfigurationTextAlignment.CENTER
@@ -68,6 +99,33 @@ export const SarsCov2CountryPopupContent = (props: SarsCov2CountryPopupContentPr
               },
               rightPaddingEnabled: false
             })),
+          {
+            title: 'Approximate Month 25% Seroprevalence was exceeded',
+            type: PopUpContentRowType.TEXT as const,
+            text: modelledSeroprevalenceForCountry.modelledTwentyFivePercentSeroprevalenceMonth
+              ? monthCountToMonthYearString(modelledSeroprevalenceForCountry.modelledTwentyFivePercentSeroprevalenceMonth)
+              : 'Not enough data to model',
+            contentTextAlignment: PopupContentTextAlignment.RIGHT,
+            rightPaddingEnabled: false
+          },
+          {
+            title: 'Approximate Month 50% Seroprevalence was exceeded',
+            type: PopUpContentRowType.TEXT as const,
+            text: modelledSeroprevalenceForCountry.modelledFiftyPercentSeroprevalenceMonth
+              ? monthCountToMonthYearString(modelledSeroprevalenceForCountry.modelledFiftyPercentSeroprevalenceMonth)
+              : 'Not enough data to model',
+            contentTextAlignment: PopupContentTextAlignment.RIGHT,
+            rightPaddingEnabled: false
+          },
+          {
+            title: 'Approximate Month 75% Seroprevalence was exceeded',
+            type: PopUpContentRowType.TEXT as const,
+            text: modelledSeroprevalenceForCountry.modelledSeventyFivePercentSeroprevalenceMonth
+              ? monthCountToMonthYearString(modelledSeroprevalenceForCountry.modelledSeventyFivePercentSeroprevalenceMonth)
+              : 'Not enough data to model',
+            contentTextAlignment: PopupContentTextAlignment.RIGHT,
+            rightPaddingEnabled: false
+          },
         ]
       }
       bottomBannerConfiguration={{
