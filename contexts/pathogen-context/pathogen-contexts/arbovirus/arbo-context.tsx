@@ -1,9 +1,9 @@
 "use client";
 import { createContext, useEffect, useMemo } from "react";
-import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
+import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../../pathogen-context";
 import { useArboData } from "@/hooks/arbovirus/useArboData";
 import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
-import { CountryDataContext } from "../country-information-context";
+import { CountryDataContext } from "../../country-information-context";
 import { ArbovirusEstimatesQueryQuery } from "@/gql/graphql";
 
 export type ArbovirusEstimate = ArbovirusEstimatesQueryQuery['arbovirusEstimates'][number];

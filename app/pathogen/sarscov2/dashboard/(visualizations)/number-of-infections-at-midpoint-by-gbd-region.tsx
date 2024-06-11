@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { AreaChart } from "@/components/customs/visualizations/area-chart";
-import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { generateRandomColour, generateRange } from "@/lib/utils";
 import { useContext } from "react";
 import { GbdSuperRegion } from "@/gql/graphql";

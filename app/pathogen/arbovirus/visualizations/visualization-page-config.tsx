@@ -1,7 +1,7 @@
 import uniq from 'lodash/uniq';
 import { VisualizationInformation } from "../../generic-pathogen-visualizations-page";
 import { StudyCountOverTime, Top10CountriesByPathogenStudyCount, convertArboSFtoArbo } from "../dashboard/(visualizations)/recharts";
-import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { EstimateCountByWHORegionAndArbovirusGraph } from "../dashboard/(visualizations)/estimate-count-by-who-region-and-arbovirus-graph";
 import { EstimateCountByUnRegionAndArbovirusGraph } from "../dashboard/(visualizations)/estimate-count-by-un-region-and-arbovirus-graph";
 import { MedianSeroprevalenceByWHORegionAndArbovirusGraph } from "../dashboard/(visualizations)/median-seroprevalence-by-who-region-and-arbovirus-graph";

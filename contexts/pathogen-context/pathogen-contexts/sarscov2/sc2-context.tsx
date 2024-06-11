@@ -1,9 +1,9 @@
 "use client";
 import { createContext, useEffect, useMemo } from "react";
-import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
+import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../../pathogen-context";
 import { SarsCov2EstimatesQuery } from "@/gql/graphql";
 import { useSarsCov2Filters } from "@/hooks/sarscov2/useSarsCov2Filters";
-import { CountryDataContext } from "../country-information-context";
+import { CountryDataContext } from "../../country-information-context";
 import { MonthlySarsCov2CountryInformationProvider } from "./monthly-sarscov2-country-information-context";
 import { useSarsCov2DataPartitionKeys } from "@/hooks/sarscov2/useSarsCov2DataPartitionKeys";
 import { useSarsCov2DataPartitioned } from "@/hooks/sarscov2/useSarsCov2DataPartitioned";

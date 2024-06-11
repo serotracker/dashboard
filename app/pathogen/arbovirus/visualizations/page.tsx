@@ -4,7 +4,7 @@ import { ArbovirusFilters } from "../dashboard/filters";
 import { GenericPathogenVisualizationsPage } from "../../generic-pathogen-visualizations-page";
 import { arbovirusVisualizationInformationArray, getUrlParameterFromVisualizationId, isArbovirusVisualizationUrlParameter } from './visualization-page-config';
 import { Suspense, useContext } from "react";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 
 export default function VisualizationsPage() {
   const { filteredData } = useContext(ArboContext);

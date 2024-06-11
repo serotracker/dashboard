@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 import parseISO from 'date-fns/parseISO';
 import defaultColours from 'tailwindcss/colors'
 
-import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { dateFromYearAndMonth, dateToMonthCount, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { generateRandomColour } from "@/lib/utils";

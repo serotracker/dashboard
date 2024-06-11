@@ -3,7 +3,7 @@ import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment
 import { PopUpContentRowType, PopupContentTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import { typedGroupBy } from "@/lib/utils";
 import { scopeToSortOrderMap } from "@/components/customs/filters/available-filters";
-import { SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 
 interface SarsCov2CountryPopupContentProps {
   record: {

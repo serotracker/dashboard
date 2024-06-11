@@ -15,7 +15,7 @@ import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmission
 import { ArboCountryPopupContent } from "./arbo-country-pop-up-content";
 import { computeClusterMarkers } from "./arbo-map-cluster-utils";
 import { MapShadingLegend } from "./MapShadingLegend";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
 

@@ -1,7 +1,7 @@
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
-import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { GbdSubRegion, WhoRegion } from "@/gql/graphql";
 import { gbdSubRegionToLabelMap, gbdSuperRegionToLabelMap, isGbdSubRegion, isGbdSuperRegion } from "@/lib/gbd-regions";
 import { getLabelForUNRegion, isUNRegion } from "@/lib/un-regions";

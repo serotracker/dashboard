@@ -2,7 +2,7 @@
 import { VisualizationInformation } from "../../generic-pathogen-visualizations-page";
 import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
-import { SarsCov2Estimate } from '@/contexts/pathogen-context/pathogen-contexts/sc2-context';
+import { SarsCov2Estimate } from '@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context';
 import { PublishedStudiesByGdbRegionGraph } from "../dashboard/(visualizations)/published-studies-by-gbd-region";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { CumulativeNumberOfSerosurveysPublishedOverTime } from "../dashboard/(visualizations)/cumulative-number-of-serosurveys-published-over-time";
