@@ -102,6 +102,8 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
     ...consideredCountryData,
   ], [consideredEstimateData, consideredCountryData])
 
+  return <div> abc </div>
+
   return (
     <div className="flex h-full">
       <div className="grow-0 h-full max-w-xs overflow-y-scroll ignore-for-visualization-download">

@@ -5,6 +5,7 @@ import { LineChart } from "./line-chart";
 import { useBestFitCurve } from "./line-fitting/use-best-fit-curve";
 import { LegendConfiguration } from "./stacked-bar-chart";
 import { generateRange } from '@/lib/utils';
+import { LineWithScatterPointsChart } from './line-with-scatter-points-chart';
 
 interface BestFitLineSettings {
   maximumPolynomialOrder: number;
@@ -123,6 +124,7 @@ export const BestFitCurveLineChart = <
       }))
   })
 
+  /*
   return (
     <LineChart
       graphId={props.graphId}
@@ -141,4 +143,40 @@ export const BestFitCurveLineChart = <
       percentageFormattingEnabled={props.percentageFormattingEnabled}
     />
   );
+  */
+
+  return (
+    <LineWithScatterPointsChart
+      graphId={props.graphId}
+      lineData={dataForBestFitLine}
+      scatterPointsData={allPrimaryKeys.flatMap((primaryKey) => rechartsData[primaryKey]
+        .map((dataPoint) => ({
+          xAxisLabel: props.xAxisValueToLabel({
+            xAxisValue: props.dataPointToXAxisValue({ dataPoint, primaryGroupingKey: primaryKey }),
+          }),
+          yAxisValue: props.dataPointToYAxisValue({ dataPoint, primaryGroupingKey: primaryKey }),
+          secondaryKeyForLineChart: primaryKey
+        }))
+        .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'yAxisValue'> & {
+          yAxisValue: NonNullable<typeof dataPoint['yAxisValue']>
+        } => dataPoint.yAxisValue !== undefined)
+      )}
+      primaryGroupingFunctionForLineData={(dataPoint) => dataPoint.xAxisLabel}
+      primaryGroupingFunctionForScatterPointsData={(dataPoint) => dataPoint.xAxisLabel}
+      primaryGroupingSortFunction={props.xAxisLabelSortingFunction}
+      secondaryGroupingFunctionForLineData={(dataPoint) => dataPoint.secondaryKeyForLineChart}
+      secondaryGroupingFunctionForScatterPointsData={(dataPoint) => dataPoint.secondaryKeyForLineChart}
+      secondaryGroupingSortFunction={props.primaryGroupingSortFunction}
+      secondaryGroupingKeyToLabel={(primaryGroupingKey) => props.primaryGroupingKeyToLabel
+        ? props.primaryGroupingKeyToLabel(primaryGroupingKey)
+        : primaryGroupingKey
+      }
+      transformOutputValueForLineData={({ data }) => data.at(0)?.yAxisValue ?? 0}
+      transformOutputValueForScatterPointData={({ dataPoint }) => dataPoint.yAxisValue}
+      getLineColour={(primaryGroupingKey, index) => props.getLineColour({ primaryGroupingKey, index })}
+      getScatterPointsColour={(primaryGroupingKey, index) => props.getLineColour({ primaryGroupingKey, index })}
+      legendConfiguration={props.legendConfiguration}
+      percentageFormattingEnabled={props.percentageFormattingEnabled}
+    />
+  )
 }
