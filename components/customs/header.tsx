@@ -21,42 +21,43 @@ type NavMenuItem = {
   description: string;
 };
 
-const serotrackerNavItems: NavMenuItem[] = [
+interface GenerateNavItemsInput {
+  route: string;
+  pathogenName: string;
+}
+
+const generateDashboardNavItems = (input: GenerateNavItemsInput): NavMenuItem[] => [
   {
     title: "Dashboard",
-    href: `/pathogen/sarscov2/dashboard#${DashboardSectionId.MAP}`,
-    description: "A dashboard for Sars Cov 2 seroprevalence data",
+    href: `/pathogen/${input.route}/dashboard#${DashboardSectionId.MAP}`,
+    description: `A dashboard for ${input.pathogenName} seroprevalence data`,
   },
   {
     title: "Data",
-    href: `/pathogen/sarscov2/dashboard#${DashboardSectionId.TABLE}`,
-    description: "View or download our entire Sars Cov 2 dataset",
-
+    href: `/pathogen/${input.route}/dashboard#${DashboardSectionId.TABLE}`,
+    description: `View or download our entire ${input.pathogenName} dataset`,
   },
   {
     title: "Visualizations",
-    href: `/pathogen/sarscov2/dashboard#${DashboardSectionId.VISUALIZATIONS}`,
-    description: "A collection of visualizations for our Sars Cov 2 dataset",
+    href: `/pathogen/${input.route}/dashboard#${DashboardSectionId.VISUALIZATIONS}`,
+    description: `A collection of visualizations for our ${input.pathogenName} dataset`,
   },
-];
+]
 
-const arbotrackerNavitems: NavMenuItem[] = [
-  {
-    title: "Dashboard",
-    href: `/pathogen/arbovirus/dashboard#${DashboardSectionId.MAP}`,
-    description: "A dashboard for arbovirus seroprevalence data",
-  },
-  {
-    title: "Data",
-    href: `/pathogen/arbovirus/dashboard#${DashboardSectionId.TABLE}`,
-    description: "View or download our entire arbovirus dataset",
-  },
-  {
-    title: "Visualizations",
-    href: `/pathogen/arbovirus/dashboard#${DashboardSectionId.VISUALIZATIONS}`,
-    description: "A collection of visualizations for our arbovirus dataset",
-  },
-];
+const sc2TrackerNavItems: NavMenuItem[] = generateDashboardNavItems({
+  route: 'sarscov2',
+  pathogenName: 'Sars Cov 2'
+});
+
+const arbotrackerNavItems: NavMenuItem[] = generateDashboardNavItems({
+  route: 'arbovirus',
+  pathogenName: 'arbovirus'
+})
+
+const mersNavItems: NavMenuItem[] = generateDashboardNavItems({
+  route: 'mers',
+  pathogenName: 'MERS'
+})
 
 const aboutNavItems: NavMenuItem[] = [
   {
@@ -155,13 +156,19 @@ export const Header = () => {
                 {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED && (
                   <TabGroup
                     title={"SC2Tracker"}
-                    navItems={serotrackerNavItems}
+                    navItems={sc2TrackerNavItems}
                   />
                 )}
                 <TabGroup
                   title={"Arbotracker"}
-                  navItems={arbotrackerNavitems}
+                  navItems={arbotrackerNavItems}
                 />
+                {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && (
+                  <TabGroup
+                    title={"MERSTracker"}
+                    navItems={mersNavItems}
+                  />
+                )}
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
