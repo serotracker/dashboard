@@ -19,6 +19,6 @@ export const mersFilters = gql`
 export function useMersFilters() {
   return useQuery<MersFilterOptionsQuery>({
     queryKey: ["mersFilterOptions"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', mersFilters)
+    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', mersFilters)
   });
 }

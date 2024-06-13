@@ -37,7 +37,7 @@ export function useMonthlySarsCov2CountryInformationPartitioned(input: UseMonthl
     queries: input.partitionKeys.map(( partitionKey ) =>  ({
       queryKey: ["partitionedMonthlySarsCov2CountryInformation", partitionKey.toString()],
       queryFn: () => request<PartitionedMonthlySarsCov2CountryInformationQuery, PartitionedMonthlySarsCov2CountryInformationQueryVariables>(
-        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
+        process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '',
         partitionedMonthlySarsCov2CountryInformation,
         { input: { partitionKey } }
       ),

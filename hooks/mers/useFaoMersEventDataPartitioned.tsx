@@ -64,7 +64,7 @@ export function useFaoMersEventDataPartitioned(input: UseFaoMersEventDataPartiti
     queries: input.partitionKeys.map(( partitionKey ) =>  ({
       queryKey: ["partitionedFaoMersEvents", partitionKey.toString()],
       queryFn: () => request<PartitionedFaoMersEventsQuery, PartitionedFaoMersEventsQueryVariables>(
-        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
+        process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '',
         partitionedFaoMersEvents,
         { input: { partitionKey } }
       ),

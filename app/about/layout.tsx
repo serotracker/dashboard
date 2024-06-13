@@ -23,7 +23,7 @@ export default async function AboutPageBaseLayout(props: AboutPageBaseLayoutProp
     queryKey: ["groupedTeamMembersQuery"],
     queryFn: () =>
       request(
-        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? "",
+        process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? "",
         groupedTeamMembers
       ),
   });

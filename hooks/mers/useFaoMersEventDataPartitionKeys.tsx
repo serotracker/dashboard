@@ -12,6 +12,6 @@ export const faoMersEventPartitionKeys = gql`
 export function useFaoMersEventDataPartitionKeys() {
   return useQuery<AllFaoMersEventPartitionKeysQuery>({
     queryKey: ["faoMersEventPartitionKeys"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', faoMersEventPartitionKeys)
+    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', faoMersEventPartitionKeys)
   });
 } 

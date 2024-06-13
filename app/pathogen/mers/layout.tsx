@@ -20,16 +20,16 @@ export default async function MersLayout({
 
   await queryClient.prefetchQuery({
     queryKey: ["mersEstimates"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', mersEstimates)
+    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', mersEstimates)
   });
   await queryClient.prefetchQuery({
     queryKey: ["mersFilterOptions"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', mersFilters)
+    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', mersFilters)
   });
 
   await queryClient.prefetchQuery({
     queryKey: ["faoMersEventPartitionKeys"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', faoMersEventPartitionKeys)
+    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', faoMersEventPartitionKeys)
   });
 
   const allFaoMersEventPartitionKeys = queryClient.getQueryData<AllFaoMersEventPartitionKeysQuery>([
@@ -40,7 +40,7 @@ export default async function MersLayout({
     queryClient.prefetchQuery({
       queryKey: ["partitionedFaoMersEvents", partitionKey.toString()],
       queryFn: () => request(
-        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
+        process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '',
         partitionedFaoMersEvents,
         { input: { partitionKey } }
       ),

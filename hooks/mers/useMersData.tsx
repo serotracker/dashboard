@@ -20,6 +20,6 @@ export const mersEstimates = gql`
 export function useMersData() {
   return useQuery<MersEstimatesQuery>({
     queryKey: ["mersEstimates"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', mersEstimates)
+    queryFn: () => request(process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? '', mersEstimates)
   });
 }

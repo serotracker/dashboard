@@ -72,7 +72,7 @@ export default async function Home() {
       queryKey: [arbovirusDataStatisticsQueryKey],
       queryFn: () =>
         request(
-          process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? "",
+          process.env.NEXT_PUBLIC_PREVIEW_API_GRAPHQL_URL ?? "",
           arbovirusDataStatistics
         ),
     });
