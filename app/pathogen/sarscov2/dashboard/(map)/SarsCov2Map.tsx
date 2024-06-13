@@ -86,7 +86,22 @@ export function SarsCov2Map() {
             },
           ]}
           clusteringSettings={{
-            clusteringEnabled: false
+            clusteringEnabled: true,
+            clusterProperties: {
+              National: ["+", ["case", ["==", ["get", "scope"], "National"], 1, 0]],
+              Regional: ["+", ["case", ["==", ["get", "scope"], "Regional"], 1, 0]],
+              Local: ["+", ["case", ["==", ["get", "scope"], "Local"], 1, 0]]
+            },
+            validClusterPropertyKeys: [
+              "National",
+              "Regional",
+              "Local"
+            ],
+            clusterPropertyToColourMap: {
+              National: "#094180",
+              Regional: "#f19e66",
+              Local: "#e15759"
+            }
           }}
           generatePopupContent={(input) => {
             if(isPopupCountryHighlightLayerContentGeneratorInput(input)) {
