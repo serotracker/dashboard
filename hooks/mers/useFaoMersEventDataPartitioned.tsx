@@ -1,6 +1,7 @@
 import { useQueries } from "@tanstack/react-query";
 import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
+import { PartitionedFaoMersEventsQuery, PartitionedFaoMersEventsQueryVariables } from "@/gql/graphql";
 
 export const partitionedFaoMersEvents = gql`
   query partitionedFaoMersEvents($input: PartitionedFaoMersEventsInput!) {
@@ -60,7 +61,7 @@ export function useFaoMersEventDataPartitioned(input: UseFaoMersEventDataPartiti
   return useQueries({
     queries: input.partitionKeys.map(( partitionKey ) =>  ({
       queryKey: ["partitionedFaoMersEvents", partitionKey.toString()],
-      queryFn: () => request<unknown, {}>(
+      queryFn: () => request<PartitionedFaoMersEventsQuery, PartitionedFaoMersEventsQueryVariables>(
         process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
         partitionedFaoMersEvents,
         { input: { partitionKey } }
