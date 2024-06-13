@@ -7,7 +7,10 @@ import { filterData } from "./filter-update-steps/apply-new-selected-filters";
 import { handleFilterUpdate } from "./filter-update-steps";
 import { CountryInformationProvider } from "./country-information-context";
 
-export interface PathogenContextType<TData extends Record<string, unknown>> extends PathogenContextState<TData> {
+export type PathogenContextType<
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+> = TPathogenContextState & {
   dispatch: React.Dispatch<PathogenContextAction>;
 }
 
@@ -29,13 +32,15 @@ export enum PathogenContextActionType {
   RESET_FILTERS = "RESET_FILTERS",
 }
 
-
-export const pathogenReducer = <TData extends Record<string, unknown>>(
-  state: PathogenContextState<TData>,
+export const pathogenReducer = <
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+>(
+  state: TPathogenContextState,
   action: PathogenContextAction,
-  initialState: PathogenContextState<TData>,
+  initialState: TPathogenContextState,
   map: MapRef | undefined
-) => {
+): TPathogenContextState => {
   switch (action.type) {
     case PathogenContextActionType.UPDATE_FILTER:
       return handleFilterUpdate({
@@ -63,16 +68,22 @@ export const pathogenReducer = <TData extends Record<string, unknown>>(
   }
 };
 
-interface PathogenProvidersProps<TData extends Record<string, unknown>> {
+interface PathogenProvidersProps<
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+> {
   children: React.ReactNode;
   mapId: string;
-  dataFetcher: (props: PathogenDataFetcherProps<TData>) => React.ReactNode;
+  dataFetcher: (props: PathogenDataFetcherProps<TData, TPathogenContextState>) => React.ReactNode;
   countryDataProvider: (props: {children: React.ReactNode}) => React.ReactNode;
-  initialState: PathogenContextState<TData>
-  context: Context<PathogenContextType<TData>>
+  initialState: TPathogenContextState
+  context: Context<PathogenContextType<TData, TPathogenContextState>>
 }
 
-export const PathogenProviders = <TData extends Record<string, unknown>>(props: PathogenProvidersProps<TData>) => {
+export const PathogenProviders = <
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+>(props: PathogenProvidersProps<TData, TPathogenContextState>) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -104,24 +115,33 @@ export const PathogenProviders = <TData extends Record<string, unknown>>(props: 
   );
 };
 
-export interface PathogenDataFetcherProps<TData extends Record<string, unknown>> {
+export interface PathogenDataFetcherProps<
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+> {
   children: React.ReactNode;
   dispatch: Dispatch<PathogenContextAction>;
-  state: PathogenContextState<TData>;
+  state: TPathogenContextState;
 }
 
-interface FilteredDataProviderProps<TData extends Record<string, unknown>> {
+interface FilteredDataProviderProps<
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+> {
   mapId: string;
   children: React.ReactNode;
-  dataFetcher: (props: PathogenDataFetcherProps<TData>) => React.ReactNode;
-  initialState: PathogenContextState<TData>;
-  context: Context<PathogenContextType<TData>>
+  dataFetcher: (props: PathogenDataFetcherProps<TData, TPathogenContextState>) => React.ReactNode;
+  initialState: TPathogenContextState;
+  context: Context<PathogenContextType<TData, TPathogenContextState>>
 }
 
-const FilteredDataProvider = <TData extends Record<string, unknown>>(props: FilteredDataProviderProps<TData>) => {
+const FilteredDataProvider = <
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+>(props: FilteredDataProviderProps<TData, TPathogenContextState>) => {
   const allMaps = useMap();
   const [state, dispatch] = useReducer(
-    (state: PathogenContextState<TData>, action: PathogenContextAction) =>
+    (state: TPathogenContextState, action: PathogenContextAction) =>
       pathogenReducer(state, action, props.initialState, allMaps[props.mapId]),
     props.initialState
   );

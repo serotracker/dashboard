@@ -1,29 +1,33 @@
 "use client";
 import { createContext, useEffect, useMemo } from "react";
-import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../../pathogen-context";
-import { useSarsCov2Data } from "@/hooks/useSarsCov2Data";
+import { PathogenContextActionType, PathogenContextState, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../../pathogen-context";
 import { MersEstimatesQuery } from "@/gql/graphql";
-import { useSarsCov2Filters } from "@/hooks/useSarsCov2Filters";
 import { CountryDataContext } from "../../country-information-context";
 import { useMersData } from "@/hooks/mers/useMersData";
 import { useMersFilters } from "@/hooks/mers/useMersFilters";
+import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 
 const initialMersContextState = {
   filteredData: [],
+  faoMersEventData: [],
   selectedFilters: {},
   dataFiltered: false,
 }
 
 export type MersEstimate = MersEstimatesQuery['mersEstimates'][number];
+type MersContextState = PathogenContextState<MersEstimate> & {
+  faoMersEventData: FaoMersEvent[];
+};
+type MersContextType = PathogenContextType<MersEstimate, MersContextState>;
 
-export const MersContext = createContext<PathogenContextType<MersEstimate>>({
+export const MersContext = createContext<MersContextType>({
   ...initialMersContextState,
   dispatch: (obj) => {
     console.debug("dispatch not initialized", obj);
   },
 });
 
-const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate>): React.ReactNode => {
+const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersContextState>): React.ReactNode => {
   const { data } = useMersData();
 
   useEffect(() => {

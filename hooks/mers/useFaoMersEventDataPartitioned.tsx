@@ -3,6 +3,8 @@ import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
 import { PartitionedFaoMersEventsQuery, PartitionedFaoMersEventsQueryVariables } from "@/gql/graphql";
 
+export type FaoMersEvent = PartitionedFaoMersEventsQuery['partitionedFaoMersEvents']['mersEvents'][number];
+
 export const partitionedFaoMersEvents = gql`
   query partitionedFaoMersEvents($input: PartitionedFaoMersEventsInput!) {
     partitionedFaoMersEvents(input: $input) {
