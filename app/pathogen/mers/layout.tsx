@@ -33,7 +33,7 @@ export default async function MersLayout({
   });
 
   const allFaoMersEventPartitionKeys = queryClient.getQueryData<AllFaoMersEventPartitionKeysQuery>([
-    'allFaoMersEventPartitionKeys'
+    'faoMersEventPartitionKeys'
   ])?.allFaoMersEventPartitionKeys ?? [];
 
   await Promise.all(allFaoMersEventPartitionKeys.map((partitionKey) => 

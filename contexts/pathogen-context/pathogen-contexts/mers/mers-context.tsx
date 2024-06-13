@@ -6,6 +6,7 @@ import { CountryDataContext } from "../../country-information-context";
 import { useMersData } from "@/hooks/mers/useMersData";
 import { useMersFilters } from "@/hooks/mers/useMersFilters";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
+import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
 
 const initialMersContextState = {
   filteredData: [],
@@ -29,15 +30,24 @@ export const MersContext = createContext<MersContextType>({
 
 const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersContextState>): React.ReactNode => {
   const { data } = useMersData();
+  const { faoMersEvents } = useFaoMersEventData()
 
   useEffect(() => {
-    if (!!data && props.state.filteredData.length === 0 && !props.state.dataFiltered) {
+    if (
+      !!data
+      && !!faoMersEvents
+      && props.state.filteredData.length === 0
+      && !props.state.dataFiltered
+    ) {
       props.dispatch({
         type: PathogenContextActionType.INITIAL_DATA_FETCH,
-        payload: { data: data.mersEstimates },
+        payload: {
+          data: data.mersEstimates,
+          faoMersEventData: faoMersEvents
+        }
       });
     }
-  }, [data]);
+  }, [data, faoMersEvents]);
 
   return (
     <>
@@ -79,6 +89,17 @@ export const MersProviders = (props: MersProvidersProps) => {
       countryDataProvider={CountryDataProvider}
       context={MersContext}
       mapId={"mersMap"}
+      // TODO: FILTERING ON FAO MERS EVENTS AND SEROPREVALENCE ESTIMATES
+      filterUpdateHandlerOverride={({ state }) => state}
+      initialDataFetchHandlerOverride={({ state, action, initialState }) => ({
+        ...state,
+        filteredData: action.payload.data,
+        faoMersEventData: action.payload.faoMersEventData,
+        selectedFilters: initialState.selectedFilters,
+        dataFiltered: false,
+      })}
+      // TODO: FILTERING ON FAO MERS EVENTS AND SEROPREVALENCE ESTIMATES
+      filterResetHandlerOverride={({ state }) => state}
       dataFetcher={MersDataFetcher}
     />
   )
