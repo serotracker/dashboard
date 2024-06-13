@@ -4,13 +4,13 @@ import {
   SortingState,
   getSortedRowModel,
   getCoreRowModel,
+  getExpandedRowModel,
   getPaginationRowModel,
   ColumnFiltersState,
   VisibilityState,
   getFilteredRowModel,
 } from "@tanstack/table-core";
-import * as Toast from "@radix-ui/react-toast";
-import { ColumnDef, flexRender, useReactTable } from "@tanstack/react-table";
+import { ColumnDef, ExpandedState, Row, flexRender, useReactTable } from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -30,10 +30,14 @@ import {
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import { useDataTableStyles } from "./use-data-table-styles";
 import { ToastContext, ToastId } from "@/contexts/toast-provider";
+import { DataTableStandardRow } from "./data-table-standard-row";
+import { DataTableExpandedRow } from "./data-table-expanded-row";
+import { DataTableExpandedRowContent } from "./data-table-expanded-row-content";
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   fixed?: boolean;
   accessorKey: string;
+  headerLabel: string;
 };
 
 interface CsvCitationConfigurationDisabled {
@@ -46,15 +50,27 @@ interface CsvCitationConfigurationEnabled {
   toastId: ToastId;
 }
 
-interface DataTableProps<TData, TValue> {
-  columns: DataTableColumnDef<TData, TValue>[];
+interface RowExpansionConfigurationDisabled {
+  enabled: false;
+}
+
+export interface RowExpansionConfigurationEnabled<TData extends Record<string, unknown>> {
+  enabled: true;
+  generateExpandedRowStatement: (input: {data: TData[], row: Row<Record<string, unknown>>}) => string;
+  visualization: (props: {className: string, data: TData[], row: Row<Record<string, unknown>>}) => React.ReactNode;
+}
+
+interface DataTableProps<TData extends Record<string, unknown>, TValue> {
+  columns: DataTableColumnDef<Record<string, unknown>, TValue>[];
   csvFilename: string;
+  tableHeader:string;
   csvCitationConfiguration: CsvCitationConfigurationDisabled | CsvCitationConfigurationEnabled;
+  rowExpansionConfiguration: RowExpansionConfigurationDisabled | RowExpansionConfigurationEnabled<TData>;
   data: TData[];
 }
 
-export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
-  const { csvCitationConfiguration } = props;
+export function DataTable<TData extends Record<string, unknown>, TValue>(props: DataTableProps<TData, TValue>) {
+  const { csvCitationConfiguration, rowExpansionConfiguration } = props;
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -65,6 +81,8 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
+  const [expandedState, setExpandedState] = React.useState<ExpandedState>({});
+
   const table = useReactTable({
     data: props.data,
     columns: props.columns,
@@ -74,35 +92,40 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    getRowCanExpand: () => true,
+    onExpandedChange: setExpandedState,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-    },
+      expanded: expandedState
+    }
   });
 
   const { generateClassnameForCell, generateClassnameForHeader } =
-    useDataTableStyles<TData, TValue>({ columns: props.columns });
+    useDataTableStyles<Record<string, unknown>, TValue>({ columns: props.columns });
 
   const getAllVisibleData = () => {
     // Get the columns we want in the csv
     let visibleColumns = table
       .getAllColumns()
       .filter((column) => column.getIsVisible());
-    let column_keys: string[] = visibleColumns.map((column) => {
-      return column.id;
-    });
+    let columns = visibleColumns.map((column) => ({
+      accessorKey: column.id,
+      headerLabel: props.columns.find((element) => element.accessorKey === column.id)?.headerLabel ?? 'Unknown Column'
+    }));
     const newArrayWithSubsetAttributes: Record<string, any>[] = table
       .getFilteredRowModel()
       .rows.map((originalObject: any) => {
         const newObj: Record<string, any> = {};
-        column_keys.forEach((attribute) => {
-          let temp_data = originalObject["original"][attribute];
+        columns.forEach(({ accessorKey, headerLabel }) => {
+          let temp_data = originalObject["original"][accessorKey];
           if (Array.isArray(temp_data)) {
             temp_data = temp_data.join(";");
           }
-          newObj[attribute] = temp_data;
+          newObj[headerLabel] = temp_data;
         });
         return newObj;
       });
@@ -152,7 +175,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   return (
     <div>
       <div className="flex items-center justify-between py-4 px-2">
-        <h3>Explore arbovirus seroprevalence estimates in our database</h3>
+        <h3>{props.tableHeader}</h3>
         <div className="flex flex-col lg:flex-row">
           <Button
             variant="outline"
@@ -197,7 +220,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
                         e.preventDefault();
                       }}
                     >
-                      {column.id}
+                      {props.columns.find((element) => element.accessorKey === column.id)?.headerLabel ?? 'Unknown Column'}
                     </DropdownMenuCheckboxItem>
                   );
                 })}
@@ -231,21 +254,27 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    className={generateClassnameForCell({
-                      columnId: cell.column.id,
-                    })}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
+              <>
+                {(row.getIsExpanded() && rowExpansionConfiguration.enabled == true) ? (
+                  <DataTableExpandedRow
+                    row={row}
+                    data={props.data}
+                    generateExpandedRowStatement={rowExpansionConfiguration.generateExpandedRowStatement}
+                  />
+                ): (
+                  <DataTableStandardRow
+                    row={row}
+                    generateClassnameForCell={generateClassnameForCell}
+                  />
+                )}
+                {(row.getIsExpanded() && rowExpansionConfiguration.enabled == true) &&
+                  <DataTableExpandedRowContent
+                    row={row}
+                    data={props.data}
+                    visualization={rowExpansionConfiguration.visualization}
+                  />
+                }
+              </>
             ))
           ) : (
             <TableRow>

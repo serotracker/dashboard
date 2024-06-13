@@ -1,25 +1,34 @@
-import { PathogenContextActionType, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
+import { PathogenContextActionType, PathogenContextState, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { ResetFiltersButton } from "./filters/reset-filters-button";
 import { FilterableField, useAvailableFilters } from "./filters/available-filters";
 import { FilterSection } from "./filters/filter-section";
 
-interface SendFilterChangeDispatchInput<TEstimate extends Record<string, unknown>> {
+interface SendFilterChangeDispatchInput<
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+> {
   value: (string | boolean)[],
   newFilter: string,
-  state: PathogenContextType<TEstimate>,
+  state: PathogenContextType<TEstimate, TPathogenContextState>,
   data: any
 }
 
-export type SendFilterChangeDispatch = <TEstimate extends Record<string, unknown>>(
-  input: SendFilterChangeDispatchInput<TEstimate>
+export type SendFilterChangeDispatch = <
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+>(
+  input: SendFilterChangeDispatchInput<TEstimate, TPathogenContextState>
 ) => void;
 
 /**
  * Function to add or update filters with multiple values
  * 
  */
-const sendFilterChangeDispatch = <TEstimate extends Record<string, unknown>>(
-  input: SendFilterChangeDispatchInput<TEstimate>
+const sendFilterChangeDispatch = <
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+>(
+  input: SendFilterChangeDispatchInput<TEstimate, TPathogenContextState>
 ) => {
   input.state.dispatch({
     type: PathogenContextActionType.UPDATE_FILTER,
@@ -37,16 +46,22 @@ interface FilterSectionConfiguration {
   includedFilters: FilterableField[];
 }
 
-interface FiltersProps<TEstimate extends Record<string, unknown>> {
+interface FiltersProps<
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+> {
   filterSections: FilterSectionConfiguration[]
-  state: PathogenContextType<TEstimate>;
+  state: PathogenContextType<TEstimate, TPathogenContextState>;
   filterData: Record<string, string[] | undefined>;
   data: TEstimate[];
   resetAllFiltersButtonEnabled: boolean;
   className?: string;
 }
 
-export const Filters = <TEstimate extends Record<string, unknown>>(props: FiltersProps<TEstimate>) => {
+export const Filters = <
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+>(props: FiltersProps<TEstimate, TPathogenContextState>) => {
   const { availableFilters } = useAvailableFilters();
 
   return (

@@ -17,7 +17,7 @@ export const getDataTableLinkColumnConfiguration = (input: GetDataTableLinkColum
     if(!!link && typeof link === 'string' && validator.isURL(link)) {
       return (
         // TODO: Link styling needs to be globalised. 
-        <Link className="w-full underline hover:text-blue-400" href={link} rel="noopener noreferrer" target="_blank">
+        <Link className="underline hover:text-blue-400 w-fit" href={link} rel="noopener noreferrer" target="_blank">
           {row.getValue(input.columnConfiguration.fieldName)}
         </Link>
       )

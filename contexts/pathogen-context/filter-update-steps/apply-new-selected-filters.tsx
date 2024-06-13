@@ -2,6 +2,7 @@ import {
   HandleFilterUpdateInput,
   HandleFilterUpdateOutput,
 } from "../../pathogen-context/filter-update-steps";
+import { PathogenContextState } from "../pathogen-context";
 
 export function filterData(
   data: any[],
@@ -77,8 +78,8 @@ export function filterData(
             return true; // Handle invalid date
           }
 
-          const itemStartDate = new Date(item.samplingStartDate);
-          let itemEndDate = new Date(item.samplingEndDate);
+          const itemStartDate = new Date(item.sampleStartDate);
+          const itemEndDate = new Date(item.sampleEndDate);
 
           // Check for any overlap in the sampling period
           return (
@@ -92,8 +93,8 @@ export function filterData(
             return true; // Handle invalid date
           }
 
-          const itemStartDate = new Date(item.sampleStartDate);
-          const itemEndDate = new Date(item.sampleEndDate);
+          const itemStartDate = new Date(item.samplingStartDate);
+          const itemEndDate = new Date(item.samplingEndDate);
 
           // Check for any overlap in the sampling period
           return (
@@ -137,9 +138,12 @@ export function filterData(
   });
 }
 
-export const applyNewSelectedFilters = <TData extends Record<string, unknown>>(
-  input: HandleFilterUpdateInput<TData>
-): HandleFilterUpdateOutput<TData> => ({
+export const applyNewSelectedFilters = <
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+>(
+  input: HandleFilterUpdateInput<TData, TPathogenContextState>
+): HandleFilterUpdateOutput<TData, TPathogenContextState> => ({
   ...input,
   state: {
     ...input.state,

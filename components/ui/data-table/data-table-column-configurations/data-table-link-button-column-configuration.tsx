@@ -11,14 +11,32 @@ interface GetDataTableLinkButtonColumnConfigurationInput {
 export const getDataTableLinkButtonColumnConfiguration = (input: GetDataTableLinkButtonColumnConfigurationInput): DataTableColumnDef<Record<string, unknown>, unknown> => ({
   ...getDataTableStandardColumnConfiguration({columnConfiguration: {...input.columnConfiguration, type: DataTableColumnConfigurationEntryType.STANDARD }}),
   cell: ({ row }) => {
-    const link = row.getValue(input.columnConfiguration.fieldNameForLink);
+    const unvalidatedUrl = row.getValue(input.columnConfiguration.fieldNameForLink);
 
-    if(!!link && typeof link === 'string' && validator.isURL(link)) {
-      return (
-        <Button onClick={() => window.open(row.getValue(input.columnConfiguration.fieldNameForLink))} className="w-full">
-          {new URL(row.getValue(input.columnConfiguration.fieldNameForLink)).hostname}
-        </Button>
-      )
+    if(!!unvalidatedUrl && typeof unvalidatedUrl === 'string' && validator.isURL(unvalidatedUrl)) {
+      //validator.isURL has been known to return true for some URLS that are not actually valid so further validation is done.
+      let validatedUrl: URL | undefined = undefined;
+
+      try {
+        validatedUrl = new URL(unvalidatedUrl);
+      } catch (error) {}
+
+      if(!validatedUrl) {
+        try {
+          // There have been instances where the https:// was omitted but the link worked fine otherwise.
+          validatedUrl = new URL(`https://${unvalidatedUrl}`);
+        } catch (error) {}
+      }
+
+      if(!!validatedUrl) {
+        return (
+          <Button onClick={() => window.open(validatedUrl)} className="w-full">
+            {validatedUrl.hostname}
+          </Button>
+        )
+      }
+
+      return <p> URL unavailable </p>
     }
 
     return <p> URL unavailable </p>
