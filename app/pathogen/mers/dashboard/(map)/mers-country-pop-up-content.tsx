@@ -1,5 +1,5 @@
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
-import { SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 
 interface MersCountryPopupContentProps {
   record: {
@@ -8,7 +8,7 @@ interface MersCountryPopupContentProps {
     countryName: string,
     latitude: string,
     longitude: string,
-    dataPoints: Pick<SarsCov2Estimate, 'country'>[],
+    dataPoints: Pick<MersEstimate, 'country'>[],
   }
 }
 

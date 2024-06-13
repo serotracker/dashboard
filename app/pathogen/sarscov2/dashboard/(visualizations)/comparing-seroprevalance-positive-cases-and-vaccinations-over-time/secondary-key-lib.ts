@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { GbdSubRegion, GbdSuperRegion, UnRegion, WhoRegion } from "@/gql/graphql";
-import { SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import assertNever from "assert-never";
 import { gbdSubRegionToLabelMap, gbdSuperRegionToLabelMap, isGbdSubRegion, isGbdSuperRegion } from "@/lib/gbd-regions";
 import { isUNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
