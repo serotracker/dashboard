@@ -11,6 +11,7 @@ export const partitionedFaoMersEvents = gql`
       partitionKey
       mersEvents {
         ... on AnimalMersEvent {
+          __typename
           id
           type
           diagnosisStatus
@@ -31,6 +32,7 @@ export const partitionedFaoMersEvents = gql`
           animalSpecies
         }
         ... on HumanMersEvent {
+          __typename
           id
           type
           diagnosisStatus
