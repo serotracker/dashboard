@@ -18,6 +18,7 @@ import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
 import { Arbovirus } from "@/gql/graphql";
+import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -87,6 +88,8 @@ export function ArbovirusMap() {
           dataPoints={state.filteredData}
           clusteringSettings={{
             clusteringEnabled: true,
+            headerText: "Estimate Count",
+            popUpWidth: GenericMapPopUpWidth.AUTO,
             clusterProperties: {
               [Arbovirus.Zikv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Zikv], 1, 0]],
               [Arbovirus.Chikv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Chikv], 1, 0]],
@@ -96,6 +99,7 @@ export function ArbovirusMap() {
               [Arbovirus.Mayv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Mayv], 1, 0]],
             },
             validClusterPropertyKeys: Object.values(Arbovirus),
+            clusterPropertyKeysIncludedInSum: Object.values(Arbovirus),
             clusterPropertyToColourMap: pathogenColors
           }}
         />

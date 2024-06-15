@@ -13,19 +13,22 @@ import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
 import { MersFaoAnimalEventPopupContent } from "./mers-fao-animal-event-pop-up-content";
 import { MersFaoHumanEventPopupContent } from "./mers-fao-human-event-pop-up-content";
 import assertNever from "assert-never";
-import { MersDiagnosisStatus } from "@/gql/graphql";
+import { MersDiagnosisStatus, MersEventAnimalSpecies } from "@/gql/graphql";
 import {
   MersMapMarkerData,
   isMersEstimateMapMarkerData,
   isMersFaoAnimalEventMapMarkerData,
   isMersFaoHumanEventMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
+import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 
-const MapPinColours: Record<'HumanMersEvent'|'AnimalMersEvent'|'MersEstimate', string> = {
+const MapPinColours = {
   'HumanMersEvent': "#8abded",
+  'human-mers-event-alt': "#2a8deb",
   'AnimalMersEvent': "#ed8ac7",
+  'animal-mers-event-alt': "#eb2aa1",
   'MersEstimate': "#e7ed8a"
-};
+} as const;
 
 export const MersMap = () => {
   const state = useContext(MersContext);
@@ -69,7 +72,47 @@ export const MersMap = () => {
             },
           ]}
           clusteringSettings={{
-            clusteringEnabled: false
+            clusteringEnabled: true,
+            headerText: "MERS Data",
+            popUpWidth: GenericMapPopUpWidth.THIN,
+            clusterProperties: {
+              "Human Events": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEvent"], 1, 0]],
+              "Human Cases": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEvent"], ["get", "humansAffected"], 0]],
+              "Human Deaths": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEvent"], ["get", "humanDeaths"], 0]],
+              "Animal Events": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersEvent"], 1, 0]],
+              "Camel Events": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersEvent"],
+                ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Camel]
+              ], 1, 0]],
+              "Bat Events": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersEvent"],
+                ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Bat]
+              ], 1, 0]],
+              "Estimates": ["+", ["case", ["==", ["get", "__typename"], "MersEstimate"], 1, 0]]
+            },
+            validClusterPropertyKeys: [
+              "Human Events",
+              "Human Cases",
+              "Human Deaths",
+              "Animal Events",
+              "Camel Events",
+              "Bat Events",
+              "Estimates"
+            ],
+            clusterPropertyKeysIncludedInSum: [
+              "Human Events",
+              "Animal Events",
+              "Estimates"
+            ],
+            clusterPropertyToColourMap: {
+              "Human Events": MapPinColours['HumanMersEvent'],
+              "Human Cases": MapPinColours['human-mers-event-alt'],
+              "Human Deaths": MapPinColours['human-mers-event-alt'],
+              "Animal Events": MapPinColours['AnimalMersEvent'],
+              "Camel Events": MapPinColours['animal-mers-event-alt'],
+              "Bat Events": MapPinColours['animal-mers-event-alt'],
+              "Estimates": MapPinColours['MersEstimate']
+            }
           }}
           generatePopupContent={(input) => {
             if(isPopupCountryHighlightLayerContentGeneratorInput(input)) {
