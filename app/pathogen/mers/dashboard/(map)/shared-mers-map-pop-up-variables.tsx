@@ -15,9 +15,19 @@ export const animalTypeToStringMap = {
   [MersEventAnimalType.Wild]: "Wild",
 }
 
+export const animalTypeToColourClassnameMap = {
+  [MersEventAnimalType.Domestic]: "bg-sky-300",
+  [MersEventAnimalType.Wild]: "bg-emerald-300",
+}
+
 export const animalSpeciesToStringMap = {
   [MersEventAnimalSpecies.Bat]: "Bat",
   [MersEventAnimalSpecies.Camel]: "Camel",
+}
+
+export const animalSpeciesToColourClassnameMap = {
+  [MersEventAnimalSpecies.Bat]: "bg-orange-700",
+  [MersEventAnimalSpecies.Camel]: "bg-yellow-300",
 }
 
 export const diagnosisSourceToStringMap = {

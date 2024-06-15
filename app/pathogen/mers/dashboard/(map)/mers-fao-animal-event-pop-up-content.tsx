@@ -1,7 +1,7 @@
 import parseISO from 'date-fns/parseISO';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
-import { AnimalMersEventMapMarkerData, animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, diagnosisStatusToColourClassnameMap, diagnosisStatusToStringMap } from "./shared-mers-map-pop-up-variables";
+import { AnimalMersEventMapMarkerData, animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, animalTypeToColourClassnameMap, animalTypeToStringMap, diagnosisSourceToStringMap, diagnosisStatusToColourClassnameMap, diagnosisStatusToStringMap } from "./shared-mers-map-pop-up-variables";
 
 interface MersFaoAnimalEventPopupContentProps {
   event: AnimalMersEventMapMarkerData;
@@ -53,15 +53,18 @@ export const MersFaoAnimalEventPopupContent = (props: MersFaoAnimalEventPopupCon
         text: diagnosisSourceToStringMap[props.event.diagnosisSource]
       }, {
         title: "Animal Type",
-        type: PopUpContentRowType.TEXT,
-        text: animalTypeToStringMap[props.event.animalType]
-      }, {
-        title: "Animal Species",
-        type: PopUpContentRowType.TEXT,
-        text: animalSpeciesToStringMap[props.event.animalSpecies]
+        type: PopUpContentRowType.COLOURED_PILL_LIST,
+        values: [ props.event.animalType ],
+        valueToColourClassnameMap: animalTypeToColourClassnameMap,
+        valueToLabelMap: animalTypeToStringMap,
+        defaultColourClassname: "bg-sky-100"
       }]}
       bottomBannerConfiguration={{
-        enabled: false
+        enabled: true,
+        bannerText: `Animal Species: ${animalSpeciesToStringMap[props.event.animalSpecies]}`,
+        bannerColourClassname: animalSpeciesToColourClassnameMap[props.event.animalSpecies],
+        isTextBolded: true,
+        isTextCentered: true
       }}
     />
   );
