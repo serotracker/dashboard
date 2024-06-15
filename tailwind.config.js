@@ -82,6 +82,7 @@ module.exports = {
         "local-study": "#e15759",
         "mers-estimate": "#e7ed8a",
         "mers-human-event": "#8abded",
+        "mers-human-event-alt": "#2a8deb",
         "mers-animal-event": "#ed8ac7",
         link: "#0000EE",
         "linkedin-icon": "#007ebb",

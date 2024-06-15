@@ -62,15 +62,23 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
           rightPaddingEnabled: false
         },
         {
-          title: 'Confirmed Human Cases'.replace(' ', '\u00A0'),
+          title: 'Human Cases'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
-          value: allHumanMersEvents.length,
+          value: allHumanMersEvents.reduce((accumulator, value) => accumulator + value.humansAffected, 0),
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-human-event' },
           rightPaddingEnabled: false
         },
         {
-          title: 'Confirmed Animal Cases'.replace(' ', '\u00A0'),
+          title: 'Human Deaths'.replace(' ', '\u00A0'),
+          type: PopUpContentRowType.NUMBER as const,
+          value: allHumanMersEvents.reduce((accumulator, value) => accumulator + value.humanDeaths, 0),
+          contentTextAlignment: PopupContentTextAlignment.RIGHT,
+          ribbonConfiguration: { ribbonColourClassname: 'bg-mers-human-event-alt' },
+          rightPaddingEnabled: false
+        },
+        {
+          title: 'Animal Cases'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
           value: allAnimalMersEvents.length,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
