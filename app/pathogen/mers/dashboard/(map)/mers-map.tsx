@@ -76,10 +76,10 @@ export const MersMap = () => {
             headerText: "MERS Data",
             popUpWidth: GenericMapPopUpWidth.THIN,
             clusterProperties: {
-              "Human Events": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEvent"], 1, 0]],
+              "Reported Human Events": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEvent"], 1, 0]],
               "Human Cases": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEvent"], ["get", "humansAffected"], 0]],
               "Human Deaths": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEvent"], ["get", "humanDeaths"], 0]],
-              "Animal Events": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersEvent"], 1, 0]],
+              "Reported Animal Events": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersEvent"], 1, 0]],
               "Camel Events": ["+", ["case", [ "all",
                 ["==", ["get", "__typename"], "AnimalMersEvent"],
                 ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Camel]
@@ -91,24 +91,24 @@ export const MersMap = () => {
               "Estimates": ["+", ["case", ["==", ["get", "__typename"], "MersEstimate"], 1, 0]]
             },
             validClusterPropertyKeys: [
-              "Human Events",
+              "Reported Human Events",
               "Human Cases",
               "Human Deaths",
-              "Animal Events",
+              "Reported Animal Events",
               "Camel Events",
               "Bat Events",
               "Estimates"
             ],
             clusterPropertyKeysIncludedInSum: [
-              "Human Events",
-              "Animal Events",
+              "Reported Human Events",
+              "Reported Animal Events",
               "Estimates"
             ],
             clusterPropertyToColourMap: {
-              "Human Events": MapPinColours['HumanMersEvent'],
+              "Reported Human Events": MapPinColours['HumanMersEvent'],
               "Human Cases": MapPinColours['human-mers-event-alt'],
               "Human Deaths": MapPinColours['human-mers-event-alt'],
-              "Animal Events": MapPinColours['AnimalMersEvent'],
+              "Reported Animal Events": MapPinColours['AnimalMersEvent'],
               "Camel Events": MapPinColours['animal-mers-event-alt'],
               "Bat Events": MapPinColours['animal-mers-event-alt'],
               "Estimates": MapPinColours['MersEstimate']
