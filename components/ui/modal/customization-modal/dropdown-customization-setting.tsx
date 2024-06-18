@@ -48,7 +48,7 @@ const SelectItem = (props: SelectItemProps) => (
 export const DropdownCustomizationSetting = <
   TDropdownOption extends string
 >(props: DropdownCustomizationSettingProps<TDropdownOption>) => (
-  <div className="w-full flex justify-between">
+  <div className="w-full flex justify-between items-center">
     <p> {props.dropdownName} </p>
     <Select.Root value={props.chosenDropdownOption} onValueChange={(value) => props.onDropdownOptionChange(value as TDropdownOption)}>
       <Select.Trigger
