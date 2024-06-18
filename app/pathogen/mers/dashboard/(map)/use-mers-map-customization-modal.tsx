@@ -57,7 +57,7 @@ export const useMersMapCustomizationModal = () => {
       onClick={() => setCustomizationModalState(ModalState.OPENED)}
       hoverColourClassname='hover:bg-mersHover/50'
     />
-  , [])
+  , [ setCustomizationModalState ])
 
   return {
     customizationModal,

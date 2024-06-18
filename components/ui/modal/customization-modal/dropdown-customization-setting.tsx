@@ -82,9 +82,9 @@ export const DropdownCustomizationSetting = <
           </Select.ScrollUpButton>
           <Select.Viewport className={`border-2 ${props.borderColourClassname} bg-neutral-100`}>
             {props.dropdownOptionGroups.map((dropdownOptionGroup, index) =>
-              <>
+              <div key={dropdownOptionGroup.groupHeader}>
                 {index !== 0 && <Select.Separator className="m-1 h-px bg-black" />}
-                <Select.Group key={dropdownOptionGroup.groupHeader}>
+                <Select.Group>
                   <Select.Label className="py-0 px-6 leading-6 text-xs">
                     {dropdownOptionGroup.groupHeader}
                   </Select.Label>
@@ -98,7 +98,7 @@ export const DropdownCustomizationSetting = <
                     </SelectItem>
                   )}
                 </Select.Group>
-              </>
+              </div>
             )}
           </Select.Viewport>
           <Select.ScrollDownButton className="flex items-center justify-center h-6 bg-white cursor-default">

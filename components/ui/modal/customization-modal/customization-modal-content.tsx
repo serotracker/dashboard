@@ -12,7 +12,7 @@ export const CustomizationModalContent = <
   <div className="mx-4 mb-4">
     {props.customizationSettings.map((customizationSetting) => {
       if(customizationSetting.type === CustomizationSettingType.DROPDOWN) {
-        return <DropdownCustomizationSetting {...customizationSetting} />
+        return <DropdownCustomizationSetting key={customizationSetting.dropdownName} {...customizationSetting} />
       }
 
       assertNever(customizationSetting.type);
