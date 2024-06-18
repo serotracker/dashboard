@@ -7,6 +7,7 @@ import { useMersData } from "@/hooks/mers/useMersData";
 import { useMersFilters } from "@/hooks/mers/useMersFilters";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
+import { CamelPopulationDataProvider } from "./camel-population-data-context";
 
 const initialMersContextState = {
   filteredData: [],
@@ -84,7 +85,6 @@ interface MersProvidersProps {
 export const MersProviders = (props: MersProvidersProps) => {
   return (
     <PathogenProviders
-      children={props.children}
       initialState={initialMersContextState}
       countryDataProvider={CountryDataProvider}
       context={MersContext}
@@ -101,6 +101,10 @@ export const MersProviders = (props: MersProvidersProps) => {
       // TODO: FILTERING ON FAO MERS EVENTS AND SEROPREVALENCE ESTIMATES
       filterResetHandlerOverride={({ state }) => state}
       dataFetcher={MersDataFetcher}
-    />
+    >
+      <CamelPopulationDataProvider>
+        {props.children}
+      </CamelPopulationDataProvider>
+    </PathogenProviders>
   )
 }

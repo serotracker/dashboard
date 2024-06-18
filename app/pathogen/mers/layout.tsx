@@ -7,9 +7,11 @@ import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
 import { mersEstimates } from "@/hooks/mers/useMersData";
 import { MersProviders } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { mersFilters } from "@/hooks/mers/useMersFilters";
-import { AllFaoMersEventPartitionKeysQuery } from "@/gql/graphql";
+import { AllFaoMersEventPartitionKeysQuery, YearlyFaoCamelPopulationDataPartitionKeysQuery } from "@/gql/graphql";
 import { faoMersEventPartitionKeys } from "@/hooks/mers/useFaoMersEventDataPartitionKeys";
 import { partitionedFaoMersEvents } from "@/hooks/mers/useFaoMersEventDataPartitioned";
+import { yearlyFaoCamelPopulationDataPartitionKeys } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitionKeys";
+import { partitionedYearlyFaoCamelPopulationData } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 
 export default async function MersLayout({
   children,
@@ -42,6 +44,26 @@ export default async function MersLayout({
       queryFn: () => request(
         process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
         partitionedFaoMersEvents,
+        { input: { partitionKey } }
+      ),
+    })
+  ))
+
+  await queryClient.prefetchQuery({
+    queryKey: ["yearlyFaoCamelPopulationDataPartitionKeys"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', yearlyFaoCamelPopulationDataPartitionKeys)
+  });
+
+  const allYearlyFaoCamelPopulationDataPartitionKeys = queryClient.getQueryData<YearlyFaoCamelPopulationDataPartitionKeysQuery>([
+    'yearlyFaoCamelPopulationDataPartitionKeys'
+  ])?.yearlyFaoCamelPopulationDataPartitionKeys ?? [];
+
+  await Promise.all(allYearlyFaoCamelPopulationDataPartitionKeys.map((partitionKey) => 
+    queryClient.prefetchQuery({
+      queryKey: ["partitionedYearlyFaoCamelPopulationData", partitionKey.toString()],
+      queryFn: () => request(
+        process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
+        partitionedYearlyFaoCamelPopulationData,
         { input: { partitionKey } }
       ),
     })

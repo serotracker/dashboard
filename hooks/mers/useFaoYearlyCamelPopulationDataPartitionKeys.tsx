@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
 import { YearlyFaoCamelPopulationDataPartitionKeysQuery } from "@/gql/graphql";
 
-export const faoCamelPopulationDataPartitionKeys = gql`
+export const yearlyFaoCamelPopulationDataPartitionKeys = gql`
   query yearlyFaoCamelPopulationDataPartitionKeys {
     yearlyFaoCamelPopulationDataPartitionKeys
   }
@@ -11,7 +11,7 @@ export const faoCamelPopulationDataPartitionKeys = gql`
 
 export function useFaoYearlyCamelPopulationDataPartitionKeys() {
   return useQuery<YearlyFaoCamelPopulationDataPartitionKeysQuery>({
-    queryKey: ["faoCamelPopulationDataPartitionKeys"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', faoCamelPopulationDataPartitionKeys)
+    queryKey: ["yearlyFaoCamelPopulationDataPartitionKeys"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', yearlyFaoCamelPopulationDataPartitionKeys)
   });
 } 

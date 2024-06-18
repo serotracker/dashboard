@@ -5,7 +5,7 @@ import { PartitionedYearlyFaoCamelPopulationDataQuery, PartitionedYearlyFaoCamel
 
 export type FaoYearlyCamelPopulationDataEntry = PartitionedYearlyFaoCamelPopulationDataQuery['partitionedYearlyFaoCamelPopulationData']['yearlyFaoCamelPopulationData'][number];
 
-export const partitionedFaoYearlyCamelPopulationData = gql`
+export const partitionedYearlyFaoCamelPopulationData = gql`
   query partitionedYearlyFaoCamelPopulationData($input: PartitionedYearlyFaoCamelPopulationDataInput!) {
     partitionedYearlyFaoCamelPopulationData(input: $input) {
       partitionKey
@@ -28,10 +28,10 @@ interface UseFaoYearlyCamelPopulationDataPartitionedInput {
 export function useFaoYearlyCamelPopulationDataPartitioned(input: UseFaoYearlyCamelPopulationDataPartitionedInput) {
   return useQueries({
     queries: input.partitionKeys.map(( partitionKey ) =>  ({
-      queryKey: ["partitionedFaoYearlyCamelPopulationData", partitionKey.toString()],
+      queryKey: ["partitionedYearlyFaoCamelPopulationData", partitionKey.toString()],
       queryFn: () => request<PartitionedYearlyFaoCamelPopulationDataQuery, PartitionedYearlyFaoCamelPopulationDataQueryVariables>(
         process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
-        partitionedFaoYearlyCamelPopulationData,
+        partitionedYearlyFaoCamelPopulationData,
         { input: { partitionKey } }
       ),
     }))
