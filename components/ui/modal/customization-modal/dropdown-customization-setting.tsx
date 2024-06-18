@@ -29,7 +29,6 @@ interface SelectItemProps {
 const SelectItem = (props: SelectItemProps) => (
   <Select.Item value={props.value} className={`
     leading-none
-    rounded
     flex
     items-center
     h-6
@@ -81,7 +80,7 @@ export const DropdownCustomizationSetting = <
           <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-white cursor-default">
             <ChevronUpIcon />
           </Select.ScrollUpButton>
-          <Select.Viewport className={`p-1.5 border-2 ${props.borderColourClassname} bg-neutral-100`}>
+          <Select.Viewport className={`border-2 ${props.borderColourClassname} bg-neutral-100`}>
             {props.dropdownOptionGroups.map((dropdownOptionGroup, index) =>
               <>
                 {index !== 0 && <Select.Separator className="m-1 h-px bg-black" />}
