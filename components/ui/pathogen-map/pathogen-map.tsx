@@ -20,7 +20,6 @@ import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-laye
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
 import { EsmMapSourceAndLayer } from "./esm-maps";
-import { WeekNumberLabel } from "react-day-picker";
 import { computeClusterMarkers } from "@/app/pathogen/arbovirus/dashboard/(map)/arbo-map-cluster-utils";
 import { GenericMapPopUpWidth } from "./map-pop-up/generic-map-pop-up";
 
@@ -56,8 +55,29 @@ interface ClusteringDisabledSettings {
 
 export type ClusteringSettings<TClusterPropertyKey extends string> = ClusteringEnabledSettings<TClusterPropertyKey> | ClusteringDisabledSettings;
 
+export interface GetPaintForCountriesInput<
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TAdditionalNonPointData extends Record<string, unknown>
+> {
+  dataPoints: TPathogenDataPointProperties[];
+  additionalNonPointData?: TAdditionalNonPointData[];
+}
+
+export type GetPaintForCountriesOutput = {
+  countryData: Array<{
+    countryAlphaThreeCode: string;
+    fill: string;
+    opacity: number;
+  }>;
+  defaults: {
+    fill: string;
+    opacity: number;
+  }
+};
+
 interface PathogenMapProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TAdditionalNonPointData extends Record<string, unknown>,
   TClusterPropertyKey extends string
 > {
   id: string;
@@ -66,13 +86,17 @@ interface PathogenMapProps<
   generatePopupContent: PopupContentGenerator<TPathogenDataPointProperties>;
   dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
   clusteringSettings: ClusteringSettings<TClusterPropertyKey>;
+  additionalNonPointData?: TAdditionalNonPointData[];
+  getPaintForCountries: (input: GetPaintForCountriesInput<
+    TPathogenDataPointProperties,
+    TAdditionalNonPointData
+  >) => GetPaintForCountriesOutput;
   sourceId: string;
 }
 
-
-
 export function PathogenMap<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TAdditionalNonPointData extends Record<string, unknown>,
   TClusterPropertyKey extends string
 >({
   id,
@@ -80,9 +104,15 @@ export function PathogenMap<
   generatePopupContent,
   layers,
   dataPoints,
+  additionalNonPointData,
   clusteringSettings,
+  getPaintForCountries,
   sourceId,
-}: PathogenMapProps<TPathogenDataPointProperties, TClusterPropertyKey>) {
+}: PathogenMapProps<
+  TPathogenDataPointProperties,
+  TAdditionalNonPointData,
+  TClusterPropertyKey
+>) {
   const [popUpInfo, _setPopUpInfo] = useState<
     PopupInfo<TPathogenDataPointProperties>
   >({ visible: false, properties: null, layerId: null });
@@ -177,20 +207,29 @@ export function PathogenMap<
       onRender={onRender}
     >
       <NavigationControl showCompass={false} />
-      <EsmMapSourceAndLayer popupLayerId={layerForCountryHighlighting?.id}/>
+      <EsmMapSourceAndLayer
+        popupLayerId={layerForCountryHighlighting?.id}
+      />
       <PathogenCountryHighlightLayer
+        additionalNonPointData={additionalNonPointData ?? []}
+        getPaintForCountries={getPaintForCountries}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
         dataPoints={dataPoints}
       />
-      <PathogenMapSourceAndLayer layers={layers} dataPoints={dataPoints} clusteringSettings={clusteringSettings} sourceId={sourceId}/>
+      <PathogenMapSourceAndLayer
+        layers={layers}
+        dataPoints={dataPoints}
+        clusteringSettings={clusteringSettings}
+        sourceId={sourceId}
+      />
       <PathogenMapPopup
         mapId={id}
         popUpInfo={popUpInfo}
         generatePopupContent={generatePopupContent}
       />
       {Object.keys(markersOnScreen).map(
-      (id) => markersOnScreen[id]?.element
-    )}
+        (id) => markersOnScreen[id]?.element
+      )}
     </Map>
   );
 }

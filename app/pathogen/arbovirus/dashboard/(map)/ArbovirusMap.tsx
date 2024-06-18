@@ -19,6 +19,7 @@ import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-su
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
 import { Arbovirus } from "@/gql/graphql";
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
+import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-highlight-layers/data-point-present-layer";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -31,10 +32,10 @@ export const pathogenColors: Record<Arbovirus, string> = {
 };
 
 export function ArbovirusMap() {
-  
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const state = useContext(ArboContext);
   const { data } = useArboData();
+  const { getPaintForCountries } = useDataPointPresentLayer();
 
   if (!data) {
     return <span> Loading... </span>;
@@ -102,6 +103,7 @@ export function ArbovirusMap() {
             clusterPropertyKeysIncludedInSum: Object.values(Arbovirus),
             clusterPropertyToColourMap: pathogenColors
           }}
+          getPaintForCountries={getPaintForCountries}
         />
       </div>
       <MapArbovirusStudySubmissionPrompt 

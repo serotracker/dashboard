@@ -22,6 +22,7 @@ import {
 } from "./shared-mers-map-pop-up-variables";
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
+import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-highlight-layers/data-point-present-layer";
 
 const MapPinColours = {
   'HumanMersEvent': "#8abded",
@@ -35,6 +36,7 @@ export const MersMap = () => {
   const state = useContext(MersContext);
   const { data } = useMersData();
   const { faoMersEvents } = useFaoMersEventData();
+  const { getPaintForCountries } = useDataPointPresentLayer();
 
   const mersMapCustomizationModal = useMersMapCustomizationModal();
 
@@ -147,6 +149,7 @@ export const MersMap = () => {
             }))
             .filter((element) => element.diagnosisStatus === MersDiagnosisStatus.Confirmed)
           )]}
+          getPaintForCountries={getPaintForCountries}
           />
       </div>
       <MapShadingLegend className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"} />

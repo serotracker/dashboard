@@ -11,10 +11,12 @@ import { SarsCov2EstimatePopupContent } from "./sars-cov-2-estimate-pop-up-conte
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
 import { SarsCov2CountryPopupContent } from "./sars-cov-2-country-pop-up-content";
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
+import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-highlight-layers/data-point-present-layer";
 
 export function SarsCov2Map() {
   const state = useContext(SarsCov2Context);
   const { data } = useSarsCov2Data();
+  const { getPaintForCountries } = useDataPointPresentLayer();
 
   if (!data) {
     return <span> Loading... </span>;
@@ -121,7 +123,8 @@ export function SarsCov2Map() {
             return <SarsCov2EstimatePopupContent estimate={input.data} />
           }}
           dataPoints={state.filteredData}
-          />
+          getPaintForCountries={getPaintForCountries}
+        />
       </div>
       <MapShadingLegend className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"} />
       <MapEstimateSummary filteredData={state.filteredData.map(({studyName}) => ({sourceSheetName: studyName}))}/>

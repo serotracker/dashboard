@@ -1,6 +1,6 @@
 import { Layer, Source } from "react-map-gl";
-import { PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { useEffect, useState } from "react";
+import { GetPaintForCountriesInput, GetPaintForCountriesOutput, PathogenDataPointPropertiesBase } from "./pathogen-map";
+import { useEffect, useMemo, useState } from "react";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import {
   MapResources,
@@ -8,59 +8,67 @@ import {
 } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 
 interface PathogenCountryHighlightLayerProps<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TAdditionalNonPointData extends Record<string, unknown>
 > {
   positionedUnderLayerWithId: string | undefined;
   dataPoints: (TPathogenDataPointProperties & {countryAlphaThreeCode : string})[];
+  additionalNonPointData: TAdditionalNonPointData[];
+  getPaintForCountries: (input: GetPaintForCountriesInput<
+    TPathogenDataPointProperties,
+    TAdditionalNonPointData
+  >) => GetPaintForCountriesOutput;
+}
+
+interface GeneratePaintForLayerInput<
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TAdditionalNonPointData extends Record<string, unknown>
+> {
+  dataPoints: (TPathogenDataPointProperties & { countryAlphaThreeCode : string})[];
+  additionalNonPointData: TAdditionalNonPointData[];
+  getPaintForCountries: (input: GetPaintForCountriesInput<
+    TPathogenDataPointProperties,
+    TAdditionalNonPointData
+  >) => GetPaintForCountriesOutput;
 }
 
 const generatePaintForLayer = <
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
->(input: {
-  dataPoints: (TPathogenDataPointProperties & { countryAlphaThreeCode : string})[];
-}) => {
-  const { dataPoints } = input;
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TAdditionalNonPointData extends Record<string, unknown>
+>(input: GeneratePaintForLayerInput<TPathogenDataPointProperties, TAdditionalNonPointData>) => {
+  const { dataPoints, additionalNonPointData, getPaintForCountries } = input;
 
-  const allUniqueCountryCodesWithData = new Set(
-    dataPoints.map((dataPoint) => dataPoint.countryAlphaThreeCode)
-  );
-
-  const countryColorsAndOpacities = Array.from(
-    allUniqueCountryCodesWithData
-  ).map((alpha3CountryCode) => ({
-    alpha3CountryCode: alpha3CountryCode,
-    fill: MapSymbology.CountryFeature.HasData.Color,
-    opacity: MapSymbology.CountryFeature.HasData.Opacity,
-  }));
+  const { countryData, defaults } = getPaintForCountries({
+    dataPoints,
+    additionalNonPointData
+  });
 
   return {
     "fill-color": [
       "match",
       ["get", "CODE"],
-      ...countryColorsAndOpacities.flatMap(({ alpha3CountryCode, fill }) => [
-        alpha3CountryCode,
+      ...countryData.flatMap(({ countryAlphaThreeCode, fill }) => [
+        countryAlphaThreeCode,
         fill,
       ]),
-      MapSymbology.CountryFeature.Default.Color,
+      defaults.fill
     ],
     "fill-opacity": [
       "match",
       ["get", "CODE"],
-      ...countryColorsAndOpacities.flatMap(({ alpha3CountryCode, opacity }) => [
-        alpha3CountryCode,
+      ...countryData.flatMap(({ countryAlphaThreeCode, opacity }) => [
+        countryAlphaThreeCode,
         opacity,
       ]),
-      MapSymbology.CountryFeature.Default.Opacity,
+      defaults.opacity
     ],
   };
 };
 
 export function PathogenCountryHighlightLayer<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
->({
-  positionedUnderLayerWithId,
-  dataPoints,
-}: PathogenCountryHighlightLayerProps<TPathogenDataPointProperties>) {
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
+  TAdditionalNonPointData extends Record<string, unknown>
+>(props: PathogenCountryHighlightLayerProps<TPathogenDataPointProperties, TAdditionalNonPointData>) {
   const [mapCountryVectors, setMapCountryVectors] = useState<any>(null);
 
   useEffect(() => {
@@ -82,8 +90,12 @@ export function PathogenCountryHighlightLayer<
       <Layer
         {...countryLayer}
         id='country-highlight-layer'
-        paint={generatePaintForLayer({ dataPoints })}
-        beforeId={positionedUnderLayerWithId}
+        paint={generatePaintForLayer({
+          dataPoints: props.dataPoints,
+          additionalNonPointData: props.additionalNonPointData,
+          getPaintForCountries: props.getPaintForCountries,
+        })}
+        beforeId={props.positionedUnderLayerWithId}
       />
     </Source>
   );
