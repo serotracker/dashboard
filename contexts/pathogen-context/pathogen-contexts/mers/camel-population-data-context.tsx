@@ -5,18 +5,14 @@ import { useFaoYearlyCamelPopulationData } from "@/hooks/mers/useFaoYearlyCamelP
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { typedObjectFromEntries } from "@/lib/utils";
 
-interface GetLatestCamelPopulationEstimateByCountryInput {
-  countryAlphaThreeCode: string;
-}
-
 interface CamelPopulationDataContextType {
   yearlyFaoCamelPopulationData: FaoYearlyCamelPopulationDataEntry[] | undefined;
-  getLatestCamelPopulationEstimateByCountry: (input: GetLatestCamelPopulationEstimateByCountryInput) => FaoYearlyCamelPopulationDataEntry | undefined;
+  latestFaoCamelPopulationDataPointsByCountry: FaoYearlyCamelPopulationDataEntry[] | undefined;
 }
 
 const initialCamelPopulationDataContext = {
   yearlyFaoCamelPopulationData: undefined,
-  getLatestCamelPopulationEstimateByCountry: () => undefined
+  latestFaoCamelPopulationDataPointsByCountry: undefined,
 };
 
 export const CamelPopulationDataContext = createContext<
@@ -30,31 +26,28 @@ interface CamelPopulationDataProviderProps {
 export const CamelPopulationDataProvider = (props: CamelPopulationDataProviderProps) => {
   const { yearlyFaoCamelPopulationData } = useFaoYearlyCamelPopulationData();
 
-  const latestFaoCamelPopulationDataPointByCountryAlphaThreeCode: Record<string, FaoYearlyCamelPopulationDataEntry | undefined> = useMemo(() => {
+  const latestFaoCamelPopulationDataPointsByCountry = useMemo(() => {
     if( yearlyFaoCamelPopulationData === undefined) {
-      return {}
+      return undefined;
     }
 
     const allCountryAlphaThreeCodes = uniq(yearlyFaoCamelPopulationData.map((element) => element.countryAlphaThreeCode));
 
     const sortedYearlyFaoCamelPopulationData = [...yearlyFaoCamelPopulationData].sort((a, b) => b.year - a.year);
 
-    return typedObjectFromEntries(allCountryAlphaThreeCodes
-      .map((alphaThreeCode) => [
-        alphaThreeCode,
-        sortedYearlyFaoCamelPopulationData
-          .filter((element) => element.countryAlphaThreeCode === alphaThreeCode)
-          .at(0)
-      ])
-    )
-  }, [yearlyFaoCamelPopulationData])
+    return allCountryAlphaThreeCodes
+      .map((alphaThreeCode) => sortedYearlyFaoCamelPopulationData
+        .filter((element) => element.countryAlphaThreeCode === alphaThreeCode)
+        .at(0)
+      )
+      .filter(<T extends unknown>(element: T | undefined): element is T => !!element)
+  }, [yearlyFaoCamelPopulationData]);
 
   return (
     <CamelPopulationDataContext.Provider
       value={{
         yearlyFaoCamelPopulationData: yearlyFaoCamelPopulationData,
-        getLatestCamelPopulationEstimateByCountry: ({ countryAlphaThreeCode }) =>
-          latestFaoCamelPopulationDataPointByCountryAlphaThreeCode[countryAlphaThreeCode]
+        latestFaoCamelPopulationDataPointsByCountry,
       }}
     >
       {props.children}

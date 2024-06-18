@@ -1,11 +1,8 @@
 import { Layer, Source } from "react-map-gl";
 import { GetPaintForCountriesInput, GetPaintForCountriesOutput, PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
-import {
-  MapResources,
-  MapSymbology,
-} from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
+import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 
 interface PathogenCountryHighlightLayerProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
@@ -69,6 +66,7 @@ export function PathogenCountryHighlightLayer<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
   TAdditionalNonPointData extends Record<string, unknown>
 >(props: PathogenCountryHighlightLayerProps<TPathogenDataPointProperties, TAdditionalNonPointData>) {
+  const { getPaintForCountries, dataPoints, additionalNonPointData } = props;
   const [mapCountryVectors, setMapCountryVectors] = useState<any>(null);
 
   useEffect(() => {
@@ -78,6 +76,12 @@ export function PathogenCountryHighlightLayer<
       }
     );
   }, []);
+
+  const paintForLayer = useMemo(() => generatePaintForLayer({
+    dataPoints: props.dataPoints,
+    additionalNonPointData: props.additionalNonPointData,
+    getPaintForCountries: props.getPaintForCountries,
+  }), [getPaintForCountries, dataPoints, additionalNonPointData])
 
   if (!mapCountryVectors) {
     return;
@@ -90,11 +94,7 @@ export function PathogenCountryHighlightLayer<
       <Layer
         {...countryLayer}
         id='country-highlight-layer'
-        paint={generatePaintForLayer({
-          dataPoints: props.dataPoints,
-          additionalNonPointData: props.additionalNonPointData,
-          getPaintForCountries: props.getPaintForCountries,
-        })}
+        paint={paintForLayer}
         beforeId={props.positionedUnderLayerWithId}
       />
     </Source>

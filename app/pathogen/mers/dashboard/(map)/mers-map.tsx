@@ -21,8 +21,11 @@ import {
   isMersFaoHumanEventMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
-import { useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
+import { MersMapCountryHighlightingSettings, useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
 import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-highlight-layers/data-point-present-layer";
+import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
+import { useTotalCamelPopulationLayer } from "./country-highlight-layers/total-camel-population-layer";
+import { useCamelsPerCapitaLayer } from "./country-highlight-layers/camels-per-capita-layer";
 
 const MapPinColours = {
   'HumanMersEvent': "#8abded",
@@ -34,11 +37,14 @@ const MapPinColours = {
 
 export const MersMap = () => {
   const state = useContext(MersContext);
+  const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);
   const { data } = useMersData();
   const { faoMersEvents } = useFaoMersEventData();
-  const { getPaintForCountries } = useDataPointPresentLayer();
-
   const mersMapCustomizationModal = useMersMapCustomizationModal();
+
+  const dataPointPresentMapLayer = useDataPointPresentLayer();
+  const totalCamelPopulationMapLayer = useTotalCamelPopulationLayer();
+  const camelsPerCapitaMapLayer = useCamelsPerCapitaLayer();
 
   if (!data || !faoMersEvents) {
     return <span> Loading... </span>;
@@ -149,7 +155,19 @@ export const MersMap = () => {
             }))
             .filter((element) => element.diagnosisStatus === MersDiagnosisStatus.Confirmed)
           )]}
-          getPaintForCountries={getPaintForCountries}
+          additionalNonPointData={latestFaoCamelPopulationDataPointsByCountry}
+          getPaintForCountries={(input) => {
+            if(mersMapCustomizationModal.currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES) {
+              return dataPointPresentMapLayer.getPaintForCountries(input);
+            }
+            if(mersMapCustomizationModal.currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION) {
+              return totalCamelPopulationMapLayer.getPaintForCountries(input);
+            }
+            if(mersMapCustomizationModal.currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA) {
+              return camelsPerCapitaMapLayer.getPaintForCountries(input);
+            }
+            assertNever(mersMapCustomizationModal.currentMapCountryHighlightingSettings);
+          }}
           />
       </div>
       <MapShadingLegend className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"} />
