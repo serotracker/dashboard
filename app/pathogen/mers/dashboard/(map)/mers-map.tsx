@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapShadingLegend } from "@/app/pathogen/arbovirus/dashboard/(map)/MapShadingLegend";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
@@ -21,6 +21,10 @@ import {
   isMersFaoHumanEventMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
+import { MapEstimateCustomizeButton } from "@/components/ui/pathogen-map/map-customize-button";
+import { X } from "lucide-react";
+import { ModalState, ModalType, useModal } from "@/components/ui/modal/modal";
+import { CustomizationSettingType } from "@/components/ui/modal/customization-modal/customization-settings";
 
 const MapPinColours = {
   'HumanMersEvent': "#8abded",
@@ -30,10 +34,56 @@ const MapPinColours = {
   'MersEstimate': "#e7ed8a"
 } as const;
 
+enum MersMapCountryHighlightingSettings {
+  EVENTS_AND_ESTIMATES = 'EVENTS_AND_ESTIMATES',
+  TOTAL_CAMEL_POPULATION = 'TOTAL_CAMEL_POPULATION',
+  CAMELS_PER_CAPITA = 'CAMELS_PER_CAPITA'
+}
+
 export const MersMap = () => {
   const state = useContext(MersContext);
   const { data } = useMersData();
   const { faoMersEvents } = useFaoMersEventData();
+
+  const [
+    currentMapCountryHighlightingSettings,
+    setCurrentMapCountryHighlightingSettings
+  ] = useState<MersMapCountryHighlightingSettings>(MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES);
+
+  const {
+    modal: CustomizationModal,
+    setModalState: setCustomizationModalState,
+    modalState: customizationModalState
+  } = useModal({
+    initialModalState: ModalState.CLOSED,
+    headerText: "Customize Map",
+    modalType: ModalType.CUSTOMIZATION_MODAL,
+    content: {
+      customizationSettings: [{
+        type: CustomizationSettingType.DROPDOWN,
+        dropdownName: 'Country Highlighting',
+        dropdownOptionGroups: [{
+          groupHeader: 'Events and estimates',
+          options: [
+            MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES
+          ]
+        }, {
+          groupHeader: 'Camels',
+          options: [
+            MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION,
+            MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA,
+          ]
+        }],
+        chosenDropdownOption: currentMapCountryHighlightingSettings,
+        dropdownOptionToLabelMap: {
+          [MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES]: "Presence of MERS events or seroprevalence estimates",
+          [MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION]: "Total camel population",
+          [MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA]: "Camels per capita",
+        },
+        onDropdownOptionChange: (option) => setCurrentMapCountryHighlightingSettings(option)
+      }]
+    }
+  });
 
   if (!data || !faoMersEvents) {
     return <span> Loading... </span>;
@@ -148,6 +198,8 @@ export const MersMap = () => {
       </div>
       <MapShadingLegend className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"} />
       <MapEstimateSummary filteredData={state.filteredData.map(() => ({sourceSheetName: "Study name goes here..."}))}/>
+      <MapEstimateCustomizeButton onClick={() => setCustomizationModalState(ModalState.OPENED)} />
+      <CustomizationModal />
     </>
   );
 }

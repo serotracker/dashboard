@@ -80,6 +80,7 @@ module.exports = {
         "national-study": "#094180",
         "regional-study": "#f19e66",
         "local-study": "#e15759",
+        "modal-background": 'rgba(0,0,0,0.4)',
         "mers-estimate": "#e7ed8a",
         "mers-human-event": "#8abded",
         "mers-human-event-alt": "#2a8deb",
