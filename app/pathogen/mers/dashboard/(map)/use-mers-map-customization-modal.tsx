@@ -26,8 +26,9 @@ export const useMersMapCustomizationModal = () => {
       customizationSettings: [{
         type: CustomizationSettingType.DROPDOWN,
         dropdownName: 'Country Highlighting',
-        primaryColourClassname: 'mers',
-        hoverColourClassname: 'mersHover',
+        borderColourClassname: 'border-mers',
+        hoverColourClassname: 'hover:bg-mersHover/50',
+        highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
         dropdownOptionGroups: [{
           groupHeader: 'Events and estimates',
           options: [
@@ -51,7 +52,12 @@ export const useMersMapCustomizationModal = () => {
     }
   });
 
-  const mapCustomizeButton = useMemo(() => <MapCustomizeButton onClick={() => setCustomizationModalState(ModalState.OPENED)} />, [])
+  const mapCustomizeButton = useMemo(() =>
+    <MapCustomizeButton
+      onClick={() => setCustomizationModalState(ModalState.OPENED)}
+      hoverColourClassname='hover:bg-mersHover/50'
+    />
+  , [])
 
   return {
     customizationModal,
