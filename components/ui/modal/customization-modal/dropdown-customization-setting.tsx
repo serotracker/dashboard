@@ -10,6 +10,8 @@ export interface DropdownCustomizationSetting<TDropdownOption extends string> {
     options: TDropdownOption[]
   }[];
   chosenDropdownOption: TDropdownOption;
+  primaryColourClassname: string;
+  hoverColourClassname: string;
   dropdownOptionToLabelMap: Record<TDropdownOption, string>;
   onDropdownOptionChange: (option: TDropdownOption) => void;
 }
@@ -23,9 +25,21 @@ interface SelectItemProps {
 }
 
 const SelectItem = (props: SelectItemProps) => (
-  <Select.Item value={props.value} className='SelectItem'>
+  <Select.Item value={props.value} className='
+    leading-none
+    rounded
+    flex
+    items-center
+    h-6
+    pr-9
+    pl-6
+    relative
+    select-none
+    data-[highlighted]:bg-mersHover
+    data-[disabled]:pointer-events-none
+  '>
     <Select.ItemText> {props.children} </Select.ItemText>
-    <Select.ItemIndicator>
+    <Select.ItemIndicator className="absolute left-0 w-6 inline-flex items-center justify-center">
       <CheckIcon />
     </Select.ItemIndicator>
   </Select.Item>
@@ -37,28 +51,50 @@ export const DropdownCustomizationSetting = <
   <div className="w-full flex justify-between">
     <p> {props.dropdownName} </p>
     <Select.Root value={props.chosenDropdownOption} onValueChange={(value) => props.onDropdownOptionChange(value as TDropdownOption)}>
-      <Select.Trigger className="SelectTrigger" aria-label="Food">
+      <Select.Trigger
+        className="
+          inline-flex
+          items-center
+          justify-center
+          rounded
+          py-0
+          px-4
+          leading-none
+          h-9
+          gap-1.5
+          bg-neutral-100
+          hover:bg-mersHover
+          border
+          border-mers
+        "
+        aria-label={`Open ${props.dropdownName} dropdown`}
+      >
         <Select.Value placeholder="Unknown" />
         <Select.Icon className="SelectIcon">
           <ChevronDownIcon />
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
-        <Select.Content className="SelectContent">
-          <Select.ScrollUpButton className="SelectScrollButton">
+        <Select.Content className="bg-white rounded-md overflow-hidden">
+          <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-white cursor-default">
             <ChevronUpIcon />
           </Select.ScrollUpButton>
-          <Select.Viewport className="SelectViewport">
-            {props.dropdownOptionGroups.map((dropdownOptionGroup) => 
-              <Select.Group key={dropdownOptionGroup.groupHeader}>
-                <Select.Label className="SelectLabel">{dropdownOptionGroup.groupHeader}</Select.Label>
-                {dropdownOptionGroup.options.map((option) =>
-                  <SelectItem key={option} value={option}>{props.dropdownOptionToLabelMap[option]}</SelectItem>
-                )}
-              </Select.Group>
+          <Select.Viewport className="p-1.5 border-2 border-mers bg-neutral-100">
+            {props.dropdownOptionGroups.map((dropdownOptionGroup, index) =>
+              <>
+                {index !== 0 && <Select.Separator className="m-1 h-px bg-black" />}
+                <Select.Group key={dropdownOptionGroup.groupHeader}>
+                  <Select.Label className="py-0 px-6 leading-6 text-xs">
+                    {dropdownOptionGroup.groupHeader}
+                  </Select.Label>
+                  {dropdownOptionGroup.options.map((option) =>
+                    <SelectItem key={option} value={option}>{props.dropdownOptionToLabelMap[option]}</SelectItem>
+                  )}
+                </Select.Group>
+              </>
             )}
           </Select.Viewport>
-          <Select.ScrollDownButton className="SelectScrollButton">
+          <Select.ScrollDownButton className="flex items-center justify-center h-6 bg-white cursor-default">
             <ChevronDownIcon />
           </Select.ScrollDownButton>
         </Select.Content>
