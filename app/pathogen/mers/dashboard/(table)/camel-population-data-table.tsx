@@ -4,6 +4,7 @@ import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen
 import { useContext } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import { WhoRegion } from "@/gql/graphql";
+import { formatCamelsPerCapita } from "../(map)/country-highlight-layers/camels-per-capita-layer";
 
 const camelPopulationDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
@@ -63,6 +64,7 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
       data={(latestFaoCamelPopulationDataPointsByCountry ?? []).map((dataPoint) => ({
         ...dataPoint,
         country: dataPoint.country.name,
+        camelCountPerCapita: dataPoint.camelCountPerCapita ? formatCamelsPerCapita(dataPoint.camelCountPerCapita) : undefined,
         countryAlphaThreeCode: dataPoint.country.alphaThreeCode,
         countryAlphaTwoCode: dataPoint.country.alphaTwoCode,
       }))}

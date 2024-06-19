@@ -40,7 +40,7 @@ export const MersDataTable = () => {
       },
       onDropdownOptionChange: (option) => setCurrentlySelectedDataTable(option)
     },
-    afterDropdownHeaderText: " estimates in our database"
+    afterDropdownHeaderText: " in our database"
   }
 
   const dataTableComponentMap = {

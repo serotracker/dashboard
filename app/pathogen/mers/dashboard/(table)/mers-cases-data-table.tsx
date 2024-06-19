@@ -4,10 +4,30 @@ import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/
 import { WhoRegion } from "@/gql/graphql";
 import { useContext } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
+import {
+  animalSpeciesToColourClassnameMap,
+  animalSpeciesToStringMap,
+  animalTypeToColourClassnameMap,
+  animalTypeToStringMap,
+  diagnosisSourceToColourClassnameMap,
+  diagnosisSourceToStringMap,
+  diagnosisStatusToColourClassnameMap,
+  diagnosisStatusToStringMap,
+  isMersDiagnosisSource,
+  isMersDiagnosisStatus,
+  isMersEventAnimalSpecies,
+  isMersEventAnimalType,
+  isMersEventTypename,
+  mersEventTypenameToColourClassnameMap,
+  mersEventTypenameToLabelMap
+} from "../(map)/shared-mers-map-pop-up-variables";
 
 const mersCasesColumnConfiguration = [{
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: '__typename',
+  valueToDisplayLabel: (typename: string) => isMersEventTypename(typename) ? mersEventTypenameToLabelMap[typename] : typename,
+  valueToColourSchemeClassnameMap: mersEventTypenameToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
   label: 'Event Type'
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
@@ -43,12 +63,18 @@ const mersCasesColumnConfiguration = [{
   fieldName: 'longitude',
   label: 'Longitude'
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'diagnosisStatus',
+  valueToDisplayLabel: (diagnosisStatus: string) => isMersDiagnosisStatus(diagnosisStatus) ? diagnosisStatusToStringMap[diagnosisStatus] : diagnosisStatus,
+  valueToColourSchemeClassnameMap: diagnosisStatusToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
   label: 'Diagnosis Status'
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'diagnosisSource',
+  valueToDisplayLabel: (diagnosisSource: string) => isMersDiagnosisSource(diagnosisSource) ? diagnosisSourceToStringMap[diagnosisSource] : diagnosisSource,
+  valueToColourSchemeClassnameMap: diagnosisSourceToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
   label: 'Diagnosis Source'
 }, {
   type: DataTableColumnConfigurationEntryType.DATE as const,
@@ -59,12 +85,18 @@ const mersCasesColumnConfiguration = [{
   fieldName: 'reportDate',
   label: 'Report Date'
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'animalType',
+  valueToDisplayLabel: (animalType: string) => isMersEventAnimalType(animalType) ? animalTypeToStringMap[animalType] : animalType,
+  valueToColourSchemeClassnameMap: animalTypeToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
   label: 'Animal Type'
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'animalSpecies',
+  valueToDisplayLabel: (animalSpecies: string) => isMersEventAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
+  valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
   label: 'Animal Species'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
@@ -94,7 +126,12 @@ export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
       rowExpansionConfiguration={{
         enabled: false
       }}
-      data={faoMersEventData.map((event) => ({ ...event, country: event.country.name }))}
+      data={faoMersEventData.map((event) => ({
+        ...event,
+        country: event.country.name,
+        latitude: event.latitude.toFixed(2),
+        longitude: event.longitude.toFixed(2),
+      }))}
     />
   )
 }
