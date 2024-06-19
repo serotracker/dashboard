@@ -16,12 +16,20 @@ export const MersFilters = (props: MersFiltersProps) => {
   const { data } = useMersData();
   const { data: filterData } = useMersFilters();
 
+  const dataTypeFilters = [
+    FilterableField.__typename,
+  ];
+
   const studyLocationFilters = [
     FilterableField.whoRegion,
     FilterableField.countryAlphaTwoCode,
   ];
 
   const filterSections = [{
+    headerText: 'Data Type',
+    headerTooltipText: 'Choose whether or not you would like to see seroprevalence estimates or events.',
+    includedFilters: dataTypeFilters
+  }, {
     headerText: 'Study Location',
     headerTooltipText: 'Filter on where the study was conducted.',
     includedFilters: studyLocationFilters
@@ -34,6 +42,11 @@ export const MersFilters = (props: MersFiltersProps) => {
       state={state}
       filterData={
         filterData?.mersFilterOptions ? {
+          __typename: [
+            "MersEstimate",
+            "AnimalMersEvent",
+            "HumanMersEvent"
+          ],
           whoRegion: filterData.mersFilterOptions.whoRegion,
           countryAlphaTwoCode: filterData.mersFilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode)
         } : {}

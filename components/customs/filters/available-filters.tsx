@@ -12,6 +12,7 @@ import { CountryInformationContext } from "@/contexts/pathogen-context/country-i
 import { Arbovirus } from "@/gql/graphql";
 import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
+import { mersDataTypeToColourClassnameMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -60,6 +61,7 @@ type FilterRenderingFunction = <
 
 export enum FilterableField {
   ageGroup = "ageGroup",
+  __typename = "__typename",
   pediatricAgeGroup = "pediatricAgeGroup",
   sex = "sex",
   esm = "esm",
@@ -355,7 +357,17 @@ export const useAvailableFilters = () => {
       label: "Population group",
       valueToLabelMap: {},
       filterRenderingFunction: MultiSelectFilter
-    }
+    },
+    [FilterableField.__typename]: {
+      field: FilterableField.__typename,
+      label: "Data Type",
+      valueToLabelMap: mersDataTypeToLabelMap,
+      optionToColourClassnameMap: mersDataTypeToColourClassnameMapForCheckbox,
+      optionSortingFunction: (optionA, optionB) => 
+        (mersDataTypeToSortOrderMap[optionA] ?? 0) - (mersDataTypeToSortOrderMap[optionB] ?? 0),
+      filterRenderingFunction: ColouredCheckboxFilter,
+      clearAllButtonText: 'Clear all data types'
+    },
   }
 
   return {

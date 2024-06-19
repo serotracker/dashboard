@@ -12,7 +12,9 @@ import { CamelPopulationDataProvider } from "./camel-population-data-context";
 const initialMersContextState = {
   filteredData: [],
   faoMersEventData: [],
-  selectedFilters: {},
+  selectedFilters: {
+    ["__typename"]: ["MersEstimate", "AnimalMersEvent", "HumanMersEvent"],
+  },
   dataFiltered: false,
 }
 
