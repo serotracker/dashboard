@@ -1,7 +1,7 @@
 import { DataTable, DropdownTableHeader } from "@/components/ui/data-table/data-table";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { WhoRegion } from "@/gql/graphql";
+import { MersDiagnosisStatus, WhoRegion } from "@/gql/graphql";
 import { useContext } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import {
@@ -126,12 +126,15 @@ export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
       rowExpansionConfiguration={{
         enabled: false
       }}
-      data={faoMersEventData.map((event) => ({
-        ...event,
-        country: event.country.name,
-        latitude: event.latitude.toFixed(2),
-        longitude: event.longitude.toFixed(2),
-      }))}
+      data={faoMersEventData
+        .filter((event) => event.diagnosisStatus === MersDiagnosisStatus.Confirmed)
+        .map((event) => ({
+          ...event,
+          country: event.country.name,
+          latitude: event.latitude.toFixed(2),
+          longitude: event.longitude.toFixed(2),
+        })
+      )}
     />
   )
 }
