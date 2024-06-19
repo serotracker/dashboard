@@ -28,7 +28,7 @@ export const DataTableStandardRow = <TData extends Record<string, unknown>>(prop
           index === 0 ? "border-l" : ""
         )}
       >
-        {cell.column.columnDef.size ? (
+        {!!cell.column.columnDef.size ? (
           <div className="block p-4 -m-4 overflow-x-hidden" style={{
             width: cell.column.columnDef.size,
           }}>

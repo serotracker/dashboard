@@ -119,6 +119,9 @@ export function DataTable<
   const table = useReactTable({
     data: props.data,
     columns: props.columns,
+    defaultColumn: {
+      size: 0
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
