@@ -22,6 +22,7 @@ import isEqual from "lodash/isEqual";
 import { EsmMapSourceAndLayer } from "./esm-maps";
 import { computeClusterMarkers } from "@/app/pathogen/arbovirus/dashboard/(map)/arbo-map-cluster-utils";
 import { GenericMapPopUpWidth } from "./map-pop-up/generic-map-pop-up";
+import { CountryHighlightLayerLegendEntry } from "./country-highlight-layers/country-highlight-layer-legend";
 
 export interface MarkerCollection<TClusterPropertyKey extends string> {
   [key: string]: {
@@ -55,15 +56,13 @@ interface ClusteringDisabledSettings {
 
 export type ClusteringSettings<TClusterPropertyKey extends string> = ClusteringEnabledSettings<TClusterPropertyKey> | ClusteringDisabledSettings;
 
-export interface GetPaintForCountriesInput<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
-  TAdditionalNonPointData extends Record<string, unknown>
+export interface GetCountryHighlightingLayerInformationInput<
+  TData extends Record<string, unknown>
 > {
-  dataPoints: TPathogenDataPointProperties[];
-  additionalNonPointData?: TAdditionalNonPointData[];
+  data: TData[];
 }
 
-export type GetPaintForCountriesOutput = {
+export interface PaintForCountries {
   countryData: Array<{
     countryAlphaThreeCode: string;
     fill: string;
@@ -73,11 +72,15 @@ export type GetPaintForCountriesOutput = {
     fill: string;
     opacity: number;
   }
+}
+
+export type GetCountryHighlightingLayerInformationOutput = {
+  paint: PaintForCountries;
+  countryHighlightLayerLegendEntries: CountryHighlightLayerLegendEntry[];
 };
 
 interface PathogenMapProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
-  TAdditionalNonPointData extends Record<string, unknown>,
   TClusterPropertyKey extends string
 > {
   id: string;
@@ -86,17 +89,12 @@ interface PathogenMapProps<
   generatePopupContent: PopupContentGenerator<TPathogenDataPointProperties>;
   dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
   clusteringSettings: ClusteringSettings<TClusterPropertyKey>;
-  additionalNonPointData?: TAdditionalNonPointData[];
-  getPaintForCountries: (input: GetPaintForCountriesInput<
-    TPathogenDataPointProperties,
-    TAdditionalNonPointData
-  >) => GetPaintForCountriesOutput;
+  paint: PaintForCountries;
   sourceId: string;
 }
 
 export function PathogenMap<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
-  TAdditionalNonPointData extends Record<string, unknown>,
   TClusterPropertyKey extends string
 >({
   id,
@@ -104,13 +102,11 @@ export function PathogenMap<
   generatePopupContent,
   layers,
   dataPoints,
-  additionalNonPointData,
   clusteringSettings,
-  getPaintForCountries,
+  paint,
   sourceId,
 }: PathogenMapProps<
   TPathogenDataPointProperties,
-  TAdditionalNonPointData,
   TClusterPropertyKey
 >) {
   const [popUpInfo, _setPopUpInfo] = useState<
@@ -211,10 +207,8 @@ export function PathogenMap<
         popupLayerId={layerForCountryHighlighting?.id}
       />
       <PathogenCountryHighlightLayer
-        additionalNonPointData={additionalNonPointData ?? []}
-        getPaintForCountries={getPaintForCountries}
+        paint={paint}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
-        dataPoints={dataPoints}
       />
       <PathogenMapSourceAndLayer
         layers={layers}

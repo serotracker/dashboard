@@ -40,7 +40,7 @@ export const generateMapColourBuckets = <
   const mapColourBuckets: ColourBucket<TData>[] = generateRange({
     startInclusive: minimumValue,
     endInclusive: maximumValue,
-    stepSize: Math.ceil(maximumValue - minimumValue) / input.idealBucketCount
+    stepSize: (maximumValue - minimumValue) / input.idealBucketCount
   }).slice(1).map((maximumExclusiveFromRange, index, array) => {
     const minimumInclusive = index === 0 ? undefined : array[index - 1];
     const maximumExclusive = index === (array.length - 1) ? undefined : maximumExclusiveFromRange;

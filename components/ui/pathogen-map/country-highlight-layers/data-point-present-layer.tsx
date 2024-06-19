@@ -1,17 +1,20 @@
 import { useCallback } from "react";
-import { GetPaintForCountriesInput, GetPaintForCountriesOutput, PathogenDataPointPropertiesBase } from "../pathogen-map";
+import {
+  GetCountryHighlightingLayerInformationInput,
+  GetCountryHighlightingLayerInformationOutput
+} from "../pathogen-map";
 import { MapSymbology } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 
 export const useDataPointPresentLayer = () => {
-  const getPaintForCountries = useCallback(<
-    TPathogenDataPointProperties extends PathogenDataPointPropertiesBase & { countryAlphaThreeCode: string },
-    TAdditionalNonPointData extends Record<string, unknown>
-  >(input: GetPaintForCountriesInput<
-    TPathogenDataPointProperties,
-    TAdditionalNonPointData
-  >): GetPaintForCountriesOutput => {
+  const getCountryHighlightingLayerInformation = useCallback(<
+    TData extends {
+      countryAlphaThreeCode: string;
+    }
+  >(input: GetCountryHighlightingLayerInformationInput<
+    TData
+  >): GetCountryHighlightingLayerInformationOutput => {
     const allUniqueCountryCodesWithData = new Set(
-      input.dataPoints.map((dataPoint) => dataPoint.countryAlphaThreeCode)
+      input.data.map((dataPoint) => dataPoint.countryAlphaThreeCode)
     );
 
     const countryData = Array.from(
@@ -22,16 +25,27 @@ export const useDataPointPresentLayer = () => {
       opacity: MapSymbology.CountryFeature.HasData.Opacity,
     }));
 
+    const countryHighlightLayerLegendEntries = [{
+      description: 'Seroprevalence estimates',
+      colour: MapSymbology.CountryFeature.HasData.Color
+    }, {
+      description: 'No seroprevalence estimates',
+      colour: MapSymbology.CountryFeature.Default.Color
+    }];
+
     return {
-      countryData,
-      defaults: {
-        fill: MapSymbology.CountryFeature.Default.Color,
-        opacity: MapSymbology.CountryFeature.Default.Opacity
-      }
+      paint: {
+        countryData,
+        defaults: {
+          fill: MapSymbology.CountryFeature.Default.Color,
+          opacity: MapSymbology.CountryFeature.Default.Opacity
+        }
+      },
+      countryHighlightLayerLegendEntries
     }
   }, []);
 
   return {
-    getPaintForCountries
+    getCountryHighlightingLayerInformation
   }
 }
