@@ -12,6 +12,12 @@ export const partitionedYearlyFaoCamelPopulationData = gql`
       yearlyFaoCamelPopulationData {
         id
         countryAlphaThreeCode
+        country {
+          alphaThreeCode
+          alphaTwoCode
+          name
+        }
+        whoRegion
         year
         camelCount
         camelCountPerCapita

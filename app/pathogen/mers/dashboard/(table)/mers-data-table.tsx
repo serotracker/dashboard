@@ -1,44 +1,53 @@
-import { DataTable } from "@/components/ui/data-table/data-table";
-import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
-import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
-import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { WhoRegion } from "@/gql/graphql";
-import { useContext } from "react";
+import { DropdownTableHeader, TableHeaderType } from "@/components/ui/data-table/data-table";
+import { useState } from "react";
+import { MersSeroprevalenceEstimateDataTable } from "./mers-seroprevalence-estimate-data-table";
+import { MersCasesDataTable } from "./mers-cases-data-table";
+import { CamelPopulationDataTable } from "./camel-population-data-table";
 
-const mersColumnConfiguration = [{
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'whoRegion',
-  label: 'WHO Region',
-  valueToColourSchemeClassnameMap: {
-    [WhoRegion.Afr]: "bg-who-region-afr",
-    [WhoRegion.Amr]: "bg-who-region-amr",
-    [WhoRegion.Emr]: "bg-who-region-emr",
-    [WhoRegion.Eur]: "bg-who-region-eur",
-    [WhoRegion.Sear]: "bg-who-region-sear",
-    [WhoRegion.Wpr]: "bg-who-region-wpr text-white"
-  },
-  defaultColourSchemeClassname: 'bg-sky-100'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'country',
-  label: 'Country'
-}];
+export enum AvailableMersDataTables {
+  MERS_SEROPREVALENCE_ESTIMATES = "MERS_SEROPREVALENCE_ESTIMATES",
+  MERS_CASES = "MERS_CASES",
+  CAMEL_POPULATION_DATA = "CAMEL_POPULATION_DATA",
+}
 
 export const MersDataTable = () => {
-  const state = useContext(MersContext);
+  const [
+    currentlySelectedDataTable,
+    setCurrentlySelectedDataTable 
+  ] = useState<AvailableMersDataTables>(AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES);
 
-  return (
-    <DataTable
-      columns={columnConfigurationToColumnDefinitions({ columnConfiguration: mersColumnConfiguration })}
-      csvFilename="merstracker_dataset"
-      tableHeader="Explore MERS seroprevalence estimates in our database"
-      csvCitationConfiguration={{
-        enabled: false
-      }}
-      rowExpansionConfiguration={{
-        enabled: false
-      }}
-      data={state.filteredData}
-    />
-  )
+  const tableHeaderForAllDataTables: DropdownTableHeader<AvailableMersDataTables> = {
+    type: TableHeaderType.DROPDOWN,
+    beforeDropdownHeaderText: "Explore ",
+    dropdownProps: {
+      dropdownName: 'Data table selection',
+      borderColourClassname: 'border-mers',
+      hoverColourClassname: 'hover:bg-mersHover/50',
+      highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
+      dropdownOptionGroups: [{
+        groupHeader: 'Available data tables',
+        options: [
+          AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES,
+          AvailableMersDataTables.MERS_CASES,
+          AvailableMersDataTables.CAMEL_POPULATION_DATA,
+        ]
+      }],
+      chosenDropdownOption: currentlySelectedDataTable,
+      dropdownOptionToLabelMap: {
+        [AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES]: "MERS seroprevalence estimates",
+        [AvailableMersDataTables.MERS_CASES]: "Confirmed MERS cases",
+        [AvailableMersDataTables.CAMEL_POPULATION_DATA]: "Camel population data",
+      },
+      onDropdownOptionChange: (option) => setCurrentlySelectedDataTable(option)
+    },
+    afterDropdownHeaderText: " estimates in our database"
+  }
+
+  const dataTableComponentMap = {
+    [AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES]: () => <MersSeroprevalenceEstimateDataTable tableHeader={tableHeaderForAllDataTables} />,
+    [AvailableMersDataTables.MERS_CASES]: () => <MersCasesDataTable tableHeader={tableHeaderForAllDataTables} />,
+    [AvailableMersDataTables.CAMEL_POPULATION_DATA]: () => <CamelPopulationDataTable tableHeader={tableHeaderForAllDataTables} />
+  }
+
+  return dataTableComponentMap[currentlySelectedDataTable]();
 }
