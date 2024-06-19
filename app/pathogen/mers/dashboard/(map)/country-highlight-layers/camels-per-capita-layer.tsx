@@ -4,6 +4,49 @@ import { GetCountryHighlightingLayerInformationInput, GetCountryHighlightingLaye
 import { MapSymbology } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { generateMapColourBuckets } from "@/components/ui/pathogen-map/country-highlight-layers/generate-map-colour-buckets";
 
+const formatNumberForLegend = (input: {
+  value: number,
+  isExclusiveInRange: boolean;
+}): string => {
+  const adjustmentAmount = input.isExclusiveInRange ? 1 : 0;
+
+  if(input.value * 1_000 >= 1) {
+    return `${((input.value * 1_000) - adjustmentAmount).toFixed(0)} per thousand people`
+  }
+
+  if(input.value * 1_000_000 >= 1) {
+    return `${((input.value * 1_000_000) - adjustmentAmount).toFixed(0)} per million people`
+  }
+
+  if(input.value * 1_000_000_000 >= 1) {
+    return `${((input.value * 1_000_000_000) - adjustmentAmount).toFixed(0)} per billion people`
+  }
+
+  return input.value.toFixed(0)
+}
+
+const formatNumberRangeForLegend = (input: {
+  minimumInclusive: number | undefined,
+  maximumExclusive: number | undefined,
+}): string => {
+  const formattedMinimum = input.minimumInclusive ? formatNumberForLegend({ value: input.minimumInclusive, isExclusiveInRange: false }) : undefined;
+  const formattedMaximum = input.maximumExclusive ? formatNumberForLegend({ value: input.maximumExclusive, isExclusiveInRange: true }) : undefined;
+
+  if(formattedMinimum !== undefined && formattedMaximum !== undefined) {
+    return `${formattedMinimum} to ${formattedMaximum}`;
+  }
+
+  if(formattedMinimum === undefined && formattedMaximum !== undefined) {
+    return `Up to ${formattedMaximum}`;
+  }
+
+  if(formattedMinimum !== undefined && formattedMaximum === undefined) {
+    return `Over ${formattedMinimum}`;
+  }
+
+  return "-";
+}
+
 export const useCamelsPerCapitaLayer = () => {
   const getCountryHighlightingLayerInformation = useCallback(<
     TData extends {
@@ -31,10 +74,16 @@ export const useCamelsPerCapitaLayer = () => {
       dataPointToValue: (dataPoint) => dataPoint.camelCountPerCapita
     });
 
-    const countryHighlightLayerLegendEntries = mapColourBuckets.map((bucket) => ({
-      description: 'BBBBB',
-      colour: bucket.fill
-    }))
+    const countryHighlightLayerLegendEntries = [
+      { description: "Data unavailable", colour: MapSymbology.CountryFeature.Default.Color },
+      ...mapColourBuckets.map((bucket) => ({
+        description: formatNumberRangeForLegend({
+          minimumInclusive: bucket.valueRange.minimumInclusive,
+          maximumExclusive: bucket.valueRange.maximumExclusive
+        }),
+        colour: bucket.fill
+      }))
+    ];
 
     return {
       paint: {
