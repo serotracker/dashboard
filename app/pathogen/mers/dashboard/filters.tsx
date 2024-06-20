@@ -6,6 +6,7 @@ import { FilterableField } from "@/components/customs/filters/available-filters"
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { useMersData } from "@/hooks/mers/useMersData";
 import { useMersFilters } from "@/hooks/mers/useMersFilters";
+import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
 
 interface MersFiltersProps {
   className?: string;
@@ -14,6 +15,7 @@ interface MersFiltersProps {
 export const MersFilters = (props: MersFiltersProps) => {
   const state = useContext(MersContext);
   const { data } = useMersData();
+  const { faoMersEvents } = useFaoMersEventData();
   const { data: filterData } = useMersFilters();
 
   const dataTypeFilters = [
@@ -51,7 +53,10 @@ export const MersFilters = (props: MersFiltersProps) => {
           countryAlphaTwoCode: filterData.mersFilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode)
         } : {}
       }
-      data={data?.mersEstimates ?? []}
+      data={{
+        mersEstimates: data?.mersEstimates ?? [],
+        faoMersEventData: faoMersEvents ?? [],
+      } as any}
       resetAllFiltersButtonEnabled={true}
     />
   )
