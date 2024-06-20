@@ -14,7 +14,7 @@ export interface ColouredCheckboxFilterProps<
   optionSortingFunction?: (a: string, b:string) => number;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   state: PathogenContextType<TEstimate, TPathogenContextState>;
-  data: TEstimate[];
+  data: TEstimate[] | Record<string, unknown>;
   filterOptions: Array<string | undefined | null>;
   optionToLabelMap: Record<string, string | undefined>;
   optionToColourClassnameMap: Record<string, string | undefined>;

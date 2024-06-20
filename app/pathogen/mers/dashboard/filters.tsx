@@ -80,7 +80,7 @@ export const MersFilters = (props: MersFiltersProps) => {
       data={{
         mersEstimates: data?.mersEstimates ?? [],
         faoMersEventData: faoMersEvents ?? [],
-      } as any}
+      }}
       resetAllFiltersButtonEnabled={true}
     />
   )

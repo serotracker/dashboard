@@ -45,7 +45,7 @@ interface FilterRenderingFunctionInput<
   placeholder: string;
   state: PathogenContextType<TEstimate, TPathogenContextState>;
   filterOptions: string[];
-  data: TEstimate[];
+  data: TEstimate[] | Record<string, unknown>;
   optionToLabelMap: Record<string, string | undefined>;
   optionSortingFunction: ((a: string, b: string) => number) | undefined;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;

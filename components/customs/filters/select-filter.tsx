@@ -24,7 +24,7 @@ export interface SelectFilterProps<
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
   state: PathogenContextType<TEstimate, TPathogenContextState>;
-  data: TEstimate[];
+  data: TEstimate[] | Record<string, unknown>;
   selectFilterType: SelectFilterType;
   filterOptions: Array<string | undefined | null>;
   optionToLabelMap: Record<string, string | undefined>;
