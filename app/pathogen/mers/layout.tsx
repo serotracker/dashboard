@@ -12,6 +12,7 @@ import { faoMersEventPartitionKeys } from "@/hooks/mers/useFaoMersEventDataParti
 import { partitionedFaoMersEvents } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { yearlyFaoCamelPopulationDataPartitionKeys } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitionKeys";
 import { partitionedYearlyFaoCamelPopulationData } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
+import { faoMersEventFilterOptions } from "@/hooks/mers/useFaoMersEventFilterOptions";
 
 export default async function MersLayout({
   children,
@@ -27,6 +28,10 @@ export default async function MersLayout({
   await queryClient.prefetchQuery({
     queryKey: ["mersFilterOptions"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', mersFilters)
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ["faoMersEventFilterOptions"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', faoMersEventFilterOptions)
   });
 
   await queryClient.prefetchQuery({

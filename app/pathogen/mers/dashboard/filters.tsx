@@ -7,6 +7,7 @@ import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/
 import { useMersData } from "@/hooks/mers/useMersData";
 import { useMersFilters } from "@/hooks/mers/useMersFilters";
 import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
+import { useFaoMersEventFilterOptions } from "@/hooks/mers/useFaoMersEventFilterOptions";
 
 interface MersFiltersProps {
   className?: string;
@@ -16,7 +17,8 @@ export const MersFilters = (props: MersFiltersProps) => {
   const state = useContext(MersContext);
   const { data } = useMersData();
   const { faoMersEvents } = useFaoMersEventData();
-  const { data: filterData } = useMersFilters();
+  const { data: estimateFilterData } = useMersFilters();
+  const { data: eventFilterData } = useFaoMersEventFilterOptions();
 
   const dataTypeFilters = [
     FilterableField.__typename,
@@ -27,14 +29,31 @@ export const MersFilters = (props: MersFiltersProps) => {
     FilterableField.countryAlphaTwoCode,
   ];
 
+  const humanAndAnimalCaseFilters = [
+    FilterableField.diagnosisSource,
+  ];
+
+  const animalCaseFilters = [
+    FilterableField.animalType,
+    FilterableField.animalSpecies,
+  ];
+
   const filterSections = [{
     headerText: 'Data Type',
     headerTooltipText: 'Choose whether or not you would like to see seroprevalence estimates or events.',
     includedFilters: dataTypeFilters
   }, {
-    headerText: 'Study Location',
-    headerTooltipText: 'Filter on where the study was conducted.',
+    headerText: 'Location',
+    headerTooltipText: 'Filter on where the study was conducted or the event occurred.',
     includedFilters: studyLocationFilters
+  }, {
+    headerText: 'Human and Animal Cases',
+    headerTooltipText: 'Filters that only apply to both human and animal confirmed cases.',
+    includedFilters: humanAndAnimalCaseFilters
+  }, {
+    headerText: 'Animal Cases',
+    headerTooltipText: 'Filters that only apply to confirmed animal cases.',
+    includedFilters: animalCaseFilters
   }];
 
   return (
@@ -42,17 +61,22 @@ export const MersFilters = (props: MersFiltersProps) => {
       className={props.className}
       filterSections={filterSections}
       state={state}
-      filterData={
-        filterData?.mersFilterOptions ? {
+      filterData={{
+        ...(estimateFilterData?.mersFilterOptions ? {
           __typename: [
             "MersEstimate",
             "AnimalMersEvent",
             "HumanMersEvent"
           ],
-          whoRegion: filterData.mersFilterOptions.whoRegion,
-          countryAlphaTwoCode: filterData.mersFilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode)
-        } : {}
-      }
+          whoRegion: estimateFilterData.mersFilterOptions.whoRegion,
+          countryAlphaTwoCode: estimateFilterData.mersFilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode)
+        } : {}),
+        ...(eventFilterData?.faoMersEventFilterOptions ? {
+          diagnosisSource: eventFilterData.faoMersEventFilterOptions.diagnosisSource,
+          animalType: eventFilterData.faoMersEventFilterOptions.animalType,
+          animalSpecies: eventFilterData.faoMersEventFilterOptions.animalSpecies,
+        } : {})
+      }}
       data={{
         mersEstimates: data?.mersEstimates ?? [],
         faoMersEventData: faoMersEvents ?? [],

@@ -12,7 +12,7 @@ import { CountryInformationContext } from "@/contexts/pathogen-context/country-i
 import { Arbovirus } from "@/gql/graphql";
 import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
-import { mersDataTypeToColourClassnameMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
+import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, mersDataTypeToColourClassnameMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -85,7 +85,10 @@ export enum FilterableField {
   antibodies = "antibodies",
   testType = "testType",
   isotypes = "isotypes",
-  populationGroup = "populationGroup"
+  populationGroup = "populationGroup",
+  diagnosisSource = "diagnosisSource",
+  animalType = "animalType",
+  animalSpecies = "animalSpecies"
 }
 
 const WhoRegionTooltip: TooltipContentRenderingFunction = (input) => (
@@ -367,6 +370,24 @@ export const useAvailableFilters = () => {
         (mersDataTypeToSortOrderMap[optionA] ?? 0) - (mersDataTypeToSortOrderMap[optionB] ?? 0),
       filterRenderingFunction: ColouredCheckboxFilter,
       clearAllButtonText: 'Clear all data types'
+    },
+    [FilterableField.diagnosisSource]: {
+      field: FilterableField.diagnosisSource,
+      label: "Diagnosis Source",
+      valueToLabelMap: diagnosisSourceToStringMap,
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.animalType]: {
+      field: FilterableField.animalType,
+      label: "Animal Type",
+      valueToLabelMap: animalTypeToStringMap,
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.animalSpecies]: {
+      field: FilterableField.animalSpecies,
+      label: "Animal Species",
+      valueToLabelMap: animalSpeciesToStringMap,
+      filterRenderingFunction: MultiSelectFilter
     },
   }
 
