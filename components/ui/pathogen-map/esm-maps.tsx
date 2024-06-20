@@ -11,7 +11,7 @@ const esmIds: Record<Esms, string> = {
 };
 
 const esmUrls: Record<Esms, string> = {
-  zika: "mapbox://serotracker.7qe2zkgd",
+  zika: "mapbox://serotracker.1dlmocr3",
   dengue2015: "mapbox://serotracker.5wobnon2",
   dengue2050: "mapbox://serotracker.9lzerqbc",
 };
