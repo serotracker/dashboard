@@ -13,7 +13,7 @@ export interface FilterSectionProps<
   state: PathogenContextType<TEstimate, TPathogenContextState>;
   allFieldInformation: FieldInformation[];
   filters: any;
-  data: TEstimate[];
+  data: TEstimate[] | Record<string, unknown>;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
 }
 

@@ -6,6 +6,7 @@ import { MersEstimatesQuery } from "@/gql/graphql";
 export const mersEstimates = gql`
   query mersEstimates {
     mersEstimates {
+      __typename
       id
       country
       countryAlphaTwoCode

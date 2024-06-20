@@ -5,6 +5,7 @@ import {
   PopUpContentRowType,
   PopupContentTextAlignment
 } from "../pop-up-content-rows";
+import { formatDateForPopUpContent } from "./pop-up-content-date-row";
 
 export type PopUpContentDateRangeRowProps = PopUpContentRowBaseProps & {
   type: PopUpContentRowType.DATE_RANGE,
@@ -13,30 +14,20 @@ export type PopUpContentDateRangeRowProps = PopUpContentRowBaseProps & {
   contentTextAlignment?: PopupContentTextAlignment;
 }
 
-const dateTimeFormat = new Intl.DateTimeFormat('en', {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-});
-
-const formatDate = (date: Date) => {
-  return dateTimeFormat.format(date);
-}
-
 export const PopUpContentDateRangeRow = (props: PopUpContentDateRangeRowProps) => {
   const { dateRangeStart, dateRangeEnd } = props;
 
   const content = useMemo(() => {
     if(dateRangeStart && dateRangeEnd) {
-      return `${formatDate(dateRangeStart)} to ${formatDate(dateRangeEnd)}`
+      return `${formatDateForPopUpContent(dateRangeStart)} to ${formatDateForPopUpContent(dateRangeEnd)}`
     }
 
     if(dateRangeStart && !dateRangeEnd) {
-      return `${formatDate(dateRangeStart)} to an unspecified date`
+      return `${formatDateForPopUpContent(dateRangeStart)} to an unspecified date`
     }
 
     if(!dateRangeStart && dateRangeEnd) {
-      return `an unspecified date - ${formatDate(dateRangeEnd)}`
+      return `an unspecified date - ${formatDateForPopUpContent(dateRangeEnd)}`
     }
 
     return "-"

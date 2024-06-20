@@ -101,12 +101,18 @@ const GenericMapPopUpRowValueBanner = (props: EnabledBannerRowValueConfiguration
 
 export enum GenericMapPopUpWidth {
   THIN = 'THIN',
-  WIDE = 'WIDE'
+  WIDE = 'WIDE',
+  AUTO = 'AUTO'
 }
 
-const widthEnumToWidthClassnameMap: {[key in GenericMapPopUpWidth]: string} = {
+const widthEnumToWidthClassnameMap: {[key in Exclude<GenericMapPopUpWidth, GenericMapPopUpWidth.AUTO>]: string } = {
   [GenericMapPopUpWidth.THIN]: 'w-[260px]',
   [GenericMapPopUpWidth.WIDE]: 'w-[460px]'
+}
+
+export const genericMapPopUpWidthEnumToWidthPxMap: {[key in Exclude<GenericMapPopUpWidth, GenericMapPopUpWidth.AUTO>]: number } = {
+  [GenericMapPopUpWidth.THIN]: 260,
+  [GenericMapPopUpWidth.WIDE]: 460
 }
 
 interface GenericMapPopUpProps {
@@ -120,7 +126,10 @@ interface GenericMapPopUpProps {
 
 export const GenericMapPopUp = (props: GenericMapPopUpProps) => {
   return (
-    <div className={cn(widthEnumToWidthClassnameMap[props.width],"bg-white/60 backdrop-blur-md pt-2 rounded-lg")}>
+    <div className={cn(
+      props.width !== GenericMapPopUpWidth.AUTO ? widthEnumToWidthClassnameMap[props.width] : '',
+      "bg-white/60 backdrop-blur-md pt-2 rounded-lg"
+    )}>
       <div className={"py-2 px-4"}>
         <GenericMapPopUpHeader {...props.headerConfiguration} />
         {props.subtitleConfiguration.enabled === true && <GenericMapPopUpSubtitle {...props.subtitleConfiguration}/>}

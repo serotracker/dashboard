@@ -1,31 +1,47 @@
-import { pathogenColors } from "@/app/pathogen/arbovirus/dashboard/(map)/ArbovirusMap";
+import { GenericMapPopUpWidth, genericMapPopUpWidthEnumToWidthPxMap } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { MarkerCollection } from "@/components/ui/pathogen-map/pathogen-map";
-import { Arbovirus } from "@/gql/graphql";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
 import mapboxgl from "mapbox-gl";
 import React from "react";
-import { Marker, MarkerEvent, useMap } from "react-map-gl";
+import { Marker } from "react-map-gl";
 
 // code for creating an SVG donut chart from feature properties
 export function createDonutChartAndHoverPopup<
   TClusterPropertyKey extends string
 >(props: {
   properties: Record<TClusterPropertyKey, number>;
+  headerText: string;
+  popUpWidth: GenericMapPopUpWidth;
   validClusterPropertyKeys: TClusterPropertyKey[];
+  clusterPropertyKeysIncludedInSum: TClusterPropertyKey[];
   clusterPropertyToColourMap: Record<TClusterPropertyKey, string>;
   map: mapboxgl.Map;
   coords: [number, number];
 }) {
-  const offsets: number[] = [];
   const counts = props.validClusterPropertyKeys.map((propertyKey) => ({
     count: props.properties[propertyKey],
     propertyKey
   }));
   let total = 0;
-  for (const { count } of counts) {
-    offsets.push(total);
+  const countsWithOffsets = counts.map(({ count, propertyKey }) => {
+    if(!props.clusterPropertyKeysIncludedInSum.includes(propertyKey)) {
+      return {
+        offset: 0,
+        count,
+        propertyKey
+      }
+    }
+
+    const offset = total;
     total = total + count;
-  }
+
+    return {
+      offset,
+      count,
+      propertyKey
+    }
+  })
+
   const fontSize =
     total >= 1000 ? 22 : total >= 100 ? 20 : total >= 10 ? 18 : 16;
   const piChartOuterRadius = total >= 50 ? 50 : total >= 25 ? 32 : total >= 10 ? 24 : 18; // r
@@ -36,16 +52,24 @@ export function createDonutChartAndHoverPopup<
   // Current country and city are not working on the popup need to add that in
   // TODO: need to add in popup HTML: <div style="font-size: 1rem">${props.properties.country}</div>
 
+  const popUpWidthStringPx = props.popUpWidth !== GenericMapPopUpWidth.AUTO
+    ? `${genericMapPopUpWidthEnumToWidthPxMap[props.popUpWidth].toString()}px`
+    : undefined
+
   let popupHTML = `
-    <div style="display: flex; flex-direction: column; padding: 1rem;" class=\"bg-white/60 backdrop-blur-md\">
+    <div style="display: flex; flex-direction: column; padding: 1rem;${popUpWidthStringPx ? `width: ${popUpWidthStringPx}` : ""}" class=\"bg-white/60 backdrop-blur-md\">
         <div style="display: flex; flex-direction: column; padding-bottom: 0.5rem">
-            <div style="font-size: 1.125rem; font-weight: bold;">Estimate Count</div>
+            <div style="font-size: 1.125rem; font-weight: bold;">${props.headerText}</div>
         </div>
         <div style="display: flex; flex-direction: row; justify-content: space-between; padding-bottom: 0.5rem">
             <div style="display: flex; flex-direction: column;">`;
             props.validClusterPropertyKeys.forEach((clusterPropertyKey) => {
               if(props.properties[clusterPropertyKey] > 0) {
-                popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${props.clusterPropertyToColourMap[clusterPropertyKey]}">${clusterPropertyKey}</div>`;
+                popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px;${
+                  props.clusterPropertyKeysIncludedInSum.includes(clusterPropertyKey)
+                    ? `border-left: 5px solid ${props.clusterPropertyToColourMap[clusterPropertyKey]}`
+                    : `margin-left: 5px`
+                }">${clusterPropertyKey}</div>`;
               }
             })
   popupHTML += `</div>
@@ -80,7 +104,8 @@ export function createDonutChartAndHoverPopup<
     offset: popupOffsets,
     className: detectBrowser() === Browser.CHROME ? "[&>*]:!bg-transparent" : "",
     closeOnClick: false,
-    focusAfterOpen: false
+    focusAfterOpen: false,
+    maxWidth: popUpWidthStringPx
   });
 
   const onMouseEnter = (event: any) => {
@@ -111,15 +136,17 @@ export function createDonutChartAndHoverPopup<
         onMouseDown={(e) => {e.preventDefault(); e.stopPropagation()}}
         onClick={() => {popup.remove()}}
       >
-        {counts.map(({ count, propertyKey }, i) =>
-          donutSegment(
-            offsets[i] / total,
-            (offsets[i] + count) / total,
-            piChartOuterRadius,
-            piChartInnerRadius,
-            props.clusterPropertyToColourMap[propertyKey],
-            `map-cluster-svg-path-${i}`
-          )
+        {countsWithOffsets.map(({ count, propertyKey, offset }) =>
+          props.clusterPropertyKeysIncludedInSum.includes(propertyKey)
+            ? donutSegment(
+              offset / total,
+              (offset + count) / total,
+              piChartOuterRadius,
+              piChartInnerRadius,
+              props.clusterPropertyToColourMap[propertyKey],
+              `map-cluster-svg-path-${propertyKey}-${count}-${offset}`
+            )
+            : null
         )}
         <circle cx={piChartOuterRadius} cy={piChartOuterRadius} r={piChartInnerRadius} fill="white"/>
         <text dominantBaseline="central" transform={`translate(${piChartOuterRadius}, ${piChartOuterRadius})`}>
@@ -198,8 +225,11 @@ export const computeClusterMarkers = <
     GeoJSON.Geometry,
     { cluster: boolean, cluster_id: string } & Record<TClusterPropertyKey, number>
   >[];
+  headerText: string;
+  popUpWidth: GenericMapPopUpWidth;
   markers: MarkerCollection<TClusterPropertyKey>;
   validClusterPropertyKeys: TClusterPropertyKey[];
+  clusterPropertyKeysIncludedInSum: TClusterPropertyKey[];
   clusterPropertyToColourMap: Record<TClusterPropertyKey, string>;
   map: mapboxgl.Map;
 }): MarkerCollection<TClusterPropertyKey> => {
@@ -218,7 +248,10 @@ export const computeClusterMarkers = <
 
         const { element, properties: markerProperties } = createDonutChartAndHoverPopup({
           properties: properties,
+          headerText: props.headerText,
+          popUpWidth: props.popUpWidth,
           validClusterPropertyKeys: props.validClusterPropertyKeys,
+          clusterPropertyKeysIncludedInSum: props.clusterPropertyKeysIncludedInSum,
           clusterPropertyToColourMap: props.clusterPropertyToColourMap,
           map: props.map,
           coords: [coords[0], coords[1]],

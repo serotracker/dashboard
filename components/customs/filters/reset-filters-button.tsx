@@ -8,7 +8,7 @@ interface ResetFiltersButtonProps<
 > {
   state: PathogenContextType<TEstimate, TPathogenContextState>;
   hidden: boolean;
-  data: TEstimate[];
+  data: TEstimate[] | Record<string, unknown>;
 }
 
 export const ResetFiltersButton = <
