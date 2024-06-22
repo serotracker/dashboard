@@ -68,7 +68,7 @@
     "@tailwindcss/typography": "^0.5.10",
     "@types/dom-to-image": "^2.6.7",
     "@types/lodash": "^4.14.200",
-    "@types/mapbox-gl": "^2.7.13",
+    "@types/mapbox-gl": "^3.1.0",
     "@types/node": "20.5.1",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",

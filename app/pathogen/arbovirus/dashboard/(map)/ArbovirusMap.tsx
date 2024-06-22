@@ -20,6 +20,7 @@ import { Arbovirus } from "@/gql/graphql";
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-highlight-layers/data-point-present-layer";
 import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
+import { useEsmCountryHighlightLayer } from "./country-highlight-layers/esm-country-highlight-layer";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -35,11 +36,16 @@ export function ArbovirusMap() {
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const { filteredData, selectedFilters }= useContext(ArboContext);
   const { data } = useArboData();
-  const { getCountryHighlightingLayerInformation } = useDataPointPresentLayer();
+  const { getCountryHighlightingLayerInformation: getDataPointPresentCountryHighlightingLayerInformation } = useDataPointPresentLayer();
+  const { getCountryHighlightingLayerInformation: getESMCountryHighlightingLayerInformation } = useEsmCountryHighlightLayer();
 
-  const { paint, countryHighlightLayerLegendEntries } = useMemo(() => getCountryHighlightingLayerInformation({
-    data: filteredData
-  }), [filteredData, getCountryHighlightingLayerInformation]);
+  const { paint, countryHighlightLayerLegendEntries } = useMemo(() => {
+    if (selectedFilters.esm?.length > 0) {
+      return getESMCountryHighlightingLayerInformation({ data: filteredData })
+    }
+
+    return getDataPointPresentCountryHighlightingLayerInformation({ data: filteredData })
+  }, [filteredData, getDataPointPresentCountryHighlightingLayerInformation, getESMCountryHighlightingLayerInformation, selectedFilters]);
 
   if (!data) {
     return <span> Loading... </span>;
@@ -120,7 +126,10 @@ export function ArbovirusMap() {
         legendEntries={[
           ...countryHighlightLayerLegendEntries,
           ...(selectedFilters.esm?.length > 0 ? [{
-            colour: "#000000",
+            colour: "#FFFFFF",
+            description: "Unsuitable Environment"
+          }, {
+            colour: "rgba(54,2,4,0.5)",
             description: "Suitable Environment"
           }] : [])
         ]}
