@@ -6,6 +6,7 @@ import React from "react";
 import clsx from "clsx";
 import "mapbox-gl/dist/mapbox-gl.css";
 import {ThemeProvider} from "@/contexts/theme-provider";
+import { AppHeaderAndMain } from "./app-header-and-main";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,10 +31,9 @@ export default function RootLayout({
       </head>
       <body className={clsx(inter.className, "text-black no-scrollbar overflow-y-hidden")}>
         <ThemeProvider>
-          <Header />
-          <main className={"h-full-screen w-screen bg-foreground top-14 fixed"}>
+          <AppHeaderAndMain>
             {children}
-          </main>
+          </AppHeaderAndMain>
         </ThemeProvider>
       </body>
     </html>

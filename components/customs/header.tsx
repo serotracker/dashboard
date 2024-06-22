@@ -14,6 +14,7 @@ import ListItem from "@/components/customs/list-item";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
+import { CircleHelp } from "lucide-react";
 
 type NavMenuItem = {
   title: string;
@@ -103,21 +104,29 @@ function TabGroup(props: TabGroupProps) {
   );
 }
 
-export const Header = () => {
+interface HeaderProps {
+  onHelpButtonClick: () => void;
+}
+
+export const Header = (props: HeaderProps) => {
   const pathname = usePathname();
   const [titleSuffix, setTitleSuffix] = useState("Sero");
   const [titleSuffixColor, setTitleSuffixColor] = useState("text-background");
   const [headerBgColor, setHeaderBgColor] = useState("bg-background delay-150");
+  const [helpButtonHoverColour, setHelpButtonHoverColour] = useState<string>('hover:bg-gray-100')
 
   // I wonder if there is a better way to do this without the useEffect.
   // Will come back to it because I have spent too much time here already
   useEffect(() => {
     if (pathname.includes("arbovirus")) {
       setTitleSuffix("Arbo");
+      setHelpButtonHoverColour('hover:bg-arbovirusHover');
     } else if (pathname.includes("sarscov2")) {
       setTitleSuffix("SC2");
+      setHelpButtonHoverColour('hover:bg-sc2virusHover');
     } else if (pathname.includes("mers")) {
       setTitleSuffix("MERS");
+      setHelpButtonHoverColour('hover:bg-mersHover');
     } else {
       setTitleSuffix("Sero");
     }
@@ -182,6 +191,16 @@ export const Header = () => {
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
+          <button
+            className={cn(
+              "rounded-full p-1",
+              helpButtonHoverColour
+            )}
+            onClick={() => props.onHelpButtonClick()}
+            aria-label="Open help modal"
+          >
+            <CircleHelp />
+          </button>
         </NavigationMenuList>
         <NavigationMenuViewport
           className={cn("transition-colors duration-300", headerBgColor)}

@@ -3,6 +3,7 @@ import { CustomizationModalContent, CustomizationModalContentProps } from "./cus
 import { assertNever } from "assert-never";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { HelpModalContent } from "./help-modal-content";
 
 export enum ModalState {
   OPENED = "OPENED",
@@ -10,7 +11,8 @@ export enum ModalState {
 }
 
 export enum ModalType {
-  CUSTOMIZATION_MODAL = "CUSTOMIZATION_MODAL"
+  CUSTOMIZATION_MODAL = "CUSTOMIZATION_MODAL",
+  HELP_MODAL = "HELP_MODAL"
 }
 
 export interface ModalPropsBase {
@@ -19,8 +21,24 @@ export interface ModalPropsBase {
   onClose: () => void;
 }
 
+type CustomizationModalProps<TDropdownOption extends string> = {
+  modalType: ModalType.CUSTOMIZATION_MODAL;
+  content: CustomizationModalContentProps<TDropdownOption>
+};
+type HelpModalProps = {
+  modalType: ModalType.HELP_MODAL;
+};
+
 type ModalPropsBasedOnType<TDropdownOption extends string> =
-  { modalType: ModalType.CUSTOMIZATION_MODAL; content: CustomizationModalContentProps<TDropdownOption> };
+  | CustomizationModalProps<TDropdownOption>
+  | HelpModalProps;
+
+const isCustomizationModalProps = <TDropdownOption extends string>(
+  props: ModalPropsBasedOnType<TDropdownOption>
+): props is CustomizationModalProps<TDropdownOption> => props.modalType === ModalType.CUSTOMIZATION_MODAL;
+const isHelpModalProps = <TDropdownOption extends string>(
+  props: ModalPropsBasedOnType<TDropdownOption>
+): props is HelpModalProps => props.modalType === ModalType.HELP_MODAL;
 
 type ModalProps<TDropdownOption extends string> = ModalPropsBase & ModalPropsBasedOnType<TDropdownOption>;
 
@@ -28,11 +46,15 @@ const Modal = <
   TDropdownOption extends string
 >(props: ModalProps<TDropdownOption>): React.ReactNode => {
   const modalContent = useMemo(() => {
-    if(props.modalType === ModalType.CUSTOMIZATION_MODAL) {
+    if(isCustomizationModalProps(props)) {
       return <CustomizationModalContent customizationSettings={props.content.customizationSettings}/>
     }
 
-    assertNever(props.modalType)
+    if(isHelpModalProps(props)) {
+      return <HelpModalContent />
+    }
+
+    assertNever(props)
   }, [props])
 
   return (
@@ -66,31 +88,32 @@ type UseModalInput<
   headerText: string;
 } & ModalPropsBasedOnType<TDropdownOption>;
 
-interface UseModalOutput<
-  TDropdownOption extends string
-> {
+interface UseModalOutput {
   modalState: ModalState;
   setModalState: (modalState: ModalState) => void;
-  modal: (propOverrides: Partial<ModalProps<TDropdownOption>>) => React.ReactNode;
+  modal: () => React.ReactNode;
 }
 
 export const useModal = <
   TDropdownOption extends string
->(input: UseModalInput<TDropdownOption>): UseModalOutput<TDropdownOption> => {
+>(input: UseModalInput<TDropdownOption>): UseModalOutput => {
   const [ modalState, setModalState ] = useState<ModalState>(input.initialModalState);
 
   return {
     modalState,
     setModalState,
-    modal: (propOverrides) => (<Modal
+    modal: () => (<Modal
       header={input.headerText}
       hidden={modalState === ModalState.CLOSED}
-      modalType={input.modalType}
-      content={input.content}
+      {...(isCustomizationModalProps(input) ? {
+        modalType: ModalType.CUSTOMIZATION_MODAL as const,
+        content: input.content
+      } : {
+        modalType: ModalType.HELP_MODAL as const
+      })}
       onClose={() => {
         setModalState(ModalState.CLOSED);
       }}
-      {...propOverrides}
     />)
   }
 }
