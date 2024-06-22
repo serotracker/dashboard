@@ -13,11 +13,6 @@ export const useEsmCountryHighlightLayer = () => {
   >(input: GetCountryHighlightingLayerInformationInput<
     TData
   >): GetCountryHighlightingLayerInformationOutput => {
-    const countryHighlightLayerLegendEntries: Array<{
-      description: string;
-      colour: string;
-    }> = [];
-
     return {
       paint: {
         countryData: [],
@@ -26,7 +21,7 @@ export const useEsmCountryHighlightLayer = () => {
           opacity: MapSymbology.CountryFeature.Default.Opacity
         }
       },
-      countryHighlightLayerLegendEntries
+      countryHighlightLayerLegendEntries: []
     }
   }, []);
 

@@ -38,7 +38,7 @@ export const MapSymbology = {
         },
         Default: {
             Color: '#FFFFFF',
-            Opacity: 0
+            Opacity: 0 
         }
     },
     Border: {
