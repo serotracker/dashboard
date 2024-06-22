@@ -48,7 +48,7 @@ export function EsmMapSourceAndLayer(props: {popupLayerId?: string}) {
           "raster-opacity": 1,
           "raster-fade-duration": 0,
         }}
-        beforeId="Boundaries/GLOBAL_ADM_L_Merge_20201201/2"
+        beforeId={props.popupLayerId}
       />
     </Source>
   );
