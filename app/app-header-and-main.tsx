@@ -2,7 +2,7 @@
 import { Header } from "@/components/customs/header";
 import { ModalState, ModalType, useModal } from "@/components/ui/modal/modal";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 interface AppHeaderAndMainProps {
   children: React.ReactNode;
@@ -16,11 +16,11 @@ export enum DashboardType {
 }
 
 const dashboardTypeToHelpModalType = {
-  [DashboardType.ARBOVIRUS]: ModalType.ARBOTRACKER_HELP_MODAL,
+  [DashboardType.ARBOVIRUS]: process.env.NEXT_PUBLIC_ARBOTRACKER_HELP_MODAL_ENABLED === "true" ? ModalType.ARBOTRACKER_HELP_MODAL : undefined,
   [DashboardType.SARS_COV_2]: undefined,
   [DashboardType.MERS]: undefined,
   [DashboardType.NONE]: undefined,
-} as const;
+} as const
 
 export const AppHeaderAndMain = (props: AppHeaderAndMainProps) => {
   const pathname = usePathname();
