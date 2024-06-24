@@ -51,7 +51,9 @@ export default function DataExtractionPage() {
         <p className='inline'>.</p>
       </div>
       <div className="mb-4">
-        <p className='inline'> We produce data for both academic and public use on our dashboard. We aim to update our search strategy and dashboard in May 2024 to capture additional data. For further information beyond the following high-level summary, please see our </p>
+        <p className='inline'> We produce data for both academic and public use on our dashboard. In May 2024 we updated our search strategy to capture additional data. A PROSPERO record with a citation can be found </p>
+        <Link className='inline text-link' href='https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000' target="__blank" rel="noopener noreferrer">here</Link>
+        <p className='inline'>. For further information beyond the following high-level summary, please see our </p>
         <Link className='inline text-link' href='https://docs.google.com/document/d/1bdePf81TemPkRqfOKWA4z3-Le0TSbl4BrZ8jTVD5IiE/edit?usp=sharing' target="__blank" rel="noopener noreferrer">study protocol</Link>
         <p className='inline'> for a detailed explanation of our research processes. </p>
       </div>
