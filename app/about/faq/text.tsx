@@ -60,14 +60,14 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
   },
   [FAQPageOptionId.HOW_DOES_ARBOTRACKER_DATA_SHOW_UP_ON_THE_MAP]: {
     label: 'How does ArboTracker data show up on the map?',
-    content: <p className='inline'> Data inputted into Airtable is automatically run through a software pipeline that cleans it and computes additional information (e.g. a study’s geographic coordinates). The outputs of the pipeline are then stored in a separate database, which is queried by <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://serotracker.vercel.app/">serotracker.vercel.app</Link> to serve the map, data tables, and data visualizations. Our data pipeline code is open source and can be found <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://github.com/serotracker/iit-backend-v2">here</Link>. </p>
+    content: <p className='inline'> Data inputted into Airtable is automatically run through a software pipeline that cleans it and computes additional information (e.g. a study’s geographic coordinates). The outputs of the pipeline are then stored in a separate database, which is queried by <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://new.serotracker.com/">new.serotracker.com</Link> to serve the map, data tables, and data visualizations. Our data pipeline code is open source and can be found <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://github.com/serotracker/iit-backend-v2">here</Link>. </p>
   },
   [FAQPageOptionId.CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS]: {
     label: 'Can I download ArboTracker data for my own analysis?',
     content: (
       <>
         <p className='inline'> Yes, our data is open-source and free for anyone to use. Every data table on the dashboard has a button next to it that allows you to download a csv of the data in the table. </p>
-        <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://serotracker.vercel.app/pathogen/arbovirus/dashboard#TABLE">This is a link to the ArboTracker data table where it is possible to download a csv containing all of our arbovirus seroprevalence estimates</Link>
+        <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://new.serotracker.com/pathogen/arbovirus/dashboard#TABLE">This is a link to the ArboTracker data table where it is possible to download a csv containing all of our arbovirus seroprevalence estimates</Link>
         <p className='inline'>. This is the recommended citation for our data: </p>
         <p className='inline italic'>Harriet Ware, Mairead Whelan, Anabel Selemon, Emilie Toews, Shaila Akter, Niklas Bobrovitz, Rahul Arora, Yannik Roell, Thomas Jaenisch. A living systematic review of arbovirus seroprevalence studies. PROSPERO 2024 CRD42024551000 Available from: https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000</p>
         <p className='inline'>.</p>
