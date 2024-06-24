@@ -7,7 +7,10 @@ interface ArboTrackerTutorialVideoFrameProps {
 export const ArboTrackerTutorialVideoFrame = (props: ArboTrackerTutorialVideoFrameProps) => (
   <iframe
     src="https://drive.google.com/file/d/1cLslLkwI57f2oKI45utkKdOtlW9ZCWpm/preview"
-    className={cn("aspect-video w-full", props.className ?? '')}
+    className={cn(
+      "aspect-video w-full rounded-lg border border-black",
+      props.className ?? ''
+    )}
     allow="autoplay"
     allowFullScreen={true}
   />
