@@ -173,7 +173,7 @@ export const Header = (props: HeaderProps) => {
     }
 
     return null;
-  }, [ helpButtonConfiguration ]);
+  }, [ helpButtonConfiguration, helpButtonHoverColour ]);
 
   return (
     <header

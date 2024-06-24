@@ -81,7 +81,7 @@ interface ArboTrackerHelpModalTableInstructionsProps {
 
 const ArboTrackerHelpModalTableInstructions = (props: ArboTrackerHelpModalTableInstructionsProps) => (
   <div className={props.className}>
-    <p>If you choose to scroll down from the map, you'll be shown a table which contains all of our arbovirus seroprevalence data</p>
+    <p>If you choose to scroll down from the map, you&apos;ll be shown a table which contains all of our arbovirus seroprevalence data</p>
     <Image
       className={"mx-2"}
       src={"/ArboTrackerHelpModalImage0006.png"}
@@ -89,9 +89,9 @@ const ArboTrackerHelpModalTableInstructions = (props: ArboTrackerHelpModalTableI
       width={1519}
       height={902}
     />
-    <p>The table can be downloaded as a CSV by clicking on the "Download CSV" button on the top right of the table. The "Get Citation for CSV" button in the top right corner allows you to get our recommended citation if your work makes use of our data.</p>
-    <p>Colums can be removed from the table by clicking on the "Columns" button in the top right. From there, you can choose which columns should be included in the table. Downloaded CSVs only include the columns which are included in the table so this can be used to remove columns you're not interested in from your downloaded CSV.</p>
-    <p>The table can only show 10 rows at a time. To view the following ten rows of the data, click on the "Next" button in the bottom right.</p>
+    <p>The table can be downloaded as a CSV by clicking on the &quot;Download CSV&quot; button on the top right of the table. The &quot;Get Citation for CSV&quot; button in the top right corner allows you to get our recommended citation if your work makes use of our data.</p>
+    <p>Colums can be removed from the table by clicking on the &quot;Columns&quot; button in the top right. From there, you can choose which columns should be included in the table. Downloaded CSVs only include the columns which are included in the table so this can be used to remove columns you&apos;re not interested in from your downloaded CSV.</p>
+    <p>The table can only show 10 rows at a time. To view the following ten rows of the data, click on the &quot;Next&quot; button in the bottom right.</p>
     <p>Most columns can be sorted ascendingly or descendingly by clicking on the two arrows in the header of the column.</p>
   </div>
 )
@@ -102,7 +102,7 @@ interface ArboTrackerHelpModalVisualizationInstructionsProps {
 
 const ArboTrackerHelpModalVisualizationInstructions = (props: ArboTrackerHelpModalVisualizationInstructionsProps) => (
   <div className={props.className}>
-    <p>If you choose to scroll down from the table, you'll be shown several visualizations of our data.</p>
+    <p>If you choose to scroll down from the table, you&apos;ll be shown several visualizations of our data.</p>
     <Image
       className={"mx-2"}
       src={"/ArboTrackerHelpModalImage0007.png"}
