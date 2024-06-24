@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import {
   NavigationMenu,
@@ -15,6 +15,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { CircleHelp } from "lucide-react";
+import { DashboardType } from "@/app/app-header-and-main";
 
 type NavMenuItem = {
   title: string;
@@ -104,33 +105,75 @@ function TabGroup(props: TabGroupProps) {
   );
 }
 
-interface HeaderProps {
+interface EnabledHeaderHelpButtonConfiguration {
+  enabled: true;
   onHelpButtonClick: () => void;
 }
 
+interface DisabledHeaderHelpButtonConfiguration {
+  enabled: false;
+}
+
+type HeaderHelpButtonConfiguration = 
+  | EnabledHeaderHelpButtonConfiguration
+  | DisabledHeaderHelpButtonConfiguration;
+
+interface HeaderProps {
+  dashboardType: DashboardType;
+  helpButtonConfiguration: HeaderHelpButtonConfiguration
+}
+
 export const Header = (props: HeaderProps) => {
-  const pathname = usePathname();
-  const [titleSuffix, setTitleSuffix] = useState("Sero");
+  const { dashboardType, helpButtonConfiguration } = props;
   const [titleSuffixColor, setTitleSuffixColor] = useState("text-background");
   const [headerBgColor, setHeaderBgColor] = useState("bg-background delay-150");
-  const [helpButtonHoverColour, setHelpButtonHoverColour] = useState<string>('hover:bg-gray-100')
 
-  // I wonder if there is a better way to do this without the useEffect.
-  // Will come back to it because I have spent too much time here already
-  useEffect(() => {
-    if (pathname.includes("arbovirus")) {
-      setTitleSuffix("Arbo");
-      setHelpButtonHoverColour('hover:bg-arbovirusHover');
-    } else if (pathname.includes("sarscov2")) {
-      setTitleSuffix("SC2");
-      setHelpButtonHoverColour('hover:bg-sc2virusHover');
-    } else if (pathname.includes("mers")) {
-      setTitleSuffix("MERS");
-      setHelpButtonHoverColour('hover:bg-mersHover');
-    } else {
-      setTitleSuffix("Sero");
+  const titleSuffix = useMemo(() => {
+    if(dashboardType === DashboardType.ARBOVIRUS) {
+      return "Arbo";
     }
-  }, [pathname]);
+    if(dashboardType === DashboardType.SARS_COV_2) {
+      return "SC2";
+    }
+    if(dashboardType === DashboardType.MERS) {
+      return "MERS";
+    }
+
+    return "Sero";
+  }, [ dashboardType ]);
+
+  const helpButtonHoverColour = useMemo(() => {
+    if(dashboardType === DashboardType.ARBOVIRUS) {
+      return 'hover:bg-arbovirusHover';
+    }
+    if(dashboardType === DashboardType.SARS_COV_2) {
+      return 'hover:bg-sc2virusHover';
+    }
+    if(dashboardType === DashboardType.MERS) {
+      return 'hover:bg-mersHover';
+    }
+
+    return 'hover:bg-gray-100';
+  }, [ dashboardType ]);
+
+  const helpButton = useMemo(() => {
+    if(helpButtonConfiguration.enabled === true) {
+      return (
+        <button
+          className={cn(
+            "rounded-full p-1",
+            helpButtonHoverColour
+          )}
+          onClick={() => helpButtonConfiguration.onHelpButtonClick()}
+          aria-label="Open help modal"
+        >
+          <CircleHelp />
+        </button>
+      )
+    }
+
+    return null;
+  }, [ helpButtonConfiguration ]);
 
   return (
     <header
@@ -191,16 +234,7 @@ export const Header = (props: HeaderProps) => {
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <button
-            className={cn(
-              "rounded-full p-1",
-              helpButtonHoverColour
-            )}
-            onClick={() => props.onHelpButtonClick()}
-            aria-label="Open help modal"
-          >
-            <CircleHelp />
-          </button>
+          {helpButton}
         </NavigationMenuList>
         <NavigationMenuViewport
           className={cn("transition-colors duration-300", headerBgColor)}

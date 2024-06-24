@@ -21,6 +21,7 @@ import {
 } from "@/hooks/useArboStatistics";
 import request from "graphql-request";
 import { SeroTrackerIntroduction } from "./serotracker-introduction";
+import { ArboTrackerTutorialVideoFrame } from "@/components/customs/arbotracker-tutorial-video-frame";
 
 interface TrackerButtonProps {
   titleSuffix: string;
@@ -91,12 +92,7 @@ export default async function Home() {
               <SeroTrackerIntroduction />
             </div>
             <div className="col-span-2 col-start-3 col-end-5 row-span-1">
-              <iframe
-                src="https://drive.google.com/file/d/1cLslLkwI57f2oKI45utkKdOtlW9ZCWpm/preview"
-                className="aspect-video w-full"
-                allow="autoplay"
-                allowFullScreen={true}
-              />
+              <ArboTrackerTutorialVideoFrame />
               <div className="flex">
                 {/*
                 These comments are for tailwindcss to pickup these classes so we do not need to add too many props
@@ -162,7 +158,7 @@ export default async function Home() {
           <div className="bg-white rounded-md w-full flex justify-center lg:justify-between px-8 lg:px-16 py-4 lg:py-6 items-center flex-wrap lg:flex-nowrap">
             <Image className={"p-2 lg:p-0"} src={"/WHO-EN-C-H.png"} alt={""} width={200} height={100} />
             <Image
-            className={"p-2 lg:p-0"}
+              className={"p-2 lg:p-0"}
               src={"/University-Of-Calgary-Logo.png"}
               alt={""}
               width={200}

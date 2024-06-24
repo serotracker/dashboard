@@ -1,9 +1,9 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { CustomizationModalContent, CustomizationModalContentProps } from "./customization-modal/customization-modal-content";
 import { assertNever } from "assert-never";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HelpModalContent } from "./help-modal-content";
+import { ArboTrackerHelpModalContent } from "../../../app/pathogen/arbovirus/arbotracker-help-modal-content";
 
 export enum ModalState {
   OPENED = "OPENED",
@@ -12,7 +12,7 @@ export enum ModalState {
 
 export enum ModalType {
   CUSTOMIZATION_MODAL = "CUSTOMIZATION_MODAL",
-  HELP_MODAL = "HELP_MODAL"
+  ARBOTRACKER_HELP_MODAL = "ARBOTRACKER_HELP_MODAL"
 }
 
 export interface ModalPropsBase {
@@ -25,20 +25,20 @@ type CustomizationModalProps<TDropdownOption extends string> = {
   modalType: ModalType.CUSTOMIZATION_MODAL;
   content: CustomizationModalContentProps<TDropdownOption>
 };
-type HelpModalProps = {
-  modalType: ModalType.HELP_MODAL;
+type ArboTrackerHelpModalProps = {
+  modalType: ModalType.ARBOTRACKER_HELP_MODAL;
 };
 
 type ModalPropsBasedOnType<TDropdownOption extends string> =
   | CustomizationModalProps<TDropdownOption>
-  | HelpModalProps;
+  | ArboTrackerHelpModalProps;
 
 const isCustomizationModalProps = <TDropdownOption extends string>(
   props: ModalPropsBasedOnType<TDropdownOption>
 ): props is CustomizationModalProps<TDropdownOption> => props.modalType === ModalType.CUSTOMIZATION_MODAL;
-const isHelpModalProps = <TDropdownOption extends string>(
+const isArboTrackerHelpModalProps = <TDropdownOption extends string>(
   props: ModalPropsBasedOnType<TDropdownOption>
-): props is HelpModalProps => props.modalType === ModalType.HELP_MODAL;
+): props is ArboTrackerHelpModalProps => props.modalType === ModalType.ARBOTRACKER_HELP_MODAL;
 
 type ModalProps<TDropdownOption extends string> = ModalPropsBase & ModalPropsBasedOnType<TDropdownOption>;
 
@@ -50,8 +50,8 @@ const Modal = <
       return <CustomizationModalContent customizationSettings={props.content.customizationSettings}/>
     }
 
-    if(isHelpModalProps(props)) {
-      return <HelpModalContent />
+    if(isArboTrackerHelpModalProps(props)) {
+      return <ArboTrackerHelpModalContent />
     }
 
     assertNever(props)
@@ -81,12 +81,26 @@ const Modal = <
   )
 }
 
-type UseModalInput<
+type DisabledUseModalInput = {
+  initialModalState: ModalState;
+  headerText: string;
+  disabled: true;
+  modalType: undefined;
+}
+
+type EnabledUseModalInput<
   TDropdownOption extends string
 > = {
   initialModalState: ModalState;
   headerText: string;
+  disabled: false;
 } & ModalPropsBasedOnType<TDropdownOption>;
+
+type UseModalInput<
+  TDropdownOption extends string
+> = 
+  | DisabledUseModalInput
+  | EnabledUseModalInput<TDropdownOption>
 
 interface UseModalOutput {
   modalState: ModalState;
@@ -99,21 +113,31 @@ export const useModal = <
 >(input: UseModalInput<TDropdownOption>): UseModalOutput => {
   const [ modalState, setModalState ] = useState<ModalState>(input.initialModalState);
 
+  const modal = useCallback(() => {
+    if(input.disabled === true) {
+      return null;
+    }
+    
+    return (
+      <Modal
+        header={input.headerText}
+        hidden={modalState === ModalState.CLOSED}
+        {...(isCustomizationModalProps(input) ? {
+          modalType: ModalType.CUSTOMIZATION_MODAL as const,
+          content: input.content
+        } : {
+          modalType: ModalType.ARBOTRACKER_HELP_MODAL as const
+        })}
+        onClose={() => {
+          setModalState(ModalState.CLOSED);
+        }}
+      />
+    );
+  }, [ input, modalState, setModalState ])
+
   return {
     modalState,
     setModalState,
-    modal: () => (<Modal
-      header={input.headerText}
-      hidden={modalState === ModalState.CLOSED}
-      {...(isCustomizationModalProps(input) ? {
-        modalType: ModalType.CUSTOMIZATION_MODAL as const,
-        content: input.content
-      } : {
-        modalType: ModalType.HELP_MODAL as const
-      })}
-      onClose={() => {
-        setModalState(ModalState.CLOSED);
-      }}
-    />)
+    modal
   }
 }
