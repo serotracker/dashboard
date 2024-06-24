@@ -1,5 +1,4 @@
 import { ArboTrackerTutorialVideoFrame } from "@/components/customs/arbotracker-tutorial-video-frame";
-import { cn } from "@/lib/utils";
 import * as Separator from '@radix-ui/react-separator';
 import Image from 'next/image'
 
@@ -91,7 +90,28 @@ const ArboTrackerHelpModalTableInstructions = (props: ArboTrackerHelpModalTableI
       height={902}
     />
     <p>The table can be downloaded as a CSV by clicking on the "Download CSV" button on the top right of the table. The "Get Citation for CSV" button in the top right corner allows you to get our recommended citation if your work makes use of our data.</p>
+    <p>Colums can be removed from the table by clicking on the "Columns" button in the top right. From there, you can choose which columns should be included in the table. Downloaded CSVs only include the columns which are included in the table so this can be used to remove columns you're not interested in from your downloaded CSV.</p>
     <p>The table can only show 10 rows at a time. To view the following ten rows of the data, click on the "Next" button in the bottom right.</p>
+    <p>Most columns can be sorted ascendingly or descendingly by clicking on the two arrows in the header of the column.</p>
+  </div>
+)
+
+interface ArboTrackerHelpModalVisualizationInstructionsProps {
+  className?: string;
+}
+
+const ArboTrackerHelpModalVisualizationInstructions = (props: ArboTrackerHelpModalVisualizationInstructionsProps) => (
+  <div className={props.className}>
+    <p>If you choose to scroll down from the table, you'll be shown several visualizations of our data.</p>
+    <Image
+      className={"mx-2"}
+      src={"/ArboTrackerHelpModalImage0007.png"}
+      alt={""}
+      width={1527}
+      height={444}
+    />
+    <p>Every visualization can be viewed in fullscreen by clicking on the magnifying glass in the top right corner of the visualization.</p>
+    <p>Every visualization can also be downloaded as an image by clicking on the cloud icon in the top right corner of the visualization.</p>
   </div>
 )
 
@@ -100,6 +120,7 @@ enum ArboTrackerHelpModalSection {
   TUTORIAL = "TUTORIAL",
   MAP_INSTRUCTIONS = "MAP_INSTRUCTIONS",
   TABLE_INSTRUCTIONS = "TABLE_INSTRUCTIONS",
+  VISUALIZATION_INSTRUCTIONS = "VISUALIZATION_INSTRUCTIONS"
 }
 
 const helpModalSectionToRenderingFunctionMap = {
@@ -107,13 +128,15 @@ const helpModalSectionToRenderingFunctionMap = {
   [ArboTrackerHelpModalSection.TUTORIAL]: {sectionRenderingFunction: ArboTrackerHelpModalTutorialSection},
   [ArboTrackerHelpModalSection.MAP_INSTRUCTIONS]: {sectionRenderingFunction: ArboTrackerHelpModalMapInstructions},
   [ArboTrackerHelpModalSection.TABLE_INSTRUCTIONS]: {sectionRenderingFunction: ArboTrackerHelpModalTableInstructions},
+  [ArboTrackerHelpModalSection.VISUALIZATION_INSTRUCTIONS]: {sectionRenderingFunction: ArboTrackerHelpModalVisualizationInstructions},
 }
 
 const allSections = [
   ArboTrackerHelpModalSection.INTRODUCTION,
   ArboTrackerHelpModalSection.TUTORIAL,
   ArboTrackerHelpModalSection.MAP_INSTRUCTIONS,
-  ArboTrackerHelpModalSection.TABLE_INSTRUCTIONS
+  ArboTrackerHelpModalSection.TABLE_INSTRUCTIONS,
+  ArboTrackerHelpModalSection.VISUALIZATION_INSTRUCTIONS
 ];
 
 export const ArboTrackerHelpModalContent = () => {
