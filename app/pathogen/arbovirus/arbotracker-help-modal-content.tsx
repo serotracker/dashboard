@@ -104,8 +104,17 @@ interface ArboTrackerHelpModalFilterInstructionsProps {
 
 const ArboTrackerHelpModalFilterInstructions = (props: ArboTrackerHelpModalFilterInstructionsProps) => (
   <div className={props.className}>
-    <p className="mb-2">Filter instructions line one.</p>
-    <p>Filter instructions line two.</p>
+    <p className="mb-2">To the left of the map is a list of filters which can be applied to our seroprevalence data.</p>
+    <p className="mb-2">Selecting any option for &quot;Environmental Suitability Map&quot; will result in the map being coloured in a way that highlights environments which are most suitable for carriers of that particular arbovirus. The white portions of the map are environments which are considered unsuitable and the portions of the map that are coloured brown are considered more suitable environments.</p>
+    <ArboTrackerHelpModalImage
+      className="mb-2"
+      src={"/ArboTrackerHelpModalImage0009.png"}
+      alt={""}
+      width={1065}
+      height={549}
+    />
+    <p className="mb-2">Selecting &quot;Children and youth (0-17 years)&quot; as your only age group of interest will let you filter on pediatric age group for even more granularity.</p>
+    <p className="mb-2">Any filters applied change the data shown on the map but also change the data shown in the table and any data visualization.</p>
   </div>
 )
 
@@ -170,13 +179,31 @@ enum ArboTrackerHelpModalSection {
   VISUALIZATION_INSTRUCTIONS = "VISUALIZATION_INSTRUCTIONS"
 }
 
-const helpModalSectionToRenderingFunctionMap = {
-  [ArboTrackerHelpModalSection.INTRODUCTION]: {sectionRenderingFunction: ArboTrackerHelpModalIntroductionSection},
-  [ArboTrackerHelpModalSection.TUTORIAL]: {sectionRenderingFunction: ArboTrackerHelpModalTutorialSection},
-  [ArboTrackerHelpModalSection.MAP_INSTRUCTIONS]: {sectionRenderingFunction: ArboTrackerHelpModalMapInstructions},
-  [ArboTrackerHelpModalSection.FILTER_INSTRUCTIONS]: {sectionRenderingFunction: ArboTrackerHelpModalFilterInstructions},
-  [ArboTrackerHelpModalSection.TABLE_INSTRUCTIONS]: {sectionRenderingFunction: ArboTrackerHelpModalTableInstructions},
-  [ArboTrackerHelpModalSection.VISUALIZATION_INSTRUCTIONS]: {sectionRenderingFunction: ArboTrackerHelpModalVisualizationInstructions},
+const helpModalSectionToSectionInformation = {
+  [ArboTrackerHelpModalSection.INTRODUCTION]: {
+    heading: 'What is ArboTracker?',
+    sectionRenderingFunction: ArboTrackerHelpModalIntroductionSection
+  },
+  [ArboTrackerHelpModalSection.TUTORIAL]: {
+    heading: 'Video Tutorial',
+    sectionRenderingFunction: ArboTrackerHelpModalTutorialSection
+  },
+  [ArboTrackerHelpModalSection.MAP_INSTRUCTIONS]: {
+    heading: 'How to Use the Map',
+    sectionRenderingFunction: ArboTrackerHelpModalMapInstructions
+  },
+  [ArboTrackerHelpModalSection.FILTER_INSTRUCTIONS]: {
+    heading: 'How to Use the Filters',
+    sectionRenderingFunction: ArboTrackerHelpModalFilterInstructions
+  },
+  [ArboTrackerHelpModalSection.TABLE_INSTRUCTIONS]: {
+    heading: 'How to Use the Data Table',
+    sectionRenderingFunction: ArboTrackerHelpModalTableInstructions
+  },
+  [ArboTrackerHelpModalSection.VISUALIZATION_INSTRUCTIONS]: {
+    heading: 'How to Use the Visualizations',
+    sectionRenderingFunction: ArboTrackerHelpModalVisualizationInstructions
+  },
 }
 
 const allSections = [
@@ -196,11 +223,12 @@ export const ArboTrackerHelpModalContent = () => {
         className="bg-arbovirus h-px mb-2"
       />
       {allSections.map((section, index) => {
-        const sectionInformation = helpModalSectionToRenderingFunctionMap[section];
+        const sectionInformation = helpModalSectionToSectionInformation[section];
         const isLastSection = index === allSections.length - 1;
 
         return (
           <div key={section}>
+            <h2 className="mb-4 mt-4 text-center">{sectionInformation.heading}</h2>
             <sectionInformation.sectionRenderingFunction className={isLastSection ? "mb-2" : "mb-6"}/>
             <Separator.Root
               orientation="horizontal"
