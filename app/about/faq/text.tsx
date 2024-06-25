@@ -36,7 +36,7 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
     label: 'Where does ArboTracker data come from?',
     content:(
       <>
-        <p className='inline'> We conducted a search for published articles on March 13, 2023 of several databases including Web of Science, Google Scholar, LILACS, and PubMed. Our search strategy was updated for a second search which would include unpublished grey literature in May 2024. A PROSPERO search record for our May 2024 search with a citation can be found </p>
+        <p className='inline'> We conducted a search for published articles on March 13, 2023 of several databases including Web of Science, Google Scholar, LILACS, and PubMed. Our search strategy was updated for a second search to include MEDLINE and EMBASE databases in May 2024. A PROSPERO search record for our May 2024 search with a citation can be found </p>
         <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href='https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000'>here</Link>
         <p className='inline'>. In addition, anyone can submit sources for us to screen and include in our review by filling out </p>
         <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href='https://forms.gle/pKNiMiMYr6hiKnXx8'>this form</Link>
@@ -52,7 +52,7 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
     label: 'How often is ArboTracker data updated?',
     content: (
       <>
-        <p className='inline'> The search feeding the current dashboard was conducted on March 13, 2023. In May 2024 our search strategy was updated to capture additional data. The PROSPERO record for the May 2024 search and a citation can be found </p>
+        <p className='inline'> The search feeding the current dashboard was conducted on March 13, 2023. In May 2024 our search strategy was updated to capture additional data, which will be added to the dashboard in the coming months. The PROSPERO record for the May 2024 search and a citation can be found </p>
         <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href='https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000'>here</Link>
         <p className='inline'>.</p>
       </>
