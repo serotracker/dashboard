@@ -84,6 +84,7 @@ export const MersMap = () => {
       <div className={"w-full h-full p-0"}>
         <PathogenMap
           id="mersMap"
+          countryPopUpEnabled={countryPopUpEnabled}
           baseCursor=""
           sourceId="mers-[GENERATED-SOURCE-ID]"
           layers={[

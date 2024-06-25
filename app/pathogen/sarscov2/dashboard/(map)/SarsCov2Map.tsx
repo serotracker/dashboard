@@ -31,6 +31,7 @@ export function SarsCov2Map() {
       <div className={"w-full h-full p-0"}>
         <PathogenMap
           id="sarsCov2Map"
+          countryPopUpEnabled={true}
           baseCursor=""
           sourceId="sc2-[GENERATED-SOURCE-ID]"
           layers={[

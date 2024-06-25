@@ -56,6 +56,7 @@ export function ArbovirusMap() {
       <div className={"w-full h-full p-0"}>
         <PathogenMap
           id="arboMap"
+          countryPopUpEnabled={true}
           baseCursor=""
           sourceId="arbo-[GENERATED-SOURCE-ID]"
           layers={[
