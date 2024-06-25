@@ -98,6 +98,17 @@ const ArboTrackerHelpModalMapInstructions = (props: ArboTrackerHelpModalMapInstr
   </div>
 )
 
+interface ArboTrackerHelpModalFilterInstructionsProps {
+  className?: string;
+}
+
+const ArboTrackerHelpModalFilterInstructions = (props: ArboTrackerHelpModalFilterInstructionsProps) => (
+  <div className={props.className}>
+    <p className="mb-2">Filter instructions line one.</p>
+    <p>Filter instructions line two.</p>
+  </div>
+)
+
 interface ArboTrackerHelpModalTableInstructionsProps {
   className?: string;
 }
@@ -115,7 +126,19 @@ const ArboTrackerHelpModalTableInstructions = (props: ArboTrackerHelpModalTableI
     <p className="mb-2">The table can be downloaded as a CSV by clicking on the &quot;Download CSV&quot; button on the top right of the table. The &quot;Get Citation for CSV&quot; button in the top right corner allows you to get our recommended citation if your work makes use of our data.</p>
     <p className="mb-2">Colums can be removed from the table by clicking on the &quot;Columns&quot; button in the top right. From there, you can choose which columns should be included in the table. Downloaded CSVs only include the columns which are included in the table so this can be used to remove columns you&apos;re not interested in from your downloaded CSV.</p>
     <p className="mb-2">The table can only show 10 rows at a time. To view the following ten rows of the data, click on the &quot;Next&quot; button in the bottom right.</p>
-    <p>Most columns can be sorted ascendingly or descendingly by clicking on the two arrows in the header of the column.</p>
+    <p className="mb-2">Most columns can be sorted ascendingly or descendingly by clicking on the two arrows in the header of the column.</p>
+    <p className="mb-2">You can view a small graph and some additional information about the study conducted by clicking on the row in the table. The image below shows what you might see after clicking on a row in the table.</p>
+    <ArboTrackerHelpModalImage
+      className="mb-2"
+      src={"/ArboTrackerHelpModalImage0007.png"}
+      alt={""}
+      width={1516}
+      height={907}
+    />
+    <p className="mb-2">The inclusion criteria for the study is given in the row that was clicked on </p>
+    <p className="mb-2">A new visualization also appears which shows how this seroprevalence estimate compares to the other seroprevalence estimates for the country the study was conducted in.</p>
+    <p className="mb-2">Applying filters using the filters to the left will change the data displayed in this visualization, just as all of the data in the other visualizations change as filters are applied.</p>
+    <p className="mb-2">Clicking on the row once more will collapse it.</p>
   </div>
 )
 
@@ -128,7 +151,7 @@ const ArboTrackerHelpModalVisualizationInstructions = (props: ArboTrackerHelpMod
     <p className="mb-2">If you choose to scroll down from the table, you&apos;ll be shown several visualizations of our data.</p>
     <ArboTrackerHelpModalImage
       className="mb-2"
-      src={"/ArboTrackerHelpModalImage0007.png"}
+      src={"/ArboTrackerHelpModalImage0008.png"}
       alt={""}
       width={1527}
       height={444}
@@ -142,6 +165,7 @@ enum ArboTrackerHelpModalSection {
   INTRODUCTION = "INTRODUCTION",
   TUTORIAL = "TUTORIAL",
   MAP_INSTRUCTIONS = "MAP_INSTRUCTIONS",
+  FILTER_INSTRUCTIONS = "FILTER_INSTRUCTIONS",
   TABLE_INSTRUCTIONS = "TABLE_INSTRUCTIONS",
   VISUALIZATION_INSTRUCTIONS = "VISUALIZATION_INSTRUCTIONS"
 }
@@ -150,6 +174,7 @@ const helpModalSectionToRenderingFunctionMap = {
   [ArboTrackerHelpModalSection.INTRODUCTION]: {sectionRenderingFunction: ArboTrackerHelpModalIntroductionSection},
   [ArboTrackerHelpModalSection.TUTORIAL]: {sectionRenderingFunction: ArboTrackerHelpModalTutorialSection},
   [ArboTrackerHelpModalSection.MAP_INSTRUCTIONS]: {sectionRenderingFunction: ArboTrackerHelpModalMapInstructions},
+  [ArboTrackerHelpModalSection.FILTER_INSTRUCTIONS]: {sectionRenderingFunction: ArboTrackerHelpModalFilterInstructions},
   [ArboTrackerHelpModalSection.TABLE_INSTRUCTIONS]: {sectionRenderingFunction: ArboTrackerHelpModalTableInstructions},
   [ArboTrackerHelpModalSection.VISUALIZATION_INSTRUCTIONS]: {sectionRenderingFunction: ArboTrackerHelpModalVisualizationInstructions},
 }
@@ -158,6 +183,7 @@ const allSections = [
   ArboTrackerHelpModalSection.INTRODUCTION,
   ArboTrackerHelpModalSection.TUTORIAL,
   ArboTrackerHelpModalSection.MAP_INSTRUCTIONS,
+  ArboTrackerHelpModalSection.FILTER_INSTRUCTIONS,
   ArboTrackerHelpModalSection.TABLE_INSTRUCTIONS,
   ArboTrackerHelpModalSection.VISUALIZATION_INSTRUCTIONS
 ];
