@@ -14,6 +14,7 @@ export const useMersMapCustomizationModal = () => {
     currentMapCountryHighlightingSettings,
     setCurrentMapCountryHighlightingSettings
   ] = useState<MersMapCountryHighlightingSettings>(MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES);
+  const [countryPopUpEnabled, setCountryPopUpEnabled] = useState<boolean>(true);
 
   const {
     modal: customizationModal,
@@ -49,6 +50,11 @@ export const useMersMapCustomizationModal = () => {
           [MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA]: "Camels per capita",
         },
         onDropdownOptionChange: (option) => setCurrentMapCountryHighlightingSettings(option)
+      }, {
+        type: CustomizationSettingType.SWITCH,
+        switchName: `Country pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
+        switchValue: countryPopUpEnabled,
+        onSwitchValueChange: (newSwitchValue) => setCountryPopUpEnabled(newSwitchValue),
       }]
     }
   });
@@ -62,6 +68,7 @@ export const useMersMapCustomizationModal = () => {
 
   return {
     customizationModal,
+    countryPopUpEnabled,
     currentMapCountryHighlightingSettings,
     mapCustomizeButton: () => mapCustomizeButton
   }

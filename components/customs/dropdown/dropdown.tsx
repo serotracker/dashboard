@@ -1,8 +1,10 @@
 import * as Select from '@radix-ui/react-select';
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { DropdownItem } from './dropdown-item';
+import { cn } from '@/lib/utils';
 
 export interface DropdownProps<TDropdownOption extends string> {
+  className?: string;
   dropdownName: string;
   dropdownOptionGroups: {
     groupHeader: string;
@@ -19,7 +21,7 @@ export interface DropdownProps<TDropdownOption extends string> {
 export const Dropdown = <TDropdownOption extends string>(props: DropdownProps<TDropdownOption>) => (
   <Select.Root value={props.chosenDropdownOption} onValueChange={(value) => props.onDropdownOptionChange(value as TDropdownOption)}>
     <Select.Trigger
-      className={`
+      className={cn(`
         inline-flex
         items-center
         justify-center
@@ -33,7 +35,7 @@ export const Dropdown = <TDropdownOption extends string>(props: DropdownProps<TD
         ${props.hoverColourClassname}
         border
         ${props.borderColourClassname}
-      `}
+      `, props.className ?? '')}
       aria-label={`Open ${props.dropdownName} dropdown`}
     >
       <Select.Value placeholder="Unknown" />

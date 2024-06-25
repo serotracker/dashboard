@@ -40,7 +40,7 @@ export const MersMap = () => {
   const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);
   const { data } = useMersData();
   const { faoMersEvents } = useFaoMersEventData();
-  const { currentMapCountryHighlightingSettings, ...mersMapCustomizationModal } = useMersMapCustomizationModal();
+  const { currentMapCountryHighlightingSettings, countryPopUpEnabled, ...mersMapCustomizationModal } = useMersMapCustomizationModal();
 
   const dataPointPresentMapLayer = useDataPointPresentLayer();
   const totalCamelPopulationMapLayer = useTotalCamelPopulationLayer();
