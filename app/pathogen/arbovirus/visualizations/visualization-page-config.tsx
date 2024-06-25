@@ -168,7 +168,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       return `${convertArboSFtoArbo(selectedPathogen)} study estimates with 95% CIs`;
     },
     titleTooltipContent: (
-      <p>95% confidence intervals were calculated using the Clopper-Pearson method if not reported in the source.'</p>
+      <p>95% confidence intervals were calculated using the Clopper-Pearson method if not reported in the source.</p>
     ),
     renderVisualization: ({ data, highlightedDataPoint, hideArbovirusDropdown }) => CountrySeroprevalenceComparisonScatterPlot({ data, highlightedDataPoint, hideArbovirusDropdown })
   },
