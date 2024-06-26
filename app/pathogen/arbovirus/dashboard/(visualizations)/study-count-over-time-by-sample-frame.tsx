@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import parseISO from 'date-fns/parseISO';
 import isAfter from 'date-fns/isAfter';
-import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { AreaChart } from "@/components/customs/visualizations/area-chart";
 import { generateRandomColour, generateRange, typedGroupBy, typedObjectEntries, typedObjectFromEntries } from "@/lib/utils";
 

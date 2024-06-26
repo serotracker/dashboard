@@ -1,4 +1,4 @@
-import { arbovirusDataStatistics, arbovirusDataStatisticsQueryKey } from "@/hooks/useArboStatistics";
+import { arbovirusDataStatistics, arbovirusDataStatisticsQueryKey } from "@/hooks/arbovirus/useArboStatistics";
 import getQueryClient from "./getQueryClient";
 import request from "graphql-request";
 import { ArbovirusDataStatistics, ArbovirusDataStatisticsQuery } from "@/gql/graphql";

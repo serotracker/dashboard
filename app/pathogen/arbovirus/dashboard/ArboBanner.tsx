@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { download, generateCsv, mkConfig } from "export-to-csv";
 import Link from "next/link";
 import { ToastContext, ToastId } from "@/contexts/toast-provider";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { typedObjectFromEntries, typedObjectKeys } from "@/lib/utils";
 import { arboDataTableRows } from "./(table)/ArboDataTable";
 

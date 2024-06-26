@@ -2,7 +2,7 @@
 
 import { DataTable, RowExpansionConfigurationEnabled, TableHeaderType } from "@/components/ui/data-table/data-table";
 import React, { useContext } from "react";
-import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { ToastId } from "@/contexts/toast-provider";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
