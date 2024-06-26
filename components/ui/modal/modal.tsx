@@ -96,7 +96,7 @@ type EnabledUseModalInput<
   disabled: false;
 } & ModalPropsBasedOnType<TDropdownOption>;
 
-type UseModalInput<
+export type UseModalInput<
   TDropdownOption extends string
 > = 
   | DisabledUseModalInput

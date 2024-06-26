@@ -28,10 +28,11 @@ export enum SarsCov2VisualizationUrlParameter {
   "comparing-seroprevalence-positive-cases-and-vaccinations" = "comparing-seroprevalence-positive-cases-and-vaccinations"
 }
 
-export type SarsCov2VisualizationInformation = VisualizationInformation<
+export type SarsCov2VisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
   SarsCov2VisualizationId,
   SarsCov2VisualizationUrlParameter,
-  SarsCov2Estimate
+  SarsCov2Estimate,
+  TDropdownOption
 >;
 
 export const isSarsCov2VisualizationUrlParameter = (
@@ -39,7 +40,7 @@ export const isSarsCov2VisualizationUrlParameter = (
 ): visualizationUrlParameter is SarsCov2VisualizationUrlParameter =>
   Object.values(SarsCov2VisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2VisualizationInformation> = {
+export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2VisualizationInformation<string>> = {
   [SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION]: {
     id: SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION,
     urlParameter:
@@ -76,7 +77,7 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
     getDisplayName: () => "Comparing Seroprevalence to Confirmed Cases and Vaccine Coverage Over Time",
     renderVisualization: () => ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
-}
+} as const;
 
 export const sarsCov2VisualizationInformationArray = typedObjectEntries(sarsCov2VisualizationInformation).map(([_, value]) => value);
 export const getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<

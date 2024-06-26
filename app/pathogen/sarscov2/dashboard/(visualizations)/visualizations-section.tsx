@@ -26,7 +26,7 @@ export const SarsCov2VisualizationsSection = () => {
 
   const { filteredData } = useContext(SarsCov2Context);
 
-  const renderVisualizationList = useCallback((visualizationList: Array<SarsCov2VisualizationInformation & {className: string}>) => {
+  const renderVisualizationList = useCallback(<TDropdownOption extends string>(visualizationList: Array<SarsCov2VisualizationInformation<TDropdownOption> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

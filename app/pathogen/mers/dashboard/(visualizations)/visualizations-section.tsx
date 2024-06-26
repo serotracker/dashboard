@@ -20,7 +20,7 @@ export const MersVisualizationsSection = () => {
 
   const { filteredData } = useContext(MersContext);
 
-  const renderVisualizationList = useCallback((visualizationList: Array<MersVisualizationInformation & {className: string}>) => {
+  const renderVisualizationList = useCallback(<TDropdownOption extends string>(visualizationList: Array<MersVisualizationInformation<TDropdownOption> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}
