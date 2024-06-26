@@ -1,14 +1,18 @@
 "use client";
-import { VisualizationInformation } from "../../generic-pathogen-visualizations-page";
-import { typedObjectEntries } from "@/lib/utils";
+import { VisualizationInformation, addToVisualizationInformation } from "../../generic-pathogen-visualizations-page";
+import { typedObjectEntries, typedObjectFromEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
 import { SarsCov2Estimate } from '@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context';
 import { PublishedStudiesByGdbRegionGraph } from "../dashboard/(visualizations)/published-studies-by-gbd-region";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { CumulativeNumberOfSerosurveysPublishedOverTime } from "../dashboard/(visualizations)/cumulative-number-of-serosurveys-published-over-time";
-import { ModelledSeroprevalenceByWhoRegionGraph } from "../dashboard/(visualizations)/modelled-seroprevalence-by-who-region";
+import { ModelledSeroprevalenceByWhoRegionGraph } from "../dashboard/(visualizations)/modelled-seroprevalence-by-who-region/modelled-seroprevalence-by-who-region";
 import { ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime } from "../dashboard/(visualizations)/comparing-seroprevalence-positive-cases-and-vaccinations-over-time";
 import { NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegion } from "../dashboard/(visualizations)/number-of-infections-at-midpoint-by-gbd-region";
+import { ModalState, ModalType } from "@/components/ui/modal/modal";
+import { useState } from "react";
+import { CustomizationSettingType } from "@/components/ui/modal/customization-modal/customization-settings";
+import { useModelledSeroprevalenceByWhoRegionCustomizationModal } from "../dashboard/(visualizations)/modelled-seroprevalence-by-who-region/use-modelled-seroprevalence-by-who-region-customization-modal";
 
 export enum SarsCov2VisualizationId {
   PUBLISHED_STUDY_COUNT_BY_GBD_REGION = "PUBLISHED_STUDY_COUNT_BY_GBD_REGION",
@@ -43,7 +47,7 @@ export const isSarsCov2VisualizationUrlParameter = (
 ): visualizationUrlParameter is SarsCov2VisualizationUrlParameter =>
   Object.values(SarsCov2VisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2VisualizationInformation<string>> = {
+const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2VisualizationInformation<string>> = {
   [SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION]: {
     id: SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION,
     urlParameter:
@@ -69,7 +73,7 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
         "modelled-seroprevalence-by-who-region"
       ],
     getDisplayName: () => "Modelled Seroprevalence Globally by WHO Region",
-    renderVisualization: () => ModelledSeroprevalenceByWhoRegionGraph({legendConfiguration: LegendConfiguration.RIGHT_ALIGNED})
+    renderVisualization: () => <p> Requires state. Initialized in following step. </p>
   },
   [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]: {
     id: SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS,
@@ -91,7 +95,35 @@ export const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, S
   }
 } as const;
 
-export const sarsCov2VisualizationInformationArray = typedObjectEntries(sarsCov2VisualizationInformation).map(([_, value]) => value);
+export const useVisualizationPageConfiguration = () => {
+  const modelledSeroprevalenceByWhoRegionCustomizationModal = useModelledSeroprevalenceByWhoRegionCustomizationModal();
+
+  const sarsCov2VisualizationInformationWithModalConfiguration = {
+    [SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION]:
+      sarsCov2VisualizationInformation[SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION],
+    [SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME]:
+      sarsCov2VisualizationInformation[SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME],
+    [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION]: {
+      ...sarsCov2VisualizationInformation[SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION],
+      customizationModalConfiguration: modelledSeroprevalenceByWhoRegionCustomizationModal.customizationModalConfiguration,
+      renderVisualization: () => ModelledSeroprevalenceByWhoRegionGraph({
+        legendConfiguration: LegendConfiguration.RIGHT_ALIGNED,
+        scatterPointsVisible: modelledSeroprevalenceByWhoRegionCustomizationModal.customizationSettings.modelledSeroprevalenceByWhoRegionScatterPointsVisible
+      }),
+    },
+    [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]:
+      sarsCov2VisualizationInformation[SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS],
+    [SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION]:
+      sarsCov2VisualizationInformation[SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION],
+  } as const;
+
+  return {
+    sarsCov2VisualizationInformation: sarsCov2VisualizationInformationWithModalConfiguration,
+    sarsCov2VisualizationInformationArray:
+      typedObjectEntries(sarsCov2VisualizationInformationWithModalConfiguration).map(([_, value]) => value)
+  }
+}
+
 export const getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<
   SarsCov2VisualizationId,
   SarsCov2VisualizationUrlParameter

@@ -18,6 +18,7 @@ const barColoursForWhoRegions: Record<WhoRegion, string> = {
 
 interface ModelledSeroprevalenceByWhoRegionGraphProps {
   legendConfiguration: LegendConfiguration;
+  scatterPointsVisible: boolean;
 }
 
 type AcceptableSarsCov2EstimateWithSeroprevalence = Omit<SarsCov2Estimate, "samplingMidDate"|"whoRegion"|"denominatorValue"|"numeratorValue"|"seroprevalence"> & {
