@@ -2,8 +2,8 @@
 
 import React, { useContext, useMemo } from "react";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
-import { useSarsCov2Data } from "@/hooks/useSarsCov2Data";
-import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { useSarsCov2Data } from "@/hooks/sarscov2/use-sars-cov2-data";
+import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { MapSymbology } from "./map-config";
 import { SarsCov2EstimatePopupContent } from "./sars-cov-2-estimate-pop-up-content";
@@ -15,14 +15,14 @@ import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/countr
 
 export function SarsCov2Map() {
   const { filteredData }= useContext(SarsCov2Context);
-  const { data } = useSarsCov2Data();
+  const { sarsCov2Estimates } = useSarsCov2Data();
   const { getCountryHighlightingLayerInformation } = useDataPointPresentLayer();
 
   const { paint, countryHighlightLayerLegendEntries } = useMemo(() => getCountryHighlightingLayerInformation({
     data: filteredData
   }), [filteredData, getCountryHighlightingLayerInformation]);
 
-  if (!data) {
+  if (filteredData.length === 0) {
     return <span> Loading... </span>;
   }
 

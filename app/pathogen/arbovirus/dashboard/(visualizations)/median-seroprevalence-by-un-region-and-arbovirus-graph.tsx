@@ -3,7 +3,7 @@ import { SplitBarChart } from "../../../../../components/customs/visualizations/
 import { convertArboSFtoArbo, median } from "./recharts";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
 import { getLabelForUNRegion } from "@/lib/un-regions";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 
 export const MedianSeroprevalenceByUnRegionAndArbovirusGraph = () => {
   const state = useContext(ArboContext);

@@ -14,7 +14,7 @@ import { convertArboSFtoArbo, median } from "./recharts";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { pathogenColors } from "../(map)/ArbovirusMap";
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { CustomXAxisTick } from "@/components/customs/visualizations/custom-x-axis-tick";
 
 type GroupableIntoTimeBuckets = { groupingTimeInterval: TimeInterval };

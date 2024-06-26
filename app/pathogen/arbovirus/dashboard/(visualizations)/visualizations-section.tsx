@@ -1,8 +1,8 @@
 import { useCallback, useContext } from "react";
 import { cn } from '@/lib/utils';
-import { useArboDataInsights } from "@/hooks/useArboDataInsights";
+import { useArboDataInsights } from "@/hooks/arbovirus/useArboDataInsights";
 import { RechartsVisualization } from "../../../../../components/customs/visualizations/recharts-visualization";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { ArbovirusVisualizationId, ArbovirusVisualizationInformation, arbovirusVisualizationInformation, getUrlParameterFromVisualizationId } from "../../visualizations/visualization-page-config";

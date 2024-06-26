@@ -18,7 +18,7 @@ import {
 import {
   arbovirusDataStatisticsQueryKey,
   arbovirusDataStatistics,
-} from "@/hooks/useArboStatistics";
+} from "@/hooks/arbovirus/useArboStatistics";
 import request from "graphql-request";
 import { SeroTrackerIntroduction } from "./serotracker-introduction";
 import { ArboTrackerTutorialVideoFrame } from "@/components/customs/arbotracker-tutorial-video-frame";

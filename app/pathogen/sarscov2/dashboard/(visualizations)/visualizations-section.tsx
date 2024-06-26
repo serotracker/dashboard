@@ -4,7 +4,7 @@ import { RechartsVisualization } from "../../../../../components/customs/visuali
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { SarsCov2VisualizationId, SarsCov2VisualizationInformation, getUrlParameterFromVisualizationId, sarsCov2VisualizationInformation } from "../../visualizations/visualization-page-config";
-import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 
 export const SarsCov2VisualizationsSection = () => {
   const allVisualizationInformationWithClassnames = addToVisualizationInformation({
@@ -12,7 +12,8 @@ export const SarsCov2VisualizationsSection = () => {
       [SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION]: { className: "h-full-screen" },
       [SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME]: { className: "h-full-screen" },
       [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION]: { className: "h-full-screen" },
-      [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]: { className: "h-full-screen" }
+      [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]: { className: "h-full-screen" },
+      [SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION]: { className: "h-full-screen" }
     },
     allVisualizationInformation: sarsCov2VisualizationInformation
   })
@@ -21,7 +22,8 @@ export const SarsCov2VisualizationsSection = () => {
     SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION,
     SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME,
     SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION,
-    SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS
+    SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS,
+    SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION
   ].includes(visualizationInfo.id));
 
   const { filteredData } = useContext(SarsCov2Context);
