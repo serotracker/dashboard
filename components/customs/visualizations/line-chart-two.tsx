@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import {
   XAxis,
   XAxisProps,
@@ -15,6 +14,7 @@ import { LegendConfiguration } from "./stacked-bar-chart";
 import { applyLabelsToSinglyGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
 import { groupDataForRechartsOnce } from './group-data-for-recharts/group-data-for-recharts-once';
 import { typedObjectEntries, typedObjectFromEntries } from '@/lib/utils';
+import { Formatter as TooltipContentFormatter } from 'recharts/types/component/DefaultTooltipContent';
 
 interface LineChartTwoProps<
   TData extends Record<'xAxisValue', number> & Record<'yAxisValue', number>,
@@ -122,25 +122,6 @@ export const LineChartTwo = <
     TPrimaryGroupingKey
   >
 ) => {
-  // const { rechartsData, allPrimaryKeys } = groupDataForRechartsOnce({
-  //   data: props.data,
-  //   primaryGroupingFunction: props.primaryGroupingFunction,
-  //   primaryGroupingSortFunction: props.primaryGroupingSortFunction,
-  //   transformOutputValue: ({ data }) => data
-  // });
-
-  // const { rechartsDataUsingLabels: unformattedRechartsDataUsingLabels } = useMemo(() => applyLabelsToSinglyGroupedRechartsData({
-  //   rechartsData,
-  //   primaryGroupingKeyToLabel
-  // }), [rechartsData, primaryGroupingKeyToLabel]);
-
-  // const rechartsDataUsingLabels = useMemo(() => 
-  //   typedObjectEntries(unformattedRechartsDataUsingLabels)
-  //     .flatMap(([primaryKey, data]) => data.map((dataPoint) => ({
-  //       [primaryKey]: dataPoint.yAxisValue,
-  //     })))
-  // , [ unformattedRechartsDataUsingLabels ])
-
   const lineDataPrefix = '';
   const scatterPointDataPrefix = 'scatter-point-data';
 
@@ -195,7 +176,7 @@ export const LineChartTwo = <
           },
         };
 
-  console.log('rechartsData', rechartsData);
+  const tooltipPercentageFormatter: TooltipContentFormatter<number, string> = (value) => `${value.toFixed(1)}%`
 
   return (
     <ResponsiveContainer width={"100%"}>
@@ -214,11 +195,11 @@ export const LineChartTwo = <
         <XAxis {...xAxisProps} />
         <YAxis
           type='number'
-          {...(props.yAxisTickSettings.percentageFormattingEnabled ? {tickFormatter: (tick) => `${tick}%`} : {})}
+          {...(props.yAxisTickSettings.percentageFormattingEnabled ? {tickFormatter: (tick) => `${tick.toFixed(1)}%`} : {})}
         />
         <Tooltip
           itemStyle={{"color": "black"}}
-          {...(props.yAxisTickSettings.percentageFormattingEnabled ? {formatter: (value) => `${value}%`} : {})}
+          {...(props.yAxisTickSettings.percentageFormattingEnabled ? {formatter: tooltipPercentageFormatter} : {})}
         />
         <Legend {...legendProps} />
         {linePrimaryKeys.map((primaryKey, index) => (
@@ -238,6 +219,10 @@ export const LineChartTwo = <
         {scatterPointPrimaryKeys.map((primaryKey, index) => (
           <Scatter
             legendType='none'
+            name={props.primaryGroupingKeyToLabel
+              ? `${props.primaryGroupingKeyToLabel(primaryKey)}`
+              : `${primaryKey}`
+            }
             key={props.primaryGroupingKeyToLabel
               ? `${scatterPointDataPrefix}${props.primaryGroupingKeyToLabel(primaryKey)}`
               : `${scatterPointDataPrefix}${primaryKey}`

@@ -7,6 +7,7 @@ import { dateToMonthCount, monthCountToMonthYearString, monthYearStringToMonthCo
 import { WhoRegion } from "@/gql/graphql";
 import { BestFitCurveLineChart } from "@/components/customs/visualizations/best-fit-curve-line-chart";
 import { LineChartTwo } from "@/components/customs/visualizations/line-chart-two";
+import { BestFitCurveLineChartTwo } from "@/components/customs/visualizations/best-fit-curve-line-chart-two";
 
 const barColoursForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Afr]: "#e15759",
@@ -71,37 +72,83 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
     [state.filteredData]
   );
 
+  //return (
+  //  <LineChartTwo 
+  //    graphId="modelled-sc2-seroprevalence-by-who-region"
+  //    data={[{
+  //      whoRegion: WhoRegion.Afr,
+  //      xAxisValue: 10,
+  //      yAxisValue: 20
+  //    }, {
+  //      whoRegion: WhoRegion.Afr,
+  //      xAxisValue: 15,
+  //      yAxisValue: 30
+  //    }, {
+  //      whoRegion: WhoRegion.Afr,
+  //      xAxisValue: 25,
+  //      yAxisValue: 100
+  //    }]}
+  //    scatterPointData={[{
+  //      whoRegion: WhoRegion.Afr,
+  //      xAxisValue: 10,
+  //      yAxisValue: 25
+  //    }, {
+  //      whoRegion: WhoRegion.Afr,
+  //      xAxisValue: 15,
+  //      yAxisValue: 35
+  //    }]}
+  //    primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
+  //    scatterPointPrimaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
+  //    primaryGroupingSortFunction={(whoRegionA, whoRegionB) => whoRegionA > whoRegionB ? 1 : -1}
+  //    getLineColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
+  //    yAxisTickSettings={{
+  //      percentageFormattingEnabled: true
+  //    }}
+  //    legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
+  //  />
+  //)
+
+  const a = [{
+    whoRegion: WhoRegion.Afr,
+    xAxisValue: 10,
+    yAxisValue: 20
+  }, {
+    whoRegion: WhoRegion.Afr,
+    xAxisValue: 15,
+    yAxisValue: 30
+  }, {
+    whoRegion: WhoRegion.Afr,
+    xAxisValue: 20,
+    yAxisValue: 90
+  }, {
+    whoRegion: WhoRegion.Afr,
+    xAxisValue: 25,
+    yAxisValue: 90
+  }]
+
+  const xAxisTicks = [0, 5, 10, 15, 20, 25, 30]
+
   return (
-    <LineChartTwo 
+    <BestFitCurveLineChartTwo 
       graphId="modelled-sc2-seroprevalence-by-who-region"
-      data={[{
-        whoRegion: WhoRegion.Afr,
-        xAxisValue: 10,
-        yAxisValue: 20
-      }, {
-        whoRegion: WhoRegion.Afr,
-        xAxisValue: 15,
-        yAxisValue: 30
-      }, {
-        whoRegion: WhoRegion.Afr,
-        xAxisValue: 25,
-        yAxisValue: 100
-      }]}
-      scatterPointData={[{
-        whoRegion: WhoRegion.Afr,
-        xAxisValue: 10,
-        yAxisValue: 25
-      }, {
-        whoRegion: WhoRegion.Afr,
-        xAxisValue: 15,
-        yAxisValue: 35
-      }]}
+      data={a}
       primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
-      scatterPointPrimaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
       primaryGroupingSortFunction={(whoRegionA, whoRegionB) => whoRegionA > whoRegionB ? 1 : -1}
       getLineColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
+      xAxisTickSettings={{
+        ticks: xAxisTicks
+      }}
       yAxisTickSettings={{
         percentageFormattingEnabled: true
+      }}
+      bestFitLineSettings={{
+        maximumPolynomialOrder: 2,
+        yAxisDomain: {
+          maximumValue: 100,
+          minimumValue: 0
+        },
+        xAxisTicks: xAxisTicks,
+        allowStrictlyIncreasingLinesOnly: true
       }}
       legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
     />
