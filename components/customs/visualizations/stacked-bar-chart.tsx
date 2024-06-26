@@ -13,7 +13,7 @@ import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
 import { typedObjectKeys } from '@/lib/utils';
 import { CustomXAxisTick } from './custom-x-axis-tick';
 import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from './group-data-for-recharts/group-data-for-recharts-twice';
-import { applyLabelsToGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
+import { applyLabelsToDoublyGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
 
 export enum LegendConfiguration {
   RIGHT_ALIGNED = 'RIGHT_ALIGNED',
@@ -103,7 +103,7 @@ export const StackedBarChart = <
     };
   }
 
-  const { rechartsDataUsingLabels } = useMemo(() => applyLabelsToGroupedRechartsData({
+  const { rechartsDataUsingLabels } = useMemo(() => applyLabelsToDoublyGroupedRechartsData({
     rechartsData,
     primaryGroupingKeyToLabel,
     secondaryGroupingKeyToLabel

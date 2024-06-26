@@ -1,6 +1,45 @@
-import { typedObjectFromEntries, typedObjectKeys } from "@/lib/utils";
+import { typedObjectEntries, typedObjectFromEntries, typedObjectKeys } from "@/lib/utils";
 
-interface ApplyLabelsToGroupedRechartsDataInput<
+interface ApplyLabelsToSinglyGroupedRechartsDataInput<
+  TPrimaryGroupingKey extends string,
+  TPrimaryGroupingKeyLabel extends string,
+  TData
+> {
+  rechartsData: Record<TPrimaryGroupingKey, TData>
+  primaryGroupingKeyToLabel?: (input: TPrimaryGroupingKey) => TPrimaryGroupingKeyLabel;
+}
+
+interface ApplyLabelsToSinglyGroupedRechartsDataOutput<
+  TPrimaryGroupingKeyLabel extends string,
+  TData
+> {
+  rechartsDataUsingLabels: Record<TPrimaryGroupingKeyLabel, TData>
+}
+
+export const applyLabelsToSinglyGroupedRechartsData = <
+  TPrimaryGroupingKey extends string,
+  TPrimaryGroupingKeyLabel extends string,
+  TData
+>(input: ApplyLabelsToSinglyGroupedRechartsDataInput<
+  TPrimaryGroupingKey,
+  TPrimaryGroupingKeyLabel,
+  TData
+>): ApplyLabelsToSinglyGroupedRechartsDataOutput<
+  TPrimaryGroupingKeyLabel,
+  TData
+> => {
+  return {
+    rechartsDataUsingLabels: typedObjectFromEntries(
+      typedObjectEntries(input.rechartsData)
+        .map(([key, value]) => [
+          input.primaryGroupingKeyToLabel ? input.primaryGroupingKeyToLabel(key) : key,
+          value
+        ])
+    )
+  }
+}
+
+interface ApplyLabelsToDoublyGroupedRechartsDataInput<
   TPrimaryGroupingKey extends string,
   TSecondaryGroupingKey extends Exclude<string, "primaryKey">,
   TPrimaryGroupingKeyLabel extends string,
@@ -14,7 +53,7 @@ interface ApplyLabelsToGroupedRechartsDataInput<
   secondaryGroupingKeyToLabel?: (input: TSecondaryGroupingKey) => TSecondaryGroupingKeyLabel;
 }
 
-interface ApplyLabelsToGroupedRechartsDataOutput<
+interface ApplyLabelsToDoublyGroupedRechartsDataOutput<
   TPrimaryGroupingKey extends string,
   TSecondaryGroupingKey extends Exclude<string, "primaryKey">,
   TPrimaryGroupingKeyLabel extends string,
@@ -26,17 +65,17 @@ interface ApplyLabelsToGroupedRechartsDataOutput<
   >)[];
 }
 
-export const applyLabelsToGroupedRechartsData = <
+export const applyLabelsToDoublyGroupedRechartsData = <
   TPrimaryGroupingKey extends string,
   TSecondaryGroupingKey extends Exclude<string, "primaryKey">,
   TPrimaryGroupingKeyLabel extends string,
   TSecondaryGroupingKeyLabel extends string
->(input: ApplyLabelsToGroupedRechartsDataInput<
+>(input: ApplyLabelsToDoublyGroupedRechartsDataInput<
   TPrimaryGroupingKey,
   TSecondaryGroupingKey,
   TPrimaryGroupingKeyLabel,
   TSecondaryGroupingKeyLabel
->): ApplyLabelsToGroupedRechartsDataOutput<
+>): ApplyLabelsToDoublyGroupedRechartsDataOutput<
   TPrimaryGroupingKey,
   TSecondaryGroupingKey,
   TPrimaryGroupingKeyLabel,

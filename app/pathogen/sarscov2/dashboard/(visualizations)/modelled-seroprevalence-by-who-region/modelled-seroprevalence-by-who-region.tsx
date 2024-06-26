@@ -6,6 +6,7 @@ import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/p
 import { dateToMonthCount, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
 import { WhoRegion } from "@/gql/graphql";
 import { BestFitCurveLineChart } from "@/components/customs/visualizations/best-fit-curve-line-chart";
+import { LineChartTwo } from "@/components/customs/visualizations/line-chart-two";
 
 const barColoursForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Afr]: "#e15759",
@@ -71,33 +72,69 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
   );
 
   return (
-    <BestFitCurveLineChart
+    <LineChartTwo 
       graphId="modelled-sc2-seroprevalence-by-who-region"
-      data={consideredData}
+      data={[{
+        whoRegion: WhoRegion.Afr,
+        xAxisValue: 10,
+        yAxisValue: 20
+      }, {
+        whoRegion: WhoRegion.Afr,
+        xAxisValue: 15,
+        yAxisValue: 30
+      }, {
+        whoRegion: WhoRegion.Afr,
+        xAxisValue: 25,
+        yAxisValue: 100
+      }]}
+      scatterPointData={[{
+        whoRegion: WhoRegion.Afr,
+        xAxisValue: 10,
+        yAxisValue: 25
+      }, {
+        whoRegion: WhoRegion.Afr,
+        xAxisValue: 15,
+        yAxisValue: 35
+      }]}
       primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
+      scatterPointPrimaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
       primaryGroupingSortFunction={(whoRegionA, whoRegionB) => whoRegionA > whoRegionB ? 1 : -1}
-      dataPointToXAxisValue={({ dataPoint }) => dateToMonthCount(dataPoint.samplingMidDate)}
-      xAxisValueToLabel={({ xAxisValue }) => monthCountToMonthYearString(xAxisValue)}
-      xAxisLabelSortingFunction={(xAxisLabelA, xAxisLabelB) => monthYearStringToMonthCount(xAxisLabelA) - monthYearStringToMonthCount(xAxisLabelB)}
-      dataPointToYAxisValue={({ dataPoint }) => {
-        const seroprevalenceDecimalValue = isAcceptableSarsCov2EstimateWithNumerator(dataPoint)
-          ? dataPoint.numeratorValue / dataPoint.denominatorValue
-          : (dataPoint.seroprevalence * dataPoint.denominatorValue) / dataPoint.denominatorValue
-
-        return parseFloat((seroprevalenceDecimalValue * 100).toFixed(1))
+      getLineColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
+      yAxisTickSettings={{
+        percentageFormattingEnabled: true
       }}
-      getLineColour={({ primaryGroupingKey }) => barColoursForWhoRegions[primaryGroupingKey]}
-      bestFitLineSettings={{
-        maximumPolynomialOrder: 2,
-        yAxisDomain: {
-          maximumValue: 100,
-          minimumValue: 0
-        },
-        allowStrictlyIncreasingLinesOnly: true
-      }}
-      formatYAxisValue={({ yAxisValue }) => parseFloat((yAxisValue).toFixed(1))}
       legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
-      percentageFormattingEnabled={true}
     />
-  );
+  )
+
+  //return (
+  //  <BestFitCurveLineChart
+  //    graphId="modelled-sc2-seroprevalence-by-who-region"
+  //    data={consideredData}
+  //    primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
+  //    primaryGroupingSortFunction={(whoRegionA, whoRegionB) => whoRegionA > whoRegionB ? 1 : -1}
+  //    dataPointToXAxisValue={({ dataPoint }) => dateToMonthCount(dataPoint.samplingMidDate)}
+  //    xAxisValueToLabel={({ xAxisValue }) => monthCountToMonthYearString(xAxisValue)}
+  //    xAxisLabelSortingFunction={(xAxisLabelA, xAxisLabelB) => monthYearStringToMonthCount(xAxisLabelA) - monthYearStringToMonthCount(xAxisLabelB)}
+  //    dataPointToYAxisValue={({ dataPoint }) => {
+  //      const seroprevalenceDecimalValue = isAcceptableSarsCov2EstimateWithNumerator(dataPoint)
+  //        ? dataPoint.numeratorValue / dataPoint.denominatorValue
+  //        : (dataPoint.seroprevalence * dataPoint.denominatorValue) / dataPoint.denominatorValue
+
+  //      return parseFloat((seroprevalenceDecimalValue * 100).toFixed(1))
+  //    }}
+  //    getLineColour={({ primaryGroupingKey }) => barColoursForWhoRegions[primaryGroupingKey]}
+  //    bestFitLineSettings={{
+  //      maximumPolynomialOrder: 2,
+  //      yAxisDomain: {
+  //        maximumValue: 100,
+  //        minimumValue: 0
+  //      },
+  //      allowStrictlyIncreasingLinesOnly: true
+  //    }}
+  //    formatYAxisValue={({ yAxisValue }) => parseFloat((yAxisValue).toFixed(1))}
+  //    legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
+  //    percentageFormattingEnabled={true}
+  //  />
+  //);
 }

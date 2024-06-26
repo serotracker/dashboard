@@ -14,7 +14,7 @@ import {
 } from "recharts";
 import { LegendConfiguration } from "./stacked-bar-chart";
 import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from './group-data-for-recharts/group-data-for-recharts-twice';
-import { applyLabelsToGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
+import { applyLabelsToDoublyGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
 
 interface LineChartProps<
   TData,
@@ -65,7 +65,7 @@ export const LineChart = <
     transformOutputValue: props.transformOutputValue,
   });
 
-  const { rechartsDataUsingLabels } = useMemo(() => applyLabelsToGroupedRechartsData({
+  const { rechartsDataUsingLabels } = useMemo(() => applyLabelsToDoublyGroupedRechartsData({
     rechartsData,
     primaryGroupingKeyToLabel,
     secondaryGroupingKeyToLabel
