@@ -115,6 +115,8 @@ export const Header = () => {
       setTitleSuffix("Arbo");
     } else if (pathname.includes("sarscov2")) {
       setTitleSuffix("SC2");
+    } else if (pathname.includes("mers")) {
+      setTitleSuffix("MERS");
     } else {
       setTitleSuffix("Sero");
     }
