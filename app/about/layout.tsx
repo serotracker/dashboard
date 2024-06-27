@@ -1,23 +1,22 @@
 import getQueryClient from "@/components/customs/getQueryClient";
-import { notFound } from "next/navigation";
 import request from "graphql-request";
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 import { groupedTeamMembers } from "@/hooks/useGroupedTeamMemberData";
 import { AboutPageProvider } from "./about-page-context";
 import { NavigationSidebar } from "@/components/ui/navigation-sidebar/navigation-sidebar";
 
-export enum AboutPageSidebarOption {
+enum AboutPageSidebarOption {
   DATA_EXTRACTION = "DATA_EXTRACTION",
   FAQ = "FAQ",
   SEROTRACKER_TEAM = "SEROTRACKER_TEAM",
 }
 
-interface AboutPageBaseLayoutProps {
-  currentSidebarOption: AboutPageSidebarOption;
+export interface AboutPageBaseLayoutProps {
   children: React.ReactNode;
 }
 
-export default async function AboutPageBaseLayout (props: AboutPageBaseLayoutProps) {
+
+export default async function AboutPageBaseLayout(props: AboutPageBaseLayoutProps) {
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
@@ -57,7 +56,7 @@ export default async function AboutPageBaseLayout (props: AboutPageBaseLayoutPro
             />
           </div>
           <div className="lg:col-span-8 h-full lg:row-span-2 overflow-y-scroll p-12">
-              {props.children}
+            {props.children}
           </div>
         </div>
       </Hydrate>
