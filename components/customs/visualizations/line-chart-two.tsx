@@ -35,6 +35,10 @@ interface LineChartTwoProps<
   getLineColour: (secondaryKey: TPrimaryGroupingKey, index: number) => string;
   xAxisTickSettings?: {
     domain?: [number, number];
+    tickFormatter: (value: number) => string;
+    interval?: number;
+    tickCount?: number;
+    ticks?: number[];
   };
   yAxisTickSettings: {
     percentageFormattingEnabled?: boolean;
@@ -150,13 +154,17 @@ export const LineChartTwo = <
 
   const rechartsData = [
     ...lineRechartsData,
-    ...scatterPointRechartsData
+    ...(props.scatterPointsVisible ? scatterPointRechartsData : [])
   ]
 
   let xAxisProps: XAxisProps = {
     dataKey: "xAxisValue",
     domain: props.xAxisTickSettings?.domain !== undefined ? props.xAxisTickSettings.domain : undefined,
-    type: 'number'
+    type: 'number',
+    ...(props.xAxisTickSettings?.interval ? { interval: props.xAxisTickSettings.interval } : {}),
+    ...(props.xAxisTickSettings?.tickCount ? { tickCount: props.xAxisTickSettings.tickCount } : {}),
+    ...(props.xAxisTickSettings?.ticks ? { ticks: props.xAxisTickSettings.ticks } : {}),
+    ...(props.xAxisTickSettings?.tickFormatter ? { tickFormatter: props.xAxisTickSettings.tickFormatter } : {})
   };
 
   const legendProps =
@@ -177,8 +185,18 @@ export const LineChartTwo = <
           },
         };
 
-  const tooltipPercentageFormatter: TooltipContentFormatter<number, string> = (value) => `${value.toFixed(1)}%`
+  const tooltipFormatter: TooltipContentFormatter<number, string> = (yAxisValue, yAxisValueLabel) => [
+    yAxisValueLabel,
+    props.yAxisTickSettings.percentageFormattingEnabled ? `${yAxisValue.toFixed(1)}%` : yAxisValue
+  ]
+  const tooltipLabelFormatter: (xAxisValue: number) => string | number = (xAxisValue) => {
+    if(!props.xAxisTickSettings?.tickFormatter) {
+      return xAxisValue;
+    }
 
+    return props.xAxisTickSettings.tickFormatter(xAxisValue);
+  }
+  
   return (
     <ResponsiveContainer width={"100%"}>
       <ComposedChart
@@ -200,7 +218,8 @@ export const LineChartTwo = <
         />
         <Tooltip
           itemStyle={{"color": "black"}}
-          {...(props.yAxisTickSettings.percentageFormattingEnabled ? {formatter: tooltipPercentageFormatter} : {})}
+          formatter={tooltipFormatter}
+          labelFormatter={tooltipLabelFormatter}
         />
         <Legend {...legendProps} />
         {linePrimaryKeys.map((primaryKey, index) => (

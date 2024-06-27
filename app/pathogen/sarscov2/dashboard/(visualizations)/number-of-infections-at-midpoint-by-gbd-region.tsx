@@ -1,12 +1,10 @@
 import { useMemo } from 'react';
-import { AreaChart } from "@/components/customs/visualizations/area-chart";
 import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { generateRandomColour, generateRange } from "@/lib/utils";
 import { useContext } from "react";
 import { GbdSuperRegion } from "@/gql/graphql";
 import { gbdSuperRegionToLabelMap } from '@/lib/gbd-regions';
-import { MonthlySarsCov2CountryInformationContext } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/monthly-sarscov2-country-information-context";
-import { pipe } from "fp-ts/lib/function.js";
+import { pipe } from "fp-ts/lib/function";
 import { LineChart } from '@/components/customs/visualizations/line-chart';
 import { LegendConfiguration } from '@/components/customs/visualizations/stacked-bar-chart';
 

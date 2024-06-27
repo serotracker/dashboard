@@ -31,6 +31,9 @@ interface BestFitCurveLineChartTwoProps<
   getLineColour: (secondaryKey: TPrimaryGroupingKey, index: number) => string;
   xAxisTickSettings?: {
     domain?: [number, number];
+    tickFormatter: (value: number) => string;
+    interval?: number;
+    tickCount?: number;
     ticks?: number[];
   };
   yAxisTickSettings: {
@@ -104,9 +107,6 @@ export const BestFitCurveLineChartTwo = <
         return element.yAxisValue >= previousElement.yAxisValue;
       })
     );
-
-  console.log('lineData', lineData);
-  console.log('props.data', props.data);
 
   return (
     <LineChartTwo 

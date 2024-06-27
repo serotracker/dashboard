@@ -1,10 +1,11 @@
 import { useContext, useMemo } from "react";
+import { pipe } from "fp-ts/lib/function";
 import parseISO from 'date-fns/parseISO';
 import uniq from 'lodash/uniq'
 
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
-import { dateToDayCount, dateToMonthCount, monthCountToDate, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
+import { dateToDayCount, dateToMonthCount, dayCountToDate, monthCountToDate, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
 import { WhoRegion } from "@/gql/graphql";
 import { BestFitCurveLineChartTwo } from "@/components/customs/visualizations/best-fit-curve-line-chart-two";
 
@@ -57,13 +58,13 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
 
   const consideredData = useMemo(() => state.filteredData
     .filter((dataPoint: SarsCov2Estimate): dataPoint is AcceptableSarsCov2Estimate => 
-        !!dataPoint.samplingMidDate
-        && !!dataPoint.whoRegion
-        && dataPoint.denominatorValue !== null && dataPoint.denominatorValue !== undefined
-        && (
-          (dataPoint.numeratorValue !== null && dataPoint.numeratorValue !== undefined)
-          || (dataPoint.seroprevalence !== null && dataPoint.seroprevalence !== undefined)
-        )
+      !!dataPoint.samplingMidDate
+      && !!dataPoint.whoRegion
+      && dataPoint.denominatorValue !== null && dataPoint.denominatorValue !== undefined
+      && (
+        (dataPoint.numeratorValue !== null && dataPoint.numeratorValue !== undefined)
+        || (dataPoint.seroprevalence !== null && dataPoint.seroprevalence !== undefined)
+      )
     ).map((dataPoint) => ({
       ...dataPoint,
       samplingMidDate: parseISO(dataPoint.samplingMidDate),
@@ -93,6 +94,13 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
       getLineColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
       xAxisTickSettings={{
         domain: [minimumXAxisTick, maximumXAxisTick],
+        tickFormatter: (dayCount) => pipe(
+          dayCount,
+          dayCountToDate,
+          dateToMonthCount,
+          monthCountToMonthYearString
+        ),
+        interval: 0,
       }}
       yAxisTickSettings={{
         percentageFormattingEnabled: true

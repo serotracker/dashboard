@@ -34,14 +34,6 @@ export const useBestFitCurve = () => {
       return regressionYAxisValue / 10_000;
     }
 
-    console.log(
-      input.data.map(({ xAxisValue, yAxisValue }) => [
-        xAxisValueToRegressionXAxisValue(xAxisValue),
-        yAxisValueToRegressionYAxisValue(yAxisValue)
-      ]),
-    )
-
-
     const bestFitEquationCoefficients = polynomial(
       input.data.map(({ xAxisValue, yAxisValue }) => [
         xAxisValueToRegressionXAxisValue(xAxisValue),
