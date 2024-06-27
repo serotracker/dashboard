@@ -6,12 +6,13 @@ import { SarsCov2Filters } from "../dashboard/filters";
 import { 
   getUrlParameterFromVisualizationId,
   isSarsCov2VisualizationUrlParameter,
-  sarsCov2VisualizationInformationArray
+  useVisualizationPageConfiguration,
 } from "./visualization-page-config";
 import { Suspense, useContext } from "react";
 
 export default function VisualizationsPage() {
   const { filteredData } = useContext(SarsCov2Context);
+  const { sarsCov2VisualizationInformationArray } = useVisualizationPageConfiguration();
 
   return (
     <Suspense>

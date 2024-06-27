@@ -48,10 +48,11 @@ export enum ArbovirusVisualizationUrlParameter {
   "country-seroprevalence-comparison-scatter-plot" = "country-seroprevalence-comparison-scatter-plot",
 }
 
-export type ArbovirusVisualizationInformation = VisualizationInformation<
+export type ArbovirusVisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
   ArbovirusVisualizationId,
   ArbovirusVisualizationUrlParameter,
-  ArbovirusEstimate
+  ArbovirusEstimate,
+  TDropdownOption
 >;
 
 export const isArbovirusVisualizationUrlParameter = (
@@ -59,7 +60,7 @@ export const isArbovirusVisualizationUrlParameter = (
 ): visualizationUrlParameter is ArbovirusVisualizationUrlParameter =>
   Object.values(ArbovirusVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, ArbovirusVisualizationInformation> = {
+export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, ArbovirusVisualizationInformation<string>> = {
   [ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS]: {
     id: ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS,
     urlParameter:

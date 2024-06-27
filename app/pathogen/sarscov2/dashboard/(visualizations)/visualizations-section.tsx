@@ -3,10 +3,12 @@ import { cn } from '@/lib/utils';
 import { RechartsVisualization } from "../../../../../components/customs/visualizations/recharts-visualization";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { SarsCov2VisualizationId, SarsCov2VisualizationInformation, getUrlParameterFromVisualizationId, sarsCov2VisualizationInformation } from "../../visualizations/visualization-page-config";
+import { SarsCov2VisualizationId, SarsCov2VisualizationInformation, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 
 export const SarsCov2VisualizationsSection = () => {
+  const { sarsCov2VisualizationInformation } = useVisualizationPageConfiguration();
+
   const allVisualizationInformationWithClassnames = addToVisualizationInformation({
     additionalInformation: {
       [SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION]: { className: "h-full-screen" },
@@ -28,7 +30,7 @@ export const SarsCov2VisualizationsSection = () => {
 
   const { filteredData } = useContext(SarsCov2Context);
 
-  const renderVisualizationList = useCallback((visualizationList: Array<SarsCov2VisualizationInformation & {className: string}>) => {
+  const renderVisualizationList = useCallback(<TDropdownOption extends string>(visualizationList: Array<SarsCov2VisualizationInformation<TDropdownOption> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

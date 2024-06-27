@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from "./group-data-for-recharts/group-data-for-recharts-twice";
 import { useMemo } from "react";
-import { applyLabelsToGroupedRechartsData } from "./group-data-for-recharts/apply-labels-to-grouped-recharts-data";
+import { applyLabelsToDoublyGroupedRechartsData } from "./group-data-for-recharts/apply-labels-to-grouped-recharts-data";
 
 interface AreaChartProps<
   TData,
@@ -70,7 +70,7 @@ export const AreaChart = <
     } : {})
   };
 
-  const { rechartsDataUsingLabels } = useMemo(() => applyLabelsToGroupedRechartsData({
+  const { rechartsDataUsingLabels } = useMemo(() => applyLabelsToDoublyGroupedRechartsData({
     rechartsData,
     primaryGroupingKeyToLabel,
     secondaryGroupingKeyToLabel

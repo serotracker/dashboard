@@ -1,7 +1,16 @@
-import { ButtonConfig, CloseButtonAdditionalButtonConfig, DownloadButtonAdditionalButtonConfig, GetUrlParameterFromVisualizationIdFunction, VisualizationHeader, ZoomInButtonAdditionalButtonConfig } from "./visualization-header";
-import { useDownloadVisualization } from "./use-download-visualization";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import {
+  ButtonConfig,
+  CloseButtonAdditionalButtonConfig,
+  DownloadButtonAdditionalButtonConfig,
+  GetUrlParameterFromVisualizationIdFunction,
+  VisualizationHeader,
+  ZoomInButtonAdditionalButtonConfig
+} from "./visualization-header";
+import { useDownloadVisualization } from "./use-download-visualization";
+import { ModalState, useModal } from "@/components/ui/modal/modal";
 
 interface RechartsVisualizationButtonConfig {
   zoomInButton: ButtonConfig<ZoomInButtonAdditionalButtonConfig>;
@@ -12,12 +21,14 @@ interface RechartsVisualizationButtonConfig {
 interface RechartsVisualizationProps<
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
-  TEstimate extends Record<string, unknown>
+  TEstimate extends Record<string, unknown>,
+  TDropdownOption extends string
 > {
   visualizationInformation: VisualizationInformation<
     TVisualizationId,
     TVisualizationUrlParameter,
-    TEstimate
+    TEstimate,
+    TDropdownOption
   >;
   data: TEstimate[];
   highlightedDataPoint: TEstimate | undefined;
@@ -30,21 +41,31 @@ interface RechartsVisualizationProps<
 export const RechartsVisualization = <
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
-  TEstimate extends Record<string, unknown>
+  TEstimate extends Record<string, unknown>,
+  TDropdownOption extends string
 >(
   props: RechartsVisualizationProps<
     TVisualizationId,
     TVisualizationUrlParameter,
-    TEstimate
+    TEstimate,
+    TDropdownOption
   >
 ) => {
   const { ref, downloadVisualization } = useDownloadVisualization({
     visualizationId: props.visualizationInformation.id
   });
 
+  const customizationModal = useModal(props.visualizationInformation.customizationModalConfiguration ?? {
+    initialModalState: ModalState.CLOSED,
+    headerText: 'Customize Visualization',
+    disabled: true as const,
+    modalType: undefined
+  });
+
   const downloadButtonId = `${props.visualizationInformation.id}-download-icon`
   const zoomInButtonId = `${props.visualizationInformation.id}-zoom-in-icon`
   const closeButtonId = `${props.visualizationInformation.id}-close-icon`
+  const customizeButtonId = `${props.visualizationInformation.id}-customize-icon`
 
   return (
     <div className={cn(props.className, 'flex flex-col rounded-md border border-background my-4 p-2')} ref={ref}>
@@ -52,7 +73,7 @@ export const RechartsVisualization = <
         visualizationInformation={props.visualizationInformation}
         data={props.data}
         downloadVisualization={() => downloadVisualization({
-          elementIdsToIgnore: [downloadButtonId, zoomInButtonId, closeButtonId]
+          elementIdsToIgnore: [downloadButtonId, zoomInButtonId, closeButtonId, customizeButtonId]
         })}
         getUrlParameterFromVisualizationId={props.getUrlParameterFromVisualizationId}
         buttonConfiguration={{
@@ -67,6 +88,14 @@ export const RechartsVisualization = <
           closeButton: {
             ...props.buttonConfig.closeButton,
             id: closeButtonId
+          },
+          customizeButton: props.visualizationInformation.customizationModalConfiguration ? {
+            enabled: true,
+            onClick: () => customizationModal.setModalState(ModalState.OPENED),
+            id: customizeButtonId
+          } : {
+            enabled: false,
+            id: customizeButtonId
           }
         }}
       />
@@ -77,6 +106,7 @@ export const RechartsVisualization = <
           hideArbovirusDropdown: props.hideArbovirusDropdown
         })}
       </div>
+      <customizationModal.modal />
     </div>
   );
 };
