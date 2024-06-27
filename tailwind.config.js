@@ -81,7 +81,7 @@ module.exports = {
         link: "#0000EE",
         "linkedin-icon": "#007ebb",
         "email-icon": "#495057",
-        "twitter-icon": "#1d9bf0",
+        "twitter-icon": "#000000",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
