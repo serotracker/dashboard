@@ -67,8 +67,7 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
     ).map((dataPoint) => ({
       ...dataPoint,
       samplingMidDate: parseISO(dataPoint.samplingMidDate),
-      //xAxisValue: dateToDayCount(parseISO(dataPoint.samplingMidDate)),
-      xAxisValue: dateToMonthCount(parseISO(dataPoint.samplingMidDate)),
+      xAxisValue: dateToDayCount(parseISO(dataPoint.samplingMidDate)),
       monthCount: dateToMonthCount(parseISO(dataPoint.samplingMidDate)),
       yAxisValue: isAcceptableSarsCov2EstimateWithSeroprevalence(dataPoint)
         ? dataPoint.seroprevalence * 100
@@ -77,10 +76,9 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
     [state.filteredData]
   );
 
-  //const xAxisTicks = uniq(consideredData.map(({ monthCount }) => monthCount))
-  //  .map((monthCount) => monthCountToDate(monthCount))
-  //  .map((date) => dateToDayCount(date) - 1_000_000);
-  const xAxisTicks = uniq(consideredData.map(({ xAxisValue }) => xAxisValue))
+  const xAxisTicks = uniq(consideredData.map(({ monthCount }) => monthCount))
+    .map((monthCount) => monthCountToDate(monthCount))
+    .map((date) => dateToDayCount(date));
 
   const maximumXAxisTick = Math.max(...xAxisTicks);
   const minimumXAxisTick = Math.min(...xAxisTicks);
