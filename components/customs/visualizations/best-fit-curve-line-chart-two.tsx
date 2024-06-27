@@ -21,6 +21,7 @@ interface BestFitCurveLineChartTwoProps<
 > {
   graphId: string;
   data: TData[];
+  scatterPointsVisible: boolean;
   primaryGroupingFunction: (data: TData) => TPrimaryGroupingKey | TPrimaryGroupingKey[];
   primaryGroupingSortFunction?: (
     a: TPrimaryGroupingKey,
@@ -29,7 +30,7 @@ interface BestFitCurveLineChartTwoProps<
   primaryGroupingKeyToLabel?: (input: TPrimaryGroupingKey) => string;
   getLineColour: (secondaryKey: TPrimaryGroupingKey, index: number) => string;
   xAxisTickSettings?: {
-    interval?: number;
+    domain?: [number, number];
     ticks?: number[];
   };
   yAxisTickSettings: {
@@ -50,11 +51,6 @@ export const BestFitCurveLineChartTwo = <
 ) => {
   const { generateBestFitCurve } = useBestFitCurve();
 
-  const { xAxisValueToYAxisValue } = generateBestFitCurve({
-    data: props.data,
-    maximumPolynomialOrder: props.bestFitLineSettings.maximumPolynomialOrder
-  });
-
   const { rechartsData: dataGroupedByPrimaryKey, allPrimaryKeys } = groupDataForRechartsOnce({
     data: props.data,
     primaryGroupingFunction: props.primaryGroupingFunction,
@@ -62,24 +58,55 @@ export const BestFitCurveLineChartTwo = <
     transformOutputValue: (({ data }) => data)
   })
 
-  const lineData = allPrimaryKeys.flatMap((primaryKey) => {
-    const dataForPrimaryKey = dataGroupedByPrimaryKey[primaryKey];
+  const lineData = allPrimaryKeys
+    .map((primaryKey) => {
+      const dataForPrimaryKey = dataGroupedByPrimaryKey[primaryKey];
 
-    const allXAxisValues = uniq(dataForPrimaryKey.map(({ xAxisValue }) => xAxisValue));
-    const smallestXAxisValue = Math.min(...allXAxisValues);
-    const largestXAxisValue = Math.max(...allXAxisValues);
+      const { xAxisValueToYAxisValue } = generateBestFitCurve({
+        data: dataForPrimaryKey,
+        maximumPolynomialOrder: props.bestFitLineSettings.maximumPolynomialOrder
+      });
 
-    return props.bestFitLineSettings.xAxisTicks
-      .filter((xAxisValue) => xAxisValue >= smallestXAxisValue && xAxisValue <= largestXAxisValue)
-      .map((xAxisValue) => ({
-        xAxisValue,
-        yAxisValue: xAxisValueToYAxisValue({ xAxisValue }),
-        primaryKey
-      }))
-  })
+      const allXAxisValues = uniq(dataForPrimaryKey.map(({ xAxisValue }) => xAxisValue));
+      const smallestXAxisValue = Math.min(...allXAxisValues);
+      const largestXAxisValue = Math.max(...allXAxisValues);
 
-  console.log('lineData', lineData)
-  console.log('scatterPointData', props.data)
+      return props.bestFitLineSettings.xAxisTicks
+        .filter((xAxisValue) => xAxisValue >= smallestXAxisValue && xAxisValue <= largestXAxisValue)
+        .map((xAxisValue) => ({
+          xAxisValue,
+          yAxisValue: xAxisValueToYAxisValue({ xAxisValue }),
+          primaryKey
+        }))
+    })
+    .flatMap((dataForPrimaryKey) => dataForPrimaryKey
+      .sort((elementA, elementB) => elementA.xAxisValue - elementB.xAxisValue)
+      .filter((element) =>
+        element.yAxisValue <= props.bestFitLineSettings.yAxisDomain.maximumValue &&
+        element.yAxisValue >= props.bestFitLineSettings.yAxisDomain.minimumValue
+      )
+      .filter((element, index, array) => {
+        if(!props.bestFitLineSettings.allowStrictlyIncreasingLinesOnly) {
+          return true;
+        }
+
+        if(index === 0 && array.length === 1) {
+          return true;
+        }
+        if(index === 0 && array.length > 1) {
+          const secondElement = array[1];
+
+          return element.yAxisValue <= secondElement.yAxisValue;
+        }
+
+        const previousElement = array[index - 1]
+
+        return element.yAxisValue >= previousElement.yAxisValue;
+      })
+    );
+
+  console.log('lineData', lineData);
+  console.log('props.data', props.data);
 
   return (
     <LineChartTwo 
@@ -90,6 +117,8 @@ export const BestFitCurveLineChartTwo = <
       scatterPointPrimaryGroupingFunction={props.primaryGroupingFunction}
       primaryGroupingSortFunction={props.primaryGroupingSortFunction}
       getLineColour={props.getLineColour}
+      xAxisTickSettings={props.xAxisTickSettings}
+      scatterPointsVisible={props.scatterPointsVisible}
       yAxisTickSettings={props.yAxisTickSettings}
       legendConfiguration={props.legendConfiguration}
     />

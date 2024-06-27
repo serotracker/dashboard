@@ -24,6 +24,7 @@ interface LineChartTwoProps<
   graphId: string;
   data: TData[];
   scatterPointData: TScatterPointData[];
+  scatterPointsVisible: boolean;
   primaryGroupingFunction: (data: TData) => TPrimaryGroupingKey | TPrimaryGroupingKey[];
   scatterPointPrimaryGroupingFunction: (data: TScatterPointData) => TPrimaryGroupingKey | TPrimaryGroupingKey[];
   primaryGroupingSortFunction?: (
@@ -33,7 +34,7 @@ interface LineChartTwoProps<
   primaryGroupingKeyToLabel?: (input: TPrimaryGroupingKey) => string;
   getLineColour: (secondaryKey: TPrimaryGroupingKey, index: number) => string;
   xAxisTickSettings?: {
-    interval?: number;
+    domain?: [number, number];
   };
   yAxisTickSettings: {
     percentageFormattingEnabled?: boolean;
@@ -154,7 +155,7 @@ export const LineChartTwo = <
 
   let xAxisProps: XAxisProps = {
     dataKey: "xAxisValue",
-    interval: props.xAxisTickSettings?.interval !== undefined ? props.xAxisTickSettings.interval : undefined,
+    domain: props.xAxisTickSettings?.domain !== undefined ? props.xAxisTickSettings.domain : undefined,
     type: 'number'
   };
 
@@ -195,7 +196,7 @@ export const LineChartTwo = <
         <XAxis {...xAxisProps} />
         <YAxis
           type='number'
-          {...(props.yAxisTickSettings.percentageFormattingEnabled ? {tickFormatter: (tick) => `${tick.toFixed(1)}%`} : {})}
+          {...(props.yAxisTickSettings.percentageFormattingEnabled ? {tickFormatter: (tick) => `${tick}%`} : {})}
         />
         <Tooltip
           itemStyle={{"color": "black"}}
@@ -216,7 +217,7 @@ export const LineChartTwo = <
             stroke={props.getLineColour(primaryKey, index)}
           />
         ))}
-        {scatterPointPrimaryKeys.map((primaryKey, index) => (
+        {props.scatterPointsVisible && (scatterPointPrimaryKeys.map((primaryKey, index) => (
           <Scatter
             legendType='none'
             name={props.primaryGroupingKeyToLabel
@@ -234,7 +235,7 @@ export const LineChartTwo = <
             }
             fill={props.getLineColour(primaryKey, index)}
           />
-        ))}
+        )))}
       </ComposedChart>
     </ResponsiveContainer>
   );

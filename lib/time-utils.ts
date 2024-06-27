@@ -49,6 +49,20 @@ export const dateToMonthCount = (date: Date): number => {
   return (date.getFullYear() * 12) + date.getMonth();
 }
 
+export const monthCountToDate = (monthCount: number): Date => {
+  return new Date(Math.floor(monthCount / 12), monthCount % 12, 1, 0, 0, 0, 0);
+}
+
+export const dateToDayCount = (date: Date): number => {
+  // valueOf is milliseconds since unix epoch. 1000ms per 1s, 60s per 1h, 24h per 1day
+  return Math.floor((((date.valueOf() / 1000) / 60) / 24));
+}
+
+export const dayCountToDate = (dayCount: number): Date => {
+  //1000ms per 1s, 60s per 1h, 24h per 1day
+  return new Date(dayCount * 1000 * 60 * 24);
+}
+
 interface DateFromYearAndMonthInput {
   year: number;
   month: Month;
