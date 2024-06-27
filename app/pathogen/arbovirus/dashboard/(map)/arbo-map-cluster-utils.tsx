@@ -6,37 +6,23 @@ import mapboxgl from "mapbox-gl";
 import React from "react";
 import { Marker, MarkerEvent, useMap } from "react-map-gl";
 
-type ArbovirusMarkerProperties = Record<string,unknown> & {
-  longitude: number;
-  latitude: number;
-  [Arbovirus.Zikv]: number;
-  [Arbovirus.Denv]: number;
-  [Arbovirus.Chikv]: number;
-  [Arbovirus.Yf]: number;
-  [Arbovirus.Wnv]: number;
-  [Arbovirus.Mayv]: number;
-}
-
-// This whole file will be custom for each of the pathogens themselves
-
 // code for creating an SVG donut chart from feature properties
-export function createDonutChartAndHoverPopup(props: {
-  properties: any;
+export function createDonutChartAndHoverPopup<
+  TClusterPropertyKey extends string
+>(props: {
+  properties: Record<TClusterPropertyKey, number>;
+  validClusterPropertyKeys: TClusterPropertyKey[];
+  clusterPropertyToColourMap: Record<TClusterPropertyKey, string>;
   map: mapboxgl.Map;
   coords: [number, number];
 }) {
   const offsets: number[] = [];
-  const counts = [
-    props.properties.ZIKV,
-    props.properties.DENV,
-    props.properties.CHIKV,
-    props.properties.YF,
-    props.properties.WNV,
-    props.properties.MAYV,
-  ];
-  const arboColorNames = ["ZIKV",  "DENV", "CHIKV", "YF", "WNV", "MAYV"];
+  const counts = props.validClusterPropertyKeys.map((propertyKey) => ({
+    count: props.properties[propertyKey],
+    propertyKey
+  }));
   let total = 0;
-  for (const count of counts) {
+  for (const { count } of counts) {
     offsets.push(total);
     total = total + count;
   }
@@ -57,33 +43,19 @@ export function createDonutChartAndHoverPopup(props: {
         </div>
         <div style="display: flex; flex-direction: row; justify-content: space-between; padding-bottom: 0.5rem">
             <div style="display: flex; flex-direction: column;">`;
-  if (props.properties.ZIKV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["ZIKV"]}">ZIKV</div>`;
-    if (props.properties.DENV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["DENV"]}">DENV</div>`;
-  if (props.properties.CHIKV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["CHIKV"]}">CHIKV</div>`;
-    if (props.properties.YF > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["YF"]}">YF</div>`;
-  if (props.properties.WNV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["WNV"]}">WNV</div>`;
-  if (props.properties.MAYV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${pathogenColors["MAYV"]}">MAYV</div>`;
+            props.validClusterPropertyKeys.forEach((clusterPropertyKey) => {
+              if(props.properties[clusterPropertyKey] > 0) {
+                popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem; padding-left: 5px; border-left: 5px solid ${props.clusterPropertyToColourMap[clusterPropertyKey]}">${clusterPropertyKey}</div>`;
+              }
+            })
   popupHTML += `</div>
             <div style="display: flex; flex-direction: column;">`;
 
-  if (props.properties.ZIKV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.ZIKV}</div>`;
-    if (props.properties.DENV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.DENV}</div>`;
-  if (props.properties.CHIKV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.CHIKV}</div>`;
-    if (props.properties.YF > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.YF}</div>`;
-  if (props.properties.WNV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.WNV}</div>`;
-  if (props.properties.MAYV > 0)
-    popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties.MAYV}</div>`;
+            props.validClusterPropertyKeys.forEach((clusterPropertyKey) => {
+              if(props.properties[clusterPropertyKey] > 0) {
+                popupHTML += `<div style="font-size: 0.875rem; font-weight: 300; margin-bottom: 0.25rem;">${props.properties[clusterPropertyKey]}</div>`;
+              }
+            })
   
   popupHTML += `</div>
         </div>
@@ -123,14 +95,9 @@ export function createDonutChartAndHoverPopup(props: {
 
   return {
     properties: {
+      ...props.properties,
       longitude: props.coords[0],
       latitude: props.coords[1],
-      [Arbovirus.Zikv]: props.properties.ZIKV,
-      [Arbovirus.Denv]: props.properties.DENV,
-      [Arbovirus.Chikv]: props.properties.CHIKV,
-      [Arbovirus.Yf]: props.properties.YF,
-      [Arbovirus.Wnv]: props.properties.WNV,
-      [Arbovirus.Mayv]: props.properties.MAYV,
     },
     element: (
       <svg
@@ -144,13 +111,13 @@ export function createDonutChartAndHoverPopup(props: {
         onMouseDown={(e) => {e.preventDefault(); e.stopPropagation()}}
         onClick={() => {popup.remove()}}
       >
-        {counts.map((count, i) =>
+        {counts.map(({ count, propertyKey }, i) =>
           donutSegment(
             offsets[i] / total,
             (offsets[i] + count) / total,
             piChartOuterRadius,
             piChartInnerRadius,
-            pathogenColors[arboColorNames[i]],
+            props.clusterPropertyToColourMap[propertyKey],
             `map-cluster-svg-path-${i}`
           )
         )}
@@ -224,12 +191,19 @@ export function createClusterPointMarker(props: {
 }
 
 // markers is a cached collection of already existing markers. 
-export function computeClusterMarkers(props: {
-  features: mapboxgl.MapboxGeoJSONFeature[];
-  markers: MarkerCollection<ArbovirusMarkerProperties>;
+export const computeClusterMarkers = <
+  TClusterPropertyKey extends string
+>(props: {
+  features: GeoJSON.Feature<
+    GeoJSON.Geometry,
+    { cluster: boolean, cluster_id: string } & Record<TClusterPropertyKey, number>
+  >[];
+  markers: MarkerCollection<TClusterPropertyKey>;
+  validClusterPropertyKeys: TClusterPropertyKey[];
+  clusterPropertyToColourMap: Record<TClusterPropertyKey, string>;
   map: mapboxgl.Map;
-}): MarkerCollection<ArbovirusMarkerProperties> {
-  const newMarkers: MarkerCollection<ArbovirusMarkerProperties> = {};
+}): MarkerCollection<TClusterPropertyKey> => {
+  const newMarkers: MarkerCollection<TClusterPropertyKey> = {};
   // for every cluster on the screen, create an HTML marker for it (if we didn't yet),
   // and add it to the map if it's not there already
   for (const feature of props.features) {
@@ -244,6 +218,8 @@ export function computeClusterMarkers(props: {
 
         const { element, properties: markerProperties } = createDonutChartAndHoverPopup({
           properties: properties,
+          validClusterPropertyKeys: props.validClusterPropertyKeys,
+          clusterPropertyToColourMap: props.clusterPropertyToColourMap,
           map: props.map,
           coords: [coords[0], coords[1]],
         });
@@ -252,12 +228,7 @@ export function computeClusterMarkers(props: {
           !!props.markers[id] &&
           markerProperties.latitude === props.markers[id].properties.latitude &&
           markerProperties.longitude === props.markers[id].properties.longitude &&
-          markerProperties[Arbovirus.Zikv] === props.markers[id].properties[Arbovirus.Zikv] &&
-          markerProperties[Arbovirus.Chikv] === props.markers[id].properties[Arbovirus.Chikv] &&
-          markerProperties[Arbovirus.Yf] === props.markers[id].properties[Arbovirus.Yf] &&
-          markerProperties[Arbovirus.Denv] === props.markers[id].properties[Arbovirus.Denv] &&
-          markerProperties[Arbovirus.Mayv] === props.markers[id].properties[Arbovirus.Mayv] &&
-          markerProperties[Arbovirus.Wnv] === props.markers[id].properties[Arbovirus.Wnv]
+          props.validClusterPropertyKeys.every((propertyKey) => markerProperties[propertyKey] === props.markers[id].properties[propertyKey])
         ) {
           newMarkers[id] = props.markers[id]
         }
