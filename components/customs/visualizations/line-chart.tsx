@@ -10,13 +10,10 @@ import {
   Legend,
   ResponsiveContainer,
   LineChart as RechartsLineChart,
-  Area,
-  Label,
   Line,
 } from "recharts";
-import { TransformOutputValueInput, groupDataForRecharts } from "./group-data-for-recharts";
 import { LegendConfiguration } from "./stacked-bar-chart";
-import { typedObjectEntries, typedObjectFromEntries } from '@/lib/utils';
+import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from './group-data-for-recharts/group-data-for-recharts-twice';
 
 interface LineChartProps<
   TData,
@@ -36,7 +33,7 @@ interface LineChartProps<
     b: TSecondaryGroupingKey
   ) => number;
   secondaryGroupingKeyToLabel?: (input: TSecondaryGroupingKey) => string;
-  transformOutputValue: (input: TransformOutputValueInput<
+  transformOutputValue: (input: DoubleGroupingTransformOutputValueInput<
     TData,
     TSecondaryGroupingKey
   >) => number;
@@ -56,7 +53,7 @@ export const LineChart = <
   props: LineChartProps<TData, TPrimaryGroupingKey, TSecondaryGroupingKey>
 ) => {
   const { secondaryGroupingKeyToLabel } = props;
-  const { rechartsData, allSecondaryKeys } = groupDataForRecharts({
+  const { rechartsData, allSecondaryKeys } = groupDataForRechartsTwice({
     data: props.data,
     primaryGroupingFunction: props.primaryGroupingFunction,
     primaryGroupingSortFunction: props.primaryGroupingSortFunction,
