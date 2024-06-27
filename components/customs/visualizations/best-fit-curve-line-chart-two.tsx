@@ -3,7 +3,7 @@ import { useBestFitCurve } from "./line-fitting/use-best-fit-curve";
 import { LegendConfiguration } from "./stacked-bar-chart";
 import { generateRange, typedGroupBy } from '@/lib/utils';
 import { groupDataForRechartsOnce } from './group-data-for-recharts/group-data-for-recharts-once';
-import { LineChartTwo } from './line-chart-two';
+import { NumericLineChart } from './numeric-line-chart';
 
 interface BestFitLineSettings {
   maximumPolynomialOrder: number;
@@ -15,7 +15,7 @@ interface BestFitLineSettings {
   allowStrictlyIncreasingLinesOnly: boolean;
 }
 
-interface BestFitCurveLineChartTwoProps<
+interface NumericBestFitCurveLineChartProps<
   TData extends Record<'xAxisValue', number> & Record<'yAxisValue', number>,
   TPrimaryGroupingKey extends string,
 > {
@@ -43,11 +43,11 @@ interface BestFitCurveLineChartTwoProps<
   legendConfiguration: LegendConfiguration;
 }
 
-export const BestFitCurveLineChartTwo = <
+export const NumericBestFitCurveLineChart = <
   TData extends Record<'xAxisValue', number> & Record<'yAxisValue', number>,
   TPrimaryGroupingKey extends string,
 >(
-  props: BestFitCurveLineChartTwoProps<
+  props: NumericBestFitCurveLineChartProps<
     TData,
     TPrimaryGroupingKey
   >
@@ -109,7 +109,7 @@ export const BestFitCurveLineChartTwo = <
     );
 
   return (
-    <LineChartTwo 
+    <NumericLineChart 
       graphId={props.graphId}
       data={lineData}
       scatterPointData={props.data}

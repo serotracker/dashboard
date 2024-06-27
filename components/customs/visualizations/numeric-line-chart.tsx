@@ -16,7 +16,7 @@ import { groupDataForRechartsOnce } from './group-data-for-recharts/group-data-f
 import { typedObjectEntries, typedObjectFromEntries } from '@/lib/utils';
 import { Formatter as TooltipContentFormatter } from 'recharts/types/component/DefaultTooltipContent';
 
-interface LineChartTwoProps<
+interface NumericLineChartProps<
   TData extends Record<'xAxisValue', number> & Record<'yAxisValue', number>,
   TScatterPointData extends Record<'xAxisValue', number> & Record<'yAxisValue', number>,
   TPrimaryGroupingKey extends string,
@@ -116,12 +116,12 @@ const getGroupedAndLabelledData = <
   }
 }
 
-export const LineChartTwo = <
+export const NumericLineChart = <
   TData extends Record<'xAxisValue', number> & Record<'yAxisValue', number>,
   TScatterPointData extends Record<'xAxisValue', number> & Record<'yAxisValue', number>,
   TPrimaryGroupingKey extends string,
 >(
-  props: LineChartTwoProps<
+  props: NumericLineChartProps<
     TData,
     TScatterPointData,
     TPrimaryGroupingKey

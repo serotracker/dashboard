@@ -7,7 +7,7 @@ import { LegendConfiguration } from "@/components/customs/visualizations/stacked
 import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { dateToDayCount, dateToMonthCount, dayCountToDate, monthCountToDate, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
 import { WhoRegion } from "@/gql/graphql";
-import { BestFitCurveLineChartTwo } from "@/components/customs/visualizations/best-fit-curve-line-chart-two";
+import { NumericBestFitCurveLineChart } from "@/components/customs/visualizations/best-fit-curve-line-chart-two";
 
 const barColoursForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Afr]: "#e15759",
@@ -85,7 +85,7 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
   const minimumXAxisTick = Math.min(...xAxisTicks);
 
   return (
-    <BestFitCurveLineChartTwo 
+    <NumericBestFitCurveLineChart 
       graphId="modelled-sc2-seroprevalence-by-who-region"
       data={consideredData}
       scatterPointsVisible={props.scatterPointsVisible}
