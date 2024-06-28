@@ -21,6 +21,12 @@ import {
   isMersFaoHumanEventMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
 
+const MapPinColours: Record<'HumanMersEvent'|'AnimalMersEvent'|'MersEstimate', string> = {
+  'HumanMersEvent': "#8abded",
+  'AnimalMersEvent': "#ed8ac7",
+  'MersEstimate': "#e7ed8a"
+};
+
 export const MersMap = () => {
   const state = useContext(MersContext);
   const { data } = useMersData();
@@ -45,12 +51,20 @@ export const MersMap = () => {
               cursor: "pointer",
               filter: ["!", ["has", "point_count"]],
               layerPaint: {
-                "circle-color": '#094180',
-                "circle-radius": 11,
-                "circle-stroke-color": 'black',
-                "circle-stroke-width": 3,
-                "circle-stroke-opacity": 1,
-                "circle-opacity": 1,
+                "circle-color": [
+                  "match",
+                  ["get", "__typename"],
+                  "HumanMersEvent",
+                  `${MapPinColours['HumanMersEvent']}`,
+                  "AnimalMersEvent",
+                  `${MapPinColours['AnimalMersEvent']}`,
+                  "MersEstimate",
+                  `${MapPinColours['MersEstimate']}`,
+                  "#FFFFFF"
+                ],
+                "circle-radius": 8,
+                "circle-stroke-color": "#333333",
+                "circle-stroke-width": 1,
               },
             },
           ]}

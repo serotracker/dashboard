@@ -124,6 +124,13 @@ export type CountryIdentifiers = {
   name: Scalars['String']['output'];
 };
 
+export type FaoMersEventFilterOptions = {
+  __typename?: 'FaoMersEventFilterOptions';
+  animalSpecies: Array<MersEventAnimalSpecies>;
+  animalType: Array<MersEventAnimalType>;
+  diagnosisSource: Array<MersDiagnosisSource>;
+};
+
 export enum GbdSubRegion {
   CentralEuropeEasternEuropeAndCentralAsiaSubregionCentralAsia = 'CENTRAL_EUROPE_EASTERN_EUROPE_AND_CENTRAL_ASIA_SUBREGION_CENTRAL_ASIA',
   CentralEuropeEasternEuropeAndCentralAsiaSubregionCentralEurope = 'CENTRAL_EUROPE_EASTERN_EUROPE_AND_CENTRAL_ASIA_SUBREGION_CENTRAL_EUROPE',
@@ -280,6 +287,26 @@ export type PartitionedFeoMersEventsOutput = {
   partitionKey: Scalars['Int']['output'];
 };
 
+export type PartitionedMonthlySarsCov2CountryInformationInput = {
+  partitionKey: Scalars['Int']['input'];
+};
+
+export type PartitionedMonthlySarsCov2CountryInformationOutput = {
+  __typename?: 'PartitionedMonthlySarsCov2CountryInformationOutput';
+  monthlySarsCov2CountryInformation: Array<MonthlySarsCov2CountryInformationEntry>;
+  partitionKey: Scalars['Int']['output'];
+};
+
+export type PartitionedSarsCov2EstimatesInput = {
+  partitionKey: Scalars['Int']['input'];
+};
+
+export type PartitionedSarsCov2EstimatesOutput = {
+  __typename?: 'PartitionedSarsCov2EstimatesOutput';
+  partitionKey: Scalars['Int']['output'];
+  sarsCov2Estimates: Array<SarsCov2Estimate>;
+};
+
 export type PartitionedYearlyFaoCamelPopulationDataInput = {
   partitionKey: Scalars['Int']['input'];
 };
@@ -293,14 +320,19 @@ export type PartitionedYearlyFaoCamelPopulationDataOutput = {
 export type Query = {
   __typename?: 'Query';
   allFaoMersEventPartitionKeys: Array<Scalars['Int']['output']>;
+  allMonthlySarsCov2CountryInformationPartitionKeys: Array<Scalars['Int']['output']>;
+  allSarsCov2EstimatePartitionKeys: Array<Scalars['Int']['output']>;
   arbovirusDataStatistics: ArbovirusDataStatistics;
   arbovirusEstimates: Array<ArbovirusEstimate>;
   arbovirusFilterOptions: ArbovirusFilterOptions;
+  faoMersEventFilterOptions: FaoMersEventFilterOptions;
   groupedTeamMembers: Array<TeamMemberGroup>;
   mersEstimates: Array<MersEstimate>;
   mersFilterOptions: MersFilterOptions;
   monthlySarsCov2CountryInformation: Array<MonthlySarsCov2CountryInformationEntry>;
   partitionedFaoMersEvents: PartitionedFeoMersEventsOutput;
+  partitionedMonthlySarsCov2CountryInformation: PartitionedMonthlySarsCov2CountryInformationOutput;
+  partitionedSarsCov2Estimates: PartitionedSarsCov2EstimatesOutput;
   partitionedYearlyFaoCamelPopulationData: PartitionedYearlyFaoCamelPopulationDataOutput;
   sarsCov2Estimates: Array<SarsCov2Estimate>;
   sarsCov2FilterOptions: SarsCov2FilterOptions;
@@ -310,6 +342,16 @@ export type Query = {
 
 export type QueryPartitionedFaoMersEventsArgs = {
   input: PartitionedFaoMersEventsInput;
+};
+
+
+export type QueryPartitionedMonthlySarsCov2CountryInformationArgs = {
+  input: PartitionedMonthlySarsCov2CountryInformationInput;
+};
+
+
+export type QueryPartitionedSarsCov2EstimatesArgs = {
+  input: PartitionedSarsCov2EstimatesInput;
 };
 
 
