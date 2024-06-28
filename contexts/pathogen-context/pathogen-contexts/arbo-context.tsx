@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useEffect, useMemo } from "react";
-import { PathogenContextActionType, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
+import { PathogenContextActionType, PathogenContextState, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
 import { useArboData } from "@/hooks/arbovirus/useArboData";
 import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
 import { CountryDataContext } from "../country-information-context";
@@ -16,14 +16,17 @@ const initialArboContextState = {
   dataFiltered: false,
 }
 
-export const ArboContext = createContext<PathogenContextType<ArbovirusEstimate>>({
+type ArbovirusContextState = PathogenContextState<ArbovirusEstimate>;
+type ArbovirusContextType = PathogenContextType<ArbovirusEstimate, ArbovirusContextState>;
+
+export const ArboContext = createContext<ArbovirusContextType>({
   ...initialArboContextState,
   dispatch: (obj) => {
     console.debug("dispatch not initialized", obj);
   },
 });
 
-const ArboDataFetcher = (props: PathogenDataFetcherProps<ArbovirusEstimate>): React.ReactNode => {
+const ArboDataFetcher = (props: PathogenDataFetcherProps<ArbovirusEstimate, ArbovirusContextState>): React.ReactNode => {
   const dataQuery = useArboData();
 
   useEffect(() => {

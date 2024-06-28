@@ -111,7 +111,6 @@ const categorizeIntoBuckets = (input: CategorizeIntoBucketsInput): CategorizeInt
 
 export const NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegion = () => {
   const state = useContext(SarsCov2Context);
-  const { lookupOptimizedSarsCov2CountryInformation } = useContext(MonthlySarsCov2CountryInformationContext);
 
   const consideredData = useMemo(() => state.filteredData
     .filter((dataPoint: SarsCov2Estimate): dataPoint is EligibleSarsCov2EstimateForVisualization =>
@@ -121,7 +120,7 @@ export const NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegio
       && dataPoint.countryPositiveCasesPerMillionPeople !== undefined
       && dataPoint.countryPositiveCasesPerMillionPeople !== null 
     )
-  , [state.filteredData, lookupOptimizedSarsCov2CountryInformation]);
+  , [ state.filteredData ]);
 
   const { dataPoints, ratioBuckets } = useMemo(() => pipe(
     { dataPoints: consideredData },

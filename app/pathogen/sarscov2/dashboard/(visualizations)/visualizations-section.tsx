@@ -33,6 +33,8 @@ export const SarsCov2VisualizationsSection = () => {
       <RechartsVisualization
         key={visualizationInformation.id}
         data={filteredData}
+        highlightedDataPoint={undefined}
+        hideArbovirusDropdown={undefined}
         visualizationInformation={visualizationInformation}
         className={cn(visualizationInformation.className, 'pb-14')}
         buttonConfig={{

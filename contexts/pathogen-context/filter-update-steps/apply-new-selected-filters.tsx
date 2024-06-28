@@ -2,6 +2,29 @@ import {
   HandleFilterUpdateInput,
   HandleFilterUpdateOutput,
 } from "../../pathogen-context/filter-update-steps";
+import { PathogenContextState } from "../pathogen-context";
+
+interface DefaultDataFilterHandlerInput {
+  item: Record<string, string[] | string>;
+  key: string;
+  filters: Record<string, string[]>;
+}
+
+const defaultDataFilterHandler = (input: DefaultDataFilterHandlerInput): boolean => {
+  const { item, key, filters } = input;
+
+  const value = input.item[input.key]
+
+  if (Array.isArray(value)) {
+    // If item[key] is an array, check if any element of item[key] is included in filters[key]
+    return value.some((element: string) =>
+      filters[key].includes(element)
+    );
+  } else {
+    // If item[key] is a string, check if it's included in filters[key]
+    return filters[key].includes(value);
+  }
+}
 
 export function filterData(
   data: any[],
@@ -77,8 +100,8 @@ export function filterData(
             return true; // Handle invalid date
           }
 
-          const itemStartDate = new Date(item.samplingStartDate);
-          let itemEndDate = new Date(item.samplingEndDate);
+          const itemStartDate = new Date(item.sampleStartDate);
+          const itemEndDate = new Date(item.sampleEndDate);
 
           // Check for any overlap in the sampling period
           return (
@@ -92,8 +115,8 @@ export function filterData(
             return true; // Handle invalid date
           }
 
-          const itemStartDate = new Date(item.sampleStartDate);
-          const itemEndDate = new Date(item.sampleEndDate);
+          const itemStartDate = new Date(item.samplingStartDate);
+          const itemEndDate = new Date(item.samplingEndDate);
 
           // Check for any overlap in the sampling period
           return (
@@ -110,6 +133,29 @@ export function filterData(
         case "whoRegion": {
           return filters["countryAlphaTwoCode"]?.includes(item["countryAlphaTwoCode"]) || filters["unRegion"]?.includes(item["unRegion"]) || filters["whoRegion"]?.includes(item["whoRegion"]);
         }
+        case "diagnosisSource": {
+          if(item['__typename'] === 'AnimalMersEvent' || item['__typename'] === 'HumanMersEvent') {
+            return defaultDataFilterHandler({
+              item,
+              key,
+              filters
+            });
+          }
+
+          return true;
+        }
+        case "animalSpecies":
+        case "animalType": {
+          if(item['__typename'] === 'AnimalMersEvent') {
+            return defaultDataFilterHandler({
+              item,
+              key,
+              filters
+            });
+          }
+
+          return true;
+        }
         case "esm": {
           switch(filters["esm"][0]){
             case "zika": 
@@ -122,24 +168,23 @@ export function filterData(
           }
         }
         default: {
-          if (Array.isArray(item[key])) {
-            // If item[key] is an array, check if any element of item[key] is included in filters[key]
-            return item[key].some((element: string) =>
-              filters[key].includes(element)
-            );
-          } else {
-            // If item[key] is a string, check if it's included in filters[key]
-            return filters[key].includes(item[key]);
-          }
+          return defaultDataFilterHandler({
+            item,
+            key,
+            filters
+          });
         }
       }
     });
   });
 }
 
-export const applyNewSelectedFilters = <TData extends Record<string, unknown>>(
-  input: HandleFilterUpdateInput<TData>
-): HandleFilterUpdateOutput<TData> => ({
+export const applyNewSelectedFilters = <
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+>(
+  input: HandleFilterUpdateInput<TData, TPathogenContextState>
+): HandleFilterUpdateOutput<TData, TPathogenContextState> => ({
   ...input,
   state: {
     ...input.state,
