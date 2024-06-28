@@ -1,20 +1,26 @@
-import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
+import { PathogenContextState, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import SectionHeader from "../SectionHeader";
 import React from "react";
 import { FieldInformation } from "./available-filters";
 import { SendFilterChangeDispatch } from "../filters";
 
-export interface FilterSectionProps<TEstimate extends Record<string, unknown>> {
+export interface FilterSectionProps<
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+> {
   headerText: string;
   headerTooltipText: string;
-  state: PathogenContextType<TEstimate>;
+  state: PathogenContextType<TEstimate, TPathogenContextState>;
   allFieldInformation: FieldInformation[];
   filters: any;
-  data: TEstimate[];
+  data: TEstimate[] | Record<string, unknown>;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
 }
 
-export const FilterSection = <TEstimate extends Record<string, unknown>>(props: FilterSectionProps<TEstimate>) => (
+export const FilterSection = <
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+>(props: FilterSectionProps<TEstimate, TPathogenContextState>) => (
   <div className="p-0">
     <SectionHeader
       headerText={props.headerText}

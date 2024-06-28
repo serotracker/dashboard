@@ -12,7 +12,7 @@ import {
   Area,
   Label,
 } from "recharts";
-import { TransformOutputValueInput, groupDataForRecharts } from "./group-data-for-recharts";
+import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from "./group-data-for-recharts/group-data-for-recharts-twice";
 
 interface AreaChartProps<
   TData,
@@ -31,7 +31,7 @@ interface AreaChartProps<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  transformOutputValue: (input: TransformOutputValueInput<
+  transformOutputValue: (input: DoubleGroupingTransformOutputValueInput<
     TData,
     TSecondaryGroupingKey
   >) => number;
@@ -48,7 +48,7 @@ export const AreaChart = <
 >(
   props: AreaChartProps<TData, TPrimaryGroupingKey, TSecondaryGroupingKey>
 ) => {
-  const { rechartsData, allSecondaryKeys } = groupDataForRecharts({
+  const { rechartsData, allSecondaryKeys } = groupDataForRechartsTwice({
     data: props.data,
     primaryGroupingFunction: props.primaryGroupingFunction,
     primaryGroupingSortFunction: props.primaryGroupingSortFunction,

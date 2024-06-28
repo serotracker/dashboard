@@ -7,33 +7,39 @@
 
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { useArboData } from "@/hooks/useArboData";
 import { ArbovirusEstimatePopupContent } from "./arbovirus-estimate-pop-up-content";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
 import { ArboCountryPopupContent } from "./arbo-country-pop-up-content";
-import { computeClusterMarkers } from "./arbo-map-cluster-utils";
-import { MapShadingLegend } from "./MapShadingLegend";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
+import { Arbovirus } from "@/gql/graphql";
+import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
+import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-highlight-layers/data-point-present-layer";
+import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
-export const pathogenColors: { [key: string]: string } = {
-  ZIKV: "#A0C4FF",
-  CHIKV: "#9BF6FF",
-  WNV: "#CAFFBF",
-  DENV: "#FFADAD",
-  YF: "#FFD6A5",
-  MAYV: "#c5a3ff",
+export const pathogenColors: Record<Arbovirus, string> = {
+  [Arbovirus.Zikv]: "#a0c4ff",
+  [Arbovirus.Chikv]: "#9bf6ff",
+  [Arbovirus.Wnv]: "#caffbf",
+  [Arbovirus.Denv]: "#ffadad",
+  [Arbovirus.Yf]: "#ffd6a5",
+  [Arbovirus.Mayv]: "#c5a3ff",
 };
 
 export function ArbovirusMap() {
-  
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
-  const state = useContext(ArboContext);
+  const { filteredData, selectedFilters }= useContext(ArboContext);
   const { data } = useArboData();
+  const { getCountryHighlightingLayerInformation } = useDataPointPresentLayer();
+
+  const { paint, countryHighlightLayerLegendEntries } = useMemo(() => getCountryHighlightingLayerInformation({
+    data: filteredData
+  }), [filteredData, getCountryHighlightingLayerInformation]);
 
   if (!data) {
     return <span> Loading... </span>;
@@ -84,19 +90,24 @@ export function ArbovirusMap() {
           
             return <ArbovirusEstimatePopupContent estimate={input.data} />
           }}
-          dataPoints={state.filteredData}
+          dataPoints={filteredData}
           clusteringSettings={{
             clusteringEnabled: true,
+            headerText: "Estimate Count",
+            popUpWidth: GenericMapPopUpWidth.AUTO,
             clusterProperties: {
-              ZIKV: ["+", ["case", ["==", ["get", "pathogen"], "ZIKV"], 1, 0]],
-              CHIKV: ["+", ["case", ["==", ["get", "pathogen"], "CHIKV"], 1, 0]],
-              WNV: ["+", ["case", ["==", ["get", "pathogen"], "WNV"], 1, 0]],
-              DENV: ["+", ["case", ["==", ["get", "pathogen"], "DENV"], 1, 0]],
-              YF: ["+", ["case", ["==", ["get", "pathogen"], "YF"], 1, 0]],
-              MAYV: ["+", ["case", ["==", ["get", "pathogen"], "MAYV"], 1, 0]],
+              [Arbovirus.Zikv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Zikv], 1, 0]],
+              [Arbovirus.Chikv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Chikv], 1, 0]],
+              [Arbovirus.Wnv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Wnv], 1, 0]],
+              [Arbovirus.Denv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Denv], 1, 0]],
+              [Arbovirus.Yf]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Yf], 1, 0]],
+              [Arbovirus.Mayv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Mayv], 1, 0]],
             },
-            computeClusterMarkers
+            validClusterPropertyKeys: Object.values(Arbovirus),
+            clusterPropertyKeysIncludedInSum: Object.values(Arbovirus),
+            clusterPropertyToColourMap: pathogenColors
           }}
+          paint={paint}
         />
       </div>
       <MapArbovirusStudySubmissionPrompt 
@@ -104,8 +115,17 @@ export function ArbovirusMap() {
         onClose={() => setStudySubmissionPromptVisibility(false)}
         className={"absolute bottom-1 left-1 mx-auto w-1/2 text-center bg-white/60 backdrop-blur-md"}
       />
-      <MapShadingLegend className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"} />
-      <MapEstimateSummary filteredData={state.filteredData}/>
+      <CountryHighlightLayerLegend
+        className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"}
+        legendEntries={[
+          ...countryHighlightLayerLegendEntries,
+          ...(selectedFilters.esm?.length > 0 ? [{
+            colour: "#000000",
+            description: "Suitable Environment"
+          }] : [])
+        ]}
+      />
+      <MapEstimateSummary filteredData={filteredData}/>
     </>
   );
 }

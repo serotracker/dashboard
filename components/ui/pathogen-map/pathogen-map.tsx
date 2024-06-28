@@ -20,11 +20,16 @@ import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-laye
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
 import { EsmMapSourceAndLayer } from "./esm-maps";
-import { WeekNumberLabel } from "react-day-picker";
+import { computeClusterMarkers } from "@/app/pathogen/arbovirus/dashboard/(map)/arbo-map-cluster-utils";
+import { GenericMapPopUpWidth } from "./map-pop-up/generic-map-pop-up";
+import { CountryHighlightLayerLegendEntry } from "./country-highlight-layers/country-highlight-layer-legend";
 
-export interface MarkerCollection<TMarkerProperties extends Record<string, unknown>> {
+export interface MarkerCollection<TClusterPropertyKey extends string> {
   [key: string]: {
-    properties: TMarkerProperties;
+    properties: Record<TClusterPropertyKey, number> & {
+      latitude: number;
+      longitude: number;
+    };
     element: JSX.Element;
   }
 }
@@ -35,40 +40,62 @@ export interface PathogenDataPointPropertiesBase {
   longitude: number | undefined;
 }
 
-interface ClusteringEnabledSettings<TMarkerProperties extends Record<string, unknown>> {
-  clusteringEnabled: true,
-  computeClusterMarkers: (props: {
-    features: mapboxgl.MapboxGeoJSONFeature[];
-    markers: MarkerCollection<TMarkerProperties>;
-    map: mapboxgl.Map;
-  }) => MarkerCollection<TMarkerProperties>;
-  clusterProperties: { [key: string]: any };
+interface ClusteringEnabledSettings<TClusterPropertyKey extends string> {
+  clusteringEnabled: true;
+  headerText: string;
+  popUpWidth: GenericMapPopUpWidth;
+  validClusterPropertyKeys: TClusterPropertyKey[];
+  clusterPropertyKeysIncludedInSum: TClusterPropertyKey[];
+  clusterProperties: Record<TClusterPropertyKey, unknown>;
+  clusterPropertyToColourMap: Record<TClusterPropertyKey, string>;
 }
 
 interface ClusteringDisabledSettings {
   clusteringEnabled: false,
 }
 
-export type ClusteringSettings<TMarkerProperties extends Record<string, unknown>> = ClusteringEnabledSettings<TMarkerProperties> | ClusteringDisabledSettings;
+export type ClusteringSettings<TClusterPropertyKey extends string> = ClusteringEnabledSettings<TClusterPropertyKey> | ClusteringDisabledSettings;
+
+export interface GetCountryHighlightingLayerInformationInput<
+  TData extends Record<string, unknown>
+> {
+  data: TData[];
+}
+
+export interface PaintForCountries {
+  countryData: Array<{
+    countryAlphaThreeCode: string;
+    fill: string;
+    opacity: number;
+  }>;
+  defaults: {
+    fill: string;
+    opacity: number;
+  }
+}
+
+export type GetCountryHighlightingLayerInformationOutput = {
+  paint: PaintForCountries;
+  countryHighlightLayerLegendEntries: CountryHighlightLayerLegendEntry[];
+};
 
 interface PathogenMapProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
-  TMarkerProperties extends Record<string, unknown>
+  TClusterPropertyKey extends string
 > {
   id: string;
   baseCursor: PathogenMapCursor;
   layers: PathogenMapLayerInfo[];
   generatePopupContent: PopupContentGenerator<TPathogenDataPointProperties>;
   dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
-  clusteringSettings: ClusteringSettings<TMarkerProperties>;
+  clusteringSettings: ClusteringSettings<TClusterPropertyKey>;
+  paint: PaintForCountries;
   sourceId: string;
 }
 
-
-
 export function PathogenMap<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
-  TMarkerProperties extends Record<string, unknown>
+  TClusterPropertyKey extends string
 >({
   id,
   baseCursor,
@@ -76,8 +103,12 @@ export function PathogenMap<
   layers,
   dataPoints,
   clusteringSettings,
+  paint,
   sourceId,
-}: PathogenMapProps<TPathogenDataPointProperties, TMarkerProperties>) {
+}: PathogenMapProps<
+  TPathogenDataPointProperties,
+  TClusterPropertyKey
+>) {
   const [popUpInfo, _setPopUpInfo] = useState<
     PopupInfo<TPathogenDataPointProperties>
   >({ visible: false, properties: null, layerId: null });
@@ -100,7 +131,7 @@ export function PathogenMap<
     _setPopUpInfo(newPopUpInfo);
   }
 
-  const [markersOnScreen, setMarkersOnScreen] = useState<MarkerCollection<TMarkerProperties>>({});
+  const [markersOnScreen, setMarkersOnScreen] = useState<MarkerCollection<TClusterPropertyKey>>({});
 
   const { cursor, onMouseLeave, onMouseEnter, onMouseDown } =
     usePathogenMapMouse({
@@ -124,13 +155,21 @@ export function PathogenMap<
   const onRender = (event: mapboxgl.MapboxEvent) => {
     const map = event.target;
     if (map) {
-      const features = map.querySourceFeatures(sourceId);
+      const features = map.querySourceFeatures(sourceId) as any as GeoJSON.Feature<
+        GeoJSON.Geometry,
+        { cluster: boolean, cluster_id: string } & Record<TClusterPropertyKey, number>
+      >[];
 
       if(clusteringSettings.clusteringEnabled === true) {
         // This needs to be standardized. How? Can we be type specific probable not? 
-        const newMarkers = clusteringSettings.computeClusterMarkers({
+        const newMarkers = computeClusterMarkers({
           features,
+          headerText: clusteringSettings.headerText,
+          popUpWidth: clusteringSettings.popUpWidth,
           markers: markersOnScreen,
+          validClusterPropertyKeys: clusteringSettings.validClusterPropertyKeys,
+          clusterPropertyKeysIncludedInSum: clusteringSettings.clusterPropertyKeysIncludedInSum,
+          clusterPropertyToColourMap: clusteringSettings.clusterPropertyToColourMap,
           map
         });
 
@@ -164,20 +203,27 @@ export function PathogenMap<
       onRender={onRender}
     >
       <NavigationControl showCompass={false} />
-      <EsmMapSourceAndLayer popupLayerId={layerForCountryHighlighting?.id}/>
-      <PathogenCountryHighlightLayer
-        positionedUnderLayerWithId={layerForCountryHighlighting?.id}
-        dataPoints={dataPoints}
+      <EsmMapSourceAndLayer
+        popupLayerId={layerForCountryHighlighting?.id}
       />
-      <PathogenMapSourceAndLayer layers={layers} dataPoints={dataPoints} clusteringSettings={clusteringSettings} sourceId={sourceId}/>
+      <PathogenCountryHighlightLayer
+        paint={paint}
+        positionedUnderLayerWithId={layerForCountryHighlighting?.id}
+      />
+      <PathogenMapSourceAndLayer
+        layers={layers}
+        dataPoints={dataPoints}
+        clusteringSettings={clusteringSettings}
+        sourceId={sourceId}
+      />
       <PathogenMapPopup
         mapId={id}
         popUpInfo={popUpInfo}
         generatePopupContent={generatePopupContent}
       />
       {Object.keys(markersOnScreen).map(
-      (id) => markersOnScreen[id]?.element
-    )}
+        (id) => markersOnScreen[id]?.element
+      )}
     </Map>
   );
 }
