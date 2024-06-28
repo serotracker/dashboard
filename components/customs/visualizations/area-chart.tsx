@@ -12,7 +12,9 @@ import {
   Area,
   Label,
 } from "recharts";
-import { TransformOutputValueInput, groupDataForRecharts } from "./group-data-for-recharts";
+import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from "./group-data-for-recharts/group-data-for-recharts-twice";
+import { useMemo } from "react";
+import { applyLabelsToGroupedRechartsData } from "./group-data-for-recharts/apply-labels-to-grouped-recharts-data";
 
 interface AreaChartProps<
   TData,
@@ -26,12 +28,15 @@ interface AreaChartProps<
     a: TPrimaryGroupingKey,
     b: TPrimaryGroupingKey
   ) => number;
+  primaryGroupingKeyToLabel?: (input: TPrimaryGroupingKey) => string;
+  allPrimaryGroups?: TPrimaryGroupingKey[];
   secondaryGroupingFunction: (data: TData) => TSecondaryGroupingKey | TSecondaryGroupingKey[];
   secondaryGroupingSortFunction?: (
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  transformOutputValue: (input: TransformOutputValueInput<
+  secondaryGroupingKeyToLabel?: (input: TSecondaryGroupingKey) => string;
+  transformOutputValue: (input: DoubleGroupingTransformOutputValueInput<
     TData,
     TSecondaryGroupingKey
   >) => number;
@@ -48,7 +53,8 @@ export const AreaChart = <
 >(
   props: AreaChartProps<TData, TPrimaryGroupingKey, TSecondaryGroupingKey>
 ) => {
-  const { rechartsData, allSecondaryKeys } = groupDataForRecharts({
+  const { primaryGroupingKeyToLabel, secondaryGroupingKeyToLabel, primaryGroupingSortFunction } = props;
+  const { rechartsData, allSecondaryKeys } = groupDataForRechartsTwice({
     data: props.data,
     primaryGroupingFunction: props.primaryGroupingFunction,
     primaryGroupingSortFunction: props.primaryGroupingSortFunction,
@@ -60,7 +66,18 @@ export const AreaChart = <
   let xAxisProps: XAxisProps = {
     dataKey: "primaryKey",
     interval: props.xAxisTickSettings?.interval !== undefined ? props.xAxisTickSettings.interval : undefined,
+    ...(props.allPrimaryGroups ? {
+      ticks: primaryGroupingSortFunction
+        ? props.allPrimaryGroups.sort((primaryGroupA, primaryGroupB) => primaryGroupingSortFunction(primaryGroupA, primaryGroupB))
+        : props.allPrimaryGroups
+    } : {})
   };
+
+  const { rechartsDataUsingLabels } = useMemo(() => applyLabelsToGroupedRechartsData({
+    rechartsData,
+    primaryGroupingKeyToLabel,
+    secondaryGroupingKeyToLabel
+  }), [rechartsData, primaryGroupingKeyToLabel, secondaryGroupingKeyToLabel]);
 
   return (
     <ResponsiveContainer width={"100%"}>
@@ -73,7 +90,7 @@ export const AreaChart = <
         }}
         width={730}
         height={500}
-        data={rechartsData}
+        data={rechartsDataUsingLabels}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis {...xAxisProps} />
@@ -84,7 +101,7 @@ export const AreaChart = <
           <Area
             key={secondaryKey}
             type="monotone"
-            dataKey={secondaryKey}
+            dataKey={props.secondaryGroupingKeyToLabel ? props.secondaryGroupingKeyToLabel(secondaryKey) : secondaryKey}
             stackId="1"
             stroke={props.getBarColour(secondaryKey)}
             fill={props.getBarColour(secondaryKey)}

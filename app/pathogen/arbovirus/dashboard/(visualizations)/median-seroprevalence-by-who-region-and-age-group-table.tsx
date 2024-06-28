@@ -21,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import { useChartArbovirusDropdown } from "./chart-arbovirus-dropdown";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { WhoRegion } from "@/gql/graphql";
 
 enum AgeGroup {
@@ -48,6 +48,9 @@ const ageGroupToSortOrderMap: {[key in AgeGroup]: number } = {
   [AgeGroup["Multiple groups"]]: 4
 };
 
+const zeroValuedColourHexCode = "#f9f1f0";
+const oneValuedColourHexCode = "#f79489";
+
 const getMedianSeroprevalenceInformationFromData = (
   input: GetMedianSeroprevalenceInformationFromDataInput
 ): GetMedianSeroprevalenceInformationFromDataOutput => {
@@ -68,8 +71,8 @@ const getMedianSeroprevalenceInformationFromData = (
   const backgroundColourHexCode =
     seroprevalenceNumber !== undefined
       ? mixColours({
-          zeroValuedColourHexCode: "#f9f1f0",
-          oneValuedColourHexCode: "#f79489",
+          zeroValuedColourHexCode,
+          oneValuedColourHexCode,
           value: seroprevalenceNumber / 100,
         })
       : "#ffffff";
@@ -181,9 +184,25 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
 
   return (
     <div className="p-2">
-      <div className="flex justify-between mb-2 ignore-for-visualization-download">
+      <div className="flex justify-between mb-2">
         {chartArbovirusDropdown}
-        <div className="space-x-2 justify-between">
+        <div className="grow flex justify-center"> 
+          <p className="hidden lg:flex items-center"> Seroprevalence: </p>
+          {[0, 0.25, 0.5, 0.75, 1].map((value) => (
+            <div className="items-center inline-flex mx-2 my-1" key={value}>
+              <div
+                className={`w-[1em] h-[1em] border-2 border-gray-500 mr-2`}
+                style={{ backgroundColor: mixColours({
+                  zeroValuedColourHexCode,
+                  oneValuedColourHexCode,
+                  value
+                })}}
+              ></div>
+              <p>{`${(value * 100).toFixed(0)}%`}</p>
+            </div>
+          ))}
+        </div>
+        <div className="space-x-2 justify-between ignore-for-visualization-download">
           <Button
             variant="outline"
             size="sm"

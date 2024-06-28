@@ -97,7 +97,6 @@ export const MersProviders = (props: MersProvidersProps) => {
       countryDataProvider={CountryDataProvider}
       context={MersContext}
       mapId={"mersMap"}
-      // TODO: FILTERING ON FAO MERS EVENTS AND SEROPREVALENCE ESTIMATES
       filterUpdateHandlerOverride={(filterUpdateData) => pipe(
         filterUpdateData,
         addActionToSelectedFilters,
