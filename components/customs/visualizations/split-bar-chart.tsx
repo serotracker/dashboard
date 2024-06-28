@@ -7,12 +7,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { TransformOutputValueInput, groupDataForRecharts } from "./group-data-for-recharts";
 import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
 import clsx from "clsx";
 import { typedObjectKeys } from "@/lib/utils";
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
 import { CustomXAxisTick } from "./custom-x-axis-tick";
+import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from "./group-data-for-recharts/group-data-for-recharts-twice";
 
 interface SplitBarChartProps<
   TData,
@@ -31,7 +31,7 @@ interface SplitBarChartProps<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  transformOutputValue: (input: TransformOutputValueInput<
+  transformOutputValue: (input: DoubleGroupingTransformOutputValueInput<
     TData,
     TSecondaryGroupingKey
   >) => number;
@@ -53,7 +53,7 @@ export const SplitBarChart = <
 >(
   props: SplitBarChartProps<TData, TPrimaryGroupingKey, TSecondaryGroupingKey>
 ) => {
-  const { rechartsData } = groupDataForRecharts({
+  const { rechartsData } = groupDataForRechartsTwice({
     data: props.data,
     primaryGroupingFunction: props.primaryGroupingFunction,
     primaryGroupingSortFunction: props.primaryGroupingSortFunction,

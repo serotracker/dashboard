@@ -1,6 +1,7 @@
 import SeroMap from "../public/SeroMap.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faLungs,
   faMosquito,
   faVirus,
   IconDefinition,
@@ -23,7 +24,6 @@ import { SeroTrackerIntroduction } from "./serotracker-introduction";
 
 interface TrackerButtonProps {
   titleSuffix: string;
-  description: string;
   icon: IconDefinition;
   textColor: string;
   bgColor: string;
@@ -106,7 +106,6 @@ export default async function Home() {
                 */}
                 <TrackerButton
                   titleSuffix="Arbo"
-                  description="ArboTracker description"
                   icon={faMosquito}
                   bgColor="bg-arbovirus"
                   textColor="text-arbovirus"
@@ -121,7 +120,6 @@ export default async function Home() {
                 {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED ? (
                   <TrackerButton
                     titleSuffix="SC2"
-                    description="SeroTracker description"
                     icon={faVirus}
                     bgColor="bg-sc2virus"
                     textColor="text-sc2virus"
@@ -131,11 +129,25 @@ export default async function Home() {
                 ) : (
                   <TrackerButton
                     titleSuffix="Original SARS-CoV-2"
-                    description="SeroTracker description"
                     icon={faVirus}
                     bgColor="bg-sc2virus"
                     textColor="text-sc2virus"
                     href={"https://serotracker.com/en/Explore"}
+                    className="mt-4"
+                  />
+                )}
+                {/*
+                hover:bg-mers
+                hover:text-mers
+                group-hover:text-mers
+                */}
+                {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && (
+                  <TrackerButton
+                    titleSuffix="MERS"
+                    icon={faLungs}
+                    bgColor="bg-mers"
+                    textColor="text-mers"
+                    href={"/pathogen/mers/dashboard"}
                     className="mt-4"
                   />
                 )}

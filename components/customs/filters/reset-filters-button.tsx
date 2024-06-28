@@ -1,14 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { PathogenContextActionType, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
+import { PathogenContextActionType, PathogenContextState, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { useCallback } from "react";
 
-interface ResetFiltersButtonProps<TEstimate extends Record<string, unknown>> {
-  state: PathogenContextType<TEstimate>;
+interface ResetFiltersButtonProps<
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+> {
+  state: PathogenContextType<TEstimate, TPathogenContextState>;
   hidden: boolean;
   data: TEstimate[];
 }
 
-export const ResetFiltersButton = <TEstimate extends Record<string, unknown>>(props: ResetFiltersButtonProps<TEstimate>) => {
+export const ResetFiltersButton = <
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+>(props: ResetFiltersButtonProps<TEstimate, TPathogenContextState>) => {
   const resetFilters = useCallback(() => {
     // Dispatch action to reset filters
     props.state.dispatch({
