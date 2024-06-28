@@ -3,7 +3,6 @@
 import React, { useContext } from "react";
 import { Filters } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
-import { useSarsCov2Data } from "@/hooks/sarscov2/useSarsCov2Data";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
 import { useSarsCov2Filters } from "@/hooks/sarscov2/useSarsCov2Filters";
 
@@ -13,7 +12,6 @@ interface SarsCov2FiltersProps {
 
 export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   const state = useContext(SarsCov2Context);
-  const { data } = useSarsCov2Data();
   const { data: filterData } = useSarsCov2Filters();
 
   const studyScopeFilters = [
@@ -96,7 +94,7 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
           countryAlphaTwoCode: filterData.sarsCov2FilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode)
         } : {}
       }
-      data={data?.sarsCov2Estimates ?? []}
+      data={state.filteredData ?? []}
       resetAllFiltersButtonEnabled={true}
     />
   )
