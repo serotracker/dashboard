@@ -3,7 +3,9 @@ import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 
 interface MersEstimatePopupContentProps {
-  estimate: MersEstimate;
+  estimate: {
+    country: string
+  };
 }
 
 export const MersEstimatePopupContent = (props: MersEstimatePopupContentProps) => {

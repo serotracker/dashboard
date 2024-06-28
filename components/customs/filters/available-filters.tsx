@@ -1,4 +1,4 @@
-import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
+import { PathogenContextState, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { DateFilter } from "./date-filter";
 import { MultiSelectFilter } from "./multi-select-filter";
 import { unRegionEnumToLabelMap } from "@/lib/un-regions";
@@ -24,16 +24,25 @@ export interface FieldInformation {
   clearAllButtonText?: string;
 }
 
-interface RenderTooltipContentInput<TEstimate extends Record<string, unknown>> {
-  state: PathogenContextType<TEstimate>;
+interface RenderTooltipContentInput<
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+> {
+  state: PathogenContextType<TEstimate, TPathogenContextState>;
 }
 
-export type TooltipContentRenderingFunction = <TEstimate extends Record<string, unknown>>(input: RenderTooltipContentInput<TEstimate>) => React.ReactNode;
+export type TooltipContentRenderingFunction = <
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+>(input: RenderTooltipContentInput<TEstimate, TPathogenContextState>) => React.ReactNode;
 
-interface FilterRenderingFunctionInput<TEstimate extends Record<string, unknown>> {
+interface FilterRenderingFunctionInput<
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+> {
   filter: string;
   placeholder: string;
-  state: PathogenContextType<TEstimate>;
+  state: PathogenContextType<TEstimate, TPathogenContextState>;
   filterOptions: string[];
   data: TEstimate[];
   optionToLabelMap: Record<string, string | undefined>;
@@ -44,7 +53,10 @@ interface FilterRenderingFunctionInput<TEstimate extends Record<string, unknown>
   clearAllButtonText: string;
 }
 
-type FilterRenderingFunction = <TEstimate extends Record<string, unknown>>(input: FilterRenderingFunctionInput<TEstimate>) => React.ReactNode;
+type FilterRenderingFunction = <
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+>(input: FilterRenderingFunctionInput<TEstimate, TPathogenContextState>) => React.ReactNode;
 
 export enum FilterableField {
   ageGroup = "ageGroup",

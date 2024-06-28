@@ -2,6 +2,7 @@ import {
   HandleFilterUpdateInput,
   HandleFilterUpdateOutput,
 } from "../../pathogen-context/filter-update-steps";
+import { PathogenContextState } from "../pathogen-context";
 
 export function filterData(
   data: any[],
@@ -137,9 +138,12 @@ export function filterData(
   });
 }
 
-export const applyNewSelectedFilters = <TData extends Record<string, unknown>>(
-  input: HandleFilterUpdateInput<TData>
-): HandleFilterUpdateOutput<TData> => ({
+export const applyNewSelectedFilters = <
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+>(
+  input: HandleFilterUpdateInput<TData, TPathogenContextState>
+): HandleFilterUpdateOutput<TData, TPathogenContextState> => ({
   ...input,
   state: {
     ...input.state,

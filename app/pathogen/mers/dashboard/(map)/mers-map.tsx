@@ -9,12 +9,14 @@ import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/
 import { useMersData } from "@/hooks/mers/useMersData";
 import { MersCountryPopupContent } from "./mers-country-pop-up-content";
 import { MersEstimatePopupContent } from "./mers-estimate-pop-up-content";
+import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
 
 export const MersMap = () => {
   const state = useContext(MersContext);
   const { data } = useMersData();
+  const { faoMersEvents } = useFaoMersEventData();
 
-  if (!data) {
+  if (!data || !faoMersEvents) {
     return <span> Loading... </span>;
   }
 
@@ -49,10 +51,15 @@ export const MersMap = () => {
             if(isPopupCountryHighlightLayerContentGeneratorInput(input)) {
               return <MersCountryPopupContent record={input.data} />
             }
-          
+
             return <MersEstimatePopupContent estimate={input.data} />
           }}
-          dataPoints={state.filteredData}
+          dataPoints={[...state.filteredData, ...(state.faoMersEventData.map((element) => ({
+            ...element,
+            country: element.country.name,
+            countryAlphaThreeCode: element.country.alphaThreeCode,
+            countryAlphaTwoCode: element.country.alphaTwoCode
+          })))]}
           />
       </div>
       <MapShadingLegend className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"} />

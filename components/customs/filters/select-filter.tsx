@@ -1,5 +1,5 @@
 import { Select } from "@/components/customs/select";
-import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
+import { PathogenContextState, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { GenericFilter } from "./generic-filter";
 import { TooltipContentRenderingFunction } from "./available-filters";
 import { SendFilterChangeDispatch } from "../filters";
@@ -15,19 +15,25 @@ export enum BooleanSelectOptionString {
   FALSE = 'FALSE'
 }
 
-export interface SelectFilterProps<TEstimate extends Record<string, unknown>> {
+export interface SelectFilterProps<
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+> {
   filter: string;
   placeholder: string;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
-  state: PathogenContextType<TEstimate>;
+  state: PathogenContextType<TEstimate, TPathogenContextState>;
   data: TEstimate[];
   selectFilterType: SelectFilterType;
   filterOptions: Array<string | undefined | null>;
   optionToLabelMap: Record<string, string | undefined>;
 }
 
-export const SelectFilter = <TEstimate extends Record<string, unknown>>(props: SelectFilterProps<TEstimate>) => (
+export const SelectFilter = <
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+>(props: SelectFilterProps<TEstimate, TPathogenContextState>) => (
   <GenericFilter
     filter={props.filter}
     state={props.state}
