@@ -1,8 +1,11 @@
-import { DropdownCustomizationSetting } from "./dropdown-customization-setting";
+import { DropdownCustomizationSettingProps } from "./dropdown-customization-setting";
+import { SwitchCustomizationSettingProps } from "./switch-customization-settings";
 
 export enum CustomizationSettingType {
-  DROPDOWN = "DROPDOWN"
+  DROPDOWN = "DROPDOWN",
+  SWITCH = "SWITCH"
 }
 
 export type CustomizationSetting<TDropdownOption extends string> =
-  DropdownCustomizationSetting<TDropdownOption>;
+| DropdownCustomizationSettingProps<TDropdownOption>
+| SwitchCustomizationSettingProps;

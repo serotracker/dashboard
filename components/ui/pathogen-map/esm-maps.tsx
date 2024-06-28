@@ -11,9 +11,9 @@ const esmIds: Record<Esms, string> = {
 };
 
 const esmUrls: Record<Esms, string> = {
-  zika: "mapbox://serotracker.7qe2zkgd",
-  dengue2015: "mapbox://serotracker.5wobnon2",
-  dengue2050: "mapbox://serotracker.9lzerqbc",
+  zika: "mapbox://serotracker.2j21tlhy",
+  dengue2015: "mapbox://serotracker.7fq6ayzs",
+  dengue2050: "mapbox://serotracker.006nrtto",
 };
 
 export function EsmMapSourceAndLayer(props: {popupLayerId?: string}) {
@@ -36,7 +36,16 @@ export function EsmMapSourceAndLayer(props: {popupLayerId?: string}) {
         minzoom={0}
         maxzoom={22}
         paint={{
-          "raster-opacity": 0.8,
+          "raster-color": [
+            "interpolate",
+            ["linear"],
+            ["raster-value"],
+            0,
+            "rgba(54,2,4,0)",
+            1,
+            "rgba(54,2,4,0.5)"
+          ],
+          "raster-opacity": 1,
           "raster-fade-duration": 0,
         }}
         beforeId={props.popupLayerId}

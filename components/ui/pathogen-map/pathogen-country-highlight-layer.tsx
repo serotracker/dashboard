@@ -20,25 +20,29 @@ const generatePaintForLayer = (
 
   const { countryData, defaults } = paint;
 
+  const fillColour = countryData.length > 0 ? [
+    "match",
+    ["get", "CODE"],
+    ...countryData.flatMap(({ countryAlphaThreeCode, fill }) => [
+      countryAlphaThreeCode,
+      fill,
+    ]),
+    defaults.fill
+  ] : defaults.fill;
+
+  const fillOpacity = countryData.length > 0 ? [
+    "match",
+    ["get", "CODE"],
+    ...countryData.flatMap(({ countryAlphaThreeCode, opacity }) => [
+      countryAlphaThreeCode,
+      opacity,
+    ]),
+    defaults.opacity
+  ] : defaults.opacity;
+
   return {
-    "fill-color": [
-      "match",
-      ["get", "CODE"],
-      ...countryData.flatMap(({ countryAlphaThreeCode, fill }) => [
-        countryAlphaThreeCode,
-        fill,
-      ]),
-      defaults.fill
-    ],
-    "fill-opacity": [
-      "match",
-      ["get", "CODE"],
-      ...countryData.flatMap(({ countryAlphaThreeCode, opacity }) => [
-        countryAlphaThreeCode,
-        opacity,
-      ]),
-      defaults.opacity
-    ],
+    "fill-color": fillColour,
+    "fill-opacity": fillOpacity
   };
 };
 

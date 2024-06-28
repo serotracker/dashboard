@@ -14,6 +14,10 @@ interface CountryHighlightLayerLegendProps {
 }
 
 export const CountryHighlightLayerLegend = (input: CountryHighlightLayerLegendProps) => {
+  if(input.legendEntries.length === 0) {
+    return null;
+  }
+
   return (
     <Card className={input.className}>
       <CardHeader className={"py-3"}>

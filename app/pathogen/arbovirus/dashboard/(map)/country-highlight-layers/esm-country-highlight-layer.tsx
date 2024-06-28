@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import {
   GetCountryHighlightingLayerInformationInput as GenericGetCountryHighlightingLayerInformationInput,
   GetCountryHighlightingLayerInformationOutput
-} from "../pathogen-map";
+} from "@/components/ui/pathogen-map/pathogen-map";
 import { MapSymbology } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 
 type GetCountryHighlightingLayerInformationInput<
@@ -11,7 +11,7 @@ type GetCountryHighlightingLayerInformationInput<
   countryHighlightingEnabled?: boolean;
 }
 
-export const useDataPointPresentLayer = () => {
+export const useEsmCountryHighlightLayer = () => {
   const getCountryHighlightingLayerInformation = useCallback(<
     TData extends {
       countryAlphaThreeCode: string;
