@@ -2,11 +2,13 @@
 
 import { DataTable, RowExpansionConfigurationEnabled, TableHeaderType } from "@/components/ui/data-table/data-table";
 import React, { useContext } from "react";
+import { useRouter } from "next/navigation";
 import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { ToastId } from "@/contexts/toast-provider";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { ArbovirusVisualizationId, arbovirusVisualizationInformation, getUrlParameterFromVisualizationId } from "../../visualizations/visualization-page-config";
+import { useMap } from "react-map-gl";
 
 const arboColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -121,6 +123,9 @@ export const arboDataTableRows = arboColumnConfiguration.map(({fieldName, label}
 
 export const ArboDataTable = () => {
   const state = useContext(ArboContext);
+  const allMaps = useMap();
+  const arboMap = allMaps['arboMap'];
+  const router = useRouter();
 
   const rowExpansionConfiguration: RowExpansionConfigurationEnabled<ArbovirusEstimate> = {
     enabled: true,
@@ -130,6 +135,30 @@ export const ArboDataTable = () => {
       const inclusionCriteriaStatement = estimate?.inclusionCriteria ? `The inclusion criteria for the study was "${estimate.inclusionCriteria}"` : "No inclusion criteria specified"
 
       return `${inclusionCriteriaStatement}. Clicking on this row in the table again will minimize it.`
+    },
+    viewOnMapHandler: (input) => {
+      const estimateId = input.row.getValue('estimateId');
+
+      if(!estimateId || !arboMap) {
+        return;
+      }
+
+      const estimate = input.data.find((dataPoint) => dataPoint.estimateId === estimateId);
+
+      if(!estimate) {
+        return;
+      }
+      
+      router.push('/pathogen/arbovirus/dashboard#MAP')
+
+      const boxSize = 2;
+
+      arboMap.fitBounds([
+        estimate.longitude - (boxSize / 2),
+        estimate.latitude - (boxSize / 2),
+        estimate.longitude + (boxSize / 2),
+        estimate.latitude + (boxSize / 2),
+      ])
     },
     visualization: (input) => {
       const estimateId = input.row.getValue('estimateId');
