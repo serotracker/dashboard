@@ -4,11 +4,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Row } from "@tanstack/react-table";
+import { Button } from '@/components/ui/button'
 
 interface DataTableExpandedRowContentProps<TData extends Record<string, unknown>> {
   row: Row<Record<string, unknown>>;
   data: TData[];
   visualization: (props: {className: string, data: TData[], row: Row<Record<string, unknown>>}) => React.ReactNode;
+  viewOnMapHandler: (props: {data: TData[], row: Row<Record<string, unknown>>}) => void;
 }
 
 export const DataTableExpandedRowContent = <TData extends Record<string, unknown>>(props: DataTableExpandedRowContentProps<TData>) => {
@@ -31,21 +33,29 @@ export const DataTableExpandedRowContent = <TData extends Record<string, unknown
           border-l
         "
         >
-          <table className="h-full lg:max-w-[50%] w-full">
-            <tr>
-              <th> Field </th>
-              <th> Value </th>
-            </tr>
-
-            {props.row.getAllCells().map((cell) => (
-              <tr key={cell.id}>
-                <td className="p-2 border-2"> {cell.column.id} </td>
-                <td className="p-2 border-2">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+          <div className="h-full lg:max-w-[50%] w-full flex flex-col">
+            <table className="w-full mb-4">
+              <tr>
+                <th> Field </th>
+                <th> Value </th>
               </tr>
-            ))}
-          </table> 
+
+              {props.row.getAllCells().map((cell) => (
+                <tr key={cell.id}>
+                  <td className="p-2 border-2"> {cell.column.id} </td>
+                  <td className="p-2 border-2">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                </tr>
+              ))}
+            </table> 
+            <Button
+              className="mx-auto"
+              onClick={() => props.viewOnMapHandler({ data: props.data, row: props.row })}
+            >
+              View On Map
+            </Button>
+          </div>
           <div className="h-full lg:pl-8 grow">
             <props.visualization
               className="h-full-screen"
