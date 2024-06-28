@@ -5,7 +5,7 @@ export const gbdSuperRegionToLabelMap = {
   [GbdSuperRegion.HighIncome]: "High Income",
   [GbdSuperRegion.LatinAmericaAndCaribbean]: "Latin America & Caribbean",
   [GbdSuperRegion.NorthAfricaAndMiddleEast]: "North Africa & Middle East",
-  [GbdSuperRegion.SouthAsia]: "South-East Asia, East Asia & Oceania",
+  [GbdSuperRegion.SouthAsia]: "South Asia",
   [GbdSuperRegion.SouthEastAsiaEastAsiaAndOceania]: "South-East Asia, East Asia & Oceania",
   [GbdSuperRegion.SubSaharanAfrica]: "Sub-saharan Africa"
 };

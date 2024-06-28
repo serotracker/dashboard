@@ -7,6 +7,7 @@ import { CountryDataContext } from "../country-information-context";
 import { MonthlySarsCov2CountryInformationProvider } from "./monthly-sarscov2-country-information-context";
 import { useSarsCov2DataPartitionKeys } from "@/hooks/sarscov2/useSarsCov2DataPartitionKeys";
 import { useSarsCov2DataPartitioned } from "@/hooks/sarscov2/useSarsCov2DataPartitioned";
+import { useSarsCov2Data } from "@/hooks/sarscov2/use-sars-cov2-data";
 
 const initialSarsCov2ContextState = {
   filteredData: [],
@@ -28,22 +29,20 @@ export const SarsCov2Context = createContext<SarsCov2ContextType>({
 });
 
 const SarsCov2DataFetcher = (props: PathogenDataFetcherProps<SarsCov2Estimate, SarsCov2ContextState>): React.ReactNode => {
-  const { data: partitionKeyData } = useSarsCov2DataPartitionKeys();
-  const dataArray = useSarsCov2DataPartitioned({ partitionKeys: partitionKeyData?.allSarsCov2EstimatePartitionKeys ?? [] })
+  const { sarsCov2Estimates } = useSarsCov2Data();
 
   useEffect(() => {
     if (
-      dataArray.length > 0
-      && dataArray.every((element) => !!element.data)
+      !!sarsCov2Estimates
       && props.state.filteredData.length === 0
       && !props.state.dataFiltered
     ) {
       props.dispatch({
         type: PathogenContextActionType.INITIAL_DATA_FETCH,
-        payload: { data: dataArray.flatMap((element) => element.data?.partitionedSarsCov2Estimates.sarsCov2Estimates ?? [])},
+        payload: { data: sarsCov2Estimates },
       });
     }
-  }, [dataArray]);
+  }, [sarsCov2Estimates]);
 
   return (
     <>
