@@ -12,7 +12,8 @@ import { CountryInformationContext } from "@/contexts/pathogen-context/country-i
 import { Arbovirus } from "@/gql/graphql";
 import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
-import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, mersDataTypeToColourClassnameMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
+import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
+import { UNRegionsTooltip, WHORegionsTooltip } from "../tooltip-content";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -91,16 +92,6 @@ export enum FilterableField {
   animalSpecies = "animalSpecies"
 }
 
-const WhoRegionTooltip: TooltipContentRenderingFunction = (input) => (
-  <div>
-    <p> AFR: African Region </p>
-    <p> AMR: Region of the Americas </p>
-    <p> EMR: Eastern Mediterranean Region </p>
-    <p> EUR: European Region </p>
-    <p> SEAR: South-East Asia Region </p>
-    <p> WPR: Western Pacific Region </p>
-  </div>
-)
 const RiskOfBiasTooltip: TooltipContentRenderingFunction = (input) => (
   <p>Reflects the extent to which the true prevalence may be different from the estimated prevalence. Estimated by SeroTracker reviewers based on the Joanna Briggs Institute critical appraisal tool for prevalence estimates.</p>
 )
@@ -247,13 +238,14 @@ export const useAvailableFilters = () => {
       field: FilterableField.whoRegion,
       label: "WHO Region",
       valueToLabelMap: {},
-      renderTooltipContent: WhoRegionTooltip,
+      renderTooltipContent: WHORegionsTooltip,
       filterRenderingFunction: MultiSelectFilter
     },
     [FilterableField.unRegion]: {
       field: FilterableField.unRegion,
       label: "UN Region",
       valueToLabelMap: unRegionEnumToLabelMap,
+      renderTooltipContent: UNRegionsTooltip,
       filterRenderingFunction: MultiSelectFilter
     },
     [FilterableField.countryAlphaTwoCode]: {

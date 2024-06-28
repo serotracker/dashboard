@@ -23,7 +23,7 @@ const toastInformation: Record<ToastId, ToastInformation> = {
     message: (
       <>
         <p className="inline">Our suggested citation for the CSV file has been copied to your clipboard (</p>
-        <p className="inline italic">Ware H*, Whelan M*, Ranka H, Roell Y, Aktar S, Kenny S, Pinno E, SeroTracker Research Team, Bobrovitz N**, Arora RK**, Jaenisch T**. ArboTracker: A Dashboard and Data Platform for arbovirus serosurveys (2024); Website, accessible via www.new.SeroTracker.com</p>
+        <p className="inline italic">Harriet Ware, Mairead Whelan, Anabel Selemon, Emilie Toews, Shaila Akter, Niklas Bobrovitz, Rahul Arora, Yannik Roell, Thomas Jaenisch. A living systematic review of arbovirus seroprevalence studies. PROSPERO 2024 CRD42024551000 Available from: https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000</p>
         <p className="inline">).</p>
       </>
     )

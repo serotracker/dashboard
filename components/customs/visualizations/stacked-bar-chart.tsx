@@ -9,10 +9,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { TransformOutputValueInput, groupDataForRecharts } from "./group-data-for-recharts";
 import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
 import { typedObjectKeys } from '@/lib/utils';
 import { CustomXAxisTick } from './custom-x-axis-tick';
+import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from './group-data-for-recharts/group-data-for-recharts-twice';
 
 export enum LegendConfiguration {
   RIGHT_ALIGNED = 'RIGHT_ALIGNED',
@@ -38,7 +38,7 @@ interface StackedBarChartProps<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  transformOutputValue: (input: TransformOutputValueInput<
+  transformOutputValue: (input: DoubleGroupingTransformOutputValueInput<
     TData,
     TSecondaryGroupingKey
   >) => number;
@@ -75,7 +75,7 @@ export const StackedBarChart = <
           },
         };
 
-  const { rechartsData, allSecondaryKeys } = groupDataForRecharts({
+  const { rechartsData, allSecondaryKeys } = groupDataForRechartsTwice({
     data: props.data,
     primaryGroupingFunction: props.primaryGroupingFunction,
     primaryGroupingSortFunction: props.primaryGroupingSortFunction,
