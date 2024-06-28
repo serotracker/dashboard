@@ -4,6 +4,10 @@ import { GetCountryHighlightingLayerInformationInput, GetCountryHighlightingLaye
 import { MapSymbology } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { generateMapColourBuckets } from "@/components/ui/pathogen-map/country-highlight-layers/generate-map-colour-buckets";
 
+export const formatCamelsPerCapita = (camelsPerCapita: number) => {
+  return formatNumberForLegend({ value: camelsPerCapita, isExclusiveInRange: false });
+}
+
 const formatNumberForLegend = (input: {
   value: number,
   isExclusiveInRange: boolean;

@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/ui/data-table/data-table";
+import { DataTable, TableHeaderType } from "@/components/ui/data-table/data-table";
 import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
@@ -216,7 +216,10 @@ export const SarsCov2DataTable = () => {
     <DataTable
       columns={columnConfigurationToColumnDefinitions({ columnConfiguration: sarsCov2ColumnConfiguration })}
       csvFilename="sarscov2tracker_dataset"
-      tableHeader="Explore SarsCov2 seroprevalence estimates in our database"
+      tableHeader={{
+        type: TableHeaderType.STANDARD,
+        headerText: "Explore SarsCov2 seroprevalence estimates in our database"
+      }}
       csvCitationConfiguration={{
         enabled: false
       }}

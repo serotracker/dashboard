@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable, RowExpansionConfigurationEnabled } from "@/components/ui/data-table/data-table";
+import { DataTable, RowExpansionConfigurationEnabled, TableHeaderType } from "@/components/ui/data-table/data-table";
 import React, { useContext } from "react";
 import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
@@ -175,7 +175,10 @@ export const ArboDataTable = () => {
       <DataTable
         columns={columnConfigurationToColumnDefinitions({ columnConfiguration: arboColumnConfiguration })}
         csvFilename="arbotracker_dataset"
-        tableHeader="Explore arbovirus seroprevalence estimates in our database"
+        tableHeader={{
+          type: TableHeaderType.STANDARD,
+          headerText: "Explore arbovirus seroprevalence estimates in our database"
+        }}
         csvCitationConfiguration={{
           enabled: true,
           citationText: "Harriet Ware, Mairead Whelan, Anabel Selemon, Emilie Toews, Shaila Akter, Niklas Bobrovitz, Rahul Arora, Yannik Roell, Thomas Jaenisch. A living systematic review of arbovirus seroprevalence studies. PROSPERO 2024 CRD42024551000 Available from: https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000",

@@ -10,6 +10,9 @@ import {
   VisibilityState,
   getFilteredRowModel,
 } from "@tanstack/table-core";
+import * as Select from '@radix-ui/react-select';
+import { assertNever } from "assert-never";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { ColumnDef, ExpandedState, Row, flexRender, useReactTable } from "@tanstack/react-table";
 import {
   Table,
@@ -33,6 +36,7 @@ import { ToastContext, ToastId } from "@/contexts/toast-provider";
 import { DataTableStandardRow } from "./data-table-standard-row";
 import { DataTableExpandedRow } from "./data-table-expanded-row";
 import { DataTableExpandedRowContent } from "./data-table-expanded-row-content";
+import { Dropdown, DropdownProps } from "@/components/customs/dropdown/dropdown";
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   fixed?: boolean;
@@ -60,17 +64,46 @@ export interface RowExpansionConfigurationEnabled<TData extends Record<string, u
   visualization: (props: {className: string, data: TData[], row: Row<Record<string, unknown>>}) => React.ReactNode;
 }
 
-interface DataTableProps<TData extends Record<string, unknown>, TValue> {
+export enum TableHeaderType {
+  STANDARD = 'STANDARD',
+  DROPDOWN = 'DROPDOWN'
+}
+
+interface StandardTableHeader {
+  type: TableHeaderType.STANDARD;
+  headerText: string;
+}
+
+export interface DropdownTableHeader<TDropdownOption extends string> {
+  type: TableHeaderType.DROPDOWN;
+  beforeDropdownHeaderText: string;
+  dropdownProps: DropdownProps<TDropdownOption>
+  afterDropdownHeaderText: string;
+}
+
+type TableHeader<TDropdownOption extends string> = 
+  | StandardTableHeader
+  | DropdownTableHeader<TDropdownOption>;
+
+interface DataTableProps<
+  TData extends Record<string, unknown>,
+  TValue,
+  TDropdownOption extends string
+> {
   columns: DataTableColumnDef<Record<string, unknown>, TValue>[];
   csvFilename: string;
-  tableHeader:string;
+  tableHeader: TableHeader<TDropdownOption>;
   csvCitationConfiguration: CsvCitationConfigurationDisabled | CsvCitationConfigurationEnabled;
   rowExpansionConfiguration: RowExpansionConfigurationDisabled | RowExpansionConfigurationEnabled<TData>;
   data: TData[];
 }
 
-export function DataTable<TData extends Record<string, unknown>, TValue>(props: DataTableProps<TData, TValue>) {
-  const { csvCitationConfiguration, rowExpansionConfiguration } = props;
+export function DataTable<
+  TData extends Record<string, unknown>,
+  TValue,
+  TDropdownOption extends string
+>(props: DataTableProps<TData, TValue, TDropdownOption>) {
+  const { csvCitationConfiguration, rowExpansionConfiguration, tableHeader } = props;
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -175,10 +208,28 @@ export function DataTable<TData extends Record<string, unknown>, TValue>(props: 
     )
   }, [csvCitationConfiguration, openToast])
 
+  const header = useMemo(() => {
+    if(tableHeader.type === TableHeaderType.STANDARD) {
+      return <h3>{tableHeader.headerText}</h3>
+    }
+
+    if(tableHeader.type === TableHeaderType.DROPDOWN) {
+      return (
+        <div>
+          <h3 className='inline'>{tableHeader.beforeDropdownHeaderText}</h3>
+          <Dropdown {...tableHeader.dropdownProps} />
+          <h3 className='inline'>{tableHeader.afterDropdownHeaderText}</h3>
+        </div>
+      );
+    }
+
+    assertNever(tableHeader);
+  }, [ tableHeader ]);
+
   return (
     <div>
       <div className="flex items-center justify-between py-4 px-2">
-        <h3>{props.tableHeader}</h3>
+        {header}
         <div className="flex flex-col lg:flex-row">
           <Button
             variant="outline"
