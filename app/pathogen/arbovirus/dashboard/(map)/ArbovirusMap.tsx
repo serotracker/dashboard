@@ -8,7 +8,7 @@
 "use client";
 
 import React, { useContext, useMemo, useState } from "react";
-import { useArboData } from "@/hooks/useArboData";
+import { useArboData } from "@/hooks/arbovirus/useArboData";
 import { ArbovirusEstimatePopupContent } from "./arbovirus-estimate-pop-up-content";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";

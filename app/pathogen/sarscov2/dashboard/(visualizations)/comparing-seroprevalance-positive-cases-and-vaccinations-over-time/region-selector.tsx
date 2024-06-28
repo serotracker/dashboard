@@ -1,7 +1,6 @@
 import { useContext, useMemo, useState } from "react"
 import { Plus, X } from "lucide-react";
 import { Select } from "@/components/customs/select";
-import { SecondaryKeyFieldsRegionPortion, SecondaryKeyRegionType, isSecondaryKeyRegionType } from "./secondary-key-lib";
 import assertNever from "assert-never";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
 import { typedObjectKeys } from "@/lib/utils";
@@ -10,28 +9,29 @@ import { isUNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { gbdSubRegionToLabelMap, gbdSuperRegionToLabelMap, isGbdSubRegion, isGbdSuperRegion } from "@/lib/gbd-regions";
 import { isWHORegion } from "@/lib/who-regions";
 import { Button } from "@/components/ui/button";
+import { SeriesFieldsRegionPortion, SeriesRegionType, isSeriesRegionType } from "./series-generator";
 
 type RegionSelectorState = {
-  regionType: SecondaryKeyRegionType.GLOBAL
+  regionType: SeriesRegionType.GLOBAL
 } | {
-  regionType: SecondaryKeyRegionType.WHO_REGION,
+  regionType: SeriesRegionType.WHO_REGION,
   whoRegions: WhoRegion[],
 } | {
-  regionType: SecondaryKeyRegionType.UN_REGION,
+  regionType: SeriesRegionType.UN_REGION,
   unRegions: UnRegion[],
 } | {
-  regionType: SecondaryKeyRegionType.COUNTRY,
+  regionType: SeriesRegionType.COUNTRY,
   countryAlphaTwoCodes: string[],
 } | {
-  regionType: SecondaryKeyRegionType.GBD_SUPER_REGION,
+  regionType: SeriesRegionType.GBD_SUPER_REGION,
   gbdSuperRegions: GbdSuperRegion[]
 } | {
-  regionType: SecondaryKeyRegionType.GBD_SUB_REGION,
+  regionType: SeriesRegionType.GBD_SUB_REGION,
   gbdSubRegions: GbdSubRegion[]
 } | undefined;
 
 interface RegionSelectorProps {
-  selectedRegionType: SecondaryKeyRegionType | undefined;
+  selectedRegionType: SeriesRegionType | undefined;
   selectedRegions: string[];
   countryAlphaTwoCodeToCountryNameMap: Record<string, string | undefined>;
   propagateRegionChange: (input: RegionSelectorState) => void;
@@ -39,12 +39,12 @@ interface RegionSelectorProps {
 }
 
 const selectedRegionTypeToLabelMap = {
-  [SecondaryKeyRegionType.COUNTRY]: 'Country',
-  [SecondaryKeyRegionType.GBD_SUB_REGION]: 'GBD Subregion',
-  [SecondaryKeyRegionType.GBD_SUPER_REGION]: 'GBD Superregion',
-  [SecondaryKeyRegionType.GLOBAL]: 'Global',
-  [SecondaryKeyRegionType.WHO_REGION]: 'WHO Region',
-  [SecondaryKeyRegionType.UN_REGION]: 'UN Region',
+  [SeriesRegionType.COUNTRY]: 'Country',
+  [SeriesRegionType.GBD_SUB_REGION]: 'GBD Subregion',
+  [SeriesRegionType.GBD_SUPER_REGION]: 'GBD Superregion',
+  [SeriesRegionType.GLOBAL]: 'Global',
+  [SeriesRegionType.WHO_REGION]: 'WHO Region',
+  [SeriesRegionType.UN_REGION]: 'UN Region',
   'N/A': 'N/A'
 }
 
@@ -62,22 +62,22 @@ const RegionSelector = (props: RegionSelectorProps) => {
 
     const newRegionType = newValue[0];
 
-    if(!(isSecondaryKeyRegionType(newRegionType))) {
+    if(!(isSeriesRegionType(newRegionType))) {
       setSelectedRegionOptions([])
       setRegionToLabelMap({});
       props.propagateRegionChange(undefined);
       return
     }
 
-    if(newRegionType === SecondaryKeyRegionType.GLOBAL) {
+    if(newRegionType === SeriesRegionType.GLOBAL) {
       setSelectedRegionOptions(['Global']);
       setRegionToLabelMap({});
       props.propagateRegionChange({
-        regionType: SecondaryKeyRegionType.GLOBAL
+        regionType: SeriesRegionType.GLOBAL
       });
       return;
     }
-    if(newRegionType === SecondaryKeyRegionType.COUNTRY) {
+    if(newRegionType === SeriesRegionType.COUNTRY) {
       const allCountryAlphaTwoCodes = typedObjectKeys(props.countryAlphaTwoCodeToCountryNameMap);
 
       if(allCountryAlphaTwoCodes.length === 0) {
@@ -88,49 +88,49 @@ const RegionSelector = (props: RegionSelectorProps) => {
         setSelectedRegionOptions(allCountryAlphaTwoCodes);
         setRegionToLabelMap(props.countryAlphaTwoCodeToCountryNameMap);
         props.propagateRegionChange({
-          regionType: SecondaryKeyRegionType.COUNTRY,
+          regionType: SeriesRegionType.COUNTRY,
           countryAlphaTwoCodes: allCountryAlphaTwoCodes.slice(0,1)
         });
       }
 
       return;
     }
-    if(newRegionType === SecondaryKeyRegionType.WHO_REGION) {
+    if(newRegionType === SeriesRegionType.WHO_REGION) {
       const allWhoRegions = Object.values(WhoRegion)
       setSelectedRegionOptions(allWhoRegions);
       setRegionToLabelMap({});
       props.propagateRegionChange({
-        regionType: SecondaryKeyRegionType.WHO_REGION,
+        regionType: SeriesRegionType.WHO_REGION,
         whoRegions: allWhoRegions.slice(0,1)
       });
       return;
     }
-    if(newRegionType === SecondaryKeyRegionType.UN_REGION) {
+    if(newRegionType === SeriesRegionType.UN_REGION) {
       const allUnRegions = Object.values(UnRegion)
       setSelectedRegionOptions(allUnRegions);
       setRegionToLabelMap(unRegionEnumToLabelMap);
       props.propagateRegionChange({
-        regionType: SecondaryKeyRegionType.UN_REGION,
+        regionType: SeriesRegionType.UN_REGION,
         unRegions: allUnRegions.slice(0,1)
       });
       return;
     }
-    if(newRegionType === SecondaryKeyRegionType.GBD_SUB_REGION) {
+    if(newRegionType === SeriesRegionType.GBD_SUB_REGION) {
       const allGbdSubRegions = Object.values(GbdSubRegion)
       setSelectedRegionOptions(allGbdSubRegions);
       setRegionToLabelMap(gbdSubRegionToLabelMap);
       props.propagateRegionChange({
-        regionType: SecondaryKeyRegionType.GBD_SUB_REGION,
+        regionType: SeriesRegionType.GBD_SUB_REGION,
         gbdSubRegions: allGbdSubRegions.slice(0,1)
       });
       return;
     }
-    if(newRegionType === SecondaryKeyRegionType.GBD_SUPER_REGION) {
+    if(newRegionType === SeriesRegionType.GBD_SUPER_REGION) {
       const allGbdSuperRegions = Object.values(GbdSuperRegion)
       setSelectedRegionOptions(allGbdSuperRegions);
       setRegionToLabelMap(gbdSuperRegionToLabelMap);
       props.propagateRegionChange({
-        regionType: SecondaryKeyRegionType.GBD_SUPER_REGION,
+        regionType: SeriesRegionType.GBD_SUPER_REGION,
         gbdSuperRegions: allGbdSuperRegions.slice(0,1)
       });
       return;
@@ -140,43 +140,43 @@ const RegionSelector = (props: RegionSelectorProps) => {
   }
 
   const selectedRegionOnChange = (newValue: string[]) => {
-    if(props.selectedRegionType === SecondaryKeyRegionType.GLOBAL) {
+    if(props.selectedRegionType === SeriesRegionType.GLOBAL) {
       props.propagateRegionChange({
-        regionType: SecondaryKeyRegionType.GLOBAL,
+        regionType: SeriesRegionType.GLOBAL,
       });
       return;
     }
-    if(props.selectedRegionType === SecondaryKeyRegionType.COUNTRY) {
+    if(props.selectedRegionType === SeriesRegionType.COUNTRY) {
       props.propagateRegionChange({
-        regionType: SecondaryKeyRegionType.COUNTRY,
+        regionType: SeriesRegionType.COUNTRY,
         countryAlphaTwoCodes: newValue
       });
       return;
     }
-    if(props.selectedRegionType === SecondaryKeyRegionType.WHO_REGION) {
+    if(props.selectedRegionType === SeriesRegionType.WHO_REGION) {
       props.propagateRegionChange({
-        regionType: SecondaryKeyRegionType.WHO_REGION,
+        regionType: SeriesRegionType.WHO_REGION,
         whoRegions: newValue.filter((value): value is WhoRegion => isWHORegion(value))
       });
       return;
     }
-    if(props.selectedRegionType === SecondaryKeyRegionType.UN_REGION) {
+    if(props.selectedRegionType === SeriesRegionType.UN_REGION) {
       props.propagateRegionChange({
-        regionType: SecondaryKeyRegionType.UN_REGION,
+        regionType: SeriesRegionType.UN_REGION,
         unRegions: newValue.filter((value): value is UnRegion => isUNRegion(value))
       });
       return;
     }
-    if(props.selectedRegionType === SecondaryKeyRegionType.GBD_SUB_REGION) {
+    if(props.selectedRegionType === SeriesRegionType.GBD_SUB_REGION) {
       props.propagateRegionChange({
-        regionType: SecondaryKeyRegionType.GBD_SUB_REGION,
+        regionType: SeriesRegionType.GBD_SUB_REGION,
         gbdSubRegions: newValue.filter((value): value is GbdSubRegion => isGbdSubRegion(value))
       });
       return;
     }
-    if(props.selectedRegionType === SecondaryKeyRegionType.GBD_SUPER_REGION) {
+    if(props.selectedRegionType === SeriesRegionType.GBD_SUPER_REGION) {
       props.propagateRegionChange({
-        regionType: SecondaryKeyRegionType.GBD_SUPER_REGION,
+        regionType: SeriesRegionType.GBD_SUPER_REGION,
         gbdSuperRegions: newValue.filter((value): value is GbdSuperRegion => isGbdSuperRegion(value))
       });
       return;
@@ -203,12 +203,12 @@ const RegionSelector = (props: RegionSelectorProps) => {
         heading={'Region Type'}
         selected={props.selectedRegionType ? [ props.selectedRegionType ] : []}
         options={[
-          SecondaryKeyRegionType.COUNTRY,
-          SecondaryKeyRegionType.GBD_SUB_REGION,
-          SecondaryKeyRegionType.GBD_SUPER_REGION,
-          SecondaryKeyRegionType.GLOBAL,
-          SecondaryKeyRegionType.WHO_REGION,
-          SecondaryKeyRegionType.UN_REGION
+          SeriesRegionType.COUNTRY,
+          SeriesRegionType.GBD_SUB_REGION,
+          SeriesRegionType.GBD_SUPER_REGION,
+          SeriesRegionType.GLOBAL,
+          SeriesRegionType.WHO_REGION,
+          SeriesRegionType.UN_REGION
         ]}
         optionToLabelMap={selectedRegionTypeToLabelMap}
         singleSelect={true}
@@ -229,7 +229,7 @@ const RegionSelector = (props: RegionSelectorProps) => {
 
 interface RegionSelectorContainerProps {
   maximumRegionSelectorCount: number;
-  setSelectedSecondaryKeys: (input: SecondaryKeyFieldsRegionPortion[]) => void;
+  setSelectedSeries: (input: SeriesFieldsRegionPortion[]) => void;
   countryAlphaTwoCodeToCountryNameMap: Record<string, string | undefined>;
 }
 
@@ -237,64 +237,64 @@ const getSelectedRegionsFromRegionSelectorState = (state: RegionSelectorState): 
   if(!state) {
     return [];
   }
-  if(state.regionType === SecondaryKeyRegionType.GLOBAL) {
+  if(state.regionType === SeriesRegionType.GLOBAL) {
     return ['Global']
   }
-  if(state.regionType === SecondaryKeyRegionType.COUNTRY) {
+  if(state.regionType === SeriesRegionType.COUNTRY) {
     return state.countryAlphaTwoCodes;
   }
-  if(state.regionType === SecondaryKeyRegionType.GBD_SUB_REGION) {
+  if(state.regionType === SeriesRegionType.GBD_SUB_REGION) {
     return state.gbdSubRegions;
   }
-  if(state.regionType === SecondaryKeyRegionType.GBD_SUPER_REGION) {
+  if(state.regionType === SeriesRegionType.GBD_SUPER_REGION) {
     return state.gbdSuperRegions;
   }
-  if(state.regionType === SecondaryKeyRegionType.UN_REGION) {
+  if(state.regionType === SeriesRegionType.UN_REGION) {
     return state.unRegions;
   }
-  if(state.regionType === SecondaryKeyRegionType.WHO_REGION) {
+  if(state.regionType === SeriesRegionType.WHO_REGION) {
     return state.whoRegions;
   }
   assertNever(state);
 }
 
-const regionSelectorStatesToSelectedSecondaryKeys = (
+const regionSelectorStatesToSelectedSeries = (
   regionSelectorStates: RegionSelectorState[]
-): SecondaryKeyFieldsRegionPortion[] => {
+): SeriesFieldsRegionPortion[] => {
   return regionSelectorStates.flatMap((state) => {
     if(!state) {
       return [];
     }
-    if(state.regionType === SecondaryKeyRegionType.GLOBAL) {
-      return [{ regionType: SecondaryKeyRegionType.GLOBAL }]
+    if(state.regionType === SeriesRegionType.GLOBAL) {
+      return [{ regionType: SeriesRegionType.GLOBAL }]
     }
-    if(state.regionType === SecondaryKeyRegionType.COUNTRY) {
-      return state.countryAlphaTwoCodes.map((countryAlphaTwoCode): SecondaryKeyFieldsRegionPortion => ({
-        regionType: SecondaryKeyRegionType.COUNTRY,
+    if(state.regionType === SeriesRegionType.COUNTRY) {
+      return state.countryAlphaTwoCodes.map((countryAlphaTwoCode): SeriesFieldsRegionPortion => ({
+        regionType: SeriesRegionType.COUNTRY,
         countryAlphaTwoCode
       }))
     }
-    if(state.regionType === SecondaryKeyRegionType.GBD_SUB_REGION) {
-      return state.gbdSubRegions.map((gbdSubRegion): SecondaryKeyFieldsRegionPortion => ({
-        regionType: SecondaryKeyRegionType.GBD_SUB_REGION,
+    if(state.regionType === SeriesRegionType.GBD_SUB_REGION) {
+      return state.gbdSubRegions.map((gbdSubRegion): SeriesFieldsRegionPortion => ({
+        regionType: SeriesRegionType.GBD_SUB_REGION,
         gbdSubRegion
       }))
     }
-    if(state.regionType === SecondaryKeyRegionType.GBD_SUPER_REGION) {
-      return state.gbdSuperRegions.map((gbdSuperRegion): SecondaryKeyFieldsRegionPortion => ({
-        regionType: SecondaryKeyRegionType.GBD_SUPER_REGION,
+    if(state.regionType === SeriesRegionType.GBD_SUPER_REGION) {
+      return state.gbdSuperRegions.map((gbdSuperRegion): SeriesFieldsRegionPortion => ({
+        regionType: SeriesRegionType.GBD_SUPER_REGION,
         gbdSuperRegion
       }))
     }
-    if(state.regionType === SecondaryKeyRegionType.UN_REGION) {
-      return state.unRegions.map((unRegion): SecondaryKeyFieldsRegionPortion => ({
-        regionType: SecondaryKeyRegionType.UN_REGION,
+    if(state.regionType === SeriesRegionType.UN_REGION) {
+      return state.unRegions.map((unRegion): SeriesFieldsRegionPortion => ({
+        regionType: SeriesRegionType.UN_REGION,
         unRegion
       }))
     }
-    if(state.regionType === SecondaryKeyRegionType.WHO_REGION) {
-      return state.whoRegions.map((whoRegion): SecondaryKeyFieldsRegionPortion => ({
-        regionType: SecondaryKeyRegionType.WHO_REGION,
+    if(state.regionType === SeriesRegionType.WHO_REGION) {
+      return state.whoRegions.map((whoRegion): SeriesFieldsRegionPortion => ({
+        regionType: SeriesRegionType.WHO_REGION,
         whoRegion
       }))
     }
@@ -318,7 +318,7 @@ const RegionSelectorContainer = (props: RegionSelectorContainerProps) => {
   const [
     allRegionSelectorStates, setAllRegionSelectorStates
   ] = useState<{selectorId: string, sortOrder: number, state: RegionSelectorState}[]>([
-    { selectorId: crypto.randomUUID(), sortOrder: 0, state: { regionType: SecondaryKeyRegionType.GLOBAL } }
+    { selectorId: crypto.randomUUID(), sortOrder: 0, state: { regionType: SeriesRegionType.GLOBAL } }
   ]);
 
   const addNewRegionSelector = () => {
@@ -332,11 +332,11 @@ const RegionSelectorContainer = (props: RegionSelectorContainerProps) => {
         }
       ].sort((a, b) => a.sortOrder - b.sortOrder);
 
-      const newSelectedSecondaryKeys = regionSelectorStatesToSelectedSecondaryKeys(
+      const newSelectedSeries = regionSelectorStatesToSelectedSeries(
         newRegionSelectorStates.map(({ state }) => state)
       );
 
-      props.setSelectedSecondaryKeys(newSelectedSecondaryKeys);
+      props.setSelectedSeries(newSelectedSeries);
 
       return newRegionSelectorStates;
     })
@@ -348,11 +348,11 @@ const RegionSelectorContainer = (props: RegionSelectorContainerProps) => {
         (element) => element.selectorId !== input.regionSelectorState.selectorId
       ).sort((a, b) => a.sortOrder - b.sortOrder);
 
-      const newSelectedSecondaryKeys = regionSelectorStatesToSelectedSecondaryKeys(
+      const newSelectedSeries = regionSelectorStatesToSelectedSeries(
         newRegionSelectorStates.map(({ state }) => state)
       );
 
-      props.setSelectedSecondaryKeys(newSelectedSecondaryKeys);
+      props.setSelectedSeries(newSelectedSeries);
 
       return newRegionSelectorStates;
     })
@@ -371,11 +371,11 @@ const RegionSelectorContainer = (props: RegionSelectorContainerProps) => {
         }] : [])
       ].sort((a, b) => a.sortOrder - b.sortOrder);
 
-      const newSelectedSecondaryKeys = regionSelectorStatesToSelectedSecondaryKeys(
+      const newSelectedSeries = regionSelectorStatesToSelectedSeries(
         newRegionSelectorStates.map(({ state }) => state)
       );
 
-      props.setSelectedSecondaryKeys(newSelectedSecondaryKeys);
+      props.setSelectedSeries(newSelectedSeries);
 
       return newRegionSelectorStates;
     });
@@ -421,20 +421,20 @@ export const useRegionSelector = (input: UseRegionSelectorInput) => {
   const { maximumRegionSelectorCount } = input;
 
   const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
-  const [selectedSecondaryKeys, setSelectedSecondaryKeys] = useState<SecondaryKeyFieldsRegionPortion[]>([
-    { regionType: SecondaryKeyRegionType.GLOBAL }
+  const [selectedSeries, setSelectedSeries] = useState<SeriesFieldsRegionPortion[]>([
+    { regionType: SeriesRegionType.GLOBAL }
   ])
 
   const regionSelector = useMemo(() => (
     <RegionSelectorContainer
       maximumRegionSelectorCount={maximumRegionSelectorCount}
       countryAlphaTwoCodeToCountryNameMap={countryAlphaTwoCodeToCountryNameMap}
-      setSelectedSecondaryKeys={setSelectedSecondaryKeys}
+      setSelectedSeries={setSelectedSeries}
     />
-  ), [maximumRegionSelectorCount, setSelectedSecondaryKeys, countryAlphaTwoCodeToCountryNameMap])
+  ), [maximumRegionSelectorCount, setSelectedSeries, countryAlphaTwoCodeToCountryNameMap])
 
   return {
     regionSelector,
-    secondaryKeyRegionPortions: selectedSecondaryKeys
+    seriesRegionPortions: selectedSeries
   }
 }

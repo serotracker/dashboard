@@ -1,8 +1,8 @@
 "use client";
 import { createContext, useEffect, useMemo } from "react";
 import { PathogenContextActionType, PathogenContextState, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
-import { useArboData } from "@/hooks/useArboData";
-import { useArboFilters } from "@/hooks/useArboFilters";
+import { useArboData } from "@/hooks/arbovirus/useArboData";
+import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
 import { CountryDataContext } from "../country-information-context";
 import { ArbovirusEstimatesQueryQuery } from "@/gql/graphql";
 
@@ -82,12 +82,13 @@ interface ArboProvidersProps {
 export const ArboProviders = (props: ArboProvidersProps) => {
   return (
     <PathogenProviders
-      children={props.children}
       initialState={initialArboContextState}
       countryDataProvider={CountryDataProvider}
       context={ArboContext}
       mapId={'arboMap'}
       dataFetcher={ArboDataFetcher}
-    />
+    >
+      {props.children}
+    </PathogenProviders>
   )
 }

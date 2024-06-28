@@ -14,8 +14,8 @@ import uniq from "lodash/uniq";
 import { typedObjectKeys } from "@/lib/utils";
 import { ContentType } from "recharts/types/component/Tooltip";
 import { useChartArbovirusDropdown } from "./chart-arbovirus-dropdown";
-import { groupDataForRechartsTwice } from "@/components/customs/visualizations/group-data-for-recharts/group-data-for-recharts-twice";
 import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { groupDataForRechartsTwice } from "@/components/customs/visualizations/group-data-for-recharts/group-data-for-recharts-twice";
 
 const CountrySeroprevalenceComparisonScatterPlotTooltip: ContentType<string, string> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {

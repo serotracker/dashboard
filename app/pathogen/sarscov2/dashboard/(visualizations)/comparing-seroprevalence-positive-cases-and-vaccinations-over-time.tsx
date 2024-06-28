@@ -2,37 +2,15 @@ import { useContext, useMemo } from "react";
 import parseISO from 'date-fns/parseISO';
 import defaultColours from 'tailwindcss/colors'
 
-import { LineChart } from "@/components/customs/visualizations/line-chart";
 import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
-import { dateToMonthCount, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
+import { dateFromYearAndMonth, dateToMonthCount, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { generateRandomColour } from "@/lib/utils";
-import { SecondaryKeyValueType, secondaryKeyStringToSecondaryKeyFields, useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSecondaryKeyFunctions } from "./comparing-seroprevalance-positive-cases-and-vaccinations-over-time/secondary-key-lib";
-import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import assertNever from "assert-never";
 import { useRegionSelector } from "./comparing-seroprevalance-positive-cases-and-vaccinations-over-time/region-selector";
-
-interface ComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeProps {
-  legendConfiguration: LegendConfiguration;
-}
-
-interface GenerateTimeBucketForEstimateInput {
-  estimate: Omit<SarsCov2Estimate, 'samplingMidDate'> & {samplingMidDate: Date};
-}
-
-const generateTimeBucketsForEstimate = (input: GenerateTimeBucketForEstimateInput): string[] => {
-  const samplingMidDateMonthCount = dateToMonthCount(input.estimate.samplingMidDate);
-
-  return [
-    monthCountToMonthYearString(samplingMidDateMonthCount - 1),
-    monthCountToMonthYearString(samplingMidDateMonthCount),
-    monthCountToMonthYearString(samplingMidDateMonthCount + 1)
-  ]
-}
-
-type SarsCov2EstimateWithMidDateCleaned = Omit<SarsCov2Estimate, "samplingMidDate"> & {
-  samplingMidDate: Date
-}
+import { MonthlySarsCov2CountryInformationContext } from "@/contexts/pathogen-context/pathogen-contexts/monthly-sarscov2-country-information-context";
+import { BestFitCurveLineChart } from "@/components/customs/visualizations/best-fit-curve-line-chart";
+import { SeriesValueType, seriesStringToSeriesFields, useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSeries } from "./comparing-seroprevalance-positive-cases-and-vaccinations-over-time/series-generator";
 
 const indexToColourMap: Record<number, string | undefined> = {
   0: defaultColours.red[200],
@@ -70,31 +48,59 @@ const indexToColourMap: Record<number, string | undefined> = {
   32: defaultColours.teal[800]
 }
 
+interface ComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeProps {
+  legendConfiguration: LegendConfiguration;
+}
+
 export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
   props: ComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeProps
 ) => {
-  const state = useContext(SarsCov2Context);
+  const { filteredData }= useContext(SarsCov2Context);
+  const { monthlySarsCov2CountryInformation } = useContext(MonthlySarsCov2CountryInformationContext);
   const {
-    getAllSecondaryKeys,
-    secondaryKeyStringToLabel,
-  } = useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSecondaryKeyFunctions()
+    getAllSeries,
+    seriesStringToLabel,
+  } = useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSeries()
   const {
     regionSelector,
-    secondaryKeyRegionPortions
+    seriesRegionPortions
   } = useRegionSelector({ maximumRegionSelectorCount: 5 });
 
-  const consideredData = useMemo(() => state.filteredData
-    .filter((dataPoint: SarsCov2Estimate): dataPoint is Omit<SarsCov2Estimate, "samplingMidDate">
-      & {
-        samplingMidDate: NonNullable<SarsCov2Estimate["samplingMidDate"]>;
-      } => 
-        !!dataPoint.samplingMidDate
-    ).map((dataPoint) => ({
-      ...dataPoint,
-      samplingMidDate: parseISO(dataPoint.samplingMidDate),
-    })),
-    [state.filteredData]
-  );
+  const consideredEstimateData = useMemo(() => filteredData
+    .filter((dataPoint: SarsCov2Estimate): dataPoint is Omit<SarsCov2Estimate, "samplingMidDate"> & {
+      samplingMidDate: NonNullable<SarsCov2Estimate["samplingMidDate"]>;
+    } => !!dataPoint.samplingMidDate)
+    .map((dataPoint) => ({
+      date: parseISO(dataPoint.samplingMidDate),
+      alphaTwoCode: dataPoint.countryAlphaTwoCode,
+      seroprevalence: dataPoint.seroprevalence ?? undefined,
+      positiveCasesPerMillionPeople: undefined,
+      peopleVaccinatedPerHundred: undefined,
+      whoRegion: dataPoint.whoRegion ?? undefined,
+      unRegion: dataPoint.unRegion ?? undefined,
+      gbdSubRegion: dataPoint.gbdSubRegion ?? undefined,
+      gbdSuperRegion: dataPoint.gbdSuperRegion ?? undefined
+    }))
+  , [filteredData])
+
+  const consideredCountryData = useMemo(() => monthlySarsCov2CountryInformation?.monthlySarsCov2CountryInformation
+    .map((countryInformation) => ({
+      date: dateFromYearAndMonth({ year: countryInformation.year, month: countryInformation.month }),
+      alphaTwoCode: countryInformation.alphaTwoCode,
+      seroprevalence: undefined,
+      positiveCasesPerMillionPeople: countryInformation.positiveCasesPerMillionPeople ?? undefined,
+      peopleVaccinatedPerHundred: countryInformation.peopleVaccinatedPerHundred ?? undefined,
+      whoRegion: countryInformation.whoRegion ?? undefined,
+      unRegion: countryInformation.unRegion ?? undefined,
+      gbdSubRegion: countryInformation.gbdSubRegion ?? undefined,
+      gbdSuperRegion: countryInformation.gbdSuperRegion ?? undefined
+    })) ?? []
+  , [monthlySarsCov2CountryInformation])
+
+  const consolidatedData = useMemo(() => [
+    ...consideredEstimateData,
+    ...consideredCountryData,
+  ], [consideredEstimateData, consideredCountryData])
 
   return (
     <div className="flex h-full">
@@ -102,61 +108,51 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
         {regionSelector}
       </div>
       <div className="grow h-full">
-        <LineChart
+        <BestFitCurveLineChart
           graphId="comparing-seroprevalence-positive-cases-and-vaccinations"
-          data={consideredData}
-          primaryGroupingFunction={(dataPoint) => generateTimeBucketsForEstimate({ estimate: dataPoint })}
-          primaryGroupingSortFunction={(timeBucketA, timeBucketB) => monthYearStringToMonthCount(timeBucketA) - monthYearStringToMonthCount(timeBucketB)}
-          secondaryGroupingFunction={(dataPoint) => getAllSecondaryKeys({
-            estimate: dataPoint,
-            secondaryKeyRegionPortions
-          }).secondaryKeyStrings}
-          secondaryGroupingKeyToLabel={(secondaryKey) => secondaryKeyStringToLabel(secondaryKey)}
-          transformOutputValue={({ data, secondaryGroupingKey }) => {
-            const secondaryKeyFields = secondaryKeyStringToSecondaryKeyFields(secondaryGroupingKey);
+          data={consolidatedData}
+          primaryGroupingFunction={(dataPoint) => getAllSeries({
+            dataPoint: dataPoint,
+            seriesRegionPortions
+          }).seriesStrings}
+          primaryGroupingKeyToLabel={(primaryGroupingKey) => seriesStringToLabel(primaryGroupingKey)}
+          primaryGroupingSortFunction={(primaryGroupingKeyA, primaryGroupingKeyB) => primaryGroupingKeyA > primaryGroupingKeyB ? 1 : -1}
+          dataPointToXAxisValue={({ dataPoint }) => dateToMonthCount(dataPoint.date)}
+          xAxisValueToLabel={({ xAxisValue }) => monthCountToMonthYearString(xAxisValue)}
+          xAxisLabelSortingFunction={(xAxisLabelA, xAxisLabelB) => monthYearStringToMonthCount(xAxisLabelA) - monthYearStringToMonthCount(xAxisLabelB)}
+          dataPointToYAxisValue={({dataPoint, primaryGroupingKey}) => {
+            const seriesFields = seriesStringToSeriesFields(primaryGroupingKey);
 
-            if(secondaryKeyFields.valueType === SecondaryKeyValueType.POSITIVE_CASES) {
-              return parseFloat(median(data
-                .filter((dataPoint): dataPoint is Omit<SarsCov2EstimateWithMidDateCleaned, "countryPositiveCasesPerMillionPeople"> & {
-                  countryPositiveCasesPerMillionPeople: NonNullable<SarsCov2EstimateWithMidDateCleaned["countryPositiveCasesPerMillionPeople"]>
-                } =>
-                  dataPoint.countryPositiveCasesPerMillionPeople !== null &&
-                  dataPoint.countryPositiveCasesPerMillionPeople !== undefined
-                )
-                .map((dataPoint) => (dataPoint.countryPositiveCasesPerMillionPeople / 1_000_000) * 100)
-              ).toFixed(1))
+            if(seriesFields.valueType === SeriesValueType.POSITIVE_CASES) {
+              return dataPoint.positiveCasesPerMillionPeople !== undefined
+                ? (dataPoint.positiveCasesPerMillionPeople / 1_000_000) * 100
+                : undefined
             }
 
-            if(secondaryKeyFields.valueType === SecondaryKeyValueType.VACCINATIONS) {
-              return parseFloat(median(data
-                .filter((dataPoint): dataPoint is Omit<SarsCov2EstimateWithMidDateCleaned, "countryPeopleVaccinatedPerHundred"> & {
-                  countryPeopleVaccinatedPerHundred: NonNullable<SarsCov2EstimateWithMidDateCleaned["countryPeopleVaccinatedPerHundred"]>
-                } =>
-                  dataPoint.countryPeopleVaccinatedPerHundred !== null &&
-                  dataPoint.countryPeopleVaccinatedPerHundred !== undefined
-                )
-                .map((dataPoint) => (dataPoint.countryPeopleVaccinatedPerHundred / 100) * 100)
-              ).toFixed(1))
+            if(seriesFields.valueType === SeriesValueType.VACCINATIONS) {
+              return dataPoint.peopleVaccinatedPerHundred;
             }
 
-            if(secondaryKeyFields.valueType === SecondaryKeyValueType.SEROPREVALENCE) {
-              return parseFloat(median(data
-                .filter((dataPoint): dataPoint is Omit<SarsCov2EstimateWithMidDateCleaned, "seroprevalence"> & {
-                  seroprevalence: NonNullable<SarsCov2EstimateWithMidDateCleaned["seroprevalence"]>
-                } =>
-                  dataPoint.seroprevalence !== null &&
-                  dataPoint.seroprevalence !== undefined
-                )
-                .map((dataPoint) => (dataPoint.seroprevalence) * 100)
-              ).toFixed(1))
+            if(seriesFields.valueType === SeriesValueType.SEROPREVALENCE) {
+              return dataPoint.seroprevalence !== undefined
+                ? dataPoint.seroprevalence * 100
+                : undefined;
             }
 
-            assertNever(secondaryKeyFields.valueType)
+            assertNever(seriesFields.valueType)
           }}
-          secondaryGroupingSortFunction={(secondaryKeyA, secondaryKeyB) => secondaryKeyA > secondaryKeyB ? 1 : -1 }
-          getLineColour={(_secondaryKey, index) => indexToColourMap[index] ?? generateRandomColour()}
-          legendConfiguration={props.legendConfiguration}
+          formatYAxisValue={({ yAxisValue }) => parseFloat((yAxisValue).toFixed(1))}
+          getLineColour={({ index }) => indexToColourMap[index] ?? generateRandomColour() }
+          bestFitLineSettings={{
+            maximumPolynomialOrder: 2,
+            yAxisDomain: {
+              maximumValue: 100,
+              minimumValue: 0
+            },
+            allowStrictlyIncreasingLinesOnly: true
+          }}
           percentageFormattingEnabled={true}
+          legendConfiguration={props.legendConfiguration}
         />
       </div>
     </div>

@@ -26,15 +26,16 @@ interface BestFitCurveLineChartProps<
     a: TPrimaryGroupingKey,
     b: TPrimaryGroupingKey
   ) => number;
+  primaryGroupingKeyToLabel?: (input: TPrimaryGroupingKey) => string;
   dataPointToXAxisValue: (input: { dataPoint: TData, primaryGroupingKey: TPrimaryGroupingKey }) => number;
   xAxisValueToLabel: (input: { xAxisValue: number }) => string;
   xAxisLabelSortingFunction?: (
     a: string,
     b: string
   ) => number;
-  dataPointToYAxisValue: (input: { dataPoint: TData, primaryGroupingKey: TPrimaryGroupingKey }) => number;
+  dataPointToYAxisValue: (input: { dataPoint: TData, primaryGroupingKey: TPrimaryGroupingKey }) => number | undefined;
   formatYAxisValue: (input: { yAxisValue: number}) => number;
-  getLineColour: (input: { primaryGroupingKey: TPrimaryGroupingKey }) => string;
+  getLineColour: (input: { primaryGroupingKey: TPrimaryGroupingKey, index: number }) => string;
   bestFitLineSettings: BestFitLineSettings;
   percentageFormattingEnabled?: boolean;
   legendConfiguration: LegendConfiguration;
@@ -61,10 +62,14 @@ export const BestFitCurveLineChart = <
   })
 
   const dataForBestFitLine = allPrimaryKeys.flatMap((primaryKey) => {
-    const allXAxisAndYAxisValues = rechartsData[primaryKey].map((dataPoint) => ({
-      xAxisValue: props.dataPointToXAxisValue({ dataPoint, primaryGroupingKey: primaryKey }),
-      yAxisValue: props.dataPointToYAxisValue({ dataPoint, primaryGroupingKey: primaryKey })
-    }));
+    const allXAxisAndYAxisValues = rechartsData[primaryKey]
+      .map((dataPoint) => ({
+        xAxisValue: props.dataPointToXAxisValue({ dataPoint, primaryGroupingKey: primaryKey }),
+        yAxisValue: props.dataPointToYAxisValue({ dataPoint, primaryGroupingKey: primaryKey })
+      }))
+      .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'yAxisValue'> & {
+        yAxisValue: NonNullable<typeof dataPoint['yAxisValue']>
+      } => dataPoint.yAxisValue !== undefined);
 
     const { xAxisValueToYAxisValue } = generateBestFitCurve({
       data: allXAxisAndYAxisValues,
@@ -126,8 +131,12 @@ export const BestFitCurveLineChart = <
       primaryGroupingSortFunction={props.xAxisLabelSortingFunction}
       secondaryGroupingFunction={(dataPoint) => dataPoint.secondaryKeyForLineChart}
       secondaryGroupingSortFunction={props.primaryGroupingSortFunction}
+      secondaryGroupingKeyToLabel={(primaryGroupingKey) => props.primaryGroupingKeyToLabel
+        ? props.primaryGroupingKeyToLabel(primaryGroupingKey)
+        : primaryGroupingKey
+      }
       transformOutputValue={({ data }) => data.at(0)?.yAxisValue ?? 0}
-      getLineColour={(primaryGroupingKey) => props.getLineColour({ primaryGroupingKey })}
+      getLineColour={(primaryGroupingKey, index) => props.getLineColour({ primaryGroupingKey, index })}
       legendConfiguration={props.legendConfiguration}
       percentageFormattingEnabled={props.percentageFormattingEnabled}
     />

@@ -5,8 +5,9 @@ import { request } from 'graphql-request';
 import { notFound } from 'next/navigation'
 import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
 import { SarsCov2Providers } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
-import { sarsCov2Estimates } from "@/hooks/useSarsCov2Data";
-import { sarsCov2Filters } from "@/hooks/useSarsCov2Filters";
+import { sarsCov2Estimates } from "@/hooks/sarscov2/useSarsCov2Data";
+import { sarsCov2Filters } from "@/hooks/sarscov2/useSarsCov2Filters";
+import { monthlySarsCov2CountryInformation } from "@/hooks/sarscov2/useMonthlySarsCov2CountryInformation";
 
 export default async function SarsCov2Layout({
   children,
@@ -18,6 +19,10 @@ export default async function SarsCov2Layout({
   await queryClient.prefetchQuery({
     queryKey: ["sarsCov2Estimates"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Estimates)
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ["monthlySarsCov2CountryInformation"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformation)
   });
   await queryClient.prefetchQuery({
     queryKey: ["sarsCov2FilterOptions"],
