@@ -9,6 +9,8 @@ export const sarsCov2Filters = gql`
       ageGroup
       scope
       sourceType
+      sex
+      populationGroup
       riskOfBias
       unRegion
       whoRegion

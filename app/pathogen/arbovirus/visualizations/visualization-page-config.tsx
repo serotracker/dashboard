@@ -14,6 +14,8 @@ import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
 import { StudyCountOverTimeBySampleFrame } from '../dashboard/(visualizations)/study-count-over-time-by-sample-frame';
 import { EstimateCountByArbovirusAndAntibodyTypeGraph } from '../dashboard/(visualizations)/estimate-count-by-arbovirus-and-antibody-type-graph';
+import Link from 'next/link';
+import { UNRegionsTooltip, WHORegionsTooltip } from '@/components/customs/tooltip-content';
 
 export enum ArbovirusVisualizationId {
   CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS = "CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS",
@@ -92,6 +94,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     urlParameter:
       ArbovirusVisualizationUrlParameter["estimate-count-by-who-region-and-arbovirus"],
     getDisplayName: () => "Estimate count by WHO region and arbovirus",
+    titleTooltipContent: <WHORegionsTooltip />,
     renderVisualization: () => EstimateCountByWHORegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
   [ArbovirusVisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS]: {
@@ -99,6 +102,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     urlParameter:
       ArbovirusVisualizationUrlParameter["estimate-count-by-un-region-and-arbovirus"],
     getDisplayName: () => "Estimate count by UN region and arbovirus",
+    titleTooltipContent: <UNRegionsTooltip />,
     renderVisualization: () => EstimateCountByUnRegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
   [ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: {
@@ -106,6 +110,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     urlParameter:
       ArbovirusVisualizationUrlParameter["median-seroprevalence-by-who-region"],
     getDisplayName: () => "Median seroprevalence of arboviruses by WHO Region",
+    titleTooltipContent: <WHORegionsTooltip />,
     renderVisualization: MedianSeroprevalenceByWHORegionAndArbovirusGraph
   },
   [ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_UN_REGION]: {
@@ -113,6 +118,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     urlParameter:
       ArbovirusVisualizationUrlParameter["median-seroprevalence-by-un-region"],
     getDisplayName: () => "Median seroprevalence of arboviruses by UN Region",
+    titleTooltipContent: <UNRegionsTooltip />,
     renderVisualization: MedianSeroprevalenceByUnRegionAndArbovirusGraph
   },
   [ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP]: {
@@ -122,6 +128,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
         "median-seroprevalence-by-who-region-and-age-group"
       ],
     getDisplayName: () => "Median seroprevalence by WHO region and age group",
+    titleTooltipContent: <WHORegionsTooltip />,
     renderVisualization: MedianSeroprevalenceByWhoRegionAndAgeGroupTable
   },
   [ArbovirusVisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS]: {
@@ -140,6 +147,9 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
         "change-in-median-seroprevalence-over-time"
       ],
     getDisplayName: () => "Change in median seroprevalence over time",
+    titleTooltipContent: (
+      <p> Hovering over any one of the bars will show the median seroprevalence for that time period. Time periods with no data are not shown so intervals on the x-axis may or may not be consecutive time periods.</p>
+    ),
     renderVisualization: ChangeInMedianSeroprevalenceOverTimeGraph
   },
   [ArbovirusVisualizationId.COUNTRY_SEROPREVALENCE_COMPARISON_SCATTER_PLOT]: {
@@ -157,8 +167,10 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
 
       return `${convertArboSFtoArbo(selectedPathogen)} study estimates with 95% CIs`;
     },
-    titleTooltipText: '95% confidence intervals were calculated using the Clopper-Pearson method if not reported in the source.',
-    renderVisualization: CountrySeroprevalenceComparisonScatterPlot
+    titleTooltipContent: (
+      <p>95% confidence intervals were calculated using the Clopper-Pearson method if not reported in the source.</p>
+    ),
+    renderVisualization: ({ data, highlightedDataPoint, hideArbovirusDropdown }) => CountrySeroprevalenceComparisonScatterPlot({ data, highlightedDataPoint, hideArbovirusDropdown })
   },
 }
 

@@ -33,8 +33,16 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
     )
   },
   [FAQPageOptionId.WHERE_DOES_ARBOTRACKER_DATA_COME_FROM]: {
-    label: 'How often is ArboTracker data updated?',
-    content: <p className='inline'> We conducted a search for published articles on March 13, 2023 of several databases including Web of Science, Google Scholar, LILACS, and PubMed. We aim to update our search to include unpublished grey literature in May 2024. In addition, anyone can submit sources for us to screen and include in our review by filling out <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href='https://forms.gle/pKNiMiMYr6hiKnXx8'>this form</Link>.</p>
+    label: 'Where does ArboTracker data come from?',
+    content:(
+      <>
+        <p className='inline'> We conducted a search for published articles on March 13, 2023 of several databases including Web of Science, Google Scholar, LILACS, and PubMed. Our search strategy was updated for a second search to include MEDLINE and EMBASE databases in May 2024. A PROSPERO search record for our May 2024 search with a citation can be found </p>
+        <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href='https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000'>here</Link>
+        <p className='inline'>. In addition, anyone can submit sources for us to screen and include in our review by filling out </p>
+        <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href='https://forms.gle/pKNiMiMYr6hiKnXx8'>this form</Link>
+        <p className="inline">.</p>
+      </>
+    )
   },
   [FAQPageOptionId.HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES]: {
     label: 'How is the data extracted from sources?',
@@ -42,20 +50,26 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
   },
   [FAQPageOptionId.HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED]: {
     label: 'How often is ArboTracker data updated?',
-    content: <p className='inline'> The search feeding the current dashboard was conducted on March 13, 2023. We aim to update our search strategy and dashboard in May 2024 to capture additional data.</p>
+    content: (
+      <>
+        <p className='inline'> The search feeding the current dashboard was conducted on March 13, 2023. In May 2024 our search strategy was updated to capture additional data, which will be added to the dashboard in the coming months. The PROSPERO record for the May 2024 search and a citation can be found </p>
+        <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href='https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000'>here</Link>
+        <p className='inline'>.</p>
+      </>
+    )
   },
   [FAQPageOptionId.HOW_DOES_ARBOTRACKER_DATA_SHOW_UP_ON_THE_MAP]: {
     label: 'How does ArboTracker data show up on the map?',
-    content: <p className='inline'> Data inputted into Airtable is automatically run through a software pipeline that cleans it and computes additional information (e.g. a study’s geographic coordinates). The outputs of the pipeline are then stored in a separate database, which is queried by <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://serotracker.vercel.app/">serotracker.vercel.app</Link> to serve the map, data tables, and data visualizations. Our data pipeline code is open source and can be found <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://github.com/serotracker/iit-backend-v2">here</Link>. </p>
+    content: <p className='inline'> Data inputted into Airtable is automatically run through a software pipeline that cleans it and computes additional information (e.g. a study’s geographic coordinates). The outputs of the pipeline are then stored in a separate database, which is queried by <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://new.serotracker.com/">new.serotracker.com</Link> to serve the map, data tables, and data visualizations. Our data pipeline code is open source and can be found <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://github.com/serotracker/iit-backend-v2">here</Link>. </p>
   },
   [FAQPageOptionId.CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS]: {
     label: 'Can I download ArboTracker data for my own analysis?',
     content: (
       <>
         <p className='inline'> Yes, our data is open-source and free for anyone to use. Every data table on the dashboard has a button next to it that allows you to download a csv of the data in the table. </p>
-        <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://serotracker.vercel.app/pathogen/arbovirus/dashboard#TABLE">This is a link to the ArboTracker data table where it is possible to download a csv containing all of our arbovirus seroprevalence estimates</Link>
+        <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://new.serotracker.com/pathogen/arbovirus/dashboard#TABLE">This is a link to the ArboTracker data table where it is possible to download a csv containing all of our arbovirus seroprevalence estimates</Link>
         <p className='inline'>. This is the recommended citation for our data: </p>
-        <p className='inline italic'>Ware H*, Whelan M*, Ranka H, Roell Y, Aktar S, Kenny S, Pinno E, SeroTracker Research Team, Bobrovitz N**, Arora RK**, Jaenisch T**. ArboTracker: A Dashboard and Data Platform for arbovirus serosurveys (2024); Website, accessible via www.new.SeroTracker.com</p>
+        <p className='inline italic'>Harriet Ware, Mairead Whelan, Anabel Selemon, Emilie Toews, Shaila Akter, Niklas Bobrovitz, Rahul Arora, Yannik Roell, Thomas Jaenisch. A living systematic review of arbovirus seroprevalence studies. PROSPERO 2024 CRD42024551000 Available from: https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000</p>
         <p className='inline'>.</p>
       </>
     )

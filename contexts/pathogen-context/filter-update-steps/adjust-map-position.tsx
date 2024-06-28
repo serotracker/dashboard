@@ -11,6 +11,7 @@ import {
 } from "../../pathogen-context/filter-update-steps";
 import { isUNRegion } from "@/lib/un-regions";
 import { isWHORegion } from "@/lib/who-regions";
+import { PathogenContextState } from "../pathogen-context";
 
 interface GetAllBoundingBoxesFromSelectedFiltersInput {
   selectedFilters: Record<string, string[] | undefined>;
@@ -54,9 +55,12 @@ const getAllBoundingBoxesFromSelectedFilters = (
   ];
 };
 
-export const adjustMapPosition = <TData extends Record<string, unknown>>(
-  input: HandleFilterUpdateInput<TData>
-): HandleFilterUpdateOutput<TData> => {
+export const adjustMapPosition = <
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+>(
+  input: HandleFilterUpdateInput<TData, TPathogenContextState>
+): HandleFilterUpdateOutput<TData, TPathogenContextState> => {
   if (!input.map) {
     return input;
   }

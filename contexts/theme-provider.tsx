@@ -16,6 +16,9 @@ export function ThemeProvider({children}: {children: React.ReactNode}) {
         } else if (pathname.includes("sarscov2")) {
           document.documentElement.style.setProperty('--background', style.getPropertyValue('--sc2'));
           document.documentElement.style.setProperty('--background-hover', style.getPropertyValue('--sc2-hover'));
+        } else if (pathname.includes("mers")) {
+          document.documentElement.style.setProperty('--background', style.getPropertyValue('--mers'));
+          document.documentElement.style.setProperty('--background-hover', style.getPropertyValue('--mers-hover'));
         } else {
           document.documentElement.style.setProperty('--background', style.getPropertyValue('--sero'));
           document.documentElement.style.setProperty('--background-hover', style.getPropertyValue('--sero-hover'));
@@ -23,9 +26,9 @@ export function ThemeProvider({children}: {children: React.ReactNode}) {
       }, [pathname]);
     
     return (
-        <div>
+      <div>
         {children}
-        </div>
+      </div>
     )
 }
 

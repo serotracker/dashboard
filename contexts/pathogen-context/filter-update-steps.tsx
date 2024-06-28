@@ -7,17 +7,26 @@ import { applyNewSelectedFilters } from "./filter-update-steps/apply-new-selecte
 import { updateSerotypeFilter } from "./filter-update-steps/update-serotype-filter";
 import { PathogenContextAction, PathogenContextState } from "./pathogen-context";
 
-export interface HandleFilterUpdateInput<TData extends Record<string, unknown>> {
-  state: PathogenContextState<TData>,
+export interface HandleFilterUpdateInput<
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+> {
+  state: TPathogenContextState,
   action: PathogenContextAction,
   map: MapRef | undefined
 }
 
-export type HandleFilterUpdateOutput<TData extends Record<string, unknown>> = HandleFilterUpdateInput<TData>;
+export type HandleFilterUpdateOutput<
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+> = HandleFilterUpdateInput<TData, TPathogenContextState>;
 
-export const handleFilterUpdate = <TData extends Record<string, unknown>>(
-  input: HandleFilterUpdateInput<TData>
-): HandleFilterUpdateOutput<TData> => {
+export const handleFilterUpdate = <
+  TData extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TData>
+>(
+  input: HandleFilterUpdateInput<TData, TPathogenContextState>
+): HandleFilterUpdateOutput<TData, TPathogenContextState> => {
   return pipe(
     input,
     addActionToSelectedFilters,
