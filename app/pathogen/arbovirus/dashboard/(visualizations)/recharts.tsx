@@ -17,7 +17,7 @@ import {
 import _ from "lodash";
 import { pathogenColors } from "../(map)/ArbovirusMap";
 import clsx from "clsx";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { CustomXAxisTick } from "@/components/customs/visualizations/custom-x-axis-tick";
 import { Arbovirus } from "@/gql/graphql";
 

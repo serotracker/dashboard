@@ -1,13 +1,12 @@
 "use client";
 import { createContext, useEffect, useMemo } from "react";
-import { PathogenContextActionType, PathogenContextState, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../pathogen-context";
+import { PathogenContextActionType, PathogenContextState, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../../pathogen-context";
 import { PartitionedSarsCov2EstimatesQuery } from "@/gql/graphql";
 import { useSarsCov2Filters } from "@/hooks/sarscov2/useSarsCov2Filters";
-import { CountryDataContext } from "../country-information-context";
+import { CountryDataContext } from "../../country-information-context";
 import { MonthlySarsCov2CountryInformationProvider } from "./monthly-sarscov2-country-information-context";
-import { useSarsCov2DataPartitionKeys } from "@/hooks/sarscov2/useSarsCov2DataPartitionKeys";
-import { useSarsCov2DataPartitioned } from "@/hooks/sarscov2/useSarsCov2DataPartitioned";
 import { useSarsCov2Data } from "@/hooks/sarscov2/use-sars-cov2-data";
+import { ModelledSarsCov2SeroprevalenceProvider } from "./modelled-sarscov2-seroprevalence-context";
 
 const initialSarsCov2ContextState = {
   filteredData: [],
@@ -85,9 +84,11 @@ export const SarsCov2Providers = (props: SarsCov2ProvidersProps) => {
       mapId={"sarsCov2Map"}
       dataFetcher={SarsCov2DataFetcher}
     >
-      <MonthlySarsCov2CountryInformationProvider>
-        {props.children}
-      </MonthlySarsCov2CountryInformationProvider>
+      <ModelledSarsCov2SeroprevalenceProvider>
+        <MonthlySarsCov2CountryInformationProvider>
+          {props.children}
+        </MonthlySarsCov2CountryInformationProvider>
+      </ModelledSarsCov2SeroprevalenceProvider>
     </PathogenProviders>
   )
 }

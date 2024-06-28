@@ -21,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import { useChartArbovirusDropdown } from "./chart-arbovirus-dropdown";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { WhoRegion } from "@/gql/graphql";
 
 enum AgeGroup {

@@ -8,7 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 

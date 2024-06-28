@@ -1,6 +1,6 @@
 "use client"
 
-import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { GenericPathogenVisualizationsPage } from "../../generic-pathogen-visualizations-page";
 import { SarsCov2Filters } from "../dashboard/filters";
 import { 

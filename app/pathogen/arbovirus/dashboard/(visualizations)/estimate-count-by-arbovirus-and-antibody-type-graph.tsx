@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { LegendConfiguration, StackedBarChart } from "@/components/customs/visualizations/stacked-bar-chart";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { convertArboSFtoArbo } from "./recharts";
 import { sortArboviruses } from "./rechart-utils";
 import { generateRandomColour } from "@/lib/utils";

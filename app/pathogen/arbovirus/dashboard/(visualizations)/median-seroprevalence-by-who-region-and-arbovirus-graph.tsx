@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { SplitBarChart } from "../../../../../components/customs/visualizations/split-bar-chart";
 import { convertArboSFtoArbo, median } from "./recharts";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 
 export const MedianSeroprevalenceByWHORegionAndArbovirusGraph = () => {
   const state = useContext(ArboContext);

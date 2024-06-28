@@ -4,7 +4,7 @@ import getQueryClient from "@/components/customs/getQueryClient";
 import { request } from 'graphql-request';
 import { notFound } from 'next/navigation'
 import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
-import { SarsCov2Providers } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { SarsCov2Providers } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { sarsCov2Filters } from "@/hooks/sarscov2/useSarsCov2Filters";
 import { monthlySarsCov2CountryInformation } from "@/hooks/sarscov2/useMonthlySarsCov2CountryInformation";
 import { sarsCov2EstimatesPartitionKeys } from "@/hooks/sarscov2/useSarsCov2DataPartitionKeys";

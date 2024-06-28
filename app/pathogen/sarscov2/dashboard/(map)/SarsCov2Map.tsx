@@ -2,7 +2,7 @@
 
 import React, { useContext, useMemo } from "react";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
-import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { MapSymbology } from "./map-config";
 import { SarsCov2EstimatePopupContent } from "./sars-cov-2-estimate-pop-up-content";
