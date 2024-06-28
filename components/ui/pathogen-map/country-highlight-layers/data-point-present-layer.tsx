@@ -41,13 +41,13 @@ export const useDataPointPresentLayer = () => {
 
     return {
       paint: {
-        countryData: (input.countryHighlightingEnabled === false) ? countryData : [],
+        countryData: (input.countryHighlightingEnabled === true) ? countryData : [],
         defaults: {
           fill: MapSymbology.CountryFeature.Default.Color,
           opacity: MapSymbology.CountryFeature.Default.Opacity
         }
       },
-      countryHighlightLayerLegendEntries: (input.countryHighlightingEnabled === false) ? countryHighlightLayerLegendEntries : [],
+      countryHighlightLayerLegendEntries: (input.countryHighlightingEnabled === true) ? countryHighlightLayerLegendEntries : [],
     }
   }, []);
 
