@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import { CustomizationSettingType } from "./customization-settings";
 import { Dropdown, DropdownProps } from '@/components/customs/dropdown/dropdown';
+import { cn } from '@/lib/utils';
+import { CustomizationSettingType } from "./customization-settings";
 
 export type DropdownCustomizationSettingProps<TDropdownOption extends string> = {
   type: CustomizationSettingType.DROPDOWN; 

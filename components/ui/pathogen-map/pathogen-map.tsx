@@ -84,6 +84,7 @@ interface PathogenMapProps<
   TClusterPropertyKey extends string
 > {
   id: string;
+  countryPopUpEnabled: boolean;
   baseCursor: PathogenMapCursor;
   layers: PathogenMapLayerInfo[];
   generatePopupContent: PopupContentGenerator<TPathogenDataPointProperties>;
@@ -99,6 +100,7 @@ export function PathogenMap<
 >({
   id,
   baseCursor,
+  countryPopUpEnabled,
   generatePopupContent,
   layers,
   dataPoints,
@@ -119,6 +121,10 @@ export function PathogenMap<
 
   const setPopUpInfo = (newPopUpInfo: PopupInfo<TPathogenDataPointProperties>) => {
     if(newPopUpInfo.layerId === 'country-highlight-layer') {
+      if(!countryPopUpEnabled) {
+        return;
+      }
+
       setPopUpInfoForCountryHighlightLayer({
         newPopUpInfo,
         setPopUpInfo: _setPopUpInfo,

@@ -40,7 +40,7 @@ export const MersMap = () => {
   const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);
   const { data } = useMersData();
   const { faoMersEvents } = useFaoMersEventData();
-  const { currentMapCountryHighlightingSettings, ...mersMapCustomizationModal } = useMersMapCustomizationModal();
+  const { currentMapCountryHighlightingSettings, countryPopUpEnabled, ...mersMapCustomizationModal } = useMersMapCustomizationModal();
 
   const dataPointPresentMapLayer = useDataPointPresentLayer();
   const totalCamelPopulationMapLayer = useTotalCamelPopulationLayer();
@@ -85,6 +85,7 @@ export const MersMap = () => {
       <div className={"w-full h-full p-0"}>
         <PathogenMap
           id="mersMap"
+          countryPopUpEnabled={countryPopUpEnabled}
           baseCursor=""
           sourceId="mers-[GENERATED-SOURCE-ID]"
           layers={[

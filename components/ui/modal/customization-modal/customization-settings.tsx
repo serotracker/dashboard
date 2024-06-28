@@ -7,5 +7,5 @@ export enum CustomizationSettingType {
 }
 
 export type CustomizationSetting<TDropdownOption extends string> =
-| DropdownCustomizationSettingProps<TDropdownOption>
-| SwitchCustomizationSettingProps;
+  | DropdownCustomizationSettingProps<TDropdownOption>
+  | SwitchCustomizationSettingProps;

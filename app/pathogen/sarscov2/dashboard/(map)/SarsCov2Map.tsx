@@ -11,10 +11,12 @@ import { SarsCov2CountryPopupContent } from "./sars-cov-2-country-pop-up-content
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-highlight-layers/data-point-present-layer";
 import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
+import { useSarsCov2MapCustomizationModal } from "./use-sars-cov-2-map-customization-modal";
 
 export function SarsCov2Map() {
   const { filteredData } = useContext(SarsCov2Context);
   const { getCountryHighlightingLayerInformation } = useDataPointPresentLayer();
+  const { countryPopUpEnabled, ...sarsCov2MapCustomizationModal } = useSarsCov2MapCustomizationModal();
 
   const { paint, countryHighlightLayerLegendEntries } = useMemo(() => getCountryHighlightingLayerInformation({
     data: filteredData,
@@ -30,6 +32,7 @@ export function SarsCov2Map() {
       <div className={"w-full h-full p-0"}>
         <PathogenMap
           id="sarsCov2Map"
+          countryPopUpEnabled={countryPopUpEnabled}
           baseCursor=""
           sourceId="sc2-[GENERATED-SOURCE-ID]"
           layers={[
@@ -134,6 +137,8 @@ export function SarsCov2Map() {
         legendEntries={countryHighlightLayerLegendEntries}
       />
       <MapEstimateSummary filteredData={filteredData.map(({studyName}) => ({sourceSheetName: studyName}))}/>
+      <sarsCov2MapCustomizationModal.mapCustomizeButton />
+      <sarsCov2MapCustomizationModal.customizationModal />
     </>
   );
 }
