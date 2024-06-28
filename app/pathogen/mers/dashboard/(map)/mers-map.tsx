@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
-import { MapShadingLegend } from "@/app/pathogen/arbovirus/dashboard/(map)/MapShadingLegend";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
@@ -21,7 +20,12 @@ import {
   isMersFaoHumanEventMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
-import { useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
+import { MersMapCountryHighlightingSettings, useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
+import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-highlight-layers/data-point-present-layer";
+import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
+import { useTotalCamelPopulationLayer } from "./country-highlight-layers/total-camel-population-layer";
+import { useCamelsPerCapitaLayer } from "./country-highlight-layers/camels-per-capita-layer";
+import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
 
 const MapPinColours = {
   'HumanMersEvent': "#8abded",
@@ -32,11 +36,44 @@ const MapPinColours = {
 } as const;
 
 export const MersMap = () => {
-  const state = useContext(MersContext);
+  const { filteredData, faoMersEventData } = useContext(MersContext);
+  const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);
   const { data } = useMersData();
   const { faoMersEvents } = useFaoMersEventData();
+  const { currentMapCountryHighlightingSettings, ...mersMapCustomizationModal } = useMersMapCustomizationModal();
 
-  const mersMapCustomizationModal = useMersMapCustomizationModal();
+  const dataPointPresentMapLayer = useDataPointPresentLayer();
+  const totalCamelPopulationMapLayer = useTotalCamelPopulationLayer();
+  const camelsPerCapitaMapLayer = useCamelsPerCapitaLayer();
+
+  const dataPoints = useMemo(() => [...filteredData, ...(faoMersEventData
+    .map((element) => ({
+      ...element,
+      country: element.country.name,
+      countryAlphaThreeCode: element.country.alphaThreeCode,
+      countryAlphaTwoCode: element.country.alphaTwoCode
+    }))
+    .filter((element) => element.diagnosisStatus === MersDiagnosisStatus.Confirmed)
+  )], [filteredData, faoMersEventData]);
+
+  const { paint, countryHighlightLayerLegendEntries } = useMemo(() => {
+    if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES) {
+      return dataPointPresentMapLayer.getCountryHighlightingLayerInformation({
+        data: dataPoints
+      });
+    }
+    if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION) {
+      return totalCamelPopulationMapLayer.getCountryHighlightingLayerInformation({
+        data: latestFaoCamelPopulationDataPointsByCountry ?? []
+      });
+    }
+    if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA) {
+      return camelsPerCapitaMapLayer.getCountryHighlightingLayerInformation({
+        data: latestFaoCamelPopulationDataPointsByCountry ?? []
+      });
+    }
+    assertNever(currentMapCountryHighlightingSettings);
+  }, [dataPointPresentMapLayer, totalCamelPopulationMapLayer, camelsPerCapitaMapLayer, currentMapCountryHighlightingSettings, dataPoints, latestFaoCamelPopulationDataPointsByCountry]);
 
   if (!data || !faoMersEvents) {
     return <span> Loading... </span>;
@@ -138,19 +175,15 @@ export const MersMap = () => {
 
             assertNever(mersMarkerData);
           }}
-          dataPoints={[...state.filteredData, ...(state.faoMersEventData
-            .map((element) => ({
-              ...element,
-              country: element.country.name,
-              countryAlphaThreeCode: element.country.alphaThreeCode,
-              countryAlphaTwoCode: element.country.alphaTwoCode
-            }))
-            .filter((element) => element.diagnosisStatus === MersDiagnosisStatus.Confirmed)
-          )]}
+          dataPoints={dataPoints}
+          paint={paint}
           />
       </div>
-      <MapShadingLegend className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"} />
-      <MapEstimateSummary filteredData={state.filteredData.map(() => ({sourceSheetName: "Study name goes here..."}))}/>
+      <CountryHighlightLayerLegend
+        className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"}
+        legendEntries={countryHighlightLayerLegendEntries}
+      />
+      <MapEstimateSummary filteredData={filteredData.map(() => ({sourceSheetName: "Study name goes here..."}))}/>
       <mersMapCustomizationModal.mapCustomizeButton />
       <mersMapCustomizationModal.customizationModal />
     </>

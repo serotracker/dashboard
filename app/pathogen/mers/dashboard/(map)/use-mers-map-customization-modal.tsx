@@ -3,7 +3,7 @@ import { ModalState, ModalType, useModal } from "@/components/ui/modal/modal";
 import { CustomizationSettingType } from "@/components/ui/modal/customization-modal/customization-settings";
 import { MapCustomizeButton } from "@/components/ui/pathogen-map/map-customize-button";
 
-enum MersMapCountryHighlightingSettings {
+export enum MersMapCountryHighlightingSettings {
   EVENTS_AND_ESTIMATES = 'EVENTS_AND_ESTIMATES',
   TOTAL_CAMEL_POPULATION = 'TOTAL_CAMEL_POPULATION',
   CAMELS_PER_CAPITA = 'CAMELS_PER_CAPITA'
@@ -61,6 +61,7 @@ export const useMersMapCustomizationModal = () => {
 
   return {
     customizationModal,
+    currentMapCountryHighlightingSettings,
     mapCustomizeButton: () => mapCustomizeButton
   }
 }
