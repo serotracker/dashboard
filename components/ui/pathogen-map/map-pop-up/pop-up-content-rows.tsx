@@ -6,8 +6,10 @@ import { PopUpContentNumberRow, PopUpContentNumberRowProps } from "./pop-up-cont
 import { PopUpContentTextRow, PopUpContentTextRowProps } from "./pop-up-content-rows/pop-up-content-text-row";
 import { cn } from "@/lib/utils";
 import { GenericMapPopUpWidth } from "./generic-map-pop-up";
+import { PopUpContentDateRow, PopUpContentDateRowProps } from "./pop-up-content-rows/pop-up-content-date-row";
 
 export enum PopUpContentRowType {
+  DATE = "DATE",
   DATE_RANGE = "DATE_RANGE",
   NUMBER = "NUMBER",
   LOCATION = "LOCATION",
@@ -24,6 +26,7 @@ export interface PopUpContentRowBaseProps {
 
 export type PopUpContentRowProps = 
   | PopUpContentDateRangeRowProps
+  | PopUpContentDateRowProps
   | PopUpContentNumberRowProps
   | PopUpContentLocationRowProps
   | PopUpContentTextRowProps
@@ -75,6 +78,10 @@ export const PopUpContentRow = (props: PopUpContentRowProps): React.ReactNode =>
 
   if(props.type === PopUpContentRowType.DATE_RANGE) {
     return <PopUpContentDateRangeRow {...props} />
+  }
+
+  if(props.type === PopUpContentRowType.DATE) {
+    return <PopUpContentDateRow {...props} />
   }
 
   if(props.type === PopUpContentRowType.NUMBER) {

@@ -4292,6 +4292,22 @@
             "deprecationReason": null
           },
           {
+            "name": "country",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "CountryIdentifiers",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "countryAlphaThreeCode",
             "description": null,
             "args": [],
@@ -4335,6 +4351,18 @@
                 "name": "String",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "whoRegion",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "WHORegion",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
