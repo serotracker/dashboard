@@ -3,7 +3,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 const config: CodegenConfig = {
    schema: 'https://iit-backend-v2.vercel.app/api/graphql',
    overwrite: true,
-   documents: "./hooks/*.tsx",
+   documents: "./hooks/**/*.tsx",
    generates: {
       './gql/': {
         preset: 'client',
