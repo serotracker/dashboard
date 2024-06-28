@@ -14,7 +14,7 @@ interface DateFilterProps<
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
   state: PathogenContextType<TEstimate, TPathogenContextState>,
-  data: any
+  data: TEstimate[] | Record<string, unknown>;
 }
 
 export const DateFilter = <

@@ -18,15 +18,15 @@ import {
   isMersEventAnimalSpecies,
   isMersEventAnimalType,
   isMersEventTypename,
-  mersEventTypenameToColourClassnameMap,
-  mersEventTypenameToLabelMap
+  mersDataTypeToLabelMap,
+  mersDataTypeToColourClassnameMap
 } from "../(map)/shared-mers-map-pop-up-variables";
 
 const mersCasesColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: '__typename',
-  valueToDisplayLabel: (typename: string) => isMersEventTypename(typename) ? mersEventTypenameToLabelMap[typename] : typename,
-  valueToColourSchemeClassnameMap: mersEventTypenameToColourClassnameMap,
+  valueToDisplayLabel: (typename: string) => isMersEventTypename(typename) ? mersDataTypeToLabelMap[typename] : typename,
+  valueToColourSchemeClassnameMap: mersDataTypeToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Event Type'
 }, {

@@ -12,6 +12,7 @@ import { CountryInformationContext } from "@/contexts/pathogen-context/country-i
 import { Arbovirus } from "@/gql/graphql";
 import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
+import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
 import { UNRegionsTooltip, WHORegionsTooltip } from "../tooltip-content";
 
 export interface FieldInformation {
@@ -45,7 +46,7 @@ interface FilterRenderingFunctionInput<
   placeholder: string;
   state: PathogenContextType<TEstimate, TPathogenContextState>;
   filterOptions: string[];
-  data: TEstimate[];
+  data: TEstimate[] | Record<string, unknown>;
   optionToLabelMap: Record<string, string | undefined>;
   optionSortingFunction: ((a: string, b: string) => number) | undefined;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
@@ -61,6 +62,7 @@ type FilterRenderingFunction = <
 
 export enum FilterableField {
   ageGroup = "ageGroup",
+  __typename = "__typename",
   pediatricAgeGroup = "pediatricAgeGroup",
   sex = "sex",
   esm = "esm",
@@ -84,7 +86,10 @@ export enum FilterableField {
   antibodies = "antibodies",
   testType = "testType",
   isotypes = "isotypes",
-  populationGroup = "populationGroup"
+  populationGroup = "populationGroup",
+  diagnosisSource = "diagnosisSource",
+  animalType = "animalType",
+  animalSpecies = "animalSpecies"
 }
 
 const RiskOfBiasTooltip: TooltipContentRenderingFunction = (input) => (
@@ -347,7 +352,35 @@ export const useAvailableFilters = () => {
       label: "Population group",
       valueToLabelMap: {},
       filterRenderingFunction: MultiSelectFilter
-    }
+    },
+    [FilterableField.__typename]: {
+      field: FilterableField.__typename,
+      label: "Data Type",
+      valueToLabelMap: mersDataTypeToLabelMap,
+      optionToColourClassnameMap: mersDataTypeToColourClassnameMapForCheckbox,
+      optionSortingFunction: (optionA, optionB) => 
+        (mersDataTypeToSortOrderMap[optionA] ?? 0) - (mersDataTypeToSortOrderMap[optionB] ?? 0),
+      filterRenderingFunction: ColouredCheckboxFilter,
+      clearAllButtonText: 'Clear all data types'
+    },
+    [FilterableField.diagnosisSource]: {
+      field: FilterableField.diagnosisSource,
+      label: "Diagnosis Source",
+      valueToLabelMap: diagnosisSourceToStringMap,
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.animalType]: {
+      field: FilterableField.animalType,
+      label: "Animal Type",
+      valueToLabelMap: animalTypeToStringMap,
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.animalSpecies]: {
+      field: FilterableField.animalSpecies,
+      label: "Animal Species",
+      valueToLabelMap: animalSpeciesToStringMap,
+      filterRenderingFunction: MultiSelectFilter
+    },
   }
 
   return {

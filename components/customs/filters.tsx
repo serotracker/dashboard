@@ -53,7 +53,7 @@ interface FiltersProps<
   filterSections: FilterSectionConfiguration[]
   state: PathogenContextType<TEstimate, TPathogenContextState>;
   filterData: Record<string, string[] | undefined>;
-  data: TEstimate[];
+  data: TEstimate[] | Record<string, unknown>;
   resetAllFiltersButtonEnabled: boolean;
   className?: string;
 }
