@@ -13,6 +13,7 @@ import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
 import { typedObjectKeys } from '@/lib/utils';
 import { CustomXAxisTick } from './custom-x-axis-tick';
 import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from './group-data-for-recharts/group-data-for-recharts-twice';
+import { applyLabelsToGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
 
 export enum LegendConfiguration {
   RIGHT_ALIGNED = 'RIGHT_ALIGNED',
@@ -102,17 +103,11 @@ export const StackedBarChart = <
     };
   }
 
-  const rechartsDataUsingLabels: Array<
-    Record<'primaryKey', string> & Record<string, number | undefined>
-  > = useMemo(() => rechartsData.map((dataPoint) => (
-    Object.fromEntries(typedObjectKeys(dataPoint).map((dataPointKey) => {
-      if(dataPointKey === 'primaryKey') {
-        return ['primaryKey', primaryGroupingKeyToLabel ? primaryGroupingKeyToLabel(dataPoint['primaryKey']) : dataPoint['primaryKey']]
-      }
-
-      return [secondaryGroupingKeyToLabel ? secondaryGroupingKeyToLabel(dataPointKey) : dataPointKey, dataPoint[dataPointKey]]
-    }))
-  )), [rechartsData, primaryGroupingKeyToLabel, secondaryGroupingKeyToLabel])
+  const { rechartsDataUsingLabels } = useMemo(() => applyLabelsToGroupedRechartsData({
+    rechartsData,
+    primaryGroupingKeyToLabel,
+    secondaryGroupingKeyToLabel
+  }), [rechartsData, primaryGroupingKeyToLabel, secondaryGroupingKeyToLabel]);
 
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
