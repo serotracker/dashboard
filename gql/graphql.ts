@@ -239,6 +239,37 @@ export type MersFilterOptions = {
   whoRegion: Array<WhoRegion>;
 };
 
+export enum Month {
+  April = 'APRIL',
+  August = 'AUGUST',
+  December = 'DECEMBER',
+  February = 'FEBRUARY',
+  January = 'JANUARY',
+  July = 'JULY',
+  June = 'JUNE',
+  March = 'MARCH',
+  May = 'MAY',
+  November = 'NOVEMBER',
+  October = 'OCTOBER',
+  September = 'SEPTEMBER'
+}
+
+export type MonthlySarsCov2CountryInformationEntry = {
+  __typename?: 'MonthlySarsCov2CountryInformationEntry';
+  alphaThreeCode: Scalars['String']['output'];
+  alphaTwoCode: Scalars['String']['output'];
+  gbdSubRegion?: Maybe<GbdSubRegion>;
+  gbdSuperRegion?: Maybe<GbdSuperRegion>;
+  month: Month;
+  peopleFullyVaccinatedPerHundred?: Maybe<Scalars['Float']['output']>;
+  peopleVaccinatedPerHundred?: Maybe<Scalars['Float']['output']>;
+  population?: Maybe<Scalars['Int']['output']>;
+  positiveCasesPerMillionPeople?: Maybe<Scalars['Float']['output']>;
+  unRegion?: Maybe<UnRegion>;
+  whoRegion?: Maybe<WhoRegion>;
+  year: Scalars['Int']['output'];
+};
+
 export type PartitionedFaoMersEventsInput = {
   partitionKey: Scalars['Int']['input'];
 };
@@ -247,6 +278,16 @@ export type PartitionedFeoMersEventsOutput = {
   __typename?: 'PartitionedFeoMersEventsOutput';
   mersEvents: Array<MersEvent>;
   partitionKey: Scalars['Int']['output'];
+};
+
+export type PartitionedYearlyFaoCamelPopulationDataInput = {
+  partitionKey: Scalars['Int']['input'];
+};
+
+export type PartitionedYearlyFaoCamelPopulationDataOutput = {
+  __typename?: 'PartitionedYearlyFaoCamelPopulationDataOutput';
+  partitionKey: Scalars['Int']['output'];
+  yearlyFaoCamelPopulationData: Array<YearlyFaoCamelPopulationDataEntry>;
 };
 
 export type Query = {
@@ -258,14 +299,22 @@ export type Query = {
   groupedTeamMembers: Array<TeamMemberGroup>;
   mersEstimates: Array<MersEstimate>;
   mersFilterOptions: MersFilterOptions;
+  monthlySarsCov2CountryInformation: Array<MonthlySarsCov2CountryInformationEntry>;
   partitionedFaoMersEvents: PartitionedFeoMersEventsOutput;
+  partitionedYearlyFaoCamelPopulationData: PartitionedYearlyFaoCamelPopulationDataOutput;
   sarsCov2Estimates: Array<SarsCov2Estimate>;
   sarsCov2FilterOptions: SarsCov2FilterOptions;
+  yearlyFaoCamelPopulationDataPartitionKeys: Array<Scalars['Int']['output']>;
 };
 
 
 export type QueryPartitionedFaoMersEventsArgs = {
   input: PartitionedFaoMersEventsInput;
+};
+
+
+export type QueryPartitionedYearlyFaoCamelPopulationDataArgs = {
+  input: PartitionedYearlyFaoCamelPopulationDataInput;
 };
 
 export type SarsCov2Estimate = {
@@ -378,6 +427,16 @@ export enum WhoRegion {
   Sear = 'SEAR',
   Wpr = 'WPR'
 }
+
+export type YearlyFaoCamelPopulationDataEntry = {
+  __typename?: 'YearlyFaoCamelPopulationDataEntry';
+  camelCount: Scalars['Int']['output'];
+  camelCountPerCapita?: Maybe<Scalars['Float']['output']>;
+  countryAlphaThreeCode: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  note: Scalars['String']['output'];
+  year: Scalars['Int']['output'];
+};
 
 export type AllFaoMersEventPartitionKeysQueryVariables = Exact<{ [key: string]: never; }>;
 

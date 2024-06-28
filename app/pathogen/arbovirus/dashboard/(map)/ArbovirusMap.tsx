@@ -13,20 +13,20 @@ import { ArbovirusEstimatePopupContent } from "./arbovirus-estimate-pop-up-conte
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
 import { ArboCountryPopupContent } from "./arbo-country-pop-up-content";
-import { computeClusterMarkers } from "./arbo-map-cluster-utils";
 import { MapShadingLegend } from "./MapShadingLegend";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
+import { Arbovirus } from "@/gql/graphql";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
-export const pathogenColors: { [key: string]: string } = {
-  ZIKV: "#A0C4FF",
-  CHIKV: "#9BF6FF",
-  WNV: "#CAFFBF",
-  DENV: "#FFADAD",
-  YF: "#FFD6A5",
-  MAYV: "#c5a3ff",
+export const pathogenColors: Record<Arbovirus, string> = {
+  [Arbovirus.Zikv]: "#a0c4ff",
+  [Arbovirus.Chikv]: "#9bf6ff",
+  [Arbovirus.Wnv]: "#caffbf",
+  [Arbovirus.Denv]: "#ffadad",
+  [Arbovirus.Yf]: "#ffd6a5",
+  [Arbovirus.Mayv]: "#c5a3ff",
 };
 
 export function ArbovirusMap() {
@@ -88,14 +88,15 @@ export function ArbovirusMap() {
           clusteringSettings={{
             clusteringEnabled: true,
             clusterProperties: {
-              ZIKV: ["+", ["case", ["==", ["get", "pathogen"], "ZIKV"], 1, 0]],
-              CHIKV: ["+", ["case", ["==", ["get", "pathogen"], "CHIKV"], 1, 0]],
-              WNV: ["+", ["case", ["==", ["get", "pathogen"], "WNV"], 1, 0]],
-              DENV: ["+", ["case", ["==", ["get", "pathogen"], "DENV"], 1, 0]],
-              YF: ["+", ["case", ["==", ["get", "pathogen"], "YF"], 1, 0]],
-              MAYV: ["+", ["case", ["==", ["get", "pathogen"], "MAYV"], 1, 0]],
+              [Arbovirus.Zikv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Zikv], 1, 0]],
+              [Arbovirus.Chikv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Chikv], 1, 0]],
+              [Arbovirus.Wnv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Wnv], 1, 0]],
+              [Arbovirus.Denv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Denv], 1, 0]],
+              [Arbovirus.Yf]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Yf], 1, 0]],
+              [Arbovirus.Mayv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Mayv], 1, 0]],
             },
-            computeClusterMarkers
+            validClusterPropertyKeys: Object.values(Arbovirus),
+            clusterPropertyToColourMap: pathogenColors
           }}
         />
       </div>
