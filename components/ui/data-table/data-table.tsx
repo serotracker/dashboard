@@ -62,6 +62,7 @@ export interface RowExpansionConfigurationEnabled<TData extends Record<string, u
   enabled: true;
   generateExpandedRowStatement: (input: {data: TData[], row: Row<Record<string, unknown>>}) => string;
   visualization: (props: {className: string, data: TData[], row: Row<Record<string, unknown>>}) => React.ReactNode;
+  viewOnMapHandler: (props: {data: TData[], row: Row<Record<string, unknown>>}) => void;
 }
 
 export enum TableHeaderType {
@@ -326,6 +327,7 @@ export function DataTable<
                     row={row}
                     data={props.data}
                     visualization={rowExpansionConfiguration.visualization}
+                    viewOnMapHandler={rowExpansionConfiguration.viewOnMapHandler}
                   />
                 }
               </>

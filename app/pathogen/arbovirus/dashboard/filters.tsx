@@ -15,9 +15,9 @@
 "use client";
 
 import React, { useContext } from "react";
-import { useArboData } from "@/hooks/useArboData";
-import { useArboFilters } from "@/hooks/useArboFilters";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { useArboData } from "@/hooks/arbovirus/useArboData";
+import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { Filters } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
 import { Arbovirus } from "@/gql/graphql";

@@ -1,3 +1,4 @@
+import { Month } from "@/gql/graphql";
 
 export const monthNumberToMonth: Record<number, string | undefined> = {
   0: 'Jan',
@@ -46,4 +47,28 @@ export const monthYearStringToMonthCount = (monthCountString: string): number =>
 
 export const dateToMonthCount = (date: Date): number => {
   return (date.getFullYear() * 12) + date.getMonth();
+}
+
+interface DateFromYearAndMonthInput {
+  year: number;
+  month: Month;
+}
+
+export const monthIndexFromMonthMap = {
+  [Month.January]: 0,
+  [Month.February]: 1,
+  [Month.March]: 2,
+  [Month.April]: 3,
+  [Month.May]: 4,
+  [Month.June]: 5,
+  [Month.July]: 6,
+  [Month.August]: 7,
+  [Month.September]: 8,
+  [Month.October]: 9,
+  [Month.November]: 10,
+  [Month.December]: 11
+}
+
+export const dateFromYearAndMonth = (input: DateFromYearAndMonthInput): Date => {
+  return new Date(input.year, monthIndexFromMonthMap[input.month]);
 }

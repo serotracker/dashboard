@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { convertArboSFtoArbo } from "./recharts";
 import { LegendConfiguration, StackedBarChart } from "../../../../../components/customs/visualizations/stacked-bar-chart";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 
 interface EstimateCountByWHORegionAndArbovirusGraphProps {
   legendConfiguration: LegendConfiguration;

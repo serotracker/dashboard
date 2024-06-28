@@ -3,7 +3,7 @@
 import React from "react";
 import { GroupedTeamMembersQuery, TeamMemberSymbol } from "@/gql/graphql";
 import { useGroupedTeamMemberData } from "@/hooks/useGroupedTeamMemberData";
-import { faLinkedin, faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { faLinkedin, faTwitter, faXTwitter } from "@fortawesome/free-brands-svg-icons";
 import { IconDefinition, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -51,7 +51,7 @@ const TeamMemberInfoCard = (props: TeamMemberInfoCardProps) => {
         ) : null}
         {props.teamMember.twitterUrl ? (
         <Link className="mr-2" href={props.teamMember.twitterUrl} target="_blank" rel="noopener noreferrer">
-          <FontAwesomeIcon icon={faTwitter} className="text-twitter-icon"/>
+          <FontAwesomeIcon icon={faXTwitter} className="text-twitter-icon"/>
         </Link>
         ) : null}
         {props.teamMember.email ? (
