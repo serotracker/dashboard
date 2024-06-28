@@ -8,7 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbo-context";
+import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 
@@ -142,9 +142,8 @@ export const VisualizationHeader = <
   >
 ) => {
   const router = useRouter();
-  const state = useContext(ArboContext);
 
-  const titleTooltip = props.visualizationInformation.titleTooltipText ? (
+  const titleTooltip = props.visualizationInformation.titleTooltipContent ? (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -167,7 +166,7 @@ export const VisualizationHeader = <
           <div
             className="bg-background w-full p-4 rounded text-white"
           >
-            {props.visualizationInformation.titleTooltipText ?? 'N/A'}
+            {props.visualizationInformation.titleTooltipContent}
           </div>
         </TooltipContent>
       </Tooltip>

@@ -3,7 +3,7 @@ import { LegendConfiguration, StackedBarChart } from "@/components/customs/visua
 import {
   SarsCov2Context,
   SarsCov2Estimate,
-} from "@/contexts/pathogen-context/pathogen-contexts/sc2-context";
+} from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { useContext } from "react";
 import { GbdSubRegion } from "@/gql/graphql";
 import { gbdSubRegionToLabelMap, gbdSuperRegionToLabelMap } from "@/lib/gbd-regions";

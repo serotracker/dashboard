@@ -4,8 +4,9 @@ import {
   typedObjectFromEntries,
   typedObjectKeys,
 } from "@/lib/utils";
+import { groupDataForRechartsOnce } from "./group-data-for-recharts-once";
 
-export interface TransformOutputValueInput<
+export interface DoubleGroupingTransformOutputValueInput<
   TData,
   TSecondaryGroupingKey extends Exclude<string, "primaryKey">
 > {
@@ -13,7 +14,7 @@ export interface TransformOutputValueInput<
   secondaryGroupingKey: TSecondaryGroupingKey;
 }
 
-interface GroupDataForRechartsInput<
+interface GroupDataForRechartsTwiceInput<
   TData,
   TPrimaryGroupingKey extends string,
   TSecondaryGroupingKey extends Exclude<string, "primaryKey">,
@@ -30,13 +31,13 @@ interface GroupDataForRechartsInput<
     a: TSecondaryGroupingKey,
     b: TSecondaryGroupingKey
   ) => number;
-  transformOutputValue: (input: TransformOutputValueInput<
+  transformOutputValue: (input: DoubleGroupingTransformOutputValueInput<
     TData,
     TSecondaryGroupingKey
   >) => TOutput;
 }
 
-interface GroupDataForRechartsOutput<
+interface GroupDataForRechartsTwiceOutput<
   TPrimaryGroupingKey extends string,
   TSecondaryGroupingKey extends Exclude<string, "primaryKey">,
   TOutput
@@ -48,40 +49,28 @@ interface GroupDataForRechartsOutput<
   allSecondaryKeys: TSecondaryGroupingKey[];
 }
 
-export const groupDataForRecharts = <
+export const groupDataForRechartsTwice = <
   TData,
   TPrimaryGroupingKey extends string,
   TSecondaryGroupingKey extends Exclude<string, "primaryKey">,
   TOutput
 >(
-  input: GroupDataForRechartsInput<
+  input: GroupDataForRechartsTwiceInput<
     TData,
     TPrimaryGroupingKey,
     TSecondaryGroupingKey,
     TOutput
   >
-): GroupDataForRechartsOutput<TPrimaryGroupingKey, TSecondaryGroupingKey, TOutput> => {
-  const dataWithPrimaryKeys = input.data
-    .map((dataPoint) => ({
-      dataPoint: dataPoint,
-      primaryKey: input.primaryGroupingFunction(dataPoint)
-    }))
-    .flatMap(({dataPoint, primaryKey}) => 
-      Array.isArray(primaryKey)
-        ? primaryKey.map((elementInPrimaryKey) => ({dataPoint: dataPoint, primaryKey: elementInPrimaryKey}))
-        :[{dataPoint: dataPoint, primaryKey: primaryKey}]
-    )
-
-  const dataGroupedByPrimaryKey = typedGroupBy(
-    dataWithPrimaryKeys,
-    (({primaryKey}) => primaryKey)
-  );
-
-  const allPrimaryKeys = typedObjectKeys(dataGroupedByPrimaryKey);
-
-  const sortedPrimaryKeys = input.primaryGroupingSortFunction
-    ? allPrimaryKeys.sort(input.primaryGroupingSortFunction)
-    : allPrimaryKeys;
+): GroupDataForRechartsTwiceOutput<TPrimaryGroupingKey, TSecondaryGroupingKey, TOutput> => {
+  const {
+    allPrimaryKeys: sortedPrimaryKeys,
+    rechartsData: dataGroupedByPrimaryKey,
+  } = groupDataForRechartsOnce({
+    data: input.data,
+    primaryGroupingFunction: input.primaryGroupingFunction,
+    primaryGroupingSortFunction: input.primaryGroupingSortFunction,
+    transformOutputValue: (({ data }) => data)
+  })
 
   const allSecondaryKeys = new Set<TSecondaryGroupingKey>();
 
@@ -89,11 +78,11 @@ export const groupDataForRecharts = <
     const dataForPrimaryKey = dataGroupedByPrimaryKey[primaryKey];
 
     const dataWithSecondaryKeys = dataForPrimaryKey
-      .map(({ dataPoint }) => ({
+      .map((dataPoint) => ({
         dataPoint: dataPoint,
         secondaryKey: input.secondaryGroupingFunction(dataPoint)
       }))
-      .flatMap(({dataPoint, secondaryKey}) => 
+      .flatMap(({ dataPoint, secondaryKey }) => 
         Array.isArray(secondaryKey)
           ? secondaryKey.map((elementInSecondaryKey) => ({dataPoint: dataPoint, secondaryKey: elementInSecondaryKey}))
           :[{dataPoint: dataPoint, secondaryKey: secondaryKey}]

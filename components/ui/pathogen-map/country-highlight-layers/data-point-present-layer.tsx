@@ -1,9 +1,15 @@
 import { useCallback } from "react";
 import {
-  GetCountryHighlightingLayerInformationInput,
+  GetCountryHighlightingLayerInformationInput as GenericGetCountryHighlightingLayerInformationInput,
   GetCountryHighlightingLayerInformationOutput
 } from "../pathogen-map";
 import { MapSymbology } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
+
+type GetCountryHighlightingLayerInformationInput<
+  TData extends { countryAlphaThreeCode: string }
+> = GenericGetCountryHighlightingLayerInformationInput<TData> & {
+  countryHighlightingEnabled: boolean;
+}
 
 export const useDataPointPresentLayer = () => {
   const getCountryHighlightingLayerInformation = useCallback(<
@@ -35,13 +41,13 @@ export const useDataPointPresentLayer = () => {
 
     return {
       paint: {
-        countryData,
+        countryData: (input.countryHighlightingEnabled === true) ? countryData : [],
         defaults: {
           fill: MapSymbology.CountryFeature.Default.Color,
           opacity: MapSymbology.CountryFeature.Default.Opacity
         }
       },
-      countryHighlightLayerLegendEntries
+      countryHighlightLayerLegendEntries: (input.countryHighlightingEnabled === true) ? countryHighlightLayerLegendEntries : [],
     }
   }, []);
 

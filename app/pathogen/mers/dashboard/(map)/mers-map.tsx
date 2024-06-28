@@ -59,7 +59,8 @@ export const MersMap = () => {
   const { paint, countryHighlightLayerLegendEntries } = useMemo(() => {
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES) {
       return dataPointPresentMapLayer.getCountryHighlightingLayerInformation({
-        data: dataPoints
+        data: dataPoints,
+        countryHighlightingEnabled: true
       });
     }
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION) {
