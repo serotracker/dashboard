@@ -1,4 +1,4 @@
-import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
+import { PathogenContextState, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { DateFilter } from "./date-filter";
 import { MultiSelectFilter } from "./multi-select-filter";
 import { unRegionEnumToLabelMap } from "@/lib/un-regions";
@@ -12,6 +12,8 @@ import { CountryInformationContext } from "@/contexts/pathogen-context/country-i
 import { Arbovirus } from "@/gql/graphql";
 import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
+import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
+import { UNRegionsTooltip, WHORegionsTooltip } from "../tooltip-content";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -24,18 +26,27 @@ export interface FieldInformation {
   clearAllButtonText?: string;
 }
 
-interface RenderTooltipContentInput<TEstimate extends Record<string, unknown>> {
-  state: PathogenContextType<TEstimate>;
+interface RenderTooltipContentInput<
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+> {
+  state: PathogenContextType<TEstimate, TPathogenContextState>;
 }
 
-export type TooltipContentRenderingFunction = <TEstimate extends Record<string, unknown>>(input: RenderTooltipContentInput<TEstimate>) => React.ReactNode;
+export type TooltipContentRenderingFunction = <
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+>(input: RenderTooltipContentInput<TEstimate, TPathogenContextState>) => React.ReactNode;
 
-interface FilterRenderingFunctionInput<TEstimate extends Record<string, unknown>> {
+interface FilterRenderingFunctionInput<
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+> {
   filter: string;
   placeholder: string;
-  state: PathogenContextType<TEstimate>;
+  state: PathogenContextType<TEstimate, TPathogenContextState>;
   filterOptions: string[];
-  data: TEstimate[];
+  data: TEstimate[] | Record<string, unknown>;
   optionToLabelMap: Record<string, string | undefined>;
   optionSortingFunction: ((a: string, b: string) => number) | undefined;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
@@ -44,10 +55,14 @@ interface FilterRenderingFunctionInput<TEstimate extends Record<string, unknown>
   clearAllButtonText: string;
 }
 
-type FilterRenderingFunction = <TEstimate extends Record<string, unknown>>(input: FilterRenderingFunctionInput<TEstimate>) => React.ReactNode;
+type FilterRenderingFunction = <
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+>(input: FilterRenderingFunctionInput<TEstimate, TPathogenContextState>) => React.ReactNode;
 
 export enum FilterableField {
   ageGroup = "ageGroup",
+  __typename = "__typename",
   pediatricAgeGroup = "pediatricAgeGroup",
   sex = "sex",
   esm = "esm",
@@ -70,19 +85,13 @@ export enum FilterableField {
   sourceType = "sourceType",
   antibodies = "antibodies",
   testType = "testType",
-  isotypes = "isotypes"
+  isotypes = "isotypes",
+  populationGroup = "populationGroup",
+  diagnosisSource = "diagnosisSource",
+  animalType = "animalType",
+  animalSpecies = "animalSpecies"
 }
 
-const WhoRegionTooltip: TooltipContentRenderingFunction = (input) => (
-  <div>
-    <p> AFR: African Region </p>
-    <p> AMR: Region of the Americas </p>
-    <p> EMR: Eastern Mediterranean Region </p>
-    <p> EUR: European Region </p>
-    <p> SEAR: South-East Asia Region </p>
-    <p> WPR: Western Pacific Region </p>
-  </div>
-)
 const RiskOfBiasTooltip: TooltipContentRenderingFunction = (input) => (
   <p>Reflects the extent to which the true prevalence may be different from the estimated prevalence. Estimated by SeroTracker reviewers based on the Joanna Briggs Institute critical appraisal tool for prevalence estimates.</p>
 )
@@ -229,13 +238,14 @@ export const useAvailableFilters = () => {
       field: FilterableField.whoRegion,
       label: "WHO Region",
       valueToLabelMap: {},
-      renderTooltipContent: WhoRegionTooltip,
+      renderTooltipContent: WHORegionsTooltip,
       filterRenderingFunction: MultiSelectFilter
     },
     [FilterableField.unRegion]: {
       field: FilterableField.unRegion,
       label: "UN Region",
       valueToLabelMap: unRegionEnumToLabelMap,
+      renderTooltipContent: UNRegionsTooltip,
       filterRenderingFunction: MultiSelectFilter
     },
     [FilterableField.countryAlphaTwoCode]: {
@@ -336,7 +346,41 @@ export const useAvailableFilters = () => {
       label: "Serotype (DENV only)",
       valueToLabelMap: {},
       filterRenderingFunction: MultiSelectFilter
-    }
+    },
+    [FilterableField.populationGroup]: {
+      field: FilterableField.populationGroup,
+      label: "Population group",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.__typename]: {
+      field: FilterableField.__typename,
+      label: "Data Type",
+      valueToLabelMap: mersDataTypeToLabelMap,
+      optionToColourClassnameMap: mersDataTypeToColourClassnameMapForCheckbox,
+      optionSortingFunction: (optionA, optionB) => 
+        (mersDataTypeToSortOrderMap[optionA] ?? 0) - (mersDataTypeToSortOrderMap[optionB] ?? 0),
+      filterRenderingFunction: ColouredCheckboxFilter,
+      clearAllButtonText: 'Clear all data types'
+    },
+    [FilterableField.diagnosisSource]: {
+      field: FilterableField.diagnosisSource,
+      label: "Diagnosis Source",
+      valueToLabelMap: diagnosisSourceToStringMap,
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.animalType]: {
+      field: FilterableField.animalType,
+      label: "Animal Type",
+      valueToLabelMap: animalTypeToStringMap,
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.animalSpecies]: {
+      field: FilterableField.animalSpecies,
+      label: "Animal Species",
+      valueToLabelMap: animalSpeciesToStringMap,
+      filterRenderingFunction: MultiSelectFilter
+    },
   }
 
   return {

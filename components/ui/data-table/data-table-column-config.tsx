@@ -28,6 +28,7 @@ export interface DataTableColumnConfigurationEntryBase {
   isFixed?: boolean;
   valueToDisplayLabel?: (input: string) => string | undefined;
   valueSortingFunction?: (valueA: string, valueB: string) => number;
+  size?: number;
 }
 
 export type StandardDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
@@ -48,12 +49,14 @@ export type ColouredPillDataTableColumnConfigurationEntry = DataTableColumnConfi
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL;
   valueToColourSchemeClassnameMap: Record<string, string | unknown>;
   defaultColourSchemeClassname: string;
+  fallbackText?: string;
 }
 
 export type ColouredPillListDataTableColumnConfigurationEntry = DataTableColumnConfigurationEntryBase & {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST;
   valueToColourSchemeClassnameMap: Record<string, string | unknown>;
   defaultColourSchemeClassname: string;
+  fallbackText?: string;
 }
 
 export type PercentageDataTableColumnConfigurationEntry = Omit<DataTableColumnConfigurationEntryBase, 'valueToDisplayLabel'> & {

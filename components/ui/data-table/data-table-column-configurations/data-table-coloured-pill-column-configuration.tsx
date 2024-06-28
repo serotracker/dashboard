@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import { DataTableColumnDef } from "../data-table";
 import { ColouredPillDataTableColumnConfigurationEntry, DataTableColumnConfigurationEntryType } from "../data-table-column-config";
-import { getSortableColumnDataTableHeaderComponent } from "../sortable-column-data-table-header";
 import { getDataTableStandardColumnConfiguration } from "./data-table-standard-column-configuration";
 
 interface GetDataTableColouredPillColumnConfigurationInput {
@@ -25,6 +24,6 @@ export const getDataTableColouredPillColumnConfiguration = (input: GetDataTableC
       )
     };
 
-    return 'N/A';
+    return input.columnConfiguration.fallbackText ?? 'N/A';
   },
 });

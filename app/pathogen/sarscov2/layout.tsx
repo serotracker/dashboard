@@ -25,6 +25,10 @@ export default async function SarsCov2Layout({
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformation)
   });
   await queryClient.prefetchQuery({
+    queryKey: ["monthlySarsCov2CountryInformation"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformation)
+  });
+  await queryClient.prefetchQuery({
     queryKey: ["sarsCov2FilterOptions"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Filters)
   });

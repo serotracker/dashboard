@@ -21,16 +21,16 @@ export const ArboBanner = () => {
 
       const csv = generateCsv(csvConfig)(
         state.filteredData.map((dataPoint) => (
-          typedObjectFromEntries(arboDataTableRows.map((key) => {
-            const value = dataPoint[key]
+          typedObjectFromEntries(arboDataTableRows.map(({ fieldName, label }) => {
+            const value = dataPoint[fieldName]
 
             if(Array.isArray(value)) {
               const joinedArrayValue = value.join(";")
 
-              return [key, joinedArrayValue];
+              return [label, joinedArrayValue];
             }
 
-            return [key, value]
+            return [label, value]
           }))
         ))
       );
@@ -51,7 +51,7 @@ export const ArboBanner = () => {
         </Button>
         <Button className="w-[30%] bg-background hover:bg-backgroundHover ml-2" onClick={() => {
           navigator.clipboard.writeText(
-            "Ware H*, Whelan M*, Ranka H, Roell Y, Aktar S, Kenny S, Pinno E, SeroTracker Research Team, Bobrovitz N**, Arora RK**, Jaenisch T**. ArboTracker: A Dashboard and Data Platform for arbovirus serosurveys (2024); Website, accessible via www.new.SeroTracker.com."
+            "Harriet Ware, Mairead Whelan, Anabel Selemon, Emilie Toews, Shaila Akter, Niklas Bobrovitz, Rahul Arora, Yannik Roell, Thomas Jaenisch. A living systematic review of arbovirus seroprevalence studies. PROSPERO 2024 CRD42024551000 Available from: https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000"
           );
 
           openToast({ toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST })

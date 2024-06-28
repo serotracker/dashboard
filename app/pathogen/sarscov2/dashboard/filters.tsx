@@ -5,6 +5,7 @@ import { Filters } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { useSarsCov2Filters } from "@/hooks/sarscov2/useSarsCov2Filters";
+import { useSarsCov2Data } from "@/hooks/sarscov2/use-sars-cov2-data";
 
 interface SarsCov2FiltersProps {
   className?: string;
@@ -12,6 +13,7 @@ interface SarsCov2FiltersProps {
 
 export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   const state = useContext(SarsCov2Context);
+  const { sarsCov2Estimates } = useSarsCov2Data();
   const { data: filterData } = useSarsCov2Filters();
 
   const studyScopeFilters = [
@@ -36,11 +38,12 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   ];
 
   const demographicFilters = [
+    FilterableField.populationGroup,
+    FilterableField.sex,
     FilterableField.ageGroup,
   ];
 
   const testInformationFilters = [
-    FilterableField.sourceType,
     FilterableField.antibodies,
     FilterableField.testType,
     FilterableField.isotypes
@@ -83,6 +86,8 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
           unRegion: filterData.sarsCov2FilterOptions.unRegion,
           ageGroup: filterData.sarsCov2FilterOptions.ageGroup,
           scope: filterData.sarsCov2FilterOptions.scope,
+          sex: filterData.sarsCov2FilterOptions.sex,
+          populationGroup: filterData.sarsCov2FilterOptions.populationGroup,
           sourceType: filterData.sarsCov2FilterOptions.sourceType,
           riskOfBias: filterData.sarsCov2FilterOptions.riskOfBias,
           antibodies: filterData.sarsCov2FilterOptions.antibodies,
@@ -91,7 +96,7 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
           countryAlphaTwoCode: filterData.sarsCov2FilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode)
         } : {}
       }
-      data={state.filteredData ?? []}
+      data={sarsCov2Estimates ?? []}
       resetAllFiltersButtonEnabled={true}
     />
   )

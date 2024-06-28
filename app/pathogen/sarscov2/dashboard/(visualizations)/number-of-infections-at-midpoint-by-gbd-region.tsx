@@ -1,11 +1,9 @@
 import { useMemo } from 'react';
-import { AreaChart } from "@/components/customs/visualizations/area-chart";
 import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { generateRandomColour, generateRange } from "@/lib/utils";
 import { useContext } from "react";
 import { GbdSuperRegion } from "@/gql/graphql";
 import { gbdSuperRegionToLabelMap } from '@/lib/gbd-regions';
-import { MonthlySarsCov2CountryInformationContext } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/monthly-sarscov2-country-information-context";
 import { pipe } from "fp-ts/lib/function.js";
 import { LineChart } from '@/components/customs/visualizations/line-chart';
 import { LegendConfiguration } from '@/components/customs/visualizations/stacked-bar-chart';
@@ -110,9 +108,9 @@ const categorizeIntoBuckets = (input: CategorizeIntoBucketsInput): CategorizeInt
 
 
 export const NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegion = () => {
-  const state = useContext(SarsCov2Context);
+  const { filteredData } = useContext(SarsCov2Context);
 
-  const consideredData = useMemo(() => state.filteredData
+  const consideredData = useMemo(() => filteredData
     .filter((dataPoint: SarsCov2Estimate): dataPoint is EligibleSarsCov2EstimateForVisualization =>
       !!dataPoint.gbdSuperRegion
       && dataPoint.seroprevalence !== undefined
@@ -120,7 +118,7 @@ export const NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegio
       && dataPoint.countryPositiveCasesPerMillionPeople !== undefined
       && dataPoint.countryPositiveCasesPerMillionPeople !== null 
     )
-  , [state.filteredData]);
+  , [ filteredData ]);
 
   const { dataPoints, ratioBuckets } = useMemo(() => pipe(
     { dataPoints: consideredData },

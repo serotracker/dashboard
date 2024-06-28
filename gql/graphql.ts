@@ -21,6 +21,24 @@ export type Affiliation = {
   label: Scalars['String']['output'];
 };
 
+export type AnimalMersEvent = MersEventInterface & {
+  __typename?: 'AnimalMersEvent';
+  animalSpecies: MersEventAnimalSpecies;
+  animalType: MersEventAnimalType;
+  city: Scalars['String']['output'];
+  country: CountryIdentifiers;
+  diagnosisSource: MersDiagnosisSource;
+  diagnosisStatus: MersDiagnosisStatus;
+  id: Scalars['String']['output'];
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  observationDate?: Maybe<Scalars['String']['output']>;
+  reportDate: Scalars['String']['output'];
+  state: Scalars['String']['output'];
+  type: MersEventType;
+  whoRegion?: Maybe<WhoRegion>;
+};
+
 export enum Arbovirus {
   Chikv = 'CHIKV',
   Denv = 'DENV',
@@ -106,6 +124,13 @@ export type CountryIdentifiers = {
   name: Scalars['String']['output'];
 };
 
+export type FaoMersEventFilterOptions = {
+  __typename?: 'FaoMersEventFilterOptions';
+  animalSpecies: Array<MersEventAnimalSpecies>;
+  animalType: Array<MersEventAnimalType>;
+  diagnosisSource: Array<MersDiagnosisSource>;
+};
+
 export enum GbdSubRegion {
   CentralEuropeEasternEuropeAndCentralAsiaSubregionCentralAsia = 'CENTRAL_EUROPE_EASTERN_EUROPE_AND_CENTRAL_ASIA_SUBREGION_CENTRAL_ASIA',
   CentralEuropeEasternEuropeAndCentralAsiaSubregionCentralEurope = 'CENTRAL_EUROPE_EASTERN_EUROPE_AND_CENTRAL_ASIA_SUBREGION_CENTRAL_EUROPE',
@@ -140,6 +165,87 @@ export enum GbdSuperRegion {
   SubSaharanAfrica = 'SUB_SAHARAN_AFRICA'
 }
 
+export type HumanMersEvent = MersEventInterface & {
+  __typename?: 'HumanMersEvent';
+  city: Scalars['String']['output'];
+  country: CountryIdentifiers;
+  diagnosisSource: MersDiagnosisSource;
+  diagnosisStatus: MersDiagnosisStatus;
+  humanDeaths: Scalars['Int']['output'];
+  humansAffected: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  observationDate?: Maybe<Scalars['String']['output']>;
+  reportDate: Scalars['String']['output'];
+  state: Scalars['String']['output'];
+  type: MersEventType;
+  whoRegion?: Maybe<WhoRegion>;
+};
+
+export enum MersDiagnosisSource {
+  FaoFieldOfficer = 'FAO_FIELD_OFFICER',
+  Media = 'MEDIA',
+  NationalAuthorities = 'NATIONAL_AUTHORITIES',
+  Publications = 'PUBLICATIONS',
+  WorldHealthOrganization = 'WORLD_HEALTH_ORGANIZATION',
+  WorldOrganisationForAnimalHealth = 'WORLD_ORGANISATION_FOR_ANIMAL_HEALTH'
+}
+
+export enum MersDiagnosisStatus {
+  Confirmed = 'CONFIRMED',
+  Denied = 'DENIED'
+}
+
+export type MersEstimate = {
+  __typename?: 'MersEstimate';
+  country: Scalars['String']['output'];
+  countryAlphaThreeCode: Scalars['String']['output'];
+  countryAlphaTwoCode: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  whoRegion?: Maybe<WhoRegion>;
+};
+
+export type MersEvent = AnimalMersEvent | HumanMersEvent;
+
+export enum MersEventAnimalSpecies {
+  Bat = 'BAT',
+  Camel = 'CAMEL'
+}
+
+export enum MersEventAnimalType {
+  Domestic = 'DOMESTIC',
+  Wild = 'WILD'
+}
+
+export type MersEventInterface = {
+  city: Scalars['String']['output'];
+  country: CountryIdentifiers;
+  diagnosisSource: MersDiagnosisSource;
+  diagnosisStatus: MersDiagnosisStatus;
+  id: Scalars['String']['output'];
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  observationDate?: Maybe<Scalars['String']['output']>;
+  reportDate: Scalars['String']['output'];
+  state: Scalars['String']['output'];
+  type: MersEventType;
+  whoRegion?: Maybe<WhoRegion>;
+};
+
+export enum MersEventType {
+  Animal = 'ANIMAL',
+  Human = 'HUMAN'
+}
+
+export type MersFilterOptions = {
+  __typename?: 'MersFilterOptions';
+  countryIdentifiers: Array<CountryIdentifiers>;
+  whoRegion: Array<WhoRegion>;
+};
+
 export enum Month {
   April = 'APRIL',
   August = 'AUGUST',
@@ -171,6 +277,16 @@ export type MonthlySarsCov2CountryInformationEntry = {
   year: Scalars['Int']['output'];
 };
 
+export type PartitionedFaoMersEventsInput = {
+  partitionKey: Scalars['Int']['input'];
+};
+
+export type PartitionedFeoMersEventsOutput = {
+  __typename?: 'PartitionedFeoMersEventsOutput';
+  mersEvents: Array<MersEvent>;
+  partitionKey: Scalars['Int']['output'];
+};
+
 export type PartitionedMonthlySarsCov2CountryInformationInput = {
   partitionKey: Scalars['Int']['input'];
 };
@@ -191,19 +307,41 @@ export type PartitionedSarsCov2EstimatesOutput = {
   sarsCov2Estimates: Array<SarsCov2Estimate>;
 };
 
+export type PartitionedYearlyFaoCamelPopulationDataInput = {
+  partitionKey: Scalars['Int']['input'];
+};
+
+export type PartitionedYearlyFaoCamelPopulationDataOutput = {
+  __typename?: 'PartitionedYearlyFaoCamelPopulationDataOutput';
+  partitionKey: Scalars['Int']['output'];
+  yearlyFaoCamelPopulationData: Array<YearlyFaoCamelPopulationDataEntry>;
+};
+
 export type Query = {
   __typename?: 'Query';
+  allFaoMersEventPartitionKeys: Array<Scalars['Int']['output']>;
   allMonthlySarsCov2CountryInformationPartitionKeys: Array<Scalars['Int']['output']>;
   allSarsCov2EstimatePartitionKeys: Array<Scalars['Int']['output']>;
   arbovirusDataStatistics: ArbovirusDataStatistics;
   arbovirusEstimates: Array<ArbovirusEstimate>;
   arbovirusFilterOptions: ArbovirusFilterOptions;
+  faoMersEventFilterOptions: FaoMersEventFilterOptions;
   groupedTeamMembers: Array<TeamMemberGroup>;
+  mersEstimates: Array<MersEstimate>;
+  mersFilterOptions: MersFilterOptions;
   monthlySarsCov2CountryInformation: Array<MonthlySarsCov2CountryInformationEntry>;
+  partitionedFaoMersEvents: PartitionedFeoMersEventsOutput;
   partitionedMonthlySarsCov2CountryInformation: PartitionedMonthlySarsCov2CountryInformationOutput;
   partitionedSarsCov2Estimates: PartitionedSarsCov2EstimatesOutput;
+  partitionedYearlyFaoCamelPopulationData: PartitionedYearlyFaoCamelPopulationDataOutput;
   sarsCov2Estimates: Array<SarsCov2Estimate>;
   sarsCov2FilterOptions: SarsCov2FilterOptions;
+  yearlyFaoCamelPopulationDataPartitionKeys: Array<Scalars['Int']['output']>;
+};
+
+
+export type QueryPartitionedFaoMersEventsArgs = {
+  input: PartitionedFaoMersEventsInput;
 };
 
 
@@ -214,6 +352,11 @@ export type QueryPartitionedMonthlySarsCov2CountryInformationArgs = {
 
 export type QueryPartitionedSarsCov2EstimatesArgs = {
   input: PartitionedSarsCov2EstimatesInput;
+};
+
+
+export type QueryPartitionedYearlyFaoCamelPopulationDataArgs = {
+  input: PartitionedYearlyFaoCamelPopulationDataInput;
 };
 
 export type SarsCov2Estimate = {
@@ -262,8 +405,10 @@ export type SarsCov2FilterOptions = {
   country: Array<Scalars['String']['output']>;
   countryIdentifiers: Array<CountryIdentifiers>;
   isotypes: Array<Scalars['String']['output']>;
+  populationGroup: Array<Scalars['String']['output']>;
   riskOfBias: Array<Scalars['String']['output']>;
   scope: Array<Scalars['String']['output']>;
+  sex: Array<Scalars['String']['output']>;
   sourceType: Array<Scalars['String']['output']>;
   testType: Array<Scalars['String']['output']>;
   unRegion: Array<UnRegion>;
@@ -325,6 +470,18 @@ export enum WhoRegion {
   Wpr = 'WPR'
 }
 
+export type YearlyFaoCamelPopulationDataEntry = {
+  __typename?: 'YearlyFaoCamelPopulationDataEntry';
+  camelCount: Scalars['Int']['output'];
+  camelCountPerCapita?: Maybe<Scalars['Float']['output']>;
+  country: CountryIdentifiers;
+  countryAlphaThreeCode: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  note: Scalars['String']['output'];
+  whoRegion?: Maybe<WhoRegion>;
+  year: Scalars['Int']['output'];
+};
+
 export type ArbovirusEstimatesQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -339,6 +496,45 @@ export type ArbovirusDataStatisticsQueryVariables = Exact<{ [key: string]: never
 
 
 export type ArbovirusDataStatisticsQuery = { __typename?: 'Query', arbovirusDataStatistics: { __typename?: 'ArbovirusDataStatistics', patricipantCount: number, sourceCount: number, estimateCount: number, countryCount: number } };
+
+export type AllFaoMersEventPartitionKeysQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllFaoMersEventPartitionKeysQuery = { __typename?: 'Query', allFaoMersEventPartitionKeys: Array<number> };
+
+export type PartitionedFaoMersEventsQueryVariables = Exact<{
+  input: PartitionedFaoMersEventsInput;
+}>;
+
+
+export type PartitionedFaoMersEventsQuery = { __typename?: 'Query', partitionedFaoMersEvents: { __typename?: 'PartitionedFeoMersEventsOutput', partitionKey: number, mersEvents: Array<{ __typename: 'AnimalMersEvent', id: string, type: MersEventType, diagnosisStatus: MersDiagnosisStatus, diagnosisSource: MersDiagnosisSource, state: string, city: string, latitude: number, longitude: number, whoRegion?: WhoRegion | null, observationDate?: string | null, reportDate: string, animalType: MersEventAnimalType, animalSpecies: MersEventAnimalSpecies, country: { __typename?: 'CountryIdentifiers', name: string, alphaTwoCode: string, alphaThreeCode: string } } | { __typename: 'HumanMersEvent', id: string, type: MersEventType, diagnosisStatus: MersDiagnosisStatus, diagnosisSource: MersDiagnosisSource, state: string, city: string, latitude: number, longitude: number, whoRegion?: WhoRegion | null, observationDate?: string | null, reportDate: string, humansAffected: number, humanDeaths: number, country: { __typename?: 'CountryIdentifiers', name: string, alphaTwoCode: string, alphaThreeCode: string } }> } };
+
+export type FaoMersEventFilterOptionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FaoMersEventFilterOptionsQuery = { __typename?: 'Query', faoMersEventFilterOptions: { __typename?: 'FaoMersEventFilterOptions', diagnosisSource: Array<MersDiagnosisSource>, animalType: Array<MersEventAnimalType>, animalSpecies: Array<MersEventAnimalSpecies> } };
+
+export type YearlyFaoCamelPopulationDataPartitionKeysQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type YearlyFaoCamelPopulationDataPartitionKeysQuery = { __typename?: 'Query', yearlyFaoCamelPopulationDataPartitionKeys: Array<number> };
+
+export type PartitionedYearlyFaoCamelPopulationDataQueryVariables = Exact<{
+  input: PartitionedYearlyFaoCamelPopulationDataInput;
+}>;
+
+
+export type PartitionedYearlyFaoCamelPopulationDataQuery = { __typename?: 'Query', partitionedYearlyFaoCamelPopulationData: { __typename?: 'PartitionedYearlyFaoCamelPopulationDataOutput', partitionKey: number, yearlyFaoCamelPopulationData: Array<{ __typename?: 'YearlyFaoCamelPopulationDataEntry', id: string, countryAlphaThreeCode: string, whoRegion?: WhoRegion | null, year: number, camelCount: number, camelCountPerCapita?: number | null, note: string, country: { __typename?: 'CountryIdentifiers', alphaThreeCode: string, alphaTwoCode: string, name: string } }> } };
+
+export type MersEstimatesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MersEstimatesQuery = { __typename?: 'Query', mersEstimates: Array<{ __typename: 'MersEstimate', id: string, country: string, countryAlphaTwoCode: string, countryAlphaThreeCode: string, latitude: number, longitude: number, whoRegion?: WhoRegion | null }> };
+
+export type MersFilterOptionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MersFilterOptionsQuery = { __typename?: 'Query', mersFilterOptions: { __typename?: 'MersFilterOptions', whoRegion: Array<WhoRegion>, countryIdentifiers: Array<{ __typename?: 'CountryIdentifiers', name: string, alphaTwoCode: string, alphaThreeCode: string }> } };
 
 export type MonthlySarsCov2CountryInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -357,11 +553,6 @@ export type PartitionedMonthlySarsCov2CountryInformationQueryVariables = Exact<{
 
 export type PartitionedMonthlySarsCov2CountryInformationQuery = { __typename?: 'Query', partitionedMonthlySarsCov2CountryInformation: { __typename?: 'PartitionedMonthlySarsCov2CountryInformationOutput', partitionKey: number, monthlySarsCov2CountryInformation: Array<{ __typename?: 'MonthlySarsCov2CountryInformationEntry', population?: number | null, peopleVaccinatedPerHundred?: number | null, peopleFullyVaccinatedPerHundred?: number | null, positiveCasesPerMillionPeople?: number | null, alphaTwoCode: string, alphaThreeCode: string, whoRegion?: WhoRegion | null, unRegion?: UnRegion | null, gbdSuperRegion?: GbdSuperRegion | null, gbdSubRegion?: GbdSubRegion | null, month: Month, year: number }> } };
 
-export type SarsCov2EstimatesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type SarsCov2EstimatesQuery = { __typename?: 'Query', sarsCov2Estimates: Array<{ __typename?: 'SarsCov2Estimate', antibodies: Array<string>, isotypes: Array<string>, isWHOUnityAligned: boolean, testType: Array<string>, sourceType?: string | null, riskOfBias?: string | null, populationGroup?: string | null, sex?: string | null, ageGroup?: string | null, country: string, countryAlphaTwoCode: string, countryAlphaThreeCode: string, whoRegion?: WhoRegion | null, unRegion?: UnRegion | null, gbdSuperRegion?: GbdSuperRegion | null, gbdSubRegion?: GbdSubRegion | null, state?: string | null, studyName: string, scope?: string | null, city?: string | null, id: string, latitude: number, longitude: number, samplingStartDate?: string | null, samplingEndDate?: string | null, samplingMidDate?: string | null, publicationDate?: string | null, countryPeopleVaccinatedPerHundred?: number | null, countryPeopleFullyVaccinatedPerHundred?: number | null, countryPositiveCasesPerMillionPeople?: number | null, denominatorValue?: number | null, numeratorValue?: number | null, seroprevalence?: number | null, estimateName?: string | null, url?: string | null }> };
-
 export type AllSarsCov2EstimatePartitionKeysQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -377,7 +568,7 @@ export type PartitionedSarsCov2EstimatesQuery = { __typename?: 'Query', partitio
 export type SarsCov2FilterOptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SarsCov2FilterOptionsQuery = { __typename?: 'Query', sarsCov2FilterOptions: { __typename?: 'SarsCov2FilterOptions', ageGroup: Array<string>, scope: Array<string>, sourceType: Array<string>, riskOfBias: Array<string>, unRegion: Array<UnRegion>, whoRegion: Array<WhoRegion>, antibodies: Array<string>, isotypes: Array<string>, testType: Array<string>, countryIdentifiers: Array<{ __typename?: 'CountryIdentifiers', name: string, alphaTwoCode: string, alphaThreeCode: string }> } };
+export type SarsCov2FilterOptionsQuery = { __typename?: 'Query', sarsCov2FilterOptions: { __typename?: 'SarsCov2FilterOptions', ageGroup: Array<string>, scope: Array<string>, sourceType: Array<string>, sex: Array<string>, populationGroup: Array<string>, riskOfBias: Array<string>, unRegion: Array<UnRegion>, whoRegion: Array<WhoRegion>, antibodies: Array<string>, isotypes: Array<string>, testType: Array<string>, countryIdentifiers: Array<{ __typename?: 'CountryIdentifiers', name: string, alphaTwoCode: string, alphaThreeCode: string }> } };
 
 export type GroupedTeamMembersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -388,11 +579,17 @@ export type GroupedTeamMembersQuery = { __typename?: 'Query', groupedTeamMembers
 export const ArbovirusEstimatesQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"arbovirusEstimatesQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"arbovirusEstimates"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"ageMaximum"}},{"kind":"Field","name":{"kind":"Name","value":"ageMinimum"}},{"kind":"Field","name":{"kind":"Name","value":"antibodies"}},{"kind":"Field","name":{"kind":"Name","value":"antigen"}},{"kind":"Field","name":{"kind":"Name","value":"assay"}},{"kind":"Field","name":{"kind":"Name","value":"assayOther"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"estimateId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"inclusionCriteria"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"pathogen"}},{"kind":"Field","name":{"kind":"Name","value":"pediatricAgeGroup"}},{"kind":"Field","name":{"kind":"Name","value":"producer"}},{"kind":"Field","name":{"kind":"Name","value":"producerOther"}},{"kind":"Field","name":{"kind":"Name","value":"sameFrameTargetGroup"}},{"kind":"Field","name":{"kind":"Name","value":"sampleEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"sampleFrame"}},{"kind":"Field","name":{"kind":"Name","value":"sampleNumerator"}},{"kind":"Field","name":{"kind":"Name","value":"sampleSize"}},{"kind":"Field","name":{"kind":"Name","value":"sampleStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalence"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceStudy95CILower"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceStudy95CIUpper"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceCalculated95CILower"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceCalculated95CIUpper"}},{"kind":"Field","name":{"kind":"Name","value":"serotype"}},{"kind":"Field","name":{"kind":"Name","value":"sex"}},{"kind":"Field","name":{"kind":"Name","value":"sourceSheetId"}},{"kind":"Field","name":{"kind":"Name","value":"sourceSheetName"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}}]}}]}}]} as unknown as DocumentNode<ArbovirusEstimatesQueryQuery, ArbovirusEstimatesQueryQueryVariables>;
 export const ArbovirusFilterOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"arbovirusFilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"arbovirusFilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"antibody"}},{"kind":"Field","name":{"kind":"Name","value":"assay"}},{"kind":"Field","name":{"kind":"Name","value":"pathogen"}},{"kind":"Field","name":{"kind":"Name","value":"pediatricAgeGroup"}},{"kind":"Field","name":{"kind":"Name","value":"producer"}},{"kind":"Field","name":{"kind":"Name","value":"sampleFrame"}},{"kind":"Field","name":{"kind":"Name","value":"serotype"}},{"kind":"Field","name":{"kind":"Name","value":"sex"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"countryIdentifiers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}}]}}]}}]}}]} as unknown as DocumentNode<ArbovirusFilterOptionsQuery, ArbovirusFilterOptionsQueryVariables>;
 export const ArbovirusDataStatisticsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"arbovirusDataStatistics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"arbovirusDataStatistics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"patricipantCount"}},{"kind":"Field","name":{"kind":"Name","value":"sourceCount"}},{"kind":"Field","name":{"kind":"Name","value":"estimateCount"}},{"kind":"Field","name":{"kind":"Name","value":"countryCount"}}]}}]}}]} as unknown as DocumentNode<ArbovirusDataStatisticsQuery, ArbovirusDataStatisticsQueryVariables>;
+export const AllFaoMersEventPartitionKeysDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allFaoMersEventPartitionKeys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allFaoMersEventPartitionKeys"}}]}}]} as unknown as DocumentNode<AllFaoMersEventPartitionKeysQuery, AllFaoMersEventPartitionKeysQueryVariables>;
+export const PartitionedFaoMersEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"partitionedFaoMersEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PartitionedFaoMersEventsInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionedFaoMersEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionKey"}},{"kind":"Field","name":{"kind":"Name","value":"mersEvents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnimalMersEvent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"diagnosisStatus"}},{"kind":"Field","name":{"kind":"Name","value":"diagnosisSource"}},{"kind":"Field","name":{"kind":"Name","value":"country"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"observationDate"}},{"kind":"Field","name":{"kind":"Name","value":"reportDate"}},{"kind":"Field","name":{"kind":"Name","value":"animalType"}},{"kind":"Field","name":{"kind":"Name","value":"animalSpecies"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"HumanMersEvent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"diagnosisStatus"}},{"kind":"Field","name":{"kind":"Name","value":"diagnosisSource"}},{"kind":"Field","name":{"kind":"Name","value":"country"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"observationDate"}},{"kind":"Field","name":{"kind":"Name","value":"reportDate"}},{"kind":"Field","name":{"kind":"Name","value":"humansAffected"}},{"kind":"Field","name":{"kind":"Name","value":"humanDeaths"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PartitionedFaoMersEventsQuery, PartitionedFaoMersEventsQueryVariables>;
+export const FaoMersEventFilterOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"faoMersEventFilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"faoMersEventFilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"diagnosisSource"}},{"kind":"Field","name":{"kind":"Name","value":"animalType"}},{"kind":"Field","name":{"kind":"Name","value":"animalSpecies"}}]}}]}}]} as unknown as DocumentNode<FaoMersEventFilterOptionsQuery, FaoMersEventFilterOptionsQueryVariables>;
+export const YearlyFaoCamelPopulationDataPartitionKeysDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"yearlyFaoCamelPopulationDataPartitionKeys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"yearlyFaoCamelPopulationDataPartitionKeys"}}]}}]} as unknown as DocumentNode<YearlyFaoCamelPopulationDataPartitionKeysQuery, YearlyFaoCamelPopulationDataPartitionKeysQueryVariables>;
+export const PartitionedYearlyFaoCamelPopulationDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"partitionedYearlyFaoCamelPopulationData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PartitionedYearlyFaoCamelPopulationDataInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionedYearlyFaoCamelPopulationData"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionKey"}},{"kind":"Field","name":{"kind":"Name","value":"yearlyFaoCamelPopulationData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"country"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"camelCount"}},{"kind":"Field","name":{"kind":"Name","value":"camelCountPerCapita"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]}}]}}]} as unknown as DocumentNode<PartitionedYearlyFaoCamelPopulationDataQuery, PartitionedYearlyFaoCamelPopulationDataQueryVariables>;
+export const MersEstimatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"mersEstimates"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mersEstimates"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}}]}}]}}]} as unknown as DocumentNode<MersEstimatesQuery, MersEstimatesQueryVariables>;
+export const MersFilterOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"mersFilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mersFilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"countryIdentifiers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}}]}}]}}]} as unknown as DocumentNode<MersFilterOptionsQuery, MersFilterOptionsQueryVariables>;
 export const MonthlySarsCov2CountryInformationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"monthlySarsCov2CountryInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"monthlySarsCov2CountryInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"population"}},{"kind":"Field","name":{"kind":"Name","value":"peopleVaccinatedPerHundred"}},{"kind":"Field","name":{"kind":"Name","value":"peopleFullyVaccinatedPerHundred"}},{"kind":"Field","name":{"kind":"Name","value":"positiveCasesPerMillionPeople"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"gbdSuperRegion"}},{"kind":"Field","name":{"kind":"Name","value":"gbdSubRegion"}}]}}]}}]} as unknown as DocumentNode<MonthlySarsCov2CountryInformationQuery, MonthlySarsCov2CountryInformationQueryVariables>;
 export const AllMonthlySarsCov2CountryInformationPartitionKeysDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allMonthlySarsCov2CountryInformationPartitionKeys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allMonthlySarsCov2CountryInformationPartitionKeys"}}]}}]} as unknown as DocumentNode<AllMonthlySarsCov2CountryInformationPartitionKeysQuery, AllMonthlySarsCov2CountryInformationPartitionKeysQueryVariables>;
 export const PartitionedMonthlySarsCov2CountryInformationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"partitionedMonthlySarsCov2CountryInformation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PartitionedMonthlySarsCov2CountryInformationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionedMonthlySarsCov2CountryInformation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionKey"}},{"kind":"Field","name":{"kind":"Name","value":"monthlySarsCov2CountryInformation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"population"}},{"kind":"Field","name":{"kind":"Name","value":"peopleVaccinatedPerHundred"}},{"kind":"Field","name":{"kind":"Name","value":"peopleFullyVaccinatedPerHundred"}},{"kind":"Field","name":{"kind":"Name","value":"positiveCasesPerMillionPeople"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"gbdSuperRegion"}},{"kind":"Field","name":{"kind":"Name","value":"gbdSubRegion"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}}]}}]}}]}}]} as unknown as DocumentNode<PartitionedMonthlySarsCov2CountryInformationQuery, PartitionedMonthlySarsCov2CountryInformationQueryVariables>;
-export const SarsCov2EstimatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"sarsCov2Estimates"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sarsCov2Estimates"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"antibodies"}},{"kind":"Field","name":{"kind":"Name","value":"isotypes"}},{"kind":"Field","name":{"kind":"Name","value":"isWHOUnityAligned"}},{"kind":"Field","name":{"kind":"Name","value":"testType"}},{"kind":"Field","name":{"kind":"Name","value":"sourceType"}},{"kind":"Field","name":{"kind":"Name","value":"riskOfBias"}},{"kind":"Field","name":{"kind":"Name","value":"populationGroup"}},{"kind":"Field","name":{"kind":"Name","value":"sex"}},{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"gbdSuperRegion"}},{"kind":"Field","name":{"kind":"Name","value":"gbdSubRegion"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"studyName"}},{"kind":"Field","name":{"kind":"Name","value":"scope"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"samplingStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"samplingEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"samplingMidDate"}},{"kind":"Field","name":{"kind":"Name","value":"publicationDate"}},{"kind":"Field","name":{"kind":"Name","value":"countryPeopleVaccinatedPerHundred"}},{"kind":"Field","name":{"kind":"Name","value":"countryPeopleFullyVaccinatedPerHundred"}},{"kind":"Field","name":{"kind":"Name","value":"countryPositiveCasesPerMillionPeople"}},{"kind":"Field","name":{"kind":"Name","value":"denominatorValue"}},{"kind":"Field","name":{"kind":"Name","value":"numeratorValue"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalence"}},{"kind":"Field","name":{"kind":"Name","value":"estimateName"}},{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]} as unknown as DocumentNode<SarsCov2EstimatesQuery, SarsCov2EstimatesQueryVariables>;
 export const AllSarsCov2EstimatePartitionKeysDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allSarsCov2EstimatePartitionKeys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allSarsCov2EstimatePartitionKeys"}}]}}]} as unknown as DocumentNode<AllSarsCov2EstimatePartitionKeysQuery, AllSarsCov2EstimatePartitionKeysQueryVariables>;
 export const PartitionedSarsCov2EstimatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"partitionedSarsCov2Estimates"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PartitionedSarsCov2EstimatesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionedSarsCov2Estimates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionKey"}},{"kind":"Field","name":{"kind":"Name","value":"sarsCov2Estimates"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"antibodies"}},{"kind":"Field","name":{"kind":"Name","value":"isotypes"}},{"kind":"Field","name":{"kind":"Name","value":"isWHOUnityAligned"}},{"kind":"Field","name":{"kind":"Name","value":"testType"}},{"kind":"Field","name":{"kind":"Name","value":"sourceType"}},{"kind":"Field","name":{"kind":"Name","value":"riskOfBias"}},{"kind":"Field","name":{"kind":"Name","value":"populationGroup"}},{"kind":"Field","name":{"kind":"Name","value":"sex"}},{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"gbdSuperRegion"}},{"kind":"Field","name":{"kind":"Name","value":"gbdSubRegion"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"studyName"}},{"kind":"Field","name":{"kind":"Name","value":"scope"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"samplingStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"samplingEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"samplingMidDate"}},{"kind":"Field","name":{"kind":"Name","value":"publicationDate"}},{"kind":"Field","name":{"kind":"Name","value":"countryPeopleVaccinatedPerHundred"}},{"kind":"Field","name":{"kind":"Name","value":"countryPeopleFullyVaccinatedPerHundred"}},{"kind":"Field","name":{"kind":"Name","value":"countryPositiveCasesPerMillionPeople"}},{"kind":"Field","name":{"kind":"Name","value":"denominatorValue"}},{"kind":"Field","name":{"kind":"Name","value":"numeratorValue"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalence"}},{"kind":"Field","name":{"kind":"Name","value":"estimateName"}},{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}}]} as unknown as DocumentNode<PartitionedSarsCov2EstimatesQuery, PartitionedSarsCov2EstimatesQueryVariables>;
-export const SarsCov2FilterOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"sarsCov2FilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sarsCov2FilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"scope"}},{"kind":"Field","name":{"kind":"Name","value":"sourceType"}},{"kind":"Field","name":{"kind":"Name","value":"riskOfBias"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"antibodies"}},{"kind":"Field","name":{"kind":"Name","value":"isotypes"}},{"kind":"Field","name":{"kind":"Name","value":"testType"}},{"kind":"Field","name":{"kind":"Name","value":"countryIdentifiers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}}]}}]}}]}}]} as unknown as DocumentNode<SarsCov2FilterOptionsQuery, SarsCov2FilterOptionsQueryVariables>;
+export const SarsCov2FilterOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"sarsCov2FilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sarsCov2FilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"scope"}},{"kind":"Field","name":{"kind":"Name","value":"sourceType"}},{"kind":"Field","name":{"kind":"Name","value":"sex"}},{"kind":"Field","name":{"kind":"Name","value":"populationGroup"}},{"kind":"Field","name":{"kind":"Name","value":"riskOfBias"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"antibodies"}},{"kind":"Field","name":{"kind":"Name","value":"isotypes"}},{"kind":"Field","name":{"kind":"Name","value":"testType"}},{"kind":"Field","name":{"kind":"Name","value":"countryIdentifiers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}}]}}]}}]}}]} as unknown as DocumentNode<SarsCov2FilterOptionsQuery, SarsCov2FilterOptionsQueryVariables>;
 export const GroupedTeamMembersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"groupedTeamMembers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"groupedTeamMembers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"teamMembers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"linkedinUrl"}},{"kind":"Field","name":{"kind":"Name","value":"twitterUrl"}},{"kind":"Field","name":{"kind":"Name","value":"affiliations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"label"}}]}},{"kind":"Field","name":{"kind":"Name","value":"additionalSymbols"}}]}}]}}]}}]} as unknown as DocumentNode<GroupedTeamMembersQuery, GroupedTeamMembersQueryVariables>;

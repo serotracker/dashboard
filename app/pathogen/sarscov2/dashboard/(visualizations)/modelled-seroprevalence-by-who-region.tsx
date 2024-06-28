@@ -78,13 +78,11 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
       dataPointToXAxisValue={({ dataPoint }) => dateToMonthCount(dataPoint.samplingMidDate)}
       xAxisValueToLabel={({ xAxisValue }) => monthCountToMonthYearString(xAxisValue)}
       xAxisLabelSortingFunction={(xAxisLabelA, xAxisLabelB) => monthYearStringToMonthCount(xAxisLabelA) - monthYearStringToMonthCount(xAxisLabelB)}
-      dataPointToYAxisValue={({ dataPoint }) => {
-        const seroprevalenceDecimalValue = isAcceptableSarsCov2EstimateWithNumerator(dataPoint)
-          ? dataPoint.numeratorValue / dataPoint.denominatorValue
-          : (dataPoint.seroprevalence * dataPoint.denominatorValue) / dataPoint.denominatorValue
-
-        return parseFloat((seroprevalenceDecimalValue * 100).toFixed(1))
-      }}
+      dataPointToYAxisValue={({ dataPoint }) => 
+        isAcceptableSarsCov2EstimateWithNumerator(dataPoint)
+          ? ((dataPoint.numeratorValue / dataPoint.denominatorValue) * 100)
+          : ((dataPoint.seroprevalence) * 100)
+      }
       getLineColour={({ primaryGroupingKey }) => barColoursForWhoRegions[primaryGroupingKey]}
       bestFitLineSettings={{
         maximumPolynomialOrder: 2,
