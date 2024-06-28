@@ -1,67 +1,53 @@
 import { Layer, Source } from "react-map-gl";
-import { PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { useEffect, useState } from "react";
+import { PaintForCountries, PathogenDataPointPropertiesBase } from "./pathogen-map";
+import { useEffect, useState, useMemo } from "react";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
-import {
-  MapResources,
-  MapSymbology,
-} from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
+import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 
-interface PathogenCountryHighlightLayerProps<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
-> {
+interface PathogenCountryHighlightLayerProps {
   positionedUnderLayerWithId: string | undefined;
-  dataPoints: (TPathogenDataPointProperties & {countryAlphaThreeCode : string})[];
+  paint: PaintForCountries;
 }
 
-const generatePaintForLayer = <
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
->(input: {
-  dataPoints: (TPathogenDataPointProperties & { countryAlphaThreeCode : string})[];
-}) => {
-  const { dataPoints } = input;
+interface GeneratePaintForLayerInput {
+  paint: PaintForCountries;
+}
 
-  const allUniqueCountryCodesWithData = new Set(
-    dataPoints.map((dataPoint) => dataPoint.countryAlphaThreeCode)
-  );
+const generatePaintForLayer = (
+  input: GeneratePaintForLayerInput
+) => {
+  const { paint } = input;
 
-  const countryColorsAndOpacities = Array.from(
-    allUniqueCountryCodesWithData
-  ).map((alpha3CountryCode) => ({
-    alpha3CountryCode: alpha3CountryCode,
-    fill: MapSymbology.CountryFeature.HasData.Color,
-    opacity: MapSymbology.CountryFeature.HasData.Opacity,
-  }));
+  const { countryData, defaults } = paint;
 
   return {
     "fill-color": [
       "match",
       ["get", "CODE"],
-      ...countryColorsAndOpacities.flatMap(({ alpha3CountryCode, fill }) => [
-        alpha3CountryCode,
+      ...countryData.flatMap(({ countryAlphaThreeCode, fill }) => [
+        countryAlphaThreeCode,
         fill,
       ]),
-      MapSymbology.CountryFeature.Default.Color,
+      defaults.fill
     ],
     "fill-opacity": [
       "match",
       ["get", "CODE"],
-      ...countryColorsAndOpacities.flatMap(({ alpha3CountryCode, opacity }) => [
-        alpha3CountryCode,
+      ...countryData.flatMap(({ countryAlphaThreeCode, opacity }) => [
+        countryAlphaThreeCode,
         opacity,
       ]),
-      MapSymbology.CountryFeature.Default.Opacity,
+      defaults.opacity
     ],
   };
 };
 
-export function PathogenCountryHighlightLayer<
-  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
->({
-  positionedUnderLayerWithId,
-  dataPoints,
-}: PathogenCountryHighlightLayerProps<TPathogenDataPointProperties>) {
+export function PathogenCountryHighlightLayer(
+  props: PathogenCountryHighlightLayerProps
+) {
+  const { paint } = props;
   const [mapCountryVectors, setMapCountryVectors] = useState<any>(null);
+  const layerPaint = useMemo(() => generatePaintForLayer({ paint }), [paint])
 
   useEffect(() => {
     getEsriVectorSourceStyle(MapResources.WHO_COUNTRY_VECTORTILES).then(
@@ -82,8 +68,8 @@ export function PathogenCountryHighlightLayer<
       <Layer
         {...countryLayer}
         id='country-highlight-layer'
-        paint={generatePaintForLayer({ dataPoints })}
-        beforeId={positionedUnderLayerWithId}
+        paint={layerPaint}
+        beforeId={props.positionedUnderLayerWithId}
       />
     </Source>
   );

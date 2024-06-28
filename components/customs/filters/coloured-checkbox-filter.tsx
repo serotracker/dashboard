@@ -1,24 +1,30 @@
-import { PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
+import { PathogenContextState, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { SendFilterChangeDispatch } from "../filters";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TooltipContentRenderingFunction } from "./available-filters";
 import { Button } from "@/components/ui/button";
 
-export interface ColouredCheckboxFilterProps<TEstimate extends Record<string, unknown>> {
+export interface ColouredCheckboxFilterProps<
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+> {
   filter: string;
   placeholder: string;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
   optionSortingFunction?: (a: string, b:string) => number;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
-  state: PathogenContextType<TEstimate>;
-  data: TEstimate[];
+  state: PathogenContextType<TEstimate, TPathogenContextState>;
+  data: TEstimate[] | Record<string, unknown>;
   filterOptions: Array<string | undefined | null>;
   optionToLabelMap: Record<string, string | undefined>;
   optionToColourClassnameMap: Record<string, string | undefined>;
   clearAllButtonText: string;
 }
 
-export const ColouredCheckboxFilter = <TEstimate extends Record<string, unknown>>(props: ColouredCheckboxFilterProps<TEstimate>) => {
+export const ColouredCheckboxFilter = <
+  TEstimate extends Record<string, unknown>,
+  TPathogenContextState extends PathogenContextState<TEstimate>
+>(props: ColouredCheckboxFilterProps<TEstimate, TPathogenContextState>) => {
   const handleOnClickCheckbox = (option: string, checked: boolean) => {
     const value = props.state.selectedFilters[props.filter] ?? [];
 

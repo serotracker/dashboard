@@ -36,11 +36,12 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   ];
 
   const demographicFilters = [
+    FilterableField.populationGroup,
+    FilterableField.sex,
     FilterableField.ageGroup,
   ];
 
   const testInformationFilters = [
-    FilterableField.sourceType,
     FilterableField.antibodies,
     FilterableField.testType,
     FilterableField.isotypes
@@ -83,6 +84,8 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
           unRegion: filterData.sarsCov2FilterOptions.unRegion,
           ageGroup: filterData.sarsCov2FilterOptions.ageGroup,
           scope: filterData.sarsCov2FilterOptions.scope,
+          sex: filterData.sarsCov2FilterOptions.sex,
+          populationGroup: filterData.sarsCov2FilterOptions.populationGroup,
           sourceType: filterData.sarsCov2FilterOptions.sourceType,
           riskOfBias: filterData.sarsCov2FilterOptions.riskOfBias,
           antibodies: filterData.sarsCov2FilterOptions.antibodies,

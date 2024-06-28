@@ -120,7 +120,7 @@ export const NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegio
       && dataPoint.countryPositiveCasesPerMillionPeople !== undefined
       && dataPoint.countryPositiveCasesPerMillionPeople !== null 
     )
-  , [state.filteredData]);
+  , [ state.filteredData ]);
 
   const { dataPoints, ratioBuckets } = useMemo(() => pipe(
     { dataPoints: consideredData },
