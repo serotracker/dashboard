@@ -8,7 +8,7 @@ import { MapSymbology } from "@/app/pathogen/arbovirus/dashboard/(map)/map-confi
 type GetCountryHighlightingLayerInformationInput<
   TData extends { countryAlphaThreeCode: string }
 > = GenericGetCountryHighlightingLayerInformationInput<TData> & {
-  countryHighlightingEnabled?: boolean;
+  countryHighlightingEnabled: boolean;
 }
 
 export const useEsmCountryHighlightLayer = () => {
@@ -41,13 +41,13 @@ export const useEsmCountryHighlightLayer = () => {
 
     return {
       paint: {
-        countryData: (input.countryHighlightingEnabled === false) ? countryData : [],
+        countryData: input.countryHighlightingEnabled ? countryData : [],
         defaults: {
           fill: MapSymbology.CountryFeature.Default.Color,
           opacity: MapSymbology.CountryFeature.Default.Opacity
         }
       },
-      countryHighlightLayerLegendEntries: (input.countryHighlightingEnabled === false) ? countryHighlightLayerLegendEntries : [],
+      countryHighlightLayerLegendEntries: input.countryHighlightingEnabled ? countryHighlightLayerLegendEntries : [],
     }
   }, []);
 

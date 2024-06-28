@@ -8,7 +8,7 @@ import { MapSymbology } from "@/app/pathogen/arbovirus/dashboard/(map)/map-confi
 type GetCountryHighlightingLayerInformationInput<
   TData extends { countryAlphaThreeCode: string }
 > = GenericGetCountryHighlightingLayerInformationInput<TData> & {
-  countryHighlightingEnabled?: boolean;
+  countryHighlightingEnabled: boolean;
 }
 
 export const useDataPointPresentLayer = () => {
