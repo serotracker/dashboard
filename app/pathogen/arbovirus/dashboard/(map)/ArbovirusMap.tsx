@@ -39,7 +39,7 @@ export function ArbovirusMap() {
   const { data } = useArboData();
   const { getCountryHighlightingLayerInformation: getDataPointPresentCountryHighlightingLayerInformation } = useDataPointPresentLayer();
   const { getCountryHighlightingLayerInformation: getESMCountryHighlightingLayerInformation } = useEsmCountryHighlightLayer();
-  const { countryHighlightingEnabled, ...arbovirusMapCustomizationModal } = useArbovirusMapCustomizationModal();
+  const { countryHighlightingEnabled, countryPopUpEnabled, ...arbovirusMapCustomizationModal } = useArbovirusMapCustomizationModal();
 
   const { paint, countryHighlightLayerLegendEntries } = useMemo(() => {
     if (selectedFilters.esm?.length > 0) {
@@ -64,7 +64,7 @@ export function ArbovirusMap() {
       <div className={"w-full h-full p-0"}>
         <PathogenMap
           id="arboMap"
-          countryPopUpEnabled={true}
+          countryPopUpEnabled={countryPopUpEnabled}
           baseCursor=""
           sourceId="arbo-[GENERATED-SOURCE-ID]"
           layers={[
