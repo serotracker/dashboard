@@ -10,6 +10,7 @@ import { MapSymbology } from "./map-config";
 import { SarsCov2EstimatePopupContent } from "./sars-cov-2-estimate-pop-up-content";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
 import { SarsCov2CountryPopupContent } from "./sars-cov-2-country-pop-up-content";
+import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 
 export function SarsCov2Map() {
   const state = useContext(SarsCov2Context);
@@ -89,12 +90,19 @@ export function SarsCov2Map() {
           ]}
           clusteringSettings={{
             clusteringEnabled: true,
+            headerText: "Estimate Count",
+            popUpWidth: GenericMapPopUpWidth.AUTO,
             clusterProperties: {
               National: ["+", ["case", ["==", ["get", "scope"], "National"], 1, 0]],
               Regional: ["+", ["case", ["==", ["get", "scope"], "Regional"], 1, 0]],
               Local: ["+", ["case", ["==", ["get", "scope"], "Local"], 1, 0]]
             },
             validClusterPropertyKeys: [
+              "National",
+              "Regional",
+              "Local"
+            ],
+            clusterPropertyKeysIncludedInSum: [
               "National",
               "Regional",
               "Local"

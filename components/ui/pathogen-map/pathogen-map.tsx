@@ -22,6 +22,7 @@ import isEqual from "lodash/isEqual";
 import { EsmMapSourceAndLayer } from "./esm-maps";
 import { WeekNumberLabel } from "react-day-picker";
 import { computeClusterMarkers } from "@/app/pathogen/arbovirus/dashboard/(map)/arbo-map-cluster-utils";
+import { GenericMapPopUpWidth } from "./map-pop-up/generic-map-pop-up";
 
 export interface MarkerCollection<TClusterPropertyKey extends string> {
   [key: string]: {
@@ -40,8 +41,11 @@ export interface PathogenDataPointPropertiesBase {
 }
 
 interface ClusteringEnabledSettings<TClusterPropertyKey extends string> {
-  clusteringEnabled: true,
+  clusteringEnabled: true;
+  headerText: string;
+  popUpWidth: GenericMapPopUpWidth;
   validClusterPropertyKeys: TClusterPropertyKey[];
+  clusterPropertyKeysIncludedInSum: TClusterPropertyKey[];
   clusterProperties: Record<TClusterPropertyKey, unknown>;
   clusterPropertyToColourMap: Record<TClusterPropertyKey, string>;
 }
@@ -134,8 +138,11 @@ export function PathogenMap<
         // This needs to be standardized. How? Can we be type specific probable not? 
         const newMarkers = computeClusterMarkers({
           features,
+          headerText: clusteringSettings.headerText,
+          popUpWidth: clusteringSettings.popUpWidth,
           markers: markersOnScreen,
           validClusterPropertyKeys: clusteringSettings.validClusterPropertyKeys,
+          clusterPropertyKeysIncludedInSum: clusteringSettings.clusterPropertyKeysIncludedInSum,
           clusterPropertyToColourMap: clusteringSettings.clusterPropertyToColourMap,
           map
         });
