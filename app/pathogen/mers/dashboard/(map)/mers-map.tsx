@@ -21,6 +21,7 @@ import {
   isMersFaoHumanEventMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
+import { useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
 
 const MapPinColours = {
   'HumanMersEvent': "#8abded",
@@ -34,6 +35,8 @@ export const MersMap = () => {
   const state = useContext(MersContext);
   const { data } = useMersData();
   const { faoMersEvents } = useFaoMersEventData();
+
+  const mersMapCustomizationModal = useMersMapCustomizationModal();
 
   if (!data || !faoMersEvents) {
     return <span> Loading... </span>;
@@ -148,6 +151,8 @@ export const MersMap = () => {
       </div>
       <MapShadingLegend className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"} />
       <MapEstimateSummary filteredData={state.filteredData.map(() => ({sourceSheetName: "Study name goes here..."}))}/>
+      <mersMapCustomizationModal.mapCustomizeButton />
+      <mersMapCustomizationModal.customizationModal />
     </>
   );
 }

@@ -16,15 +16,15 @@ export type PopUpContentColouredPillListRowProps = PopUpContentRowBaseProps & {
 }
 
 export const PopUpContentColouredPillListRow = (props: PopUpContentColouredPillListRowProps) => {
-  const { values, valueToColourClassnameMap, defaultColourClassname } = props;
+  const { values, valueToColourClassnameMap, defaultColourClassname, valueToLabelMap } = props;
 
   const content = useMemo(() => {
     return values.map((value) => (
       <span key={value} className={`${valueToColourClassnameMap[value] ?? defaultColourClassname} mr-1 p-2 rounded-sm`}>
-        {props.valueToLabelMap?.[value] ? props.valueToLabelMap[value] : value}
+        {valueToLabelMap?.[value] ? valueToLabelMap[value] : value}
       </span>
     ))
-  }, [values, valueToColourClassnameMap, defaultColourClassname])
+  }, [values, valueToColourClassnameMap, defaultColourClassname, valueToLabelMap])
 
   return (
     <GenericPopUpContentRow
