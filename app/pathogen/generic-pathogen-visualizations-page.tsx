@@ -22,7 +22,7 @@ export interface VisualizationInformation<
   id: TVisualizationId;
   urlParameter: TVisualizationUrlParameter;
   getDisplayName: (input: GetDisplayNameInput<TEstimate>) => string;
-  titleTooltipText?: string;
+  titleTooltipContent?: string | React.ReactNode;
   renderVisualization: (input: RenderVisualizationInput<TEstimate>) => React.ReactNode;
 }
 

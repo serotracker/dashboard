@@ -181,7 +181,7 @@ export const ArboDataTable = () => {
         }}
         csvCitationConfiguration={{
           enabled: true,
-          citationText: "Ware H*, Whelan M*, Ranka H, Roell Y, Aktar S, Kenny S, Pinno E, SeroTracker Research Team, Bobrovitz N**, Arora RK**, Jaenisch T**. ArboTracker: A Dashboard and Data Platform for arbovirus serosurveys (2024); Website, accessible via www.new.SeroTracker.com.",
+          citationText: "Harriet Ware, Mairead Whelan, Anabel Selemon, Emilie Toews, Shaila Akter, Niklas Bobrovitz, Rahul Arora, Yannik Roell, Thomas Jaenisch. A living systematic review of arbovirus seroprevalence studies. PROSPERO 2024 CRD42024551000 Available from: https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000",
           toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST
         }}
         rowExpansionConfiguration={rowExpansionConfiguration}
