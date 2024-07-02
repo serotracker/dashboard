@@ -45,18 +45,6 @@ type ModalProps<TDropdownOption extends string> = ModalPropsBase & ModalPropsBas
 const Modal = <
   TDropdownOption extends string
 >(props: ModalProps<TDropdownOption>): React.ReactNode => {
-  const modalContent = useMemo(() => {
-    if(isCustomizationModalProps(props)) {
-      return <CustomizationModalContent customizationSettings={props.content.customizationSettings}/>
-    }
-
-    if(isArboTrackerHelpModalProps(props)) {
-      return <ArboTrackerHelpModalContent />
-    }
-
-    assertNever(props)
-  }, [props])
-
   return (
     <div className={cn(
       "absolute w-full h-full top-0 left-0 p-4 flex items-center justify-center bg-modal-background z-10",
@@ -75,7 +63,11 @@ const Modal = <
             <X />
           </button>
         </div>
-        {modalContent}
+        <CustomizationModalContent
+          className={isCustomizationModalProps(props) ? '' : 'hidden'}
+          customizationSettings={isCustomizationModalProps(props) ? props.content.customizationSettings : []}
+        />
+        <ArboTrackerHelpModalContent className={isArboTrackerHelpModalProps(props) ? '' : 'hidden'} />
       </div>
     </div>
   )
