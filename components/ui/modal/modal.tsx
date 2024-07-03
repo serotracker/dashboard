@@ -16,14 +16,13 @@ export enum ModalType {
 }
 
 export interface ModalPropsBase {
-  header: string;
   hidden: boolean;
   onClose: () => void;
 }
 
 type CustomizationModalProps<TDropdownOption extends string> = {
   modalType: ModalType.CUSTOMIZATION_MODAL;
-  content: CustomizationModalContentProps<TDropdownOption>
+  content: Omit<CustomizationModalContentProps<TDropdownOption>, 'closeModal'>
 };
 type ArboTrackerHelpModalProps = {
   modalType: ModalType.ARBOTRACKER_HELP_MODAL;
@@ -45,37 +44,21 @@ type ModalProps<TDropdownOption extends string> = ModalPropsBase & ModalPropsBas
 const Modal = <
   TDropdownOption extends string
 >(props: ModalProps<TDropdownOption>): React.ReactNode => {
-  const modalContent = useMemo(() => {
-    if(isCustomizationModalProps(props)) {
-      return <CustomizationModalContent customizationSettings={props.content.customizationSettings}/>
-    }
-
-    if(isArboTrackerHelpModalProps(props)) {
-      return <ArboTrackerHelpModalContent />
-    }
-
-    assertNever(props)
-  }, [props])
-
   return (
     <div className={cn(
       "absolute w-full h-full top-0 left-0 p-4 flex items-center justify-center bg-modal-background z-10",
       props.hidden ? 'hidden' : ''
     )}>
       <div className="w-full lg:w-1/2 bg-white rounded">
-        <div className="w-full flex justify-between p-2">
-          <div/>
-          <h3 className="flex items-center">{ props.header }</h3>
-          <button
-            className="mr-2 p-2 hover:bg-gray-100 rounded-full"
-            onClick={() => props.onClose()}
-            aria-label={`Close "${ props.header }" Modal`}
-            title={`Close "${ props.header }" Modal`}
-          >
-            <X />
-          </button>
-        </div>
-        {modalContent}
+        <CustomizationModalContent
+          closeModal={props.onClose}
+          className={isCustomizationModalProps(props) ? '' : 'hidden'}
+          customizationSettings={isCustomizationModalProps(props) ? props.content.customizationSettings : []}
+        />
+        <ArboTrackerHelpModalContent
+          closeModal={props.onClose}
+          className={isArboTrackerHelpModalProps(props) ? '' : 'hidden'}
+        />
       </div>
     </div>
   )
@@ -83,7 +66,6 @@ const Modal = <
 
 type DisabledUseModalInput = {
   initialModalState: ModalState;
-  headerText: string;
   disabled: true;
   modalType: undefined;
 }
@@ -92,7 +74,6 @@ type EnabledUseModalInput<
   TDropdownOption extends string
 > = {
   initialModalState: ModalState;
-  headerText: string;
   disabled: false;
 } & ModalPropsBasedOnType<TDropdownOption>;
 
@@ -120,7 +101,6 @@ export const useModal = <
     
     return (
       <Modal
-        header={input.headerText}
         hidden={modalState === ModalState.CLOSED}
         {...(isCustomizationModalProps(input) ? {
           modalType: ModalType.CUSTOMIZATION_MODAL as const,

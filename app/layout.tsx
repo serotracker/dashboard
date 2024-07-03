@@ -5,7 +5,7 @@ import { Header } from "@/components/customs/header";
 import React from "react";
 import clsx from "clsx";
 import "mapbox-gl/dist/mapbox-gl.css";
-import {ThemeProvider} from "@/contexts/theme-provider";
+import { ThemeProvider } from "@/contexts/theme-provider";
 import { AppHeaderAndMain } from "./app-header-and-main";
 
 const inter = Inter({ subsets: ["latin"] });

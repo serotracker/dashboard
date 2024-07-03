@@ -1,8 +1,9 @@
 "use client";
 import { Header } from "@/components/customs/header";
 import { ModalState, ModalType, useModal } from "@/components/ui/modal/modal";
+import { HelpModalContext } from "@/contexts/help-modal-provider";
 import { usePathname } from "next/navigation";
-import { useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 
 interface AppHeaderAndMainProps {
   children: React.ReactNode;
@@ -45,13 +46,11 @@ export const AppHeaderAndMain = (props: AppHeaderAndMainProps) => {
     return !!modalType
       ? {
         initialModalState: ModalState.CLOSED,
-        headerText: 'Help',
         disabled: false as const,
         modalType: modalType
       }
       : {
         initialModalState: ModalState.CLOSED,
-        headerText: 'Help',
         disabled: true as const,
         modalType: undefined
       }
