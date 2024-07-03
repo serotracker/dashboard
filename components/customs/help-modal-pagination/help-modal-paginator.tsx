@@ -4,6 +4,7 @@ import React, { useState, useMemo, useCallback } from "react"
 interface HelpModalPage<TPageId extends string> {
   pageId: TPageId;
   pageIndex: number;
+  pageHeader: string;
   pageRenderingFunction: () => React.ReactNode;
 }
 

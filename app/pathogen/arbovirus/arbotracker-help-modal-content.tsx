@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { OnPageChangeInput, useHelpModalPaginator } from "@/components/customs/help-modal-pagination/help-modal-paginator";
 import { useCallback, useContext, useState } from "react";
 import { HelpModalContext } from "@/contexts/help-modal-provider";
+import { ModalHeader } from "@/components/ui/modal/modal-header";
 
 interface ArboTrackerHelpModalImageProps {
   className?: string;
@@ -182,69 +183,69 @@ enum ArboTrackerHelpModalSection {
   VISUALIZATION_INSTRUCTIONS = "VISUALIZATION_INSTRUCTIONS"
 }
 
-const sectionToHeaderMap: { [key in ArboTrackerHelpModalSection]: string} = {
-  [ArboTrackerHelpModalSection.INTRODUCTION]: 'What is ArboTracker?',
-  [ArboTrackerHelpModalSection.TUTORIAL]: 'Video Tutorial',
-  [ArboTrackerHelpModalSection.MAP_INSTRUCTIONS]: 'How to Use the Map',
-  [ArboTrackerHelpModalSection.FILTER_INSTRUCTIONS]: 'How to Use the Filters',
-  [ArboTrackerHelpModalSection.TABLE_INSTRUCTIONS]: 'How to Use the Data Table',
-  [ArboTrackerHelpModalSection.VISUALIZATION_INSTRUCTIONS]: 'How to Use the Visualizations'
-}
-
 const allSections = [{
   pageIndex: 0,
+  pageHeader: 'What is ArboTracker?',
   pageId: ArboTrackerHelpModalSection.INTRODUCTION,
   pageRenderingFunction: () => <ArboTrackerHelpModalIntroductionSection />
 }, {
   pageIndex: 1,
+  pageHeader: 'Video Tutorial',
   pageId: ArboTrackerHelpModalSection.TUTORIAL,
   pageRenderingFunction: () => <ArboTrackerHelpModalTutorialSection />
 }, {
   pageIndex: 2,
+  pageHeader: 'How to Use the Map',
   pageId: ArboTrackerHelpModalSection.MAP_INSTRUCTIONS,
   pageRenderingFunction: () => <ArboTrackerHelpModalMapInstructions />
 }, {
   pageIndex: 3,
+  pageHeader: 'How to Use the Filters',
   pageId: ArboTrackerHelpModalSection.FILTER_INSTRUCTIONS,
   pageRenderingFunction: () => <ArboTrackerHelpModalFilterInstructions />
 }, {
   pageIndex: 4,
+  pageHeader: 'How to Use the Data Table',
   pageId: ArboTrackerHelpModalSection.TABLE_INSTRUCTIONS,
   pageRenderingFunction: () => <ArboTrackerHelpModalTableInstructions />
 }, {
   pageIndex: 5,
+  pageHeader: 'How to Use the Visualizations',
   pageId: ArboTrackerHelpModalSection.VISUALIZATION_INSTRUCTIONS,
   pageRenderingFunction: () => <ArboTrackerHelpModalVisualizationInstructions />
 }];
 
 interface ArboTrackerHelpModalContentProps {
   className?: string;
+  closeModal: () => void;
 }
 
 export const ArboTrackerHelpModalContent = (props: ArboTrackerHelpModalContentProps) => {
-  const { setHelpModalTitle } = useContext(HelpModalContext);
+  const [ helpModalTitle, setHelpModalTitle ] = useState<string>(allSections[0].pageHeader);
+  const [ currentPageIndex, setCurrentPageIndex ] = useState<number>(allSections[0].pageIndex);
 
   const onPageChange = useCallback((input: OnPageChangeInput<ArboTrackerHelpModalSection>) => {
-    setHelpModalTitle(sectionToHeaderMap[input.newPage.pageId]);
+    setHelpModalTitle(input.newPage.pageHeader);
   }, [ setHelpModalTitle ]);
-
-  const [currentPageIndex, setCurrentPageIndex] = useState<number>(allSections[0].pageIndex);
 
   const helpModalPaginator = useHelpModalPaginator({
     currentPageIndex,
     setCurrentPageIndex,
     pages: allSections,
-    onPageChange: () => {}
+    onPageChange
   });
 
   return (
-    <div className={cn("px-4 overflow-y-scroll max-h-3/4-screen", props.className)}>
-      <Separator.Root
-        orientation="horizontal"
-        className="bg-arbovirus h-px mb-2 sticky top-0"
-      />
-      <helpModalPaginator.content />
-      <helpModalPaginator.navigator />
+    <div className={props.className}>
+      <ModalHeader header={helpModalTitle} closeModal={props.closeModal} />
+      <div className="px-4 overflow-y-scroll max-h-3/4-screen">
+        <Separator.Root
+          orientation="horizontal"
+          className="bg-arbovirus h-px mb-2 sticky top-0"
+        />
+        <helpModalPaginator.content />
+        <helpModalPaginator.navigator />
+      </div>
     </div>
   );
 }

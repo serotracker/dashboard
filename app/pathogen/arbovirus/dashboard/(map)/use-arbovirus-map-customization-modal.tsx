@@ -12,7 +12,6 @@ export const useArbovirusMapCustomizationModal = () => {
     setModalState: setCustomizationModalState,
   } = useModal({
     initialModalState: ModalState.CLOSED,
-    headerText: "Customize Map",
     disabled: false,
     modalType: ModalType.CUSTOMIZATION_MODAL,
     content: {

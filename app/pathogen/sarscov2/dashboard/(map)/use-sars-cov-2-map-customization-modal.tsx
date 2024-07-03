@@ -11,7 +11,6 @@ export const useSarsCov2MapCustomizationModal = () => {
     setModalState: setCustomizationModalState,
   } = useModal({
     initialModalState: ModalState.CLOSED,
-    headerText: "Customize Map",
     disabled: false,
     modalType: ModalType.CUSTOMIZATION_MODAL,
     content: {

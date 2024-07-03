@@ -25,7 +25,6 @@ const dashboardTypeToHelpModalType = {
 
 export const AppHeaderAndMain = (props: AppHeaderAndMainProps) => {
   const pathname = usePathname();
-  const { helpModalTitle } = useContext(HelpModalContext);
 
   const dashboardType = useMemo(() => {
     if (pathname.includes("arbovirus")) {
@@ -47,17 +46,15 @@ export const AppHeaderAndMain = (props: AppHeaderAndMainProps) => {
     return !!modalType
       ? {
         initialModalState: ModalState.CLOSED,
-        headerText: helpModalTitle,
         disabled: false as const,
         modalType: modalType
       }
       : {
         initialModalState: ModalState.CLOSED,
-        headerText: helpModalTitle,
         disabled: true as const,
         modalType: undefined
       }
-  }, [ dashboardType, helpModalTitle ])
+  }, [ dashboardType ])
 
   const helpModal = useModal(useModalInput);
 

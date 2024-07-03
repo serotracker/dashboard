@@ -7,7 +7,6 @@ import clsx from "clsx";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { ThemeProvider } from "@/contexts/theme-provider";
 import { AppHeaderAndMain } from "./app-header-and-main";
-import { HelpModalProvider } from "@/contexts/help-modal-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,11 +31,9 @@ export default function RootLayout({
       </head>
       <body className={clsx(inter.className, "text-black no-scrollbar overflow-y-hidden")}>
         <ThemeProvider>
-          <HelpModalProvider>
-            <AppHeaderAndMain>
-              {children}
-            </AppHeaderAndMain>
-          </HelpModalProvider>
+          <AppHeaderAndMain>
+            {children}
+          </AppHeaderAndMain>
         </ThemeProvider>
       </body>
     </html>
