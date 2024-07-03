@@ -130,13 +130,12 @@ const HelpModalPageNavigator = <TPageId extends string>(props: HelpModalPageNavi
         maximumPageIndex={props.maximumPageIndex}
         goToPageIndex={goToPageIndex}
       />
-      {generateRange({
-        startInclusive: props.minimumPageIndex,
-        endInclusive: props.maximumPageIndex,
-        stepSize: 1
-      }).map((pageIndex) => (
+      {pages
+        .sort((pageA, pageB) => pageA.pageIndex - pageB.pageIndex)
+        .map(({ pageIndex, pageId }) => (
         <RoundedButton
           className="mx-1"
+          key={pageId}
           hoverClassname={props.hoverClassname}
           selected={props.currentPageIndex === pageIndex}
           selectedClassname={props.selectedClassname}
