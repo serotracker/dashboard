@@ -229,6 +229,8 @@ export const ArboTrackerHelpModalContent = (props: ArboTrackerHelpModalContentPr
   }, [ setHelpModalTitle ]);
 
   const helpModalPaginator = useHelpModalPaginator({
+    hoverClassname: "hover:bg-arbovirusHover",
+    selectedClassname: "bg-arbovirus text-white",
     currentPageIndex,
     setCurrentPageIndex,
     pages: allSections,
@@ -238,13 +240,21 @@ export const ArboTrackerHelpModalContent = (props: ArboTrackerHelpModalContentPr
   return (
     <div className={props.className}>
       <ModalHeader header={helpModalTitle} closeModal={props.closeModal} />
-      <div className="px-4 overflow-y-scroll max-h-3/4-screen">
-        <Separator.Root
-          orientation="horizontal"
-          className="bg-arbovirus h-px mb-2 sticky top-0"
-        />
-        <helpModalPaginator.content />
-        <helpModalPaginator.navigator />
+      <Separator.Root
+        orientation="horizontal"
+        className="bg-arbovirus h-px"
+      />
+      <div className="px-4 overflow-y-scroll h-3/4-screen flex flex-col mt-2">
+        <div className="grow">
+          <helpModalPaginator.content />
+        </div>
+        <div className="sticky bottom-0 bg-white w-full">
+          <Separator.Root
+            orientation="horizontal"
+            className="bg-arbovirus h-px mb-2"
+          />
+          <helpModalPaginator.navigator className="mb-2" />
+        </div>
       </div>
     </div>
   );
