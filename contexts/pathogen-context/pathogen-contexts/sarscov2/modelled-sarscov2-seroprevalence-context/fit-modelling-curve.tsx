@@ -20,6 +20,6 @@ interface FitModellingCurveOutput<TGroupingKeyValue extends string> {
   }>
 }
 
-const fitModellingCurve = <TGroupingKeyValue extends string>(input: FitModellingCurveInput<TGroupingKeyValue>): FitModellingCurveOutput<TGroupingKeyValue>  => {
+export const fitModellingCurve = <TGroupingKeyValue extends string>(input: FitModellingCurveInput<TGroupingKeyValue>): FitModellingCurveOutput<TGroupingKeyValue>  => {
   return { dataPoints: [] }
 }

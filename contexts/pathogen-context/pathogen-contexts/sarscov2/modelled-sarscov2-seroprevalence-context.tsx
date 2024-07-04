@@ -12,6 +12,7 @@ import { MonthlySarsCov2CountryInformationContext } from './monthly-sarscov2-cou
 import { filterDataForSarsCov2SeroprevalenceModelling } from './modelled-sarscov2-seroprevalence-context/data-filtering';
 import { generateCountrySeroprevalenceDataBreakdown } from './modelled-sarscov2-seroprevalence-context/country-seroprevalence-breakdown-helper';
 import { generateDataPointsForGroup } from './modelled-sarscov2-seroprevalence-context/generate-data-points-for-group';
+import { fitModellingCurve } from './modelled-sarscov2-seroprevalence-context/fit-modelling-curve';
 
 export type CountryModelledSeroprevalenceBreakdown = Record<string, {
   whoRegion: WhoRegion | undefined;
