@@ -35,7 +35,7 @@ export const SarsCov2CountryPopupContent = (props: SarsCov2CountryPopupContentPr
   const { countryModelledSeroprevalenceBreakdown } = useContext(ModelledSarsCov2SeroprevalenceContext);
 
   const modelledSeroprevalenceForCountry = useMemo(() =>
-    countryModelledSeroprevalenceBreakdown[alpha3CountryCode].reduce<{
+    countryModelledSeroprevalenceBreakdown[alpha3CountryCode].data.reduce<{
       modelledTwentyFivePercentSeroprevalenceMonth: number | undefined
       modelledFiftyPercentSeroprevalenceMonth: number | undefined
       modelledSeventyFivePercentSeroprevalenceMonth: number | undefined
