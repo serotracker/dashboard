@@ -6,7 +6,6 @@ import { notFound } from 'next/navigation'
 import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
 import { SarsCov2Providers } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { sarsCov2Filters } from "@/hooks/sarscov2/useSarsCov2Filters";
-import { monthlySarsCov2CountryInformation } from "@/hooks/sarscov2/useMonthlySarsCov2CountryInformation";
 import { sarsCov2EstimatesPartitionKeys } from "@/hooks/sarscov2/useSarsCov2DataPartitionKeys";
 import { monthlySarsCov2CountryInformationPartitionKeys } from "@/hooks/sarscov2/useMonthlySarsCov2CountryInformationPartitionKeys";
 import { AllMonthlySarsCov2CountryInformationPartitionKeysQuery, AllSarsCov2EstimatePartitionKeysQuery } from "@/gql/graphql";
@@ -20,14 +19,6 @@ export default async function SarsCov2Layout({
 }) {
   const queryClient = getQueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ["monthlySarsCov2CountryInformation"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformation)
-  });
-  await queryClient.prefetchQuery({
-    queryKey: ["monthlySarsCov2CountryInformation"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', monthlySarsCov2CountryInformation)
-  });
   await queryClient.prefetchQuery({
     queryKey: ["sarsCov2FilterOptions"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', sarsCov2Filters)

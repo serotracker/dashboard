@@ -1,7 +1,6 @@
 "use client";
 import React, { createContext, useMemo } from "react";
 import { PartitionedMonthlySarsCov2CountryInformationQuery } from "@/gql/graphql";
-import { useMonthlySarsCov2CountryInformation } from "@/hooks/sarscov2/useMonthlySarsCov2CountryInformation";
 import { groupByArray } from "@/lib/utils";
 import { useMonthlySarsCov2CountryInformationPartitionKeys } from "@/hooks/sarscov2/useMonthlySarsCov2CountryInformationPartitionKeys";
 import { useMonthlySarsCov2CountryInformationPartitioned } from "@/hooks/sarscov2/useMonthlySarsCov2CountryInformationPartitioned";
