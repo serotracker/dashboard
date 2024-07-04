@@ -84,11 +84,11 @@ export const SarsCov2Providers = (props: SarsCov2ProvidersProps) => {
       mapId={"sarsCov2Map"}
       dataFetcher={SarsCov2DataFetcher}
     >
-      <ModelledSarsCov2SeroprevalenceProvider>
-        <MonthlySarsCov2CountryInformationProvider>
+      <MonthlySarsCov2CountryInformationProvider>
+        <ModelledSarsCov2SeroprevalenceProvider>
           {props.children}
-        </MonthlySarsCov2CountryInformationProvider>
-      </ModelledSarsCov2SeroprevalenceProvider>
+        </ModelledSarsCov2SeroprevalenceProvider>
+      </MonthlySarsCov2CountryInformationProvider>
     </PathogenProviders>
   )
 }

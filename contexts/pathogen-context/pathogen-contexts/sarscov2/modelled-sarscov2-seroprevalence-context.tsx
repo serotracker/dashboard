@@ -4,21 +4,29 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { SarsCov2Context, SarsCov2Estimate } from "./sc2-context";
 import { useBestFitCurve } from "@/components/customs/visualizations/line-fitting/use-best-fit-curve";
 import { generateRange, typedGroupBy, typedObjectEntries, typedObjectFromEntries, typedObjectKeys } from "@/lib/utils";
-import { dateToMonthCount } from "@/lib/time-utils";
+import { dateToMonthCount, monthEnumFromMonthIndex } from "@/lib/time-utils";
 import parseISO from "date-fns/parseISO";
+import { pipe } from "fp-ts/lib/function.js";
+import { GbdSubRegion, GbdSuperRegion, UnRegion, WhoRegion } from '@/gql/graphql';
+import { MonthlySarsCov2CountryInformationContext } from './monthly-sarscov2-country-information-context';
+import { filterDataForSarsCov2SeroprevalenceModelling } from './modelled-sarscov2-seroprevalence-context/data-filtering';
+import { generateCountrySeroprevalenceDataBreakdown } from './modelled-sarscov2-seroprevalence-context/country-seroprevalence-breakdown-helper';
+import { generateDataPointsForGroup } from './modelled-sarscov2-seroprevalence-context/generate-data-points-for-group';
 
-type CountrySeroprevalenceBreakdown = Record<string, Array<{
-  xAxisValue: number;
-  yAxisValue: number;
-}>>
+export type CountryModelledSeroprevalenceBreakdown = Record<string, {
+  whoRegion: WhoRegion | undefined;
+  data: Array<{
+    xAxisValue: number;
+    modelledYAxisValue: number;
+    rawYAxisValue: number | undefined;
+  }>;
+}>;
 
 interface ModelledSarsCov2SeroprevalenceContextType {
-  countrySeroprevalenceDataBreakdown: CountrySeroprevalenceBreakdown;
-  countryModelledSeroprevalenceBreakdown: CountrySeroprevalenceBreakdown;
+  countryModelledSeroprevalenceBreakdown: CountryModelledSeroprevalenceBreakdown;
 }
 
 const initialModelledSarsCov2SeroprevalenceContext = {
-  countrySeroprevalenceDataBreakdown: {},
   countryModelledSeroprevalenceBreakdown: {}
 };
 
@@ -30,138 +38,127 @@ interface ModelledSarsCov2SeroprevalenceProviderProps {
   children: React.ReactNode;
 }
 
-type AcceptableSarsCov2EstimateWithSeroprevalence = Omit<SarsCov2Estimate, "samplingMidDate"|"whoRegion"|"denominatorValue"|"numeratorValue"|"seroprevalence"> & {
-  samplingMidDate: NonNullable<SarsCov2Estimate["samplingMidDate"]>;
-  whoRegion: NonNullable<SarsCov2Estimate["whoRegion"]>;
-  denominatorValue: NonNullable<SarsCov2Estimate["denominatorValue"]>;
-} & {
-  numeratorValue: SarsCov2Estimate["numeratorValue"];
-  seroprevalence: NonNullable<SarsCov2Estimate["seroprevalence"]>;
-}
-
-const isAcceptableSarsCov2EstimateWithSeroprevalence = (estimate: AcceptableSarsCov2Estimate): estimate is AcceptableSarsCov2EstimateWithSeroprevalence =>
-  estimate.seroprevalence !== null && estimate.seroprevalence !== undefined;
-
-type AcceptableSarsCov2EstimateWithNumerator = Omit<SarsCov2Estimate, "samplingMidDate"|"whoRegion"|"denominatorValue"|"numeratorValue"|"seroprevalence"> & {
-  samplingMidDate: NonNullable<SarsCov2Estimate["samplingMidDate"]>;
-  whoRegion: NonNullable<SarsCov2Estimate["whoRegion"]>;
-  denominatorValue: NonNullable<SarsCov2Estimate["denominatorValue"]>;
-} & {
-  numeratorValue: NonNullable<SarsCov2Estimate["numeratorValue"]>;
-  seroprevalence: SarsCov2Estimate["seroprevalence"]
-}
-
-const isAcceptableSarsCov2EstimateWithNumerator = (estimate: AcceptableSarsCov2Estimate): estimate is AcceptableSarsCov2EstimateWithNumerator =>
-  estimate.numeratorValue !== null && estimate.numeratorValue !== undefined;
-
-type AcceptableSarsCov2Estimate = AcceptableSarsCov2EstimateWithSeroprevalence | AcceptableSarsCov2EstimateWithNumerator;
 
 export const ModelledSarsCov2SeroprevalenceProvider = (props: ModelledSarsCov2SeroprevalenceProviderProps) => {
   const { filteredData } = useContext(SarsCov2Context);
+  const { lookupOptimizedSarsCov2CountryInformation } = useContext(MonthlySarsCov2CountryInformationContext);
   const { generateBestFitCurve } = useBestFitCurve();
 
-  const consideredData = useMemo(() => filteredData
-    .filter((dataPoint: SarsCov2Estimate): dataPoint is AcceptableSarsCov2Estimate => 
-        !!dataPoint.samplingMidDate
-        && !!dataPoint.whoRegion
-        && dataPoint.denominatorValue !== null && dataPoint.denominatorValue !== undefined
-        && (
-          (dataPoint.numeratorValue !== null && dataPoint.numeratorValue !== undefined)
-          || (dataPoint.seroprevalence !== null && dataPoint.seroprevalence !== undefined)
-        )
-    ),
-    [filteredData]
-  );
+  const { filteredDataForModelling } = useMemo(() =>
+    filterDataForSarsCov2SeroprevalenceModelling({ data: filteredData })
+  , [ filteredData ]);
 
-  const countrySeroprevalenceDataBreakdown = useMemo(() => {
-    if(consideredData.length === 0) {
-      return {};
-    }
+  const { countryModelledSeroprevalenceBreakdown } = useMemo(() =>
+    generateCountrySeroprevalenceDataBreakdown({
+      filteredDataForModelling,
+      lookupOptimizedSarsCov2CountryInformation
+    })
+  , [ filteredDataForModelling, lookupOptimizedSarsCov2CountryInformation ])
 
-    const dataBrokenDownByCountry = typedGroupBy(consideredData, (dataPoint) => dataPoint.countryAlphaThreeCode);
-    const allCountryAlphaThreeCodes = typedObjectKeys(dataBrokenDownByCountry);
+  const { dataPoints: dataPointsForWorld } = useMemo(() => pipe({
+    groupingKey: "global" as const,
+    countryModelledSeroprevalenceBreakdown
+  },
+    generateDataPointsForGroup<"global", "Global">,
+    fitModellingCurve
+  ), [ countryModelledSeroprevalenceBreakdown ]);
 
-    return typedObjectFromEntries(allCountryAlphaThreeCodes
-      .map((countryAlphaThreeCode): [string, AcceptableSarsCov2Estimate[]] => [
-        countryAlphaThreeCode, dataBrokenDownByCountry[countryAlphaThreeCode]
-      ])
-      .map(([countryAlphaThreeCode, dataForCountry]): [
-        string,
-        Array<{xAxisValue: number, yAxisValue: number}>
-      ] => [
-        countryAlphaThreeCode,
-        dataForCountry.map((dataPoint) => {
-          const seroprevalenceDecimalValue = isAcceptableSarsCov2EstimateWithNumerator(dataPoint)
-            ? dataPoint.numeratorValue / dataPoint.denominatorValue
-            : (dataPoint.seroprevalence * dataPoint.denominatorValue) / dataPoint.denominatorValue
+  const { dataPoints: dataPointsForWhoRegions } = useMemo(() => pipe({
+    groupingKey: "whoRegion" as const,
+    countryModelledSeroprevalenceBreakdown
+  },
+    generateDataPointsForGroup<"whoRegion", WhoRegion>,
+    fitModellingCurve
+  ), [ countryModelledSeroprevalenceBreakdown ]);
 
-          return {
-            xAxisValue: dateToMonthCount(parseISO(dataPoint.samplingMidDate)),
-            yAxisValue: seroprevalenceDecimalValue
-          }
-        })
-      ])
-    )
-  }, [consideredData])
+  console.log('dataPointsForWhoRegions', dataPointsForWhoRegions);
 
-  const countryModelledSeroprevalenceBreakdown = useMemo(() => {
-    return typedObjectFromEntries(
-      typedObjectEntries(countrySeroprevalenceDataBreakdown)
-        .map(([countryAlphaThreeCode, dataForCountry]) => {
-          const { xAxisValueToYAxisValue } = generateBestFitCurve({
-            data: dataForCountry,
-            maximumPolynomialOrder: 2
-          });
+  const { dataPoints: dataPointsForUnRegions } = useMemo(() => pipe({
+    groupingKey: "unRegion" as const,
+    countryModelledSeroprevalenceBreakdown
+  },
+    generateDataPointsForGroup<"unRegion", UnRegion>,
+    fitModellingCurve
+  ), [ countryModelledSeroprevalenceBreakdown ]);
 
-          const allXAxisValuesForPrimaryKey = uniq(dataForCountry.map(({ xAxisValue }) => xAxisValue));
-          const smallestXAxisValueForPrimaryKey = Math.min(...allXAxisValuesForPrimaryKey);
-          const largestXAxisValueForPrimaryKey = Math.max(...allXAxisValuesForPrimaryKey);
+  const { dataPoints: dataPointsForGbdSuperRegions } = useMemo(() => pipe({
+    groupingKey: "gbdSuperRegion" as const,
+    countryModelledSeroprevalenceBreakdown
+  },
+    generateDataPointsForGroup<"gbdSuperRegion", GbdSuperRegion>,
+    fitModellingCurve
+  ), [ countryModelledSeroprevalenceBreakdown ]);
 
-          const modelledDataForCountry = generateRange({
-            startInclusive: smallestXAxisValueForPrimaryKey,
-            endInclusive: largestXAxisValueForPrimaryKey,
-            stepSize: 1
-          })
-            .map((xAxisValue) => {
-              let yAxisValue = xAxisValueToYAxisValue({ xAxisValue });
+  const { dataPoints: dataPointsForGbdSubRegions } = useMemo(() => pipe({
+    groupingKey: "gbdSubRegion" as const,
+    countryModelledSeroprevalenceBreakdown
+  },
+    generateDataPointsForGroup<"gbdSubRegion", GbdSubRegion>,
+    fitModellingCurve
+  ), [ countryModelledSeroprevalenceBreakdown ]);
 
-              return {
-                xAxisValue: xAxisValue,
-                yAxisValue: yAxisValue
-              }
-            })
-            .filter((element) =>
-              element.yAxisValue <= 100 &&
-              element.yAxisValue >= 0
-            )
-            .filter((element, index, array) => {
-              if(index === 0 && array.length === 1) {
-                return true;
-              }
-              if(index === 0 && array.length > 1) {
-                const secondElement = array[1];
+  //const countryModelledSeroprevalenceBreakdown = useMemo(() => {
+  //  return typedObjectFromEntries(
+  //    typedObjectEntries(countrySeroprevalenceDataBreakdown)
+  //      .map(([countryAlphaThreeCode, dataForCountry]) => {
+  //        const { xAxisValueToYAxisValue } = generateBestFitCurve({
+  //          data: dataForCountry.data,
+  //          maximumPolynomialOrder: 2
+  //        });
 
-                return element.yAxisValue <= secondElement.yAxisValue;
-              }
+  //        const allXAxisValuesForPrimaryKey = uniq(dataForCountry.data.map(({ xAxisValue }) => xAxisValue));
+  //        const smallestXAxisValueForPrimaryKey = Math.min(...allXAxisValuesForPrimaryKey);
+  //        const largestXAxisValueForPrimaryKey = Math.max(...allXAxisValuesForPrimaryKey);
 
-              const previousElement = array[index - 1]
+  //        const modelledDataForCountry = generateRange({
+  //          startInclusive: smallestXAxisValueForPrimaryKey,
+  //          endInclusive: largestXAxisValueForPrimaryKey,
+  //          stepSize: 1
+  //        })
+  //          .map((xAxisValue) => {
+  //            let yAxisValue = xAxisValueToYAxisValue({ xAxisValue });
 
-              return element.yAxisValue >= previousElement.yAxisValue;
-            })
+  //            return {
+  //              xAxisValue: xAxisValue,
+  //              modelledYAxisValue: yAxisValue,
+  //              rawYAxisValue: dataForCountry.data.find((element) => element.xAxisValue === xAxisValue)?.yAxisValue
+  //            }
+  //          })
+  //          .filter((element) =>
+  //            element.modelledYAxisValue <= 100 &&
+  //            element.modelledYAxisValue >= 0
+  //          )
+  //          .filter((element, index, array) => {
+  //            if(index === 0 && array.length === 1) {
+  //              return true;
+  //            }
+  //            if(index === 0 && array.length > 1) {
+  //              const secondElement = array[1];
 
-          return [
-            countryAlphaThreeCode,
-            modelledDataForCountry
-          ]
-        })
-    )
-  }, [countrySeroprevalenceDataBreakdown, generateBestFitCurve])
+  //              return element.modelledYAxisValue <= secondElement.modelledYAxisValue;
+  //            }
+
+  //            const previousElement = array[index - 1]
+
+  //            return element.modelledYAxisValue >= previousElement.modelledYAxisValue;
+  //          })
+
+  //        return [
+  //          countryAlphaThreeCode,
+  //          {
+  //            whoRegion: dataForCountry.whoRegion,
+  //            data: modelledDataForCountry
+  //          }
+  //        ]
+  //      })
+  //  )
+  //}, [countrySeroprevalenceDataBreakdown, generateBestFitCurve])
 
   return (
     <ModelledSarsCov2SeroprevalenceContext.Provider
       value={{
-        countrySeroprevalenceDataBreakdown: countrySeroprevalenceDataBreakdown,
-        countryModelledSeroprevalenceBreakdown: countryModelledSeroprevalenceBreakdown
+        //countryModelledSeroprevalenceBreakdown: countryModelledSeroprevalenceBreakdown
+        countryModelledSeroprevalenceBreakdown: {}
       }}
     >
       {props.children}

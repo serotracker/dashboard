@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useMemo } from "react";
-import { PartitionedMonthlySarsCov2CountryInformationQuery } from "@/gql/graphql";
+import { Month, PartitionedMonthlySarsCov2CountryInformationQuery } from "@/gql/graphql";
 import { useMonthlySarsCov2CountryInformation } from "@/hooks/sarscov2/useMonthlySarsCov2CountryInformation";
 import { groupByArray } from "@/lib/utils";
 import { useMonthlySarsCov2CountryInformationPartitionKeys } from "@/hooks/sarscov2/useMonthlySarsCov2CountryInformationPartitionKeys";
@@ -11,7 +11,7 @@ export type LookupOptimizedSarsCov2CountryInformation = Array<{
   data: Array<{
     year: number,
     data: Array<{
-      month: string,
+      month: Month,
       data: Array<Omit<
         PartitionedMonthlySarsCov2CountryInformationQuery[
           'partitionedMonthlySarsCov2CountryInformation'
@@ -65,7 +65,7 @@ export const MonthlySarsCov2CountryInformationProvider = (props: MonthlySarsCov2
         alphaTwoCode,
         data: groupByArray(data, "year").map(({ year, data }) => ({
           year: parseInt(year),
-          data: groupByArray(data, "month")
+          data: groupByArray<"month", Month, typeof data[number]>(data, "month")
         })),
       }));
     }

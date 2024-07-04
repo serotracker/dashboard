@@ -1,4 +1,5 @@
 import { Month } from "@/gql/graphql";
+import { typedObjectEntries, typedObjectFromEntries } from "./utils";
 
 export const monthNumberToMonth: Record<number, string | undefined> = {
   0: 'Jan',
@@ -71,4 +72,14 @@ export const monthIndexFromMonthMap = {
 
 export const dateFromYearAndMonth = (input: DateFromYearAndMonthInput): Date => {
   return new Date(input.year, monthIndexFromMonthMap[input.month]);
+}
+
+interface MonthEnumFromMonthIndexInput {
+  monthIndex: number
+}
+
+export const monthEnumFromMonthIndex = (input: MonthEnumFromMonthIndexInput): Month | undefined => {
+  return typedObjectEntries(monthIndexFromMonthMap)
+    .map(([ monthEnum, monthIndex ]) => ({ monthEnum, monthIndex }))
+    .find((element) => element.monthIndex === input.monthIndex)?.monthEnum;
 }
