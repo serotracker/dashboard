@@ -112,7 +112,7 @@ export const generateDataPointsForGroup = <
         const dataForXAxisValue = dataGroupedByXAxisValue[xAxisValue];
 
         const totalPopulation = pipe(
-          dataForEachCountry,
+          dataForXAxisValue,
           (intermediateInput) => intermediateInput.map(({ countryPopulation }) => countryPopulation),
           sum
         );

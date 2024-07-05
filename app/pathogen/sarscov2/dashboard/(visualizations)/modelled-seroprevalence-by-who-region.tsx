@@ -6,6 +6,9 @@ import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/p
 import { dateToMonthCount, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
 import { WhoRegion } from "@/gql/graphql";
 import { BestFitCurveLineChart } from "@/components/customs/visualizations/best-fit-curve-line-chart";
+import { LineChart } from "@/components/customs/visualizations/line-chart";
+import { ModelledSarsCov2SeroprevalenceContext } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/modelled-sarscov2-seroprevalence-context";
+import { generateRandomColour } from "@/lib/utils";
 
 const barColoursForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Afr]: "#e15759",
@@ -52,49 +55,26 @@ type AcceptableSarsCov2Estimate = AcceptableSarsCov2EstimateWithSeroprevalence |
 
 export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeroprevalenceByWhoRegionGraphProps) => {
   const state = useContext(SarsCov2Context);
-
-  const consideredData = useMemo(() => state.filteredData
-    .filter((dataPoint: SarsCov2Estimate): dataPoint is AcceptableSarsCov2Estimate => 
-        !!dataPoint.samplingMidDate
-        && !!dataPoint.whoRegion
-        && dataPoint.denominatorValue !== null && dataPoint.denominatorValue !== undefined
-        && (
-          (dataPoint.numeratorValue !== null && dataPoint.numeratorValue !== undefined)
-          || (dataPoint.seroprevalence !== null && dataPoint.seroprevalence !== undefined)
-        )
-    ).map((dataPoint) => ({
-      ...dataPoint,
-      samplingMidDate: parseISO(dataPoint.samplingMidDate),
-    })),
-    [state.filteredData]
-  );
+  const { dataPointsForWhoRegions } = useContext(ModelledSarsCov2SeroprevalenceContext);
+  const ungroupedDataPoints = dataPointsForWhoRegions.flatMap(({ whoRegion, data }) => data.map((dataPoint) => ({
+    whoRegion,
+    xAxisValue: dataPoint.xAxisValue,
+    rawYAxisValue: dataPoint.rawYAxisValue,
+    modelledYAxisValue: dataPoint.modelledYAxisValue,
+  })));
 
   return (
-    <BestFitCurveLineChart
+    <LineChart
       graphId="modelled-sc2-seroprevalence-by-who-region"
-      data={consideredData}
-      primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
-      primaryGroupingSortFunction={(whoRegionA, whoRegionB) => whoRegionA > whoRegionB ? 1 : -1}
-      dataPointToXAxisValue={({ dataPoint }) => dateToMonthCount(dataPoint.samplingMidDate)}
-      xAxisValueToLabel={({ xAxisValue }) => monthCountToMonthYearString(xAxisValue)}
-      xAxisLabelSortingFunction={(xAxisLabelA, xAxisLabelB) => monthYearStringToMonthCount(xAxisLabelA) - monthYearStringToMonthCount(xAxisLabelB)}
-      dataPointToYAxisValue={({ dataPoint }) => 
-        isAcceptableSarsCov2EstimateWithNumerator(dataPoint)
-          ? ((dataPoint.numeratorValue / dataPoint.denominatorValue) * 100)
-          : ((dataPoint.seroprevalence) * 100)
-      }
-      getLineColour={({ primaryGroupingKey }) => barColoursForWhoRegions[primaryGroupingKey]}
-      bestFitLineSettings={{
-        maximumPolynomialOrder: 2,
-        yAxisDomain: {
-          maximumValue: 100,
-          minimumValue: 0
-        },
-        allowStrictlyIncreasingLinesOnly: true
-      }}
-      formatYAxisValue={({ yAxisValue }) => parseFloat((yAxisValue).toFixed(1))}
-      legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
+      data={ungroupedDataPoints}
+      primaryGroupingFunction={(dataPoint) => monthCountToMonthYearString(dataPoint.xAxisValue)}
+      primaryGroupingSortFunction={(monthCountStringA, monthCountStringB) => monthYearStringToMonthCount(monthCountStringA) - monthYearStringToMonthCount(monthCountStringB)}
+      secondaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
+      secondaryGroupingSortFunction={(whoRegionA, whoRegionB) => whoRegionA > whoRegionB ? 1 : -1}
+      transformOutputValue={({ data }) => data.at(0)?.modelledYAxisValue}
+      getLineColour={(whoRegion) => barColoursForWhoRegions[whoRegion] ?? generateRandomColour()}
       percentageFormattingEnabled={true}
+      legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
     />
   );
 }

@@ -15,6 +15,7 @@ import {
 import { LegendConfiguration } from "./stacked-bar-chart";
 import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from './group-data-for-recharts/group-data-for-recharts-twice';
 import { applyLabelsToGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
+import { Formatter } from 'recharts/types/component/DefaultTooltipContent';
 
 interface LineChartProps<
   TData,
@@ -39,7 +40,7 @@ interface LineChartProps<
   transformOutputValue: (input: DoubleGroupingTransformOutputValueInput<
     TData,
     TSecondaryGroupingKey
-  >) => number;
+  >) => number | undefined;
   getLineColour: (secondaryKey: TSecondaryGroupingKey, index: number) => string;
   xAxisTickSettings?: {
     interval?: number;
@@ -98,6 +99,8 @@ export const LineChart = <
             bottom: 0,
           },
         };
+  
+  const tooltipFormatter: Formatter<number, string> = (value) => `${value.toFixed(2)}%`
 
   return (
     <ResponsiveContainer width={"100%"}>
@@ -119,7 +122,7 @@ export const LineChart = <
         />
         <Tooltip
           itemStyle={{"color": "black"}}
-          {...(props.percentageFormattingEnabled ? {formatter: (value) => `${value}%`} : {})}
+          {...(props.percentageFormattingEnabled ? {formatter: tooltipFormatter} : {})}
         />
         <Legend {...legendProps} />
         {allSecondaryKeys.map((secondaryKey, index) => (

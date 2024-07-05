@@ -12,6 +12,7 @@ interface GenerateCountrySeroprevalenceDataBreakdownInput {
 
 export type CountryModelledSeroprevalenceBreakdown = Record<string, {
   global: "Global",
+  countryAlphaThreeCode: string;
   whoRegion: WhoRegion | undefined;
   gbdSuperRegion: GbdSuperRegion | undefined;
   gbdSubRegion: GbdSubRegion | undefined;
@@ -48,6 +49,7 @@ export const generateCountrySeroprevalenceDataBreakdown = (input: GenerateCountr
       countryAlphaThreeCode,
       {
         global: "Global" as const,
+        countryAlphaThreeCode: countryAlphaThreeCode,
         whoRegion: dataForCountry.length > 0 ? (dataForCountry[0].whoRegion ?? undefined) : undefined,
         gbdSuperRegion: dataForCountry.length > 0 ? (dataForCountry[0].gbdSuperRegion ?? undefined) : undefined,
         gbdSubRegion: dataForCountry.length > 0 ? (dataForCountry[0].gbdSubRegion ?? undefined) : undefined,

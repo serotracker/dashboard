@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { polynomial } from 'regression';
 
-interface GenerateBestFitCurveInput {
+export interface GenerateBestFitCurveInput {
   data: Array<{
     xAxisValue: number,
     yAxisValue: number
@@ -9,7 +9,7 @@ interface GenerateBestFitCurveInput {
   maximumPolynomialOrder: number;
 }
 
-interface GenerateBestFitCurveOutput {
+export interface GenerateBestFitCurveOutput {
   xAxisValueToYAxisValue: (input: { xAxisValue: number }) => number;
 }
 
