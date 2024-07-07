@@ -8,7 +8,7 @@ interface ApplyLabelsToGroupedRechartsDataInput<
 > {
   rechartsData: ({ primaryKey: TPrimaryGroupingKey } & Record<
     TSecondaryGroupingKey,
-    number
+    number | undefined
   >)[];
   primaryGroupingKeyToLabel?: (input: TPrimaryGroupingKey) => TPrimaryGroupingKeyLabel;
   secondaryGroupingKeyToLabel?: (input: TSecondaryGroupingKey) => TSecondaryGroupingKeyLabel;

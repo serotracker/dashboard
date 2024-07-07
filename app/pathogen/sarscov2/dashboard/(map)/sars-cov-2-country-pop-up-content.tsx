@@ -32,24 +32,24 @@ export const SarsCov2CountryPopupContent = (props: SarsCov2CountryPopupContentPr
   const allScopesPresentInData = uniq(allDataPointsWithScopes.map((dataPoint) => dataPoint.scope));
   const dataGroupedByScope = typedGroupBy(allDataPointsWithScopes, (dataPoint) => dataPoint.scope);
 
-  const { countryModelledSeroprevalenceBreakdown } = useContext(ModelledSarsCov2SeroprevalenceContext);
+  const { dataPointsForCountryAlphaThreeCodes } = useContext(ModelledSarsCov2SeroprevalenceContext);
 
   const modelledSeroprevalenceForCountry = useMemo(() =>
-    countryModelledSeroprevalenceBreakdown[alpha3CountryCode].reduce<{
+    dataPointsForCountryAlphaThreeCodes.find((element) => element.countryAlphaThreeCode === alpha3CountryCode)?.data.reduce<{
       modelledTwentyFivePercentSeroprevalenceMonth: number | undefined
       modelledFiftyPercentSeroprevalenceMonth: number | undefined
       modelledSeventyFivePercentSeroprevalenceMonth: number | undefined
     }>((accumulator, value) => ({
       modelledTwentyFivePercentSeroprevalenceMonth:
-        accumulator.modelledTwentyFivePercentSeroprevalenceMonth === undefined && value.yAxisValue > 0.25
+        accumulator.modelledTwentyFivePercentSeroprevalenceMonth === undefined && value.modelledYAxisValue > 25
           ? value.xAxisValue
           : accumulator.modelledTwentyFivePercentSeroprevalenceMonth,
       modelledFiftyPercentSeroprevalenceMonth:
-        accumulator.modelledFiftyPercentSeroprevalenceMonth === undefined && value.yAxisValue > 0.50
+        accumulator.modelledFiftyPercentSeroprevalenceMonth === undefined && value.modelledYAxisValue > 50
           ? value.xAxisValue
           : accumulator.modelledFiftyPercentSeroprevalenceMonth,
       modelledSeventyFivePercentSeroprevalenceMonth:
-        accumulator.modelledSeventyFivePercentSeroprevalenceMonth === undefined && value.yAxisValue > 0.75
+        accumulator.modelledSeventyFivePercentSeroprevalenceMonth === undefined && value.modelledYAxisValue > 75
           ? value.xAxisValue
           : accumulator.modelledSeventyFivePercentSeroprevalenceMonth
     }), {
@@ -57,7 +57,7 @@ export const SarsCov2CountryPopupContent = (props: SarsCov2CountryPopupContentPr
       modelledFiftyPercentSeroprevalenceMonth: undefined,
       modelledSeventyFivePercentSeroprevalenceMonth: undefined,
     })
-  , [countryModelledSeroprevalenceBreakdown, alpha3CountryCode]);
+  , [dataPointsForCountryAlphaThreeCodes, alpha3CountryCode]);
 
   return (
     <GenericMapPopUp
@@ -102,7 +102,7 @@ export const SarsCov2CountryPopupContent = (props: SarsCov2CountryPopupContentPr
           {
             title: 'Approximate Month 25% Seroprevalence was exceeded',
             type: PopUpContentRowType.TEXT as const,
-            text: modelledSeroprevalenceForCountry.modelledTwentyFivePercentSeroprevalenceMonth
+            text: modelledSeroprevalenceForCountry?.modelledTwentyFivePercentSeroprevalenceMonth
               ? monthCountToMonthYearString(modelledSeroprevalenceForCountry.modelledTwentyFivePercentSeroprevalenceMonth)
               : 'Not enough data to model',
             contentTextAlignment: PopupContentTextAlignment.RIGHT,
@@ -111,7 +111,7 @@ export const SarsCov2CountryPopupContent = (props: SarsCov2CountryPopupContentPr
           {
             title: 'Approximate Month 50% Seroprevalence was exceeded',
             type: PopUpContentRowType.TEXT as const,
-            text: modelledSeroprevalenceForCountry.modelledFiftyPercentSeroprevalenceMonth
+            text: modelledSeroprevalenceForCountry?.modelledFiftyPercentSeroprevalenceMonth
               ? monthCountToMonthYearString(modelledSeroprevalenceForCountry.modelledFiftyPercentSeroprevalenceMonth)
               : 'Not enough data to model',
             contentTextAlignment: PopupContentTextAlignment.RIGHT,
@@ -120,7 +120,7 @@ export const SarsCov2CountryPopupContent = (props: SarsCov2CountryPopupContentPr
           {
             title: 'Approximate Month 75% Seroprevalence was exceeded',
             type: PopUpContentRowType.TEXT as const,
-            text: modelledSeroprevalenceForCountry.modelledSeventyFivePercentSeroprevalenceMonth
+            text: modelledSeroprevalenceForCountry?.modelledSeventyFivePercentSeroprevalenceMonth
               ? monthCountToMonthYearString(modelledSeroprevalenceForCountry.modelledSeventyFivePercentSeroprevalenceMonth)
               : 'Not enough data to model',
             contentTextAlignment: PopupContentTextAlignment.RIGHT,
