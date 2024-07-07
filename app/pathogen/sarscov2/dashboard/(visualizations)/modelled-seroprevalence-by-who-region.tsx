@@ -18,6 +18,7 @@ const barColoursForWhoRegions: Record<WhoRegion, string> = {
 };
 
 interface ModelledSeroprevalenceByWhoRegionGraphProps {
+  scatterPointsVisible: boolean;
   legendConfiguration: LegendConfiguration;
 }
 
@@ -64,6 +65,7 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
     <LineChartWithBestFitCurveAndScatterPoints
       graphId="modelled-sc2-seroprevalence-by-who-region"
       data={ungroupedDataPoints}
+      scatterPointsVisible={props.scatterPointsVisible}
       xAxisValueToLabel={(xAxisValue) => monthCountToMonthYearString(xAxisValue)}
       primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
       primaryGroupingSortFunction={(whoRegionA, whoRegionB) => whoRegionA > whoRegionB ? 1 : -1}
