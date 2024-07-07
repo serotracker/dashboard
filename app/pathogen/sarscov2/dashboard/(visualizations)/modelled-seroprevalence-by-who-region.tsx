@@ -9,6 +9,7 @@ import { BestFitCurveLineChart } from "@/components/customs/visualizations/best-
 import { LineChart } from "@/components/customs/visualizations/line-chart";
 import { ModelledSarsCov2SeroprevalenceContext } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/modelled-sarscov2-seroprevalence-context";
 import { generateRandomColour } from "@/lib/utils";
+import { LineChartWithBestFitCurveAndScatterPoints } from "@/components/customs/visualizations/line-chart-with-best-fit-curve-and-scatter-points";
 
 const barColoursForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Afr]: "#e15759",
@@ -64,14 +65,12 @@ export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeropreval
   })));
 
   return (
-    <LineChart
+    <LineChartWithBestFitCurveAndScatterPoints
       graphId="modelled-sc2-seroprevalence-by-who-region"
       data={ungroupedDataPoints}
-      primaryGroupingFunction={(dataPoint) => monthCountToMonthYearString(dataPoint.xAxisValue)}
-      primaryGroupingSortFunction={(monthCountStringA, monthCountStringB) => monthYearStringToMonthCount(monthCountStringA) - monthYearStringToMonthCount(monthCountStringB)}
-      secondaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
-      secondaryGroupingSortFunction={(whoRegionA, whoRegionB) => whoRegionA > whoRegionB ? 1 : -1}
-      transformOutputValue={({ data }) => data.at(0)?.modelledYAxisValue}
+      xAxisValueToLabel={(xAxisValue) => monthCountToMonthYearString(xAxisValue)}
+      primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
+      primaryGroupingSortFunction={(whoRegionA, whoRegionB) => whoRegionA > whoRegionB ? 1 : -1}
       getLineColour={(whoRegion) => barColoursForWhoRegions[whoRegion] ?? generateRandomColour()}
       percentageFormattingEnabled={true}
       legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
