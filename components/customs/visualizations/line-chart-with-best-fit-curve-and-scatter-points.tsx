@@ -83,8 +83,6 @@ export const LineChartWithBestFitCurveAndScatterPoints = <
     }
   )
 
-  console.log('formattedRechartsData', formattedRechartsData)
-
   const tooltipFormatter: TooltipFormatter<number, string> = (value, name) => [
     `${value.toFixed(2)}%`,
     name
@@ -95,7 +93,6 @@ export const LineChartWithBestFitCurveAndScatterPoints = <
       .replace(/ \(Modelled\)$/g, '')
       .replace(/ \(Raw\)$/g, '')
   )
-
 
   const legendProps = props.legendConfiguration === LegendConfiguration.RIGHT_ALIGNED
     ? {

@@ -2,7 +2,6 @@ import uniq from 'lodash/uniq';
 import {
   GenerateBestFitCurveInput,
   GenerateBestFitCurveOutput,
-  useBestFitCurve
 } from "@/components/customs/visualizations/line-fitting/use-best-fit-curve";
 import { generateRange } from '@/lib/utils';
 

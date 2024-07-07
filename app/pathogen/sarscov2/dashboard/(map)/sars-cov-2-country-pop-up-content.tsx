@@ -41,15 +41,15 @@ export const SarsCov2CountryPopupContent = (props: SarsCov2CountryPopupContentPr
       modelledSeventyFivePercentSeroprevalenceMonth: number | undefined
     }>((accumulator, value) => ({
       modelledTwentyFivePercentSeroprevalenceMonth:
-        accumulator.modelledTwentyFivePercentSeroprevalenceMonth === undefined && value.modelledYAxisValue > 0.25
+        accumulator.modelledTwentyFivePercentSeroprevalenceMonth === undefined && value.modelledYAxisValue > 25
           ? value.xAxisValue
           : accumulator.modelledTwentyFivePercentSeroprevalenceMonth,
       modelledFiftyPercentSeroprevalenceMonth:
-        accumulator.modelledFiftyPercentSeroprevalenceMonth === undefined && value.modelledYAxisValue > 0.50
+        accumulator.modelledFiftyPercentSeroprevalenceMonth === undefined && value.modelledYAxisValue > 50
           ? value.xAxisValue
           : accumulator.modelledFiftyPercentSeroprevalenceMonth,
       modelledSeventyFivePercentSeroprevalenceMonth:
-        accumulator.modelledSeventyFivePercentSeroprevalenceMonth === undefined && value.modelledYAxisValue > 0.75
+        accumulator.modelledSeventyFivePercentSeroprevalenceMonth === undefined && value.modelledYAxisValue > 75
           ? value.xAxisValue
           : accumulator.modelledSeventyFivePercentSeroprevalenceMonth
     }), {

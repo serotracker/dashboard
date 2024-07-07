@@ -1,12 +1,9 @@
-import { useContext, useMemo } from "react";
-import parseISO from 'date-fns/parseISO';
+import { useContext } from "react";
 
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
-import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
-import { dateToMonthCount, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
+import { SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
+import { monthCountToMonthYearString } from "@/lib/time-utils";
 import { WhoRegion } from "@/gql/graphql";
-import { BestFitCurveLineChart } from "@/components/customs/visualizations/best-fit-curve-line-chart";
-import { LineChart } from "@/components/customs/visualizations/line-chart";
 import { ModelledSarsCov2SeroprevalenceContext } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/modelled-sarscov2-seroprevalence-context";
 import { generateRandomColour } from "@/lib/utils";
 import { LineChartWithBestFitCurveAndScatterPoints } from "@/components/customs/visualizations/line-chart-with-best-fit-curve-and-scatter-points";
@@ -55,7 +52,6 @@ const isAcceptableSarsCov2EstimateWithNumerator = (
 type AcceptableSarsCov2Estimate = AcceptableSarsCov2EstimateWithSeroprevalence | AcceptableSarsCov2EstimateWithNumerator;
 
 export const ModelledSeroprevalenceByWhoRegionGraph = (props: ModelledSeroprevalenceByWhoRegionGraphProps) => {
-  const state = useContext(SarsCov2Context);
   const { dataPointsForWhoRegions } = useContext(ModelledSarsCov2SeroprevalenceContext);
   const ungroupedDataPoints = dataPointsForWhoRegions.flatMap(({ whoRegion, data }) => data.map((dataPoint) => ({
     whoRegion,

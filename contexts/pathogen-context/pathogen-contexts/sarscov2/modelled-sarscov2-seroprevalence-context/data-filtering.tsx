@@ -42,13 +42,7 @@ export const filterDataForSarsCov2SeroprevalenceModelling = (input: FilterDataFo
       (dataPoint.riskOfBias && [
         'Low',
         'Moderate'
-      ].includes(dataPoint.riskOfBias)) &&
-      (dataPoint.populationGroup && [
-        'Household and community samples',
-        'Representative patient population',
-        'Multiple general populations',
-        'Multiple populations'
-      ].includes(dataPoint.populationGroup))
+      ].includes(dataPoint.riskOfBias))
     )
     .filter((dataPoint: SarsCov2Estimate): dataPoint is AcceptableSarsCov2Estimate => 
         !!dataPoint.samplingMidDate
