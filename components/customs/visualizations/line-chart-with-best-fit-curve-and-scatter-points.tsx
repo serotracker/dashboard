@@ -12,10 +12,11 @@ import {
 } from "recharts";
 import groupBy from "lodash/groupBy";
 import { LegendConfiguration } from "./stacked-bar-chart";
-import { Formatter } from "recharts/types/component/DefaultTooltipContent";
 import { groupDataForRechartsOnce } from "./group-data-for-recharts/group-data-for-recharts-once";
 import { typedGroupBy, typedObjectEntries, typedObjectKeys } from "@/lib/utils";
 import { pipe } from "fp-ts/lib/function";
+import { Formatter as TooltipFormatter } from "recharts/types/component/DefaultTooltipContent";
+import { Formatter as LegendFormatter} from "recharts/types/component/DefaultLegendContent";
 
 interface LineChartWithBestFitCurveAndScatterPointsProps<
   TData extends {
@@ -84,12 +85,25 @@ export const LineChartWithBestFitCurveAndScatterPoints = <
 
   console.log('formattedRechartsData', formattedRechartsData)
 
+  const tooltipFormatter: TooltipFormatter<number, string> = (value, name) => [
+    `${value.toFixed(2)}%`,
+    name
+  ];
+
+  const legendFormatter: LegendFormatter = (name: string) => (
+    name
+      .replace(/ \(Modelled\)$/g, '')
+      .replace(/ \(Raw\)$/g, '')
+  )
+
+
   const legendProps = props.legendConfiguration === LegendConfiguration.RIGHT_ALIGNED
     ? {
         layout: "vertical" as const,
         verticalAlign: "middle" as const,
         align: "right" as const,
         wrapperStyle: { right: -10 },
+        formatter: legendFormatter
       }
     : {
         layout: "horizontal" as const,
@@ -99,14 +113,13 @@ export const LineChartWithBestFitCurveAndScatterPoints = <
           paddingTop: 10,
           bottom: 0,
         },
+        formatter: legendFormatter
       };
 
   const xAxisProps: XAxisProps = {
     dataKey: "xAxisValue",
     type: 'category'
   }
-
-  const tooltipFormatter: Formatter<number, string> = (value) => `${value.toFixed(2)}%`
 
   return (
     <ResponsiveContainer width={"100%"}>
