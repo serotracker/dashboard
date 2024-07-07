@@ -37,6 +37,7 @@ interface LineChartWithBestFitCurveAndScatterPointsProps<
   xAxisValueToLabel?: (input: number) => string;
   allPrimaryGroups?: TPrimaryGroupingKey[];
   getLineColour: (secondaryKey: TPrimaryGroupingKey, index: number) => string;
+  scatterPointsVisible: boolean;
   percentageFormattingEnabled?: boolean;
   legendConfiguration: LegendConfiguration;
 }
@@ -83,10 +84,17 @@ export const LineChartWithBestFitCurveAndScatterPoints = <
     }
   )
 
-  const tooltipFormatter: TooltipFormatter<number, string> = (value, name) => [
-    `${value.toFixed(2)}%`,
-    name
-  ];
+  const tooltipFormatter: TooltipFormatter<number, string> = props.scatterPointsVisible 
+    ? (value, name) => [
+      `${value.toFixed(2)}%`,
+      name
+    ]
+    : (value, name) => [
+      `${value.toFixed(2)}%`,
+      name
+        .replace(/ \(Modelled\)$/g, '')
+        .replace(/ \(Raw\)$/g, '')
+    ];
 
   const legendFormatter: LegendFormatter = (name: string) => (
     name
@@ -151,7 +159,7 @@ export const LineChartWithBestFitCurveAndScatterPoints = <
             stroke={props.getLineColour(primaryKey, index)}
           />
         ))}
-        {allPrimaryKeys.map((primaryKey, index) => (
+        {props.scatterPointsVisible && allPrimaryKeys.map((primaryKey, index) => (
           <Scatter
             legendType='none'
             name={`${primaryKey} (Raw)`}

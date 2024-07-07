@@ -1,9 +1,9 @@
 "use client";
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { SarsCov2Context } from "./sc2-context";
 import { useBestFitCurve } from "@/components/customs/visualizations/line-fitting/use-best-fit-curve";
 import { pipe } from "fp-ts/lib/function.js";
-import { GbdSubRegion, GbdSuperRegion, UnRegion, WhoRegion } from '@/gql/graphql';
+import { WhoRegion } from '@/gql/graphql';
 import { MonthlySarsCov2CountryInformationContext } from './monthly-sarscov2-country-information-context';
 import { filterDataForSarsCov2SeroprevalenceModelling } from './modelled-sarscov2-seroprevalence-context/data-filtering';
 import { generateCountrySeroprevalenceDataBreakdown } from './modelled-sarscov2-seroprevalence-context/country-seroprevalence-breakdown-helper';
@@ -92,10 +92,6 @@ export const ModelledSarsCov2SeroprevalenceProvider = (props: ModelledSarsCov2Se
     (input) => fitModellingCurve({ ...input, generateBestFitCurve }),
     (input) => ({ dataPoints: input.dataPoints.map((dataPoint) => ({ countryAlphaThreeCode: dataPoint.groupingKey, data: dataPoint.data }))})
   ), [ countryModelledSeroprevalenceBreakdown ]);
-
-  useEffect(() => {
-    console.log('dataPointsForWhoRegions', dataPointsForWhoRegions);
-  }, [ dataPointsForWhoRegions ])
 
   return (
     <ModelledSarsCov2SeroprevalenceContext.Provider

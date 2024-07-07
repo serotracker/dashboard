@@ -3,6 +3,7 @@ import { NotFound } from "../not-found";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from "@/components/customs/visualizations/visualization-header";
+import { UseModalInput } from "@/components/ui/modal/modal";
 
 interface GetDisplayNameInput<TEstimate extends Record<string, unknown>> {
   data: TEstimate[]
@@ -17,13 +18,15 @@ interface RenderVisualizationInput<TEstimate extends Record<string, unknown>> {
 export interface VisualizationInformation<
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
-  TEstimate extends Record<string, unknown>
+  TEstimate extends Record<string, unknown>,
+  TDropdownOption extends string
 > {
   id: TVisualizationId;
   urlParameter: TVisualizationUrlParameter;
   getDisplayName: (input: GetDisplayNameInput<TEstimate>) => string;
   titleTooltipContent?: string | React.ReactNode;
   renderVisualization: (input: RenderVisualizationInput<TEstimate>) => React.ReactNode;
+  customizationModalConfiguration?: UseModalInput<TDropdownOption>;
 }
 
 interface FiltersComponentProps {
@@ -34,13 +37,15 @@ type AddVisualizationInformationInput<
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
-  TNewInformation extends Record<string, unknown>
+  TNewInformation extends Record<string, unknown>,
+  TDropdownOption extends string
 > = {
   additionalInformation: Record<TVisualizationId, TNewInformation>;
   allVisualizationInformation: Record<TVisualizationId, VisualizationInformation<
     TVisualizationId,
     TVisualizationUrlParameter,
-    TEstimate
+    TEstimate,
+    TDropdownOption
   >>;
 }
 
@@ -48,30 +53,35 @@ type AddVisualizationInformationOutput<
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
-  TNewInformation extends Record<string, unknown>
+  TNewInformation extends Record<string, unknown>,
+  TDropdownOption extends string
 > = (TNewInformation & VisualizationInformation<
   TVisualizationId,
   TVisualizationUrlParameter,
-  TEstimate
+  TEstimate,
+  TDropdownOption
 >)[];
 
 export const addToVisualizationInformation = <
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
-  TNewInformation extends Record<string, unknown>
+  TNewInformation extends Record<string, unknown>,
+  TDropdownOption extends string
 >(
   input: AddVisualizationInformationInput<
     TVisualizationId,
     TVisualizationUrlParameter,
     TEstimate,
-    TNewInformation
+    TNewInformation,
+    TDropdownOption
   >
 ): AddVisualizationInformationOutput<
   TVisualizationId,
   TVisualizationUrlParameter,
   TEstimate,
-  TNewInformation
+  TNewInformation,
+  TDropdownOption
 > => {
   return typedObjectEntries(input.additionalInformation).map(([key, value]) => ({
     ...input.allVisualizationInformation[key],
@@ -82,13 +92,19 @@ export const addToVisualizationInformation = <
 interface GenericPathogenVisualizationsPageProps<
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
-  TEstimate extends Record<string, unknown>
+  TEstimate extends Record<string, unknown>,
+  TDropdownOption extends string
 > {
   data: TEstimate[];
   isValidVisualizationUrlParameter:
     (visualizationUrlParameter: string) => visualizationUrlParameter is TVisualizationUrlParameter;
   getVisualizationInformationFromVisualizationUrlParameter:
-    (visualizationUrlParameter: TVisualizationUrlParameter) => VisualizationInformation<TVisualizationId, TVisualizationUrlParameter, TEstimate> | undefined;
+    (visualizationUrlParameter: TVisualizationUrlParameter) => VisualizationInformation<
+      TVisualizationId,
+      TVisualizationUrlParameter,
+      TEstimate,
+      TDropdownOption
+    > | undefined;
   filtersComponent: (props: FiltersComponentProps) => React.ReactNode;
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
 }
@@ -96,11 +112,13 @@ interface GenericPathogenVisualizationsPageProps<
 export const GenericPathogenVisualizationsPage = <
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
-  TEstimate extends Record<string, unknown>
+  TEstimate extends Record<string, unknown>,
+  TDropdownOption extends string
 >(props: GenericPathogenVisualizationsPageProps<
   TVisualizationId,
   TVisualizationUrlParameter,
-  TEstimate
+  TEstimate,
+  TDropdownOption
 >):React.ReactNode => {
   const searchParams = useSearchParams();
   const visualizationUrlParameter = searchParams.get('visualization');

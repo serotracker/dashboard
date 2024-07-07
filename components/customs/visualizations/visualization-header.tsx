@@ -1,14 +1,12 @@
-import { ZoomIn, DownloadCloud, X } from "lucide-react";
+import { ZoomIn, DownloadCloud, X, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { isSafeReferrerLink } from "@/utils/referrer-link-util";
-import { useContext } from "react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 
@@ -27,6 +25,7 @@ export type ButtonConfig<AdditionalButtonInformation> =
 export type ZoomInButtonAdditionalButtonConfig = { referrerRoute: string };
 export type DownloadButtonAdditionalButtonConfig = {};
 export type CloseButtonAdditionalButtonConfig = { referrerRoute: string | undefined | null };
+export type CustomizeButtonAdditionalButtonConfig = { onClick: () => void };
 
 export type GetUrlParameterFromVisualizationIdFunction<TVisualizationId extends string, TVisualizationUrlParameter extends string> =
   (input: {visualizationId: TVisualizationId}) => {urlParameter: TVisualizationUrlParameter};
@@ -48,10 +47,15 @@ interface CloseButtonProps {
   router: AppRouterInstance;
 }
 
+interface CustomizeButtonProps {
+  configuration: EnabledButtonConfig<CustomizeButtonAdditionalButtonConfig> & { id: string };
+}
+
 interface AllButtonConfigurations {
   zoomInButton: ButtonConfig<ZoomInButtonAdditionalButtonConfig> & { id: string };
   downloadButton: ButtonConfig<DownloadButtonAdditionalButtonConfig> & { id: string };
   closeButton: ButtonConfig<CloseButtonAdditionalButtonConfig> & { id: string };
+  customizeButton: ButtonConfig<CustomizeButtonAdditionalButtonConfig> & { id: string };
 }
 
 const DownloadButton = (props: DownloadButtonProps) => (
@@ -114,15 +118,29 @@ const ZoomInButton = <
   </button>
 );
 
+const CustomizeButton = (props: CustomizeButtonProps) => (
+  <button
+    id={props.configuration.id}
+    aria-label="Customize Visualization"
+    title="Customize Visualization"
+    className="mr-2 p-2 hover:bg-gray-100 rounded-full"
+    onClick={() => props.configuration.onClick()}
+  >
+    <Settings />
+  </button>
+);
+
 interface VisualizationHeaderProps<
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
-  TEstimate extends Record<string, unknown>
+  TEstimate extends Record<string, unknown>,
+  TDropdownOption extends string
 > {
   visualizationInformation: VisualizationInformation<
     TVisualizationId,
     TVisualizationUrlParameter,
-    TEstimate
+    TEstimate,
+    TDropdownOption
   >;
   data: TEstimate[];
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
@@ -133,12 +151,14 @@ interface VisualizationHeaderProps<
 export const VisualizationHeader = <
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
-  TEstimate extends Record<string, unknown>
+  TEstimate extends Record<string, unknown>,
+  TDropdownOption extends string
 >(
   props: VisualizationHeaderProps<
     TVisualizationId,
     TVisualizationUrlParameter,
-    TEstimate
+    TEstimate,
+    TDropdownOption
   >
 ) => {
   const router = useRouter();
@@ -183,6 +203,11 @@ export const VisualizationHeader = <
         <DownloadButton
           downloadVisualization={() => props.downloadVisualization()}
           configuration={props.buttonConfiguration.downloadButton}
+        />
+      )}
+      {props.buttonConfiguration.customizeButton.enabled && (
+        <CustomizeButton
+          configuration={props.buttonConfiguration.customizeButton}
         />
       )}
       {props.buttonConfiguration.closeButton.enabled && (

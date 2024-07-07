@@ -18,10 +18,11 @@ export enum MersVisualizationUrlParameter {
   "placeholder" = "placeholder"
 }
 
-export type MersVisualizationInformation = VisualizationInformation<
+export type MersVisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
   MersVisualizationId,
   MersVisualizationUrlParameter,
-  MersEstimate
+  MersEstimate,
+  TDropdownOption
 >;
 
 export const isMersVisualizationUrlParameter = (
@@ -29,7 +30,7 @@ export const isMersVisualizationUrlParameter = (
 ): visualizationUrlParameter is MersVisualizationUrlParameter =>
   Object.values(MersVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-export const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation> = {
+export const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string>> = {
   [MersVisualizationId.PLACEHOLDER]: {
     id: MersVisualizationId.PLACEHOLDER,
     urlParameter:
