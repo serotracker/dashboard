@@ -84,10 +84,17 @@ export const LineChartWithBestFitCurveAndScatterPoints = <
     }
   )
 
-  const tooltipFormatter: TooltipFormatter<number, string> = (value, name) => [
-    `${value.toFixed(2)}%`,
-    name
-  ];
+  const tooltipFormatter: TooltipFormatter<number, string> = props.scatterPointsVisible 
+    ? (value, name) => [
+      `${value.toFixed(2)}%`,
+      name
+    ]
+    : (value, name) => [
+      `${value.toFixed(2)}%`,
+      name
+        .replace(/ \(Modelled\)$/g, '')
+        .replace(/ \(Raw\)$/g, '')
+    ];
 
   const legendFormatter: LegendFormatter = (name: string) => (
     name

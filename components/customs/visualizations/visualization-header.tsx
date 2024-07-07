@@ -120,6 +120,7 @@ const ZoomInButton = <
 
 const CustomizeButton = (props: CustomizeButtonProps) => (
   <button
+    id={props.configuration.id}
     aria-label="Customize Visualization"
     title="Customize Visualization"
     className="mr-2 p-2 hover:bg-gray-100 rounded-full"
