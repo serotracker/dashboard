@@ -1,8 +1,8 @@
-import { DataTable, DropdownTableHeader } from "@/components/ui/data-table/data-table";
+import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { MersDiagnosisStatus, WhoRegion } from "@/gql/graphql";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import {
   animalSpeciesToColourClassnameMap,
@@ -21,8 +21,18 @@ import {
   mersDataTypeToLabelMap,
   mersDataTypeToColourClassnameMap
 } from "../(map)/shared-mers-map-pop-up-variables";
+import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
+import { EventAndSeroprevalenceSummaryOverTime } from "../(visualizations)/event-and-seroprevalence-summary-over-time";
+import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 
 const mersCasesColumnConfiguration = [{
+  type: DataTableColumnConfigurationEntryType.DATE as const,
+  fieldName: 'reportDate',
+  label: 'Report Date',
+  isFixed: true,
+  isHideable: false,
+  size: 200
+}, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: '__typename',
   valueToDisplayLabel: (typename: string) => isMersEventTypename(typename) ? mersDataTypeToLabelMap[typename] : typename,
@@ -81,10 +91,6 @@ const mersCasesColumnConfiguration = [{
   fieldName: 'observationDate',
   label: 'Observation Date'
 }, {
-  type: DataTableColumnConfigurationEntryType.DATE as const,
-  fieldName: 'reportDate',
-  label: 'Report Date'
-}, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'animalType',
   valueToDisplayLabel: (animalType: string) => isMersEventAnimalType(animalType) ? animalTypeToStringMap[animalType] : animalType,
@@ -106,6 +112,12 @@ const mersCasesColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'humanDeaths',
   label: 'Humans Deaths'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'id',
+  label: 'ID',
+  isHideable: false,
+  initiallyVisible: false
 }];
 
 interface MersCasesDataTableProps {
@@ -114,6 +126,18 @@ interface MersCasesDataTableProps {
 
 export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
   const { faoMersEventData } = useContext(MersContext);
+  const { viewOnMapHandler } = useDataTableMapViewingHandler();
+
+  const rowExpansionConfiguration: RowExpansionConfiguration<Omit<FaoMersEvent, 'latitude'|'longitude'|'country'> & {
+    country: string;
+    latitude: string;
+    longitude: string;
+  }> = useMemo(() => ({
+    enabled: true,
+    generateExpandedRowStatement: ({ data, row }) => 'Clicking on this row in the table again will minimize it',
+    visualization: ({ data, row, className }) => <EventAndSeroprevalenceSummaryOverTime />,
+    viewOnMapHandler
+  }), []);
 
   return (
     <DataTable
@@ -123,9 +147,7 @@ export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
       csvCitationConfiguration={{
         enabled: false
       }}
-      rowExpansionConfiguration={{
-        enabled: false
-      }}
+      rowExpansionConfiguration={rowExpansionConfiguration}
       data={faoMersEventData
         .filter((event) => event.diagnosisStatus === MersDiagnosisStatus.Confirmed)
         .map((event) => ({

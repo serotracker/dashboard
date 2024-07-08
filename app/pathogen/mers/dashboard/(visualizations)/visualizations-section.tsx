@@ -9,13 +9,13 @@ import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/
 export const MersVisualizationsSection = () => {
   const allVisualizationInformationWithClassnames = addToVisualizationInformation({
     additionalInformation: {
-      [MersVisualizationId.PLACEHOLDER]: { className: "h-full-screen" },
+      [MersVisualizationId.EVENT_AND_SEROPREVALENCE_SUMMARY_OVER_TIME]: { className: "h-full-screen" },
     },
     allVisualizationInformation: mersVisualizationInformation
   })
 
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
-    MersVisualizationId.PLACEHOLDER
+    MersVisualizationId.EVENT_AND_SEROPREVALENCE_SUMMARY_OVER_TIME
   ].includes(visualizationInfo.id));
 
   const { filteredData } = useContext(MersContext);

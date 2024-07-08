@@ -1,4 +1,4 @@
-import { DropdownTableHeader, TableHeaderType } from "@/components/ui/data-table/data-table";
+import { DropdownTableHeader, RowExpansionConfiguration, TableHeaderType } from "@/components/ui/data-table/data-table";
 import { useState } from "react";
 import { MersSeroprevalenceEstimateDataTable } from "./mers-seroprevalence-estimate-data-table";
 import { MersCasesDataTable } from "./mers-cases-data-table";

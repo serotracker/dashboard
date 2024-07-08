@@ -1,16 +1,20 @@
-import { DataTable, DropdownTableHeader } from "@/components/ui/data-table/data-table";
+import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import { WhoRegion } from "@/gql/graphql";
 import { formatCamelsPerCapita } from "../(map)/country-highlight-layers/camels-per-capita-layer";
+import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
+import { EventAndSeroprevalenceSummaryOverTime } from "../(visualizations)/event-and-seroprevalence-summary-over-time";
+import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 
 const camelPopulationDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'country',
   label: 'Country',
   isFixed: true,
+  size: 500,
   isHideable: false
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
@@ -41,6 +45,12 @@ const camelPopulationDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'note',
   label: 'Note'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'id',
+  label: 'ID',
+  isHideable: false,
+  initiallyVisible: false
 }];
 
 interface CamelPopulationDataTableProps {
@@ -49,6 +59,19 @@ interface CamelPopulationDataTableProps {
 
 export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) => {
   const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);
+  const { viewOnMapHandler } = useDataTableMapViewingHandler();
+
+  const rowExpansionConfiguration: RowExpansionConfiguration<Omit<FaoYearlyCamelPopulationDataEntry, 'country'|'camelCountPerCapita'|'countryAlphaThreeCode'|'countryAlphaTwoCode'> & {
+    country: string;
+    camelCountPerCapita: string | undefined;
+    countryAlphaThreeCode: string;
+    countryAlphaTwoCode: string;
+  }> = useMemo(() => ({
+    enabled: true,
+    generateExpandedRowStatement: ({ data, row }) => 'Clicking on this row in the table again will minimize it',
+    visualization: ({ data, row, className }) => <EventAndSeroprevalenceSummaryOverTime />,
+    viewOnMapHandler
+  }), []);
 
   return (
     <DataTable
@@ -58,9 +81,7 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
       csvCitationConfiguration={{
         enabled: false
       }}
-      rowExpansionConfiguration={{
-        enabled: false
-      }}
+      rowExpansionConfiguration={rowExpansionConfiguration}
       data={(latestFaoCamelPopulationDataPointsByCountry ?? []).map((dataPoint) => ({
         ...dataPoint,
         country: dataPoint.country.name,

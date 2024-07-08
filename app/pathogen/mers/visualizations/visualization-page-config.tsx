@@ -4,9 +4,10 @@ import { VisualizationInformation } from "../../generic-pathogen-visualizations-
 import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { EventAndSeroprevalenceSummaryOverTime } from "../dashboard/(visualizations)/event-and-seroprevalence-summary-over-time";
 
 export enum MersVisualizationId {
-  PLACEHOLDER = "PLACEHOLDER",
+  EVENT_AND_SEROPREVALENCE_SUMMARY_OVER_TIME = "EVENT_AND_SEROPREVALENCE_SUMMARY_OVER_TIME",
 }
 
 export const isMersVisualizationId = (
@@ -15,7 +16,7 @@ export const isMersVisualizationId = (
   Object.values(MersVisualizationId).some((element) => element === visualizationId);
 
 export enum MersVisualizationUrlParameter {
-  "placeholder" = "placeholder"
+  "event_and_seroprevalence_summary_over_time" = "event_and_seroprevalence_summary_over_time"
 }
 
 export type MersVisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
@@ -31,14 +32,14 @@ export const isMersVisualizationUrlParameter = (
   Object.values(MersVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
 export const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string>> = {
-  [MersVisualizationId.PLACEHOLDER]: {
-    id: MersVisualizationId.PLACEHOLDER,
+  [MersVisualizationId.EVENT_AND_SEROPREVALENCE_SUMMARY_OVER_TIME]: {
+    id: MersVisualizationId.EVENT_AND_SEROPREVALENCE_SUMMARY_OVER_TIME,
     urlParameter:
       MersVisualizationUrlParameter[
-        "placeholder"
+        "event_and_seroprevalence_summary_over_time"
       ],
-    getDisplayName: () => "Placeholder",
-    renderVisualization: () => <p>Placeholder</p>
+    getDisplayName: () => "Event and Seroprevalence Summary Over Time",
+    renderVisualization: () => <EventAndSeroprevalenceSummaryOverTime />
   }
 }
 

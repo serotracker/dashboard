@@ -14,6 +14,7 @@ export const getDataTableStandardColumnConfiguration = (input: GetDataTableStand
     headerLabel: input.columnConfiguration.label,
     header: (input.columnConfiguration.isSortable === undefined || input.columnConfiguration.isSortable === true) ? getSortableColumnDataTableHeaderComponent({ columnName: input.columnConfiguration.label }) : input.columnConfiguration.label,
     enableHiding: input.columnConfiguration.isHideable ?? true,
+    initiallyVisible: input.columnConfiguration.initiallyVisible ?? true,
     fixed: input.columnConfiguration.isFixed ?? false,
     ...(valueSortingFunction ? {sortingFn: (rowA, rowB, columnId) => valueSortingFunction(rowA.getValue(columnId), rowB.getValue(columnId))} : {}),
     ...(size !== undefined ? { size } : {}),
