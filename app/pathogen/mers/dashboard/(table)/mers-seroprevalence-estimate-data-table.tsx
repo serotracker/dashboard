@@ -4,7 +4,6 @@ import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/
 import { MersEstimate, WhoRegion } from "@/gql/graphql";
 import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
-import { EventAndSeroprevalenceSummaryOverTime } from "../(visualizations)/event-and-seroprevalence-summary-over-time";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 
 const mersSeroprevalenceEstimateColumnConfiguration = [{
@@ -73,9 +72,9 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
   const rowExpansionConfiguration: RowExpansionConfiguration<MersEstimate> = useMemo(() => ({
     enabled: true,
     generateExpandedRowStatement: ({ data, row }) => 'Clicking on this row in the table again will minimize it',
-    visualization: ({ data, row, className }) => <EventAndSeroprevalenceSummaryOverTime />,
+    visualization: ({ data, row, className }) => <p>Placeholder</p>,
     viewOnMapHandler
-  }), []);
+  }), [ viewOnMapHandler ]);
 
   return (
     <DataTable

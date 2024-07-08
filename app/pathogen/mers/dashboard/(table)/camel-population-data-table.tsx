@@ -6,7 +6,6 @@ import { AvailableMersDataTables } from "./mers-data-table";
 import { WhoRegion } from "@/gql/graphql";
 import { formatCamelsPerCapita } from "../(map)/country-highlight-layers/camels-per-capita-layer";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
-import { EventAndSeroprevalenceSummaryOverTime } from "../(visualizations)/event-and-seroprevalence-summary-over-time";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 
 const camelPopulationDataTableColumnConfiguration = [{
@@ -69,9 +68,9 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
   }> = useMemo(() => ({
     enabled: true,
     generateExpandedRowStatement: ({ data, row }) => 'Clicking on this row in the table again will minimize it',
-    visualization: ({ data, row, className }) => <EventAndSeroprevalenceSummaryOverTime />,
+    visualization: ({ data, row, className }) => <p>Placeholder</p>,
     viewOnMapHandler
-  }), []);
+  }), [ viewOnMapHandler ]);
 
   return (
     <DataTable

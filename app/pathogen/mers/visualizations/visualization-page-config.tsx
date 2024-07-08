@@ -4,10 +4,12 @@ import { VisualizationInformation } from "../../generic-pathogen-visualizations-
 import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { EventAndSeroprevalenceSummaryOverTime } from "../dashboard/(visualizations)/event-and-seroprevalence-summary-over-time";
+import { ReportedEventSummaryOverTime } from "../dashboard/(visualizations)/reported-event-summary-over-time";
+import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
+import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 
 export enum MersVisualizationId {
-  EVENT_AND_SEROPREVALENCE_SUMMARY_OVER_TIME = "EVENT_AND_SEROPREVALENCE_SUMMARY_OVER_TIME",
+  REPORTED_EVENT_SUMMARY_OVER_TIME = "REPORTED_EVENT_SUMMARY_OVER_TIME",
 }
 
 export const isMersVisualizationId = (
@@ -16,15 +18,15 @@ export const isMersVisualizationId = (
   Object.values(MersVisualizationId).some((element) => element === visualizationId);
 
 export enum MersVisualizationUrlParameter {
-  "event_and_seroprevalence_summary_over_time" = "event_and_seroprevalence_summary_over_time"
+  "reported_event_summary_over_time" = "reported_event_summary_over_time"
 }
 
 export type MersVisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
   MersVisualizationId,
   MersVisualizationUrlParameter,
-  MersEstimate,
+  MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry,
   TDropdownOption
->;
+>
 
 export const isMersVisualizationUrlParameter = (
   visualizationUrlParameter: string
@@ -32,14 +34,14 @@ export const isMersVisualizationUrlParameter = (
   Object.values(MersVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
 export const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string>> = {
-  [MersVisualizationId.EVENT_AND_SEROPREVALENCE_SUMMARY_OVER_TIME]: {
-    id: MersVisualizationId.EVENT_AND_SEROPREVALENCE_SUMMARY_OVER_TIME,
+  [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]: {
+    id: MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME,
     urlParameter:
       MersVisualizationUrlParameter[
-        "event_and_seroprevalence_summary_over_time"
+        "reported_event_summary_over_time"
       ],
     getDisplayName: () => "Event and Seroprevalence Summary Over Time",
-    renderVisualization: () => <EventAndSeroprevalenceSummaryOverTime />
+    renderVisualization: ({ data }) => <ReportedEventSummaryOverTime data={data} />
   }
 }
 
