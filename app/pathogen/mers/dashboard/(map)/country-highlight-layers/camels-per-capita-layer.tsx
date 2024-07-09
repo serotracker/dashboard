@@ -1,8 +1,8 @@
 import { rose } from 'tailwindcss/colors'
 import { useCallback } from "react";
 import { GetCountryHighlightingLayerInformationInput, GetCountryHighlightingLayerInformationOutput, PathogenDataPointPropertiesBase } from "@/components/ui/pathogen-map/pathogen-map";
-import { MapSymbology } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { generateMapColourBuckets } from "@/components/ui/pathogen-map/country-highlight-layers/generate-map-colour-buckets";
+import { MapSymbology } from '@/app/pathogen/sarscov2/dashboard/(map)/map-config';
 
 export const formatCamelsPerCapita = (camelsPerCapita: number) => {
   return formatNumberForLegend({ value: camelsPerCapita, isExclusiveInRange: false });
@@ -95,15 +95,20 @@ export const useCamelsPerCapitaLayer = () => {
           colourBucket.dataPoints.map((dataPoint) => ({
             countryAlphaThreeCode: dataPoint.countryAlphaThreeCode,
             fill: colourBucket.fill,
-            opacity: colourBucket.opacity
+            opacity: colourBucket.opacity,
+            borderWidthPx: 0,
+            borderColour: "#000000",
           })
         )),
         defaults: {
           fill: MapSymbology.CountryFeature.Default.Color,
-          opacity: MapSymbology.CountryFeature.Default.Opacity
+          opacity: MapSymbology.CountryFeature.Default.Opacity,
+          borderWidthPx: 0,
+          borderColour: "#000000",
         }
       },
-      countryHighlightLayerLegendEntries
+      countryHighlightLayerLegendEntries,
+      freeTextEntries: []
     }
   }, []);
 

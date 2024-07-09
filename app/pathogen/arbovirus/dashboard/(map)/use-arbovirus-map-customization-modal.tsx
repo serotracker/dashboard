@@ -3,8 +3,15 @@ import { ModalState, ModalType, useModal } from "@/components/ui/modal/modal";
 import { MapCustomizeButton } from "@/components/ui/pathogen-map/map-customize-button";
 import { useMemo, useState } from "react";
 
+export enum CountryPaintChangeSetting {
+  WHEN_RECOMMENDED = "WHEN_RECOMMENDED",
+  ALWAYS_ENABLED = "ALWAYS_ENABLED",
+  ALWAYS_DISABLED = "ALWAYS_DISABLED",
+}
+
 export const useArbovirusMapCustomizationModal = () => {
-  const [ countryHighlightingEnabled, setCountryHighlightingEnabled ] = useState<boolean>(true);
+  const [ countryHighlightingSetting, setCountryHighlightingSetting ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.WHEN_RECOMMENDED);
+  const [ countryOutlinesSetting, setCountryOutlinesSetting ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.WHEN_RECOMMENDED);
   const [ countryPopUpEnabled, setCountryPopUpEnabled ] = useState<boolean>(true);
 
   const {
@@ -16,10 +23,47 @@ export const useArbovirusMapCustomizationModal = () => {
     modalType: ModalType.CUSTOMIZATION_MODAL,
     content: {
       customizationSettings: [{
-        type: CustomizationSettingType.SWITCH,
-        switchName: `Country highlighting ${countryHighlightingEnabled ? 'enabled' : 'disabled'}.`,
-        switchValue: countryHighlightingEnabled,
-        onSwitchValueChange: (newSwitchValue) => setCountryHighlightingEnabled(newSwitchValue),
+        type: CustomizationSettingType.DROPDOWN,
+        dropdownName: 'Country highlighting for countries with data',
+        borderColourClassname: 'border-arbovirus',
+        hoverColourClassname: 'hover:bg-arbovirusHover/50',
+        highlightedColourClassname: 'data-[highlighted]:bg-arbovirusHover/50',
+        dropdownOptionGroups: [{
+          groupHeader: 'Preferences',
+          options: [
+            CountryPaintChangeSetting.WHEN_RECOMMENDED,
+            CountryPaintChangeSetting.ALWAYS_DISABLED,
+            CountryPaintChangeSetting.ALWAYS_ENABLED,
+          ]
+        }],
+        chosenDropdownOption: countryHighlightingSetting,
+        dropdownOptionToLabelMap: {
+          [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
+          [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
+          [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
+        },
+        onDropdownOptionChange: (option) => setCountryHighlightingSetting(option)
+      }, {
+        type: CustomizationSettingType.DROPDOWN,
+        dropdownName: 'Country outlines for countries with data',
+        borderColourClassname: 'border-arbovirus',
+        hoverColourClassname: 'hover:bg-arbovirusHover/50',
+        highlightedColourClassname: 'data-[highlighted]:bg-arbovirusHover/50',
+        dropdownOptionGroups: [{
+          groupHeader: 'Preferences',
+          options: [
+            CountryPaintChangeSetting.WHEN_RECOMMENDED,
+            CountryPaintChangeSetting.ALWAYS_DISABLED,
+            CountryPaintChangeSetting.ALWAYS_ENABLED,
+          ]
+        }],
+        chosenDropdownOption: countryOutlinesSetting,
+        dropdownOptionToLabelMap: {
+          [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
+          [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
+          [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
+        },
+        onDropdownOptionChange: (option) => setCountryOutlinesSetting(option)
       }, {
         type: CustomizationSettingType.SWITCH,
         switchName: `Country pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
@@ -39,7 +83,8 @@ export const useArbovirusMapCustomizationModal = () => {
   return {
     customizationModal,
     countryPopUpEnabled,
-    countryHighlightingEnabled,
+    countryHighlightingSetting,
+    countryOutlinesSetting,
     mapCustomizeButton: () => mapCustomizeButton
   }
 }

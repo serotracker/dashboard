@@ -21,7 +21,7 @@ import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/ge
 import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-highlight-layers/data-point-present-layer";
 import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
 import { useEsmCountryHighlightLayer } from "./country-highlight-layers/esm-country-highlight-layer";
-import { useArbovirusMapCustomizationModal } from "./use-arbovirus-map-customization-modal";
+import { CountryPaintChangeSetting, useArbovirusMapCustomizationModal } from "./use-arbovirus-map-customization-modal";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -39,15 +39,34 @@ export function ArbovirusMap() {
   const { data } = useArboData();
   const { getCountryHighlightingLayerInformation: getDataPointPresentCountryHighlightingLayerInformation } = useDataPointPresentLayer();
   const { getCountryHighlightingLayerInformation: getESMCountryHighlightingLayerInformation } = useEsmCountryHighlightLayer();
-  const { countryHighlightingEnabled, countryPopUpEnabled, ...arbovirusMapCustomizationModal } = useArbovirusMapCustomizationModal();
+  const {
+    countryHighlightingSetting,
+    countryOutlinesSetting,
+    countryPopUpEnabled,
+    ...arbovirusMapCustomizationModal
+  } = useArbovirusMapCustomizationModal();
 
-  const { paint, countryHighlightLayerLegendEntries } = useMemo(() => {
+  const { paint, countryHighlightLayerLegendEntries, freeTextEntries } = useMemo(() => {
     if (selectedFilters.esm?.length > 0) {
-      return getESMCountryHighlightingLayerInformation({ data: filteredData, countryHighlightingEnabled })
+      const countryHighlightingEnabled = (countryHighlightingSetting === CountryPaintChangeSetting.ALWAYS_ENABLED);
+      const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
+
+      return getESMCountryHighlightingLayerInformation({
+        data: filteredData,
+        countryHighlightingEnabled,
+        countryOutlinesEnabled
+      })
     }
 
-    return getDataPointPresentCountryHighlightingLayerInformation({ data: filteredData, countryHighlightingEnabled })
-  }, [filteredData, getDataPointPresentCountryHighlightingLayerInformation, getESMCountryHighlightingLayerInformation, selectedFilters, countryHighlightingEnabled]);
+    const countryHighlightingEnabled = (countryHighlightingSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryHighlightingSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
+    const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
+
+    return getDataPointPresentCountryHighlightingLayerInformation({
+      data: filteredData,
+      countryHighlightingEnabled,
+      countryOutlinesEnabled
+    })
+  }, [ filteredData, getDataPointPresentCountryHighlightingLayerInformation, getESMCountryHighlightingLayerInformation, selectedFilters, countryHighlightingSetting, countryOutlinesSetting ]);
 
   const legendEntries = useMemo(() => [
     ...countryHighlightLayerLegendEntries,
@@ -133,6 +152,7 @@ export function ArbovirusMap() {
       <CountryHighlightLayerLegend
         className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"}
         legendEntries={legendEntries}
+        freeTextEntries={freeTextEntries}
       />
       <MapEstimateSummary filteredData={filteredData}/>
       <arbovirusMapCustomizationModal.mapCustomizeButton />

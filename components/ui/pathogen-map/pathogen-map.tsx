@@ -1,4 +1,3 @@
-import { MapResources } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { useState, useEffect, MutableRefObject, useRef, useMemo } from "react";
 import { Map, NavigationControl } from "react-map-gl";
@@ -22,7 +21,8 @@ import isEqual from "lodash/isEqual";
 import { EsmMapSourceAndLayer } from "./esm-maps";
 import { computeClusterMarkers } from "@/app/pathogen/arbovirus/dashboard/(map)/arbo-map-cluster-utils";
 import { GenericMapPopUpWidth } from "./map-pop-up/generic-map-pop-up";
-import { CountryHighlightLayerLegendEntry } from "./country-highlight-layers/country-highlight-layer-legend";
+import { CountryHighlightLayerLegendEntry, FreeTextEntry } from "./country-highlight-layers/country-highlight-layer-legend";
+import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 
 export interface MarkerCollection<TClusterPropertyKey extends string> {
   [key: string]: {
@@ -67,16 +67,21 @@ export interface PaintForCountries {
     countryAlphaThreeCode: string;
     fill: string;
     opacity: number;
+    borderWidthPx: number;
+    borderColour: string;
   }>;
   defaults: {
     fill: string;
     opacity: number;
+    borderWidthPx: number;
+    borderColour: string;
   }
 }
 
 export type GetCountryHighlightingLayerInformationOutput = {
   paint: PaintForCountries;
   countryHighlightLayerLegendEntries: CountryHighlightLayerLegendEntry[];
+  freeTextEntries: FreeTextEntry[];
 };
 
 interface PathogenMapProps<

@@ -56,11 +56,12 @@ export const MersMap = () => {
     .filter((element) => element.diagnosisStatus === MersDiagnosisStatus.Confirmed)
   )], [filteredData, faoMersEventData]);
 
-  const { paint, countryHighlightLayerLegendEntries } = useMemo(() => {
+  const { paint, countryHighlightLayerLegendEntries, freeTextEntries } = useMemo(() => {
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES) {
       return dataPointPresentMapLayer.getCountryHighlightingLayerInformation({
         data: dataPoints,
-        countryHighlightingEnabled: true
+        countryHighlightingEnabled: true,
+        countryOutlinesEnabled: false
       });
     }
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION) {
@@ -184,6 +185,7 @@ export const MersMap = () => {
       <CountryHighlightLayerLegend
         className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"}
         legendEntries={countryHighlightLayerLegendEntries}
+        freeTextEntries={freeTextEntries}
       />
       <MapEstimateSummary filteredData={filteredData.map(() => ({sourceSheetName: "Study name goes here..."}))}/>
       <mersMapCustomizationModal.mapCustomizeButton />
