@@ -22,7 +22,8 @@ export const MersVisualizationsSection = () => {
 
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
     MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION,
-    MersVisualizationId.REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION
+    MersVisualizationId.REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION,
+    MersVisualizationId.SUMMARY_BY_WHO_REGION
   ].includes(visualizationInfo.id));
 
   const { filteredData, faoMersEventData } = useContext(MersContext);
