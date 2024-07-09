@@ -5,6 +5,7 @@ import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-pa
 import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { MersVisualizationId, MersVisualizationInformation, getUrlParameterFromVisualizationId, mersVisualizationInformation } from "../../visualizations/visualization-page-config";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
 
 export const MersVisualizationsSection = () => {
   const allVisualizationInformationWithClassnames = addToVisualizationInformation({
@@ -12,21 +13,30 @@ export const MersVisualizationsSection = () => {
       [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]: { className: "h-full-screen" },
       [MersVisualizationId.CAMEL_POPULATION_OVER_TIME]: { className: "h-full-screen" },
       [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME]: { className: "h-full-screen" },
+      [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION]: { className: "h-full-screen" },
+      [MersVisualizationId.REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION]: { className: "h-full-screen" },
+      [MersVisualizationId.SUMMARY_BY_WHO_REGION]: { className: "h-full-screen" },
     },
     allVisualizationInformation: mersVisualizationInformation
   })
 
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
-    MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME
+    MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION,
+    MersVisualizationId.REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION
   ].includes(visualizationInfo.id));
 
-  const { filteredData } = useContext(MersContext);
+  const { filteredData, faoMersEventData } = useContext(MersContext);
+  const { yearlyFaoCamelPopulationData } = useContext(CamelPopulationDataContext);
 
   const renderVisualizationList = useCallback(<TDropdownOption extends string>(visualizationList: Array<MersVisualizationInformation<TDropdownOption> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}
-        data={filteredData}
+        data={[
+          ...filteredData,
+          ...faoMersEventData,
+          ...(yearlyFaoCamelPopulationData ?? [])
+        ]}
         highlightedDataPoint={undefined}
         hideArbovirusDropdown={undefined}
         visualizationInformation={visualizationInformation}

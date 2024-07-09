@@ -9,11 +9,16 @@ import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { CamelPopulationOverTime } from "../dashboard/(visualizations)/camel-population-over-time";
 import { MedianSeroprevalenceOverTime } from "../dashboard/(visualizations)/median-seroprevalence-over-time";
+import { MedianSeroprevalenceOverTimeByWhoRegion } from "../dashboard/(visualizations)/median-seroprevalence-over-time-by-who-region";
+import { ReportedEventsOverTimeByWhoRegion } from "../dashboard/(visualizations)/reported-events-over-time-by-who-region";
 
 export enum MersVisualizationId {
   REPORTED_EVENT_SUMMARY_OVER_TIME = "REPORTED_EVENT_SUMMARY_OVER_TIME",
   CAMEL_POPULATION_OVER_TIME = "CAMEL_POPULATION_OVER_TIME",
-  MEDIAN_SEROPREVALENCE_OVER_TIME = "MEDIAN_SEROPREVALENCE_OVER_TIME"
+  MEDIAN_SEROPREVALENCE_OVER_TIME = "MEDIAN_SEROPREVALENCE_OVER_TIME",
+  MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION = "MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION",
+  REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION = "REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION",
+  SUMMARY_BY_WHO_REGION = "SUMMARY_BY_WHO_REGION"
 }
 
 export const isMersVisualizationId = (
@@ -24,7 +29,10 @@ export const isMersVisualizationId = (
 export enum MersVisualizationUrlParameter {
   "reported_event_summary_over_time" = "reported_event_summary_over_time",
   "camel_population_over_time" = "camel_population_over_time",
-  "median_seroprevalence_over_time" = "median_seroprevalence_over_time"
+  "median_seroprevalence_over_time" = "median_seroprevalence_over_time",
+  "median_seroprevalence_over_time_by_who_region" = "median_seroprevalence_over_time_by_who_region",
+  "reported_events_over_time_by_who_region" = "reported_events_over_time_by_who_region",
+  "summary_by_who_region" = "summary_by_who_region"
 }
 
 export type MersVisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
@@ -46,7 +54,7 @@ export const mersVisualizationInformation: Record<MersVisualizationId, MersVisua
       MersVisualizationUrlParameter[
         "reported_event_summary_over_time"
       ],
-    getDisplayName: () => "Event and Seroprevalence Summary Over Time",
+    getDisplayName: () => "Reported MERS Cases Over Time",
     renderVisualization: ({ data }) => <ReportedEventSummaryOverTime data={data} />
   },
   [MersVisualizationId.CAMEL_POPULATION_OVER_TIME]: {
@@ -66,6 +74,33 @@ export const mersVisualizationInformation: Record<MersVisualizationId, MersVisua
       ],
     getDisplayName: () => "Median Seroprevalence Over Time",
     renderVisualization: ({ data }) => <MedianSeroprevalenceOverTime data={data} />
+  },
+  [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION]: {
+    id: MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION,
+    urlParameter:
+      MersVisualizationUrlParameter[
+        "median_seroprevalence_over_time_by_who_region"
+      ],
+    getDisplayName: () => "Median Seroprevalence Over Time By WHO Region",
+    renderVisualization: ({ data }) => <MedianSeroprevalenceOverTimeByWhoRegion data={data} />
+  },
+  [MersVisualizationId.REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION]: {
+    id: MersVisualizationId.REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION,
+    urlParameter:
+      MersVisualizationUrlParameter[
+        "reported_events_over_time_by_who_region"
+      ],
+    getDisplayName: () => "Reported MERS Cases Over Time By WHO Region",
+    renderVisualization: ({ data }) => <ReportedEventsOverTimeByWhoRegion data={data} />
+  },
+  [MersVisualizationId.SUMMARY_BY_WHO_REGION]: {
+    id: MersVisualizationId.SUMMARY_BY_WHO_REGION,
+    urlParameter:
+      MersVisualizationUrlParameter[
+        "summary_by_who_region"
+      ],
+    getDisplayName: () => "MERS Summary By WHO Region",
+    renderVisualization: ({ data }) => <ReportedEventsOverTimeByWhoRegion data={data} />
   }
 }
 
