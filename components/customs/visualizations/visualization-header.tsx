@@ -134,13 +134,13 @@ interface VisualizationHeaderProps<
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
-  TDropdownOption extends string
+  TCustomizationModalDropdownOption extends string
 > {
   visualizationInformation: VisualizationInformation<
     TVisualizationId,
     TVisualizationUrlParameter,
     TEstimate,
-    TDropdownOption
+    TCustomizationModalDropdownOption
   >;
   data: TEstimate[];
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
@@ -152,13 +152,13 @@ export const VisualizationHeader = <
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
-  TDropdownOption extends string
+  TCustomizationModalDropdownOption extends string
 >(
   props: VisualizationHeaderProps<
     TVisualizationId,
     TVisualizationUrlParameter,
     TEstimate,
-    TDropdownOption
+    TCustomizationModalDropdownOption
   >
 ) => {
   const router = useRouter();

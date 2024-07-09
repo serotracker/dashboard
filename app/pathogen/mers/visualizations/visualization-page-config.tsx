@@ -35,11 +35,11 @@ export enum MersVisualizationUrlParameter {
   "summary_by_who_region" = "summary_by_who_region"
 }
 
-export type MersVisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
+export type MersVisualizationInformation<TCustomizationModalDropdownOption extends string> = VisualizationInformation<
   MersVisualizationId,
   MersVisualizationUrlParameter,
   MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry,
-  TDropdownOption
+  TCustomizationModalDropdownOption
 >
 
 export const isMersVisualizationUrlParameter = (

@@ -47,7 +47,7 @@ export const ArbovirusVisualizationsSection = () => {
     ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP
   ].includes(visualizationInfo.id));
 
-  const renderVisualizationList = useCallback(<TDropdownOption extends string>(visualizationList: Array<ArbovirusVisualizationInformation<TDropdownOption> & {className: string}>) => {
+  const renderVisualizationList = useCallback(<TCustomizationModalDropdownOption extends string>(visualizationList: Array<ArbovirusVisualizationInformation<TCustomizationModalDropdownOption> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

@@ -50,11 +50,11 @@ export enum ArbovirusVisualizationUrlParameter {
   "country-seroprevalence-comparison-scatter-plot" = "country-seroprevalence-comparison-scatter-plot",
 }
 
-export type ArbovirusVisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
+export type ArbovirusVisualizationInformation<TCustomizationModalDropdownOption extends string> = VisualizationInformation<
   ArbovirusVisualizationId,
   ArbovirusVisualizationUrlParameter,
   ArbovirusEstimate,
-  TDropdownOption
+  TCustomizationModalDropdownOption
 >;
 
 export const isArbovirusVisualizationUrlParameter = (

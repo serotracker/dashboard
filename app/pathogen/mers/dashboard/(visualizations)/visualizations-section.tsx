@@ -29,7 +29,7 @@ export const MersVisualizationsSection = () => {
   const { filteredData, faoMersEventData } = useContext(MersContext);
   const { yearlyFaoCamelPopulationData } = useContext(CamelPopulationDataContext);
 
-  const renderVisualizationList = useCallback(<TDropdownOption extends string>(visualizationList: Array<MersVisualizationInformation<TDropdownOption> & {className: string}>) => {
+  const renderVisualizationList = useCallback(<TCustomizationModalDropdownOption extends string>(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

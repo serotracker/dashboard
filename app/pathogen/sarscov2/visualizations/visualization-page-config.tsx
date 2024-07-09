@@ -32,11 +32,11 @@ export enum SarsCov2VisualizationUrlParameter {
   "number-of-infections-at-midpoint-by-gbd-region" = "number-of-infections-at-midpoint-by-gbd-region"
 }
 
-export type SarsCov2VisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
+export type SarsCov2VisualizationInformation<TCustomizationModalDropdownOption extends string> = VisualizationInformation<
   SarsCov2VisualizationId,
   SarsCov2VisualizationUrlParameter,
   SarsCov2Estimate,
-  TDropdownOption
+  TCustomizationModalDropdownOption
 >;
 
 export const isSarsCov2VisualizationUrlParameter = (
