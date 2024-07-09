@@ -60,6 +60,7 @@ export const SeroprevalenceSummaryByWhoRegion = (props: SeroprevalenceSummaryByW
       getIntervalStartDate={(dataPoint) => parseISO(dataPoint.samplingStartDate)}
       getIntervalEndDate={(dataPoint) => parseISO(dataPoint.samplingEndDate)}
       getBarColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
+      percentageFormattingEnabled={true}
       getBarName={() => 'Median Seroprevalence'}
       transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.seroprevalence * 100))}
     />

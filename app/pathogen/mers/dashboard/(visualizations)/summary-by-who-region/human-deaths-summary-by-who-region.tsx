@@ -58,6 +58,7 @@ export const HumanDeathsSummaryByWhoRegion = (props: HumanDeathsSummaryByWhoRegi
       getIntervalStartDate={(dataPoint) => parseISO(dataPoint.reportDate)}
       getIntervalEndDate={(dataPoint) => parseISO(dataPoint.reportDate)}
       getBarColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
+      percentageFormattingEnabled={false}
       getBarName={() => 'Reported Deaths'}
       transformOutputValue={(data) => data.reduce((accumulator, dataPoint) => {
         if(dataPoint.__typename === 'HumanMersEvent') {

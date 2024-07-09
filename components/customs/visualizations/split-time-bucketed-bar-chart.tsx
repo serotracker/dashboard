@@ -23,6 +23,7 @@ export interface SplitTimeBucketedBarChartProps<
   getIntervalEndDate: (dataPoint: TData) => Date;
   getBarColour: (primaryKey: TPrimaryGroupingKey) => string;
   getBarName: (primaryKey: TPrimaryGroupingKey) => string;
+  percentageFormattingEnabled: boolean;
   transformOutputValue: (data: TData[]) => number;
 }
 
@@ -30,7 +31,7 @@ export const SplitTimeBucketedBarChart = <
   TData,
   TPrimaryGroupingKey extends string,
 >(props: SplitTimeBucketedBarChartProps<TData, TPrimaryGroupingKey>) => {
-  const { data, primaryGroupingFunction, getIntervalStartDate, getIntervalEndDate } = props;
+  const { data, primaryGroupingFunction, getIntervalStartDate, getIntervalEndDate, percentageFormattingEnabled } = props;
   const { desiredBucketCount, validBucketSizes } = props.bucketingConfiguration;
 
   const eventsGroupedByPrimaryKey = useMemo(() => {
@@ -56,6 +57,18 @@ export const SplitTimeBucketedBarChart = <
       ]
     )
   ), [ eventsGroupedByPrimaryKey, desiredBucketCount, validBucketSizes, getIntervalStartDate, getIntervalEndDate ])
+
+  const yAxisProps = useMemo(() => percentageFormattingEnabled ? {
+    domain: [0, 100],
+    tickFormatter:(tick: string) => `${tick}%`
+  } : {}, [ percentageFormattingEnabled ])
+
+  const tooltipProps = useMemo(() => percentageFormattingEnabled ? {
+    itemStyle: {color: "black"},
+    formatter: (value: number) => `${value.toFixed(2)}%`
+  } : {
+    itemStyle: {color: "black"}
+  }, [ percentageFormattingEnabled ])
 
   const isLargeScreen = useIsLargeScreen();
 
@@ -109,13 +122,13 @@ export const SplitTimeBucketedBarChart = <
                     tick={(props) => CustomXAxisTick({...props, tickSlant: 35 })}
                     hide={!isLargeScreen}
                   />
-                  <YAxis />
+                  <YAxis {...yAxisProps}/>
                   <Bar
                     dataKey="valueForBar"
                     fill={props.getBarColour(primaryKey)}
                     name={props.getBarName(primaryKey)}
                   />
-                  <Tooltip itemStyle={{"color": "black"}}/>
+                  <Tooltip {...tooltipProps} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

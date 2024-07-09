@@ -58,6 +58,7 @@ export const AnimalCasesSummaryByWhoRegion = (props: AnimalCasesSummaryByWhoRegi
       getIntervalStartDate={(dataPoint) => parseISO(dataPoint.reportDate)}
       getIntervalEndDate={(dataPoint) => parseISO(dataPoint.reportDate)}
       getBarColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
+      percentageFormattingEnabled={false}
       getBarName={() => 'Reported Confirmed Positive Cases'}
       transformOutputValue={(data) => data.reduce((accumulator, dataPoint) => {
         return accumulator + 1;
