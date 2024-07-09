@@ -60,6 +60,7 @@ export const HumanDeathsSummaryByWhoRegion = (props: HumanDeathsSummaryByWhoRegi
       getBarColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
       percentageFormattingEnabled={false}
       getBarName={() => 'Reported Deaths'}
+      getChartTitle={(whoRegion) => whoRegion}
       transformOutputValue={(data) => data.reduce((accumulator, dataPoint) => {
         if(dataPoint.__typename === 'HumanMersEvent') {
           return accumulator + dataPoint.humanDeaths;

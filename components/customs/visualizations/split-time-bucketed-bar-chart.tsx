@@ -23,6 +23,7 @@ export interface SplitTimeBucketedBarChartProps<
   getIntervalEndDate: (dataPoint: TData) => Date;
   getBarColour: (primaryKey: TPrimaryGroupingKey) => string;
   getBarName: (primaryKey: TPrimaryGroupingKey) => string;
+  getChartTitle: (primaryKey: TPrimaryGroupingKey) => string;
   percentageFormattingEnabled: boolean;
   transformOutputValue: (data: TData[]) => number;
 }
@@ -99,7 +100,7 @@ export const SplitTimeBucketedBarChart = <
               key={`${props.graphId}-${primaryKey}`}
             >
               <p className="w-full text-center ">
-                {primaryKey}
+                {props.getChartTitle(primaryKey)}
               </p>
               <ResponsiveContainer width="100%" height="90%">
                 <BarChart

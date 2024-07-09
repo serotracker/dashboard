@@ -60,6 +60,7 @@ export const AnimalCasesSummaryByWhoRegion = (props: AnimalCasesSummaryByWhoRegi
       getBarColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
       percentageFormattingEnabled={false}
       getBarName={() => 'Reported Confirmed Positive Cases'}
+      getChartTitle={(whoRegion) => whoRegion}
       transformOutputValue={(data) => data.reduce((accumulator, dataPoint) => {
         return accumulator + 1;
       }, 0)}
