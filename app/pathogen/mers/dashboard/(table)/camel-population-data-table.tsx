@@ -10,6 +10,7 @@ import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-hand
 import { MersVisualizationId, getUrlParameterFromVisualizationId, mersVisualizationInformation } from "../../visualizations/visualization-page-config";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { useFaoYearlyCamelPopulationData } from "@/hooks/mers/useFaoYearlyCamelPopulationData";
+import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 
 const camelPopulationDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
@@ -122,7 +123,10 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
           hideArbovirusDropdown={true}
           visualizationInformation={{
             ...mersVisualizationInformation[MersVisualizationId.CAMEL_POPULATION_OVER_TIME],
-            getDisplayName: () => `Camel Population over time for ${countryName}`
+            getDisplayName: () => ({
+              type: VisualizationDisplayNameType.STANDARD,
+              displayName: `Camel Population over time for ${countryName}`
+            })
           }}
           getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
           buttonConfig={{

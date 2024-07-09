@@ -1,5 +1,5 @@
 "use client";
-import { VisualizationInformation } from "../../generic-pathogen-visualizations-page";
+import { VisualizationDisplayNameType, VisualizationInformation } from "../../generic-pathogen-visualizations-page";
 import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
 import { SarsCov2Estimate } from '@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context';
@@ -32,11 +32,15 @@ export enum SarsCov2VisualizationUrlParameter {
   "number-of-infections-at-midpoint-by-gbd-region" = "number-of-infections-at-midpoint-by-gbd-region"
 }
 
-export type SarsCov2VisualizationInformation<TCustomizationModalDropdownOption extends string> = VisualizationInformation<
+export type SarsCov2VisualizationInformation<
+  TCustomizationModalDropdownOption extends string,
+  TVisualizationDisplayNameDropdownOption extends string
+> = VisualizationInformation<
   SarsCov2VisualizationId,
   SarsCov2VisualizationUrlParameter,
   SarsCov2Estimate,
-  TCustomizationModalDropdownOption
+  TCustomizationModalDropdownOption,
+  TVisualizationDisplayNameDropdownOption
 >;
 
 export const isSarsCov2VisualizationUrlParameter = (
@@ -44,14 +48,14 @@ export const isSarsCov2VisualizationUrlParameter = (
 ): visualizationUrlParameter is SarsCov2VisualizationUrlParameter =>
   Object.values(SarsCov2VisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2VisualizationInformation<string>> = {
+const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2VisualizationInformation<string, string>> = {
   [SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION]: {
     id: SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION,
     urlParameter:
       SarsCov2VisualizationUrlParameter[
         "published-study-count-by-gbd-region"
       ],
-    getDisplayName: () => "Published Studies per GBD Region",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Published Studies per GBD Region" }),
     renderVisualization: () => PublishedStudiesByGdbRegionGraph({legendConfiguration: LegendConfiguration.RIGHT_ALIGNED})
   },
   [SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME]: {
@@ -60,7 +64,7 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       SarsCov2VisualizationUrlParameter[
         "cumulative-number-of-serosurveys-published-over-time"
       ],
-    getDisplayName: () => "Cumulative Number Serosurveys Published Over Time",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Cumulative Number Serosurveys Published Over Time" }),
     renderVisualization: () => CumulativeNumberOfSerosurveysPublishedOverTime()
   },
   [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION]: {
@@ -69,7 +73,7 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       SarsCov2VisualizationUrlParameter[
         "modelled-seroprevalence-by-who-region"
       ],
-    getDisplayName: () => "Modelled Seroprevalence Globally by WHO Region",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Modelled Seroprevalence Globally by WHO Region" }),
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>
   },
   [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]: {
@@ -78,7 +82,7 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       SarsCov2VisualizationUrlParameter[
         "comparing-seroprevalence-positive-cases-and-vaccinations"
       ],
-    getDisplayName: () => "Comparing Seroprevalence to Confirmed Cases and Vaccine Coverage Over Time",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Comparing Seroprevalence to Confirmed Cases and Vaccine Coverage Over Time" }),
     renderVisualization: () => ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
   [SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION]: {
@@ -87,7 +91,7 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       SarsCov2VisualizationUrlParameter[
         "number-of-infections-at-midpoint-by-gbd-region"
       ],
-    getDisplayName: () => "Number of Infections per Confirmed Case at the Study Midpoint by GBD Region",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Number of Infections per Confirmed Case at the Study Midpoint by GBD Region" }),
     renderVisualization: () => NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegion()
   },
 }

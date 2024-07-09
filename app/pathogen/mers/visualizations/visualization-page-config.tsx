@@ -1,6 +1,6 @@
 
 "use client";
-import { VisualizationInformation } from "../../generic-pathogen-visualizations-page";
+import { VisualizationDisplayNameType, VisualizationInformation } from "../../generic-pathogen-visualizations-page";
 import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
@@ -35,11 +35,15 @@ export enum MersVisualizationUrlParameter {
   "summary_by_who_region" = "summary_by_who_region"
 }
 
-export type MersVisualizationInformation<TCustomizationModalDropdownOption extends string> = VisualizationInformation<
+export type MersVisualizationInformation<
+  TCustomizationModalDropdownOption extends string,
+  TVisualizationDisplayNameDropdownOption extends string
+> = VisualizationInformation<
   MersVisualizationId,
   MersVisualizationUrlParameter,
   MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry,
-  TCustomizationModalDropdownOption
+  TCustomizationModalDropdownOption,
+  TVisualizationDisplayNameDropdownOption
 >
 
 export const isMersVisualizationUrlParameter = (
@@ -47,14 +51,14 @@ export const isMersVisualizationUrlParameter = (
 ): visualizationUrlParameter is MersVisualizationUrlParameter =>
   Object.values(MersVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-export const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string>> = {
+export const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string, string>> = {
   [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]: {
     id: MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME,
     urlParameter:
       MersVisualizationUrlParameter[
         "reported_event_summary_over_time"
       ],
-    getDisplayName: () => "Reported MERS Cases Over Time",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Reported MERS Cases Over Time" }),
     renderVisualization: ({ data }) => <ReportedEventSummaryOverTime data={data} />
   },
   [MersVisualizationId.CAMEL_POPULATION_OVER_TIME]: {
@@ -63,7 +67,7 @@ export const mersVisualizationInformation: Record<MersVisualizationId, MersVisua
       MersVisualizationUrlParameter[
         "camel_population_over_time"
       ],
-    getDisplayName: () => "Camel Population Over Time",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Camel Population Over Time" }),
     renderVisualization: ({ data }) => <CamelPopulationOverTime data={data} />
   },
   [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME]: {
@@ -72,7 +76,7 @@ export const mersVisualizationInformation: Record<MersVisualizationId, MersVisua
       MersVisualizationUrlParameter[
         "median_seroprevalence_over_time"
       ],
-    getDisplayName: () => "Median Seroprevalence Over Time",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median Seroprevalence Over Time" }),
     renderVisualization: ({ data }) => <MedianSeroprevalenceOverTime data={data} />
   },
   [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION]: {
@@ -81,7 +85,7 @@ export const mersVisualizationInformation: Record<MersVisualizationId, MersVisua
       MersVisualizationUrlParameter[
         "median_seroprevalence_over_time_by_who_region"
       ],
-    getDisplayName: () => "Median Seroprevalence Over Time By WHO Region",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median Seroprevalence Over Time By WHO Region" }),
     renderVisualization: ({ data }) => <MedianSeroprevalenceOverTimeByWhoRegion data={data} />
   },
   [MersVisualizationId.REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION]: {
@@ -90,7 +94,7 @@ export const mersVisualizationInformation: Record<MersVisualizationId, MersVisua
       MersVisualizationUrlParameter[
         "reported_events_over_time_by_who_region"
       ],
-    getDisplayName: () => "Reported MERS Cases Over Time By WHO Region",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Reported MERS Cases Over Time By WHO Region" }),
     renderVisualization: ({ data }) => <ReportedEventsOverTimeByWhoRegion data={data} />
   },
   [MersVisualizationId.SUMMARY_BY_WHO_REGION]: {
@@ -99,7 +103,7 @@ export const mersVisualizationInformation: Record<MersVisualizationId, MersVisua
       MersVisualizationUrlParameter[
         "summary_by_who_region"
       ],
-    getDisplayName: () => "MERS Summary By WHO Region",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "MERS Summary By WHO Region" }),
     renderVisualization: ({ data }) => <ReportedEventsOverTimeByWhoRegion data={data} />
   }
 }

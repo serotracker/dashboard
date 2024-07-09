@@ -7,6 +7,7 @@ import { AvailableMersDataTables } from "./mers-data-table";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, mersVisualizationInformation } from "../../visualizations/visualization-page-config";
+import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 
 const mersSeroprevalenceEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -100,7 +101,10 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
           hideArbovirusDropdown={true}
           visualizationInformation={{
             ...mersVisualizationInformation[MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME],
-            getDisplayName: () => `Median Seroprevalence for ${countryName} over time`
+            getDisplayName: () => ({
+              type: VisualizationDisplayNameType.STANDARD,
+              displayName: `Median Seroprevalence for ${countryName} over time`
+            })
           }}
           getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
           buttonConfig={{

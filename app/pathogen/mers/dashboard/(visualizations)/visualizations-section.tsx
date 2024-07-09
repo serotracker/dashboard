@@ -29,7 +29,10 @@ export const MersVisualizationsSection = () => {
   const { filteredData, faoMersEventData } = useContext(MersContext);
   const { yearlyFaoCamelPopulationData } = useContext(CamelPopulationDataContext);
 
-  const renderVisualizationList = useCallback(<TCustomizationModalDropdownOption extends string>(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption> & {className: string}>) => {
+  const renderVisualizationList = useCallback(<
+    TCustomizationModalDropdownOption extends string,
+    TVisualizationDisplayNameDropdownOption extends string
+  >(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption, TVisualizationDisplayNameDropdownOption> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}
@@ -57,7 +60,7 @@ export const MersVisualizationsSection = () => {
         getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
       />
     ));
-  }, [filteredData]);
+  }, [ filteredData, faoMersEventData, yearlyFaoCamelPopulationData ]);
 
   return (
     <>

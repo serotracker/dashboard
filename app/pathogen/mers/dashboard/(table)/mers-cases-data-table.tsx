@@ -25,6 +25,7 @@ import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, mersVisualizationInformation } from "../../visualizations/visualization-page-config";
+import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 
 const mersCasesColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.DATE as const,
@@ -239,7 +240,10 @@ export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
           hideArbovirusDropdown={true}
           visualizationInformation={{
             ...mersVisualizationInformation[MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME],
-            getDisplayName: () => `MERS Event summary for ${countryName}`
+            getDisplayName: () => ({
+              type: VisualizationDisplayNameType.STANDARD,
+              displayName: `MERS Event summary for ${countryName}`
+            })
           }}
           getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
           buttonConfig={{

@@ -8,7 +8,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import { VisualizationDisplayNameType, VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import { useMemo } from "react";
+import assertNever from "assert-never";
 
 interface DisabledButtonConfig {
   enabled: false;
@@ -134,13 +136,15 @@ interface VisualizationHeaderProps<
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
-  TCustomizationModalDropdownOption extends string
+  TCustomizationModalDropdownOption extends string,
+  TVisualizationDisplayNameDropdownOption extends string
 > {
   visualizationInformation: VisualizationInformation<
     TVisualizationId,
     TVisualizationUrlParameter,
     TEstimate,
-    TCustomizationModalDropdownOption
+    TCustomizationModalDropdownOption,
+    TVisualizationDisplayNameDropdownOption
   >;
   data: TEstimate[];
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
@@ -152,18 +156,22 @@ export const VisualizationHeader = <
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
-  TCustomizationModalDropdownOption extends string
+  TCustomizationModalDropdownOption extends string,
+  TVisualizationDisplayNameDropdownOption extends string
 >(
   props: VisualizationHeaderProps<
     TVisualizationId,
     TVisualizationUrlParameter,
     TEstimate,
-    TCustomizationModalDropdownOption
+    TCustomizationModalDropdownOption,
+    TVisualizationDisplayNameDropdownOption
   >
 ) => {
   const router = useRouter();
+  const { data } = props;
+  const { titleTooltipContent, getDisplayName } = props.visualizationInformation;
 
-  const titleTooltip = props.visualizationInformation.titleTooltipContent ? (
+  const titleTooltip = useMemo(() => titleTooltipContent ? (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -186,19 +194,39 @@ export const VisualizationHeader = <
           <div
             className="bg-background w-full p-4 rounded text-white"
           >
-            {props.visualizationInformation.titleTooltipContent}
+            {titleTooltipContent}
           </div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  ) : null
+  ) : null, [titleTooltipContent])
+
+  const visualizationTitle = useMemo(() => {
+    const displayName = getDisplayName({ data });
+
+    if(displayName.type === VisualizationDisplayNameType.STANDARD) {
+      return ( 
+        <h3 className="w-full text-center text-lg inline">
+          {displayName.displayName}
+          {titleTooltip}
+        </h3>
+      )
+    }
+
+    if(displayName.type === VisualizationDisplayNameType.WITH_DROPDOWN) {
+      return (
+        <h3 className="w-full text-center text-lg inline">
+          TODO
+        </h3>
+      )
+    }
+
+    assertNever(displayName);
+  }, [titleTooltip, getDisplayName, data]);
 
   return (
     <div className="flex py-4">
-      <h3 className="w-full text-center text-lg inline">
-        {props.visualizationInformation.getDisplayName({ data: props.data })}
-        {titleTooltip}
-      </h3>
+      {visualizationTitle}
       {props.buttonConfiguration.downloadButton.enabled && (
         <DownloadButton
           downloadVisualization={() => props.downloadVisualization()}
