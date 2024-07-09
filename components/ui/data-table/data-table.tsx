@@ -37,8 +37,10 @@ import { DataTableStandardRow } from "./data-table-standard-row";
 import { DataTableExpandedRow } from "./data-table-expanded-row";
 import { DataTableExpandedRowContent } from "./data-table-expanded-row-content";
 import { Dropdown, DropdownProps } from "@/components/customs/dropdown/dropdown";
+import { typedObjectFromEntries } from "@/lib/utils";
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
+  initiallyVisible: boolean;
   fixed?: boolean;
   accessorKey: string;
   headerLabel: string;
@@ -86,6 +88,10 @@ type TableHeader<TDropdownOption extends string> =
   | StandardTableHeader
   | DropdownTableHeader<TDropdownOption>;
 
+export type RowExpansionConfiguration<
+  TData extends Record<string, unknown>
+> = RowExpansionConfigurationDisabled | RowExpansionConfigurationEnabled<TData>;
+
 interface DataTableProps<
   TData extends Record<string, unknown>,
   TValue,
@@ -95,7 +101,7 @@ interface DataTableProps<
   csvFilename: string;
   tableHeader: TableHeader<TDropdownOption>;
   csvCitationConfiguration: CsvCitationConfigurationDisabled | CsvCitationConfigurationEnabled;
-  rowExpansionConfiguration: RowExpansionConfigurationDisabled | RowExpansionConfigurationEnabled<TData>;
+  rowExpansionConfiguration: RowExpansionConfiguration<TData>;
   data: TData[];
 }
 
@@ -113,7 +119,19 @@ export function DataTable<
   const { openToast } = useContext(ToastContext);
 
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>(typedObjectFromEntries(props.columns
+      .filter((column) => column.initiallyVisible === false)
+      .map((column): [string, boolean] | undefined => {
+        const fieldName = column.accessorKey;
+
+        if(!fieldName) {
+          return undefined;
+        }
+
+        return [fieldName, false]
+      })
+      .filter((element): element is NonNullable<typeof element> => !!element)
+    ));
 
   const [expandedState, setExpandedState] = React.useState<ExpandedState>({});
 
@@ -325,6 +343,7 @@ export function DataTable<
                 {(row.getIsExpanded() && rowExpansionConfiguration.enabled == true) &&
                   <DataTableExpandedRowContent
                     row={row}
+                    columns={props.columns}
                     data={props.data}
                     visualization={rowExpansionConfiguration.visualization}
                     viewOnMapHandler={rowExpansionConfiguration.viewOnMapHandler}

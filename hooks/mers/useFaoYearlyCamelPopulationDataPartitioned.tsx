@@ -10,6 +10,7 @@ export const partitionedYearlyFaoCamelPopulationData = gql`
     partitionedYearlyFaoCamelPopulationData(input: $input) {
       partitionKey
       yearlyFaoCamelPopulationData {
+        __typename
         id
         countryAlphaThreeCode
         country {

@@ -26,6 +26,7 @@ export interface DataTableColumnConfigurationEntryBase {
   isSortable?: boolean;
   isHideable?: boolean;
   isFixed?: boolean;
+  initiallyVisible?: boolean;
   valueToDisplayLabel?: (input: string) => string | undefined;
   valueSortingFunction?: (valueA: string, valueB: string) => number;
   size?: number;

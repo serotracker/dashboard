@@ -4,9 +4,16 @@ import { VisualizationInformation } from "../../generic-pathogen-visualizations-
 import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { ReportedEventSummaryOverTime } from "../dashboard/(visualizations)/reported-event-summary-over-time";
+import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
+import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
+import { CamelPopulationOverTime } from "../dashboard/(visualizations)/camel-population-over-time";
+import { MedianSeroprevalenceOverTime } from "../dashboard/(visualizations)/median-seroprevalence-over-time";
 
 export enum MersVisualizationId {
-  PLACEHOLDER = "PLACEHOLDER",
+  REPORTED_EVENT_SUMMARY_OVER_TIME = "REPORTED_EVENT_SUMMARY_OVER_TIME",
+  CAMEL_POPULATION_OVER_TIME = "CAMEL_POPULATION_OVER_TIME",
+  MEDIAN_SEROPREVALENCE_OVER_TIME = "MEDIAN_SEROPREVALENCE_OVER_TIME"
 }
 
 export const isMersVisualizationId = (
@@ -15,15 +22,17 @@ export const isMersVisualizationId = (
   Object.values(MersVisualizationId).some((element) => element === visualizationId);
 
 export enum MersVisualizationUrlParameter {
-  "placeholder" = "placeholder"
+  "reported_event_summary_over_time" = "reported_event_summary_over_time",
+  "camel_population_over_time" = "camel_population_over_time",
+  "median_seroprevalence_over_time" = "median_seroprevalence_over_time"
 }
 
 export type MersVisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
   MersVisualizationId,
   MersVisualizationUrlParameter,
-  MersEstimate,
+  MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry,
   TDropdownOption
->;
+>
 
 export const isMersVisualizationUrlParameter = (
   visualizationUrlParameter: string
@@ -31,14 +40,32 @@ export const isMersVisualizationUrlParameter = (
   Object.values(MersVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
 export const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string>> = {
-  [MersVisualizationId.PLACEHOLDER]: {
-    id: MersVisualizationId.PLACEHOLDER,
+  [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]: {
+    id: MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME,
     urlParameter:
       MersVisualizationUrlParameter[
-        "placeholder"
+        "reported_event_summary_over_time"
       ],
-    getDisplayName: () => "Placeholder",
-    renderVisualization: () => <p>Placeholder</p>
+    getDisplayName: () => "Event and Seroprevalence Summary Over Time",
+    renderVisualization: ({ data }) => <ReportedEventSummaryOverTime data={data} />
+  },
+  [MersVisualizationId.CAMEL_POPULATION_OVER_TIME]: {
+    id: MersVisualizationId.CAMEL_POPULATION_OVER_TIME,
+    urlParameter:
+      MersVisualizationUrlParameter[
+        "camel_population_over_time"
+      ],
+    getDisplayName: () => "Camel Population Over Time",
+    renderVisualization: ({ data }) => <CamelPopulationOverTime data={data} />
+  },
+  [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME]: {
+    id: MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME,
+    urlParameter:
+      MersVisualizationUrlParameter[
+        "median_seroprevalence_over_time"
+      ],
+    getDisplayName: () => "Median Seroprevalence Over Time",
+    renderVisualization: ({ data }) => <MedianSeroprevalenceOverTime data={data} />
   }
 }
 
