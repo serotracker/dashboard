@@ -140,7 +140,7 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
       );
     },
     viewOnMapHandler
-  }), [ viewOnMapHandler ]);
+  }), [ viewOnMapHandler, yearlyFaoCamelPopulationData ]);
 
   return (
     <DataTable
