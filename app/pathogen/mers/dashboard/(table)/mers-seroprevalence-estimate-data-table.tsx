@@ -6,7 +6,7 @@ import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
-import { MersVisualizationId, getUrlParameterFromVisualizationId, mersVisualizationInformation } from "../../visualizations/visualization-page-config";
+import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 
 const mersSeroprevalenceEstimateColumnConfiguration = [{
@@ -71,6 +71,7 @@ interface MersSeroprevalenceEstimateDataTableProps {
 export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEstimateDataTableProps) => {
   const state = useContext(MersContext);
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
+  const { mersVisualizationInformation } = useVisualizationPageConfiguration();
 
   const rowExpansionConfiguration: RowExpansionConfiguration<MersEstimate> = useMemo(() => ({
     enabled: true,
@@ -122,7 +123,7 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
       );
     },
     viewOnMapHandler
-  }), [ viewOnMapHandler ]);
+  }), [ viewOnMapHandler, mersVisualizationInformation ]);
 
   return (
     <DataTable

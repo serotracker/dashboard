@@ -1,4 +1,3 @@
-import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { CustomXAxisTick } from "@/components/customs/visualizations/custom-x-axis-tick";
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { WhoRegion } from "@/gql/graphql";
@@ -11,7 +10,7 @@ import clsx from "clsx";
 import parseISO from "date-fns/parseISO";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-interface MedianSeroprevalenceOverTimeByWhoRegionProps {
+interface HumanCasesSummaryByWhoRegionProps {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
 }
 
@@ -24,23 +23,30 @@ const barColoursForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Wpr]: "#4e79a7",
 };
 
-export const MedianSeroprevalenceOverTimeByWhoRegion = (props: MedianSeroprevalenceOverTimeByWhoRegionProps) => {
-  const estimates = props.data.filter((dataPoint): dataPoint is MersEstimate => dataPoint.__typename === 'MersEstimate');
+export const HumanCasesSummaryByWhoRegion = (props: HumanCasesSummaryByWhoRegionProps) => {
+  const events = props.data
+    .filter((dataPoint): dataPoint is FaoMersEvent => dataPoint.__typename === 'AnimalMersEvent' || dataPoint.__typename === 'HumanMersEvent')
+    .filter((dataPoint) => dataPoint.__typename === 'HumanMersEvent' && dataPoint.humansAffected > 0);
 
-  const dataGroupedByWhoRegion = typedGroupBy(estimates
-    .filter((estimate): estimate is Omit<typeof estimate, 'whoRegion'> & {whoRegion: NonNullable<typeof estimate['whoRegion']>} => !!estimate.whoRegion)
-    .map((estimate) => ({
-      ...estimate,
-      //TODO remove these when we have real data
-      samplingStartDate: '2024-07-09T00:28:53Z',
-      samplingEndDate: '2024-07-09T00:28:53Z',
-      seroprevalence: 0.1
-    })),
+  const eventsGroupedByWhoRegion = typedGroupBy(events
+    .map((event) => {
+      const whoRegion = event.whoRegion;
+
+      if(!whoRegion) {
+        return undefined;
+      }
+
+      return {
+        ...event,
+        whoRegion
+      }
+    })
+    .filter((event): event is NonNullable<typeof event> => !!event),
     (event) => event.whoRegion
   );
 
   const eventsGroupedByWhoRegionAndThenTimeBucket = typedObjectFromEntries(
-    typedObjectEntries(dataGroupedByWhoRegion).map(
+    typedObjectEntries(eventsGroupedByWhoRegion).map(
       ([whoRegion, eventsForWhoRegion]) => [
         whoRegion,
         groupDataPointsIntoTimeBuckets({
@@ -48,8 +54,8 @@ export const MedianSeroprevalenceOverTimeByWhoRegion = (props: MedianSeroprevale
             .map((dataPoint) => ({
               ...dataPoint,
               groupingTimeInterval: {
-                intervalStartDate: parseISO(dataPoint.samplingStartDate),
-                intervalEndDate: parseISO(dataPoint.samplingEndDate),
+                intervalStartDate: parseISO(dataPoint.reportDate),
+                intervalEndDate: parseISO(dataPoint.reportDate),
               },
             })),
             desiredBucketCount: 10,
@@ -76,7 +82,13 @@ export const MedianSeroprevalenceOverTimeByWhoRegion = (props: MedianSeroprevale
               `${interval.intervalStartDate.getFullYear()}-${interval.intervalEndDate.getFullYear()}` :
               `${interval.intervalStartDate.getFullYear()}`,
             dataPoints,
-            median: median(dataPoints.map((dataPoint) => dataPoint.seroprevalence * 100))
+            sum: dataPoints.reduce((accumulator, dataPoint) => {
+              if(dataPoint.__typename === 'HumanMersEvent') {
+                return accumulator + dataPoint.humansAffected;
+              }
+
+              return accumulator;
+            }, 0)
           }));
 
           const numberOfSubgraphsDisplayed = Object.keys(eventsGroupedByWhoRegionAndThenTimeBucket).length;
@@ -91,7 +103,7 @@ export const MedianSeroprevalenceOverTimeByWhoRegion = (props: MedianSeroprevale
           return (
             <div
               className={clsx(width, height)}
-              key={`median-seroprevalence-over-time-by-who-region-${whoRegion}`}
+              key={`human-cases-summary-by-who-region-${whoRegion}`}
             >
               <p className="w-full text-center ">
                 {whoRegion}
@@ -117,12 +129,9 @@ export const MedianSeroprevalenceOverTimeByWhoRegion = (props: MedianSeroprevale
                     tick={(props) => CustomXAxisTick({...props, tickSlant: 35 })}
                     hide={!isLargeScreen}
                   />
-                  <YAxis
-                    domain={[0, 100]}
-                    tickFormatter={(tick) => `${tick}%`}
-                  />
-                  <Bar dataKey="median" fill={barColoursForWhoRegions[whoRegion]} name="Median Seroprevalence"/>
-                  <Tooltip itemStyle={{"color": "black"}} formatter={(value) => `${(value as number).toFixed(2)}%`}/>
+                  <YAxis />
+                  <Bar dataKey="sum" fill={barColoursForWhoRegions[whoRegion]} name="Reported Confirmed Positive Cases"/>
+                  <Tooltip itemStyle={{"color": "black"}}/>
                 </BarChart>
               </ResponsiveContainer>
             </div>

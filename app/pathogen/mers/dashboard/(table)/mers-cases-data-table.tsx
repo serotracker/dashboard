@@ -24,7 +24,7 @@ import {
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
-import { MersVisualizationId, getUrlParameterFromVisualizationId, mersVisualizationInformation } from "../../visualizations/visualization-page-config";
+import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 
 const mersCasesColumnConfiguration = [{
@@ -208,6 +208,7 @@ const unformatDataFromTable = (dataPoint: FaoMersEventForTable): FaoMersEvent =>
 export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
   const { faoMersEventData } = useContext(MersContext);
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
+  const { mersVisualizationInformation } = useVisualizationPageConfiguration();
 
   const rowExpansionConfiguration: RowExpansionConfiguration<FaoMersEventForTable> = useMemo(() => ({
     enabled: true,
@@ -261,7 +262,7 @@ export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
       );
     },
     viewOnMapHandler
-  }), [ viewOnMapHandler ]);
+  }), [ viewOnMapHandler, mersVisualizationInformation ]);
 
   return (
     <DataTable

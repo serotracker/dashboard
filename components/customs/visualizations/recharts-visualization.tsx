@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ButtonConfig, CloseButtonAdditionalButtonConfig, DownloadButtonAdditionalButtonConfig, GetUrlParameterFromVisualizationIdFunction, VisualizationHeader, ZoomInButtonAdditionalButtonConfig } from "./visualization-header";
 import { useDownloadVisualization } from "./use-download-visualization";
 import { cn } from "@/lib/utils";
@@ -57,6 +57,10 @@ export const RechartsVisualization = <
     disabled: true as const,
     modalType: undefined
   });
+  const [
+    selectedHeaderDropdownOption,
+    setSelectedHeaderDropdownOption
+  ] = useState<TVisualizationDisplayNameDropdownOption | undefined>(undefined);
 
   const downloadButtonId = `${props.visualizationInformation.id}-download-icon`
   const zoomInButtonId = `${props.visualizationInformation.id}-zoom-in-icon`
@@ -71,6 +75,8 @@ export const RechartsVisualization = <
         downloadVisualization={() => downloadVisualization({
           elementIdsToIgnore: [downloadButtonId, zoomInButtonId, closeButtonId, customizeButtonId]
         })}
+        selectedHeaderDropdownOption={selectedHeaderDropdownOption}
+        setSelectedHeaderDropdownOption={setSelectedHeaderDropdownOption}
         getUrlParameterFromVisualizationId={props.getUrlParameterFromVisualizationId}
         buttonConfiguration={{
           zoomInButton: {

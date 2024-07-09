@@ -9,15 +9,13 @@ import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { CamelPopulationOverTime } from "../dashboard/(visualizations)/camel-population-over-time";
 import { MedianSeroprevalenceOverTime } from "../dashboard/(visualizations)/median-seroprevalence-over-time";
-import { MedianSeroprevalenceOverTimeByWhoRegion } from "../dashboard/(visualizations)/median-seroprevalence-over-time-by-who-region";
-import { ReportedEventsOverTimeByWhoRegion } from "../dashboard/(visualizations)/reported-events-over-time-by-who-region";
+import { SummaryByWhoRegion, SummaryByWhoRegionDropdownOption } from "../dashboard/(visualizations)/summary-by-who-region";
+import { useCallback, useState } from "react";
 
 export enum MersVisualizationId {
   REPORTED_EVENT_SUMMARY_OVER_TIME = "REPORTED_EVENT_SUMMARY_OVER_TIME",
   CAMEL_POPULATION_OVER_TIME = "CAMEL_POPULATION_OVER_TIME",
   MEDIAN_SEROPREVALENCE_OVER_TIME = "MEDIAN_SEROPREVALENCE_OVER_TIME",
-  MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION = "MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION",
-  REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION = "REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION",
   SUMMARY_BY_WHO_REGION = "SUMMARY_BY_WHO_REGION"
 }
 
@@ -30,8 +28,6 @@ export enum MersVisualizationUrlParameter {
   "reported_event_summary_over_time" = "reported_event_summary_over_time",
   "camel_population_over_time" = "camel_population_over_time",
   "median_seroprevalence_over_time" = "median_seroprevalence_over_time",
-  "median_seroprevalence_over_time_by_who_region" = "median_seroprevalence_over_time_by_who_region",
-  "reported_events_over_time_by_who_region" = "reported_events_over_time_by_who_region",
   "summary_by_who_region" = "summary_by_who_region"
 }
 
@@ -51,7 +47,7 @@ export const isMersVisualizationUrlParameter = (
 ): visualizationUrlParameter is MersVisualizationUrlParameter =>
   Object.values(MersVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-export const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string, string>> = {
+const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string, string>> = {
   [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]: {
     id: MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME,
     urlParameter:
@@ -79,32 +75,85 @@ export const mersVisualizationInformation: Record<MersVisualizationId, MersVisua
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median Seroprevalence Over Time" }),
     renderVisualization: ({ data }) => <MedianSeroprevalenceOverTime data={data} />
   },
-  [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION]: {
-    id: MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION,
-    urlParameter:
-      MersVisualizationUrlParameter[
-        "median_seroprevalence_over_time_by_who_region"
-      ],
-    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median Seroprevalence Over Time By WHO Region" }),
-    renderVisualization: ({ data }) => <MedianSeroprevalenceOverTimeByWhoRegion data={data} />
-  },
-  [MersVisualizationId.REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION]: {
-    id: MersVisualizationId.REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION,
-    urlParameter:
-      MersVisualizationUrlParameter[
-        "reported_events_over_time_by_who_region"
-      ],
-    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Reported MERS Cases Over Time By WHO Region" }),
-    renderVisualization: ({ data }) => <ReportedEventsOverTimeByWhoRegion data={data} />
-  },
   [MersVisualizationId.SUMMARY_BY_WHO_REGION]: {
     id: MersVisualizationId.SUMMARY_BY_WHO_REGION,
     urlParameter:
       MersVisualizationUrlParameter[
         "summary_by_who_region"
       ],
-    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "MERS Summary By WHO Region" }),
-    renderVisualization: ({ data }) => <ReportedEventsOverTimeByWhoRegion data={data} />
+    getDisplayName: () => ({
+      type: VisualizationDisplayNameType.STANDARD,
+      displayName: "Requires state. Initialized in following step."
+    }),
+    renderVisualization: () => <p> Requires state. Initialized in following step. </p>
+  }
+}
+
+export const useVisualizationPageConfiguration = () => {
+  const [
+    summaryByWhoRegionSelectedDropdownOption,
+    setSummaryByWhoRegionSelectedDropdownOption,
+  ] = useState<SummaryByWhoRegionDropdownOption>(SummaryByWhoRegionDropdownOption.SEROPREVALENCE_ESTIMATES);
+
+  const getDisplayNameForSummaryByWhoRegion: MersVisualizationInformation<string, SummaryByWhoRegionDropdownOption>['getDisplayName'] = useCallback(() => ({
+    type: VisualizationDisplayNameType.WITH_DROPDOWN,
+    beforeDropdownHeaderText: "",
+    afterDropdownHeaderText: " By WHO Region",
+    dropdownProps: {
+      dropdownName: 'Data Selection',
+      borderColourClassname: 'border-mers',
+      hoverColourClassname: 'hover:bg-mersHover/50',
+      highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
+      dropdownOptionGroups: [{
+        groupHeader: 'Seroprevalence Estimates',
+        options: [
+          SummaryByWhoRegionDropdownOption.SEROPREVALENCE_ESTIMATES
+        ]
+      }, {
+        groupHeader: 'Cases and Deaths',
+        options: [
+          SummaryByWhoRegionDropdownOption.MERS_ANIMAL_CASES,
+          SummaryByWhoRegionDropdownOption.MERS_HUMAN_CASES,
+          SummaryByWhoRegionDropdownOption.MERS_HUMAN_DEATHS,
+        ]
+      }],
+      chosenDropdownOption: summaryByWhoRegionSelectedDropdownOption,
+      dropdownOptionToLabelMap: {
+        [SummaryByWhoRegionDropdownOption.SEROPREVALENCE_ESTIMATES]: "Seroprevalence Estimates",
+        [SummaryByWhoRegionDropdownOption.MERS_ANIMAL_CASES]: "Confirmed Animal Cases",
+        [SummaryByWhoRegionDropdownOption.MERS_HUMAN_CASES]: "Confirmed Human Cases",
+        [SummaryByWhoRegionDropdownOption.MERS_HUMAN_DEATHS]: "Confirmed Human Deaths"
+      },
+      onDropdownOptionChange: (option) => setSummaryByWhoRegionSelectedDropdownOption(option)
+    }
+  }), [ summaryByWhoRegionSelectedDropdownOption, setSummaryByWhoRegionSelectedDropdownOption ])
+
+  const renderVisualizationForSummaryByWhoRegion: MersVisualizationInformation<
+    string, SummaryByWhoRegionDropdownOption
+  >['renderVisualization'] = useCallback(({ data }) => (
+    <SummaryByWhoRegion
+      data={data}
+      selectedDropdownOption={summaryByWhoRegionSelectedDropdownOption}
+    />
+  ), [ summaryByWhoRegionSelectedDropdownOption ]);
+
+  const completedMersVisualizationInformation = {
+    [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]:
+      mersVisualizationInformation[MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME],
+    [MersVisualizationId.CAMEL_POPULATION_OVER_TIME]:
+      mersVisualizationInformation[MersVisualizationId.CAMEL_POPULATION_OVER_TIME],
+    [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME]:
+      mersVisualizationInformation[MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME],
+    [MersVisualizationId.SUMMARY_BY_WHO_REGION]: {
+      ...mersVisualizationInformation[MersVisualizationId.SUMMARY_BY_WHO_REGION],
+      getDisplayName: getDisplayNameForSummaryByWhoRegion,
+      renderVisualization: renderVisualizationForSummaryByWhoRegion
+    }
+  } as const;
+
+  return {
+    mersVisualizationInformation: completedMersVisualizationInformation,
+    mersVisualizationInformationArray: typedObjectEntries(completedMersVisualizationInformation).map(([_, value]) => value)
   }
 }
 

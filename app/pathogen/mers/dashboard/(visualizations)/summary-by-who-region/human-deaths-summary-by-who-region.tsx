@@ -1,4 +1,3 @@
-
 import { CustomXAxisTick } from "@/components/customs/visualizations/custom-x-axis-tick";
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { WhoRegion } from "@/gql/graphql";
@@ -7,12 +6,11 @@ import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCame
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
 import { groupDataPointsIntoTimeBuckets } from "@/lib/time-bucket-grouping";
 import { typedGroupBy, typedObjectEntries, typedObjectFromEntries, typedObjectKeys } from "@/lib/utils";
-import assertNever from "assert-never";
 import clsx from "clsx";
 import parseISO from "date-fns/parseISO";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-interface ReportedEventsOverTimeByWhoRegionProps {
+interface HumanDeathsSummaryByWhoRegionProps {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
 }
 
@@ -25,8 +23,10 @@ const barColoursForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Wpr]: "#4e79a7",
 };
 
-export const ReportedEventsOverTimeByWhoRegion = (props: ReportedEventsOverTimeByWhoRegionProps) => {
-  const events = props.data.filter((dataPoint): dataPoint is FaoMersEvent => dataPoint.__typename === 'AnimalMersEvent' || dataPoint.__typename === 'HumanMersEvent');
+export const HumanDeathsSummaryByWhoRegion = (props: HumanDeathsSummaryByWhoRegionProps) => {
+  const events = props.data
+    .filter((dataPoint): dataPoint is FaoMersEvent => dataPoint.__typename === 'AnimalMersEvent' || dataPoint.__typename === 'HumanMersEvent')
+    .filter((dataPoint) => dataPoint.__typename === 'HumanMersEvent' && dataPoint.humanDeaths > 0);
 
   const eventsGroupedByWhoRegion = typedGroupBy(events
     .map((event) => {
@@ -84,12 +84,10 @@ export const ReportedEventsOverTimeByWhoRegion = (props: ReportedEventsOverTimeB
             dataPoints,
             sum: dataPoints.reduce((accumulator, dataPoint) => {
               if(dataPoint.__typename === 'HumanMersEvent') {
-                return accumulator + dataPoint.humansAffected;
+                return accumulator + dataPoint.humanDeaths;
               }
-              if(dataPoint.__typename === 'AnimalMersEvent') {
-                return accumulator + 1;
-              }
-              assertNever(dataPoint);
+
+              return accumulator;
             }, 0)
           }));
 
@@ -105,7 +103,7 @@ export const ReportedEventsOverTimeByWhoRegion = (props: ReportedEventsOverTimeB
           return (
             <div
               className={clsx(width, height)}
-              key={`median-seroprevalence-over-time-by-who-region-${whoRegion}`}
+              key={`human-deaths-summary-by-who-region-${whoRegion}`}
             >
               <p className="w-full text-center ">
                 {whoRegion}
@@ -132,7 +130,7 @@ export const ReportedEventsOverTimeByWhoRegion = (props: ReportedEventsOverTimeB
                     hide={!isLargeScreen}
                   />
                   <YAxis />
-                  <Bar dataKey="sum" fill={barColoursForWhoRegions[whoRegion]} name="Reported Confirmed Positive Cases"/>
+                  <Bar dataKey="sum" fill={barColoursForWhoRegions[whoRegion]} name="Reported Deaths"/>
                   <Tooltip itemStyle={{"color": "black"}}/>
                 </BarChart>
               </ResponsiveContainer>

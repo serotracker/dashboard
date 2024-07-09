@@ -3,26 +3,28 @@ import { cn } from '@/lib/utils';
 import { RechartsVisualization } from "../../../../../components/customs/visualizations/recharts-visualization";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { MersVisualizationId, MersVisualizationInformation, getUrlParameterFromVisualizationId, mersVisualizationInformation } from "../../visualizations/visualization-page-config";
+import { MersVisualizationId, MersVisualizationInformation, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
 
 export const MersVisualizationsSection = () => {
-  const allVisualizationInformationWithClassnames = addToVisualizationInformation({
-    additionalInformation: {
-      [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]: { className: "h-full-screen" },
-      [MersVisualizationId.CAMEL_POPULATION_OVER_TIME]: { className: "h-full-screen" },
-      [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME]: { className: "h-full-screen" },
-      [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION]: { className: "h-full-screen" },
-      [MersVisualizationId.REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION]: { className: "h-full-screen" },
-      [MersVisualizationId.SUMMARY_BY_WHO_REGION]: { className: "h-full-screen" },
-    },
-    allVisualizationInformation: mersVisualizationInformation
-  })
+  const { mersVisualizationInformation } = useVisualizationPageConfiguration();
+
+  const allVisualizationInformationWithClassnames = [{
+    ...mersVisualizationInformation[MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME],
+     className: "h-full-screen"
+  }, {
+    ...mersVisualizationInformation[MersVisualizationId.CAMEL_POPULATION_OVER_TIME],
+     className: "h-full-screen"
+  }, {
+    ...mersVisualizationInformation[MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME],
+     className: "h-full-screen"
+  }, {
+    ...mersVisualizationInformation[MersVisualizationId.SUMMARY_BY_WHO_REGION],
+     className: "h-full-screen"
+  }];
 
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
-    MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME_BY_WHO_REGION,
-    MersVisualizationId.REPORTED_EVENTS_OVER_TIME_BY_WHO_REGION,
     MersVisualizationId.SUMMARY_BY_WHO_REGION
   ].includes(visualizationInfo.id));
 
@@ -31,8 +33,7 @@ export const MersVisualizationsSection = () => {
 
   const renderVisualizationList = useCallback(<
     TCustomizationModalDropdownOption extends string,
-    TVisualizationDisplayNameDropdownOption extends string
-  >(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption, TVisualizationDisplayNameDropdownOption> & {className: string}>) => {
+  >(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption, any> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

@@ -11,6 +11,8 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 import { VisualizationDisplayNameType, VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { useMemo } from "react";
 import assertNever from "assert-never";
+import { Dropdown } from "../dropdown/dropdown";
+import { cn } from "@/lib/utils";
 
 interface DisabledButtonConfig {
   enabled: false;
@@ -147,6 +149,8 @@ interface VisualizationHeaderProps<
     TVisualizationDisplayNameDropdownOption
   >;
   data: TEstimate[];
+  selectedHeaderDropdownOption: TVisualizationDisplayNameDropdownOption | undefined;
+  setSelectedHeaderDropdownOption: (newSelectedHeaderDropdownOption: TVisualizationDisplayNameDropdownOption) => void;
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
   downloadVisualization: () => void;
   buttonConfiguration: AllButtonConfigurations;
@@ -215,9 +219,14 @@ export const VisualizationHeader = <
 
     if(displayName.type === VisualizationDisplayNameType.WITH_DROPDOWN) {
       return (
-        <h3 className="w-full text-center text-lg inline">
-          TODO
-        </h3>
+        <div className="w-full text-center text-lg inline">
+          <h3 className="inline">{displayName.beforeDropdownHeaderText} </h3>
+          <div className="inline">
+            <Dropdown {...displayName.dropdownProps}/>
+          </div>
+          <h3 className="inline">{displayName.afterDropdownHeaderText} </h3>
+          {titleTooltip}
+        </div>
       )
     }
 
