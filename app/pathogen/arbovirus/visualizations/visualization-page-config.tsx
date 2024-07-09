@@ -1,5 +1,5 @@
 import uniq from 'lodash/uniq';
-import { VisualizationInformation } from "../../generic-pathogen-visualizations-page";
+import { VisualizationDisplayNameType, VisualizationInformation } from "../../generic-pathogen-visualizations-page";
 import { StudyCountOverTime, Top10CountriesByPathogenStudyCount, convertArboSFtoArbo } from "../dashboard/(visualizations)/recharts";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { EstimateCountByWHORegionAndArbovirusGraph } from "../dashboard/(visualizations)/estimate-count-by-who-region-and-arbovirus-graph";
@@ -50,11 +50,15 @@ export enum ArbovirusVisualizationUrlParameter {
   "country-seroprevalence-comparison-scatter-plot" = "country-seroprevalence-comparison-scatter-plot",
 }
 
-export type ArbovirusVisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
+export type ArbovirusVisualizationInformation<
+  TCustomizationModalDropdownOption extends string,
+  TVisualizationDisplayNameDropdownOption extends string
+> = VisualizationInformation<
   ArbovirusVisualizationId,
   ArbovirusVisualizationUrlParameter,
   ArbovirusEstimate,
-  TDropdownOption
+  TCustomizationModalDropdownOption,
+  TVisualizationDisplayNameDropdownOption
 >;
 
 export const isArbovirusVisualizationUrlParameter = (
@@ -62,14 +66,14 @@ export const isArbovirusVisualizationUrlParameter = (
 ): visualizationUrlParameter is ArbovirusVisualizationUrlParameter =>
   Object.values(ArbovirusVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, ArbovirusVisualizationInformation<string>> = {
+export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, ArbovirusVisualizationInformation<string, string>> = {
   [ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS]: {
     id: ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS,
     urlParameter:
       ArbovirusVisualizationUrlParameter[
         "cumulative-estimate-count-over-time-by-arbovirus"
       ],
-    getDisplayName: () => "Cumulative estimate count over time by arbovirus",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Cumulative estimate count over time by arbovirus" }),
     renderVisualization: StudyCountOverTime
   },
   [ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME]: {
@@ -78,7 +82,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       ArbovirusVisualizationUrlParameter[
         "cumulative-estimate-count-over-time-by-sample-frame"
       ],
-    getDisplayName: () => "Cumulative estimate count over time by sample frame",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Cumulative estimate count over time by sample frame" }),
     renderVisualization: StudyCountOverTimeBySampleFrame
   },
   [ArbovirusVisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE]: {
@@ -87,14 +91,14 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       ArbovirusVisualizationUrlParameter[
         "estimate-count-by-arbovirus-and-antibody-type"
       ],
-    getDisplayName: () => "Estimate count by arbovirus & antibody type",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Estimate count by arbovirus & antibody type" }),
     renderVisualization: () => EstimateCountByArbovirusAndAntibodyTypeGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
   [ArbovirusVisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS]: {
     id: ArbovirusVisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS,
     urlParameter:
       ArbovirusVisualizationUrlParameter["estimate-count-by-who-region-and-arbovirus"],
-    getDisplayName: () => "Estimate count by WHO region and arbovirus",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Estimate count by WHO region and arbovirus" }),
     titleTooltipContent: <WHORegionsTooltip />,
     renderVisualization: () => EstimateCountByWHORegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
@@ -102,7 +106,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     id: ArbovirusVisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS,
     urlParameter:
       ArbovirusVisualizationUrlParameter["estimate-count-by-un-region-and-arbovirus"],
-    getDisplayName: () => "Estimate count by UN region and arbovirus",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Estimate count by UN region and arbovirus" }),
     titleTooltipContent: <UNRegionsTooltip />,
     renderVisualization: () => EstimateCountByUnRegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
   },
@@ -110,7 +114,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     id: ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION,
     urlParameter:
       ArbovirusVisualizationUrlParameter["median-seroprevalence-by-who-region"],
-    getDisplayName: () => "Median seroprevalence of arboviruses by WHO Region",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median seroprevalence of arboviruses by WHO Region" }),
     titleTooltipContent: <WHORegionsTooltip />,
     renderVisualization: MedianSeroprevalenceByWHORegionAndArbovirusGraph
   },
@@ -118,7 +122,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     id: ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_UN_REGION,
     urlParameter:
       ArbovirusVisualizationUrlParameter["median-seroprevalence-by-un-region"],
-    getDisplayName: () => "Median seroprevalence of arboviruses by UN Region",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median seroprevalence of arboviruses by UN Region" }),
     titleTooltipContent: <UNRegionsTooltip />,
     renderVisualization: MedianSeroprevalenceByUnRegionAndArbovirusGraph
   },
@@ -128,7 +132,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       ArbovirusVisualizationUrlParameter[
         "median-seroprevalence-by-who-region-and-age-group"
       ],
-    getDisplayName: () => "Median seroprevalence by WHO region and age group",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median seroprevalence by WHO region and age group" }),
     titleTooltipContent: <WHORegionsTooltip />,
     renderVisualization: MedianSeroprevalenceByWhoRegionAndAgeGroupTable
   },
@@ -138,7 +142,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       ArbovirusVisualizationUrlParameter[
         "top-ten-countries-reporting-estimates-by-arbovirus"
       ],
-    getDisplayName: () => "Top ten countries reporting estimates by arbovirus",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Top ten countries reporting estimates by arbovirus" }),
     renderVisualization: Top10CountriesByPathogenStudyCount
   },
   [ArbovirusVisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME]: {
@@ -147,7 +151,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       ArbovirusVisualizationUrlParameter[
         "change-in-median-seroprevalence-over-time"
       ],
-    getDisplayName: () => "Change in median seroprevalence over time",
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Change in median seroprevalence over time" }),
     titleTooltipContent: (
       <p> Hovering over any one of the bars will show the median seroprevalence for that time period. Time periods with no data are not shown so intervals on the x-axis may or may not be consecutive time periods.</p>
     ),
@@ -161,12 +165,18 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       const allPathogensInData = uniq(input.data.map((dataPoint) => dataPoint.pathogen));
 
       if(allPathogensInData.length !== 1) {
-        return "Estimates with 95% CIs";
+        return {
+          type: VisualizationDisplayNameType.STANDARD,
+          displayName: "Estimates with 95% CIs"
+        }
       }
 
       const selectedPathogen = allPathogensInData[0];
 
-      return `${convertArboSFtoArbo(selectedPathogen)} study estimates with 95% CIs`;
+      return {
+        type: VisualizationDisplayNameType.STANDARD,
+        displayName: `${convertArboSFtoArbo(selectedPathogen)} study estimates with 95% CIs`
+      }
     },
     titleTooltipContent: (
       <p>95% confidence intervals were calculated using the Clopper-Pearson method if not reported in the source.</p>

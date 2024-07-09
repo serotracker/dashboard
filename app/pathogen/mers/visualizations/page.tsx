@@ -7,17 +7,24 @@ import { MersFilters } from "../dashboard/filters";
 import { 
   getUrlParameterFromVisualizationId,
   isMersVisualizationUrlParameter,
-  mersVisualizationInformationArray
+  useVisualizationPageConfiguration
 } from "./visualization-page-config";
+import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
 
 export default function VisualizationsPage() {
-  const { filteredData } = useContext(MersContext);
+  const { filteredData, faoMersEventData } = useContext(MersContext);
+  const { yearlyFaoCamelPopulationData } = useContext(CamelPopulationDataContext);
+  const { mersVisualizationInformationArray } = useVisualizationPageConfiguration();
 
   return (
     <Suspense>
       <GenericPathogenVisualizationsPage
         isValidVisualizationUrlParameter={isMersVisualizationUrlParameter}
-        data={filteredData}
+        data={[
+          ...filteredData,
+          ...faoMersEventData,
+          ...(yearlyFaoCamelPopulationData ?? [])
+        ]}
         getVisualizationInformationFromVisualizationUrlParameter={(urlParameter) => mersVisualizationInformationArray.find((element) => urlParameter === element.urlParameter)}
         filtersComponent={MersFilters}
         getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}

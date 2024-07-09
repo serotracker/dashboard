@@ -7,9 +7,10 @@ import { WhoRegion, YearlyFaoCamelPopulationDataEntry } from "@/gql/graphql";
 import { formatCamelsPerCapita } from "../(map)/country-highlight-layers/camels-per-capita-layer";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
-import { MersVisualizationId, getUrlParameterFromVisualizationId, mersVisualizationInformation } from "../../visualizations/visualization-page-config";
+import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { useFaoYearlyCamelPopulationData } from "@/hooks/mers/useFaoYearlyCamelPopulationData";
+import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 
 const camelPopulationDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
@@ -91,6 +92,7 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
   const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { yearlyFaoCamelPopulationData } = useFaoYearlyCamelPopulationData();
+  const { mersVisualizationInformation } = useVisualizationPageConfiguration();
 
   const rowExpansionConfiguration: RowExpansionConfiguration<FaoYearlyCamelPopulationDataEntryForTable> = useMemo(() => ({
     enabled: true,
@@ -122,7 +124,10 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
           hideArbovirusDropdown={true}
           visualizationInformation={{
             ...mersVisualizationInformation[MersVisualizationId.CAMEL_POPULATION_OVER_TIME],
-            getDisplayName: () => `Camel Population over time for ${countryName}`
+            getDisplayName: () => ({
+              type: VisualizationDisplayNameType.STANDARD,
+              displayName: `Camel Population over time for ${countryName}`
+            })
           }}
           getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
           buttonConfig={{
@@ -140,7 +145,7 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
       );
     },
     viewOnMapHandler
-  }), [ viewOnMapHandler, yearlyFaoCamelPopulationData ]);
+  }), [ viewOnMapHandler, yearlyFaoCamelPopulationData, mersVisualizationInformation ]);
 
   return (
     <DataTable
