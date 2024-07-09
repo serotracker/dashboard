@@ -10,6 +10,8 @@ export const MersVisualizationsSection = () => {
   const allVisualizationInformationWithClassnames = addToVisualizationInformation({
     additionalInformation: {
       [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]: { className: "h-full-screen" },
+      [MersVisualizationId.CAMEL_POPULATION_OVER_TIME]: { className: "h-full-screen" },
+      [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME]: { className: "h-full-screen" },
     },
     allVisualizationInformation: mersVisualizationInformation
   })

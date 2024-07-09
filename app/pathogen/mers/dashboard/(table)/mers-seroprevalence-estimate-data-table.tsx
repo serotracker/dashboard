@@ -1,10 +1,12 @@
 import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
-import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { MersEstimate, WhoRegion } from "@/gql/graphql";
+import { MersContext, MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { WhoRegion } from "@/gql/graphql";
 import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
+import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
+import { MersVisualizationId, getUrlParameterFromVisualizationId, mersVisualizationInformation } from "../../visualizations/visualization-page-config";
 
 const mersSeroprevalenceEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -72,7 +74,49 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
   const rowExpansionConfiguration: RowExpansionConfiguration<MersEstimate> = useMemo(() => ({
     enabled: true,
     generateExpandedRowStatement: ({ data, row }) => 'Clicking on this row in the table again will minimize it',
-    visualization: ({ data, row, className }) => <p>Placeholder</p>,
+    visualization: ({ data, row, className }) => {
+      const idOfEstimate = row.getValue('id');
+
+      if(!idOfEstimate) {
+        return null;
+      }
+
+      const estimate = data.find((dataPoint) => dataPoint.id === idOfEstimate);
+
+      if(!estimate) {
+        return null;
+      }
+
+      const countryName = estimate.country;
+
+      const filteredData = data
+        .filter((dataPoint) => dataPoint.country === countryName)
+
+      return (
+        <RechartsVisualization
+          className="h-full-screen"
+          data={filteredData}
+          highlightedDataPoint={estimate}
+          hideArbovirusDropdown={true}
+          visualizationInformation={{
+            ...mersVisualizationInformation[MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME],
+            getDisplayName: () => `Median Seroprevalence for ${countryName} over time`
+          }}
+          getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
+          buttonConfig={{
+            downloadButton: {
+              enabled: true,
+            },
+            zoomInButton: {
+              enabled: false,
+            },
+            closeButton: {
+              enabled: false,
+            }
+          }}
+        />
+      );
+    },
     viewOnMapHandler
   }), [ viewOnMapHandler ]);
 

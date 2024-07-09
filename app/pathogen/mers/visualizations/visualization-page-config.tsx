@@ -8,10 +8,12 @@ import { ReportedEventSummaryOverTime } from "../dashboard/(visualizations)/repo
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { CamelPopulationOverTime } from "../dashboard/(visualizations)/camel-population-over-time";
+import { MedianSeroprevalenceOverTime } from "../dashboard/(visualizations)/median-seroprevalence-over-time";
 
 export enum MersVisualizationId {
   REPORTED_EVENT_SUMMARY_OVER_TIME = "REPORTED_EVENT_SUMMARY_OVER_TIME",
   CAMEL_POPULATION_OVER_TIME = "CAMEL_POPULATION_OVER_TIME",
+  MEDIAN_SEROPREVALENCE_OVER_TIME = "MEDIAN_SEROPREVALENCE_OVER_TIME"
 }
 
 export const isMersVisualizationId = (
@@ -21,7 +23,8 @@ export const isMersVisualizationId = (
 
 export enum MersVisualizationUrlParameter {
   "reported_event_summary_over_time" = "reported_event_summary_over_time",
-  "camel_population_over_time" = "camel_population_over_time"
+  "camel_population_over_time" = "camel_population_over_time",
+  "median_seroprevalence_over_time" = "median_seroprevalence_over_time"
 }
 
 export type MersVisualizationInformation<TDropdownOption extends string> = VisualizationInformation<
@@ -54,6 +57,15 @@ export const mersVisualizationInformation: Record<MersVisualizationId, MersVisua
       ],
     getDisplayName: () => "Camel Population Over Time",
     renderVisualization: ({ data }) => <CamelPopulationOverTime data={data} />
+  },
+  [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME]: {
+    id: MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME,
+    urlParameter:
+      MersVisualizationUrlParameter[
+        "median_seroprevalence_over_time"
+      ],
+    getDisplayName: () => "Median Seroprevalence Over Time",
+    renderVisualization: ({ data }) => <MedianSeroprevalenceOverTime data={data} />
   }
 }
 

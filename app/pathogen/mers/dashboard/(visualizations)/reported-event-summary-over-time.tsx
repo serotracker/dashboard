@@ -120,9 +120,7 @@ export const ReportedEventSummaryOverTime = (props: ReportedEventSummaryOverTime
                     tick={(props) => CustomXAxisTick({...props, tickSlant: 35 })}
                     hide={!isLargeScreen}
                   />
-                  <YAxis
-                    hide={index % 2 != 0}
-                  />
+                  <YAxis />
                   <Bar dataKey="sum" fill={typenameToLineColour[type]} name="Reported Confirmed Positive Cases"/>
                   <Tooltip itemStyle={{"color": "black"}}/>
                 </BarChart>

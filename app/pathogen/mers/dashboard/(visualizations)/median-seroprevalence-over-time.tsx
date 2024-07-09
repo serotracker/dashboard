@@ -1,3 +1,4 @@
+import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { CustomXAxisTick } from "@/components/customs/visualizations/custom-x-axis-tick";
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
@@ -10,26 +11,32 @@ import clsx from "clsx";
 import parseISO from "date-fns/parseISO";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-interface CamelPopulationOverTimeProps {
+interface MedianSeroprevalenceOverTimeProps {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
 }
 
 const typenameToLabel = {
-  ['YearlyFaoCamelPopulationDataEntry']: 'Camel Population',
+  ['MersEstimate']: 'MERS Seroprevalence',
 }
 
 const typenameToLineColour = {
-  ['YearlyFaoCamelPopulationDataEntry']: '#d37295'
+  ['MersEstimate']: '#e7ed8a',
 }
 
-export const CamelPopulationOverTime = (props: CamelPopulationOverTimeProps) => {
+export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTimeProps) => {
   const consideredData = props.data.filter((
     element: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry
-  ): element is FaoYearlyCamelPopulationDataEntry => element.__typename === 'YearlyFaoCamelPopulationDataEntry')
+  ): element is MersEstimate => element.__typename === 'MersEstimate')
 
   const dataGroupedByType = typedGroupBy(
-    consideredData,
-    (dataPoint) => dataPoint.__typename
+    consideredData.map((dataPoint) => ({
+      ...dataPoint,
+      //TODO remove these when we have real data
+      samplingStartDate: '2024-07-09T00:28:53Z',
+      samplingEndDate: '2024-07-09T00:28:53Z',
+      seroprevalence: 0.1
+    })),
+    (event) => event.__typename
   );
 
   const eventsGroupedByTypeAndThenTimeBucket = typedObjectFromEntries(
@@ -41,19 +48,23 @@ export const CamelPopulationOverTime = (props: CamelPopulationOverTimeProps) => 
             .map((dataPoint) => ({
               ...dataPoint,
               groupingTimeInterval: {
-                intervalStartDate: new Date(dataPoint.year, 3),
-                intervalEndDate: new Date(dataPoint.year, 8)
+                intervalStartDate: parseISO(dataPoint.samplingStartDate),
+                intervalEndDate: parseISO(dataPoint.samplingEndDate),
               },
             })),
             desiredBucketCount: 10,
             validBucketSizes: [
+              { years: 5 },
+              { years: 4 },
+              { years: 3 },
+              { years: 2 },
               { years: 1 }
             ]
         }).groupedDataPoints,
       ]
     )
   );
-
+  
   const isLargeScreen = useIsLargeScreen();
 
   return (
@@ -65,9 +76,7 @@ export const CamelPopulationOverTime = (props: CamelPopulationOverTimeProps) => 
               `${interval.intervalStartDate.getFullYear()}-${interval.intervalEndDate.getFullYear()}` :
               `${interval.intervalStartDate.getFullYear()}`,
             dataPoints,
-            sum: dataPoints.reduce((accumulator, dataPoint) => {
-              return accumulator + dataPoint.camelCount;
-            }, 0)
+            median: median(dataPoints.map((dataPoint) => dataPoint.seroprevalence * 100))
           }));
 
           const numberOfSubgraphsDisplayed = Object.keys(eventsGroupedByTypeAndThenTimeBucket).length;
@@ -82,7 +91,7 @@ export const CamelPopulationOverTime = (props: CamelPopulationOverTimeProps) => 
           return (
             <div
               className={clsx(width, height)}
-              key={`camel-population-over-time-${type}`}
+              key={`median-seroprevalence-over-time-${type}`}
             >
               <p className="w-full text-center ">
                 {typenameToLabel[type]}
@@ -108,9 +117,12 @@ export const CamelPopulationOverTime = (props: CamelPopulationOverTimeProps) => 
                     tick={(props) => CustomXAxisTick({...props, tickSlant: 35 })}
                     hide={!isLargeScreen}
                   />
-                  <YAxis />
-                  <Bar dataKey="sum" fill={typenameToLineColour[type]} name="Camel Population"/>
-                  <Tooltip itemStyle={{"color": "black"}}/>
+                  <YAxis
+                    domain={[0, 100]}
+                    tickFormatter={(tick) => `${tick}%`}
+                  />
+                  <Bar dataKey="median" fill={typenameToLineColour[type]} name="Median Seroprevalence"/>
+                  <Tooltip itemStyle={{"color": "black"}} formatter={(value) => `${(value as number).toFixed(2)}%`}/>
                 </BarChart>
               </ResponsiveContainer>
             </div>
