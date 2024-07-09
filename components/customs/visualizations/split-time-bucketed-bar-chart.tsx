@@ -121,7 +121,7 @@ export const SplitTimeBucketedBarChart = <
                     dataKey="intervalAsString"
                     interval={0}
                     tick={(props) => CustomXAxisTick({...props, tickSlant: 35 })}
-                    hide={!isLargeScreen}
+                    hide={isLargeScreen === false || isLargeScreen === undefined}
                   />
                   <YAxis {...yAxisProps}/>
                   <Bar

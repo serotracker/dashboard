@@ -32,7 +32,7 @@ export const GenericPathogenDashboardPage = (props: GenericPathogenDashboardPage
           "overflow-y-scroll snap-y scroll-smooth row-span-3 col-span-12 lg:col-span-10 lg:row-span-2 px-4"
         }
       >
-        {!isLargeScreen && (
+        {(isLargeScreen === false) && (
           <section className="w-full h-fit relative row-span-2 rounded-md mt-4 border border-background p-4">
             We suggest viewing our dashboard on a larger screen or in landscape
             mode for the best experience. Support for smaller devices is coming

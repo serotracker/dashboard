@@ -136,7 +136,7 @@ export const SplitBarChart = <
                 data={dataForInnerGraph}
               >
                 <CartesianGrid />
-                <XAxis {...xAxisProps} hide={!isLargeScreen}/>
+                <XAxis {...xAxisProps} hide={isLargeScreen === false || isLargeScreen === undefined}/>
                 <YAxis
                   domain={[0, 100]}
                   hide={index % 2 != 0}

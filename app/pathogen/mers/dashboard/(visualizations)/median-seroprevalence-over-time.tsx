@@ -1,17 +1,10 @@
 import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
-import { CustomXAxisTick } from "@/components/customs/visualizations/custom-x-axis-tick";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
-import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
-import { groupDataPointsIntoTimeBuckets } from "@/lib/time-bucket-grouping";
-import { typedGroupBy, typedObjectEntries, typedObjectFromEntries, typedObjectKeys } from "@/lib/utils";
-import assertNever from "assert-never";
-import clsx from "clsx";
 import parseISO from "date-fns/parseISO";
 import { useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 interface MedianSeroprevalenceOverTimeProps {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
