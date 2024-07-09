@@ -11,6 +11,7 @@ import { CamelPopulationOverTime } from "../dashboard/(visualizations)/camel-pop
 import { MedianSeroprevalenceOverTime } from "../dashboard/(visualizations)/median-seroprevalence-over-time";
 import { SummaryByWhoRegion, SummaryByWhoRegionDropdownOption } from "../dashboard/(visualizations)/summary-by-who-region";
 import { useCallback, useState } from "react";
+import { WHORegionsTooltip } from "@/components/customs/tooltip-content";
 
 export enum MersVisualizationId {
   REPORTED_EVENT_SUMMARY_OVER_TIME = "REPORTED_EVENT_SUMMARY_OVER_TIME",
@@ -85,6 +86,7 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
       type: VisualizationDisplayNameType.STANDARD,
       displayName: "Requires state. Initialized in following step."
     }),
+    titleTooltipContent: <WHORegionsTooltip />,
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>
   }
 }
