@@ -27,7 +27,9 @@ export const MapSymbology = {
         },
         HasData: {
             Color: '#97b1bd',
-            Opacity: 0.5 
+            Opacity: 0.5,
+            BorderColour: "#455a64",
+            BorderWidth: 2
         },
         Disputed: {
             Color: '#E1E1E1',
@@ -38,11 +40,10 @@ export const MapSymbology = {
         },
         Default: {
             Color: '#FFFFFF',
-            Opacity: 0 
+            Opacity: 0,
+            BorderColour: "#FFFFFF",
+            BorderWidth: 0
         }
-    },
-    Border: {
-        Color: "#455a64"
     }
 }
 

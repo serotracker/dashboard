@@ -3,12 +3,14 @@ import {
   GetCountryHighlightingLayerInformationInput as GenericGetCountryHighlightingLayerInformationInput,
   GetCountryHighlightingLayerInformationOutput
 } from "@/components/ui/pathogen-map/pathogen-map";
-import { MapSymbology } from "@/app/pathogen/arbovirus/dashboard/(map)/map-config";
+import { CountryPaintChangeSetting } from "../use-arbovirus-map-customization-modal";
+import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 
 type GetCountryHighlightingLayerInformationInput<
   TData extends { countryAlphaThreeCode: string }
 > = GenericGetCountryHighlightingLayerInformationInput<TData> & {
-  countryHighlightingEnabled: boolean;
+  countryHighlightingEnabled: boolean,
+  countryOutlinesEnabled: boolean,
 }
 
 export const useEsmCountryHighlightLayer = () => {
@@ -27,8 +29,18 @@ export const useEsmCountryHighlightLayer = () => {
       allUniqueCountryCodesWithData
     ).map((countryAlphaThreeCode) => ({
       countryAlphaThreeCode: countryAlphaThreeCode,
-      fill: MapSymbology.CountryFeature.HasData.Color,
-      opacity: MapSymbology.CountryFeature.HasData.Opacity,
+      fill: input.countryHighlightingEnabled 
+        ? MapSymbology.CountryFeature.HasData.Color
+        : MapSymbology.CountryFeature.Default.Color,
+      opacity: input.countryHighlightingEnabled 
+        ? MapSymbology.CountryFeature.HasData.Opacity
+        : MapSymbology.CountryFeature.Default.Opacity,
+      borderWidthPx: input.countryOutlinesEnabled
+        ? MapSymbology.CountryFeature.HasData.BorderWidth
+        : MapSymbology.CountryFeature.Default.BorderWidth,
+      borderColour: input.countryOutlinesEnabled
+        ? MapSymbology.CountryFeature.HasData.BorderColour
+        : MapSymbology.CountryFeature.Default.BorderColour,
     }));
 
     const countryHighlightLayerLegendEntries = [{
@@ -41,10 +53,12 @@ export const useEsmCountryHighlightLayer = () => {
 
     return {
       paint: {
-        countryData: input.countryHighlightingEnabled ? countryData : [],
+        countryData: (input.countryHighlightingEnabled || input.countryOutlinesEnabled) ? countryData : [],
         defaults: {
           fill: MapSymbology.CountryFeature.Default.Color,
-          opacity: MapSymbology.CountryFeature.Default.Opacity
+          opacity: MapSymbology.CountryFeature.Default.Opacity,
+          borderWidthPx: MapSymbology.CountryFeature.Default.BorderWidth,
+          borderColour: MapSymbology.CountryFeature.Default.BorderColour,
         }
       },
       countryHighlightLayerLegendEntries: input.countryHighlightingEnabled ? countryHighlightLayerLegendEntries : [],

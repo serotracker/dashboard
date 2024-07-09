@@ -20,7 +20,8 @@ export function SarsCov2Map() {
 
   const { paint, countryHighlightLayerLegendEntries } = useMemo(() => getCountryHighlightingLayerInformation({
     data: filteredData,
-    countryHighlightingEnabled: true
+    countryHighlightingEnabled: true,
+    countryOutlinesEnabled: false
   }), [filteredData, getCountryHighlightingLayerInformation]);
 
   if (filteredData.length === 0) {

@@ -60,7 +60,8 @@ export const MersMap = () => {
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES) {
       return dataPointPresentMapLayer.getCountryHighlightingLayerInformation({
         data: dataPoints,
-        countryHighlightingEnabled: true
+        countryHighlightingEnabled: true,
+        countryOutlinesEnabled: false
       });
     }
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION) {
