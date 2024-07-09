@@ -149,8 +149,6 @@ interface VisualizationHeaderProps<
     TVisualizationDisplayNameDropdownOption
   >;
   data: TEstimate[];
-  selectedHeaderDropdownOption: TVisualizationDisplayNameDropdownOption | undefined;
-  setSelectedHeaderDropdownOption: (newSelectedHeaderDropdownOption: TVisualizationDisplayNameDropdownOption) => void;
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
   downloadVisualization: () => void;
   buttonConfiguration: AllButtonConfigurations;
