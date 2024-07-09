@@ -2,7 +2,6 @@ import { useCallback, useContext } from "react";
 import { cn } from '@/lib/utils';
 import { RechartsVisualization } from "../../../../../components/customs/visualizations/recharts-visualization";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
-import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { MersVisualizationId, MersVisualizationInformation, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
