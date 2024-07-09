@@ -29,7 +29,7 @@ export const useArbovirusMapCustomizationModal = () => {
         hoverColourClassname: 'hover:bg-arbovirusHover/50',
         highlightedColourClassname: 'data-[highlighted]:bg-arbovirusHover/50',
         dropdownOptionGroups: [{
-          groupHeader: 'All Settings',
+          groupHeader: 'Preferences',
           options: [
             CountryPaintChangeSetting.WHEN_RECOMMENDED,
             CountryPaintChangeSetting.ALWAYS_DISABLED,
@@ -38,9 +38,9 @@ export const useArbovirusMapCustomizationModal = () => {
         }],
         chosenDropdownOption: countryHighlightingSetting,
         dropdownOptionToLabelMap: {
-          [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "when recommended",
-          [CountryPaintChangeSetting.ALWAYS_ENABLED]: "always enabled",
-          [CountryPaintChangeSetting.ALWAYS_DISABLED]: "always disabled",
+          [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
+          [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
+          [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
         },
         onDropdownOptionChange: (option) => setCountryHighlightingSetting(option)
       }, {
@@ -50,7 +50,7 @@ export const useArbovirusMapCustomizationModal = () => {
         hoverColourClassname: 'hover:bg-arbovirusHover/50',
         highlightedColourClassname: 'data-[highlighted]:bg-arbovirusHover/50',
         dropdownOptionGroups: [{
-          groupHeader: 'All Settings',
+          groupHeader: 'Preferences',
           options: [
             CountryPaintChangeSetting.WHEN_RECOMMENDED,
             CountryPaintChangeSetting.ALWAYS_DISABLED,
@@ -59,9 +59,9 @@ export const useArbovirusMapCustomizationModal = () => {
         }],
         chosenDropdownOption: countryOutlinesSetting,
         dropdownOptionToLabelMap: {
-          [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "when recommended",
-          [CountryPaintChangeSetting.ALWAYS_ENABLED]: "always enabled",
-          [CountryPaintChangeSetting.ALWAYS_DISABLED]: "always disabled",
+          [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
+          [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
+          [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
         },
         onDropdownOptionChange: (option) => setCountryOutlinesSetting(option)
       }, {
