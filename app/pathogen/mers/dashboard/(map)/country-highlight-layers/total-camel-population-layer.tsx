@@ -103,7 +103,8 @@ export const useTotalCamelPopulationLayer = () => {
           borderColour: "#000000",
         }
       },
-      countryHighlightLayerLegendEntries
+      countryHighlightLayerLegendEntries,
+      freeTextEntries: []
     }
   }, []);
 

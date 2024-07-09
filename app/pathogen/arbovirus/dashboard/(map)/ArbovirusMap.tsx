@@ -46,7 +46,7 @@ export function ArbovirusMap() {
     ...arbovirusMapCustomizationModal
   } = useArbovirusMapCustomizationModal();
 
-  const { paint, countryHighlightLayerLegendEntries } = useMemo(() => {
+  const { paint, countryHighlightLayerLegendEntries, freeTextEntries } = useMemo(() => {
     if (selectedFilters.esm?.length > 0) {
       const countryHighlightingEnabled = (countryHighlightingSetting === CountryPaintChangeSetting.ALWAYS_ENABLED);
       const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
@@ -152,6 +152,7 @@ export function ArbovirusMap() {
       <CountryHighlightLayerLegend
         className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"}
         legendEntries={legendEntries}
+        freeTextEntries={freeTextEntries}
       />
       <MapEstimateSummary filteredData={filteredData}/>
       <arbovirusMapCustomizationModal.mapCustomizeButton />

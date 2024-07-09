@@ -107,7 +107,8 @@ export const useCamelsPerCapitaLayer = () => {
           borderColour: "#000000",
         }
       },
-      countryHighlightLayerLegendEntries
+      countryHighlightLayerLegendEntries,
+      freeTextEntries: []
     }
   }, []);
 
