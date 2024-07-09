@@ -154,13 +154,12 @@ export const GenericPathogenVisualizationsPage = <
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
   TCustomizationModalDropdownOption extends string,
-  TVisualizationDisplayNameDropdownOption extends string
 >(props: GenericPathogenVisualizationsPageProps<
   TVisualizationId,
   TVisualizationUrlParameter,
   TEstimate,
   TCustomizationModalDropdownOption,
-  TVisualizationDisplayNameDropdownOption
+  any
 >):React.ReactNode => {
   const searchParams = useSearchParams();
   const visualizationUrlParameter = searchParams.get('visualization');

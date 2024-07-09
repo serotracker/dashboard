@@ -159,7 +159,6 @@ export const useVisualizationPageConfiguration = () => {
   }
 }
 
-export const mersVisualizationInformationArray = typedObjectEntries(mersVisualizationInformation).map(([_, value]) => value);
 export const getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<
   MersVisualizationId,
   MersVisualizationUrlParameter

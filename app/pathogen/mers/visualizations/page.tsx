@@ -7,13 +7,14 @@ import { MersFilters } from "../dashboard/filters";
 import { 
   getUrlParameterFromVisualizationId,
   isMersVisualizationUrlParameter,
-  mersVisualizationInformationArray
+  useVisualizationPageConfiguration
 } from "./visualization-page-config";
 import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
 
 export default function VisualizationsPage() {
   const { filteredData, faoMersEventData } = useContext(MersContext);
   const { yearlyFaoCamelPopulationData } = useContext(CamelPopulationDataContext);
+  const { mersVisualizationInformationArray } = useVisualizationPageConfiguration();
 
   return (
     <Suspense>
