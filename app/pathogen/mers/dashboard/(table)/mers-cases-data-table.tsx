@@ -23,7 +23,6 @@ import {
 } from "../(map)/shared-mers-map-pop-up-variables";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
-import { ReportedEventSummaryOverTime } from "../(visualizations)/reported-event-summary-over-time";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, mersVisualizationInformation } from "../../visualizations/visualization-page-config";
 

@@ -10,28 +10,26 @@ import clsx from "clsx";
 import parseISO from "date-fns/parseISO";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-interface ReportedEventSummaryOverTimeProps {
+interface CamelPopulationOverTimeProps {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
 }
 
 const typenameToLabel = {
-  ['AnimalMersEvent']: 'Animal MERS Events',
-  ['HumanMersEvent']: 'Human MERS Events'
+  ['YearlyFaoCamelPopulationDataEntry']: 'Camel Population',
 }
 
 const typenameToLineColour = {
-  ['AnimalMersEvent']: '#ed8ac7',
-  ['HumanMersEvent']: '#8abded'
+  ['YearlyFaoCamelPopulationDataEntry']: '#d37295'
 }
 
-export const ReportedEventSummaryOverTime = (props: ReportedEventSummaryOverTimeProps) => {
+export const CamelPopulationOverTime = (props: CamelPopulationOverTimeProps) => {
   const consideredData = props.data.filter((
     element: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry
-  ): element is FaoMersEvent => element.__typename === 'AnimalMersEvent' || element.__typename === 'HumanMersEvent')
+  ): element is FaoYearlyCamelPopulationDataEntry => element.__typename === 'YearlyFaoCamelPopulationDataEntry')
 
   const dataGroupedByType = typedGroupBy(
     consideredData,
-    (event) => event.__typename
+    (dataPoint) => dataPoint.__typename
   );
 
   const eventsGroupedByTypeAndThenTimeBucket = typedObjectFromEntries(
@@ -43,23 +41,19 @@ export const ReportedEventSummaryOverTime = (props: ReportedEventSummaryOverTime
             .map((dataPoint) => ({
               ...dataPoint,
               groupingTimeInterval: {
-                intervalStartDate: parseISO(dataPoint.reportDate),
-                intervalEndDate: parseISO(dataPoint.reportDate),
+                intervalStartDate: new Date(dataPoint.year, 3),
+                intervalEndDate: new Date(dataPoint.year, 8)
               },
             })),
             desiredBucketCount: 10,
             validBucketSizes: [
-              { years: 5 },
-              { years: 4 },
-              { years: 3 },
-              { years: 2 },
               { years: 1 }
             ]
         }).groupedDataPoints,
       ]
     )
   );
-  
+
   const isLargeScreen = useIsLargeScreen();
 
   return (
@@ -72,13 +66,7 @@ export const ReportedEventSummaryOverTime = (props: ReportedEventSummaryOverTime
               `${interval.intervalStartDate.getFullYear()}`,
             dataPoints,
             sum: dataPoints.reduce((accumulator, dataPoint) => {
-              if(dataPoint.__typename === 'HumanMersEvent') {
-                return accumulator + dataPoint.humansAffected;
-              }
-              if(dataPoint.__typename === 'AnimalMersEvent') {
-                return accumulator + 1;
-              }
-              assertNever(dataPoint);
+              return accumulator + dataPoint.camelCount;
             }, 0)
           }));
 
@@ -94,7 +82,7 @@ export const ReportedEventSummaryOverTime = (props: ReportedEventSummaryOverTime
           return (
             <div
               className={clsx(width, height)}
-              key={`reported-events-over-time-${type}`}
+              key={`camel-population-over-time-${type}`}
             >
               <p className="w-full text-center ">
                 {typenameToLabel[type]}
@@ -123,7 +111,7 @@ export const ReportedEventSummaryOverTime = (props: ReportedEventSummaryOverTime
                   <YAxis
                     hide={index % 2 != 0}
                   />
-                  <Bar dataKey="sum" fill={typenameToLineColour[type]} name="Reported Confirmed Positive Cases"/>
+                  <Bar dataKey="sum" fill={typenameToLineColour[type]} name="Camel Population"/>
                   <Tooltip itemStyle={{"color": "black"}}/>
                 </BarChart>
               </ResponsiveContainer>
