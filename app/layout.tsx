@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: "SeroTracker",
   description:
     "A collection of dashboards tracking global seroprevalence data for mutliple pathogens.",
+  icons: {
+    icon: '/SerotrackerLogo.png'
+  }
 };
 
 export default function RootLayout({
