@@ -26,6 +26,7 @@ export const MersFilters = (props: MersFiltersProps) => {
 
   const studyLocationFilters = [
     FilterableField.whoRegion,
+    FilterableField.unRegion,
     FilterableField.countryAlphaTwoCode,
   ];
 
@@ -69,6 +70,7 @@ export const MersFilters = (props: MersFiltersProps) => {
             "HumanMersEvent"
           ],
           whoRegion: estimateFilterData.mersFilterOptions.whoRegion,
+          unRegion: estimateFilterData.mersFilterOptions.unRegion,
           countryAlphaTwoCode: estimateFilterData.mersFilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode)
         } : {}),
         ...(eventFilterData?.faoMersEventFilterOptions ? {

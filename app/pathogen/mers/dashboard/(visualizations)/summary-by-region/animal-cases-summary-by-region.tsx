@@ -1,50 +1,43 @@
 import { useMemo } from "react";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { WhoRegion } from "@/gql/graphql";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import parseISO from "date-fns/parseISO";
 
-interface AnimalCasesSummaryByWhoRegionProps {
+interface AnimalCasesSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  regionGroupingFunction: (dataPoint: FaoMersEvent) => TRegion | undefined;
+  regionToBarColour: (region: TRegion) => string;
+  regionToChartTitle: (region: TRegion) => string;
 }
 
-const barColoursForWhoRegions: Record<WhoRegion, string> = {
-  [WhoRegion.Afr]: "#e15759",
-  [WhoRegion.Amr]: "#59a14f",
-  [WhoRegion.Emr]: "#f1ce63",
-  [WhoRegion.Eur]: "#f28e2b",
-  [WhoRegion.Sear]: "#d37295",
-  [WhoRegion.Wpr]: "#4e79a7",
-};
-
-export const AnimalCasesSummaryByWhoRegion = (props: AnimalCasesSummaryByWhoRegionProps) => {
-  const { data } = props;
+export const AnimalCasesSummaryByRegion = <TRegion extends string>(props: AnimalCasesSummaryByRegionProps<TRegion>) => {
+  const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle } = props;
 
   const events = useMemo(() => data
     .filter((dataPoint): dataPoint is FaoMersEvent => dataPoint.__typename === 'AnimalMersEvent' || dataPoint.__typename === 'HumanMersEvent')
     .filter((dataPoint) => dataPoint.__typename === 'AnimalMersEvent')
     .map((event) => {
-      const whoRegion = event.whoRegion;
+      const region = regionGroupingFunction(event);
 
-      if(!whoRegion) {
+      if(!region) {
         return undefined;
       }
 
       return {
         ...event,
-        whoRegion
+        region
       }
     })
     .filter((event): event is NonNullable<typeof event> => !!event)
-  , [data]);
+  , [ data, regionGroupingFunction ]);
   
   return (
     <SplitTimeBucketedBarChart
-      graphId='animal-cases-summary-by-who-region'
+      graphId='animal-cases-summary-by-region'
       data={events}
-      primaryGroupingFunction={(event) => event.whoRegion}
+      primaryGroupingFunction={(event) => event.region}
       bucketingConfiguration={{
         desiredBucketCount: 10,
         validBucketSizes: [
@@ -57,10 +50,10 @@ export const AnimalCasesSummaryByWhoRegion = (props: AnimalCasesSummaryByWhoRegi
       }}
       getIntervalStartDate={(dataPoint) => parseISO(dataPoint.reportDate)}
       getIntervalEndDate={(dataPoint) => parseISO(dataPoint.reportDate)}
-      getBarColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
+      getBarColour={(region) => regionToBarColour(region)}
+      getChartTitle={(region) => regionToChartTitle(region)}
       percentageFormattingEnabled={false}
       getBarName={() => 'Reported Confirmed Positive Cases'}
-      getChartTitle={(whoRegion) => whoRegion}
       transformOutputValue={(data) => data.reduce((accumulator, dataPoint) => {
         return accumulator + 1;
       }, 0)}

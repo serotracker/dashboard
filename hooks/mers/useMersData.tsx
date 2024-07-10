@@ -14,6 +14,7 @@ export const mersEstimates = gql`
       latitude
       longitude
       whoRegion
+      unRegion
     }
   }
 `

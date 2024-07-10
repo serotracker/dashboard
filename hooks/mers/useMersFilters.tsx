@@ -12,6 +12,7 @@ export const mersFilters = gql`
         alphaThreeCode
       }
       whoRegion
+      unRegion
     }
   }
 `

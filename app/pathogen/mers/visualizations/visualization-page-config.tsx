@@ -9,7 +9,7 @@ import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { CamelPopulationOverTime } from "../dashboard/(visualizations)/camel-population-over-time";
 import { MedianSeroprevalenceOverTime } from "../dashboard/(visualizations)/median-seroprevalence-over-time";
-import { SummaryByRegion, SummaryByRegionRegionDropdownOption, SummaryByRegionVariableOfInterestDropdownOption } from "../dashboard/(visualizations)/summary-by-who-region";
+import { SummaryByRegion, SummaryByRegionRegionDropdownOption, SummaryByRegionVariableOfInterestDropdownOption } from "../dashboard/(visualizations)/summary-by-region";
 import { useCallback, useMemo, useState } from "react";
 import { UNRegionsTooltip, WHORegionsTooltip } from "@/components/customs/tooltip-content";
 import { WhoRegion } from "@/gql/graphql";
@@ -112,12 +112,6 @@ export const useVisualizationPageConfiguration = () => {
     SummaryByRegionRegionDropdownOption
   >['getDisplayName'] = useCallback(() => ({
     type: VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN,
-             // type: VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN;
-             // beforeBothDropdownsHeaderText: string;
-             // firstDropdownProps: DropdownProps<TVisualizationDisplayNameDropdownOption>
-             // betweenDropdownsHeaderText: string;
-             // secondDropdownProps: DropdownProps<TSecondVisualizationDisplayNameDropdownOption>
-             // afterBothDropdownsHeaderText: string;
     beforeBothDropdownsHeaderText: "",
     firstDropdownProps: {
       dropdownName: 'Variable of Interest Selection',

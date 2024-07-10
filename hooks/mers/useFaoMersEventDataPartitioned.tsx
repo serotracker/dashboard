@@ -26,6 +26,7 @@ export const partitionedFaoMersEvents = gql`
           latitude
           longitude
           whoRegion
+          unRegion
           observationDate
           reportDate
           animalType
@@ -47,6 +48,7 @@ export const partitionedFaoMersEvents = gql`
           latitude
           longitude
           whoRegion
+          unRegion
           observationDate
           reportDate
           humansAffected
