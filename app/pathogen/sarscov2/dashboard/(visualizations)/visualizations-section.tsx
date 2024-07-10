@@ -32,8 +32,9 @@ export const SarsCov2VisualizationsSection = () => {
 
   const renderVisualizationList = useCallback(<
     TCustomizationModalDropdownOption extends string,
-    TVisualizationDisplayNameDropdownOption extends string
-  >(visualizationList: Array<SarsCov2VisualizationInformation<TCustomizationModalDropdownOption, TVisualizationDisplayNameDropdownOption> & {className: string}>) => {
+    TVisualizationDisplayNameDropdownOption extends string,
+    TSecondVisualizationDisplayNameDropdownOption extends string
+  >(visualizationList: Array<SarsCov2VisualizationInformation<TCustomizationModalDropdownOption, TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

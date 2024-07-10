@@ -139,14 +139,16 @@ interface VisualizationHeaderProps<
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
   TCustomizationModalDropdownOption extends string,
-  TVisualizationDisplayNameDropdownOption extends string
+  TVisualizationDisplayNameDropdownOption extends string,
+  TSecondVisualizationDisplayNameDropdownOption extends string
 > {
   visualizationInformation: VisualizationInformation<
     TVisualizationId,
     TVisualizationUrlParameter,
     TEstimate,
     TCustomizationModalDropdownOption,
-    TVisualizationDisplayNameDropdownOption
+    TVisualizationDisplayNameDropdownOption,
+    TSecondVisualizationDisplayNameDropdownOption
   >;
   data: TEstimate[];
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
@@ -159,14 +161,16 @@ export const VisualizationHeader = <
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
   TCustomizationModalDropdownOption extends string,
-  TVisualizationDisplayNameDropdownOption extends string
+  TVisualizationDisplayNameDropdownOption extends string,
+  TSecondVisualizationDisplayNameDropdownOption extends string
 >(
   props: VisualizationHeaderProps<
     TVisualizationId,
     TVisualizationUrlParameter,
     TEstimate,
     TCustomizationModalDropdownOption,
-    TVisualizationDisplayNameDropdownOption
+    TVisualizationDisplayNameDropdownOption,
+    TSecondVisualizationDisplayNameDropdownOption
   >
 ) => {
   const router = useRouter();
@@ -223,6 +227,23 @@ export const VisualizationHeader = <
             <Dropdown {...displayName.dropdownProps}/>
           </div>
           <h3 className="inline">{displayName.afterDropdownHeaderText} </h3>
+          {titleTooltip}
+        </div>
+      )
+    }
+
+    if(displayName.type === VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN) {
+      return (
+        <div className="w-full text-center text-lg inline">
+          <h3 className="inline">{displayName.beforeBothDropdownsHeaderText} </h3>
+          <div className="inline">
+            <Dropdown {...displayName.firstDropdownProps}/>
+          </div>
+          <h3 className="inline">{displayName.betweenDropdownsHeaderText} </h3>
+          <div className="inline">
+            <Dropdown {...displayName.secondDropdownProps}/>
+          </div>
+          <h3 className="inline">{displayName.afterBothDropdownsHeaderText} </h3>
           {titleTooltip}
         </div>
       )

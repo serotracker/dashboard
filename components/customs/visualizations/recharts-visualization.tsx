@@ -16,14 +16,16 @@ interface RechartsVisualizationProps<
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
   TCustomizationModalDropdownOption extends string,
-  TVisualizationDisplayNameDropdownOption extends string
+  TVisualizationDisplayNameDropdownOption extends string,
+  TSecondVisualizationDisplayNameDropdownOption extends string
 > {
   visualizationInformation: VisualizationInformation<
     TVisualizationId,
     TVisualizationUrlParameter,
     TEstimate,
     TCustomizationModalDropdownOption,
-    TVisualizationDisplayNameDropdownOption
+    TVisualizationDisplayNameDropdownOption,
+    TSecondVisualizationDisplayNameDropdownOption
   >;
   data: TEstimate[];
   highlightedDataPoint: TEstimate | undefined;
@@ -38,14 +40,16 @@ export const RechartsVisualization = <
   TVisualizationUrlParameter extends string,
   TEstimate extends Record<string, unknown>,
   TCustomizationModalDropdownOption extends string,
-  TVisualizationDisplayNameDropdownOption extends string
+  TVisualizationDisplayNameDropdownOption extends string,
+  TSecondVisualizationDisplayNameDropdownOption extends string
 >(
   props: RechartsVisualizationProps<
     TVisualizationId,
     TVisualizationUrlParameter,
     TEstimate,
     TCustomizationModalDropdownOption,
-    TVisualizationDisplayNameDropdownOption
+    TVisualizationDisplayNameDropdownOption,
+    TSecondVisualizationDisplayNameDropdownOption
   >
 ) => {
   const { ref, downloadVisualization } = useDownloadVisualization({
