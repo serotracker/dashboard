@@ -91,7 +91,7 @@ export const SplitTimeBucketedBarChart = <
     const endIndex = ((currentPageIndex + 1) * 6);
 
     return sortedPrimaryKeys.slice(startIndex, endIndex);
-  }, [ sortedPrimaryKeys ]);
+  }, [ sortedPrimaryKeys, currentPageIndex ]);
 
   const isLargeScreen = useIsLargeScreen();
 
