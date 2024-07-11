@@ -91,12 +91,14 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
         options: [
           SummaryByRegionRegionDropdownOption.WHO_REGION,
           SummaryByRegionRegionDropdownOption.UN_REGION,
+          SummaryByRegionRegionDropdownOption.COUNTRY,
         ]
       }],
       chosenDropdownOption: summaryByRegionSelectedDropdownOption,
       dropdownOptionToLabelMap: {
         [SummaryByRegionRegionDropdownOption.WHO_REGION]: "WHO Region",
-        [SummaryByRegionRegionDropdownOption.UN_REGION]: "UN Region"
+        [SummaryByRegionRegionDropdownOption.UN_REGION]: "UN Region",
+        [SummaryByRegionRegionDropdownOption.COUNTRY]: "Country"
       },
       onDropdownOptionChange: (option) => {
         setSummaryByRegionSelectedDropdownOption(option);
@@ -128,6 +130,10 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
 
     if(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.UN_REGION) {
       return <UNRegionsTooltip />
+    }
+
+    if(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.COUNTRY) {
+      return undefined;
     }
 
     assertNever(summaryByRegionSelectedDropdownOption);
