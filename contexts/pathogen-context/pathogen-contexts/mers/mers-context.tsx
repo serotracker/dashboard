@@ -110,7 +110,11 @@ export const MersProviders = (props: MersProvidersProps) => {
               filterUpdateData.state.selectedFilters
             ),
             faoMersEventData: filterData(
-              filterUpdateData.action.payload.data.faoMersEventData,
+              filterUpdateData.action.payload.data.faoMersEventData.map((event: any) => ({
+                ...event,
+                countryAlphaTwoCode: event.country.alphaTwoCode,
+                countryAlphaThreeCode: event.country.alphaThreeCode,
+              })),
               filterUpdateData.state.selectedFilters
             ),
             dataFiltered: true,
