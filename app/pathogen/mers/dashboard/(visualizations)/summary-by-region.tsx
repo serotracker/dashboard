@@ -27,6 +27,9 @@ interface SummaryByRegionProps {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
   selectedVariableOfInterest: SummaryByRegionVariableOfInterestDropdownOption;
   selectedRegion: SummaryByRegionRegionDropdownOption;
+  numberOfPagesAvailable: number;
+  setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
+  currentPageIndex: number;
 }
 
 const barColoursForWhoRegions: Record<WhoRegion, string> = {
@@ -84,7 +87,13 @@ const chartTitleMap = {
 };
 
 export const SummaryByRegion = (props: SummaryByRegionProps) => {
-  const { data, selectedVariableOfInterest, selectedRegion } = props;
+  const {
+    data,
+    selectedVariableOfInterest,
+    selectedRegion,
+    setNumberOfPagesAvailable,
+    currentPageIndex,
+  } = props;
 
   const regionGroupingFunction = useCallback((dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => {
     if(selectedRegion === SummaryByRegionRegionDropdownOption.WHO_REGION) {
@@ -103,6 +112,8 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
         regionToBarColour={(region) => barColourMap[region]}
         regionToChartTitle={(region) => chartTitleMap[region]}
+        setNumberOfPagesAvailable={setNumberOfPagesAvailable}
+        currentPageIndex={currentPageIndex}
       />
     }
     if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES) {
@@ -111,6 +122,8 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
         regionToBarColour={(region) => barColourMap[region]}
         regionToChartTitle={(region) => chartTitleMap[region]}
+        setNumberOfPagesAvailable={setNumberOfPagesAvailable}
+        currentPageIndex={currentPageIndex}
       />
     }
     if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES) {
@@ -119,6 +132,8 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
         regionToBarColour={(region) => barColourMap[region]}
         regionToChartTitle={(region) => chartTitleMap[region]}
+        setNumberOfPagesAvailable={setNumberOfPagesAvailable}
+        currentPageIndex={currentPageIndex}
       />
     }
     if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS) {
@@ -127,11 +142,13 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
         regionToBarColour={(region) => barColourMap[region]}
         regionToChartTitle={(region) => chartTitleMap[region]}
+        setNumberOfPagesAvailable={setNumberOfPagesAvailable}
+        currentPageIndex={currentPageIndex}
       />
     }
 
     assertNever(selectedVariableOfInterest);
-  }, [ data, selectedVariableOfInterest, regionGroupingFunction ]);
+  }, [ data, selectedVariableOfInterest, regionGroupingFunction, setNumberOfPagesAvailable, currentPageIndex ]);
 
   return graph;
 }

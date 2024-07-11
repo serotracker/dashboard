@@ -1,4 +1,4 @@
-import { ZoomIn, DownloadCloud, X, Settings } from "lucide-react";
+import { ZoomIn, DownloadCloud, X, Settings, ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { isSafeReferrerLink } from "@/utils/referrer-link-util";
 import {
@@ -30,6 +30,8 @@ export type ZoomInButtonAdditionalButtonConfig = { referrerRoute: string };
 export type DownloadButtonAdditionalButtonConfig = {};
 export type CloseButtonAdditionalButtonConfig = { referrerRoute: string | undefined | null };
 export type CustomizeButtonAdditionalButtonConfig = { onClick: () => void };
+export type LeftArrowButtonAdditionalButtonConfig = { onClick: () => void, disabledButVisible: boolean };
+export type RightArrowButtonAdditionalButtonConfig = { onClick: () => void, disabledButVisible: boolean };
 
 export type GetUrlParameterFromVisualizationIdFunction<TVisualizationId extends string, TVisualizationUrlParameter extends string> =
   (input: {visualizationId: TVisualizationId}) => {urlParameter: TVisualizationUrlParameter};
@@ -55,11 +57,21 @@ interface CustomizeButtonProps {
   configuration: EnabledButtonConfig<CustomizeButtonAdditionalButtonConfig> & { id: string };
 }
 
+interface LeftArrowButtonProps {
+  configuration: EnabledButtonConfig<LeftArrowButtonAdditionalButtonConfig> & { id: string };
+}
+
+interface RightArrowButtonProps {
+  configuration: EnabledButtonConfig<RightArrowButtonAdditionalButtonConfig> & { id: string };
+}
+
 interface AllButtonConfigurations {
   zoomInButton: ButtonConfig<ZoomInButtonAdditionalButtonConfig> & { id: string };
   downloadButton: ButtonConfig<DownloadButtonAdditionalButtonConfig> & { id: string };
   closeButton: ButtonConfig<CloseButtonAdditionalButtonConfig> & { id: string };
   customizeButton: ButtonConfig<CustomizeButtonAdditionalButtonConfig> & { id: string };
+  leftArrowButton: ButtonConfig<LeftArrowButtonAdditionalButtonConfig> & { id: string };
+  rightArrowButton: ButtonConfig<RightArrowButtonAdditionalButtonConfig> & { id: string };
 }
 
 const DownloadButton = (props: DownloadButtonProps) => (
@@ -131,6 +143,34 @@ const CustomizeButton = (props: CustomizeButtonProps) => (
     onClick={() => props.configuration.onClick()}
   >
     <Settings />
+  </button>
+);
+
+const LeftArrowButton = (props: LeftArrowButtonProps) => (
+  <button
+    id={props.configuration.id}
+    aria-label="Move to the previous page"
+    aria-disabled={props.configuration.disabledButVisible}
+    disabled={props.configuration.disabledButVisible}
+    title="Move to the previous page"
+    className={cn("mr-2 p-2 rounded-full", !props.configuration.disabledButVisible ? "text-black hover:bg-gray-100" : "bg-gray-200 text-gray-400")}
+    onClick={!props.configuration.disabledButVisible ? () => props.configuration.onClick() : () => {}}
+  >
+    <ArrowLeft />
+  </button>
+);
+
+const RightArrowButton = (props: RightArrowButtonProps) => (
+  <button
+    id={props.configuration.id}
+    aria-label="Move to the next page"
+    aria-disabled={props.configuration.disabledButVisible}
+    disabled={props.configuration.disabledButVisible}
+    title="Move to the next page"
+    className={cn("mr-2 p-2 rounded-full", !props.configuration.disabledButVisible ? "text-black hover:bg-gray-100" : "bg-gray-200 text-gray-400")}
+    onClick={!props.configuration.disabledButVisible ? () => props.configuration.onClick() : () => {}}
+  >
+    <ArrowRight />
   </button>
 );
 
@@ -255,6 +295,16 @@ export const VisualizationHeader = <
   return (
     <div className="flex py-4">
       {visualizationTitle}
+      {props.buttonConfiguration.leftArrowButton.enabled && (
+        <LeftArrowButton
+          configuration={props.buttonConfiguration.leftArrowButton}
+        />
+      )}
+      {props.buttonConfiguration.rightArrowButton.enabled && (
+        <RightArrowButton
+          configuration={props.buttonConfiguration.rightArrowButton}
+        />
+      )}
       {props.buttonConfiguration.downloadButton.enabled && (
         <DownloadButton
           downloadVisualization={() => props.downloadVisualization()}

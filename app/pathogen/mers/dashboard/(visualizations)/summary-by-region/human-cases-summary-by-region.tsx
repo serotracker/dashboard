@@ -1,8 +1,9 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
+import uniqBy from "lodash/uniqBy";
 import parseISO from "date-fns/parseISO";
 
 interface HumanCasesSummaryByRegionProps<TRegion extends string> {
@@ -10,10 +11,12 @@ interface HumanCasesSummaryByRegionProps<TRegion extends string> {
   regionGroupingFunction: (dataPoint: FaoMersEvent) => TRegion | undefined;
   regionToBarColour: (region: TRegion) => string;
   regionToChartTitle: (region: TRegion) => string;
+  setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
+  currentPageIndex: number;
 }
 
 export const HumanCasesSummaryByRegion = <TRegion extends string>(props: HumanCasesSummaryByRegionProps<TRegion>) => {
-  const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle } = props;
+  const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
 
   const events = useMemo(() => data
     .filter((dataPoint): dataPoint is FaoMersEvent => dataPoint.__typename === 'AnimalMersEvent' || dataPoint.__typename === 'HumanMersEvent')
@@ -33,11 +36,22 @@ export const HumanCasesSummaryByRegion = <TRegion extends string>(props: HumanCa
     .filter((event): event is NonNullable<typeof event> => !!event)
   , [ data, regionGroupingFunction ]);
 
+  const numberOfPagesAvailable = useMemo(() => {
+    const numberOfGraphs = uniqBy(events, (event) => event.region).length;
+
+    return Math.ceil(numberOfGraphs / 6)
+  }, [ events ]);
+
+  useEffect(() => {
+    setNumberOfPagesAvailable(numberOfPagesAvailable);
+  }, [ numberOfPagesAvailable, setNumberOfPagesAvailable ])
+
   return (
     <SplitTimeBucketedBarChart
       graphId='human-cases-summary-by-region'
       data={events}
       primaryGroupingFunction={(event) => event.region}
+      currentPageIndex={currentPageIndex}
       bucketingConfiguration={{
         desiredBucketCount: 10,
         validBucketSizes: [

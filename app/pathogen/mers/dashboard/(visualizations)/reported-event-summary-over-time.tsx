@@ -34,6 +34,7 @@ export const ReportedEventSummaryOverTime = (props: ReportedEventSummaryOverTime
       graphId='reported-event-summary-over-time'
       data={consideredData}
       primaryGroupingFunction={(dataPoint) => dataPoint.__typename}
+      currentPageIndex={0}
       bucketingConfiguration={{
         desiredBucketCount: 10,
         validBucketSizes: [

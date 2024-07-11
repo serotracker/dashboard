@@ -4,17 +4,20 @@ import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import parseISO from "date-fns/parseISO";
-import { useMemo } from "react";
+import uniqBy from "lodash/uniqBy";
+import { useMemo, useEffect } from "react";
 
 interface SeroprevalenceSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
   regionGroupingFunction: (dataPoint: MersEstimate) => TRegion | undefined;
   regionToBarColour: (region: TRegion) => string;
   regionToChartTitle: (region: TRegion) => string;
+  setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
+  currentPageIndex: number;
 }
 
 export const SeroprevalenceSummaryByRegion = <TRegion extends string>(props: SeroprevalenceSummaryByRegionProps<TRegion>) => {
-  const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle } = props;
+  const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
 
   const estimates = useMemo(() => data
     .filter((dataPoint): dataPoint is MersEstimate => dataPoint.__typename === 'MersEstimate')
@@ -29,11 +32,22 @@ export const SeroprevalenceSummaryByRegion = <TRegion extends string>(props: Ser
     .filter((estimate): estimate is Omit<typeof estimate, 'region'> & {region: NonNullable<typeof estimate['region']>} => !!estimate.region)
   , [ data, regionGroupingFunction ]);
 
+  const numberOfPagesAvailable = useMemo(() => {
+    const numberOfGraphs = uniqBy(estimates, (estimate) => estimate.region).length;
+
+    return Math.ceil(numberOfGraphs / 6)
+  }, [ estimates ]);
+
+  useEffect(() => {
+    setNumberOfPagesAvailable(numberOfPagesAvailable);
+  }, [ numberOfPagesAvailable, setNumberOfPagesAvailable ])
+
   return (
     <SplitTimeBucketedBarChart
       graphId='seroprevalence-summary-by-region'
       data={estimates}
       primaryGroupingFunction={(estimate) => estimate.region}
+      currentPageIndex={currentPageIndex}
       bucketingConfiguration={{
         desiredBucketCount: 10,
         validBucketSizes: [

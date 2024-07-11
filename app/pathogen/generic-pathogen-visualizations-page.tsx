@@ -75,6 +75,12 @@ export const isVisualizationDisplayNameWithDoubleDropdown = <
   displayName: VisualizationDisplayName<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption> 
 ): displayName is VisualizationDisplayNameWithDoubleDropdown<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption> => displayName.type === VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN;
 
+export interface PaginationConfiguration {
+  numberOfPagesAvailable: number;
+  currentPageIndex: number;
+  setCurrentPageIndex: (newCurrentPageIndex: number) => void;
+}
+
 export interface VisualizationInformation<
   TVisualizationId extends string,
   TVisualizationUrlParameter extends string,
@@ -92,6 +98,7 @@ export interface VisualizationInformation<
   titleTooltipContent?: string | React.ReactNode;
   renderVisualization: (input: RenderVisualizationInput<TEstimate>) => React.ReactNode;
   customizationModalConfiguration?: UseModalInput<TCustomizationModalDropdownOption>;
+  paginationConfiguration?: PaginationConfiguration;
 }
 
 interface FiltersComponentProps {

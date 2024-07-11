@@ -30,6 +30,7 @@ export const CamelPopulationOverTime = (props: CamelPopulationOverTimeProps) => 
       graphId='camel-population-over-time'
       data={consideredData}
       primaryGroupingFunction={(dataPoint) => dataPoint.__typename}
+      currentPageIndex={0}
       bucketingConfiguration={{
         desiredBucketCount: 10,
         validBucketSizes: [

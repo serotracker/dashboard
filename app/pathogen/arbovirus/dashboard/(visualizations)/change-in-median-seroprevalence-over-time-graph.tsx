@@ -19,6 +19,7 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => 
       graphId='change-in-med-sero-prev'
       data={consideredData}
       primaryGroupingFunction={(dataPoint) => dataPoint.pathogen}
+      currentPageIndex={0}
       bucketingConfiguration={{
         desiredBucketCount: 10,
         validBucketSizes: [

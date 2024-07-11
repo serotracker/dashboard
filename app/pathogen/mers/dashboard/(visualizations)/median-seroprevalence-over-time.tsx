@@ -39,6 +39,7 @@ export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTime
       graphId='median-seroprevalence-over-time'
       data={consideredData}
       primaryGroupingFunction={(dataPoint) => dataPoint.__typename}
+      currentPageIndex={0}
       bucketingConfiguration={{
         desiredBucketCount: 10,
         validBucketSizes: [
