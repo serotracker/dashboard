@@ -49,8 +49,9 @@ export const ArbovirusVisualizationsSection = () => {
 
   const renderVisualizationList = useCallback(<
     TCustomizationModalDropdownOption extends string,
-    TVisualizationDisplayNameDropdownOption extends string
-  >(visualizationList: Array<ArbovirusVisualizationInformation<TCustomizationModalDropdownOption, TVisualizationDisplayNameDropdownOption> & {className: string}>) => {
+    TVisualizationDisplayNameDropdownOption extends string,
+    TSecondVisualizationDisplayNameDropdownOption extends string
+  >(visualizationList: Array<ArbovirusVisualizationInformation<TCustomizationModalDropdownOption, TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

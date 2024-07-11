@@ -19,12 +19,12 @@ export const MersVisualizationsSection = () => {
     ...mersVisualizationInformation[MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME],
      className: "h-full-screen"
   }, {
-    ...mersVisualizationInformation[MersVisualizationId.SUMMARY_BY_WHO_REGION],
+    ...mersVisualizationInformation[MersVisualizationId.SUMMARY_BY_REGION],
      className: "h-full-screen"
   }];
 
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
-    MersVisualizationId.SUMMARY_BY_WHO_REGION
+    MersVisualizationId.SUMMARY_BY_REGION
   ].includes(visualizationInfo.id));
 
   const { filteredData, faoMersEventData } = useContext(MersContext);
@@ -32,7 +32,7 @@ export const MersVisualizationsSection = () => {
 
   const renderVisualizationList = useCallback(<
     TCustomizationModalDropdownOption extends string,
-  >(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption, any> & {className: string}>) => {
+  >(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption, any, any> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

@@ -13,12 +13,17 @@ export interface SplitTimeBucketedBarChartProps<
   graphId: string;
   data: TData[];
   primaryGroupingFunction: (dataPoint: TData) => TPrimaryGroupingKey;
+  primaryGroupingSortFunction?: (
+    a: TPrimaryGroupingKey,
+    b: TPrimaryGroupingKey
+  ) => number;
   bucketingConfiguration: {
     desiredBucketCount: number;
     validBucketSizes: Array<{
       years: number;
     }>;
   }
+  currentPageIndex: number;
   getIntervalStartDate: (dataPoint: TData) => Date;
   getIntervalEndDate: (dataPoint: TData) => Date;
   getBarColour: (primaryKey: TPrimaryGroupingKey) => string;
@@ -32,7 +37,7 @@ export const SplitTimeBucketedBarChart = <
   TData,
   TPrimaryGroupingKey extends string,
 >(props: SplitTimeBucketedBarChartProps<TData, TPrimaryGroupingKey>) => {
-  const { data, primaryGroupingFunction, getIntervalStartDate, getIntervalEndDate, percentageFormattingEnabled } = props;
+  const { data, primaryGroupingFunction, primaryGroupingSortFunction, getIntervalStartDate, getIntervalEndDate, percentageFormattingEnabled, currentPageIndex } = props;
   const { desiredBucketCount, validBucketSizes } = props.bucketingConfiguration;
 
   const eventsGroupedByPrimaryKey = useMemo(() => {
@@ -71,12 +76,29 @@ export const SplitTimeBucketedBarChart = <
     itemStyle: {color: "black"}
   }, [ percentageFormattingEnabled ])
 
+  const sortedPrimaryKeys = useMemo(() => {
+    const unsortedPrimaryKeys = typedObjectKeys(eventsGroupedByPrimaryKeyAndThenTimeBucket);
+
+    if(!primaryGroupingSortFunction) {
+      return unsortedPrimaryKeys;
+    }
+
+    return unsortedPrimaryKeys.sort((primaryKeyA, primaryKeyB) => primaryGroupingSortFunction(primaryKeyA, primaryKeyB));
+  }, [ eventsGroupedByPrimaryKeyAndThenTimeBucket, primaryGroupingSortFunction ])
+
+  const primaryKeysForPage = useMemo(() => {
+    const startIndex = currentPageIndex * 6;
+    const endIndex = ((currentPageIndex + 1) * 6);
+
+    return sortedPrimaryKeys.slice(startIndex, endIndex);
+  }, [ sortedPrimaryKeys ]);
+
   const isLargeScreen = useIsLargeScreen();
 
   return (
     <div className="h-full flex flex-col">
       <div className="h-full flex flex-row flex-wrap">
-        {typedObjectKeys(eventsGroupedByPrimaryKeyAndThenTimeBucket).map((primaryKey, index) => {
+        {primaryKeysForPage.map((primaryKey, index) => {
           const dataForType = eventsGroupedByPrimaryKeyAndThenTimeBucket[primaryKey].map(({interval, dataPoints}) => ({
             intervalAsString: interval.intervalStartDate.getFullYear() !== interval.intervalEndDate.getFullYear() ?
               `${interval.intervalStartDate.getFullYear()}-${interval.intervalEndDate.getFullYear()}` :

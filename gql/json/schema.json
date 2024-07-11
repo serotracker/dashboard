@@ -243,6 +243,18 @@
             "deprecationReason": null
           },
           {
+            "name": "unRegion",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "UNRegion",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "whoRegion",
             "description": null,
             "args": [],
@@ -1828,6 +1840,18 @@
             "deprecationReason": null
           },
           {
+            "name": "unRegion",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "UNRegion",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "whoRegion",
             "description": null,
             "args": [],
@@ -2028,6 +2052,18 @@
                 "name": "Float",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "unRegion",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "UNRegion",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -2295,6 +2331,18 @@
             "deprecationReason": null
           },
           {
+            "name": "unRegion",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "UNRegion",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "whoRegion",
             "description": null,
             "args": [],
@@ -2367,6 +2415,30 @@
                   "ofType": {
                     "kind": "OBJECT",
                     "name": "CountryIdentifiers",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "unRegion",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "UNRegion",
                     "ofType": null
                   }
                 }
@@ -4725,6 +4797,18 @@
             "deprecationReason": null
           },
           {
+            "name": "unRegion",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "UNRegion",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "whoRegion",
             "description": null,
             "args": [],
@@ -5719,6 +5803,15 @@
             "deprecationReason": null
           }
         ]
+      },
+      {
+        "name": "oneOf",
+        "description": "Indicates exactly one field must be supplied and this field must not be `null`.",
+        "isRepeatable": false,
+        "locations": [
+          "INPUT_OBJECT"
+        ],
+        "args": []
       },
       {
         "name": "skip",

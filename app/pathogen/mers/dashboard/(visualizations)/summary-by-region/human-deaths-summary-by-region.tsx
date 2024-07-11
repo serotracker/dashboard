@@ -1,50 +1,58 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { WhoRegion } from "@/gql/graphql";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
+import uniqBy from "lodash/uniqBy";
 import parseISO from "date-fns/parseISO";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
 
-interface HumanDeathsSummaryByWhoRegionProps {
+interface HumanDeathsSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  regionGroupingFunction: (dataPoint: FaoMersEvent) => TRegion | undefined;
+  regionToBarColour: (region: TRegion) => string;
+  regionToChartTitle: (region: TRegion) => string;
+  setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
+  currentPageIndex: number;
 }
 
-const barColoursForWhoRegions: Record<WhoRegion, string> = {
-  [WhoRegion.Afr]: "#e15759",
-  [WhoRegion.Amr]: "#59a14f",
-  [WhoRegion.Emr]: "#f1ce63",
-  [WhoRegion.Eur]: "#f28e2b",
-  [WhoRegion.Sear]: "#d37295",
-  [WhoRegion.Wpr]: "#4e79a7",
-};
-
-export const HumanDeathsSummaryByWhoRegion = (props: HumanDeathsSummaryByWhoRegionProps) => {
-  const { data } = props;
+export const HumanDeathsSummaryByRegion = <TRegion extends string>(props: HumanDeathsSummaryByRegionProps<TRegion>) => {
+  const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
 
   const events = useMemo(() => data
     .filter((dataPoint): dataPoint is FaoMersEvent => dataPoint.__typename === 'AnimalMersEvent' || dataPoint.__typename === 'HumanMersEvent')
     .filter((dataPoint) => dataPoint.__typename === 'HumanMersEvent' && dataPoint.humanDeaths > 0)
     .map((event) => {
-      const whoRegion = event.whoRegion;
+      const region = regionGroupingFunction(event);
 
-      if(!whoRegion) {
+      if(!region) {
         return undefined;
       }
 
       return {
         ...event,
-        whoRegion
+        region
       }
     })
     .filter((event): event is NonNullable<typeof event> => !!event)
-  , [ data ]);
+  , [ data, regionGroupingFunction ]);
+
+  const numberOfPagesAvailable = useMemo(() => {
+    const numberOfGraphs = uniqBy(events, (event) => event.region).length;
+
+    return Math.ceil(numberOfGraphs / 6)
+  }, [ events ]);
+
+  useEffect(() => {
+    setNumberOfPagesAvailable(numberOfPagesAvailable);
+  }, [ numberOfPagesAvailable, setNumberOfPagesAvailable ])
 
   return (
     <SplitTimeBucketedBarChart
-      graphId='human-deaths-summary-by-who-region'
+      graphId='human-deaths-summary-by-region'
       data={events}
-      primaryGroupingFunction={(event) => event.whoRegion}
+      primaryGroupingFunction={(event) => event.region}
+      primaryGroupingSortFunction={(regionA, regionB) => regionA > regionB ? 1 : -1}
+      currentPageIndex={currentPageIndex}
       bucketingConfiguration={{
         desiredBucketCount: 10,
         validBucketSizes: [
@@ -57,10 +65,10 @@ export const HumanDeathsSummaryByWhoRegion = (props: HumanDeathsSummaryByWhoRegi
       }}
       getIntervalStartDate={(dataPoint) => parseISO(dataPoint.reportDate)}
       getIntervalEndDate={(dataPoint) => parseISO(dataPoint.reportDate)}
-      getBarColour={(whoRegion) => barColoursForWhoRegions[whoRegion]}
+      getBarColour={(region) => regionToBarColour(region)}
+      getChartTitle={(region) => regionToChartTitle(region)}
       percentageFormattingEnabled={false}
       getBarName={() => 'Reported Deaths'}
-      getChartTitle={(whoRegion) => whoRegion}
       transformOutputValue={(data) => data.reduce((accumulator, dataPoint) => {
         if(dataPoint.__typename === 'HumanMersEvent') {
           return accumulator + dataPoint.humanDeaths;
