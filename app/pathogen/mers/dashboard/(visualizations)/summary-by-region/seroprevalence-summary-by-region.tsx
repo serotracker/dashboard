@@ -47,6 +47,7 @@ export const SeroprevalenceSummaryByRegion = <TRegion extends string>(props: Ser
       graphId='seroprevalence-summary-by-region'
       data={estimates}
       primaryGroupingFunction={(estimate) => estimate.region}
+      primaryGroupingSortFunction={(regionA, regionB) => regionA > regionB ? 1 : -1}
       currentPageIndex={currentPageIndex}
       bucketingConfiguration={{
         desiredBucketCount: 10,

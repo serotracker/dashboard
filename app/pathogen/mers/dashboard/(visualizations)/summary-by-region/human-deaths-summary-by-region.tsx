@@ -51,6 +51,7 @@ export const HumanDeathsSummaryByRegion = <TRegion extends string>(props: HumanD
       graphId='human-deaths-summary-by-region'
       data={events}
       primaryGroupingFunction={(event) => event.region}
+      primaryGroupingSortFunction={(regionA, regionB) => regionA > regionB ? 1 : -1}
       currentPageIndex={currentPageIndex}
       bucketingConfiguration={{
         desiredBucketCount: 10,
