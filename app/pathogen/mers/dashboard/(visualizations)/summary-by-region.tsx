@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useContext } from "react";
 import assertNever from "assert-never";
 import defaultColours from 'tailwindcss/colors'
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
@@ -9,7 +9,9 @@ import { SeroprevalenceSummaryByRegion } from "./summary-by-region/seroprevalenc
 import { AnimalCasesSummaryByRegion } from "./summary-by-region/animal-cases-summary-by-region";
 import { HumanDeathsSummaryByRegion } from "./summary-by-region/human-deaths-summary-by-region";
 import { UnRegion, WhoRegion } from "@/gql/graphql";
-import { unRegionEnumToLabelMap } from "@/lib/un-regions";
+import { isUNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
+import { isWHORegion } from "@/lib/who-regions";
+import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
 
 export enum SummaryByRegionVariableOfInterestDropdownOption {
   MEDIAN_SEROPREVALENCE = "MEDIAN_SEROPREVALENCE",
@@ -20,7 +22,8 @@ export enum SummaryByRegionVariableOfInterestDropdownOption {
 
 export enum SummaryByRegionRegionDropdownOption {
   WHO_REGION = "WHO_REGION",
-  UN_REGION = "UN_REGION"
+  UN_REGION = "UN_REGION",
+  COUNTRY = "COUNTRY",
 }
 
 interface SummaryByRegionProps {
@@ -77,14 +80,12 @@ const barColoursForUnRegions: Record<UnRegion, string> = {
 
 const chartTitlesForUnRegions = unRegionEnumToLabelMap;
 
-const barColourMap = {
-  ...barColoursForWhoRegions,
-  ...barColoursForUnRegions
-};
-const chartTitleMap = {
-  ...chartTitlesForWhoRegions,
-  ...chartTitlesForUnRegions,
-};
+const variableOfInterestToBarColourMap = {
+  [SummaryByRegionVariableOfInterestDropdownOption.MEDIAN_SEROPREVALENCE]: "#e7ed8a",
+  [SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES]: "#ed8ac7",
+  [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES]: "#8abded",
+  [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS]: "#2a8deb",
+}
 
 export const SummaryByRegion = (props: SummaryByRegionProps) => {
   const {
@@ -95,6 +96,8 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     currentPageIndex,
   } = props;
 
+  const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
+
   const regionGroupingFunction = useCallback((dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => {
     if(selectedRegion === SummaryByRegionRegionDropdownOption.WHO_REGION) {
       return dataPoint.whoRegion;
@@ -102,16 +105,51 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     if(selectedRegion === SummaryByRegionRegionDropdownOption.UN_REGION) {
       return dataPoint.unRegion;
     }
+    if(selectedRegion === SummaryByRegionRegionDropdownOption.COUNTRY) {
+      if(dataPoint.__typename === 'MersEstimate') {
+        return dataPoint.countryAlphaTwoCode;
+      }
+
+      return dataPoint.country.alphaTwoCode;
+    }
     assertNever(selectedRegion);
-  }, [selectedRegion])
+  }, [ selectedRegion ]);
+
+  const regionToBarColour = useCallback((region: string) => {
+    if(isWHORegion(region)) {
+      return barColoursForWhoRegions[region];
+    }
+    if(isUNRegion(region)) {
+      return barColoursForUnRegions[region];
+    }
+
+    return variableOfInterestToBarColourMap[selectedVariableOfInterest];
+  }, [ selectedVariableOfInterest ]);
+
+  const regionToChartTitle = useCallback((region: string) => {
+    if(isWHORegion(region)) {
+      return chartTitlesForWhoRegions[region];
+    }
+    if(isUNRegion(region)) {
+      return chartTitlesForUnRegions[region];
+    }
+
+    const countryName = countryAlphaTwoCodeToCountryNameMap[region];
+
+    if(!!countryName) {
+      return countryName;
+    }
+
+    return region;
+  }, [ countryAlphaTwoCodeToCountryNameMap ]);
 
   const graph = useMemo(() => {
     if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.MEDIAN_SEROPREVALENCE) {
       return <SeroprevalenceSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
-        regionToBarColour={(region) => barColourMap[region]}
-        regionToChartTitle={(region) => chartTitleMap[region]}
+        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
       />
@@ -120,8 +158,8 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <AnimalCasesSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
-        regionToBarColour={(region) => barColourMap[region]}
-        regionToChartTitle={(region) => chartTitleMap[region]}
+        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
       />
@@ -130,8 +168,8 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <HumanCasesSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
-        regionToBarColour={(region) => barColourMap[region]}
-        regionToChartTitle={(region) => chartTitleMap[region]}
+        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
       />
@@ -140,15 +178,15 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <HumanDeathsSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
-        regionToBarColour={(region) => barColourMap[region]}
-        regionToChartTitle={(region) => chartTitleMap[region]}
+        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
       />
     }
 
     assertNever(selectedVariableOfInterest);
-  }, [ data, selectedVariableOfInterest, regionGroupingFunction, setNumberOfPagesAvailable, currentPageIndex ]);
+  }, [ data, selectedVariableOfInterest, regionGroupingFunction, setNumberOfPagesAvailable, currentPageIndex, regionToBarColour, regionToChartTitle ]);
 
   return graph;
 }
