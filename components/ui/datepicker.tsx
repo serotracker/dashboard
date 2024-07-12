@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { format, utcToZonedTime } from "date-fns-tz";
+import { format } from "date-fns-tz";
 import { Calendar as CalendarIcon, XCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";

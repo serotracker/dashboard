@@ -139,7 +139,7 @@ export const PathogenProviders = <
     defaultOptions: {
       queries: {
         staleTime: Infinity,
-        cacheTime: Infinity,
+        gcTime: Infinity
       },
     },
   });

@@ -1,4 +1,4 @@
-import parseISO from 'date-fns/parseISO';
+import { parseISO } from 'date-fns';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import { AnimalMersEventMapMarkerData, animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, animalTypeToColourClassnameMap, animalTypeToStringMap, diagnosisSourceToStringMap, diagnosisStatusToColourClassnameMap, diagnosisStatusToStringMap } from "./shared-mers-map-pop-up-variables";

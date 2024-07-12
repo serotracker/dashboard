@@ -3,7 +3,7 @@ import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/s
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
-import parseISO from "date-fns/parseISO";
+import { parseISO } from 'date-fns';
 import { useMemo } from "react";
 
 interface MedianSeroprevalenceOverTimeProps {

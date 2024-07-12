@@ -1,5 +1,5 @@
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
-import { useState, useEffect, MutableRefObject, useRef, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Map, NavigationControl } from "react-map-gl";
 import {
   PathogenMapCursor,
@@ -163,8 +163,8 @@ export function PathogenMap<
     return;
   }
 
-  const onRender = (event: mapboxgl.MapboxEvent) => {
-    const map = event.target;
+  const onRender = (event: mapboxgl.Event) => {
+    const map = event.target as mapboxgl.Map;
     if (map) {
       const features = map.querySourceFeatures(sourceId) as any as GeoJSON.Feature<
         GeoJSON.Geometry,

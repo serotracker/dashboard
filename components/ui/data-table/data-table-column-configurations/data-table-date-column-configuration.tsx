@@ -1,8 +1,7 @@
 import { Row } from "@tanstack/react-table";
-import parseISO from "date-fns/parseISO";
+import { parseISO } from 'date-fns';
 import { DataTableColumnDef } from "../data-table";
 import { DataTableColumnConfigurationEntryType, DateDataTableColumnConfigurationEntry } from "../data-table-column-config";
-import { getSortableColumnDataTableHeaderComponent } from "../sortable-column-data-table-header";
 import { TranslateDate } from "@/utils/translate-util/translate-service";
 import { getDataTableStandardColumnConfiguration } from "./data-table-standard-column-configuration";
 

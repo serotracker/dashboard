@@ -1,5 +1,5 @@
 import { GbdSubRegion, GbdSuperRegion, UnRegion, WhoRegion } from "@/gql/graphql";
-import parseISO from "date-fns/parseISO";
+import { parseISO } from 'date-fns';
 import { typedGroupBy, typedObjectFromEntries, typedObjectKeys } from "@/lib/utils";
 import { AcceptableSarsCov2Estimate, isAcceptableSarsCov2EstimateWithNumerator } from "./data-filtering";
 import { dateToMonthCount, monthEnumFromMonthIndex } from "@/lib/time-utils";

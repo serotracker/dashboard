@@ -1,5 +1,5 @@
 import { useContext, useMemo } from "react";
-import parseISO from 'date-fns/parseISO';
+import { parseISO } from 'date-fns';
 import defaultColours from 'tailwindcss/colors'
 
 import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";

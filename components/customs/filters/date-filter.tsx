@@ -1,7 +1,7 @@
 import { PathogenContextActionType, PathogenContextState, PathogenContextType } from "@/contexts/pathogen-context/pathogen-context";
 import { GenericFilter } from "./generic-filter";
 import { DatePicker } from "@/components/ui/datepicker";
-import parseISO from "date-fns/parseISO";
+import { parseISO } from 'date-fns';
 import { TooltipContentRenderingFunction } from "./available-filters";
 import { SendFilterChangeDispatch } from "../filters";
 

@@ -8,7 +8,7 @@ const getQueryClient = cache(() => {
     defaultOptions: {
       queries: {
         staleTime: Infinity,
-        cacheTime: Infinity,
+        gcTime: Infinity
       },
     },
   })});

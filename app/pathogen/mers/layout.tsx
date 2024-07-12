@@ -1,5 +1,5 @@
 import React from "react";
-import { Hydrate, dehydrate } from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
 import { request } from 'graphql-request';
 import { notFound } from 'next/navigation'
@@ -83,7 +83,9 @@ export default async function MersLayout({
   return (
     <GenericPathogenPageLayout>
       <MersProviders>
-        <Hydrate state={dehydratedState}>{children}</Hydrate>
+        <HydrationBoundary state={dehydratedState}>
+          {children}
+        </HydrationBoundary>
       </MersProviders>
     </GenericPathogenPageLayout>
   );

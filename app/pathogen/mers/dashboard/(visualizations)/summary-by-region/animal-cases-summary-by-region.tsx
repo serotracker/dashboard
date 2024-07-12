@@ -4,7 +4,7 @@ import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import uniqBy from "lodash/uniqBy";
-import parseISO from "date-fns/parseISO";
+import { parseISO } from "date-fns";
 
 interface AnimalCasesSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
