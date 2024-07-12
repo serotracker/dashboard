@@ -4,8 +4,7 @@ import { AreaChart } from "@/components/customs/visualizations/area-chart";
 import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { generateRandomColour, generateRange, typedGroupBy, typedObjectEntries, typedObjectFromEntries } from "@/lib/utils";
 import { useContext } from "react";
-import parseISO from 'date-fns/parseISO';
-import isAfter from 'date-fns/isAfter';
+import { parseISO, isAfter } from 'date-fns';
 import { dateToMonthCount, monthCountToMonthYearString, monthYearStringToMonthCount } from "@/lib/time-utils";
 
 

@@ -10,7 +10,7 @@ export const AboutPageProvider = ({
     defaultOptions: {
       queries: {
         staleTime: Infinity,
-        cacheTime: Infinity
+        gcTime: Infinity
       },
     },
   });

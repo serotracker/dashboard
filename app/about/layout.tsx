@@ -1,6 +1,6 @@
 import getQueryClient from "@/components/customs/getQueryClient";
 import request from "graphql-request";
-import { Hydrate, dehydrate } from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { groupedTeamMembers } from "@/hooks/useGroupedTeamMemberData";
 import { AboutPageProvider } from "./about-page-context";
 import { NavigationSidebar } from "@/components/ui/navigation-sidebar/navigation-sidebar";
@@ -32,7 +32,7 @@ export default async function AboutPageBaseLayout(props: AboutPageBaseLayoutProp
 
   return (
     <AboutPageProvider>
-      <Hydrate state={dehydratedState}>
+      <HydrationBoundary state={dehydratedState}>
         <div className="flex flex-col lg:grid lg:col-span-12 lg:grid-cols-12 lg:grid-rows-2 lg:grid-flow-col w-full h-full">
           <div className="lg:col-span-2 lg:h-full lg:row-span-2 border-b border-background lg:border-b-0">
             <NavigationSidebar
@@ -59,7 +59,7 @@ export default async function AboutPageBaseLayout(props: AboutPageBaseLayoutProp
             {props.children}
           </div>
         </div>
-      </Hydrate>
+      </HydrationBoundary>
     </AboutPageProvider>
   );
 };

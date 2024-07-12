@@ -3,7 +3,7 @@ import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import uniqBy from "lodash/uniqBy";
-import parseISO from "date-fns/parseISO";
+import { parseISO } from "date-fns";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
 
 interface HumanDeathsSummaryByRegionProps<TRegion extends string> {

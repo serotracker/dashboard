@@ -1,5 +1,4 @@
 import { Expressions } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
-import mapboxgl from "mapbox-gl";
 
 // Params: url - to an esri vector tile service
 // Returns: Modified style object with attributes for Mapbox GL JS compatability
@@ -30,7 +29,7 @@ async function prepare(url: string) {
 export async function getEsriVectorSourceStyle(url: string) {
   let style = await prepare(url);
 
-  var source = style.sources.esri as mapboxgl.VectorSource;
+  var source = style.sources.esri as mapboxgl.VectorTileSource;
 
   const l = style.layers[0] as mapboxgl.Layer;
   if (l.id === "Countries") {
