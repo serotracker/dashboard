@@ -173,7 +173,7 @@ export const seriesStringToSeriesFields = (seriesString: SeriesString): SeriesFi
 const valueTypeToLabelMap = {
   [SeriesValueType.VACCINATIONS]: "Vaccination Coverage",
   [SeriesValueType.POSITIVE_CASES]: "Cumulative Incidence of Positive Cases",
-  [SeriesValueType.SEROPREVALENCE]: "Seroprevalence",
+  [SeriesValueType.SEROPREVALENCE]: "Median Seroprevalence",
 }
 
 interface SeriesFieldsToLabelInput {

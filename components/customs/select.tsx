@@ -14,7 +14,7 @@ export type SelectOption = {
   value: string; // All lower case
 };
 
-interface SelectProps {
+export interface SelectProps {
   heading: string;
   options: string[];
   optionToLabelMap: Record<string, string | undefined>;
@@ -123,7 +123,7 @@ export function Select(props: SelectProps) {
         </div>
         <div className="relative mt-2">
           {open && selectables.length > 0 ? (
-            <div className="absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
+            <div className="absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in overflow-y-scroll max-h-96">
               <CommandGroup className="h-full overflow-auto" heading={heading}>
                 {selectables.map((option) => {
                   return (

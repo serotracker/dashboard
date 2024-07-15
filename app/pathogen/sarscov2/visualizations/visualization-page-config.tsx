@@ -10,6 +10,7 @@ import { ModelledSeroprevalenceByWhoRegionGraph } from "../dashboard/(visualizat
 import { ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime } from "../dashboard/(visualizations)/comparing-seroprevalence-positive-cases-and-vaccinations-over-time";
 import { NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegion } from "../dashboard/(visualizations)/number-of-infections-at-midpoint-by-gbd-region";
 import { useModelledSeroprevalenceByWhoRegionCustomizationModal } from "../dashboard/(visualizations)/modelled-seroprevalence-by-who-region/use-modelled-seroprevalence-by-who-region-customization-modal";
+import { useComparingSeroprevalenceToPositiveCasesAndVaccinationsOverTimeModal } from "../dashboard/(visualizations)/comparing-seroprevalance-positive-cases-and-vaccinations-over-time/use-comparing-seroprevalence-positive-cases-and-vaccinations-over-time-modal";
 
 export enum SarsCov2VisualizationId {
   PUBLISHED_STUDY_COUNT_BY_GBD_REGION = "PUBLISHED_STUDY_COUNT_BY_GBD_REGION",
@@ -95,8 +96,8 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       SarsCov2VisualizationUrlParameter[
         "comparing-seroprevalence-positive-cases-and-vaccinations"
       ],
-    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Comparing Seroprevalence to Confirmed Cases and Vaccine Coverage Over Time" }),
-    renderVisualization: () => ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED })
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Comparing Median Seroprevalence to Confirmed Cases and Vaccine Coverage Over Time" }),
+    renderVisualization: () => <p> Requires state. Initialized in following step. </p>
   },
   [SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION]: {
     id: SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION,
@@ -111,6 +112,7 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
 
 export const useVisualizationPageConfiguration = () => {
   const modelledSeroprevalenceByWhoRegionCustomizationModal = useModelledSeroprevalenceByWhoRegionCustomizationModal();
+  const comparingSeroprevalenceToPositiveCasesAndVaccinationsOverTimeModal = useComparingSeroprevalenceToPositiveCasesAndVaccinationsOverTimeModal();
 
   const sarsCov2VisualizationInformationWithModalConfiguration = {
     [SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION]:
@@ -120,15 +122,21 @@ export const useVisualizationPageConfiguration = () => {
     [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION]: {
       ...sarsCov2VisualizationInformation[SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION],
       customizationModalConfiguration: modelledSeroprevalenceByWhoRegionCustomizationModal.customizationModalConfiguration,
-      renderVisualization: () => ModelledSeroprevalenceByWhoRegionGraph({
-        legendConfiguration: LegendConfiguration.RIGHT_ALIGNED,
-        scatterPointsVisible: modelledSeroprevalenceByWhoRegionCustomizationModal.customizationSettings.modelledSeroprevalenceByWhoRegionScatterPointsVisible
-      }),
+      renderVisualization: () => <ModelledSeroprevalenceByWhoRegionGraph
+        legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
+        scatterPointsVisible={modelledSeroprevalenceByWhoRegionCustomizationModal.customizationSettings.modelledSeroprevalenceByWhoRegionScatterPointsVisible}
+      />,
+    },
+    [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]: {
+      ...sarsCov2VisualizationInformation[SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS],
+      customizationModalConfiguration: comparingSeroprevalenceToPositiveCasesAndVaccinationsOverTimeModal.customizationModalConfiguration,
+      renderVisualization: () => <ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime
+        legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
+        seriesRegionPortions={comparingSeroprevalenceToPositiveCasesAndVaccinationsOverTimeModal.seriesRegionPortions}
+      />
     },
     [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_COUNTRY]: 
       sarsCov2VisualizationInformation[SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_COUNTRY],
-    [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]:
-      sarsCov2VisualizationInformation[SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS],
     [SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION]:
       sarsCov2VisualizationInformation[SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION],
   } as const;
