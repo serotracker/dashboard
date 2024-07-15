@@ -16,6 +16,7 @@ export enum SarsCov2VisualizationId {
   PUBLISHED_STUDY_COUNT_BY_GBD_REGION = "PUBLISHED_STUDY_COUNT_BY_GBD_REGION",
   CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME = 'CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME',
   MODELLED_SEROPREVALENCE_BY_WHO_REGION = "MODELLED_SEROPREVALENCE_BY_WHO_REGION",
+  MODELLED_SEROPREVALENCE_BY_COUNTRY = "MODELLED_SEROPREVALENCE_BY_COUNTRY",
   COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS = "COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS",
   NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION = "NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION"
 }
@@ -29,6 +30,7 @@ export enum SarsCov2VisualizationUrlParameter {
   "published-study-count-by-gbd-region" = "published-study-count-by-gbd-region",
   "cumulative-number-of-serosurveys-published-over-time" = "cumulative-number-of-serosurveys-published-over-time",
   "modelled-seroprevalence-by-who-region" = "modelled-seroprevalence-by-who-region",
+  "modelled-seroprevalence-by-country" = "modelled-seroprevalence-by-country",
   "comparing-seroprevalence-positive-cases-and-vaccinations" = "comparing-seroprevalence-positive-cases-and-vaccinations",
   "number-of-infections-at-midpoint-by-gbd-region" = "number-of-infections-at-midpoint-by-gbd-region"
 }
@@ -79,6 +81,15 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Modelled Seroprevalence Globally by WHO Region" }),
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>
   },
+  [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_COUNTRY]: {
+    id: SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_COUNTRY,
+    urlParameter:
+      SarsCov2VisualizationUrlParameter[
+        "modelled-seroprevalence-by-country"
+      ],
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Modelled Seroprevalence Globally by Country" }),
+    renderVisualization: () => <p> Requires state. Initialized in following step. </p>
+  },
   [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]: {
     id: SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS,
     urlParameter:
@@ -124,6 +135,8 @@ export const useVisualizationPageConfiguration = () => {
         seriesRegionPortions={comparingSeroprevalenceToPositiveCasesAndVaccinationsOverTimeModal.seriesRegionPortions}
       />
     },
+    [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_COUNTRY]: 
+      sarsCov2VisualizationInformation[SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_COUNTRY],
     [SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION]:
       sarsCov2VisualizationInformation[SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION],
   } as const;

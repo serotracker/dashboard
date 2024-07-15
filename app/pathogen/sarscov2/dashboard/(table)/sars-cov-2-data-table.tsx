@@ -1,11 +1,19 @@
-import { DataTable, TableHeaderType } from "@/components/ui/data-table/data-table";
+import { useContext, useMemo } from "react";
+import { DataTable, RowExpansionConfiguration, TableHeaderType } from "@/components/ui/data-table/data-table";
 import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
-import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
+import { SarsCov2Context, SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
 import { GbdSubRegion, WhoRegion } from "@/gql/graphql";
 import { gbdSubRegionToLabelMap, gbdSuperRegionToLabelMap, isGbdSubRegion, isGbdSuperRegion } from "@/lib/gbd-regions";
 import { getLabelForUNRegion, isUNRegion } from "@/lib/un-regions";
-import { useContext } from "react";
+import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
+import { ModelledSarsCov2SeroprevalenceContext } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/modelled-sarscov2-seroprevalence-context";
+import { SarsCov2VisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
+import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
+import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
+import { ModelledSeroprevalenceByCountryGraph } from "../(visualizations)/modelled-seroprevalence-by-country";
+import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 
 const ageGroupToSortOrderMap: Record<string, number | undefined> = {
   'Children and Youth (0-17 years)': 1,
@@ -33,6 +41,7 @@ const sarsCov2ColumnConfiguration = [{
   label: 'Estimate Name',
   isHideable: false,
   isFixed: true,
+  size: 700,
   fieldNameForLink: 'url'
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
@@ -207,10 +216,86 @@ const sarsCov2ColumnConfiguration = [{
   label: 'Source',
   fieldNameForLink: 'url',
   isSortable: false
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'id',
+  label: 'ID',
+  isHideable: false,
+  initiallyVisible: false
 }];
 
 export const SarsCov2DataTable = () => {
   const state = useContext(SarsCov2Context);
+  const { dataPointsForCountryAlphaThreeCodes } = useContext(ModelledSarsCov2SeroprevalenceContext);
+  const { sarsCov2VisualizationInformation } = useVisualizationPageConfiguration();
+  const { countryAlphaThreeCodeToCountryNameMap } = useContext(CountryInformationContext)
+  const { viewOnMapHandler } = useDataTableMapViewingHandler();
+
+  const rowExpansionConfiguration: RowExpansionConfiguration<SarsCov2Estimate> = useMemo(() => ({
+    enabled: true,
+    generateExpandedRowStatement: ({ data, row }) => 'Clicking on this row in the table again will minimize it',
+    visualization: ({ data, row, className }) => {
+      const idOfEstimate = row.getValue('id');
+
+      if(!idOfEstimate) {
+        return null;
+      }
+
+      const estimate = data.find((dataPoint) => dataPoint.id === idOfEstimate);
+
+      if(!estimate) {
+        return null;
+      }
+
+      const whoRegion = estimate.whoRegion ?? undefined;
+      const countryAlphaThreeCode = estimate.countryAlphaThreeCode;
+      const dataPointsForCountry = dataPointsForCountryAlphaThreeCodes.find(
+        (element) => element.countryAlphaThreeCode === countryAlphaThreeCode
+      )?.data.map((dataPoint) => ({
+        whoRegion,
+        countryAlphaThreeCode,
+        xAxisValue: dataPoint.xAxisValue,
+        rawYAxisValue: dataPoint.rawYAxisValue,
+        modelledYAxisValue: dataPoint.modelledYAxisValue
+      })) ?? [];
+
+      const countryName = countryAlphaThreeCodeToCountryNameMap[countryAlphaThreeCode] ?? "Unknown Country";
+
+      return (
+        <RechartsVisualization
+          className="h-full-screen"
+          data={dataPointsForCountry}
+          highlightedDataPoint={undefined}
+          hideArbovirusDropdown={true}
+          visualizationInformation={{
+            ...sarsCov2VisualizationInformation[SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_COUNTRY],
+            getDisplayName: () => ({
+              type: VisualizationDisplayNameType.STANDARD,
+              displayName: `Modelled Seroprevalence for ${countryName} over time`
+            }),
+            renderVisualization: () => <ModelledSeroprevalenceByCountryGraph
+              data={dataPointsForCountry}
+              scatterPointsVisible={true}
+              legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
+            />
+          }}
+          getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
+          buttonConfig={{
+            downloadButton: {
+              enabled: true,
+            },
+            zoomInButton: {
+              enabled: false,
+            },
+            closeButton: {
+              enabled: false,
+            }
+          }}
+        />
+      );
+    },
+    viewOnMapHandler
+  }), [ viewOnMapHandler, sarsCov2VisualizationInformation, dataPointsForCountryAlphaThreeCodes, countryAlphaThreeCodeToCountryNameMap ]);
 
   return (
     <DataTable
@@ -223,9 +308,7 @@ export const SarsCov2DataTable = () => {
       csvCitationConfiguration={{
         enabled: false
       }}
-      rowExpansionConfiguration={{
-        enabled: false
-      }}
+      rowExpansionConfiguration={rowExpansionConfiguration}
       data={state.filteredData}
     />
   )

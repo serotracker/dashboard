@@ -14,6 +14,7 @@ export const SarsCov2VisualizationsSection = () => {
       [SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION]: { className: "h-full-screen" },
       [SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME]: { className: "h-full-screen" },
       [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION]: { className: "h-full-screen" },
+      [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_COUNTRY]: { className: "h-full-screen" },
       [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]: { className: "h-full-screen" },
       [SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION]: { className: "h-full-screen" }
     },
