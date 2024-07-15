@@ -279,7 +279,9 @@ export const SarsCov2DataTable = () => {
               modalType: ModalType.CUSTOMIZATION_MODAL,
               content: {
                 customizationSettings: modelledSeroprevalenceCustomizationSettings,
-              }
+              },
+              modalBackgroundClassname: 'relative',
+              modalForegroundClassname: 'w-full lg:w-11/12',
             },
             getDisplayName: () => ({
               type: VisualizationDisplayNameType.STANDARD,

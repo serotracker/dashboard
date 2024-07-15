@@ -138,6 +138,7 @@ export const NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegio
       secondaryGroupingSortFunction={(gbdSuperRegionA, gbdSuperRegionB) => gbdSuperRegionA > gbdSuperRegionB ? 1 : -1}
       secondaryGroupingKeyToLabel={(gbdSuperRegion) => gbdSuperRegionToLabelMap[gbdSuperRegion]}
       transformOutputValue={({ data }) => data.length}
+      tooltipLabelFormatter={(label) => <b>{`Number of studies per region that reported approximately ${label} infections per confirmed case`}</b>}
       getLineColour={(gbdSuperRegion) => barColoursForGbdSuperRegions[gbdSuperRegion] ?? generateRandomColour()}
       legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
     />
