@@ -15,7 +15,7 @@ export const MultiSelectDropdownCustomizationSetting = (
   return (
     <div className={cn("w-full flex justify-between items-center", props.className ?? '')}>
       <p> {props.dropdownName} </p>
-      <Select {...propsWithoutClassname} />
+      <Select className='max-w-md' {...propsWithoutClassname} />
     </div>
   );
 }
