@@ -14,6 +14,7 @@ import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-hand
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
 import { ModelledSeroprevalenceByCountryGraph } from "../(visualizations)/modelled-seroprevalence-by-country";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
+import { ModalState, ModalType } from "@/components/ui/modal/modal";
 
 const ageGroupToSortOrderMap: Record<string, number | undefined> = {
   'Children and Youth (0-17 years)': 1,
@@ -226,7 +227,10 @@ const sarsCov2ColumnConfiguration = [{
 
 export const SarsCov2DataTable = () => {
   const state = useContext(SarsCov2Context);
-  const { dataPointsForCountryAlphaThreeCodes } = useContext(ModelledSarsCov2SeroprevalenceContext);
+  const {
+    dataPointsForCountryAlphaThreeCodes,
+    customizationSettingsForModal: modelledSeroprevalenceCustomizationSettings
+  } = useContext(ModelledSarsCov2SeroprevalenceContext);
   const { sarsCov2VisualizationInformation } = useVisualizationPageConfiguration();
   const { countryAlphaThreeCodeToCountryNameMap } = useContext(CountryInformationContext)
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
@@ -269,6 +273,14 @@ export const SarsCov2DataTable = () => {
           hideArbovirusDropdown={true}
           visualizationInformation={{
             ...sarsCov2VisualizationInformation[SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_COUNTRY],
+            customizationModalConfiguration: {
+              initialModalState: ModalState.CLOSED,
+              disabled: false,
+              modalType: ModalType.CUSTOMIZATION_MODAL,
+              content: {
+                customizationSettings: modelledSeroprevalenceCustomizationSettings,
+              }
+            },
             getDisplayName: () => ({
               type: VisualizationDisplayNameType.STANDARD,
               displayName: `Modelled Seroprevalence for ${countryName} over time`
@@ -295,7 +307,7 @@ export const SarsCov2DataTable = () => {
       );
     },
     viewOnMapHandler
-  }), [ viewOnMapHandler, sarsCov2VisualizationInformation, dataPointsForCountryAlphaThreeCodes, countryAlphaThreeCodeToCountryNameMap ]);
+  }), [ viewOnMapHandler, sarsCov2VisualizationInformation, dataPointsForCountryAlphaThreeCodes, countryAlphaThreeCodeToCountryNameMap, modelledSeroprevalenceCustomizationSettings ]);
 
   return (
     <DataTable
