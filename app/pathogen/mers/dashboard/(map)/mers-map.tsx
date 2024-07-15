@@ -131,7 +131,7 @@ export const MersMap = () => {
                 ["==", ["get", "__typename"], "AnimalMersEvent"],
                 ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Bat]
               ], 1, 0]],
-              "Estimates": ["+", ["case", ["==", ["get", "__typename"], "MersEstimate"], 1, 0]]
+              "Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename"], "MersEstimate"], 1, 0]]
             },
             validClusterPropertyKeys: [
               "Reported Human Events",
@@ -140,12 +140,12 @@ export const MersMap = () => {
               "Reported Animal Events",
               "Camel Events",
               "Bat Events",
-              "Estimates"
+              "Seroprevalence Estimates"
             ],
             clusterPropertyKeysIncludedInSum: [
               "Reported Human Events",
               "Reported Animal Events",
-              "Estimates"
+              "Seroprevalence Estimates"
             ],
             clusterPropertyToColourMap: {
               "Reported Human Events": MapPinColours['HumanMersEvent'],
@@ -154,7 +154,7 @@ export const MersMap = () => {
               "Reported Animal Events": MapPinColours['AnimalMersEvent'],
               "Camel Events": MapPinColours['animal-mers-event-alt'],
               "Bat Events": MapPinColours['animal-mers-event-alt'],
-              "Estimates": MapPinColours['MersEstimate']
+              "Seroprevalence Estimates": MapPinColours['MersEstimate']
             }
           }}
           generatePopupContent={(input) => {
@@ -187,7 +187,7 @@ export const MersMap = () => {
         legendEntries={countryHighlightLayerLegendEntries}
         freeTextEntries={freeTextEntries}
       />
-      <MapEstimateSummary filteredData={filteredData.map(() => ({sourceSheetName: "Study name goes here..."}))}/>
+      <MapEstimateSummary filteredData={filteredData.map((estimate) => ({ sourceSheetName: estimate.sourceTitle }))}/>
       <mersMapCustomizationModal.mapCustomizeButton />
       <mersMapCustomizationModal.customizationModal />
     </>
