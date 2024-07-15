@@ -8,6 +8,8 @@ export const mersEstimates = gql`
     mersEstimates {
       __typename
       id
+      seroprevalence
+      estimateId
       country
       countryAlphaTwoCode
       countryAlphaThreeCode
@@ -15,6 +17,11 @@ export const mersEstimates = gql`
       longitude
       whoRegion
       unRegion
+      firstAuthorFullName
+      sourceUrl
+      sourceType
+      sourceTitle
+      insitutution
     }
   }
 `

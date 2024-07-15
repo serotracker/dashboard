@@ -27,7 +27,6 @@ export const SeroprevalenceSummaryByRegion = <TRegion extends string>(props: Ser
       //TODO remove these when we have real data
       samplingStartDate: '2024-07-09T00:28:53Z',
       samplingEndDate: '2024-07-09T00:28:53Z',
-      seroprevalence: 0.1
     }))
     .filter((estimate): estimate is Omit<typeof estimate, 'region'> & {region: NonNullable<typeof estimate['region']>} => !!estimate.region)
   , [ data, regionGroupingFunction ]);
