@@ -156,6 +156,17 @@ export function filterData(
 
           return true;
         }
+        case "sourceType": {
+          if(item['__typename'] === 'AnimalMersEvent' || item['__typename'] === 'HumanMersEvent') {
+            return true;
+          }
+
+          return defaultDataFilterHandler({
+            item,
+            key,
+            filters
+          });
+        }
         case "esm": {
           switch(filters["esm"][0]){
             case "zika": 
