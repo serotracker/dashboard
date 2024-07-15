@@ -26,6 +26,11 @@ export type AcceptableSarsCov2Estimate = AcceptableSarsCov2EstimateWithSeropreva
 
 interface FilterDataForSarsCov2SeroprevalenceModellingInput {
   data: SarsCov2Estimate[];
+  filterSelections: {
+    scopeSelections: string[];
+    riskOfBiasSelections: string[];
+    populationGroupSelections: string[];
+  }
 }
 
 interface FilterDataForSarsCov2SeroprevalenceModellingOutput {
@@ -35,23 +40,9 @@ interface FilterDataForSarsCov2SeroprevalenceModellingOutput {
 export const filterDataForSarsCov2SeroprevalenceModelling = (input: FilterDataForSarsCov2SeroprevalenceModellingInput): FilterDataForSarsCov2SeroprevalenceModellingOutput => {
   const filteredDataForModelling = input.data
     .filter((dataPoint) =>
-      (dataPoint.scope && [
-        'National',
-        'Regional'
-      ].includes(dataPoint.scope)) &&
-      (dataPoint.riskOfBias && [
-        'Low',
-        'Moderate'
-      ].includes(dataPoint.riskOfBias)) && 
-      (dataPoint.populationGroup && [
-        'Blood donors',
-        'Household and community samples',
-        'Multiple general populations',
-        'Persons living in slums',
-        'Pregnant or parturient women',
-        'Representative patient population',
-        'Residual sera'
-      ].includes(dataPoint.populationGroup))
+      (dataPoint.scope && input.filterSelections.scopeSelections.includes(dataPoint.scope)) &&
+      (dataPoint.riskOfBias && input.filterSelections.riskOfBiasSelections.includes(dataPoint.riskOfBias)) &&
+      (dataPoint.populationGroup && input.filterSelections.populationGroupSelections.includes(dataPoint.populationGroup))
     )
     .filter((dataPoint: SarsCov2Estimate): dataPoint is AcceptableSarsCov2Estimate => 
         !!dataPoint.samplingMidDate
