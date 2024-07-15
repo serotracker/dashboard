@@ -3,6 +3,7 @@ import { CustomizationSetting, CustomizationSettingType } from "./customization-
 import { DropdownCustomizationSetting } from "./dropdown-customization-setting";
 import { SwitchCustomizationSetting } from "./switch-customization-settings";
 import { ModalHeader } from "../modal-header";
+import { MultiSelectDropdownCustomizationSetting } from "./multi-select-dropdown-customization-setting";
 
 export interface CustomizationModalContentProps<TDropdownOption extends string> {
   className?: string;
@@ -21,6 +22,10 @@ export const CustomizationModalContent = <
 
         if(customizationSetting.type === CustomizationSettingType.DROPDOWN) {
           return <DropdownCustomizationSetting className={isLastElement ? '' : 'mb-6'} key={customizationSetting.dropdownName} {...customizationSetting} />
+        }
+
+        if(customizationSetting.type === CustomizationSettingType.MULTI_SELECT_DROPDOWN) {
+          return <MultiSelectDropdownCustomizationSetting className={isLastElement ? '' : 'mb-6'} key={customizationSetting.dropdownName} {...customizationSetting} />
         }
 
         if(customizationSetting.type === CustomizationSettingType.SWITCH) {

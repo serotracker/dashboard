@@ -7,10 +7,9 @@ import { dateFromYearAndMonth, dateToMonthCount, monthCountToMonthYearString, mo
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { generateRandomColour } from "@/lib/utils";
 import assertNever from "assert-never";
-import { useRegionSelector } from "./comparing-seroprevalance-positive-cases-and-vaccinations-over-time/region-selector";
 import { MonthlySarsCov2CountryInformationContext } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/monthly-sarscov2-country-information-context";
 import { BestFitCurveLineChart } from "@/components/customs/visualizations/best-fit-curve-line-chart";
-import { SeriesValueType, seriesStringToSeriesFields, useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSeries } from "./comparing-seroprevalance-positive-cases-and-vaccinations-over-time/series-generator";
+import { SeriesFieldsRegionPortion, SeriesValueType, seriesStringToSeriesFields, useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSeries } from "./comparing-seroprevalance-positive-cases-and-vaccinations-over-time/series-generator";
 
 const indexToColourMap: Record<number, string | undefined> = {
   0: defaultColours.red[200],
@@ -50,21 +49,18 @@ const indexToColourMap: Record<number, string | undefined> = {
 
 interface ComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeProps {
   legendConfiguration: LegendConfiguration;
+  seriesRegionPortions: SeriesFieldsRegionPortion[];
 }
 
 export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
   props: ComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeProps
 ) => {
-  const { filteredData }= useContext(SarsCov2Context);
+  const { filteredData } = useContext(SarsCov2Context);
   const { monthlySarsCov2CountryInformation } = useContext(MonthlySarsCov2CountryInformationContext);
   const {
     getAllSeries,
     seriesStringToLabel,
   } = useComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeSeries()
-  const {
-    regionSelector,
-    seriesRegionPortions
-  } = useRegionSelector({ maximumRegionSelectorCount: 5 });
 
   const consideredEstimateData = useMemo(() => filteredData
     .filter((dataPoint: SarsCov2Estimate): dataPoint is Omit<SarsCov2Estimate, "samplingMidDate"> & {
@@ -103,58 +99,53 @@ export const ComparingSeroprevalencePositiveCasesAndVaccinationsOverTime = (
   ], [consideredEstimateData, consideredCountryData])
 
   return (
-    <div className="flex h-full">
-      <div className="grow-0 h-full max-w-xs overflow-y-scroll ignore-for-visualization-download">
-        {regionSelector}
-      </div>
-      <div className="grow h-full">
-        <BestFitCurveLineChart
-          graphId="comparing-seroprevalence-positive-cases-and-vaccinations"
-          data={consolidatedData}
-          primaryGroupingFunction={(dataPoint) => getAllSeries({
-            dataPoint: dataPoint,
-            seriesRegionPortions
-          }).seriesStrings}
-          primaryGroupingKeyToLabel={(primaryGroupingKey) => seriesStringToLabel(primaryGroupingKey)}
-          primaryGroupingSortFunction={(primaryGroupingKeyA, primaryGroupingKeyB) => primaryGroupingKeyA > primaryGroupingKeyB ? 1 : -1}
-          dataPointToXAxisValue={({ dataPoint }) => dateToMonthCount(dataPoint.date)}
-          xAxisValueToLabel={({ xAxisValue }) => monthCountToMonthYearString(xAxisValue)}
-          xAxisLabelSortingFunction={(xAxisLabelA, xAxisLabelB) => monthYearStringToMonthCount(xAxisLabelA) - monthYearStringToMonthCount(xAxisLabelB)}
-          dataPointToYAxisValue={({dataPoint, primaryGroupingKey}) => {
-            const seriesFields = seriesStringToSeriesFields(primaryGroupingKey);
+    <div className="h-full">
+      <BestFitCurveLineChart
+        graphId="comparing-seroprevalence-positive-cases-and-vaccinations"
+        data={consolidatedData}
+        primaryGroupingFunction={(dataPoint) => getAllSeries({
+          dataPoint: dataPoint,
+          seriesRegionPortions: props.seriesRegionPortions
+        }).seriesStrings}
+        primaryGroupingKeyToLabel={(primaryGroupingKey) => seriesStringToLabel(primaryGroupingKey)}
+        primaryGroupingSortFunction={(primaryGroupingKeyA, primaryGroupingKeyB) => primaryGroupingKeyA > primaryGroupingKeyB ? 1 : -1}
+        dataPointToXAxisValue={({ dataPoint }) => dateToMonthCount(dataPoint.date)}
+        xAxisValueToLabel={({ xAxisValue }) => monthCountToMonthYearString(xAxisValue)}
+        xAxisLabelSortingFunction={(xAxisLabelA, xAxisLabelB) => monthYearStringToMonthCount(xAxisLabelA) - monthYearStringToMonthCount(xAxisLabelB)}
+        dataPointToYAxisValue={({dataPoint, primaryGroupingKey}) => {
+          const seriesFields = seriesStringToSeriesFields(primaryGroupingKey);
 
-            if(seriesFields.valueType === SeriesValueType.POSITIVE_CASES) {
-              return dataPoint.positiveCasesPerMillionPeople !== undefined
-                ? (dataPoint.positiveCasesPerMillionPeople / 1_000_000) * 100
-                : undefined
-            }
+          if(seriesFields.valueType === SeriesValueType.POSITIVE_CASES) {
+            return dataPoint.positiveCasesPerMillionPeople !== undefined
+              ? (dataPoint.positiveCasesPerMillionPeople / 1_000_000) * 100
+              : undefined
+          }
 
-            if(seriesFields.valueType === SeriesValueType.VACCINATIONS) {
-              return dataPoint.peopleVaccinatedPerHundred;
-            }
+          if(seriesFields.valueType === SeriesValueType.VACCINATIONS) {
+            return dataPoint.peopleVaccinatedPerHundred;
+          }
 
-            if(seriesFields.valueType === SeriesValueType.SEROPREVALENCE) {
-              return dataPoint.seroprevalence !== undefined
-                ? dataPoint.seroprevalence * 100
-                : undefined;
-            }
+          if(seriesFields.valueType === SeriesValueType.SEROPREVALENCE) {
+            return dataPoint.seroprevalence !== undefined
+              ? dataPoint.seroprevalence * 100
+              : undefined;
+          }
 
-            assertNever(seriesFields.valueType)
-          }}
-          formatYAxisValue={({ yAxisValue }) => parseFloat((yAxisValue).toFixed(1))}
-          getLineColour={({ index }) => indexToColourMap[index] ?? generateRandomColour() }
-          bestFitLineSettings={{
-            maximumPolynomialOrder: 2,
-            yAxisDomain: {
-              maximumValue: 100,
-              minimumValue: 0
-            },
-            allowStrictlyIncreasingLinesOnly: true
-          }}
-          percentageFormattingEnabled={true}
-          legendConfiguration={props.legendConfiguration}
-        />
-      </div>
+          assertNever(seriesFields.valueType)
+        }}
+        formatYAxisValue={({ yAxisValue }) => parseFloat((yAxisValue).toFixed(1))}
+        getLineColour={({ index }) => indexToColourMap[index] ?? generateRandomColour() }
+        bestFitLineSettings={{
+          maximumPolynomialOrder: 2,
+          yAxisDomain: {
+            maximumValue: 100,
+            minimumValue: 0
+          },
+          allowStrictlyIncreasingLinesOnly: true
+        }}
+        percentageFormattingEnabled={true}
+        legendConfiguration={props.legendConfiguration}
+      />
     </div>
   );
 
