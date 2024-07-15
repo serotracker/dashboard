@@ -102,25 +102,6 @@ export const LineChartWithBestFitCurveAndScatterPoints = <
       .replace(/ \(Raw\)$/g, '')
   )
 
-  const legendProps = props.legendConfiguration === LegendConfiguration.RIGHT_ALIGNED
-    ? {
-        layout: "vertical" as const,
-        verticalAlign: "middle" as const,
-        align: "right" as const,
-        wrapperStyle: { right: -10 },
-        formatter: legendFormatter
-      }
-    : {
-        layout: "horizontal" as const,
-        verticalAlign: "bottom" as const,
-        align: "center" as const,
-        wrapperStyle: {
-          paddingTop: 10,
-          bottom: 0,
-        },
-        formatter: legendFormatter
-      };
-
   const xAxisProps: XAxisProps = {
     dataKey: "xAxisValue",
     type: 'category'
@@ -149,10 +130,12 @@ export const LineChartWithBestFitCurveAndScatterPoints = <
           itemStyle={{"color": "black"}}
           formatter={tooltipFormatter}
         />
-        <Legend {...legendProps} />
         {allPrimaryKeys.map((primaryKey, index) => (
           <Line
-            name={`${primaryKey} (Modelled)`}
+            name={`${props.primaryGroupingKeyToLabel 
+              ? props.primaryGroupingKeyToLabel(primaryKey)
+              : primaryKey
+            } (Modelled)`}
             key={`${primaryKey}-modelledYAxisValue`}
             type="monotone"
             dataKey={`${primaryKey}-modelledYAxisValue`}
@@ -162,7 +145,10 @@ export const LineChartWithBestFitCurveAndScatterPoints = <
         {props.scatterPointsVisible && allPrimaryKeys.map((primaryKey, index) => (
           <Scatter
             legendType='none'
-            name={`${primaryKey} (Raw)`}
+            name={`${props.primaryGroupingKeyToLabel
+              ? props.primaryGroupingKeyToLabel(primaryKey)
+              : primaryKey
+            } (Raw)`}
             key={`${primaryKey}-rawYAxisValue`}
             dataKey={`${primaryKey}-rawYAxisValue`}
             type="monotone"
