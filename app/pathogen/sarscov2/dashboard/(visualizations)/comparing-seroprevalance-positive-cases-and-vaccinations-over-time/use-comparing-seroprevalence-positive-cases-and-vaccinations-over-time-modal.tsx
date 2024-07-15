@@ -17,7 +17,7 @@ interface UseComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeModalOut
 export const useComparingSeroprevalenceToPositiveCasesAndVaccinationsOverTimeModal = (): UseComparingSeroprevalencePositiveCasesAndVaccinationsOverTimeModalOutput => {
   const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
 
-  const [ globalLineVisible, setGlobalLineVisible ] = useState<boolean>(true);
+  const [ globalLineVisible, setGlobalLineVisible ] = useState<boolean>(false);
   const [ selectedCountries, setSelectedCountries ] = useState<string[]>([]);
   const [ selectedUnRegions, setSelectedUnRegions ] = useState<UnRegion[]>([]);
   const [ selectedWhoRegions, setSelectedWhoRegions ] = useState<WhoRegion[]>([
