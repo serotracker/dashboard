@@ -10,6 +10,8 @@ export const mersEstimates = gql`
       id
       seroprevalence
       estimateId
+      city
+      state
       country
       countryAlphaTwoCode
       countryAlphaThreeCode

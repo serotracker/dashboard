@@ -150,11 +150,7 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
         enabled: false
       }}
       rowExpansionConfiguration={rowExpansionConfiguration}
-      data={state.filteredData.map((dataPoint) => ({
-        ...dataPoint,
-        state: "Alberta",
-        city: "Calgary",
-      }))}
+      data={state.filteredData}
     />
   )
 }
