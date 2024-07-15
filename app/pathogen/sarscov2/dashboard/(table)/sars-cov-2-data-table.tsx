@@ -295,7 +295,7 @@ export const SarsCov2DataTable = () => {
       );
     },
     viewOnMapHandler
-  }), [ viewOnMapHandler, sarsCov2VisualizationInformation, dataPointsForCountryAlphaThreeCodes ]);
+  }), [ viewOnMapHandler, sarsCov2VisualizationInformation, dataPointsForCountryAlphaThreeCodes, countryAlphaThreeCodeToCountryNameMap ]);
 
   return (
     <DataTable
