@@ -30,7 +30,6 @@ export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTime
       //TODO remove these when we have real data
       samplingStartDate: '2024-07-09T00:28:53Z',
       samplingEndDate: '2024-07-09T00:28:53Z',
-      seroprevalence: 0.1
     }))
   , [ data ]);
 

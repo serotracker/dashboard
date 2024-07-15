@@ -15,7 +15,7 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
   label: 'Estimate ID',
   isHideable: false,
   isFixed: true,
-  fieldNameForLink: 'url',
+  fieldNameForLink: 'sourceUrl',
   size: 400,
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
@@ -48,13 +48,29 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
   label: 'Seroprevalence'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'firstAuthorFullName',
+  label: 'First Author Full Name'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'sourceType',
+  label: 'Source Type'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'sourceTitle',
+  label: 'Source Title'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'insitutution',
+  label: 'Institution'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'sampleSize',
   label: 'Sample Size'
 }, {
   type: DataTableColumnConfigurationEntryType.LINK_BUTTON as const,
-  fieldName: 'url',
+  fieldName: 'sourceUrl',
   label: 'Source',
-  fieldNameForLink: 'url',
+  fieldNameForLink: 'sourceUrl',
   isSortable: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
@@ -134,15 +150,7 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
         enabled: false
       }}
       rowExpansionConfiguration={rowExpansionConfiguration}
-      data={state.filteredData.map((dataPoint) => ({
-        ...dataPoint,
-        state: "Alberta",
-        city: "Calgary",
-        estimateId: "Test Data",
-        url: "https://en.wikipedia.org/wiki/MERS",
-        seroprevalence: 0.1,
-        sampleSize: 100
-      }))}
+      data={state.filteredData}
     />
   )
 }

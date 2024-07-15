@@ -6,21 +6,21 @@ import React, { useMemo } from "react";
 
 function pathogenFullString(pathogen: string) {
   switch (pathogen) {
-      case "DENV":
-        return "Dengue Virus";
-      case "ZIKV":
-        return "Zika Virus";
-      case "CHIKV":
-        return "Chikungunya Virus";
-      case "YF":
-        return "Yellow Fever";
-      case "WNV":
-        return "West Nile Virus";
-      case "MAYV":
-        return "Mayaro Virus";
-      default:
-        return "Unknown";
-    }
+    case "DENV":
+      return "Dengue Virus";
+    case "ZIKV":
+      return "Zika Virus";
+    case "CHIKV":
+      return "Chikungunya Virus";
+    case "YF":
+      return "Yellow Fever";
+    case "WNV":
+      return "West Nile Virus";
+    case "MAYV":
+      return "Mayaro Virus";
+    default:
+      return "Unknown";
+  }
 }
 
 interface ArbovirusEstimatePopupContentProps {
