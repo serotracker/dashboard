@@ -5,16 +5,18 @@ import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { HumanCasesSummaryByRegion } from "./summary-by-region/human-cases-summary-by-region";
-import { SeroprevalenceSummaryByRegion } from "./summary-by-region/seroprevalence-summary-by-region";
+import { HumanSeroprevalenceSummaryByRegion } from "./summary-by-region/human-seroprevalence-summary-by-region";
 import { AnimalCasesSummaryByRegion } from "./summary-by-region/animal-cases-summary-by-region";
 import { HumanDeathsSummaryByRegion } from "./summary-by-region/human-deaths-summary-by-region";
 import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { isUNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { isWHORegion } from "@/lib/who-regions";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
+import { AnimalSeroprevalenceSummaryByRegion } from "./summary-by-region/animal-seroprevalence-by-region";
 
 export enum SummaryByRegionVariableOfInterestDropdownOption {
-  MEDIAN_SEROPREVALENCE = "MEDIAN_SEROPREVALENCE",
+  HUMAN_MEDIAN_SEROPREVALENCE = "HUMAN_MEDIAN_SEROPREVALENCE",
+  ANIMAL_MEDIAN_SEROPREVALENCE = "ANIMAL_MEDIAN_SEROPREVALENCE",
   MERS_ANIMAL_CASES = "MERS_ANIMAL_CASES",
   MERS_HUMAN_CASES = "MERS_HUMAN_CASES",
   MERS_HUMAN_DEATHS = "MERS_HUMAN_DEATHS",
@@ -81,7 +83,8 @@ const barColoursForUnRegions: Record<UnRegion, string> = {
 const chartTitlesForUnRegions = unRegionEnumToLabelMap;
 
 const variableOfInterestToBarColourMap = {
-  [SummaryByRegionVariableOfInterestDropdownOption.MEDIAN_SEROPREVALENCE]: "#e7ed8a",
+  [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE]: "#e7ed8a",
+  [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE]: "#13f244",
   [SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES]: "#ed8ac7",
   [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES]: "#8abded",
   [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS]: "#2a8deb",
@@ -144,8 +147,18 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
   }, [ countryAlphaTwoCodeToCountryNameMap ]);
 
   const graph = useMemo(() => {
-    if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.MEDIAN_SEROPREVALENCE) {
-      return <SeroprevalenceSummaryByRegion
+    if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE) {
+      return <HumanSeroprevalenceSummaryByRegion
+        data={data}
+        regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
+        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToChartTitle={(region) => regionToChartTitle(region)}
+        setNumberOfPagesAvailable={setNumberOfPagesAvailable}
+        currentPageIndex={currentPageIndex}
+      />
+    }
+    if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE) {
+      return <AnimalSeroprevalenceSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
         regionToBarColour={(region) => regionToBarColour(region)}

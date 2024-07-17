@@ -9,7 +9,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
   const [
     summaryByRegionVariableOfInterestSelectedDropdownOption,
     setSummaryByRegionVariableOfInterestSelectedDropdownOption,
-  ] = useState<SummaryByRegionVariableOfInterestDropdownOption>(SummaryByRegionVariableOfInterestDropdownOption.MEDIAN_SEROPREVALENCE);
+  ] = useState<SummaryByRegionVariableOfInterestDropdownOption>(SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE);
 
   const [
     summaryByRegionSelectedDropdownOption,
@@ -58,7 +58,8 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       dropdownOptionGroups: [{
         groupHeader: 'Seroprevalence Estimates',
         options: [
-          SummaryByRegionVariableOfInterestDropdownOption.MEDIAN_SEROPREVALENCE
+          SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE,
+          SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE
         ]
       }, {
         groupHeader: 'Cases and Deaths',
@@ -70,7 +71,8 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       }],
       chosenDropdownOption: summaryByRegionVariableOfInterestSelectedDropdownOption,
       dropdownOptionToLabelMap: {
-        [SummaryByRegionVariableOfInterestDropdownOption.MEDIAN_SEROPREVALENCE]: "Median Seroprevalence",
+        [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE]: "Median Human Seroprevalence",
+        [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE]: "Median Animal Seroprevalence",
         [SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES]: "Confirmed Animal Cases",
         [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES]: "Confirmed Human Cases",
         [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS]: "Confirmed Human Deaths"

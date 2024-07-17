@@ -7,7 +7,7 @@ import { parseISO } from "date-fns";
 import uniqBy from "lodash/uniqBy";
 import { useMemo, useEffect } from "react";
 
-interface SeroprevalenceSummaryByRegionProps<TRegion extends string> {
+interface HumanSeroprevalenceSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
   regionGroupingFunction: (dataPoint: MersEstimate) => TRegion | undefined;
   regionToBarColour: (region: TRegion) => string;
@@ -16,11 +16,12 @@ interface SeroprevalenceSummaryByRegionProps<TRegion extends string> {
   currentPageIndex: number;
 }
 
-export const SeroprevalenceSummaryByRegion = <TRegion extends string>(props: SeroprevalenceSummaryByRegionProps<TRegion>) => {
+export const HumanSeroprevalenceSummaryByRegion = <TRegion extends string>(props: HumanSeroprevalenceSummaryByRegionProps<TRegion>) => {
   const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
 
   const estimates = useMemo(() => data
     .filter((dataPoint): dataPoint is MersEstimate => dataPoint.__typename === 'HumanMersEstimate' || dataPoint.__typename === 'AnimalMersEstimate')
+    .filter((dataPoint) => dataPoint.__typename === 'HumanMersEstimate')
     .map((estimate) => ({
       ...estimate,
       region: regionGroupingFunction(estimate),
@@ -63,7 +64,7 @@ export const SeroprevalenceSummaryByRegion = <TRegion extends string>(props: Ser
       getBarColour={(region) => regionToBarColour(region)}
       getChartTitle={(region) => regionToChartTitle(region)}
       percentageFormattingEnabled={true}
-      getBarName={() => 'Median Seroprevalence'}
+      getBarName={() => 'Human Median Seroprevalence'}
       transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.seroprevalence * 100))}
     />
   );

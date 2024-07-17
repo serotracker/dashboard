@@ -116,6 +116,7 @@ export const mersDataTypeToColourClassnameMapForCheckbox = {
 }
 
 export const isMersEventTypename = (typename: string): typename is "HumanMersEvent"|"AnimalMersEvent" => ["HumanMersEvent","AnimalMersEvent"].includes(typename);
+export const isMersEstimateTypename = (typename: string): typename is "HumanMersEstimate"|"AnimalMersEstimate" => ["HumanMersEstimate","AnimalMersEstimate"].includes(typename);
 
 export type MersMapMarkerData = 
   | AnimalMersEstimateMapMarkerData

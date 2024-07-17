@@ -20,7 +20,7 @@ export const AnimalMersEstimatePopupContent = (props: AnimalMersEstimatePopupCon
     <GenericMapPopUp
       width={GenericMapPopUpWidth.WIDE}
       headerConfiguration={{
-        text: "Seroprevalence Estimate",
+        text: "Animal Seroprevalence Estimate",
         textAlignment: HeaderConfigurationTextAlignment.CENTER
       }}
       subtitleConfiguration={{
