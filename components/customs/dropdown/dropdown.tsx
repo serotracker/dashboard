@@ -44,7 +44,7 @@ export const Dropdown = <TDropdownOption extends string>(props: DropdownProps<TD
       </Select.Icon>
     </Select.Trigger>
     <Select.Portal>
-      <Select.Content className="bg-white rounded-md overflow-hidden z-20">
+      <Select.Content className="bg-white rounded-md overflow-hidden z-30">
         <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-white cursor-default">
           <ChevronUpIcon />
         </Select.ScrollUpButton>

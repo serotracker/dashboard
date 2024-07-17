@@ -17,6 +17,8 @@ import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } fr
 import { applyLabelsToGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
 import { Formatter } from 'recharts/types/component/DefaultTooltipContent';
 
+const percentageTooltipFormatter: Formatter<number, string> = (value) => `${value.toFixed(2)}%`
+
 interface LineChartProps<
   TData,
   TPrimaryGroupingKey extends string,
@@ -42,6 +44,8 @@ interface LineChartProps<
     TSecondaryGroupingKey
   >) => number | undefined;
   getLineColour: (secondaryKey: TSecondaryGroupingKey, index: number) => string;
+  tooltipFormatter?: Formatter<number, string>;
+  tooltipLabelFormatter?: (label: string) => React.ReactNode;
   xAxisTickSettings?: {
     interval?: number;
   };
@@ -56,7 +60,14 @@ export const LineChart = <
 >(
   props: LineChartProps<TData, TPrimaryGroupingKey, TSecondaryGroupingKey>
 ) => {
-  const { secondaryGroupingKeyToLabel, primaryGroupingKeyToLabel, primaryGroupingSortFunction } = props;
+  const {
+    secondaryGroupingKeyToLabel,
+    primaryGroupingKeyToLabel,
+    primaryGroupingSortFunction,
+    percentageFormattingEnabled,
+    tooltipFormatter: tooltipFormatterOverride,
+    tooltipLabelFormatter
+  } = props;
   const { rechartsData, allSecondaryKeys } = groupDataForRechartsTwice({
     data: props.data,
     primaryGroupingFunction: props.primaryGroupingFunction,
@@ -100,7 +111,17 @@ export const LineChart = <
           },
         };
   
-  const tooltipFormatter: Formatter<number, string> = (value) => `${value.toFixed(2)}%`
+  const tooltipFormatter = useMemo(() => {
+    if(tooltipFormatterOverride) {
+      return tooltipFormatterOverride;
+    }
+
+    if(percentageFormattingEnabled) {
+      return percentageTooltipFormatter;
+    }
+
+    return undefined
+  }, [ tooltipFormatterOverride, percentageFormattingEnabled ])
 
   return (
     <ResponsiveContainer width={"100%"}>
@@ -122,7 +143,8 @@ export const LineChart = <
         />
         <Tooltip
           itemStyle={{"color": "black"}}
-          {...(props.percentageFormattingEnabled ? {formatter: tooltipFormatter} : {})}
+          {...(tooltipFormatter ? {formatter: tooltipFormatter} : {})}
+          {...(tooltipLabelFormatter ? {labelFormatter: tooltipLabelFormatter} : {})}
         />
         <Legend {...legendProps} />
         {allSecondaryKeys.map((secondaryKey, index) => (

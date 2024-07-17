@@ -18,6 +18,8 @@ export enum ModalType {
 export interface ModalPropsBase {
   hidden: boolean;
   onClose: () => void;
+  modalBackgroundClassname?: string;
+  modalForegroundClassname?: string;
 }
 
 type CustomizationModalProps<TDropdownOption extends string> = {
@@ -45,11 +47,21 @@ const Modal = <
   TDropdownOption extends string
 >(props: ModalProps<TDropdownOption>): React.ReactNode => {
   return (
-    <div className={cn(
-      "absolute w-full h-full top-0 left-0 p-4 flex items-center justify-center bg-modal-background z-10",
-      props.hidden ? 'hidden' : ''
-    )}>
-      <div className="w-full lg:w-1/2 bg-white rounded">
+    <div
+      className={cn(
+        "absolute w-full h-full top-0 left-0 p-4 flex items-center justify-center bg-modal-background z-10 cursor-pointer",
+        props.hidden ? 'hidden' : '',
+        props.modalBackgroundClassname ?? ''
+      )}
+      onClick={() => props.onClose()}
+    >
+      <div
+        className={cn(
+          "w-full lg:w-1/2 bg-white rounded z-20 cursor-default",
+          props.modalForegroundClassname ?? ''
+        )}
+        onClick={(e) => {e.stopPropagation();}}
+      >
         <CustomizationModalContent
           closeModal={props.onClose}
           className={isCustomizationModalProps(props) ? '' : 'hidden'}
@@ -75,6 +87,8 @@ type EnabledUseModalInput<
 > = {
   initialModalState: ModalState;
   disabled: false;
+  modalBackgroundClassname?: string;
+  modalForegroundClassname?: string;
 } & ModalPropsBasedOnType<TDropdownOption>;
 
 export type UseModalInput<
@@ -102,6 +116,8 @@ export const useModal = <
     return (
       <Modal
         hidden={modalState === ModalState.CLOSED}
+        modalBackgroundClassname={input.modalBackgroundClassname}
+        modalForegroundClassname={input.modalForegroundClassname}
         {...(isCustomizationModalProps(input) ? {
           modalType: ModalType.CUSTOMIZATION_MODAL as const,
           content: input.content
