@@ -11,11 +11,13 @@ interface MedianSeroprevalenceOverTimeProps {
 }
 
 const typenameToLabel = {
-  ['MersEstimate']: 'MERS Seroprevalence',
+  ['HumanMersEstimate']: 'Human MERS Seroprevalence',
+  ['AnimalMersEstimate']: 'Animal MERS Seroprevalence',
 }
 
 const typenameToLineColour = {
-  ['MersEstimate']: '#e7ed8a',
+  ['HumanMersEstimate']: '#e7ed8a',
+  ['AnimalMersEstimate']: '#13f244',
 }
 
 export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTimeProps) => {
@@ -23,7 +25,7 @@ export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTime
 
   const consideredData = useMemo(() => data
     .filter((dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry): dataPoint is MersEstimate => {
-      return dataPoint.__typename === 'MersEstimate'
+      return dataPoint.__typename === 'HumanMersEstimate' || dataPoint.__typename === 'AnimalMersEstimate'
     })
     .map((dataPoint) => ({
       ...dataPoint,

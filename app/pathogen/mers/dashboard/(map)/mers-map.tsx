@@ -7,7 +7,8 @@ import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { useMersData } from "@/hooks/mers/useMersData";
 import { MersCountryPopupContent } from "./mers-country-pop-up-content";
-import { MersEstimatePopupContent } from "./mers-estimate-pop-up-content";
+import { HumanMersEstimatePopupContent } from "./human-mers-estimate-pop-up-content";
+import { AnimalMersEstimatePopupContent } from "./animal-mers-estimate-pop-up-content";
 import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
 import { MersFaoAnimalEventPopupContent } from "./mers-fao-animal-event-pop-up-content";
 import { MersFaoHumanEventPopupContent } from "./mers-fao-human-event-pop-up-content";
@@ -15,7 +16,8 @@ import assertNever from "assert-never";
 import { MersDiagnosisStatus, MersEventAnimalSpecies } from "@/gql/graphql";
 import {
   MersMapMarkerData,
-  isMersEstimateMapMarkerData,
+  isHumanMersEstimateMapMarkerData,
+  isAnimalMersEstimateMapMarkerData,
   isMersFaoAnimalEventMapMarkerData,
   isMersFaoHumanEventMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
@@ -32,7 +34,8 @@ const MapPinColours = {
   'human-mers-event-alt': "#2a8deb",
   'AnimalMersEvent': "#ed8ac7",
   'animal-mers-event-alt': "#eb2aa1",
-  'MersEstimate': "#e7ed8a"
+  'HumanMersEstimate': "#e7ed8a",
+  'AnimalMersEstimate': "#13f244"
 } as const;
 
 export const MersMap = () => {
@@ -104,8 +107,10 @@ export const MersMap = () => {
                   `${MapPinColours['HumanMersEvent']}`,
                   "AnimalMersEvent",
                   `${MapPinColours['AnimalMersEvent']}`,
-                  "MersEstimate",
-                  `${MapPinColours['MersEstimate']}`,
+                  "HumanMersEstimate",
+                  `${MapPinColours['HumanMersEstimate']}`,
+                  "AnimalMersEstimate",
+                  `${MapPinColours['AnimalMersEstimate']}`,
                   "#FFFFFF"
                 ],
                 "circle-radius": 8,
@@ -117,7 +122,7 @@ export const MersMap = () => {
           clusteringSettings={{
             clusteringEnabled: true,
             headerText: "MERS Data",
-            popUpWidth: GenericMapPopUpWidth.THIN,
+            popUpWidth: GenericMapPopUpWidth.MEDIUM,
             clusterProperties: {
               "Reported Human Events": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEvent"], 1, 0]],
               "Human Cases": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEvent"], ["get", "humansAffected"], 0]],
@@ -131,7 +136,8 @@ export const MersMap = () => {
                 ["==", ["get", "__typename"], "AnimalMersEvent"],
                 ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Bat]
               ], 1, 0]],
-              "Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename"], "MersEstimate"], 1, 0]]
+              "Human Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEstimate"], 1, 0]],
+              "Animal Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersEstimate"], 1, 0]]
             },
             validClusterPropertyKeys: [
               "Reported Human Events",
@@ -140,12 +146,14 @@ export const MersMap = () => {
               "Reported Animal Events",
               "Camel Events",
               "Bat Events",
-              "Seroprevalence Estimates"
+              "Human Seroprevalence Estimates",
+              "Animal Seroprevalence Estimates"
             ],
             clusterPropertyKeysIncludedInSum: [
               "Reported Human Events",
               "Reported Animal Events",
-              "Seroprevalence Estimates"
+              "Human Seroprevalence Estimates",
+              "Animal Seroprevalence Estimates"
             ],
             clusterPropertyToColourMap: {
               "Reported Human Events": MapPinColours['HumanMersEvent'],
@@ -154,7 +162,8 @@ export const MersMap = () => {
               "Reported Animal Events": MapPinColours['AnimalMersEvent'],
               "Camel Events": MapPinColours['animal-mers-event-alt'],
               "Bat Events": MapPinColours['animal-mers-event-alt'],
-              "Seroprevalence Estimates": MapPinColours['MersEstimate']
+              "Human Seroprevalence Estimates": MapPinColours['HumanMersEstimate'],
+              "Animal Seroprevalence Estimates": MapPinColours['AnimalMersEstimate']
             }
           }}
           generatePopupContent={(input) => {
@@ -164,8 +173,12 @@ export const MersMap = () => {
 
             const mersMarkerData: MersMapMarkerData = input.data;
 
-            if(isMersEstimateMapMarkerData(mersMarkerData)) {
-              return <MersEstimatePopupContent estimate={mersMarkerData} />
+            if(isHumanMersEstimateMapMarkerData(mersMarkerData)) {
+              return <HumanMersEstimatePopupContent estimate={mersMarkerData} />
+            }
+
+            if(isAnimalMersEstimateMapMarkerData(mersMarkerData)) {
+              return <AnimalMersEstimatePopupContent estimate={mersMarkerData} />
             }
 
             if(isMersFaoAnimalEventMapMarkerData(mersMarkerData)) {

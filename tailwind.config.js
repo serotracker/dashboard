@@ -86,6 +86,8 @@ module.exports = {
         "switch-thumb-checked": "rgb(25,118,210)",
         "switch-thumb-unchecked": 'rgb(255,255,255)',
         "mers-estimate": "#e7ed8a",
+        "mers-human-estimate": "#e7ed8a",
+        "mers-animal-estimate": "#13f244",
         "mers-human-event": "#8abded",
         "mers-human-event-alt": "#2a8deb",
         "mers-animal-event": "#ed8ac7",

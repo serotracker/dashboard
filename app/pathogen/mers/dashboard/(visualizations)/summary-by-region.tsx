@@ -106,7 +106,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return dataPoint.unRegion;
     }
     if(selectedRegion === SummaryByRegionRegionDropdownOption.COUNTRY) {
-      if(dataPoint.__typename === 'MersEstimate') {
+      if(dataPoint.__typename === 'HumanMersEstimate' || dataPoint.__typename === 'AnimalMersEstimate') {
         return dataPoint.countryAlphaTwoCode;
       }
 

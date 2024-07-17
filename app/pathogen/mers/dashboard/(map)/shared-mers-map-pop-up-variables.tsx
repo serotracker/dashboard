@@ -1,4 +1,4 @@
-import { AnimalMersEvent, HumanMersEvent, MersDiagnosisSource, MersDiagnosisStatus, MersEstimate, MersEventAnimalSpecies, MersEventAnimalType } from "@/gql/graphql"
+import { AnimalMersEvent, HumanMersEvent, HumanMersEstimate, AnimalMersEstimate, MersDiagnosisSource, MersDiagnosisStatus, MersEventAnimalSpecies, MersEventAnimalType } from "@/gql/graphql"
 
 export const diagnosisStatusToStringMap = {
   [MersDiagnosisStatus.Confirmed]: "Confirmed",
@@ -68,7 +68,8 @@ export type AnimalMersEventMapMarkerData = Omit<AnimalMersEvent,'country'> & {
   countryAlphaTwoCode: string;
 };
 
-export type MersEstimateMapMarkerData = MersEstimate;
+export type HumanMersEstimateMapMarkerData = HumanMersEstimate;
+export type AnimalMersEstimateMapMarkerData = AnimalMersEstimate;
 
 export const isMersFaoHumanEventMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is HumanMersEventMapMarkerData => 
   mersMapMarkerData.__typename === "HumanMersEvent";
@@ -76,32 +77,40 @@ export const isMersFaoHumanEventMapMarkerData = (mersMapMarkerData: MersMapMarke
 export const isMersFaoAnimalEventMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is AnimalMersEventMapMarkerData => 
   mersMapMarkerData.__typename === "AnimalMersEvent";
 
-export const isMersEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is MersEstimateMapMarkerData => 
-  mersMapMarkerData.__typename === "MersEstimate";
+export const isHumanMersEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is HumanMersEstimateMapMarkerData => 
+  mersMapMarkerData.__typename === "HumanMersEstimate";
+
+export const isAnimalMersEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is AnimalMersEstimateMapMarkerData => 
+  mersMapMarkerData.__typename === "AnimalMersEstimate";
 
 export const mersDataTypeToSortOrderMap: Record<string, number | undefined> & Record<
-  | "MersEstimate"
+  | "HumanMersEstimate"
+  | "AnimalMersEstimate"
   | "AnimalMersEvent"
   | "HumanMersEvent"
 , number> = {
-  "MersEstimate": 1,
+  "HumanMersEstimate": 1,
+  "AnimalMersEstimate": 1,
   "AnimalMersEvent": 2,
   "HumanMersEvent": 3,
 };
 export const mersDataTypeToLabelMap = {
-  "MersEstimate": "Seroprevalence Estimate",
+  "HumanMersEstimate": "Human Seroprevalence Estimate",
+  "AnimalMersEstimate": "Animal Seroprevalence Estimate",
   "AnimalMersEvent": "Animal Case",
   "HumanMersEvent": "Human Case",
 };
 
 export const mersDataTypeToColourClassnameMap = {
-  "MersEstimate": "bg-mers-estimate",
+  "HumanMersEstimate": "bg-mers-human-estimate",
+  "AnimalMersEstimate": "bg-mers-animal-estimate",
   "AnimalMersEvent": "bg-mers-animal-event",
   "HumanMersEvent": "bg-mers-human-event"
 }
 
 export const mersDataTypeToColourClassnameMapForCheckbox = {
-  "MersEstimate": "data-[state=checked]:bg-mers-estimate",
+  "HumanMersEstimate": "data-[state=checked]:bg-mers-human-estimate",
+  "AnimalMersEstimate": "data-[state=checked]:bg-mers-animal-estimate",
   "AnimalMersEvent": "data-[state=checked]:bg-mers-animal-event",
   "HumanMersEvent": "data-[state=checked]:bg-mers-human-event"
 }
@@ -109,6 +118,7 @@ export const mersDataTypeToColourClassnameMapForCheckbox = {
 export const isMersEventTypename = (typename: string): typename is "HumanMersEvent"|"AnimalMersEvent" => ["HumanMersEvent","AnimalMersEvent"].includes(typename);
 
 export type MersMapMarkerData = 
-  | MersEstimateMapMarkerData
+  | AnimalMersEstimateMapMarkerData
+  | HumanMersEstimateMapMarkerData
   | HumanMersEventMapMarkerData
   | AnimalMersEventMapMarkerData;

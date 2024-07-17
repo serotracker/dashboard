@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
-import { MersEstimateMapMarkerData } from "./shared-mers-map-pop-up-variables";
+import { AnimalMersEstimateMapMarkerData } from "./shared-mers-map-pop-up-variables";
 
-interface MersEstimatePopupContentProps {
-  estimate: MersEstimateMapMarkerData;
+interface AnimalMersEstimatePopupContentProps {
+  estimate: AnimalMersEstimateMapMarkerData;
 }
 
-export const MersEstimatePopupContent = (props: MersEstimatePopupContentProps) => {
+export const AnimalMersEstimatePopupContent = (props: AnimalMersEstimatePopupContentProps) => {
   const { estimate } = props;
 
   const topBannerText = useMemo(() => {
@@ -31,7 +31,7 @@ export const MersEstimatePopupContent = (props: MersEstimatePopupContentProps) =
       topBannerConfiguration={{
         enabled: true,
         bannerText: topBannerText,
-        bannerColourClassname: 'bg-mers-estimate',
+        bannerColourClassname: 'bg-mers-animal-estimate',
         isTextBolded: true,
         isTextCentered: false
       }}
