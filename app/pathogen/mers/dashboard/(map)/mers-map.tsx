@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext, useMemo } from "react";
-import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
+import { GetCountryHighlightingLayerInformationOutput, PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
@@ -22,7 +22,7 @@ import {
   isMersFaoHumanEventMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
-import { MersMapCountryHighlightingSettings, useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
+import { CountryPaintChangeSetting, MersMapCountryHighlightingSettings, useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
 import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-highlight-layers/data-point-present-layer";
 import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
 import { useTotalCamelPopulationLayer } from "./country-highlight-layers/total-camel-population-layer";
@@ -43,7 +43,12 @@ export const MersMap = () => {
   const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);
   const { data } = useMersData();
   const { faoMersEvents } = useFaoMersEventData();
-  const { currentMapCountryHighlightingSettings, countryPopUpEnabled, ...mersMapCustomizationModal } = useMersMapCustomizationModal();
+  const {
+    currentMapCountryHighlightingSettings,
+    countryPopUpEnabled,
+    countryOutlinesSetting,
+    ...mersMapCustomizationModal
+  } = useMersMapCustomizationModal();
 
   const dataPointPresentMapLayer = useDataPointPresentLayer();
   const totalCamelPopulationMapLayer = useTotalCamelPopulationLayer();
@@ -59,22 +64,32 @@ export const MersMap = () => {
     .filter((element) => element.diagnosisStatus === MersDiagnosisStatus.Confirmed)
   )], [filteredData, faoMersEventData]);
 
-  const { paint, countryHighlightLayerLegendEntries, freeTextEntries } = useMemo(() => {
+  const { paint, countryHighlightLayerLegendEntries, freeTextEntries } = useMemo((): GetCountryHighlightingLayerInformationOutput => {
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES) {
+      const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
+
       return dataPointPresentMapLayer.getCountryHighlightingLayerInformation({
         data: dataPoints,
         countryHighlightingEnabled: true,
-        countryOutlinesEnabled: false
+        countryOutlinesEnabled
       });
     }
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION) {
+      const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
+
       return totalCamelPopulationMapLayer.getCountryHighlightingLayerInformation({
-        data: latestFaoCamelPopulationDataPointsByCountry ?? []
+        data: latestFaoCamelPopulationDataPointsByCountry ?? [],
+        countryOutlineData: dataPoints,
+        countryOutlinesEnabled
       });
     }
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA) {
+      const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
+
       return camelsPerCapitaMapLayer.getCountryHighlightingLayerInformation({
-        data: latestFaoCamelPopulationDataPointsByCountry ?? []
+        data: latestFaoCamelPopulationDataPointsByCountry ?? [],
+        countryOutlineData: dataPoints,
+        countryOutlinesEnabled
       });
     }
     assertNever(currentMapCountryHighlightingSettings);
