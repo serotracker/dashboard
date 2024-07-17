@@ -20,7 +20,7 @@ export const HumanMersEstimatePopupContent = (props: HumanMersEstimatePopupConte
     <GenericMapPopUp
       width={GenericMapPopUpWidth.WIDE}
       headerConfiguration={{
-        text: "Seroprevalence Estimate",
+        text: "Human Seroprevalence Estimate",
         textAlignment: HeaderConfigurationTextAlignment.CENTER
       }}
       subtitleConfiguration={{

@@ -8,6 +8,7 @@ import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-hand
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import { isMersEstimateTypename, mersDataTypeToColourClassnameMap, mersDataTypeToLabelMap } from "../(map)/shared-mers-map-pop-up-variables";
 
 const mersSeroprevalenceEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -17,6 +18,13 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
   isFixed: true,
   fieldNameForLink: 'sourceUrl',
   size: 400,
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: '__typename',
+  valueToDisplayLabel: (typename: string) => isMersEstimateTypename(typename) ? mersDataTypeToLabelMap[typename] : typename,
+  valueToColourSchemeClassnameMap: mersDataTypeToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Estimate Type'
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'whoRegion',
