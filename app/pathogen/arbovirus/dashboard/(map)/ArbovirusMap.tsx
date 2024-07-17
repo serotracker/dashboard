@@ -35,7 +35,7 @@ export const pathogenColors: Record<Arbovirus, string> = {
 
 export function ArbovirusMap() {
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
-  const { filteredData, selectedFilters }= useContext(ArboContext);
+  const { filteredData, selectedFilters } = useContext(ArboContext);
   const { data } = useArboData();
   const { getCountryHighlightingLayerInformation: getDataPointPresentCountryHighlightingLayerInformation } = useDataPointPresentLayer();
   const { getCountryHighlightingLayerInformation: getESMCountryHighlightingLayerInformation } = useEsmCountryHighlightLayer();

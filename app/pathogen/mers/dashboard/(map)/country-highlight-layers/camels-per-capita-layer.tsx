@@ -1,6 +1,10 @@
 import { rose } from 'tailwindcss/colors'
+import uniq from 'lodash/uniq';
 import { useCallback } from "react";
-import { GetCountryHighlightingLayerInformationInput, GetCountryHighlightingLayerInformationOutput, PathogenDataPointPropertiesBase } from "@/components/ui/pathogen-map/pathogen-map";
+import {
+  GetCountryHighlightingLayerInformationInput as GenericGetCountryHighlightingLayerInformationInput,
+  GetCountryHighlightingLayerInformationOutput,
+} from "@/components/ui/pathogen-map/pathogen-map";
 import { generateMapColourBuckets } from "@/components/ui/pathogen-map/country-highlight-layers/generate-map-colour-buckets";
 import { MapSymbology } from '@/app/pathogen/sarscov2/dashboard/(map)/map-config';
 
@@ -51,14 +55,24 @@ const formatNumberRangeForLegend = (input: {
   return "-";
 }
 
+type GetCountryHighlightingLayerInformationInput<
+  TData extends { countryAlphaThreeCode: string },
+  TCountryOutlineData extends  { countryAlphaThreeCode: string },
+> = GenericGetCountryHighlightingLayerInformationInput<TData> & {
+  countryOutlinesEnabled: boolean;
+  countryOutlineData: TCountryOutlineData[];
+}
+
 export const useCamelsPerCapitaLayer = () => {
   const getCountryHighlightingLayerInformation = useCallback(<
     TData extends {
       countryAlphaThreeCode: string;
       camelCountPerCapita?: number | undefined | null;
-    }
+    },
+    TCountryOutlineData extends  { countryAlphaThreeCode: string },
   >(input: GetCountryHighlightingLayerInformationInput<
-    TData
+    TData,
+    TCountryOutlineData
   >): GetCountryHighlightingLayerInformationOutput => {
     const { mapColourBuckets } = generateMapColourBuckets({
       idealBucketCount: 8,
@@ -88,27 +102,46 @@ export const useCamelsPerCapitaLayer = () => {
         colour: bucket.fill
       }))
     ];
+    
+    const outlinedCountryAlphaThreeCodes = input.countryOutlinesEnabled ? uniq(input.countryOutlineData.map(({ countryAlphaThreeCode }) => countryAlphaThreeCode)) : [];
+    const countryAlphaThreeCodesWithCamelData = uniq(input.data.map(( { countryAlphaThreeCode }) => countryAlphaThreeCode))
+    const outlinedCountryAlphaThreeCodesWithNoCamelData = outlinedCountryAlphaThreeCodes.filter((alphaThreeCode) => !countryAlphaThreeCodesWithCamelData.includes(alphaThreeCode));
 
     return {
       paint: {
-        countryData: mapColourBuckets.flatMap((colourBucket) => 
-          colourBucket.dataPoints.map((dataPoint) => ({
-            countryAlphaThreeCode: dataPoint.countryAlphaThreeCode,
-            fill: colourBucket.fill,
-            opacity: colourBucket.opacity,
-            borderWidthPx: 0,
-            borderColour: "#000000",
-          })
-        )),
+        countryData: [
+          ...mapColourBuckets.flatMap((colourBucket) => 
+            colourBucket.dataPoints.map((dataPoint) => ({
+              countryAlphaThreeCode: dataPoint.countryAlphaThreeCode,
+              fill: colourBucket.fill,
+              opacity: colourBucket.opacity,
+              borderWidthPx: outlinedCountryAlphaThreeCodes.includes(dataPoint.countryAlphaThreeCode)
+                ? MapSymbology.CountryFeature.HasData.BorderWidth
+                : MapSymbology.CountryFeature.Default.BorderWidth,
+              borderColour: outlinedCountryAlphaThreeCodes.includes(dataPoint.countryAlphaThreeCode)
+                ? MapSymbology.CountryFeature.HasData.BorderColour
+                : MapSymbology.CountryFeature.Default.BorderColour,
+            })
+          )),
+          ...outlinedCountryAlphaThreeCodesWithNoCamelData.map((countryAlphaThreeCode) => ({
+            countryAlphaThreeCode,
+            fill: MapSymbology.CountryFeature.Default.Color,
+            opacity: MapSymbology.CountryFeature.Default.Opacity,
+            borderWidthPx: MapSymbology.CountryFeature.HasData.BorderWidth,
+            borderColour: MapSymbology.CountryFeature.HasData.BorderColour
+          }))
+        ],
         defaults: {
           fill: MapSymbology.CountryFeature.Default.Color,
           opacity: MapSymbology.CountryFeature.Default.Opacity,
-          borderWidthPx: 0,
-          borderColour: "#000000",
+          borderWidthPx: MapSymbology.CountryFeature.Default.BorderWidth,
+          borderColour: MapSymbology.CountryFeature.Default.BorderColour
         }
       },
       countryHighlightLayerLegendEntries,
-      freeTextEntries: []
+      freeTextEntries: input.countryOutlinesEnabled ? [{
+        text: 'Countries with a black outline contain seroprevalence or positive case data.'
+      }] : []
     }
   }, []);
 
