@@ -20,7 +20,7 @@ export const SeroprevalenceSummaryByRegion = <TRegion extends string>(props: Ser
   const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
 
   const estimates = useMemo(() => data
-    .filter((dataPoint): dataPoint is MersEstimate => dataPoint.__typename === 'MersEstimate')
+    .filter((dataPoint): dataPoint is MersEstimate => dataPoint.__typename === 'HumanMersEstimate' || dataPoint.__typename === 'AnimalMersEstimate')
     .map((estimate) => ({
       ...estimate,
       region: regionGroupingFunction(estimate),

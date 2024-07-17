@@ -75,7 +75,8 @@ export const MersFilters = (props: MersFiltersProps) => {
       filterData={{
         ...(sharedFilterData?.mersFilterOptions ? {
           __typename: [
-            "MersEstimate",
+            "HumanMersEstimate",
+            "AnimalMersEstimate",
             "AnimalMersEvent",
             "HumanMersEvent"
           ],
@@ -93,7 +94,7 @@ export const MersFilters = (props: MersFiltersProps) => {
         } : {})
       }}
       data={{
-        mersEstimates: data?.mersEstimates ?? [],
+        mersEstimates: data?.mersEstimates_V2 ?? [],
         faoMersEventData: faoMersEvents ?? [],
       }}
       resetAllFiltersButtonEnabled={true}

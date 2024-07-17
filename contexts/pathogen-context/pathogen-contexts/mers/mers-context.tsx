@@ -2,7 +2,7 @@
 import { createContext, useEffect, useMemo } from "react";
 import { pipe } from "fp-ts/lib/function";
 import { PathogenContextActionType, PathogenContextState, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../../pathogen-context";
-import { MersEstimatesQuery } from "@/gql/graphql";
+import { MersEstimates_V2Query } from "@/gql/graphql";
 import { CountryDataContext } from "../../country-information-context";
 import { useMersData } from "@/hooks/mers/useMersData";
 import { useMersFilters } from "@/hooks/mers/useMersFilters";
@@ -17,12 +17,17 @@ const initialMersContextState = {
   filteredData: [],
   faoMersEventData: [],
   selectedFilters: {
-    ["__typename"]: ["MersEstimate", "AnimalMersEvent", "HumanMersEvent"],
+    ["__typename"]: [
+      "HumanMersEstimate",
+      "AnimalMersEstimate",
+      "AnimalMersEvent",
+      "HumanMersEvent"
+    ],
   },
   dataFiltered: false,
 }
 
-export type MersEstimate = MersEstimatesQuery['mersEstimates'][number];
+export type MersEstimate = MersEstimates_V2Query['mersEstimates_V2'][number];
 type MersContextState = PathogenContextState<MersEstimate> & {
   faoMersEventData: FaoMersEvent[];
 };
@@ -50,7 +55,7 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
         type: PathogenContextActionType.INITIAL_DATA_FETCH,
         payload: {
           data: {
-            mersEstimates: data?.mersEstimates,
+            mersEstimates: data?.mersEstimates_V2,
             faoMersEventData: faoMersEvents
           }
         }
