@@ -121,7 +121,7 @@ interface ArboTrackerHelpModalTableInstructionsProps {
 
 const ArboTrackerHelpModalTableInstructions = (props: ArboTrackerHelpModalTableInstructionsProps) => (
   <div className={props.className}>
-    <p className="mb-2">If you choose to scroll down from the map, you&apos;ll be shown a table which contains all of our arbovirus seroprevalence data</p>
+    <p className="mb-2">If you choose to scroll down from the map, you&apos;ll be shown a table which contains all of our arbovirus seroprevalence data.</p>
     <ArboTrackerHelpModalImage
       className="mb-2"
       src={"/ArboTrackerHelpModalImage0006.png"}
@@ -130,7 +130,7 @@ const ArboTrackerHelpModalTableInstructions = (props: ArboTrackerHelpModalTableI
       height={902}
     />
     <p className="mb-2">The table can be downloaded as a CSV by clicking on the &quot;Download CSV&quot; button on the top right of the table. The &quot;Get Citation for CSV&quot; button in the top right corner allows you to get our recommended citation if your work makes use of our data.</p>
-    <p className="mb-2">Colums can be removed from the table by clicking on the &quot;Columns&quot; button in the top right. From there, you can choose which columns should be included in the table. Downloaded CSVs only include the columns which are included in the table so this can be used to remove columns you&apos;re not interested in from your downloaded CSV.</p>
+    <p className="mb-2">Columns can be removed from the table by clicking on the &quot;Columns&quot; button in the top right. From there, you can choose which columns should be included in the table. Downloaded CSVs only include the columns which are included in the table so this can be used to remove columns you&apos;re not interested in from your downloaded CSV.</p>
     <p className="mb-2">The table can only show 10 rows at a time. To view the following ten rows of the data, click on the &quot;Next&quot; button in the bottom right.</p>
     <p className="mb-2">Most columns can be sorted ascendingly or descendingly by clicking on the two arrows in the header of the column.</p>
     <p className="mb-2">You can view a small graph and some additional information about the study conducted by clicking on the row in the table. The image below shows what you might see after clicking on a row in the table.</p>
@@ -141,7 +141,7 @@ const ArboTrackerHelpModalTableInstructions = (props: ArboTrackerHelpModalTableI
       width={1516}
       height={907}
     />
-    <p className="mb-2">The inclusion criteria for the study is given in the row that was clicked on </p>
+    <p className="mb-2">The inclusion criteria for the study is given in the row that was clicked on.</p>
     <p className="mb-2">A new visualization also appears which shows how this seroprevalence estimate compares to the other seroprevalence estimates for the country the study was conducted in. The data point highlighted in green is the data point this row corresponds to. Data points with zero percent seroprevalence are not included in this visualization.</p>
     <p className="mb-2">Applying filters using the filters to the left will change the data displayed in this visualization, just as all of the data in the other visualizations change as filters are applied.</p>
     <p className="mb-2">At the bottom of the data table that appears when you click on a row is a button which can be used to see this estimate on the map.</p>
