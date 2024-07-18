@@ -30,22 +30,13 @@ const ArboTrackerHelpModalImage = (props: ArboTrackerHelpModalImageProps) => (
   </div>
 )
 
-interface ArboTrackerHelpModalIntroductionSectionProps {
-  className?: string;
-}
-
-const ArboTrackerHelpModalIntroductionSection = (props: ArboTrackerHelpModalIntroductionSectionProps) => (
-  <div className={props.className ?? ''}>
-    <p>ArboTracker is a dashboard which compiles findings from thousands of arbovirus seroprevalence studies worldwide.</p>
-  </div>
-);
-
 interface ArboTrackerHelpModalTutorialSectionProps {
   className?: string;
 }
 
 const ArboTrackerHelpModalTutorialSection = (props: ArboTrackerHelpModalTutorialSectionProps) => (
   <div className={props.className ?? ''}>
+    <p>ArboTracker is a dashboard which compiles findings from thousands of arbovirus seroprevalence studies worldwide.</p>
     <p className="mb-2">The following tutorial shows the main functionalities of the ArboTracker dashboard.</p>
     <ArboTrackerTutorialVideoFrame className="mb-6" />
   </div>
@@ -99,6 +90,8 @@ const ArboTrackerHelpModalMapInstructions = (props: ArboTrackerHelpModalMapInstr
       width={541}
       height={507}
     />
+    <p className="mb-2">If the country pop-up is making it difficult for you navigate through the map, simply click on the "Customize" button in the top right corner of the map to see an option to turn it off.</p>
+    <p className="mb-2">Other options exist here such as the ability to turn off country highlighting when a country has seroprevalence estimates or turn off the outlines around a country when it has seroprevalence estimates.</p>
   </div>
 )
 
@@ -149,8 +142,9 @@ const ArboTrackerHelpModalTableInstructions = (props: ArboTrackerHelpModalTableI
       height={907}
     />
     <p className="mb-2">The inclusion criteria for the study is given in the row that was clicked on </p>
-    <p className="mb-2">A new visualization also appears which shows how this seroprevalence estimate compares to the other seroprevalence estimates for the country the study was conducted in.</p>
+    <p className="mb-2">A new visualization also appears which shows how this seroprevalence estimate compares to the other seroprevalence estimates for the country the study was conducted in. The data point highlighted in green is the data point this row corresponds to. Data points with zero percent seroprevalence are not included in this visualization.</p>
     <p className="mb-2">Applying filters using the filters to the left will change the data displayed in this visualization, just as all of the data in the other visualizations change as filters are applied.</p>
+    <p className="mb-2">At the bottom of the data table that appears when you click on a row is a button which can be used to see this estimate on the map.</p>
     <p className="mb-2">Clicking on the row once more will collapse it.</p>
   </div>
 )
@@ -185,31 +179,26 @@ enum ArboTrackerHelpModalSection {
 
 const allSections = [{
   pageIndex: 0,
-  pageHeader: 'What is ArboTracker?',
-  pageId: ArboTrackerHelpModalSection.INTRODUCTION,
-  pageRenderingFunction: () => <ArboTrackerHelpModalIntroductionSection />
-}, {
-  pageIndex: 1,
   pageHeader: 'Video Tutorial',
   pageId: ArboTrackerHelpModalSection.TUTORIAL,
   pageRenderingFunction: () => <ArboTrackerHelpModalTutorialSection />
 }, {
-  pageIndex: 2,
+  pageIndex: 1,
   pageHeader: 'How to Use the Map',
   pageId: ArboTrackerHelpModalSection.MAP_INSTRUCTIONS,
   pageRenderingFunction: () => <ArboTrackerHelpModalMapInstructions />
 }, {
-  pageIndex: 3,
+  pageIndex: 2,
   pageHeader: 'How to Use the Filters',
   pageId: ArboTrackerHelpModalSection.FILTER_INSTRUCTIONS,
   pageRenderingFunction: () => <ArboTrackerHelpModalFilterInstructions />
 }, {
-  pageIndex: 4,
+  pageIndex: 3,
   pageHeader: 'How to Use the Data Table',
   pageId: ArboTrackerHelpModalSection.TABLE_INSTRUCTIONS,
   pageRenderingFunction: () => <ArboTrackerHelpModalTableInstructions />
 }, {
-  pageIndex: 5,
+  pageIndex: 4,
   pageHeader: 'How to Use the Visualizations',
   pageId: ArboTrackerHelpModalSection.VISUALIZATION_INSTRUCTIONS,
   pageRenderingFunction: () => <ArboTrackerHelpModalVisualizationInstructions />

@@ -17,7 +17,7 @@ export enum DashboardType {
 }
 
 const dashboardTypeToHelpModalType = {
-  [DashboardType.ARBOVIRUS]: process.env.NEXT_PUBLIC_ARBOTRACKER_HELP_MODAL_ENABLED === "true" ? ModalType.ARBOTRACKER_HELP_MODAL : undefined,
+  [DashboardType.ARBOVIRUS]: ModalType.ARBOTRACKER_HELP_MODAL,
   [DashboardType.SARS_COV_2]: undefined,
   [DashboardType.MERS]: undefined,
   [DashboardType.NONE]: undefined,
