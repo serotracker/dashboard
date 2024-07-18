@@ -90,7 +90,7 @@ const ArboTrackerHelpModalMapInstructions = (props: ArboTrackerHelpModalMapInstr
       width={541}
       height={507}
     />
-    <p className="mb-2">If the country pop-up is making it difficult for you navigate through the map, simply click on the "Customize" button in the top right corner of the map to see an option to turn it off.</p>
+    <p className="mb-2">If the country pop-up is making it difficult for you navigate through the map, simply click on the &quot;Customize&quot; button in the top right corner of the map to see an option to turn it off.</p>
     <p className="mb-2">Other options exist here such as the ability to turn off country highlighting when a country has seroprevalence estimates or turn off the outlines around a country when it has seroprevalence estimates.</p>
   </div>
 )
