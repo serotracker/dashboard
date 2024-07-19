@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
-import { AnimalMersViralEstimateMapMarkerData } from "./shared-mers-map-pop-up-variables";
+import { AnimalMersViralEstimateMapMarkerData, animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, animalTypeToColourClassnameMap, animalTypeToStringMap } from "./shared-mers-map-pop-up-variables";
 
 interface AnimalMersViralEstimatePopupContentProps {
   estimate: AnimalMersViralEstimateMapMarkerData;
@@ -53,9 +53,28 @@ export const AnimalMersViralEstimatePopupContent = (props: AnimalMersViralEstima
         title: "Institution",
         type: PopUpContentRowType.TEXT,
         text: props.estimate.insitutution ?? 'Not Reported'
+      }, {
+        title: "Animal Type",
+        type: PopUpContentRowType.COLOURED_PILL_LIST,
+        values: [ props.estimate.animalType ],
+        valueToColourClassnameMap: animalTypeToColourClassnameMap,
+        valueToLabelMap: animalTypeToStringMap,
+        defaultColourClassname: "bg-sky-100"
+      }, {
+        title: "Study Inclusion Criteria",
+        type: PopUpContentRowType.TEXT,
+        text: props.estimate.studyInclusionCriteria ?? 'Not Reported'
+      }, {
+        title: "Study Exclusion Criteria",
+        type: PopUpContentRowType.TEXT,
+        text: props.estimate.studyExclusionCriteria ?? 'Not Reported'
       }]}
       bottomBannerConfiguration={{
-        enabled: false
+        enabled: true,
+        bannerText: `Animal Species: ${animalSpeciesToStringMap[props.estimate.animalSpecies]}`,
+        bannerColourClassname: animalSpeciesToColourClassnameMap[props.estimate.animalSpecies],
+        isTextBolded: true,
+        isTextCentered: true
       }}
     />
   );

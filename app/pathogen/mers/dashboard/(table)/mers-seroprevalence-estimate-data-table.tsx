@@ -75,6 +75,16 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
   fieldName: 'sampleSize',
   label: 'Sample Size'
 }, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'studyInclusionCriteria',
+  label: 'Study Inclusion Criteria',
+  initiallyVisible: false
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'studyExclusionCriteria',
+  label: 'Study Exclusion Criteria',
+  initiallyVisible: false
+}, {
   type: DataTableColumnConfigurationEntryType.LINK_BUTTON as const,
   fieldName: 'sourceUrl',
   label: 'Source',
@@ -99,7 +109,14 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
 
   const rowExpansionConfiguration: RowExpansionConfiguration<MersEstimate> = useMemo(() => ({
     enabled: true,
-    generateExpandedRowStatement: ({ data, row }) => 'Clicking on this row in the table again will minimize it',
+    generateExpandedRowStatement: (input) => {
+      const estimateId = input.row.getValue('estimateId');
+      const estimate = estimateId ? input.data.find((dataPoint) => dataPoint.estimateId === estimateId) : undefined;
+      const inclusionCriteriaStatement = estimate?.studyInclusionCriteria ? `The inclusion criteria for the study was "${estimate.studyInclusionCriteria}"` : "No inclusion criteria was specified"
+      const exclusionCriteriaStatement = estimate?.studyExclusionCriteria ? `The exclusion criteria for the study was "${estimate.studyExclusionCriteria}"` : "No exclusion criteria was specified"
+
+      return `${inclusionCriteriaStatement}. ${exclusionCriteriaStatement}. Clicking on this row in the table again will minimize it.`
+    },
     visualization: ({ data, row, className }) => {
       const idOfEstimate = row.getValue('id');
 

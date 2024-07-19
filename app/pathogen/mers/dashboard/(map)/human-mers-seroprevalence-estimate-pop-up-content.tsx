@@ -53,6 +53,18 @@ export const HumanMersSeroprevalenceEstimatePopupContent = (props: HumanMersSero
         title: "Institution",
         type: PopUpContentRowType.TEXT,
         text: props.estimate.insitutution ?? 'Not Reported'
+      }, {
+        title: "Age Group",
+        type: PopUpContentRowType.TEXT,
+        text: props.estimate.ageGroup ?? 'Not Reported'
+      }, {
+        title: "Study Inclusion Criteria",
+        type: PopUpContentRowType.TEXT,
+        text: props.estimate.studyInclusionCriteria ?? 'Not Reported'
+      }, {
+        title: "Study Exclusion Criteria",
+        type: PopUpContentRowType.TEXT,
+        text: props.estimate.studyExclusionCriteria ?? 'Not Reported'
       }]}
       bottomBannerConfiguration={{
         enabled: false
