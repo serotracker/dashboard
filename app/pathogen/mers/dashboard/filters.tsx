@@ -47,7 +47,7 @@ export const MersFilters = (props: MersFiltersProps) => {
 
   const filterSections = [{
     headerText: 'Data Type',
-    headerTooltipText: 'Choose whether or not you would like to see seroprevalence estimates or events.',
+    headerTooltipText: 'Choose what kind of data you would like to see (seroprevalence estimates, viral estimates, positive cases).',
     includedFilters: dataTypeFilters
   }, {
     headerText: 'Location',

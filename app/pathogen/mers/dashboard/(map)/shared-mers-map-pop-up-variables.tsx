@@ -154,8 +154,8 @@ export const mersDataTypeToSuperOptionMap = {
 }
 
 export const mersDataTypeSuperOptionToLabelMap = {
-  [MersDataTypeSuperOption.HUMAN]: "Human",
-  [MersDataTypeSuperOption.ANIMAL]: "Animal"
+  [MersDataTypeSuperOption.HUMAN]: "Human Data",
+  [MersDataTypeSuperOption.ANIMAL]: "Animal Data"
 }
 
 export const mersDataTypeToColourClassnameMap = {

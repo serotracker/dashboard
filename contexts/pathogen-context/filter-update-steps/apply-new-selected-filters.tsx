@@ -46,6 +46,11 @@ export function filterData(
         return false;
       }
 
+      /* If no __typename is selected, we don't want to see any data */
+      if (key === "__typename" && filters[key].length == 0 ){
+        return false;
+      }
+
       /* Ignore pediatric age group for non pediatric age groups. */
       if (key === "pediatricAgeGroup" && item["ageGroup"] !== "Children and Youth (0-17 years)"){
         return true;
