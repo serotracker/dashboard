@@ -16,6 +16,8 @@ export const mersEstimates_V2 = gql`
         country
         countryAlphaTwoCode
         countryAlphaThreeCode
+        studyInclusionCriteria
+        studyExclusionCriteria
         latitude
         longitude
         whoRegion
@@ -38,6 +40,8 @@ export const mersEstimates_V2 = gql`
         country
         countryAlphaTwoCode
         countryAlphaThreeCode
+        studyInclusionCriteria
+        studyExclusionCriteria
         latitude
         longitude
         whoRegion
@@ -60,6 +64,8 @@ export const mersEstimates_V2 = gql`
         country
         countryAlphaTwoCode
         countryAlphaThreeCode
+        studyInclusionCriteria
+        studyExclusionCriteria
         latitude
         longitude
         whoRegion
@@ -83,6 +89,8 @@ export const mersEstimates_V2 = gql`
         country
         countryAlphaTwoCode
         countryAlphaThreeCode
+        studyInclusionCriteria
+        studyExclusionCriteria
         latitude
         longitude
         whoRegion

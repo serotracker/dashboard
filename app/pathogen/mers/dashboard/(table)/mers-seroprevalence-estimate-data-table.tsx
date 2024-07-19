@@ -8,7 +8,17 @@ import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-hand
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { isMersSeroprevalenceEstimateTypename, mersDataTypeToColourClassnameMap, mersDataTypeToLabelMap } from "../(map)/shared-mers-map-pop-up-variables";
+import {
+  animalSpeciesToColourClassnameMap,
+  animalSpeciesToStringMap,
+  animalTypeToColourClassnameMap,
+  animalTypeToStringMap,
+  isMersAnimalSpecies,
+  isMersAnimalType,
+  isMersSeroprevalenceEstimateTypename,
+  mersDataTypeToColourClassnameMap,
+  mersDataTypeToLabelMap
+} from "../(map)/shared-mers-map-pop-up-variables";
 
 const mersSeroprevalenceEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -71,9 +81,37 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
   fieldName: 'insitutution',
   label: 'Institution'
 }, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: 'animalType',
+  valueToDisplayLabel: (animalType: string) => isMersAnimalType(animalType) ? animalTypeToStringMap[animalType] : animalType,
+  valueToColourSchemeClassnameMap: animalTypeToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Animal Type'
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: 'animalSpecies',
+  valueToDisplayLabel: (animalSpecies: string) => isMersAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
+  valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Animal Species'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'ageGroup',
+  label: 'Age Group'
+}, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'sampleSize',
   label: 'Sample Size'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'studyInclusionCriteria',
+  label: 'Study Inclusion Criteria',
+  initiallyVisible: false
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'studyExclusionCriteria',
+  label: 'Study Exclusion Criteria',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.LINK_BUTTON as const,
   fieldName: 'sourceUrl',
@@ -99,7 +137,14 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
 
   const rowExpansionConfiguration: RowExpansionConfiguration<MersEstimate> = useMemo(() => ({
     enabled: true,
-    generateExpandedRowStatement: ({ data, row }) => 'Clicking on this row in the table again will minimize it',
+    generateExpandedRowStatement: (input) => {
+      const estimateId = input.row.getValue('estimateId');
+      const estimate = estimateId ? input.data.find((dataPoint) => dataPoint.estimateId === estimateId) : undefined;
+      const inclusionCriteriaStatement = estimate?.studyInclusionCriteria ? `The inclusion criteria for the study was "${estimate.studyInclusionCriteria}"` : "No inclusion criteria was specified"
+      const exclusionCriteriaStatement = estimate?.studyExclusionCriteria ? `The exclusion criteria for the study was "${estimate.studyExclusionCriteria}"` : "No exclusion criteria was specified"
+
+      return `${inclusionCriteriaStatement}. ${exclusionCriteriaStatement}. Clicking on this row in the table again will minimize it.`
+    },
     visualization: ({ data, row, className }) => {
       const idOfEstimate = row.getValue('id');
 
