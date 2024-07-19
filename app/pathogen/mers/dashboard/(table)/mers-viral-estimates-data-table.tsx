@@ -1,6 +1,6 @@
 import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
-import { MersContext, MersEstimate, MersSeroprevalenceEstimate, isMersSeroprevalenceEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { MersContext, MersEstimate, MersViralEstimate, isMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { WhoRegion } from "@/gql/graphql";
 import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
@@ -8,9 +8,9 @@ import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-hand
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { isMersSeroprevalenceEstimateTypename, mersDataTypeToColourClassnameMap, mersDataTypeToLabelMap } from "../(map)/shared-mers-map-pop-up-variables";
+import { isMersSeroprevalenceEstimateTypename, isMersViralEstimateTypename, mersDataTypeToColourClassnameMap, mersDataTypeToLabelMap } from "../(map)/shared-mers-map-pop-up-variables";
 
-const mersSeroprevalenceEstimateColumnConfiguration = [{
+const mersViralEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
   fieldName: 'estimateId',
   label: 'Estimate ID',
@@ -21,7 +21,7 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: '__typename',
-  valueToDisplayLabel: (typename: string) => isMersSeroprevalenceEstimateTypename(typename) ? mersDataTypeToLabelMap[typename] : typename,
+  valueToDisplayLabel: (typename: string) => isMersViralEstimateTypename(typename) ? mersDataTypeToLabelMap[typename] : typename,
   valueToColourSchemeClassnameMap: mersDataTypeToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Estimate Type'
@@ -52,8 +52,8 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
   label: 'Country'
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'seroprevalence',
-  label: 'Seroprevalence'
+  fieldName: 'positivePrevalence',
+  label: 'Positive Prevalence'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'firstAuthorFullName',
@@ -88,11 +88,11 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
   initiallyVisible: false
 }];
 
-interface MersSeroprevalenceEstimateDataTableProps {
+interface MersViralEstimateDataTableProps {
   tableHeader: DropdownTableHeader<AvailableMersDataTables>;
 }
 
-export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEstimateDataTableProps) => {
+export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProps) => {
   const state = useContext(MersContext);
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
@@ -125,10 +125,10 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
           highlightedDataPoint={estimate}
           hideArbovirusDropdown={true}
           visualizationInformation={{
-            ...mersVisualizationInformation[MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME],
+            ...mersVisualizationInformation[MersVisualizationId.MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME],
             getDisplayName: () => ({
               type: VisualizationDisplayNameType.STANDARD,
-              displayName: `Median Seroprevalence for ${countryName} over time`
+              displayName: `Median Viral Positive Prevalence for ${countryName} over time`
             })
           }}
           getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
@@ -151,7 +151,7 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
 
   return (
     <DataTable
-      columns={columnConfigurationToColumnDefinitions({ columnConfiguration: mersSeroprevalenceEstimateColumnConfiguration })}
+      columns={columnConfigurationToColumnDefinitions({ columnConfiguration: mersViralEstimateColumnConfiguration })}
       csvFilename="merstracker_dataset"
       tableHeader={props.tableHeader}
       csvCitationConfiguration={{
@@ -159,7 +159,7 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
       }}
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={state.filteredData
-        .filter((dataPoint): dataPoint is MersSeroprevalenceEstimate => isMersSeroprevalenceEstimate(dataPoint))
+        .filter((dataPoint): dataPoint is MersViralEstimate => isMersViralEstimate(dataPoint))
       }
     />
   )

@@ -3,9 +3,11 @@ import { useState } from "react";
 import { MersSeroprevalenceEstimateDataTable } from "./mers-seroprevalence-estimate-data-table";
 import { MersCasesDataTable } from "./mers-cases-data-table";
 import { CamelPopulationDataTable } from "./camel-population-data-table";
+import { MersViralEstimateDataTable } from "./mers-viral-estimates-data-table";
 
 export enum AvailableMersDataTables {
   MERS_SEROPREVALENCE_ESTIMATES = "MERS_SEROPREVALENCE_ESTIMATES",
+  MERS_VIRAL_ESTIMATES = "MERS_VIRAL_ESTIMATES",
   MERS_CASES = "MERS_CASES",
   CAMEL_POPULATION_DATA = "CAMEL_POPULATION_DATA",
 }
@@ -28,6 +30,7 @@ export const MersDataTable = () => {
         groupHeader: 'Available data tables',
         options: [
           AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES,
+          AvailableMersDataTables.MERS_VIRAL_ESTIMATES,
           AvailableMersDataTables.MERS_CASES,
           AvailableMersDataTables.CAMEL_POPULATION_DATA,
         ]
@@ -35,6 +38,7 @@ export const MersDataTable = () => {
       chosenDropdownOption: currentlySelectedDataTable,
       dropdownOptionToLabelMap: {
         [AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES]: "MERS seroprevalence estimates",
+        [AvailableMersDataTables.MERS_VIRAL_ESTIMATES]: "MERS viral estimates",
         [AvailableMersDataTables.MERS_CASES]: "Confirmed MERS cases",
         [AvailableMersDataTables.CAMEL_POPULATION_DATA]: "Camel population data",
       },
@@ -45,6 +49,7 @@ export const MersDataTable = () => {
 
   const dataTableComponentMap = {
     [AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES]: () => <MersSeroprevalenceEstimateDataTable tableHeader={tableHeaderForAllDataTables} />,
+    [AvailableMersDataTables.MERS_VIRAL_ESTIMATES]: () => <MersViralEstimateDataTable tableHeader={tableHeaderForAllDataTables} />,
     [AvailableMersDataTables.MERS_CASES]: () => <MersCasesDataTable tableHeader={tableHeaderForAllDataTables} />,
     [AvailableMersDataTables.CAMEL_POPULATION_DATA]: () => <CamelPopulationDataTable tableHeader={tableHeaderForAllDataTables} />
   }

@@ -10,11 +10,13 @@ import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCame
 import { CamelPopulationOverTime } from "../dashboard/(visualizations)/camel-population-over-time";
 import { MedianSeroprevalenceOverTime } from "../dashboard/(visualizations)/median-seroprevalence-over-time";
 import { useSummaryByRegionVisualizationPageConfig } from "./visualization-page-config/use-summary-by-region-visualization-page-config";
+import { MedianViralPositivePrevalenceOverTime } from "../dashboard/(visualizations)/median-viral-positive-prevalence-over-time";
 
 export enum MersVisualizationId {
   REPORTED_EVENT_SUMMARY_OVER_TIME = "REPORTED_EVENT_SUMMARY_OVER_TIME",
   CAMEL_POPULATION_OVER_TIME = "CAMEL_POPULATION_OVER_TIME",
   MEDIAN_SEROPREVALENCE_OVER_TIME = "MEDIAN_SEROPREVALENCE_OVER_TIME",
+  MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME = "MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME",
   SUMMARY_BY_REGION = "SUMMARY_BY_REGION"
 }
 
@@ -27,6 +29,7 @@ export enum MersVisualizationUrlParameter {
   "reported_event_summary_over_time" = "reported_event_summary_over_time",
   "camel_population_over_time" = "camel_population_over_time",
   "median_seroprevalence_over_time" = "median_seroprevalence_over_time",
+  "median_viral_positive_prevalence_over_time" = "median_viral_positive_prevalence_over_time",
   "summary_by_region" = "summary_by_region"
 }
 
@@ -76,6 +79,15 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median Seroprevalence Over Time" }),
     renderVisualization: ({ data }) => <MedianSeroprevalenceOverTime data={data} />
   },
+  [MersVisualizationId.MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME]: {
+    id: MersVisualizationId.MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME,
+    urlParameter:
+      MersVisualizationUrlParameter[
+        "median_viral_positive_prevalence_over_time"
+      ],
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median Viral Positive Prevalenc eOver Time" }),
+    renderVisualization: ({ data }) => <MedianViralPositivePrevalenceOverTime data={data} />
+  },
   [MersVisualizationId.SUMMARY_BY_REGION]: {
     id: MersVisualizationId.SUMMARY_BY_REGION,
     urlParameter:
@@ -108,6 +120,8 @@ export const useVisualizationPageConfiguration = () => {
       mersVisualizationInformation[MersVisualizationId.CAMEL_POPULATION_OVER_TIME],
     [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME]:
       mersVisualizationInformation[MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME],
+    [MersVisualizationId.MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME]:
+      mersVisualizationInformation[MersVisualizationId.MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME],
     [MersVisualizationId.SUMMARY_BY_REGION]: {
       ...mersVisualizationInformation[MersVisualizationId.SUMMARY_BY_REGION],
       getDisplayName: getDisplayNameForSummaryByWhoRegion,
