@@ -1,6 +1,6 @@
 import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
-import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { AnimalMersSeroprevalenceEstimate, MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { parseISO } from "date-fns";
@@ -20,8 +20,7 @@ export const AnimalSeroprevalenceSummaryByRegion = <TRegion extends string>(prop
   const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
 
   const estimates = useMemo(() => data
-    .filter((dataPoint): dataPoint is MersEstimate => dataPoint.__typename === 'HumanMersEstimate' || dataPoint.__typename === 'AnimalMersEstimate')
-    .filter((dataPoint) => dataPoint.__typename === 'AnimalMersEstimate')
+    .filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimate => dataPoint.__typename === 'AnimalMersEstimate')
     .map((estimate) => ({
       ...estimate,
       region: regionGroupingFunction(estimate),

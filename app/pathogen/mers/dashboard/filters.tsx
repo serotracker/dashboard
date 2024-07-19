@@ -76,7 +76,9 @@ export const MersFilters = (props: MersFiltersProps) => {
         ...(sharedFilterData?.mersFilterOptions ? {
           __typename: [
             "HumanMersEstimate",
+            "HumanMersViralEstimate",
             "AnimalMersEstimate",
+            "AnimalMersViralEstimate",
             "AnimalMersEvent",
             "HumanMersEvent"
           ],

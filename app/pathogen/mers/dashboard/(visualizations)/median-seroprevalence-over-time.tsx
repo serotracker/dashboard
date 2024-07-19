@@ -1,6 +1,6 @@
 import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
-import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { MersEstimate, MersSeroprevalenceEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { parseISO } from 'date-fns';
@@ -24,7 +24,7 @@ export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTime
   const { data } = props;
 
   const consideredData = useMemo(() => data
-    .filter((dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry): dataPoint is MersEstimate => {
+    .filter((dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry): dataPoint is MersSeroprevalenceEstimate => {
       return dataPoint.__typename === 'HumanMersEstimate' || dataPoint.__typename === 'AnimalMersEstimate'
     })
     .map((dataPoint) => ({

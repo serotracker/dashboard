@@ -19,7 +19,9 @@ const initialMersContextState = {
   selectedFilters: {
     ["__typename"]: [
       "HumanMersEstimate",
+      "HumanMersViralEstimate",
       "AnimalMersEstimate",
+      "AnimalMersViralEstimate",
       "AnimalMersEvent",
       "HumanMersEvent"
     ],
@@ -27,7 +29,30 @@ const initialMersContextState = {
   dataFiltered: false,
 }
 
-export type MersEstimate = MersEstimates_V2Query['mersEstimates_V2'][number];
+export type HumanMersSeroprevalenceEstimate = Extract<MersEstimates_V2Query['mersEstimates_V2'][number], {
+  __typename: 'HumanMersEstimate'
+}>;
+export type AnimalMersSeroprevalenceEstimate = Extract<MersEstimates_V2Query['mersEstimates_V2'][number], {
+  __typename: 'AnimalMersEstimate'
+}>;
+export type AnimalMersViralEstimate = Extract<MersEstimates_V2Query['mersEstimates_V2'][number], {
+  __typename: 'AnimalMersViralEstimate'
+}>;
+export type HumanMersViralEstimate = Extract<MersEstimates_V2Query['mersEstimates_V2'][number], {
+  __typename: 'HumanMersViralEstimate'
+}>;
+
+export type MersSeroprevalenceEstimate =
+  | HumanMersSeroprevalenceEstimate
+  | AnimalMersSeroprevalenceEstimate;
+export type MersViralEstimate = 
+  | HumanMersViralEstimate
+  | AnimalMersViralEstimate;
+
+export type MersEstimate = 
+  | MersSeroprevalenceEstimate
+  | MersViralEstimate;
+
 type MersContextState = PathogenContextState<MersEstimate> & {
   faoMersEventData: FaoMersEvent[];
 };

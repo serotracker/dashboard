@@ -10,7 +10,6 @@ export const mersEstimates_V2 = gql`
         __typename
         id
         type
-        seroprevalence
         estimateId
         city
         state
@@ -26,12 +25,35 @@ export const mersEstimates_V2 = gql`
         sourceType
         sourceTitle
         insitutution
+        seroprevalence
+        ageGroup
+      }
+      ... on HumanMersViralEstimate {
+        __typename
+        id
+        type
+        estimateId
+        city
+        state
+        country
+        countryAlphaTwoCode
+        countryAlphaThreeCode
+        latitude
+        longitude
+        whoRegion
+        unRegion
+        firstAuthorFullName
+        sourceUrl
+        sourceType
+        sourceTitle
+        insitutution
+        positivePrevalence
+        ageGroup
       }
       ... on AnimalMersEstimate {
         __typename
         id
         type
-        seroprevalence
         estimateId
         city
         state
@@ -47,6 +69,32 @@ export const mersEstimates_V2 = gql`
         sourceType
         sourceTitle
         insitutution
+        seroprevalence
+        animalType
+        animalSpecies
+      }
+      ... on AnimalMersViralEstimate {
+        __typename
+        id
+        type
+        estimateId
+        city
+        state
+        country
+        countryAlphaTwoCode
+        countryAlphaThreeCode
+        latitude
+        longitude
+        whoRegion
+        unRegion
+        firstAuthorFullName
+        sourceUrl
+        sourceType
+        sourceTitle
+        insitutution
+        positivePrevalence
+        animalType
+        animalSpecies
       }
     }
   }

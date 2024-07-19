@@ -1,3 +1,4 @@
+import { AnimalMersSeroprevalenceEstimate, AnimalMersViralEstimate, HumanMersSeroprevalenceEstimate, HumanMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { AnimalMersEvent, HumanMersEvent, HumanMersEstimate, AnimalMersEstimate, MersDiagnosisSource, MersDiagnosisStatus, MersEventAnimalSpecies, MersEventAnimalType } from "@/gql/graphql"
 
 export const diagnosisStatusToStringMap = {
@@ -68,8 +69,10 @@ export type AnimalMersEventMapMarkerData = Omit<AnimalMersEvent,'country'> & {
   countryAlphaTwoCode: string;
 };
 
-export type HumanMersEstimateMapMarkerData = HumanMersEstimate;
-export type AnimalMersEstimateMapMarkerData = AnimalMersEstimate;
+export type HumanMersSeroprevalenceEstimateMapMarkerData = HumanMersSeroprevalenceEstimate;
+export type AnimalMersSeroprevalenceEstimateMapMarkerData = AnimalMersSeroprevalenceEstimate;
+export type HumanMersViralEstimateMapMarkerData = HumanMersViralEstimate;
+export type AnimalMersViralEstimateMapMarkerData = AnimalMersViralEstimate;
 
 export const isMersFaoHumanEventMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is HumanMersEventMapMarkerData => 
   mersMapMarkerData.__typename === "HumanMersEvent";
@@ -77,49 +80,68 @@ export const isMersFaoHumanEventMapMarkerData = (mersMapMarkerData: MersMapMarke
 export const isMersFaoAnimalEventMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is AnimalMersEventMapMarkerData => 
   mersMapMarkerData.__typename === "AnimalMersEvent";
 
-export const isHumanMersEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is HumanMersEstimateMapMarkerData => 
+export const isHumanMersSeroprevalenceEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is HumanMersSeroprevalenceEstimateMapMarkerData => 
   mersMapMarkerData.__typename === "HumanMersEstimate";
 
-export const isAnimalMersEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is AnimalMersEstimateMapMarkerData => 
+export const isAnimalMersSeroprevalenceEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is AnimalMersSeroprevalenceEstimateMapMarkerData => 
   mersMapMarkerData.__typename === "AnimalMersEstimate";
+
+export const isHumanMersViralEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is HumanMersViralEstimateMapMarkerData => 
+  mersMapMarkerData.__typename === "HumanMersViralEstimate";
+
+export const isAnimalMersViralEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is AnimalMersViralEstimateMapMarkerData => 
+  mersMapMarkerData.__typename === "AnimalMersViralEstimate";
 
 export const mersDataTypeToSortOrderMap: Record<string, number | undefined> & Record<
   | "HumanMersEstimate"
   | "AnimalMersEstimate"
-  | "AnimalMersEvent"
   | "HumanMersEvent"
+  | "AnimalMersEvent"
+  | "HumanMersViralEstimate"
+  | "AnimalMersViralEstimate"
 , number> = {
   "HumanMersEstimate": 1,
-  "AnimalMersEstimate": 1,
-  "AnimalMersEvent": 2,
-  "HumanMersEvent": 3,
+  "AnimalMersEstimate": 2,
+  "HumanMersViralEstimate": 3,
+  "AnimalMersViralEstimate": 4,
+  "HumanMersEvent": 5,
+  "AnimalMersEvent": 6
 };
 export const mersDataTypeToLabelMap = {
   "HumanMersEstimate": "Human Seroprevalence Estimate",
   "AnimalMersEstimate": "Animal Seroprevalence Estimate",
+  "HumanMersViralEstimate": "Human Viral Estimate",
+  "AnimalMersViralEstimate": "Animal Viral Estimate",
   "AnimalMersEvent": "Animal Case",
   "HumanMersEvent": "Human Case",
 };
 
 export const mersDataTypeToColourClassnameMap = {
   "HumanMersEstimate": "bg-mers-human-estimate",
+  "HumanMersViralEstimate": "bg-mers-human-viral-estimate",
   "AnimalMersEstimate": "bg-mers-animal-estimate",
+  "AnimalMersViralEstimate": "bg-mers-animal-viral-estimate",
   "AnimalMersEvent": "bg-mers-animal-event",
   "HumanMersEvent": "bg-mers-human-event"
 }
 
 export const mersDataTypeToColourClassnameMapForCheckbox = {
   "HumanMersEstimate": "data-[state=checked]:bg-mers-human-estimate",
+  "HumanMersViralEstimate": "data-[state=checked]:bg-mers-human-viral-estimate",
   "AnimalMersEstimate": "data-[state=checked]:bg-mers-animal-estimate",
+  "AnimalMersViralEstimate": "data-[state=checked]:bg-mers-animal-viral-estimate",
   "AnimalMersEvent": "data-[state=checked]:bg-mers-animal-event",
   "HumanMersEvent": "data-[state=checked]:bg-mers-human-event"
 }
 
 export const isMersEventTypename = (typename: string): typename is "HumanMersEvent"|"AnimalMersEvent" => ["HumanMersEvent","AnimalMersEvent"].includes(typename);
-export const isMersEstimateTypename = (typename: string): typename is "HumanMersEstimate"|"AnimalMersEstimate" => ["HumanMersEstimate","AnimalMersEstimate"].includes(typename);
+export const isMersSeroprevalenceEstimateTypename = (typename: string): typename is "HumanMersEstimate"|"AnimalMersEstimate" => ["HumanMersEstimate","AnimalMersEstimate"].includes(typename);
+export const isMersViralEstimateTypename = (typename: string): typename is "HumanMersViralEstimate"|"AnimalMersViralEstimate" => ["HumanMersViralEstimate","AnimalMersViralEstimate"].includes(typename);
 
 export type MersMapMarkerData = 
-  | AnimalMersEstimateMapMarkerData
-  | HumanMersEstimateMapMarkerData
+  | AnimalMersSeroprevalenceEstimateMapMarkerData
+  | HumanMersSeroprevalenceEstimateMapMarkerData
   | HumanMersEventMapMarkerData
-  | AnimalMersEventMapMarkerData;
+  | AnimalMersEventMapMarkerData
+  | HumanMersViralEstimateMapMarkerData
+  | AnimalMersViralEstimateMapMarkerData;

@@ -7,19 +7,21 @@ import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { useMersData } from "@/hooks/mers/useMersData";
 import { MersCountryPopupContent } from "./mers-country-pop-up-content";
-import { HumanMersEstimatePopupContent } from "./human-mers-estimate-pop-up-content";
-import { AnimalMersEstimatePopupContent } from "./animal-mers-estimate-pop-up-content";
+import { HumanMersSeroprevalenceEstimatePopupContent } from "./human-mers-seroprevalence-estimate-pop-up-content";
+import { AnimalMersSeroprevalenceEstimatePopupContent } from "./animal-mers-seroprevalence-estimate-pop-up-content";
 import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
 import { MersFaoAnimalEventPopupContent } from "./mers-fao-animal-event-pop-up-content";
 import { MersFaoHumanEventPopupContent } from "./mers-fao-human-event-pop-up-content";
 import assertNever from "assert-never";
-import { MersDiagnosisStatus, MersEventAnimalSpecies } from "@/gql/graphql";
+import { MersAnimalSpecies, MersDiagnosisStatus, MersEventAnimalSpecies } from "@/gql/graphql";
 import {
   MersMapMarkerData,
-  isHumanMersEstimateMapMarkerData,
-  isAnimalMersEstimateMapMarkerData,
+  isHumanMersSeroprevalenceEstimateMapMarkerData,
+  isAnimalMersSeroprevalenceEstimateMapMarkerData,
   isMersFaoAnimalEventMapMarkerData,
-  isMersFaoHumanEventMapMarkerData
+  isMersFaoHumanEventMapMarkerData,
+  isAnimalMersViralEstimateMapMarkerData,
+  isHumanMersViralEstimateMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { CountryPaintChangeSetting, MersMapCountryHighlightingSettings, useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
@@ -28,6 +30,8 @@ import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen
 import { useTotalCamelPopulationLayer } from "./country-highlight-layers/total-camel-population-layer";
 import { useCamelsPerCapitaLayer } from "./country-highlight-layers/camels-per-capita-layer";
 import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
+import { AnimalMersViralEstimatePopupContent } from "./animal-mers-viral-estimate-pop-up-content";
+import { HumanMersViralEstimatePopupContent } from "./human-mers-viral-estimate-pop-up-content";
 
 const MapPinColours = {
   'HumanMersEvent': "#8abded",
@@ -35,7 +39,10 @@ const MapPinColours = {
   'AnimalMersEvent': "#ed8ac7",
   'animal-mers-event-alt': "#eb2aa1",
   'HumanMersEstimate': "#e7ed8a",
-  'AnimalMersEstimate': "#13f244"
+  'AnimalMersEstimate': "#13f244",
+  'HumanMersViralEstimate': "#e37712",
+  'AnimalMersViralEstimate': "#de141b",
+  'mers-animal-viral-estimate-alt': "#910c10",
 } as const;
 
 export const MersMap = () => {
@@ -93,7 +100,7 @@ export const MersMap = () => {
       });
     }
     assertNever(currentMapCountryHighlightingSettings);
-  }, [dataPointPresentMapLayer, totalCamelPopulationMapLayer, camelsPerCapitaMapLayer, currentMapCountryHighlightingSettings, dataPoints, latestFaoCamelPopulationDataPointsByCountry]);
+  }, [dataPointPresentMapLayer, totalCamelPopulationMapLayer, camelsPerCapitaMapLayer, currentMapCountryHighlightingSettings, dataPoints, latestFaoCamelPopulationDataPointsByCountry, countryOutlinesSetting]);
 
   if (!data || !faoMersEvents) {
     return <span> Loading... </span>;
@@ -126,6 +133,10 @@ export const MersMap = () => {
                   `${MapPinColours['HumanMersEstimate']}`,
                   "AnimalMersEstimate",
                   `${MapPinColours['AnimalMersEstimate']}`,
+                  "HumanMersViralEstimate",
+                  `${MapPinColours['HumanMersViralEstimate']}`,
+                  "AnimalMersViralEstimate",
+                  `${MapPinColours['AnimalMersViralEstimate']}`,
                   "#FFFFFF"
                 ],
                 "circle-radius": 8,
@@ -152,7 +163,25 @@ export const MersMap = () => {
                 ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Bat]
               ], 1, 0]],
               "Human Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEstimate"], 1, 0]],
-              "Animal Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersEstimate"], 1, 0]]
+              "Human Viral Estimates": ["+", ["case", ["==", ["get", "__typename"], "HumanMersViralEstimate"], 1, 0]],
+              "Animal Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersEstimate"], 1, 0]],
+              "Camel Seroprevalence Estimates": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersEstimate"],
+                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Camel]
+              ], 1, 0]],
+              "Bat Seroprevalence Estimates": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersEstimate"],
+                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Bat]
+              ], 1, 0]],
+              "Animal Viral Estimates": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersViralEstimate"], 1, 0]],
+              "Camel Viral Estimates": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
+                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Camel]
+              ], 1, 0]],
+              "Bat Viral Estimates": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
+                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Bat]
+              ], 1, 0]],
             },
             validClusterPropertyKeys: [
               "Reported Human Events",
@@ -162,13 +191,21 @@ export const MersMap = () => {
               "Camel Events",
               "Bat Events",
               "Human Seroprevalence Estimates",
-              "Animal Seroprevalence Estimates"
+              "Animal Seroprevalence Estimates",
+              "Camel Seroprevalence Estimates",
+              "Bat Seroprevalence Estimates",
+              "Human Viral Estimates",
+              "Animal Viral Estimates",
+              "Camel Viral Estimates",
+              "Bat Viral Estimates"
             ],
             clusterPropertyKeysIncludedInSum: [
               "Reported Human Events",
               "Reported Animal Events",
               "Human Seroprevalence Estimates",
-              "Animal Seroprevalence Estimates"
+              "Animal Seroprevalence Estimates",
+              "Human Viral Estimates",
+              "Animal Viral Estimates",
             ],
             clusterPropertyToColourMap: {
               "Reported Human Events": MapPinColours['HumanMersEvent'],
@@ -178,7 +215,13 @@ export const MersMap = () => {
               "Camel Events": MapPinColours['animal-mers-event-alt'],
               "Bat Events": MapPinColours['animal-mers-event-alt'],
               "Human Seroprevalence Estimates": MapPinColours['HumanMersEstimate'],
-              "Animal Seroprevalence Estimates": MapPinColours['AnimalMersEstimate']
+              "Animal Seroprevalence Estimates": MapPinColours['AnimalMersEstimate'],
+              "Camel Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
+              "Bat Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
+              "Human Viral Estimates": MapPinColours['HumanMersViralEstimate'],
+              "Animal Viral Estimates": MapPinColours['AnimalMersViralEstimate'],
+              "Camel Viral Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
+              "Bat Viral Estimates": MapPinColours['mers-animal-viral-estimate-alt']
             }
           }}
           generatePopupContent={(input) => {
@@ -188,12 +231,20 @@ export const MersMap = () => {
 
             const mersMarkerData: MersMapMarkerData = input.data;
 
-            if(isHumanMersEstimateMapMarkerData(mersMarkerData)) {
-              return <HumanMersEstimatePopupContent estimate={mersMarkerData} />
+            if(isHumanMersSeroprevalenceEstimateMapMarkerData(mersMarkerData)) {
+              return <HumanMersSeroprevalenceEstimatePopupContent estimate={mersMarkerData} />
             }
 
-            if(isAnimalMersEstimateMapMarkerData(mersMarkerData)) {
-              return <AnimalMersEstimatePopupContent estimate={mersMarkerData} />
+            if(isHumanMersViralEstimateMapMarkerData(mersMarkerData)) {
+              return <HumanMersViralEstimatePopupContent estimate={mersMarkerData} />
+            }
+
+            if(isAnimalMersSeroprevalenceEstimateMapMarkerData(mersMarkerData)) {
+              return <AnimalMersSeroprevalenceEstimatePopupContent estimate={mersMarkerData} />
+            }
+
+            if(isAnimalMersViralEstimateMapMarkerData(mersMarkerData)) {
+              return <AnimalMersViralEstimatePopupContent estimate={mersMarkerData} />
             }
 
             if(isMersFaoAnimalEventMapMarkerData(mersMarkerData)) {

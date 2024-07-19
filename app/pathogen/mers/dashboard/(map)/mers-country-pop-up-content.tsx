@@ -8,10 +8,14 @@ import {
   AnimalMersEventMapMarkerData,
   HumanMersEventMapMarkerData,
   MersMapMarkerData,
-  HumanMersEstimateMapMarkerData,
-  isHumanMersEstimateMapMarkerData,
-  AnimalMersEstimateMapMarkerData,
-  isAnimalMersEstimateMapMarkerData,
+  HumanMersSeroprevalenceEstimateMapMarkerData,
+  isHumanMersSeroprevalenceEstimateMapMarkerData,
+  AnimalMersSeroprevalenceEstimateMapMarkerData,
+  isAnimalMersSeroprevalenceEstimateMapMarkerData,
+  HumanMersViralEstimateMapMarkerData,
+  isHumanMersViralEstimateMapMarkerData,
+  AnimalMersViralEstimateMapMarkerData,
+  isAnimalMersViralEstimateMapMarkerData,
   isMersFaoAnimalEventMapMarkerData,
   isMersFaoHumanEventMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
@@ -31,11 +35,17 @@ interface MersCountryPopupContentProps {
 export const MersCountryPopupContent = (props: MersCountryPopupContentProps): React.ReactNode => {
   const { dataPoints } = props.record;
 
-  const allHumanMersEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is HumanMersEstimateMapMarkerData =>
-    isHumanMersEstimateMapMarkerData(dataPoint))
+  const allHumanMersSeroprevalenceEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is HumanMersSeroprevalenceEstimateMapMarkerData =>
+    isHumanMersSeroprevalenceEstimateMapMarkerData(dataPoint))
   , [ dataPoints ])
-  const allAnimalMersEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is AnimalMersEstimateMapMarkerData =>
-    isAnimalMersEstimateMapMarkerData(dataPoint))
+  const allAnimalMersSeroprevalenceEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimateMapMarkerData =>
+    isAnimalMersSeroprevalenceEstimateMapMarkerData(dataPoint))
+  , [ dataPoints ])
+  const allHumanMersViralEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is HumanMersViralEstimateMapMarkerData =>
+    isHumanMersViralEstimateMapMarkerData(dataPoint))
+  , [ dataPoints ])
+  const allAnimalMersViralEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is AnimalMersViralEstimateMapMarkerData =>
+    isAnimalMersViralEstimateMapMarkerData(dataPoint))
   , [ dataPoints ])
   const allHumanMersEvents = useMemo(() => dataPoints.filter((dataPoint): dataPoint is HumanMersEventMapMarkerData =>
     isMersFaoHumanEventMapMarkerData(dataPoint))
@@ -46,7 +56,7 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
 
   return (
     <GenericMapPopUp
-      width={GenericMapPopUpWidth.MEDIUM}
+      width={GenericMapPopUpWidth.WIDE}
       headerConfiguration={{
         text: props.record.countryName,
         textAlignment: HeaderConfigurationTextAlignment.CENTER
@@ -61,7 +71,7 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
         {
           title: 'Human Seroprevalence Estimates'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
-          value: allHumanMersEstimates.length,
+          value: allHumanMersSeroprevalenceEstimates.length,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-human-estimate' },
           rightPaddingEnabled: false
@@ -69,9 +79,25 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
         {
           title: 'Animal Seroprevalence Estimates'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
-          value: allAnimalMersEstimates.length,
+          value: allAnimalMersSeroprevalenceEstimates.length,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-animal-estimate' },
+          rightPaddingEnabled: false
+        },
+        {
+          title: 'Human Viral Estimates'.replace(' ', '\u00A0'),
+          type: PopUpContentRowType.NUMBER as const,
+          value: allHumanMersViralEstimates.length,
+          contentTextAlignment: PopupContentTextAlignment.RIGHT,
+          ribbonConfiguration: { ribbonColourClassname: 'bg-mers-human-viral-estimate' },
+          rightPaddingEnabled: false
+        },
+        {
+          title: 'Animal Viral Estimates'.replace(' ', '\u00A0'),
+          type: PopUpContentRowType.NUMBER as const,
+          value: allAnimalMersViralEstimates.length,
+          contentTextAlignment: PopupContentTextAlignment.RIGHT,
+          ribbonConfiguration: { ribbonColourClassname: 'bg-mers-animal-viral-estimate' },
           rightPaddingEnabled: false
         },
         {
