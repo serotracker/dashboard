@@ -67,7 +67,7 @@ export const GroupedColouredCheckboxFilter = <
       (filterOptions) => filterOptions.sort((a, b) => optionSortingFunction ? optionSortingFunction(a, b) : 0),
       (filterOptions) => typedGroupBy(filterOptions, (filterOption) => optionToSuperOptionFunction ? optionToSuperOptionFunction(filterOption) : filterOption)
     )
-  , [ filterOptions, optionSortingFunction ]);
+  , [ filterOptions, optionSortingFunction, optionToSuperOptionFunction ]);
 
   return (
     <div className={"flex justify-between lg:justify-center flex-wrap lg:flex-col pb-3"}>
@@ -107,6 +107,7 @@ export const GroupedColouredCheckboxFilter = <
               />
               <div className='ml-5'>
                 {filterSubOptions.map((option) => <ColouredCheckbox
+                  key={option}
                   option={option}
                   checkedColourClassname={props.optionToColourClassnameMap[option] ?? 'data-[state=checked]:bg-sky-100'}
                   checked={ props.state.selectedFilters[props.filter]

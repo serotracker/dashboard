@@ -13,10 +13,7 @@ interface ColouredCheckboxProps {
 }
 
 export const ColouredCheckbox = (props: ColouredCheckboxProps) => (
-  <div
-    key={props.option}
-    className="items-top flex space-x-2 my-1 mb-2"
-  >
+  <div className="items-top flex space-x-2 my-1 mb-2">
     <Checkbox
       id={`checkbox-${props.option}`}
       className={props.checkedColourClassname}
@@ -89,6 +86,7 @@ export const ColouredCheckboxFilter = <
         .filter((option): option is NonNullable<typeof option> => !!option)
         .sort((a, b) => props.optionSortingFunction ? props.optionSortingFunction(a, b) : 0)
         .map((option) => <ColouredCheckbox
+          key={option}
           option={option}
           checkedColourClassname={props.optionToColourClassnameMap[option] ?? 'data-[state=checked]:bg-sky-100'}
           checked={ props.state.selectedFilters[props.filter]
