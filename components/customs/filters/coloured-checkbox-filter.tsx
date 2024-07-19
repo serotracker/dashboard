@@ -4,6 +4,35 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { TooltipContentRenderingFunction } from "./available-filters";
 import { Button } from "@/components/ui/button";
 
+interface ColouredCheckboxProps {
+  option: string;
+  label: string;
+  checkedColourClassname: string;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+}
+
+export const ColouredCheckbox = (props: ColouredCheckboxProps) => (
+  <div className="items-top flex space-x-2 my-1 mb-2">
+    <Checkbox
+      id={`checkbox-${props.option}`}
+      className={props.checkedColourClassname}
+      checked={props.checked}
+      onCheckedChange={(checked: boolean) => props.onCheckedChange(checked)}
+    />
+    <div className="grid gap-1.5 leading-none">
+      <label
+        htmlFor={`checkbox-${props.option}`}
+        className={
+          "text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        }
+      >
+        {props.label}
+      </label>
+    </div>
+  </div>
+)
+
 export interface ColouredCheckboxFilterProps<
   TEstimate extends Record<string, unknown>,
   TPathogenContextState extends PathogenContextState<TEstimate>
@@ -56,39 +85,25 @@ export const ColouredCheckboxFilter = <
       {props.filterOptions
         .filter((option): option is NonNullable<typeof option> => !!option)
         .sort((a, b) => props.optionSortingFunction ? props.optionSortingFunction(a, b) : 0)
-        .map((option) => (
-          <div
-            key={option}
-            className="items-top flex space-x-2 my-1 mb-2"
-          >
-            <Checkbox
-              id={`checkbox-${option}`}
-              className={props.optionToColourClassnameMap[option] ?? 'data-[state=checked]:bg-sky-100'}
-              checked={
-                props.state.selectedFilters[props.filter]
-                  ? props.state.selectedFilters[props.filter].includes(
-                      option
-                    )
-                  : false
-              }
-              onCheckedChange={(checked: boolean) => {
-                handleOnClickCheckbox(option, checked);
-              }}
-            />
-            <div className="grid gap-1.5 leading-none">
-              <label
-                htmlFor={`checkbox-${option}`}
-                className={
-                  "text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                }
-              >
-                {props.optionToLabelMap[option] ?? option}
-              </label>
-            </div>
-          </div>
-        ))
+        .map((option) => <ColouredCheckbox
+          key={option}
+          option={option}
+          checkedColourClassname={props.optionToColourClassnameMap[option] ?? 'data-[state=checked]:bg-sky-100'}
+          checked={ props.state.selectedFilters[props.filter]
+            ? props.state.selectedFilters[props.filter].includes(option)
+            : false
+          }
+          onCheckedChange={(checked: boolean) => {handleOnClickCheckbox(option, checked)}}
+          label={props.optionToLabelMap[option] ?? option}
+        />)
       }
-      <Button className="mt-2 w-full" variant={'ghost'} onClick={clearAllHandler}> {props.clearAllButtonText} </Button>
+      <Button
+        className="mt-2 w-full"
+        variant={'ghost'}
+        onClick={clearAllHandler}
+      >
+        {props.clearAllButtonText}
+      </Button>
     </div>
   );
 };

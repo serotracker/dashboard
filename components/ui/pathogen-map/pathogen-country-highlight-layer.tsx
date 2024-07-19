@@ -89,8 +89,6 @@ export function PathogenCountryHighlightLayer(
 
   const countryLayer = mapCountryVectors.layers[0];
 
-  console.log('countryLayer', countryLayer);
-
   return (
     <Source {...mapCountryVectors.sources[countryLayer.source]}>
       <Layer

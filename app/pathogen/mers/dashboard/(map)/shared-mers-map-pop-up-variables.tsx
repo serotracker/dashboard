@@ -132,6 +132,32 @@ export const mersDataTypeToLabelMap = {
   "HumanMersEvent": "Human Case",
 };
 
+export enum MersDataTypeSuperOption {
+  HUMAN = 'HUMAN',
+  ANIMAL = 'ANIMAL',
+}
+
+export const isMersDataTypeSuperOption = (superOption: string): superOption is MersDataTypeSuperOption =>
+  Object.values(MersDataTypeSuperOption).some((element) => element === superOption);
+
+export const isMersDataType = (dataType: string): dataType is
+  "HumanMersEstimate" | "AnimalMersEstimate" | "HumanMersViralEstimate" | "AnimalMersViralEstimate" | "AnimalMersEvent" | "HumanMersEvent" =>
+  ["HumanMersEstimate", "AnimalMersEstimate", "HumanMersViralEstimate", "AnimalMersViralEstimate", "AnimalMersEvent", "HumanMersEvent"].includes(dataType)
+
+export const mersDataTypeToSuperOptionMap = {
+  "HumanMersEstimate": MersDataTypeSuperOption.HUMAN,
+  "AnimalMersEstimate": MersDataTypeSuperOption.ANIMAL,
+  "HumanMersViralEstimate": MersDataTypeSuperOption.HUMAN,
+  "AnimalMersViralEstimate": MersDataTypeSuperOption.ANIMAL,
+  "HumanMersEvent": MersDataTypeSuperOption.HUMAN,
+  "AnimalMersEvent": MersDataTypeSuperOption.ANIMAL
+}
+
+export const mersDataTypeSuperOptionToLabelMap = {
+  [MersDataTypeSuperOption.HUMAN]: "Human Data",
+  [MersDataTypeSuperOption.ANIMAL]: "Animal Data"
+}
+
 export const mersDataTypeToColourClassnameMap = {
   "HumanMersEstimate": "bg-mers-human-estimate",
   "HumanMersViralEstimate": "bg-mers-human-viral-estimate",
