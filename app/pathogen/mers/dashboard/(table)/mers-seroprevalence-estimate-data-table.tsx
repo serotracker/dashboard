@@ -8,7 +8,17 @@ import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-hand
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { isMersSeroprevalenceEstimateTypename, mersDataTypeToColourClassnameMap, mersDataTypeToLabelMap } from "../(map)/shared-mers-map-pop-up-variables";
+import {
+  animalSpeciesToColourClassnameMap,
+  animalSpeciesToStringMap,
+  animalTypeToColourClassnameMap,
+  animalTypeToStringMap,
+  isMersAnimalSpecies,
+  isMersAnimalType,
+  isMersSeroprevalenceEstimateTypename,
+  mersDataTypeToColourClassnameMap,
+  mersDataTypeToLabelMap
+} from "../(map)/shared-mers-map-pop-up-variables";
 
 const mersSeroprevalenceEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -70,6 +80,24 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'insitutution',
   label: 'Institution'
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: 'animalType',
+  valueToDisplayLabel: (animalType: string) => isMersAnimalType(animalType) ? animalTypeToStringMap[animalType] : animalType,
+  valueToColourSchemeClassnameMap: animalTypeToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Animal Type'
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: 'animalSpecies',
+  valueToDisplayLabel: (animalSpecies: string) => isMersAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
+  valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Animal Species'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'ageGroup',
+  label: 'Age Group'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'sampleSize',

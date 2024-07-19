@@ -1,5 +1,19 @@
-import { AnimalMersSeroprevalenceEstimate, AnimalMersViralEstimate, HumanMersSeroprevalenceEstimate, HumanMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { AnimalMersEvent, HumanMersEvent, HumanMersEstimate, AnimalMersEstimate, MersDiagnosisSource, MersDiagnosisStatus, MersEventAnimalSpecies, MersEventAnimalType } from "@/gql/graphql"
+import {
+  AnimalMersSeroprevalenceEstimate,
+  AnimalMersViralEstimate,
+  HumanMersSeroprevalenceEstimate,
+  HumanMersViralEstimate
+} from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import {
+  AnimalMersEvent,
+  HumanMersEvent,
+  MersDiagnosisSource,
+  MersDiagnosisStatus,
+  MersEventAnimalSpecies,
+  MersEventAnimalType,
+  MersAnimalType,
+  MersAnimalSpecies
+} from "@/gql/graphql"
 
 export const diagnosisStatusToStringMap = {
   [MersDiagnosisStatus.Confirmed]: "Confirmed",
@@ -24,6 +38,7 @@ export const animalTypeToColourClassnameMap = {
 }
 
 export const isMersEventAnimalType = (animalType: string): animalType is MersEventAnimalType => Object.values(MersEventAnimalType).some((element) => element === animalType);
+export const isMersAnimalType = (animalType: string): animalType is MersAnimalType => Object.values(MersAnimalType).some((element) => element === animalType);
 
 export const animalSpeciesToStringMap = {
   [MersEventAnimalSpecies.Bat]: "Bat",
@@ -36,6 +51,7 @@ export const animalSpeciesToColourClassnameMap = {
 }
 
 export const isMersEventAnimalSpecies = (animalSpecies: string): animalSpecies is MersEventAnimalSpecies => Object.values(MersEventAnimalSpecies).some((element) => element === animalSpecies);
+export const isMersAnimalSpecies = (animalSpecies: string): animalSpecies is MersAnimalSpecies => Object.values(MersAnimalSpecies).some((element) => element === animalSpecies);
 
 export const diagnosisSourceToStringMap = {
   [MersDiagnosisSource.FaoFieldOfficer]: "FAO Field Officer",
