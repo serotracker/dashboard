@@ -1,7 +1,7 @@
 import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { MersDiagnosisSource, MersDiagnosisStatus, MersEventAnimalSpecies, MersEventAnimalType, MersEventType, WhoRegion } from "@/gql/graphql";
+import { MersDiagnosisStatus, MersEventAnimalSpecies, MersEventAnimalType, MersEventType, WhoRegion } from "@/gql/graphql";
 import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import {

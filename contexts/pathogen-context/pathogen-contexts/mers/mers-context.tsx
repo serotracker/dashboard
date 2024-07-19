@@ -42,6 +42,12 @@ export type HumanMersViralEstimate = Extract<MersEstimates_V2Query['mersEstimate
   __typename: 'HumanMersViralEstimate'
 }>;
 
+export const isMersSeroprevalenceEstimate = (estimate: MersEstimate): estimate is MersSeroprevalenceEstimate =>
+  (estimate.__typename === 'HumanMersEstimate') || (estimate.__typename === 'AnimalMersEstimate');
+
+export const isMersViralEstimate = (estimate: MersEstimate): estimate is MersViralEstimate =>
+  (estimate.__typename === 'HumanMersViralEstimate') || (estimate.__typename === 'AnimalMersViralEstimate');
+
 export type MersSeroprevalenceEstimate =
   | HumanMersSeroprevalenceEstimate
   | AnimalMersSeroprevalenceEstimate;
