@@ -1,26 +1,26 @@
 import { useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
-import { AnimalMersEstimateMapMarkerData } from "./shared-mers-map-pop-up-variables";
+import { HumanMersViralEstimateMapMarkerData } from "./shared-mers-map-pop-up-variables";
 
-interface AnimalMersEstimatePopupContentProps {
-  estimate: AnimalMersEstimateMapMarkerData;
+interface HumanMersViralEstimatePopupContentProps {
+  estimate: HumanMersViralEstimateMapMarkerData;
 }
 
-export const AnimalMersEstimatePopupContent = (props: AnimalMersEstimatePopupContentProps) => {
+export const HumanMersViralEstimatePopupContent = (props: HumanMersViralEstimatePopupContentProps) => {
   const { estimate } = props;
 
   const topBannerText = useMemo(() => {
-    const seroprevalencePercentageText = `Seroprevalence: ${(estimate.seroprevalence * 100).toFixed(1)}%`;
+    const positivePrevalencePercentageText = `Positive Prevalence: ${(estimate.positivePrevalence * 100).toFixed(1)}%`;
 
-    return `${seroprevalencePercentageText}`
+    return `${positivePrevalencePercentageText}`
   }, [ estimate ]);
 
   return (
     <GenericMapPopUp
       width={GenericMapPopUpWidth.WIDE}
       headerConfiguration={{
-        text: "Animal Seroprevalence Estimate",
+        text: "Human Viral Estimate",
         textAlignment: HeaderConfigurationTextAlignment.CENTER
       }}
       subtitleConfiguration={{
@@ -31,7 +31,7 @@ export const AnimalMersEstimatePopupContent = (props: AnimalMersEstimatePopupCon
       topBannerConfiguration={{
         enabled: true,
         bannerText: topBannerText,
-        bannerColourClassname: 'bg-mers-animal-estimate',
+        bannerColourClassname: 'bg-mers-human-viral-estimate',
         isTextBolded: true,
         isTextCentered: false
       }}
