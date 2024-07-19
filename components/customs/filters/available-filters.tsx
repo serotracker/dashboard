@@ -12,8 +12,9 @@ import { CountryInformationContext } from "@/contexts/pathogen-context/country-i
 import { Arbovirus } from "@/gql/graphql";
 import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
-import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
+import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, isMersDataType, isMersDataTypeSuperOption, mersDataTypeSuperOptionToLabelMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap, mersDataTypeToSuperOptionMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
 import { UNRegionsTooltip, WHORegionsTooltip } from "../tooltip-content";
+import { GroupedColouredCheckboxFilter } from "./grouped-coloured-checkbox-filter";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -21,6 +22,8 @@ export interface FieldInformation {
   valueToLabelMap: Record<string, string | undefined>;
   optionToColourClassnameMap?: Record<string, string | undefined>;
   optionSortingFunction?: (a: string, b:string) => number;
+  optionToSuperOptionFunction?: (option: string) => string;
+  superOptionToLabelMap?: (superOption: string) => string;
   renderTooltipContent?: TooltipContentRenderingFunction
   filterRenderingFunction: FilterRenderingFunction;
   clearAllButtonText?: string;
@@ -49,6 +52,8 @@ interface FilterRenderingFunctionInput<
   data: TEstimate[] | Record<string, unknown>;
   optionToLabelMap: Record<string, string | undefined>;
   optionSortingFunction: ((a: string, b: string) => number) | undefined;
+  optionToSuperOptionFunction: ((option: string) => string) | undefined;
+  superOptionToLabelMap?: ((superOption: string) => string) | undefined;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
   optionToColourClassnameMap: Record<string, string | undefined>;
@@ -360,7 +365,9 @@ export const useAvailableFilters = () => {
       optionToColourClassnameMap: mersDataTypeToColourClassnameMapForCheckbox,
       optionSortingFunction: (optionA, optionB) => 
         (mersDataTypeToSortOrderMap[optionA] ?? 0) - (mersDataTypeToSortOrderMap[optionB] ?? 0),
-      filterRenderingFunction: ColouredCheckboxFilter,
+      optionToSuperOptionFunction: (typename) => isMersDataType(typename) ? mersDataTypeToSuperOptionMap[typename] : typename,
+      superOptionToLabelMap: (superOption) => isMersDataTypeSuperOption(superOption) ? mersDataTypeSuperOptionToLabelMap[superOption] : superOption,
+      filterRenderingFunction: GroupedColouredCheckboxFilter,
       clearAllButtonText: 'Clear all data types'
     },
     [FilterableField.diagnosisSource]: {
