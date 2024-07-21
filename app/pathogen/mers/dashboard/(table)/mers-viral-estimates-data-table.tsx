@@ -8,7 +8,7 @@ import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-hand
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, animalTypeToColourClassnameMap, animalTypeToStringMap, isMersAnimalSpecies, isMersAnimalType, isMersSeroprevalenceEstimateTypename, isMersViralEstimateTypename, mersDataTypeToColourClassnameMap, mersDataTypeToLabelMap } from "../(map)/shared-mers-map-pop-up-variables";
+import { ageGroupToColourClassnameMap, animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, animalTypeToColourClassnameMap, animalTypeToStringMap, isMersAnimalSpecies, isMersAnimalType, isMersSeroprevalenceEstimateTypename, isMersViralEstimateTypename, mersDataTypeToColourClassnameMap, mersDataTypeToLabelMap } from "../(map)/shared-mers-map-pop-up-variables";
 
 const mersViralEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -85,8 +85,10 @@ const mersViralEstimateColumnConfiguration = [{
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Animal Species'
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'ageGroup',
+  valueToColourSchemeClassnameMap: ageGroupToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
   label: 'Age Group'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
-import { HumanMersSeroprevalenceEstimateMapMarkerData } from "./shared-mers-map-pop-up-variables";
+import { HumanMersSeroprevalenceEstimateMapMarkerData, ageGroupToColourClassnameMap } from "./shared-mers-map-pop-up-variables";
 
 interface HumanMersSeroprevalenceEstimatePopupContentProps {
   estimate: HumanMersSeroprevalenceEstimateMapMarkerData;
@@ -55,8 +55,11 @@ export const HumanMersSeroprevalenceEstimatePopupContent = (props: HumanMersSero
         text: props.estimate.insitutution ?? 'Not Reported'
       }, {
         title: "Age Group",
-        type: PopUpContentRowType.TEXT,
-        text: props.estimate.ageGroup ?? 'Not Reported'
+        type: PopUpContentRowType.COLOURED_PILL_LIST,
+        values: props.estimate.ageGroup,
+        valueToColourClassnameMap: ageGroupToColourClassnameMap,
+        valueToLabelMap: {},
+        defaultColourClassname: "bg-sky-100"
       }, {
         title: "Study Inclusion Criteria",
         type: PopUpContentRowType.TEXT,
