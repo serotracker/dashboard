@@ -11,13 +11,15 @@ import { CamelPopulationOverTime } from "../dashboard/(visualizations)/camel-pop
 import { MedianSeroprevalenceOverTime } from "../dashboard/(visualizations)/median-seroprevalence-over-time";
 import { useSummaryByRegionVisualizationPageConfig } from "./visualization-page-config/use-summary-by-region-visualization-page-config";
 import { MedianViralPositivePrevalenceOverTime } from "../dashboard/(visualizations)/median-viral-positive-prevalence-over-time";
+import { useEstimatesByRegionVisualizationPageConfig } from "./visualization-page-config/use-estimates-by-region-visualization-page-config";
 
 export enum MersVisualizationId {
   REPORTED_EVENT_SUMMARY_OVER_TIME = "REPORTED_EVENT_SUMMARY_OVER_TIME",
   CAMEL_POPULATION_OVER_TIME = "CAMEL_POPULATION_OVER_TIME",
   MEDIAN_SEROPREVALENCE_OVER_TIME = "MEDIAN_SEROPREVALENCE_OVER_TIME",
   MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME = "MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME",
-  SUMMARY_BY_REGION = "SUMMARY_BY_REGION"
+  SUMMARY_BY_REGION = "SUMMARY_BY_REGION",
+  ESTIMATES_BY_REGION = "ESTIMATES_BY_REGION"
 }
 
 export const isMersVisualizationId = (
@@ -30,7 +32,8 @@ export enum MersVisualizationUrlParameter {
   "camel_population_over_time" = "camel_population_over_time",
   "median_seroprevalence_over_time" = "median_seroprevalence_over_time",
   "median_viral_positive_prevalence_over_time" = "median_viral_positive_prevalence_over_time",
-  "summary_by_region" = "summary_by_region"
+  "summary_by_region" = "summary_by_region",
+  "estimates_by_region" = "estimates_by_region"
 }
 
 export type MersVisualizationInformation<
@@ -100,6 +103,19 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
     }),
     titleTooltipContent: <p> Requires state. Initialized in following step. </p>,
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>
+  },
+  [MersVisualizationId.ESTIMATES_BY_REGION]: {
+    id: MersVisualizationId.ESTIMATES_BY_REGION,
+    urlParameter:
+      MersVisualizationUrlParameter[
+        "estimates_by_region"
+      ],
+    getDisplayName: () => ({
+      type: VisualizationDisplayNameType.STANDARD,
+      displayName: "Requires state. Initialized in following step."
+    }),
+    titleTooltipContent: <p> Requires state. Initialized in following step. </p>,
+    renderVisualization: () => <p> Requires state. Initialized in following step. </p>
   }
 }
 
@@ -112,6 +128,12 @@ export const useVisualizationPageConfiguration = () => {
     currentPageIndex,
     setCurrentPageIndex
   } = useSummaryByRegionVisualizationPageConfig();
+
+  const {
+    getDisplayNameForEstimatesByRegion,
+    renderVisualizationForEstimatesByRegion,
+    estimatesByRegionTitleTooltipContent,
+  } = useEstimatesByRegionVisualizationPageConfig();
 
   const completedMersVisualizationInformation = useMemo(() => ({
     [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]:
@@ -132,8 +154,24 @@ export const useVisualizationPageConfiguration = () => {
         currentPageIndex,
         setCurrentPageIndex
       }
+    },
+    [MersVisualizationId.ESTIMATES_BY_REGION]: {
+      ...mersVisualizationInformation[MersVisualizationId.ESTIMATES_BY_REGION],
+      getDisplayName: getDisplayNameForEstimatesByRegion,
+      renderVisualization: renderVisualizationForEstimatesByRegion,
+      titleTooltipContent: estimatesByRegionTitleTooltipContent,
     }
-  }), [ getDisplayNameForSummaryByWhoRegion, renderVisualizationForSummaryByWhoRegion, summaryByWhoRegionTitleTooltipContent, numberOfPagesAvailable, currentPageIndex, setCurrentPageIndex ])
+  }), [
+    getDisplayNameForEstimatesByRegion,
+    renderVisualizationForEstimatesByRegion,
+    estimatesByRegionTitleTooltipContent,
+    getDisplayNameForSummaryByWhoRegion,
+    renderVisualizationForSummaryByWhoRegion,
+    summaryByWhoRegionTitleTooltipContent,
+    numberOfPagesAvailable,
+    currentPageIndex,
+    setCurrentPageIndex
+  ])
 
   return {
     mersVisualizationInformation: completedMersVisualizationInformation,

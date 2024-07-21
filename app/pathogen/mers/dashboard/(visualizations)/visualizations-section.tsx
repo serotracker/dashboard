@@ -21,10 +21,14 @@ export const MersVisualizationsSection = () => {
   }, {
     ...mersVisualizationInformation[MersVisualizationId.SUMMARY_BY_REGION],
      className: "h-full-screen"
+  }, {
+    ...mersVisualizationInformation[MersVisualizationId.ESTIMATES_BY_REGION],
+     className: "h-full-screen"
   }];
 
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
-    MersVisualizationId.SUMMARY_BY_REGION
+    MersVisualizationId.SUMMARY_BY_REGION,
+    MersVisualizationId.ESTIMATES_BY_REGION,
   ].includes(visualizationInfo.id));
 
   const { filteredData, faoMersEventData } = useContext(MersContext);

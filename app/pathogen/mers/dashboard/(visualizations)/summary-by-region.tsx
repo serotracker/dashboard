@@ -41,7 +41,7 @@ interface SummaryByRegionProps {
   currentPageIndex: number;
 }
 
-const barColoursForWhoRegions: Record<WhoRegion, string> = {
+export const barColoursForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Afr]: "#e15759",
   [WhoRegion.Amr]: "#59a14f",
   [WhoRegion.Emr]: "#f1ce63",
@@ -50,7 +50,7 @@ const barColoursForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Wpr]: "#4e79a7",
 };
 
-const chartTitlesForWhoRegions: Record<WhoRegion, string> = {
+export const chartTitlesForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Afr]: "AFR",
   [WhoRegion.Amr]: "AMR",
   [WhoRegion.Emr]: "EMR",
@@ -59,7 +59,7 @@ const chartTitlesForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Wpr]: "WPR",
 };
 
-const barColoursForUnRegions: Record<UnRegion, string> = {
+export const barColoursForUnRegions: Record<UnRegion, string> = {
   [UnRegion.AustraliaAndNewZealand]: defaultColours.amber[200],
   [UnRegion.Caribbean]: defaultColours.fuchsia[200],
   [UnRegion.CentralAmerica]: defaultColours.blue[200],
@@ -84,7 +84,7 @@ const barColoursForUnRegions: Record<UnRegion, string> = {
   [UnRegion.WesternEurope]: defaultColours.indigo[400]
 }
 
-const chartTitlesForUnRegions = unRegionEnumToLabelMap;
+export const chartTitlesForUnRegions = unRegionEnumToLabelMap;
 
 const variableOfInterestToBarColourMap = {
   [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE]: "#e7ed8a",
