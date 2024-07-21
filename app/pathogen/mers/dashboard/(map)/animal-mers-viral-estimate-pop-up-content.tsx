@@ -56,7 +56,7 @@ export const AnimalMersViralEstimatePopupContent = (props: AnimalMersViralEstima
       }, {
         title: "Animal Type",
         type: PopUpContentRowType.COLOURED_PILL_LIST,
-        values: [ props.estimate.animalType ],
+        values: props.estimate.animalType,
         valueToColourClassnameMap: animalTypeToColourClassnameMap,
         valueToLabelMap: animalTypeToStringMap,
         defaultColourClassname: "bg-sky-100"

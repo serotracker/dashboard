@@ -71,7 +71,7 @@ const mersViralEstimateColumnConfiguration = [{
   fieldName: 'insitutution',
   label: 'Institution'
 }, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'animalType',
   valueToDisplayLabel: (animalType: string) => isMersAnimalType(animalType) ? animalTypeToStringMap[animalType] : animalType,
   valueToColourSchemeClassnameMap: animalTypeToColourClassnameMap,
