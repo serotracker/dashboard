@@ -27,7 +27,23 @@ export const mersEstimates_V2 = gql`
         sourceType
         sourceTitle
         insitutution
+        sensitivity
+        sensitivity95CILower
+        sensitivity95CIUpper
+        sensitivityDenominator
+        specificity
+        specificity95CILower
+        specificity95CIUpper
+        specificityDenominator
+        sampleDenominator
+        sampleNumerator
+        assay
+        specimenType
+        sex
+        isotypes
         seroprevalence
+        seroprevalence95CILower
+        seroprevalence95CIUpper
         ageGroup
       }
       ... on HumanMersViralEstimate {
@@ -51,7 +67,23 @@ export const mersEstimates_V2 = gql`
         sourceType
         sourceTitle
         insitutution
+        sensitivity
+        sensitivity95CILower
+        sensitivity95CIUpper
+        sensitivityDenominator
+        specificity
+        specificity95CILower
+        specificity95CIUpper
+        specificityDenominator
+        sampleDenominator
+        sampleNumerator
+        assay
+        specimenType
+        sex
+        isotypes
         positivePrevalence
+        positivePrevalence95CILower
+        positivePrevalence95CIUpper
         ageGroup
       }
       ... on AnimalMersEstimate {
@@ -75,7 +107,23 @@ export const mersEstimates_V2 = gql`
         sourceType
         sourceTitle
         insitutution
+        sensitivity
+        sensitivity95CILower
+        sensitivity95CIUpper
+        sensitivityDenominator
+        specificity
+        specificity95CILower
+        specificity95CIUpper
+        specificityDenominator
+        sampleDenominator
+        sampleNumerator
+        assay
+        specimenType
+        sex
+        isotypes
         seroprevalence
+        seroprevalence95CILower
+        seroprevalence95CIUpper
         animalType
         animalSpecies
       }
@@ -100,7 +148,23 @@ export const mersEstimates_V2 = gql`
         sourceType
         sourceTitle
         insitutution
+        sensitivity
+        sensitivity95CILower
+        sensitivity95CIUpper
+        sensitivityDenominator
+        specificity
+        specificity95CILower
+        specificity95CIUpper
+        specificityDenominator
+        sampleDenominator
+        sampleNumerator
+        assay
+        specimenType
+        sex
+        isotypes
         positivePrevalence
+        positivePrevalence95CILower
+        positivePrevalence95CIUpper
         animalType
         animalSpecies
       }
