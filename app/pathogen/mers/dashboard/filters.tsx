@@ -34,6 +34,11 @@ export const MersFilters = (props: MersFiltersProps) => {
 
   const seroprevalenceEstimateFilters = [
     FilterableField.sourceType,
+    FilterableField.ageGroup,
+    FilterableField.assay,
+    FilterableField.specimenType,
+    FilterableField.sex,
+    FilterableField.isotypes
   ];
 
   const humanAndAnimalCaseFilters = [
@@ -54,16 +59,16 @@ export const MersFilters = (props: MersFiltersProps) => {
     headerTooltipText: 'Filter on where the study was conducted or the event occurred.',
     includedFilters: studyLocationFilters
   }, {
-    headerText: 'Seroprevalence Estimates',
-    headerTooltipText: 'Filters that only apply to seroprevalence estimates.',
+    headerText: 'Seroprevalence and Viral Estimates',
+    headerTooltipText: 'Filters that only apply to seroprevalence and viral estimates.',
     includedFilters: seroprevalenceEstimateFilters
   }, {
     headerText: 'Human and Animal Cases',
     headerTooltipText: 'Filters that only apply to both human and animal confirmed cases.',
     includedFilters: humanAndAnimalCaseFilters
   }, {
-    headerText: 'Animal Cases',
-    headerTooltipText: 'Filters that only apply to confirmed animal cases.',
+    headerText: 'Animal Data only',
+    headerTooltipText: 'Filters that only apply to animal seroprevalence and viral estimates as well as animal cases.',
     includedFilters: animalCaseFilters
   }];
 
@@ -87,7 +92,12 @@ export const MersFilters = (props: MersFiltersProps) => {
           countryAlphaTwoCode: sharedFilterData.mersFilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode)
         } : {}),
         ...(estimateFilterData?.mersEstimatesFilterOptions ? {
-          sourceType: estimateFilterData.mersEstimatesFilterOptions.sourceType
+          sourceType: estimateFilterData.mersEstimatesFilterOptions.sourceType,
+          ageGroup: estimateFilterData.mersEstimatesFilterOptions.ageGroup,
+          assay: estimateFilterData.mersEstimatesFilterOptions.assay,
+          specimenType: estimateFilterData.mersEstimatesFilterOptions.specimenType,
+          sex: estimateFilterData.mersEstimatesFilterOptions.sex,
+          isotypes: estimateFilterData.mersEstimatesFilterOptions.isotypes
         } : {}),
         ...(eventFilterData?.faoMersEventFilterOptions ? {
           diagnosisSource: eventFilterData.faoMersEventFilterOptions.diagnosisSource,

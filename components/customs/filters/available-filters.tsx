@@ -79,6 +79,7 @@ export enum FilterableField {
   sampleFrame = "sampleFrame",
   antibody = "antibody",
   pathogen = "pathogen",
+  specimenType = "specimenType",
   start_date = "start_date",
   end_date = "end_date",
   samplingStartDate = "samplingStartDate",
@@ -273,6 +274,12 @@ export const useAvailableFilters = () => {
     [FilterableField.ageGroup]: {
       field: FilterableField.ageGroup,
       label: "Age Group",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.specimenType]: {
+      field: FilterableField.specimenType,
+      label: "Specimen Type",
       valueToLabelMap: {},
       filterRenderingFunction: MultiSelectFilter
     },

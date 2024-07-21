@@ -139,7 +139,10 @@ export function filterData(
           return filters["countryAlphaTwoCode"]?.includes(item["countryAlphaTwoCode"]) || filters["unRegion"]?.includes(item["unRegion"]) || filters["whoRegion"]?.includes(item["whoRegion"]);
         }
         case "diagnosisSource": {
-          if(item['__typename'] === 'AnimalMersEvent' || item['__typename'] === 'HumanMersEvent') {
+          if(
+            item['__typename'] === 'AnimalMersEvent' ||
+            item['__typename'] === 'HumanMersEvent'
+          ) {
             return defaultDataFilterHandler({
               item,
               key,
@@ -151,7 +154,11 @@ export function filterData(
         }
         case "animalSpecies":
         case "animalType": {
-          if(item['__typename'] === 'AnimalMersEvent') {
+          if(
+            item['__typename'] === 'AnimalMersEvent' ||
+            item['__typename'] === 'AnimalMersViralEstimate' ||
+            item['__typename'] === 'AnimalMersEstimate'
+          ) {
             return defaultDataFilterHandler({
               item,
               key,
@@ -161,8 +168,16 @@ export function filterData(
 
           return true;
         }
-        case "sourceType": {
-          if(item['__typename'] === 'AnimalMersEvent' || item['__typename'] === 'HumanMersEvent') {
+        case "sourceType":
+        case "ageGroup": 
+        case "assay": 
+        case "specimenType": 
+        case "sex": 
+        case "isotypes": {
+          if(
+            item['__typename'] === 'AnimalMersEvent' ||
+            item['__typename'] === 'HumanMersEvent'
+          ) {
             return true;
           }
 

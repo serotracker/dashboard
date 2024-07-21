@@ -7,6 +7,11 @@ export const mersEstimatesFilterOptions = gql`
   query mersEstimatesFilterOptions {
     mersEstimatesFilterOptions {
       sourceType
+      ageGroup
+      assay
+      specimenType
+      sex
+      isotypes
     }
   }
 `
