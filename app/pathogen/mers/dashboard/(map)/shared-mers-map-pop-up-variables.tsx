@@ -45,6 +45,10 @@ export const animalSpeciesToStringMap = {
   [MersEventAnimalSpecies.Camel]: "Camel",
 }
 
+export const ageGroupToColourClassnameMap = {
+  "Adults": "bg-lime-200"
+}
+
 export const animalSpeciesToColourClassnameMap = {
   [MersEventAnimalSpecies.Bat]: "bg-orange-700",
   [MersEventAnimalSpecies.Camel]: "bg-yellow-300",
