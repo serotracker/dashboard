@@ -9,16 +9,11 @@ import { RechartsVisualization } from "@/components/customs/visualizations/recha
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import {
-  animalSpeciesToColourClassnameMap,
-  animalSpeciesToStringMap,
-  animalTypeToColourClassnameMap,
-  animalTypeToStringMap,
-  isMersAnimalSpecies,
-  isMersAnimalType,
   isMersSeroprevalenceEstimateTypename,
   mersDataTypeToColourClassnameMap,
   mersDataTypeToLabelMap
 } from "../(map)/shared-mers-map-pop-up-variables";
+import { mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 
 const mersSeroprevalenceEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -27,7 +22,7 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
   isHideable: false,
   isFixed: true,
   fieldNameForLink: 'sourceUrl',
-  size: 400,
+  size: 700,
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: '__typename',
@@ -36,95 +31,22 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Estimate Type'
 }, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'whoRegion',
-  label: 'WHO Region',
-  valueToColourSchemeClassnameMap: {
-    [WhoRegion.Afr]: "bg-who-region-afr",
-    [WhoRegion.Amr]: "bg-who-region-amr",
-    [WhoRegion.Emr]: "bg-who-region-emr",
-    [WhoRegion.Eur]: "bg-who-region-eur",
-    [WhoRegion.Sear]: "bg-who-region-sear",
-    [WhoRegion.Wpr]: "bg-who-region-wpr text-white"
-  },
-  defaultColourSchemeClassname: 'bg-sky-100'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'city',
-  label: 'City'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'state',
-  label: 'State'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'country',
-  label: 'Country'
-}, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
   fieldName: 'seroprevalence',
   label: 'Seroprevalence'
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'firstAuthorFullName',
-  label: 'First Author Full Name'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'sourceType',
-  label: 'Source Type'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'sourceTitle',
-  label: 'Source Title'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'insitutution',
-  label: 'Institution'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'animalType',
-  valueToDisplayLabel: (animalType: string) => isMersAnimalType(animalType) ? animalTypeToStringMap[animalType] : animalType,
-  valueToColourSchemeClassnameMap: animalTypeToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Animal Type'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'animalSpecies',
-  valueToDisplayLabel: (animalSpecies: string) => isMersAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
-  valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Animal Species'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'ageGroup',
-  label: 'Age Group'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'sampleSize',
-  label: 'Sample Size'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'studyInclusionCriteria',
-  label: 'Study Inclusion Criteria',
+  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+  fieldName: 'seroprevalence95CILower',
+  label: 'Seroprevalence (95% Confidence Interval Lower Bound)',
   initiallyVisible: false
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'studyExclusionCriteria',
-  label: 'Study Exclusion Criteria',
+  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+  fieldName: 'seroprevalence95CIUpper',
+  label: 'Seroprevalence (95% Confidence Interval Upper Bound)',
   initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.LINK_BUTTON as const,
-  fieldName: 'sourceUrl',
-  label: 'Source',
-  fieldNameForLink: 'sourceUrl',
-  isSortable: false
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'id',
-  label: 'ID',
-  isHideable: false,
-  initiallyVisible: false
-}];
+},
+...mersSeroprevalenceAndViralEstimateSharedColumnConfiguration
+];
 
 interface MersSeroprevalenceEstimateDataTableProps {
   tableHeader: DropdownTableHeader<AvailableMersDataTables>;

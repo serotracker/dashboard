@@ -27,6 +27,30 @@ export const diagnosisStatusToColourClassnameMap = {
 
 export const isMersDiagnosisStatus = (diagnosisStatus: string): diagnosisStatus is MersDiagnosisStatus => Object.values(MersDiagnosisStatus).some((element) => element === diagnosisStatus);
 
+export const sexToColourClassnameMap = {
+  'All': 'bg-indigo-300'
+}
+
+export const sourceTypeToColourClassnameMap = {
+  'Journal Article (Peer-Reviewed)': 'bg-purple-300'
+}
+
+export const assayToColourClassnameMap = {
+  "ELISA": "bg-red-300",
+  "N2 RT-qPCR": "bg-green-300",
+  "N3 RT-qPCR": "bg-violet-300",
+  "Neutralization": "bg-cyan-300"
+}
+
+export const isotypeToColourClassnameMap = {
+  "IgG": "bg-teal-300"
+}
+
+export const specimenTypeToColourClassnameMap = {
+  "Nasal Swab": "bg-lime-300",
+  "Serum": "bg-orange-300"
+}
+
 export const animalTypeToStringMap = {
   [MersEventAnimalType.Domestic]: "Domestic",
   [MersEventAnimalType.Wild]: "Wild",

@@ -264,7 +264,7 @@ export function DataTable<
                 Columns
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="p-2">
+            <DropdownMenuContent align="end" className="p-2 overflow-y-scroll max-h-half-screen">
               <Button
                 variant="outline"
                 className="mr-2 mb-2"
