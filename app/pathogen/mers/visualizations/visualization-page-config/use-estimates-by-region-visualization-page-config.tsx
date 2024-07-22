@@ -64,12 +64,14 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
         options: [
           EstimatesByRegionRegionDropdownOption.WHO_REGION,
           EstimatesByRegionRegionDropdownOption.UN_REGION,
+          EstimatesByRegionRegionDropdownOption.COUNTRY,
         ]
       }],
       chosenDropdownOption: estimatesByRegionSelectedRegion,
       dropdownOptionToLabelMap: {
         [EstimatesByRegionRegionDropdownOption.WHO_REGION]: "WHO Region",
         [EstimatesByRegionRegionDropdownOption.UN_REGION]: "UN Region",
+        [EstimatesByRegionRegionDropdownOption.COUNTRY]: "Country",
       },
       onDropdownOptionChange: (option) => {
         setEstimatesByRegionSelectedRegion(option);
@@ -98,6 +100,10 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
 
     if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.UN_REGION) {
       return <UNRegionsTooltip />
+    }
+
+    if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.COUNTRY) {
+      return null;
     }
 
     assertNever(estimatesByRegionSelectedRegion);

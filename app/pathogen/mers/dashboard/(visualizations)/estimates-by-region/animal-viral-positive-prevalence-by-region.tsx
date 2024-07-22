@@ -48,9 +48,9 @@ const AnimalViralPositivePrevalenceByRegionTooltip: TooltipContentType<string, s
 
 interface AnimalViralPositivePrevalenceByRegionProps {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
-  regionGroupingFunction: (dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => WhoRegion | UnRegion | null | undefined;
-  regionToDotColour: (region:WhoRegion | UnRegion) => string;
-  regionToLegendLabel: (region:WhoRegion | UnRegion) => string;
+  regionGroupingFunction: (dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => WhoRegion | UnRegion | string | null | undefined;
+  regionToDotColour: (region:WhoRegion | UnRegion | string, regionIndex: number) => string;
+  regionToLegendLabel: (region:WhoRegion | UnRegion | string) => string;
   legendConfiguration: LegendConfiguration;
 }
 
@@ -160,16 +160,16 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
           content={AnimalViralPositivePrevalenceByRegionTooltip}
         />
         <Legend {...legendProps}/>
-        {allRegions.map((region) => (
+        {allRegions.map((region, regionIndex) => (
           <Scatter
             key={region}
             data={consideredDataByRegion[region]}
             name={regionToLegendLabel(region)}
-            fill={regionToDotColour(region)}
+            fill={regionToDotColour(region, regionIndex)}
           >
             <ErrorBar
               dataKey="positivePrevalenceError"
-              stroke={regionToDotColour(region)}
+              stroke={regionToDotColour(region, regionIndex)}
               width={0}
               direction="x"
             />

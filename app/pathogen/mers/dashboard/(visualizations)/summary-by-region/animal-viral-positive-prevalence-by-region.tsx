@@ -10,7 +10,7 @@ import { useMemo, useEffect } from "react";
 interface AnimalViralPositivePrevalenceSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
   regionGroupingFunction: (dataPoint: MersEstimate) => TRegion | undefined;
-  regionToBarColour: (region: TRegion) => string;
+  regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
   setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
   currentPageIndex: number;
@@ -60,7 +60,7 @@ export const AnimalViralPositivePrevalenceSummaryByRegion = <TRegion extends str
       }}
       getIntervalStartDate={(dataPoint) => parseISO(dataPoint.samplingStartDate)}
       getIntervalEndDate={(dataPoint) => parseISO(dataPoint.samplingEndDate)}
-      getBarColour={(region) => regionToBarColour(region)}
+      getBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
       getChartTitle={(region) => regionToChartTitle(region)}
       percentageFormattingEnabled={true}
       getBarName={() => 'Animal Median Positive Prevalence By Region'}

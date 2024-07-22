@@ -12,6 +12,8 @@ import { LegendConfiguration } from "@/components/customs/visualizations/stacked
 import { AnimalSeroprevalenceByRegion } from "./estimates-by-region/animal-seroprevalence-by-region";
 import { HumanViralPositivePrevalenceByRegion } from "./estimates-by-region/human-viral-positive-prevalence-by-region";
 import { AnimalViralPositivePrevalenceByRegion } from "./estimates-by-region/animal-viral-positive-prevalence-by-region";
+import { distinctColoursMap, generateRandomColour } from "@/lib/utils";
+import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
 
 export enum EstimatesByRegionVariableOfInterestDropdownOption {
   HUMAN_SEROPREVALENCE = "HUMAN_SEROPREVALENCE",
@@ -23,6 +25,7 @@ export enum EstimatesByRegionVariableOfInterestDropdownOption {
 export enum EstimatesByRegionRegionDropdownOption {
   WHO_REGION = "WHO_REGION",
   UN_REGION = "UN_REGION",
+  COUNTRY = "COUNTRY"
 }
 
 interface EstimatesByRegionProps {
@@ -40,6 +43,8 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     legendConfiguration
   } = props;
 
+  const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
+
   const regionGroupingFunction = useCallback((dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => {
     if(selectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION) {
       return dataPoint.whoRegion;
@@ -48,28 +53,58 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
       return dataPoint.unRegion;
     }
 
+    if(selectedRegion === EstimatesByRegionRegionDropdownOption.COUNTRY) {
+      if(
+        dataPoint.__typename === 'HumanMersEstimate' ||
+        dataPoint.__typename === 'HumanMersViralEstimate' ||
+        dataPoint.__typename === 'AnimalMersEstimate' ||
+        dataPoint.__typename === 'AnimalMersViralEstimate'
+      ) {
+        return dataPoint.countryAlphaTwoCode;
+      }
+
+      return dataPoint.country.alphaTwoCode;
+    }
+
     assertNever(selectedRegion);
   }, [ selectedRegion ]);
 
-  const regionToDotColour = useCallback((region: WhoRegion | UnRegion) => {
+  const regionToDotColour = useCallback((region: WhoRegion | UnRegion | string, regionIndex: number) => {
     if(isWHORegion(region)) {
       return barColoursForWhoRegions[region];
     }
+
     if(isUNRegion(region)) {
       return barColoursForUnRegions[region];
     }
-    assertNever(region);
+
+    const indexInDistinctColourMap = Math.floor((regionIndex * 3) / 32) + Math.floor(((regionIndex * 3) % 32)) + 1;
+    const distinctColour = distinctColoursMap[indexInDistinctColourMap]
+
+    if(distinctColour) {
+      return distinctColour;
+    }
+
+    return generateRandomColour();
   }, []);
 
-  const regionToLegendLabel = useCallback((region: WhoRegion | UnRegion) => {
+  const regionToLegendLabel = useCallback((region: WhoRegion | UnRegion | string) => {
     if(isWHORegion(region)) {
       return chartTitlesForWhoRegions[region];
     }
+
     if(isUNRegion(region)) {
       return chartTitlesForUnRegions[region];
     }
-    assertNever(region);
-  }, []);
+
+    const countryName = countryAlphaTwoCodeToCountryNameMap[region];
+
+    if(!!countryName) {
+      return countryName;
+    }
+
+    return region;
+  }, [ countryAlphaTwoCodeToCountryNameMap ]);
 
   const graph = useMemo(() => {
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE) {
