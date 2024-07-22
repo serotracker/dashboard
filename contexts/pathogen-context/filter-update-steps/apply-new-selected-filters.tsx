@@ -79,6 +79,13 @@ export function filterData(
           return itemEndDate >= filterStartDate;
         }
         case "samplingStartDate": {
+          if(
+            item['__typename'] === 'AnimalMersEvent' ||
+            item['__typename'] === 'HumanMersEvent'
+          ) {
+            return true;
+          }
+
           const filterStartDate = new Date(filters["samplingStartDate"][0]);
 
           if (isNaN(filterStartDate.getTime())) {
@@ -114,6 +121,13 @@ export function filterData(
             (itemEndDate >= filterEndDate && itemStartDate < filterEndDate));
         } 
         case "samplingEndDate": {
+          if(
+            item['__typename'] === 'AnimalMersEvent' ||
+            item['__typename'] === 'HumanMersEvent'
+          ) {
+            return true;
+          }
+
           const filterEndDate = new Date(filters["samplingEndDate"][0]);
 
           if (isNaN(filterEndDate.getTime())) {
@@ -168,11 +182,32 @@ export function filterData(
 
           return true;
         }
+        case "animalDetectionSettings":
+        case "animalImportedOrLocal":
+        case "animalPurpose": {
+          if(
+            item['__typename'] === 'AnimalMersViralEstimate' ||
+            item['__typename'] === 'AnimalMersEstimate'
+          ) {
+            return defaultDataFilterHandler({
+              item,
+              key,
+              filters
+            });
+          }
+
+          return true;
+        }
         case "sourceType":
         case "ageGroup": 
         case "assay": 
         case "specimenType": 
         case "sex": 
+        case "samplingMethod": 
+        case "geographicScope": 
+        case "sampleFrame": 
+        case "testProducer":
+        case "testValidation":
         case "isotypes": {
           if(
             item['__typename'] === 'AnimalMersEvent' ||

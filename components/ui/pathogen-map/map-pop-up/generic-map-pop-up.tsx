@@ -103,19 +103,22 @@ export enum GenericMapPopUpWidth {
   THIN = 'THIN',
   MEDIUM = 'MEDIUM',
   WIDE = 'WIDE',
+  EXTRA_WIDE = 'EXTRA_WIDE',
   AUTO = 'AUTO'
 }
 
 const widthEnumToWidthClassnameMap: {[key in Exclude<GenericMapPopUpWidth, GenericMapPopUpWidth.AUTO>]: string } = {
   [GenericMapPopUpWidth.THIN]: 'w-[260px]',
   [GenericMapPopUpWidth.MEDIUM]: 'w-[360px]',
-  [GenericMapPopUpWidth.WIDE]: 'w-[460px]'
+  [GenericMapPopUpWidth.WIDE]: 'w-[460px]',
+  [GenericMapPopUpWidth.EXTRA_WIDE]: 'w-[560px]'
 }
 
 export const genericMapPopUpWidthEnumToWidthPxMap: {[key in Exclude<GenericMapPopUpWidth, GenericMapPopUpWidth.AUTO>]: number } = {
   [GenericMapPopUpWidth.THIN]: 260,
   [GenericMapPopUpWidth.MEDIUM]: 360,
-  [GenericMapPopUpWidth.WIDE]: 460
+  [GenericMapPopUpWidth.WIDE]: 460,
+  [GenericMapPopUpWidth.EXTRA_WIDE]: 560
 }
 
 interface GenericMapPopUpProps {

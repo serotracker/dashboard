@@ -70,6 +70,13 @@ export enum FilterableField {
   __typename = "__typename",
   pediatricAgeGroup = "pediatricAgeGroup",
   sex = "sex",
+  samplingMethod = "samplingMethod",
+  geographicScope = "geographicScope",
+  testProducer = "testProducer",
+  testValidation = "testValidation",
+  animalDetectionSettings = "animalDetectionSettings",
+  animalPurpose = "animalPurpose",
+  animalImportedOrLocal = "animalImportedOrLocal",
   esm = "esm",
   whoRegion = "whoRegion",
   unRegion = "unRegion",
@@ -280,6 +287,48 @@ export const useAvailableFilters = () => {
     [FilterableField.specimenType]: {
       field: FilterableField.specimenType,
       label: "Specimen Type",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.samplingMethod]: {
+      field: FilterableField.samplingMethod,
+      label: "Sampling Method",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.geographicScope]: {
+      field: FilterableField.geographicScope,
+      label: "Geographic Scope",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.testProducer]: {
+      field: FilterableField.testProducer,
+      label: "Test Producer",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.testValidation]: {
+      field: FilterableField.testValidation,
+      label: "Test Validation",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.animalDetectionSettings]: {
+      field: FilterableField.animalDetectionSettings,
+      label: "Detection Setting",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.animalPurpose]: {
+      field: FilterableField.animalPurpose,
+      label: "Animal Purpose",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.animalImportedOrLocal]: {
+      field: FilterableField.animalImportedOrLocal,
+      label: "Imported or Local",
       valueToLabelMap: {},
       filterRenderingFunction: MultiSelectFilter
     },

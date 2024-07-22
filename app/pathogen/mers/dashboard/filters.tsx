@@ -34,12 +34,25 @@ export const MersFilters = (props: MersFiltersProps) => {
 
   const seroprevalenceEstimateFilters = [
     FilterableField.sourceType,
-    FilterableField.ageGroup,
+    FilterableField.samplingStartDate,
+    FilterableField.samplingEndDate,
+    FilterableField.samplingMethod,
     FilterableField.assay,
     FilterableField.specimenType,
     FilterableField.sex,
     FilterableField.isotypes
   ];
+
+  const humanEstimatesFilters = [
+    FilterableField.ageGroup,
+    FilterableField.sampleFrame
+  ]
+
+  const animalEstimatesFilters = [
+    FilterableField.animalDetectionSettings,
+    FilterableField.animalPurpose,
+    FilterableField.animalImportedOrLocal
+  ]
 
   const humanAndAnimalCaseFilters = [
     FilterableField.diagnosisSource,
@@ -62,6 +75,14 @@ export const MersFilters = (props: MersFiltersProps) => {
     headerText: 'Seroprevalence and Viral Estimates',
     headerTooltipText: 'Filters that only apply to seroprevalence and viral estimates.',
     includedFilters: seroprevalenceEstimateFilters
+  }, {
+    headerText: 'Human Estimates',
+    headerTooltipText: 'Filters that only apply to human seroprevalence and viral estimates.',
+    includedFilters: humanEstimatesFilters
+  }, {
+    headerText: 'Animal Estimates',
+    headerTooltipText: 'Filters that only apply to animal seroprevalence and viral estimates.',
+    includedFilters: animalEstimatesFilters
   }, {
     headerText: 'Human and Animal Cases',
     headerTooltipText: 'Filters that only apply to both human and animal confirmed cases.',
@@ -97,7 +118,15 @@ export const MersFilters = (props: MersFiltersProps) => {
           assay: estimateFilterData.mersEstimatesFilterOptions.assay,
           specimenType: estimateFilterData.mersEstimatesFilterOptions.specimenType,
           sex: estimateFilterData.mersEstimatesFilterOptions.sex,
-          isotypes: estimateFilterData.mersEstimatesFilterOptions.isotypes
+          isotypes: estimateFilterData.mersEstimatesFilterOptions.isotypes,
+          samplingMethod: estimateFilterData.mersEstimatesFilterOptions.samplingMethod,
+          sampleFrame: estimateFilterData.mersEstimatesFilterOptions.sampleFrame,
+          geographicScope: estimateFilterData.mersEstimatesFilterOptions.geographicScope,
+          testProducer: estimateFilterData.mersEstimatesFilterOptions.testProducer,
+          testValidation: estimateFilterData.mersEstimatesFilterOptions.testValidation,
+          animalDetectionSettings: estimateFilterData.mersEstimatesFilterOptions.animalDetectionSettings,
+          animalPurpose: estimateFilterData.mersEstimatesFilterOptions.animalPurpose,
+          animalImportedOrLocal: estimateFilterData.mersEstimatesFilterOptions.animalImportedOrLocal,
         } : {}),
         ...(eventFilterData?.faoMersEventFilterOptions ? {
           diagnosisSource: eventFilterData.faoMersEventFilterOptions.diagnosisSource,
