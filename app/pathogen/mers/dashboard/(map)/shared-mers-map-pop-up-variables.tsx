@@ -83,6 +83,7 @@ export const geographicScopeToColourClassnameMap = {
 
 export const testProducerToColourClassnameMap = {
   "Euroimmun": "bg-teal-400",
+  "Roche": "bg-fuchsia-400",
   "In-house": "bg-red-400",
   "Not reported": "bg-pink-400"
 }
