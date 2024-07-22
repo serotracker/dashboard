@@ -109,7 +109,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
       />
     }
     assertNever(selectedVariableOfInterest);
-  }, [ data, selectedVariableOfInterest, regionGroupingFunction, regionToDotColour, regionToLegendLabel ]);
+  }, [ data, selectedVariableOfInterest, regionGroupingFunction, regionToDotColour, regionToLegendLabel, legendConfiguration ]);
 
   return graph;
 }
