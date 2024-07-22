@@ -10,6 +10,8 @@ import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { HumanSeroprevalenceByRegion } from "./estimates-by-region/human-seroprevalence-by-region";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { AnimalSeroprevalenceByRegion } from "./estimates-by-region/animal-seroprevalence-by-region";
+import { HumanViralPositivePrevalenceByRegion } from "./estimates-by-region/human-viral-positive-prevalence-by-region";
+import { AnimalViralPositivePrevalenceByRegion } from "./estimates-by-region/animal-viral-positive-prevalence-by-region";
 
 export enum EstimatesByRegionVariableOfInterestDropdownOption {
   HUMAN_SEROPREVALENCE = "HUMAN_SEROPREVALENCE",
@@ -80,7 +82,13 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
       />
     }
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE) {
-      return <p> abc </p>
+      return <HumanViralPositivePrevalenceByRegion
+        data={data}
+        regionGroupingFunction={regionGroupingFunction}
+        regionToDotColour={regionToDotColour}
+        regionToLegendLabel={regionToLegendLabel}
+        legendConfiguration={legendConfiguration}
+      />
     }
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE) {
       return <AnimalSeroprevalenceByRegion
@@ -92,7 +100,13 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
       />
     }
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE) {
-      return <p> abc </p>
+      return <AnimalViralPositivePrevalenceByRegion
+        data={data}
+        regionGroupingFunction={regionGroupingFunction}
+        regionToDotColour={regionToDotColour}
+        regionToLegendLabel={regionToLegendLabel}
+        legendConfiguration={legendConfiguration}
+      />
     }
     assertNever(selectedVariableOfInterest);
   }, [ data, selectedVariableOfInterest, regionGroupingFunction, regionToDotColour, regionToLegendLabel ]);

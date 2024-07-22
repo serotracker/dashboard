@@ -67,7 +67,7 @@ export const MersFilters = (props: MersFiltersProps) => {
     headerTooltipText: 'Filters that only apply to both human and animal confirmed cases.',
     includedFilters: humanAndAnimalCaseFilters
   }, {
-    headerText: 'Animal Data only',
+    headerText: 'Animal Data',
     headerTooltipText: 'Filters that only apply to animal seroprevalence and viral estimates as well as animal cases.',
     includedFilters: animalCaseFilters
   }];

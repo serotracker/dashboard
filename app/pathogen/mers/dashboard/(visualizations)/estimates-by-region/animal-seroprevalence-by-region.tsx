@@ -68,6 +68,20 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
         seroprevalence: parseFloat(
           (dataPoint.seroprevalence * 100).toFixed(1)
         ),
+        seroprevalenceError: [
+          dataPoint.seroprevalence95CILower ? parseFloat(
+            (
+              dataPoint.seroprevalence * 100 -
+              dataPoint.seroprevalence95CILower * 100
+            ).toFixed(1)
+          ) : 0,
+          dataPoint.seroprevalence95CIUpper ? parseFloat(
+            (
+              dataPoint.seroprevalence95CIUpper * 100 -
+              dataPoint.seroprevalence * 100
+            ).toFixed(1)
+          ) : 0,
+        ],
         estimateNumber: index + 1
       }))
   , [ data, regionGroupingFunction ]);
