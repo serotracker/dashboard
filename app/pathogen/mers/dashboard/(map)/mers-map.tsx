@@ -162,6 +162,18 @@ export const MersMap = () => {
                 ["==", ["get", "__typename"], "AnimalMersEvent"],
                 ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Bat]
               ], 1, 0]],
+              "Goat Events": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersEvent"],
+                ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Goat]
+              ], 1, 0]],
+              "Cattle Events": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersEvent"],
+                ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Cattle]
+              ], 1, 0]],
+              "Sheep Events": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersEvent"],
+                ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Sheep]
+              ], 1, 0]],
               "Human Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEstimate"], 1, 0]],
               "Human Viral Estimates": ["+", ["case", ["==", ["get", "__typename"], "HumanMersViralEstimate"], 1, 0]],
               "Animal Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersEstimate"], 1, 0]],
@@ -173,6 +185,18 @@ export const MersMap = () => {
                 ["==", ["get", "__typename"], "AnimalMersEstimate"],
                 ["==", ["get", "animalSpecies"], MersAnimalSpecies.Bat]
               ], 1, 0]],
+              "Goat Seroprevalence Estimates": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersEstimate"],
+                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Goat]
+              ], 1, 0]],
+              "Cattle Seroprevalence Estimates": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersEstimate"],
+                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Cattle]
+              ], 1, 0]],
+              "Sheep Seroprevalence Estimates": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersEstimate"],
+                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Sheep]
+              ], 1, 0]],
               "Animal Viral Estimates": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersViralEstimate"], 1, 0]],
               "Camel Viral Estimates": ["+", ["case", [ "all",
                 ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
@@ -182,6 +206,18 @@ export const MersMap = () => {
                 ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
                 ["==", ["get", "animalSpecies"], MersAnimalSpecies.Bat]
               ], 1, 0]],
+              "Goat Viral Estimates": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
+                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Goat]
+              ], 1, 0]],
+              "Cattle Viral Estimates": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
+                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Cattle]
+              ], 1, 0]],
+              "Sheep Viral Estimates": ["+", ["case", [ "all",
+                ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
+                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Sheep]
+              ], 1, 0]],
             },
             validClusterPropertyKeys: [
               "Reported Human Events",
@@ -190,14 +226,23 @@ export const MersMap = () => {
               "Reported Animal Events",
               "Camel Events",
               "Bat Events",
+              "Goat Events",
+              "Cattle Events",
+              "Sheep Events",
               "Human Seroprevalence Estimates",
               "Animal Seroprevalence Estimates",
               "Camel Seroprevalence Estimates",
               "Bat Seroprevalence Estimates",
+              "Goat Seroprevalence Estimates",
+              "Cattle Seroprevalence Estimates",
+              "Sheep Seroprevalence Estimates",
               "Human Viral Estimates",
               "Animal Viral Estimates",
               "Camel Viral Estimates",
-              "Bat Viral Estimates"
+              "Bat Viral Estimates",
+              "Goat Viral Estimates",
+              "Cattle Viral Estimates",
+              "Sheep Viral Estimates"
             ],
             clusterPropertyKeysIncludedInSum: [
               "Reported Human Events",
@@ -214,14 +259,23 @@ export const MersMap = () => {
               "Reported Animal Events": MapPinColours['AnimalMersEvent'],
               "Camel Events": MapPinColours['animal-mers-event-alt'],
               "Bat Events": MapPinColours['animal-mers-event-alt'],
+              "Goat Events": MapPinColours['animal-mers-event-alt'],
+              "Cattle Events": MapPinColours['animal-mers-event-alt'],
+              "Sheep Events": MapPinColours['animal-mers-event-alt'],
               "Human Seroprevalence Estimates": MapPinColours['HumanMersEstimate'],
               "Animal Seroprevalence Estimates": MapPinColours['AnimalMersEstimate'],
               "Camel Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
               "Bat Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
+              "Goat Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
+              "Cattle Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
+              "Sheep Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
               "Human Viral Estimates": MapPinColours['HumanMersViralEstimate'],
               "Animal Viral Estimates": MapPinColours['AnimalMersViralEstimate'],
               "Camel Viral Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
-              "Bat Viral Estimates": MapPinColours['mers-animal-viral-estimate-alt']
+              "Bat Viral Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
+              "Goat Viral Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
+              "Cattle Viral Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
+              "Sheep Viral Estimates": MapPinColours['mers-animal-viral-estimate-alt']
             }
           }}
           generatePopupContent={(input) => {
