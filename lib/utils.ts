@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import groupBy from 'lodash/groupBy'
+import defaultColours from 'tailwindcss/colors'
  
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -73,6 +74,42 @@ const generateRandomRGBValue = (): string => {
 }
 
 export const generateRandomColour = (): string => `#${[1,2,3].map(() => `${generateRandomRGBValue()}`).join('')}`
+
+export const distinctColoursMap: Record<number, string | undefined> = {
+  0: defaultColours.red[200],
+  1: defaultColours.red[500],
+  2: defaultColours.red[800],
+  3: defaultColours.emerald[200],
+  4: defaultColours.emerald[500],
+  5: defaultColours.emerald[800],
+  6: defaultColours.purple[200],
+  7: defaultColours.purple[500],
+  8: defaultColours.purple[800],
+  9: defaultColours.yellow[200],
+  10: defaultColours.yellow[500],
+  11: defaultColours.yellow[800],
+  12: defaultColours.blue[200],
+  13: defaultColours.blue[500],
+  14: defaultColours.blue[800],
+  15: defaultColours.rose[200],
+  16: defaultColours.rose[500],
+  17: defaultColours.rose[800],
+  18: defaultColours.orange[200],
+  19: defaultColours.orange[500],
+  20: defaultColours.orange[800],
+  21: defaultColours.lime[200],
+  22: defaultColours.lime[500],
+  23: defaultColours.lime[800],
+  24: defaultColours.cyan[200],
+  25: defaultColours.cyan[500],
+  26: defaultColours.cyan[800],
+  27: defaultColours.amber[200],
+  28: defaultColours.amber[500],
+  29: defaultColours.amber[800],
+  30: defaultColours.teal[200],
+  31: defaultColours.teal[500],
+  32: defaultColours.teal[800]
+};
 
 export const groupByArray = <TGroupingKey extends string, TGroupingValue extends string, TValue extends Record<TGroupingKey, TGroupingValue>>(values: TValue[], groupingKey: TGroupingKey): Array<Record<TGroupingKey, TGroupingValue> & {data: Omit<TValue, TGroupingKey>[]}> => {
   const valueToGroupingValue = (value: TValue): TGroupingValue => {

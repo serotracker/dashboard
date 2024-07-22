@@ -9,7 +9,7 @@ import { parseISO } from "date-fns";
 interface HumanCasesSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
   regionGroupingFunction: (dataPoint: FaoMersEvent) => TRegion | undefined;
-  regionToBarColour: (region: TRegion) => string;
+  regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
   setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
   currentPageIndex: number;
@@ -65,7 +65,7 @@ export const HumanCasesSummaryByRegion = <TRegion extends string>(props: HumanCa
       }}
       getIntervalStartDate={(dataPoint) => parseISO(dataPoint.reportDate)}
       getIntervalEndDate={(dataPoint) => parseISO(dataPoint.reportDate)}
-      getBarColour={(region) => regionToBarColour(region)}
+      getBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
       getChartTitle={(region) => regionToChartTitle(region)}
       percentageFormattingEnabled={false}
       getBarName={() => 'Reported Confirmed Positive Cases'}

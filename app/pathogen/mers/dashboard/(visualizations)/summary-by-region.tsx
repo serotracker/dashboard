@@ -15,6 +15,7 @@ import { CountryInformationContext } from "@/contexts/pathogen-context/country-i
 import { AnimalSeroprevalenceSummaryByRegion } from "./summary-by-region/animal-seroprevalence-by-region";
 import { HumanViralPositivePrevalenceSummaryByRegion } from "./summary-by-region/human-viral-positive-prevalence-by-region";
 import { AnimalViralPositivePrevalenceSummaryByRegion } from "./summary-by-region/animal-viral-positive-prevalence-by-region";
+import { distinctColoursMap } from "@/lib/utils";
 
 export enum SummaryByRegionVariableOfInterestDropdownOption {
   HUMAN_MEDIAN_SEROPREVALENCE = "HUMAN_MEDIAN_SEROPREVALENCE",
@@ -41,7 +42,7 @@ interface SummaryByRegionProps {
   currentPageIndex: number;
 }
 
-const barColoursForWhoRegions: Record<WhoRegion, string> = {
+export const barColoursForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Afr]: "#e15759",
   [WhoRegion.Amr]: "#59a14f",
   [WhoRegion.Emr]: "#f1ce63",
@@ -50,7 +51,7 @@ const barColoursForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Wpr]: "#4e79a7",
 };
 
-const chartTitlesForWhoRegions: Record<WhoRegion, string> = {
+export const chartTitlesForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Afr]: "AFR",
   [WhoRegion.Amr]: "AMR",
   [WhoRegion.Emr]: "EMR",
@@ -59,7 +60,7 @@ const chartTitlesForWhoRegions: Record<WhoRegion, string> = {
   [WhoRegion.Wpr]: "WPR",
 };
 
-const barColoursForUnRegions: Record<UnRegion, string> = {
+export const barColoursForUnRegions: Record<UnRegion, string> = {
   [UnRegion.AustraliaAndNewZealand]: defaultColours.amber[200],
   [UnRegion.Caribbean]: defaultColours.fuchsia[200],
   [UnRegion.CentralAmerica]: defaultColours.blue[200],
@@ -84,7 +85,7 @@ const barColoursForUnRegions: Record<UnRegion, string> = {
   [UnRegion.WesternEurope]: defaultColours.indigo[400]
 }
 
-const chartTitlesForUnRegions = unRegionEnumToLabelMap;
+export const chartTitlesForUnRegions = unRegionEnumToLabelMap;
 
 const variableOfInterestToBarColourMap = {
   [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE]: "#e7ed8a",
@@ -129,12 +130,19 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     assertNever(selectedRegion);
   }, [ selectedRegion ]);
 
-  const regionToBarColour = useCallback((region: string) => {
+  const regionToBarColour = useCallback((region: string, regionIndex: number) => {
     if(isWHORegion(region)) {
       return barColoursForWhoRegions[region];
     }
     if(isUNRegion(region)) {
       return barColoursForUnRegions[region];
+    }
+
+    const indexInDistinctColourMap = Math.floor((regionIndex * 3) / 32) + Math.floor(((regionIndex * 3) % 32)) + 1;
+    const distinctColour = distinctColoursMap[indexInDistinctColourMap]
+
+    if(distinctColour) {
+      return distinctColour;
     }
 
     return variableOfInterestToBarColourMap[selectedVariableOfInterest];
@@ -162,7 +170,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <HumanSeroprevalenceSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
-        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
@@ -172,7 +180,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <HumanViralPositivePrevalenceSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
-        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
@@ -182,7 +190,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <AnimalSeroprevalenceSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
-        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
@@ -192,7 +200,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <AnimalViralPositivePrevalenceSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
-        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
@@ -202,7 +210,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <AnimalCasesSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
-        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
@@ -212,7 +220,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <HumanCasesSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
-        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
@@ -222,7 +230,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <HumanDeathsSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
-        regionToBarColour={(region) => regionToBarColour(region)}
+        regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}

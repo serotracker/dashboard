@@ -26,7 +26,7 @@ export interface SplitTimeBucketedBarChartProps<
   currentPageIndex: number;
   getIntervalStartDate: (dataPoint: TData) => Date;
   getIntervalEndDate: (dataPoint: TData) => Date;
-  getBarColour: (primaryKey: TPrimaryGroupingKey) => string;
+  getBarColour: (primaryKey: TPrimaryGroupingKey, index: number) => string;
   getBarName: (primaryKey: TPrimaryGroupingKey) => string;
   getChartTitle: (primaryKey: TPrimaryGroupingKey) => string;
   percentageFormattingEnabled: boolean;
@@ -148,7 +148,7 @@ export const SplitTimeBucketedBarChart = <
                   <YAxis {...yAxisProps}/>
                   <Bar
                     dataKey="valueForBar"
-                    fill={props.getBarColour(primaryKey)}
+                    fill={props.getBarColour(primaryKey, index)}
                     name={props.getBarName(primaryKey)}
                   />
                   <Tooltip {...tooltipProps} />
