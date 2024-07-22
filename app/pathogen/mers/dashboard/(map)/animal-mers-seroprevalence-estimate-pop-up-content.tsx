@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
-import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
-import { AnimalMersSeroprevalenceEstimateMapMarkerData, animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, animalTypeToColourClassnameMap, animalTypeToStringMap, getAnimalMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
+import { AnimalMersSeroprevalenceEstimateMapMarkerData, animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, getAnimalMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
 
 interface AnimalMersSeroprevalenceEstimatePopupContentProps {
   estimate: AnimalMersSeroprevalenceEstimateMapMarkerData;

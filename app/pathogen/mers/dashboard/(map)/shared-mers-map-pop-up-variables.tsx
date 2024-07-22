@@ -83,6 +83,7 @@ export const geographicScopeToColourClassnameMap = {
 
 export const testProducerToColourClassnameMap = {
   "Euroimmun": "bg-teal-400",
+  "Roche": "bg-fuchsia-400",
   "In-house": "bg-red-400",
   "Not reported": "bg-pink-400"
 }
@@ -108,6 +109,9 @@ export const isMersAnimalType = (animalType: string): animalType is MersAnimalTy
 export const animalSpeciesToStringMap = {
   [MersEventAnimalSpecies.Bat]: "Bat",
   [MersEventAnimalSpecies.Camel]: "Camel",
+  [MersEventAnimalSpecies.Goat]: "Goat",
+  [MersEventAnimalSpecies.Cattle]: "Cattle",
+  [MersEventAnimalSpecies.Sheep]: "Sheep",
 }
 
 export const ageGroupToColourClassnameMap = {
@@ -117,6 +121,9 @@ export const ageGroupToColourClassnameMap = {
 export const animalSpeciesToColourClassnameMap = {
   [MersEventAnimalSpecies.Bat]: "bg-orange-700",
   [MersEventAnimalSpecies.Camel]: "bg-yellow-300",
+  [MersEventAnimalSpecies.Goat]: "bg-sky-300",
+  [MersEventAnimalSpecies.Cattle]: "bg-pink-300",
+  [MersEventAnimalSpecies.Sheep]: "bg-red-200",
 }
 
 export const isMersEventAnimalSpecies = (animalSpecies: string): animalSpecies is MersEventAnimalSpecies => Object.values(MersEventAnimalSpecies).some((element) => element === animalSpecies);
