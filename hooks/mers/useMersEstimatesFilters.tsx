@@ -12,6 +12,14 @@ export const mersEstimatesFilterOptions = gql`
       specimenType
       sex
       isotypes
+      samplingMethod
+      geographicScope
+      animalDetectionSettings
+      animalPurpose
+      animalImportedOrLocal
+      sampleFrame
+      testProducer
+      testValidation
     }
   }
 `

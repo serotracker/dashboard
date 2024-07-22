@@ -1,3 +1,4 @@
+import { PopUpContentRowProps, PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import {
   AnimalMersSeroprevalenceEstimate,
   AnimalMersViralEstimate,
@@ -14,6 +15,7 @@ import {
   MersAnimalType,
   MersAnimalSpecies
 } from "@/gql/graphql"
+import { parseISO } from "date-fns";
 
 export const diagnosisStatusToStringMap = {
   [MersDiagnosisStatus.Confirmed]: "Confirmed",
@@ -49,6 +51,45 @@ export const isotypeToColourClassnameMap = {
 export const specimenTypeToColourClassnameMap = {
   "Nasal Swab": "bg-lime-300",
   "Serum": "bg-orange-300"
+}
+
+export const animalDetectionSettingsToColourClassnameMap = {
+  "Abattoirs": "bg-orange-200",
+  "Free-roaming herds": "bg-lime-200",
+  "Livestock markets": "bg-cyan-200"
+}
+
+export const animalPurposeSettingsToColourClassnameMap = {
+  "Multiple purposes": "bg-emerald-200"
+}
+
+export const animalImportedOrLocalToColourClassnameMap = {
+  "Local": "bg-purple-200",
+  "Imported": "bg-yellow-200",
+}
+
+export const sampleFrameToColourClassnameMap = {
+  "Livestock workers": "bg-teal-200"
+}
+
+export const samplingMethodToColourClassnameMap = {
+  "Convenience": "bg-violet-400",
+  "Stratified probability": "bg-lime-400"
+}
+
+export const geographicScopeToColourClassnameMap = {
+  "National": "bg-orange-400",
+}
+
+export const testProducerToColourClassnameMap = {
+  "Euroimmun": "bg-teal-400",
+  "In-house": "bg-red-400",
+  "Not reported": "bg-pink-400"
+}
+
+export const testValidationToColourClassnameMap = {
+  "Validated by developers": "bg-yellow-400",
+  "Not reported": "bg-pink-400"
 }
 
 export const animalTypeToStringMap = {
@@ -208,10 +249,138 @@ export const isMersEventTypename = (typename: string): typename is "HumanMersEve
 export const isMersSeroprevalenceEstimateTypename = (typename: string): typename is "HumanMersEstimate"|"AnimalMersEstimate" => ["HumanMersEstimate","AnimalMersEstimate"].includes(typename);
 export const isMersViralEstimateTypename = (typename: string): typename is "HumanMersViralEstimate"|"AnimalMersViralEstimate" => ["HumanMersViralEstimate","AnimalMersViralEstimate"].includes(typename);
 
-export type MersMapMarkerData = 
+type AnimalMersEstimateMarkerData = 
   | AnimalMersSeroprevalenceEstimateMapMarkerData
-  | HumanMersSeroprevalenceEstimateMapMarkerData
-  | HumanMersEventMapMarkerData
-  | AnimalMersEventMapMarkerData
-  | HumanMersViralEstimateMapMarkerData
   | AnimalMersViralEstimateMapMarkerData;
+
+type HumanMersEstimateMarkerData = 
+  | HumanMersSeroprevalenceEstimateMapMarkerData
+  | HumanMersViralEstimateMapMarkerData;
+
+type MersEstimateMapMarkerData = 
+  | HumanMersEstimateMarkerData
+  | AnimalMersEstimateMarkerData;
+
+export type MersMapMarkerData = 
+  | MersEstimateMapMarkerData
+  | HumanMersEventMapMarkerData
+  | AnimalMersEventMapMarkerData;
+
+
+export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): PopUpContentRowProps[] => [{
+  title: "Location",
+  type: PopUpContentRowType.LOCATION,
+  countryName: estimate.country,
+  stateName: estimate.state ?? undefined,
+  cityName: estimate.city ?? undefined
+}, {
+  title: "Source Type",
+  type: PopUpContentRowType.TEXT,
+  text: estimate.sourceType ?? 'Not Reported'
+}, {
+  title: "Sampling Date Range",
+  type: PopUpContentRowType.DATE_RANGE,
+  dateRangeStart: estimate.samplingStartDate ? parseISO(estimate.samplingStartDate) : undefined,
+  dateRangeEnd: estimate.samplingEndDate ? parseISO(estimate.samplingEndDate) : undefined
+}, {
+  title: "First Author Full Name",
+  type: PopUpContentRowType.TEXT,
+  text: estimate.firstAuthorFullName ?? 'Not Reported'
+}, {
+  title: "Institution",
+  type: PopUpContentRowType.TEXT,
+  text: estimate.insitutution ?? 'Not Reported'
+}, {
+  title: "Study Inclusion Criteria",
+  type: PopUpContentRowType.TEXT,
+  text: estimate.studyInclusionCriteria ?? 'Not Reported'
+}, {
+  title: "Study Exclusion Criteria",
+  type: PopUpContentRowType.TEXT,
+  text: estimate.studyExclusionCriteria ?? 'Not Reported'
+}, {
+  title: "Assay",
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.assay,
+  valueToColourClassnameMap: assayToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}, {
+  title: "Isotypes",
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.isotypes,
+  valueToColourClassnameMap: isotypeToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}, {
+  title: "Specimen Type",
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.specimenType ? [ estimate.specimenType ] : [],
+  valueToColourClassnameMap: specimenTypeToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}, {
+  title: 'Sampling Method',
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.samplingMethod ? [ estimate.samplingMethod ] : [],
+  valueToColourClassnameMap: samplingMethodToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}, {
+  title: 'Geographic Scope',
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.geographicScope ? [ estimate.geographicScope ] : [],
+  valueToColourClassnameMap: geographicScopeToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}, {
+  title: 'Test Producer',
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.testProducer,
+  valueToColourClassnameMap: testProducerToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}, {
+  title: 'Test Validation',
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.testValidation,
+  valueToColourClassnameMap: testValidationToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}];
+
+export const getAnimalMersEstimateRows = (estimate: AnimalMersEstimateMarkerData): PopUpContentRowProps[] => [{
+  title: "Animal Type",
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.animalType,
+  valueToColourClassnameMap: animalTypeToColourClassnameMap,
+  valueToLabelMap: animalTypeToStringMap,
+  defaultColourClassname: "bg-sky-100"
+}, {
+  title: 'Animal Detection Settings',
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.animalDetectionSettings,
+  valueToColourClassnameMap: animalDetectionSettingsToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}, {
+  title: 'Animal Purpose',
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.animalPurpose ? [ estimate.animalPurpose ] : [],
+  valueToColourClassnameMap: animalPurposeSettingsToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}, {
+  title: 'Imported Or Local',
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.animalImportedOrLocal ? [ estimate.animalImportedOrLocal ] : [],
+  valueToColourClassnameMap: animalImportedOrLocalToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}];
+
+export const getHumanMersEstimateRows = (estimate: HumanMersEstimateMarkerData): PopUpContentRowProps[] => [{
+  title: "Age Group",
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.ageGroup,
+  valueToColourClassnameMap: ageGroupToColourClassnameMap,
+  valueToLabelMap: {},
+  defaultColourClassname: "bg-sky-100"
+}, {
+  title: "Sample Frame",
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.sampleFrame ? [ estimate.sampleFrame ] : [],
+  valueToColourClassnameMap: sampleFrameToColourClassnameMap,
+  valueToLabelMap: {},
+  defaultColourClassname: "bg-sky-100"
+}];

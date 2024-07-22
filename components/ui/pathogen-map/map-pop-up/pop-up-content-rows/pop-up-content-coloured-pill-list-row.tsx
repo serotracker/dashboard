@@ -19,6 +19,10 @@ export const PopUpContentColouredPillListRow = (props: PopUpContentColouredPillL
   const { values, valueToColourClassnameMap, defaultColourClassname, valueToLabelMap } = props;
 
   const content = useMemo(() => {
+    if(!Array.isArray(values)) {
+      return <div className="text-md"> Not reported </div>
+    }
+
     return values.map((value) => (
       <span key={value} className={`${valueToColourClassnameMap[value] ?? defaultColourClassname} mr-1 p-2 rounded-sm`}>
         {valueToLabelMap?.[value] ? valueToLabelMap[value] : value}

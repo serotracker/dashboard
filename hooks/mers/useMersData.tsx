@@ -27,6 +27,8 @@ export const mersEstimates_V2 = gql`
         sourceType
         sourceTitle
         insitutution
+        samplingStartDate
+        samplingEndDate
         sensitivity
         sensitivity95CILower
         sensitivity95CIUpper
@@ -44,6 +46,11 @@ export const mersEstimates_V2 = gql`
         seroprevalence
         seroprevalence95CILower
         seroprevalence95CIUpper
+        samplingMethod
+        geographicScope
+        testProducer
+        testValidation
+        sampleFrame
         ageGroup
       }
       ... on HumanMersViralEstimate {
@@ -67,6 +74,8 @@ export const mersEstimates_V2 = gql`
         sourceType
         sourceTitle
         insitutution
+        samplingStartDate
+        samplingEndDate
         sensitivity
         sensitivity95CILower
         sensitivity95CIUpper
@@ -84,6 +93,11 @@ export const mersEstimates_V2 = gql`
         positivePrevalence
         positivePrevalence95CILower
         positivePrevalence95CIUpper
+        samplingMethod
+        geographicScope
+        testProducer
+        testValidation
+        sampleFrame
         ageGroup
       }
       ... on AnimalMersEstimate {
@@ -107,6 +121,8 @@ export const mersEstimates_V2 = gql`
         sourceType
         sourceTitle
         insitutution
+        samplingStartDate
+        samplingEndDate
         sensitivity
         sensitivity95CILower
         sensitivity95CIUpper
@@ -124,8 +140,15 @@ export const mersEstimates_V2 = gql`
         seroprevalence
         seroprevalence95CILower
         seroprevalence95CIUpper
+        samplingMethod
+        geographicScope
+        testProducer
+        testValidation
         animalType
         animalSpecies
+        animalDetectionSettings
+        animalPurpose
+        animalImportedOrLocal
       }
       ... on AnimalMersViralEstimate {
         __typename
@@ -148,6 +171,8 @@ export const mersEstimates_V2 = gql`
         sourceType
         sourceTitle
         insitutution
+        samplingStartDate
+        samplingEndDate
         sensitivity
         sensitivity95CILower
         sensitivity95CIUpper
@@ -165,8 +190,15 @@ export const mersEstimates_V2 = gql`
         positivePrevalence
         positivePrevalence95CILower
         positivePrevalence95CIUpper
+        samplingMethod
+        geographicScope
+        testProducer
+        testValidation
         animalType
         animalSpecies
+        animalDetectionSettings
+        animalPurpose
+        animalImportedOrLocal
       }
     }
   }

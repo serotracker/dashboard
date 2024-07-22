@@ -2,17 +2,25 @@ import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-tabl
 import { WhoRegion } from "@/gql/graphql";
 import {
   ageGroupToColourClassnameMap,
+  animalDetectionSettingsToColourClassnameMap,
+  animalImportedOrLocalToColourClassnameMap,
+  animalPurposeSettingsToColourClassnameMap,
   animalSpeciesToColourClassnameMap,
   animalSpeciesToStringMap,
   animalTypeToColourClassnameMap,
   animalTypeToStringMap,
   assayToColourClassnameMap,
+  geographicScopeToColourClassnameMap,
   isMersAnimalSpecies,
   isMersAnimalType,
   isotypeToColourClassnameMap,
+  sampleFrameToColourClassnameMap,
+  samplingMethodToColourClassnameMap,
   sexToColourClassnameMap,
   sourceTypeToColourClassnameMap,
-  specimenTypeToColourClassnameMap
+  specimenTypeToColourClassnameMap,
+  testProducerToColourClassnameMap,
+  testValidationToColourClassnameMap
 } from "../(map)/shared-mers-map-pop-up-variables";
 
 export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
@@ -40,6 +48,14 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'country',
   label: 'Country'
+}, {
+  type: DataTableColumnConfigurationEntryType.DATE as const,
+  fieldName: 'samplingStartDate',
+  label: 'Sampling Start Date',
+}, {
+  type: DataTableColumnConfigurationEntryType.DATE as const,
+  fieldName: 'samplingEndDate',
+  label: 'Sampling End Date',
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'sex',
@@ -102,10 +118,34 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   label: 'Animal Species'
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+  fieldName: 'animalDetectionSettings',
+  valueToColourSchemeClassnameMap: animalDetectionSettingsToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Animal Detection Settings',
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: 'animalPurpose',
+  valueToColourSchemeClassnameMap: animalPurposeSettingsToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Animal Purpose',
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+  fieldName: 'animalImportedOrLocal',
+  valueToColourSchemeClassnameMap: animalImportedOrLocalToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Animal Imported Or Local',
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'ageGroup',
   valueToColourSchemeClassnameMap: ageGroupToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Age Group'
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+  fieldName: 'sampleFrame',
+  valueToColourSchemeClassnameMap: sampleFrameToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Sample Frame'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'sampleDenominator',
@@ -142,6 +182,30 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   fieldName: 'specificity95CIUpper',
   label: 'Test Specificity (95% Confidence Interval Upper Bound)',
   initiallyVisible: false
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: 'samplingMethod',
+  valueToColourSchemeClassnameMap: samplingMethodToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Sampling Method',
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: 'geographicScope',
+  valueToColourSchemeClassnameMap: geographicScopeToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Geographic Scope',
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+  fieldName: 'testProducer',
+  valueToColourSchemeClassnameMap: testProducerToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Test Producer',
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+  fieldName: 'testValidation',
+  valueToColourSchemeClassnameMap: testValidationToColourClassnameMap,
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Test Validation',
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'studyInclusionCriteria',
