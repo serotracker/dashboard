@@ -54,6 +54,8 @@ export const useComparingSeroprevalenceToPositiveCasesAndVaccinationsOverTimeMod
       disabled: false,
       modalType: ModalType.CUSTOMIZATION_MODAL,
       content: {
+        paginationHoverClassname: "hover:bg-sc2virusHover",
+        paginationSelectedClassname: "bg-sc2virus",
         customizationSettings: [{
           type: CustomizationSettingType.SWITCH,
           switchName: `Global line ${globalLineVisible ? 'visible' : 'not visible'}.`,

@@ -278,6 +278,8 @@ export const SarsCov2DataTable = () => {
               disabled: false,
               modalType: ModalType.CUSTOMIZATION_MODAL,
               content: {
+                paginationHoverClassname: "hover:bg-sc2virusHover",
+                paginationSelectedClassname: "bg-sc2virus",
                 customizationSettings: modelledSeroprevalenceCustomizationSettings,
               },
               modalBackgroundClassname: 'relative',

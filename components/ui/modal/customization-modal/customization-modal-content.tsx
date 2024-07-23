@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 export interface CustomizationModalContentProps<TDropdownOption extends string> {
   className?: string;
   customizationSettings: CustomizationSetting<TDropdownOption>[];
+  paginationHoverClassname: string;
+  paginationSelectedClassname: string;
   closeModal: () => void;
 }
 
@@ -53,8 +55,8 @@ export const CustomizationModalContent = <
       )
     })),
     currentPageIndex,
-    hoverClassname: "hover:bg-mersHover",
-    selectedClassname: "bg-mers",
+    hoverClassname: props.paginationHoverClassname,
+    selectedClassname: props.paginationSelectedClassname,
     setCurrentPageIndex: (newCurrentPageIndex: number) => setCurrentPageIndex(newCurrentPageIndex),
     onPageChange: () => {}
   })

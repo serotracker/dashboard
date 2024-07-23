@@ -148,6 +148,8 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       disabled: false,
       modalType: ModalType.CUSTOMIZATION_MODAL,
       content: {
+        paginationHoverClassname: "hover:bg-mersHover",
+        paginationSelectedClassname: "bg-mers",
         customizationSettings: [
           ...(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.WHO_REGION ? Object.values(WhoRegion).map((whoRegion): ColourPickerCustomizationSettingProps => ({
             type: CustomizationSettingType.COLOUR_PICKER,

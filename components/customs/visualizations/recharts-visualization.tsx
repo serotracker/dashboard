@@ -3,7 +3,7 @@ import { ButtonConfig, CloseButtonAdditionalButtonConfig, DownloadButtonAddition
 import { useDownloadVisualization } from "./use-download-visualization";
 import { cn } from "@/lib/utils";
 import { PaginationConfiguration, VisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { ModalState, useModal } from "@/components/ui/modal/modal";
+import { ModalState, ModalWrapper } from "@/components/ui/modal/modal";
 
 interface RechartsVisualizationButtonConfig {
   zoomInButton: ButtonConfig<ZoomInButtonAdditionalButtonConfig>;
@@ -59,11 +59,9 @@ export const RechartsVisualization = <
 
   const { paginationConfiguration } = props.visualizationInformation;
 
-  const customizationModal = useModal(props.visualizationInformation.customizationModalConfiguration ?? {
-    initialModalState: ModalState.CLOSED,
-    disabled: true as const,
-    modalType: undefined
-  });
+  const [ customizationModalState, setCustomizationModalState ] = useState<ModalState>(
+    props.visualizationInformation.customizationModalConfiguration?.initialModalState ?? ModalState.CLOSED
+  );
 
   const downloadButtonId = `${props.visualizationInformation.id}-download-icon`
   const zoomInButtonId = `${props.visualizationInformation.id}-zoom-in-icon`
@@ -96,7 +94,7 @@ export const RechartsVisualization = <
           },
           customizeButton: props.visualizationInformation.customizationModalConfiguration ? {
             enabled: true,
-            onClick: () => customizationModal.setModalState(ModalState.OPENED),
+            onClick: () => setCustomizationModalState(ModalState.OPENED),
             id: customizeButtonId
           } : {
             enabled: false,
@@ -133,7 +131,15 @@ export const RechartsVisualization = <
           hideArbovirusDropdown: props.hideArbovirusDropdown
         })}
       </div>
-      <customizationModal.modal />
+      <ModalWrapper
+        modalState={customizationModalState}
+        setModalState={setCustomizationModalState}
+        {...props.visualizationInformation.customizationModalConfiguration ?? {
+          initialModalState: ModalState.CLOSED,
+          disabled: true as const,
+          modalType: undefined
+        }}
+      />
     </div>
   );
 };

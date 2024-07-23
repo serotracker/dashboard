@@ -122,6 +122,8 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       disabled: false,
       modalType: ModalType.CUSTOMIZATION_MODAL,
       content: {
+        paginationHoverClassname: "hover:bg-mersHover",
+        paginationSelectedClassname: "bg-mers",
         customizationSettings: [
           ...(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION ? Object.values(WhoRegion).map((whoRegion): ColourPickerCustomizationSettingProps => ({
             type: CustomizationSettingType.COLOUR_PICKER,
