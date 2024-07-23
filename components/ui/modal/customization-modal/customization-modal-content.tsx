@@ -6,7 +6,7 @@ import { ModalHeader } from "../modal-header";
 import { MultiSelectDropdownCustomizationSetting } from "./multi-select-dropdown-customization-setting";
 import { ColourPickerCustomizationSetting } from "./colour-picker-customization-setting";
 import { useState } from "react";
-import { useHelpModalPaginator } from "@/components/customs/help-modal-pagination/help-modal-paginator";
+import { usePaginator } from "@/components/customs/paginator/paginator";
 import { cn } from "@/lib/utils";
 
 export interface CustomizationModalContentProps<TDropdownOption extends string> {
@@ -23,7 +23,7 @@ export const CustomizationModalContent = <
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0)
   const totalPageCount = Math.floor((((props.customizationSettings.length - 1) / 6) + 1));
 
-  const paginator = useHelpModalPaginator({
+  const paginator = usePaginator({
     pages: Array.from({length: totalPageCount}, (_, index) => index).map((pageIndex) => ({
       pageId: `page-id-${pageIndex}`,
       pageIndex: pageIndex,
