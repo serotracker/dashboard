@@ -120,7 +120,6 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
     return {
       initialModalState: ModalState.CLOSED,
       disabled: false,
-      modalForegroundClassname: 'max-h-half-screen overflow-y-scroll',
       modalType: ModalType.CUSTOMIZATION_MODAL,
       content: {
         customizationSettings: [
