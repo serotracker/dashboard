@@ -1,9 +1,16 @@
 import { useCallback, useMemo, useState } from "react";
+import defaultColours from 'tailwindcss/colors'
 import { SummaryByRegion, SummaryByRegionRegionDropdownOption, SummaryByRegionVariableOfInterestDropdownOption } from "../../dashboard/(visualizations)/summary-by-region";
 import { UNRegionsTooltip, WHORegionsTooltip } from "@/components/customs/tooltip-content";
 import assertNever from "assert-never";
 import { MersVisualizationInformation } from "../visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import { UnRegion, WhoRegion } from "@/gql/graphql";
+import { ModalState, ModalType } from "@/components/ui/modal/modal";
+import { CustomizationSettingType } from "@/components/ui/modal/customization-modal/customization-settings";
+import { defaultColoursForWhoRegions } from "@/lib/who-regions";
+import { defaultColoursForUnRegions, unRegionEnumToLabelMap } from "@/lib/un-regions";
+import { ColourPickerCustomizationSettingProps } from "@/components/ui/modal/customization-modal/colour-picker-customization-setting";
 
 export const useSummaryByRegionVisualizationPageConfig = () => {
   const [
@@ -15,6 +22,15 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     summaryByRegionSelectedDropdownOption,
     setSummaryByRegionSelectedDropdownOption,
   ] = useState<SummaryByRegionRegionDropdownOption>(SummaryByRegionRegionDropdownOption.WHO_REGION);
+
+  const [
+    barColoursForWhoRegions,
+    setBarColoursForWhoRegions,
+  ] = useState<Record<WhoRegion, string>>(defaultColoursForWhoRegions);
+  const [
+    barColoursForUnRegions,
+    setBarColoursForUnRegions,
+  ] = useState<Record<UnRegion, string>>(defaultColoursForUnRegions);
 
   const [
     numberOfPagesAvailable,
@@ -118,18 +134,59 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     afterBothDropdownsHeaderText: " Over Time"
   }), [ summaryByRegionVariableOfInterestSelectedDropdownOption, setSummaryByRegionVariableOfInterestSelectedDropdownOption, summaryByRegionSelectedDropdownOption, setSummaryByRegionSelectedDropdownOption ])
 
+  const customizationModalConfigurationForSummaryByRegion: MersVisualizationInformation<
+    string,
+    SummaryByRegionVariableOfInterestDropdownOption,
+    SummaryByRegionRegionDropdownOption
+  >['customizationModalConfiguration'] = useMemo(() => {
+    if(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.COUNTRY) {
+      return undefined;
+    }
+
+    return {
+      initialModalState: ModalState.CLOSED,
+      disabled: false,
+      modalForegroundClassname: 'max-h-half-screen overflow-y-scroll',
+      modalType: ModalType.CUSTOMIZATION_MODAL,
+      content: {
+        customizationSettings: [
+          ...(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.WHO_REGION ? Object.values(WhoRegion).map((whoRegion): ColourPickerCustomizationSettingProps => ({
+            type: CustomizationSettingType.COLOUR_PICKER,
+            colourPickerName: `Colour for ${whoRegion}`,
+            chosenColour: barColoursForWhoRegions[whoRegion],
+            setChosenColour: (newChosenColour) => setBarColoursForWhoRegions({
+              ...barColoursForWhoRegions,
+              [whoRegion]: newChosenColour
+            })
+          })) : []),
+          ...(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.UN_REGION ? Object.values(UnRegion).map((unRegion): ColourPickerCustomizationSettingProps => ({
+            type: CustomizationSettingType.COLOUR_PICKER,
+            colourPickerName: `Colour for ${unRegionEnumToLabelMap[unRegion]}`,
+            chosenColour: barColoursForUnRegions[unRegion],
+            setChosenColour: (newChosenColour) => setBarColoursForUnRegions({
+              ...barColoursForUnRegions,
+              [unRegion]: newChosenColour
+            })
+          })) : [])
+        ]
+      }
+    }
+  }, [ barColoursForWhoRegions, setBarColoursForWhoRegions, barColoursForUnRegions, setBarColoursForUnRegions, summaryByRegionSelectedDropdownOption ]);
+
   const renderVisualizationForSummaryByWhoRegion: MersVisualizationInformation<
     string, SummaryByRegionVariableOfInterestDropdownOption, SummaryByRegionRegionDropdownOption
   >['renderVisualization'] = useCallback(({ data }) => (
     <SummaryByRegion
       data={data}
       selectedVariableOfInterest={summaryByRegionVariableOfInterestSelectedDropdownOption}
+      barColoursForWhoRegions={barColoursForWhoRegions}
+      barColoursForUnRegions={barColoursForUnRegions}
       selectedRegion={summaryByRegionSelectedDropdownOption}
       numberOfPagesAvailable={numberOfPagesAvailable}
       setNumberOfPagesAvailable={setNumberOfPagesAvailable}
       currentPageIndex={currentPageIndex}
     />
-  ), [ summaryByRegionVariableOfInterestSelectedDropdownOption, summaryByRegionSelectedDropdownOption, numberOfPagesAvailable, setNumberOfPagesAvailable, currentPageIndex ]);
+  ), [ summaryByRegionVariableOfInterestSelectedDropdownOption, summaryByRegionSelectedDropdownOption, numberOfPagesAvailable, setNumberOfPagesAvailable, currentPageIndex, barColoursForUnRegions, barColoursForWhoRegions ]);
 
   const summaryByWhoRegionTitleTooltipContent: MersVisualizationInformation<
     string, SummaryByRegionVariableOfInterestDropdownOption, SummaryByRegionRegionDropdownOption
@@ -152,6 +209,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
   return {
     getDisplayNameForSummaryByWhoRegion,
     renderVisualizationForSummaryByWhoRegion,
+    customizationModalConfigurationForSummaryByRegion,
     summaryByWhoRegionTitleTooltipContent,
     numberOfPagesAvailable,
     setNumberOfPagesAvailable,

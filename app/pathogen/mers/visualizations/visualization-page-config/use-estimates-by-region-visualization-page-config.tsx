@@ -5,6 +5,12 @@ import { MersVisualizationInformation } from "../visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { EstimatesByRegion, EstimatesByRegionRegionDropdownOption, EstimatesByRegionVariableOfInterestDropdownOption } from "../../dashboard/(visualizations)/estimates-by-region";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
+import { UnRegion, WhoRegion } from "@/gql/graphql";
+import { defaultColoursForWhoRegions } from "@/lib/who-regions";
+import { defaultColoursForUnRegions, unRegionEnumToLabelMap } from "@/lib/un-regions";
+import { ModalState, ModalType } from "@/components/ui/modal/modal";
+import { ColourPickerCustomizationSettingProps } from "@/components/ui/modal/customization-modal/colour-picker-customization-setting";
+import { CustomizationSettingType } from "@/components/ui/modal/customization-modal/customization-settings";
 
 export const useEstimatesByRegionVisualizationPageConfig = () => {
   const [
@@ -16,6 +22,15 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
     estimatesByRegionSelectedRegion,
     setEstimatesByRegionSelectedRegion,
   ] = useState<EstimatesByRegionRegionDropdownOption>(EstimatesByRegionRegionDropdownOption.WHO_REGION);
+
+  const [
+    barColoursForWhoRegions,
+    setBarColoursForWhoRegions,
+  ] = useState<Record<WhoRegion, string>>(defaultColoursForWhoRegions);
+  const [
+    barColoursForUnRegions,
+    setBarColoursForUnRegions,
+  ] = useState<Record<UnRegion, string>>(defaultColoursForUnRegions);
 
   const getDisplayNameForEstimatesByRegion: MersVisualizationInformation<
     string,
@@ -85,11 +100,52 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   >['renderVisualization'] = useCallback(({ data }) => (
     <EstimatesByRegion
       data={data}
+      barColoursForWhoRegions={barColoursForWhoRegions}
+      barColoursForUnRegions={barColoursForUnRegions}
       selectedVariableOfInterest={estimatesByRegionVariableOfInterest}
       selectedRegion={estimatesByRegionSelectedRegion}
       legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
     />
-  ), [ estimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion ]);
+  ), [ estimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, barColoursForWhoRegions, barColoursForUnRegions ]);
+
+  const customizationModalConfigurationForEstimatesByRegion: MersVisualizationInformation<
+    string,
+    EstimatesByRegionVariableOfInterestDropdownOption,
+    EstimatesByRegionRegionDropdownOption
+  >['customizationModalConfiguration'] = useMemo(() => {
+    if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.COUNTRY) {
+      return undefined;
+    }
+
+    return {
+      initialModalState: ModalState.CLOSED,
+      disabled: false,
+      modalForegroundClassname: 'max-h-half-screen overflow-y-scroll',
+      modalType: ModalType.CUSTOMIZATION_MODAL,
+      content: {
+        customizationSettings: [
+          ...(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION ? Object.values(WhoRegion).map((whoRegion): ColourPickerCustomizationSettingProps => ({
+            type: CustomizationSettingType.COLOUR_PICKER,
+            colourPickerName: `Colour for ${whoRegion}`,
+            chosenColour: barColoursForWhoRegions[whoRegion],
+            setChosenColour: (newChosenColour) => setBarColoursForWhoRegions({
+              ...barColoursForWhoRegions,
+              [whoRegion]: newChosenColour
+            })
+          })) : []),
+          ...(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.UN_REGION ? Object.values(UnRegion).map((unRegion): ColourPickerCustomizationSettingProps => ({
+            type: CustomizationSettingType.COLOUR_PICKER,
+            colourPickerName: `Colour for ${unRegionEnumToLabelMap[unRegion]}`,
+            chosenColour: barColoursForUnRegions[unRegion],
+            setChosenColour: (newChosenColour) => setBarColoursForUnRegions({
+              ...barColoursForUnRegions,
+              [unRegion]: newChosenColour
+            })
+          })) : [])
+        ]
+      }
+    }
+  }, [ barColoursForWhoRegions, setBarColoursForWhoRegions, barColoursForUnRegions, setBarColoursForUnRegions, estimatesByRegionSelectedRegion ]);
 
   const estimatesByRegionTitleTooltipContent: MersVisualizationInformation<
     string, EstimatesByRegionVariableOfInterestDropdownOption, EstimatesByRegionRegionDropdownOption
@@ -111,6 +167,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
 
   return {
     getDisplayNameForEstimatesByRegion,
+    customizationModalConfigurationForEstimatesByRegion,
     renderVisualizationForEstimatesByRegion,
     estimatesByRegionTitleTooltipContent,
   }
