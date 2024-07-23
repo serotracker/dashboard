@@ -123,6 +123,7 @@ export const useVisualizationPageConfiguration = () => {
   const {
     getDisplayNameForSummaryByWhoRegion,
     renderVisualizationForSummaryByWhoRegion,
+    customizationModalConfigurationForSummaryByRegion,
     summaryByWhoRegionTitleTooltipContent,
     numberOfPagesAvailable,
     currentPageIndex,
@@ -132,6 +133,7 @@ export const useVisualizationPageConfiguration = () => {
   const {
     getDisplayNameForEstimatesByRegion,
     renderVisualizationForEstimatesByRegion,
+    customizationModalConfigurationForEstimatesByRegion,
     estimatesByRegionTitleTooltipContent,
   } = useEstimatesByRegionVisualizationPageConfig();
 
@@ -148,6 +150,7 @@ export const useVisualizationPageConfiguration = () => {
       ...mersVisualizationInformation[MersVisualizationId.SUMMARY_BY_REGION],
       getDisplayName: getDisplayNameForSummaryByWhoRegion,
       renderVisualization: renderVisualizationForSummaryByWhoRegion,
+      customizationModalConfiguration: customizationModalConfigurationForSummaryByRegion,
       titleTooltipContent: summaryByWhoRegionTitleTooltipContent,
       paginationConfiguration: {
         numberOfPagesAvailable,
@@ -159,6 +162,7 @@ export const useVisualizationPageConfiguration = () => {
       ...mersVisualizationInformation[MersVisualizationId.ESTIMATES_BY_REGION],
       getDisplayName: getDisplayNameForEstimatesByRegion,
       renderVisualization: renderVisualizationForEstimatesByRegion,
+      customizationModalConfiguration: customizationModalConfigurationForEstimatesByRegion,
       titleTooltipContent: estimatesByRegionTitleTooltipContent,
     }
   }), [
@@ -168,6 +172,8 @@ export const useVisualizationPageConfiguration = () => {
     getDisplayNameForSummaryByWhoRegion,
     renderVisualizationForSummaryByWhoRegion,
     summaryByWhoRegionTitleTooltipContent,
+    customizationModalConfigurationForSummaryByRegion,
+    customizationModalConfigurationForEstimatesByRegion,
     numberOfPagesAvailable,
     currentPageIndex,
     setCurrentPageIndex

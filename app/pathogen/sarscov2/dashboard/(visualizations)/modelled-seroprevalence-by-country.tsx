@@ -4,15 +4,7 @@ import { monthCountToMonthYearString } from "@/lib/time-utils";
 import { WhoRegion } from "@/gql/graphql";
 import { LineChartWithBestFitCurveAndScatterPoints } from "@/components/customs/visualizations/line-chart-with-best-fit-curve-and-scatter-points";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
-
-const barColoursForWhoRegions: Record<WhoRegion, string> = {
-  [WhoRegion.Afr]: "#e15759",
-  [WhoRegion.Amr]: "#59a14f",
-  [WhoRegion.Emr]: "#f1ce63",
-  [WhoRegion.Eur]: "#f28e2b",
-  [WhoRegion.Sear]: "#d37295",
-  [WhoRegion.Wpr]: "#4e79a7",
-};
+import { defaultColoursForWhoRegions } from "@/lib/who-regions";
 
 interface ModelledSeroprevalenceByCountryGraphProps {
   data: Array<{
@@ -31,7 +23,7 @@ export const ModelledSeroprevalenceByCountryGraph = (props: ModelledSeroprevalen
 
   const firstWhoRegionPresentInData = props.data.at(0)?.whoRegion;
   const colourForAllLines = firstWhoRegionPresentInData
-    ? barColoursForWhoRegions[firstWhoRegionPresentInData] ?? "#FFFFFF"
+    ? defaultColoursForWhoRegions[firstWhoRegionPresentInData] ?? "#FFFFFF"
     : "#FFFFFF"
 
   return (

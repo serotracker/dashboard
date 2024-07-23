@@ -46,6 +46,8 @@ export const useMersMapCustomizationModal = () => {
     disabled: false,
     modalType: ModalType.CUSTOMIZATION_MODAL,
     content: {
+      paginationHoverClassname: "hover:bg-mersHover",
+      paginationSelectedClassname: "bg-mers",
       customizationSettings: [{
         type: CustomizationSettingType.DROPDOWN,
         dropdownName: 'Country Highlighting',

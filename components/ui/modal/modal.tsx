@@ -1,7 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { CustomizationModalContent, CustomizationModalContentProps } from "./customization-modal/customization-modal-content";
-import { assertNever } from "assert-never";
-import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ArboTrackerHelpModalContent } from "../../../app/pathogen/arbovirus/arbotracker-help-modal-content";
 
@@ -66,6 +64,8 @@ const Modal = <
           closeModal={props.onClose}
           className={isCustomizationModalProps(props) ? '' : 'hidden'}
           customizationSettings={isCustomizationModalProps(props) ? props.content.customizationSettings : []}
+          paginationHoverClassname={isCustomizationModalProps(props) ? props.content.paginationHoverClassname : ''}
+          paginationSelectedClassname={isCustomizationModalProps(props) ? props.content.paginationSelectedClassname: ''}
         />
         <ArboTrackerHelpModalContent
           closeModal={props.onClose}
@@ -120,7 +120,9 @@ export const useModal = <
         modalForegroundClassname={input.modalForegroundClassname}
         {...(isCustomizationModalProps(input) ? {
           modalType: ModalType.CUSTOMIZATION_MODAL as const,
-          content: input.content
+          content: input.content,
+          paginationHoverClassname: input.content.paginationHoverClassname,
+          paginationSelectedClassname: input.content.paginationSelectedClassname
         } : {
           modalType: ModalType.ARBOTRACKER_HELP_MODAL as const
         })}
@@ -136,4 +138,34 @@ export const useModal = <
     setModalState,
     modal
   }
+}
+
+export const ModalWrapper = <
+  TDropdownOption extends string
+>(props: UseModalInput<TDropdownOption> & {
+  modalState: ModalState;
+  setModalState: (newModalState: ModalState) => void;
+}) => {
+  if(props.disabled === true) {
+    return null;
+  }
+
+  return (
+    <Modal
+      hidden={props.modalState === ModalState.CLOSED}
+      modalBackgroundClassname={props.modalBackgroundClassname}
+      modalForegroundClassname={props.modalForegroundClassname}
+      {...(isCustomizationModalProps(props) ? {
+        modalType: ModalType.CUSTOMIZATION_MODAL as const,
+        content: props.content,
+        paginationHoverClassname: props.content.paginationHoverClassname,
+        paginationSelectedClassname: props.content.paginationSelectedClassname
+      } : {
+        modalType: ModalType.ARBOTRACKER_HELP_MODAL as const
+      })}
+      onClose={() => {
+        props.setModalState(ModalState.CLOSED);
+      }}
+    />
+  );
 }

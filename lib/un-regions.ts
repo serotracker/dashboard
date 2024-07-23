@@ -1,3 +1,4 @@
+import defaultColours from 'tailwindcss/colors'
 import { UnRegion } from "@/gql/graphql";
 
 const countryAlphaTwoCodeToUNRegionsMap: Partial<Record<string, UnRegion>> = {
@@ -267,6 +268,31 @@ export const unRegionEnumToLabelMap = {
   [UnRegion.Micronesia]: "Micronesia",
   [UnRegion.Polynesia]: "Polynesia",
 };
+
+export const defaultColoursForUnRegions: Record<UnRegion, string> = {
+  [UnRegion.AustraliaAndNewZealand]: defaultColours.amber[200],
+  [UnRegion.Caribbean]: defaultColours.fuchsia[200],
+  [UnRegion.CentralAmerica]: defaultColours.blue[200],
+  [UnRegion.CentralAsia]: defaultColours.purple[200],
+  [UnRegion.EasternAfrica]: defaultColours.emerald[200],
+  [UnRegion.EasternAsia]: defaultColours.rose[200],
+  [UnRegion.EasternEurope]: defaultColours.orange[200],
+  [UnRegion.Melanesia]: defaultColours.lime[200],
+  [UnRegion.Micronesia]: defaultColours.red[200],
+  [UnRegion.MiddleAfrica]: defaultColours.teal[200],
+  [UnRegion.NorthernAfrica]: defaultColours.indigo[200],
+  [UnRegion.NorthernAmerica]: defaultColours.amber[400],
+  [UnRegion.NorthernEurope]: defaultColours.fuchsia[400],
+  [UnRegion.Polynesia]: defaultColours.blue[400],
+  [UnRegion.SouthernAfrica]: defaultColours.purple[400],
+  [UnRegion.SouthernAsia]: defaultColours.emerald[400],
+  [UnRegion.SouthernEurope]: defaultColours.rose[400],
+  [UnRegion.SouthAmerica]: defaultColours.orange[400],
+  [UnRegion.SouthEasternAsia]: defaultColours.lime[400],
+  [UnRegion.WesternAfrica]: defaultColours.red[400],
+  [UnRegion.WesternAsia]: defaultColours.teal[400],
+  [UnRegion.WesternEurope]: defaultColours.indigo[400]
+}
 
 export const getLabelForUNRegion = (unRegion: UnRegion) => {
   return unRegionEnumToLabelMap[unRegion];

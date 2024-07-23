@@ -5,7 +5,7 @@ import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { isUNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { isWHORegion } from "@/lib/who-regions";
-import { barColoursForUnRegions, barColoursForWhoRegions, chartTitlesForUnRegions, chartTitlesForWhoRegions } from "./summary-by-region";
+import { chartTitlesForUnRegions, chartTitlesForWhoRegions } from "./summary-by-region";
 import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { HumanSeroprevalenceByRegion } from "./estimates-by-region/human-seroprevalence-by-region";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
@@ -30,6 +30,8 @@ export enum EstimatesByRegionRegionDropdownOption {
 
 interface EstimatesByRegionProps {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  barColoursForWhoRegions: Record<WhoRegion, string>;
+  barColoursForUnRegions: Record<UnRegion, string>;
   selectedVariableOfInterest: EstimatesByRegionVariableOfInterestDropdownOption;
   selectedRegion: EstimatesByRegionRegionDropdownOption;
   legendConfiguration: LegendConfiguration;
@@ -40,6 +42,8 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     data,
     selectedVariableOfInterest,
     selectedRegion,
+    barColoursForWhoRegions,
+    barColoursForUnRegions,
     legendConfiguration
   } = props;
 
@@ -86,7 +90,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     }
 
     return generateRandomColour();
-  }, []);
+  }, [ barColoursForWhoRegions, barColoursForUnRegions ]);
 
   const regionToLegendLabel = useCallback((region: WhoRegion | UnRegion | string) => {
     if(isWHORegion(region)) {

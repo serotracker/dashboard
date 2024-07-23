@@ -2,7 +2,7 @@ import { ArboTrackerTutorialVideoFrame } from "@/components/customs/arbotracker-
 import * as Separator from '@radix-ui/react-separator';
 import Image from 'next/image'
 import { cn } from "@/lib/utils";
-import { OnPageChangeInput, useHelpModalPaginator } from "@/components/customs/help-modal-pagination/help-modal-paginator";
+import { OnPageChangeInput, usePaginator } from "@/components/customs/paginator/paginator";
 import { useCallback, useContext, useState } from "react";
 import { HelpModalContext } from "@/contexts/help-modal-provider";
 import { ModalHeader } from "@/components/ui/modal/modal-header";
@@ -217,7 +217,7 @@ export const ArboTrackerHelpModalContent = (props: ArboTrackerHelpModalContentPr
     setHelpModalTitle(input.newPage.pageHeader);
   }, [ setHelpModalTitle ]);
 
-  const helpModalPaginator = useHelpModalPaginator({
+  const helpModalPaginator = usePaginator({
     hoverClassname: "hover:bg-arbovirusHover",
     selectedClassname: "bg-arbovirus text-white",
     currentPageIndex,

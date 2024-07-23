@@ -22,6 +22,8 @@ export const useArbovirusMapCustomizationModal = () => {
     disabled: false,
     modalType: ModalType.CUSTOMIZATION_MODAL,
     content: {
+      paginationHoverClassname: "hover:bg-arbovirusHover",
+      paginationSelectedClassname: "bg-arbovirus",
       customizationSettings: [{
         type: CustomizationSettingType.DROPDOWN,
         dropdownName: 'Country highlighting for countries with data',

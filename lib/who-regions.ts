@@ -243,6 +243,15 @@ const countryAlphaTwoCodeToWhoRegionsMap: Partial<Record<string, WhoRegion>> = {
   ZW: WhoRegion.Afr
 };
 
+export const defaultColoursForWhoRegions: Record<WhoRegion, string> = {
+  [WhoRegion.Afr]: "#e15759",
+  [WhoRegion.Amr]: "#59a14f",
+  [WhoRegion.Emr]: "#f1ce63",
+  [WhoRegion.Eur]: "#f28e2b",
+  [WhoRegion.Sear]: "#d37295",
+  [WhoRegion.Wpr]: "#4e79a7",
+}
+
 interface GetCountryCodesInWHORegionInput {
   whoRegion: WhoRegion;
 }

@@ -3,18 +3,18 @@ import { cn, generateRange } from "@/lib/utils";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import React, { useState, useMemo, useCallback } from "react"
 
-interface HelpModalPage<TPageId extends string> {
+interface Page<TPageId extends string> {
   pageId: TPageId;
   pageIndex: number;
   pageHeader: string;
   pageRenderingFunction: () => React.ReactNode;
 }
 
-interface HelpModalPaginatorProps<TPageId extends string> {
-  page: HelpModalPage<TPageId>;
+interface PaginatorProps<TPageId extends string> {
+  page: Page<TPageId>;
 }
 
-const HelpModalPaginatorContent = <TPageId extends string>(props: HelpModalPaginatorProps<TPageId>) => {
+const PaginatorContent = <TPageId extends string>(props: PaginatorProps<TPageId>) => {
   return <props.page.pageRenderingFunction/>
 }
 
@@ -47,13 +47,13 @@ const RoundedButton = (props: RoundedButtonProps) => (
   </div>
 )
 
-enum HelpModalPageNavigatorButtonDirection {
+enum PageNavigatorButtonDirection {
   NEXT_PAGE = 'NEXT_PAGE',
   PREVIOUS_PAGE = 'PREVIOUS_PAGE'
 }
 
-interface HelpModalPageNavigatorButtonProps {
-  direction: HelpModalPageNavigatorButtonDirection;
+interface PageNavigatorButtonProps {
+  direction: PageNavigatorButtonDirection;
   className?: string;
   hoverClassname: string;
   selectedClassname: string;
@@ -63,9 +63,9 @@ interface HelpModalPageNavigatorButtonProps {
   goToPageIndex: (newPageIndex: number) => void;
 }
 
-const HelpModalPageNavigatorButton = (props: HelpModalPageNavigatorButtonProps) => (
+const PageNavigatorButton = (props: PageNavigatorButtonProps) => (
   <RoundedButton
-    disabled={props.direction === HelpModalPageNavigatorButtonDirection.NEXT_PAGE
+    disabled={props.direction === PageNavigatorButtonDirection.NEXT_PAGE
       ? props.currentPageIndex >= props.maximumPageIndex
       : props.currentPageIndex <= props.minimumPageIndex
     }
@@ -74,19 +74,19 @@ const HelpModalPageNavigatorButton = (props: HelpModalPageNavigatorButtonProps) 
     selected={false}
     className={props.className}
     onClick={() => {
-      const newPageIndex = props.direction === HelpModalPageNavigatorButtonDirection.NEXT_PAGE
+      const newPageIndex = props.direction === PageNavigatorButtonDirection.NEXT_PAGE
         ? props.currentPageIndex + 1
         : props.currentPageIndex - 1;
 
       props.goToPageIndex(newPageIndex);
     }}
   >
-    <ArrowLeft className={props.direction === HelpModalPageNavigatorButtonDirection.PREVIOUS_PAGE ? '' : 'hidden'} />
-    <ArrowRight className={props.direction === HelpModalPageNavigatorButtonDirection.NEXT_PAGE ? '' : 'hidden'} />
+    <ArrowLeft className={props.direction === PageNavigatorButtonDirection.PREVIOUS_PAGE ? '' : 'hidden'} />
+    <ArrowRight className={props.direction === PageNavigatorButtonDirection.NEXT_PAGE ? '' : 'hidden'} />
   </RoundedButton>
 )
 
-interface HelpModalPageNavigatorProps<TPageId extends string> {
+interface PageNavigatorProps<TPageId extends string> {
   currentPageIndex: number;
   className?: string;
   selectedClassname: string;
@@ -94,11 +94,11 @@ interface HelpModalPageNavigatorProps<TPageId extends string> {
   minimumPageIndex: number;
   maximumPageIndex: number;
   setCurrentPageIndex: (input: number) => void;
-  pages: HelpModalPage<TPageId>[];
+  pages: Page<TPageId>[];
   onPageChange?: (input: OnPageChangeInput<TPageId>) => void;
 }
 
-const HelpModalPageNavigator = <TPageId extends string>(props: HelpModalPageNavigatorProps<TPageId>) => {
+const PageNavigator = <TPageId extends string>(props: PageNavigatorProps<TPageId>) => {
   const { pages, currentPageIndex, setCurrentPageIndex, onPageChange } = props;
 
   const goToPageIndex = useCallback((newPageIndex: number) => {
@@ -121,8 +121,8 @@ const HelpModalPageNavigator = <TPageId extends string>(props: HelpModalPageNavi
 
   return (
     <div className={cn("flex w-fit mx-auto", props.className)}>
-      <HelpModalPageNavigatorButton
-        direction={HelpModalPageNavigatorButtonDirection.PREVIOUS_PAGE}
+      <PageNavigatorButton
+        direction={PageNavigatorButtonDirection.PREVIOUS_PAGE}
         hoverClassname={props.hoverClassname}
         selectedClassname={props.selectedClassname}
         currentPageIndex={props.currentPageIndex}
@@ -144,8 +144,8 @@ const HelpModalPageNavigator = <TPageId extends string>(props: HelpModalPageNavi
           <p> {(pageIndex + 1).toString()} </p>
         </RoundedButton>
       ))}
-      <HelpModalPageNavigatorButton
-        direction={HelpModalPageNavigatorButtonDirection.NEXT_PAGE}
+      <PageNavigatorButton
+        direction={PageNavigatorButtonDirection.NEXT_PAGE}
         hoverClassname={props.hoverClassname}
         selectedClassname={props.selectedClassname}
         currentPageIndex={props.currentPageIndex}
@@ -158,12 +158,12 @@ const HelpModalPageNavigator = <TPageId extends string>(props: HelpModalPageNavi
 }
 
 export interface OnPageChangeInput<TPageId extends string> {
-  oldPage: HelpModalPage<TPageId>;
-  newPage: HelpModalPage<TPageId>;
+  oldPage: Page<TPageId>;
+  newPage: Page<TPageId>;
 }
 
-interface UseHelpModalPaginatorInput<TPageId extends string> {
-  pages: HelpModalPage<TPageId>[];
+interface UsePaginatorInput<TPageId extends string> {
+  pages: Page<TPageId>[];
   currentPageIndex: number;
   hoverClassname: string;
   selectedClassname: string;
@@ -171,23 +171,23 @@ interface UseHelpModalPaginatorInput<TPageId extends string> {
   onPageChange: (input: OnPageChangeInput<TPageId>) => void;
 }
 
-export const useHelpModalPaginator = <TPageId extends string>(input: UseHelpModalPaginatorInput<TPageId>) => {
+export const usePaginator = <TPageId extends string>(input: UsePaginatorInput<TPageId>) => {
   const { pages, onPageChange, currentPageIndex, hoverClassname, setCurrentPageIndex, selectedClassname  } = input;
 
-  const helpModalPaginatorContent = useCallback(() => {
+  const paginatorContent = useCallback(() => {
     const page = pages.find((page) => page.pageIndex === currentPageIndex);
 
     if(!page) {
       return null;
     }
 
-    return <HelpModalPaginatorContent page={page} />
+    return <PaginatorContent page={page} />
   }, [ currentPageIndex, pages ])
 
-  const helpModalPageNavigator = useCallback((props: {className?: string}) => {
+  const pageNavigator = useCallback((props: {className?: string}) => {
     const maximumPageIndex = Math.max(...pages.map(({ pageIndex }) => pageIndex));
 
-    return <HelpModalPageNavigator
+    return <PageNavigator
       currentPageIndex={currentPageIndex}
       hoverClassname={hoverClassname}
       className={props.className}
@@ -201,8 +201,8 @@ export const useHelpModalPaginator = <TPageId extends string>(input: UseHelpModa
   }, [ currentPageIndex, setCurrentPageIndex, pages, onPageChange, hoverClassname, selectedClassname ])
 
   return {
-    content: helpModalPaginatorContent,
-    navigator: (props: {className?: string}) => helpModalPageNavigator(props),
+    content: paginatorContent,
+    navigator: (props: {className?: string}) => pageNavigator(props),
     currentPageIndex,
     setCurrentPageIndex
   }
