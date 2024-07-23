@@ -102,7 +102,7 @@ interface ArboTrackerHelpModalFilterInstructionsProps {
 const ArboTrackerHelpModalFilterInstructions = (props: ArboTrackerHelpModalFilterInstructionsProps) => (
   <div className={props.className}>
     <p className="mb-2">To the left of the map is a list of filters which can be applied to our seroprevalence data.</p>
-    <p className="mb-2">Selecting any option for &quot;Environmental Suitability Map&quot; will result in the map being coloured in a way that highlights environments which are most suitable for carriers of that particular arbovirus. The white portions of the map are environments which are considered unsuitable and the portions of the map that are coloured brown are considered more suitable environments.</p>
+    <p className="mb-2">Selecting any option for &quot;Environmental Suitability Map&quot; will result in the map being coloured in a way that highlights environments which are most suitable for carriers of that particular arbovirus. The white portions of the map are environments which are considered unsuitable. Portions of the map that are coloured light yellow are considered somewhat suitable and the portions of the map that are coloured dark brown are considered very suitable environments.</p>
     <ArboTrackerHelpModalImage
       className="mb-2"
       src={"/ArboTrackerHelpModalImage0009.png"}
