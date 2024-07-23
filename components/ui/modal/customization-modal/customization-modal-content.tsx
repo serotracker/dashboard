@@ -59,8 +59,6 @@ export const CustomizationModalContent = <
     onPageChange: () => {}
   })
 
-  console.log('totalPageCount', totalPageCount);
-
   return (
     <div className={props.className}>
       <ModalHeader header={"Customize"} closeModal={props.closeModal} />
