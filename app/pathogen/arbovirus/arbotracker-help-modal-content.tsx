@@ -107,8 +107,8 @@ const ArboTrackerHelpModalFilterInstructions = (props: ArboTrackerHelpModalFilte
       className="mb-2"
       src={"/ArboTrackerHelpModalImage0009.png"}
       alt={""}
-      width={1065}
-      height={549}
+      width={1450}
+      height={623}
     />
     <p className="mb-2">Selecting &quot;Children and youth (0-17 years)&quot; as your only age group of interest will let you filter on pediatric age group for even more granularity.</p>
     <p className="mb-2">Any filters applied change the data shown on the map but also change the data shown in the table and any data visualization.</p>
