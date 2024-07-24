@@ -38,7 +38,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
     EstimatesByRegionRegionDropdownOption
   >['getDisplayName'] = useCallback(() => ({
     type: VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN,
-    beforeBothDropdownsHeaderText: "View All ",
+    beforeBothDropdownsHeaderText: "",
     firstDropdownProps: {
       dropdownName: 'Variable of Interest Selection',
       borderColourClassname: 'border-mers',

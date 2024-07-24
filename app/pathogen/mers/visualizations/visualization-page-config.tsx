@@ -12,6 +12,7 @@ import { MedianSeroprevalenceOverTime } from "../dashboard/(visualizations)/medi
 import { useSummaryByRegionVisualizationPageConfig } from "./visualization-page-config/use-summary-by-region-visualization-page-config";
 import { MedianViralPositivePrevalenceOverTime } from "../dashboard/(visualizations)/median-viral-positive-prevalence-over-time";
 import { useEstimatesByRegionVisualizationPageConfig } from "./visualization-page-config/use-estimates-by-region-visualization-page-config";
+import { useEstimateSummaryByWhoRegionAndFieldPageConfig } from "./visualization-page-config/use-estimate-summary-by-who-region-and-field-page-config";
 
 export enum MersVisualizationId {
   REPORTED_EVENT_SUMMARY_OVER_TIME = "REPORTED_EVENT_SUMMARY_OVER_TIME",
@@ -19,7 +20,8 @@ export enum MersVisualizationId {
   MEDIAN_SEROPREVALENCE_OVER_TIME = "MEDIAN_SEROPREVALENCE_OVER_TIME",
   MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME = "MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME",
   SUMMARY_BY_REGION = "SUMMARY_BY_REGION",
-  ESTIMATES_BY_REGION = "ESTIMATES_BY_REGION"
+  ESTIMATES_BY_REGION = "ESTIMATES_BY_REGION",
+  ESTIMATE_SUMMARY_BY_WHO_REGION = "ESTIMATE_SUMMARY_BY_WHO_REGION",
 }
 
 export const isMersVisualizationId = (
@@ -33,7 +35,8 @@ export enum MersVisualizationUrlParameter {
   "median_seroprevalence_over_time" = "median_seroprevalence_over_time",
   "median_viral_positive_prevalence_over_time" = "median_viral_positive_prevalence_over_time",
   "summary_by_region" = "summary_by_region",
-  "estimates_by_region" = "estimates_by_region"
+  "estimates_by_region" = "estimates_by_region",
+  "estimate_summary_by_who_region" = "estimate_summary_by_who_region"
 }
 
 export type MersVisualizationInformation<
@@ -116,6 +119,19 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
     }),
     titleTooltipContent: <p> Requires state. Initialized in following step. </p>,
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>
+  },
+  [MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION]: {
+    id: MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION,
+    urlParameter:
+      MersVisualizationUrlParameter[
+        "estimate_summary_by_who_region"
+      ],
+    getDisplayName: () => ({
+      type: VisualizationDisplayNameType.STANDARD,
+      displayName: "Requires state. Initialized in following step."
+    }),
+    titleTooltipContent: <p> Requires state. Initialized in following step. </p>,
+    renderVisualization: () => <p> Requires state. Initialized in following step. </p>
   }
 }
 
@@ -136,6 +152,12 @@ export const useVisualizationPageConfiguration = () => {
     customizationModalConfigurationForEstimatesByRegion,
     estimatesByRegionTitleTooltipContent,
   } = useEstimatesByRegionVisualizationPageConfig();
+
+  const {
+    getDisplayNameForEstimateSummaryByWhoRegionAndField,
+    estimateSummaryByWhoRegionAndFieldTooltipContent,
+    renderVisualizationForEstimateSummaryByWhoRegionAndField
+  } = useEstimateSummaryByWhoRegionAndFieldPageConfig();
 
   const completedMersVisualizationInformation = useMemo(() => ({
     [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]:
@@ -164,6 +186,12 @@ export const useVisualizationPageConfiguration = () => {
       renderVisualization: renderVisualizationForEstimatesByRegion,
       customizationModalConfiguration: customizationModalConfigurationForEstimatesByRegion,
       titleTooltipContent: estimatesByRegionTitleTooltipContent,
+    },
+    [MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION]: {
+      ...mersVisualizationInformation[MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION],
+      getDisplayName: getDisplayNameForEstimateSummaryByWhoRegionAndField,
+      renderVisualization: renderVisualizationForEstimateSummaryByWhoRegionAndField,
+      titleTooltipContent: estimateSummaryByWhoRegionAndFieldTooltipContent,
     }
   }), [
     getDisplayNameForEstimatesByRegion,
@@ -176,7 +204,10 @@ export const useVisualizationPageConfiguration = () => {
     customizationModalConfigurationForEstimatesByRegion,
     numberOfPagesAvailable,
     currentPageIndex,
-    setCurrentPageIndex
+    setCurrentPageIndex,
+    getDisplayNameForEstimateSummaryByWhoRegionAndField,
+    renderVisualizationForEstimateSummaryByWhoRegionAndField,
+    estimateSummaryByWhoRegionAndFieldTooltipContent
   ])
 
   return {
