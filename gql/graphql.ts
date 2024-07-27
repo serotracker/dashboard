@@ -21,6 +21,14 @@ export type Affiliation = {
   label: Scalars['String']['output'];
 };
 
+export type AnimalMersAgeGroupSubEstimate = MersSubEstimateInterface & {
+  __typename?: 'AnimalMersAgeGroupSubEstimate';
+  animalAgeGroup: Array<Scalars['String']['output']>;
+  estimateId: Scalars['String']['output'];
+  estimateInfo: MersSubEstimateInformation;
+  id: Scalars['String']['output'];
+};
+
 export type AnimalMersEstimate = MersEstimateInterface & {
   __typename?: 'AnimalMersEstimate';
   animalDetectionSettings: Array<Scalars['String']['output']>;
@@ -270,6 +278,14 @@ export enum GbdSuperRegion {
   SubSaharanAfrica = 'SUB_SAHARAN_AFRICA'
 }
 
+export type HumanMersAgeGroupSubEstimate = MersSubEstimateInterface & {
+  __typename?: 'HumanMersAgeGroupSubEstimate';
+  ageGroup: Array<Scalars['String']['output']>;
+  estimateId: Scalars['String']['output'];
+  estimateInfo: MersSubEstimateInformation;
+  id: Scalars['String']['output'];
+};
+
 export type HumanMersEstimate = MersEstimateInterface & {
   __typename?: 'HumanMersEstimate';
   ageGroup: Array<Scalars['String']['output']>;
@@ -387,6 +403,8 @@ export type HumanMersViralEstimate = MersEstimateInterface & {
   whoRegion?: Maybe<WhoRegion>;
 };
 
+export type MersAgeGroupSubEstimate = AnimalMersAgeGroupSubEstimate | HumanMersAgeGroupSubEstimate;
+
 export enum MersAnimalSpecies {
   Bat = 'BAT',
   Camel = 'CAMEL',
@@ -394,6 +412,14 @@ export enum MersAnimalSpecies {
   Goat = 'GOAT',
   Sheep = 'SHEEP'
 }
+
+export type MersAnimalSpeciesSubEstimate = MersSubEstimateInterface & {
+  __typename?: 'MersAnimalSpeciesSubEstimate';
+  animalSpecies: MersAnimalSpecies;
+  estimateId: Scalars['String']['output'];
+  estimateInfo: MersSubEstimateInformation;
+  id: Scalars['String']['output'];
+};
 
 export enum MersAnimalType {
   Domestic = 'DOMESTIC',
@@ -548,6 +574,82 @@ export type MersFilterOptions = {
   whoRegion: Array<WhoRegion>;
 };
 
+export type MersGeographicalAreaSubEstimate = MersSubEstimateInterface & {
+  __typename?: 'MersGeographicalAreaSubEstimate';
+  city?: Maybe<Scalars['String']['output']>;
+  country: Scalars['String']['output'];
+  countryAlphaThreeCode: Scalars['String']['output'];
+  countryAlphaTwoCode: Scalars['String']['output'];
+  estimateId: Scalars['String']['output'];
+  estimateInfo: MersSubEstimateInformation;
+  geographicScope?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  state?: Maybe<Scalars['String']['output']>;
+  unRegion?: Maybe<UnRegion>;
+  whoRegion?: Maybe<WhoRegion>;
+};
+
+export type MersPrimaryEstimate = {
+  __typename?: 'MersPrimaryEstimate';
+  ageGroupSubestimates: Array<MersAgeGroupSubEstimate>;
+  animalSpeciesSubestimates: Array<MersAnimalSpeciesSubEstimate>;
+  estimateId: Scalars['String']['output'];
+  geographicalAreaSubestimates: Array<MersGeographicalAreaSubEstimate>;
+  id: Scalars['String']['output'];
+  primaryEstimateInfo: PrimaryMersEstimateInformation;
+  sexSubestimates: Array<MersSexSubEstimate>;
+  testUsedSubestimates: Array<MersTestUsedSubEstimate>;
+};
+
+export type MersSeroprevalenceSubEstimateInformation = MersSubEstimateInformationInterface & {
+  __typename?: 'MersSeroprevalenceSubEstimateInformation';
+  sampleDenominator?: Maybe<Scalars['Int']['output']>;
+  sampleNumerator?: Maybe<Scalars['Int']['output']>;
+  seroprevalence: Scalars['Float']['output'];
+  seroprevalence95CILower?: Maybe<Scalars['Float']['output']>;
+  seroprevalence95CIUpper?: Maybe<Scalars['Float']['output']>;
+};
+
+export type MersSexSubEstimate = MersSubEstimateInterface & {
+  __typename?: 'MersSexSubEstimate';
+  estimateId: Scalars['String']['output'];
+  estimateInfo: MersSubEstimateInformation;
+  id: Scalars['String']['output'];
+  sex?: Maybe<Scalars['String']['output']>;
+};
+
+export type MersSubEstimateInformation = MersSeroprevalenceSubEstimateInformation | MersViralSubEstimateInformation;
+
+export type MersSubEstimateInformationInterface = {
+  sampleDenominator?: Maybe<Scalars['Int']['output']>;
+  sampleNumerator?: Maybe<Scalars['Int']['output']>;
+};
+
+export type MersSubEstimateInterface = {
+  estimateId: Scalars['String']['output'];
+  estimateInfo: MersSubEstimateInformation;
+  id: Scalars['String']['output'];
+};
+
+export type MersTestUsedSubEstimate = MersSubEstimateInterface & {
+  __typename?: 'MersTestUsedSubEstimate';
+  assay: Array<Scalars['String']['output']>;
+  estimateId: Scalars['String']['output'];
+  estimateInfo: MersSubEstimateInformation;
+  id: Scalars['String']['output'];
+};
+
+export type MersViralSubEstimateInformation = MersSubEstimateInformationInterface & {
+  __typename?: 'MersViralSubEstimateInformation';
+  positivePrevalence: Scalars['Float']['output'];
+  positivePrevalence95CILower?: Maybe<Scalars['Float']['output']>;
+  positivePrevalence95CIUpper?: Maybe<Scalars['Float']['output']>;
+  sampleDenominator?: Maybe<Scalars['Int']['output']>;
+  sampleNumerator?: Maybe<Scalars['Int']['output']>;
+};
+
 export enum Month {
   April = 'APRIL',
   August = 'AUGUST',
@@ -619,6 +721,255 @@ export type PartitionedYearlyFaoCamelPopulationDataOutput = {
   yearlyFaoCamelPopulationData: Array<YearlyFaoCamelPopulationDataEntry>;
 };
 
+export type PrimaryAnimalMersEstimateInformation = PrimaryMersEstimateInformationInterface & {
+  __typename?: 'PrimaryAnimalMersEstimateInformation';
+  animalAgeGroup: Array<Scalars['String']['output']>;
+  animalDetectionSettings: Array<Scalars['String']['output']>;
+  animalImportedOrLocal?: Maybe<Scalars['String']['output']>;
+  animalPurpose?: Maybe<Scalars['String']['output']>;
+  animalSpecies: MersAnimalSpecies;
+  animalType: Array<MersAnimalType>;
+  assay: Array<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country: Scalars['String']['output'];
+  countryAlphaThreeCode: Scalars['String']['output'];
+  countryAlphaTwoCode: Scalars['String']['output'];
+  estimateId: Scalars['String']['output'];
+  firstAuthorFullName: Scalars['String']['output'];
+  geographicScope?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  insitutution?: Maybe<Scalars['String']['output']>;
+  isotypes: Array<Scalars['String']['output']>;
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  sampleDenominator?: Maybe<Scalars['Int']['output']>;
+  sampleNumerator?: Maybe<Scalars['Int']['output']>;
+  samplingEndDate?: Maybe<Scalars['String']['output']>;
+  samplingMethod?: Maybe<Scalars['String']['output']>;
+  samplingMidDate?: Maybe<Scalars['String']['output']>;
+  samplingStartDate?: Maybe<Scalars['String']['output']>;
+  sensitivity?: Maybe<Scalars['Float']['output']>;
+  sensitivity95CILower?: Maybe<Scalars['Float']['output']>;
+  sensitivity95CIUpper?: Maybe<Scalars['Float']['output']>;
+  sensitivityDenominator?: Maybe<Scalars['Int']['output']>;
+  seroprevalence: Scalars['Float']['output'];
+  seroprevalence95CILower?: Maybe<Scalars['Float']['output']>;
+  seroprevalence95CIUpper?: Maybe<Scalars['Float']['output']>;
+  sex?: Maybe<Scalars['String']['output']>;
+  sourceTitle: Scalars['String']['output'];
+  sourceType: Scalars['String']['output'];
+  sourceUrl: Scalars['String']['output'];
+  specificity?: Maybe<Scalars['Float']['output']>;
+  specificity95CILower?: Maybe<Scalars['Float']['output']>;
+  specificity95CIUpper?: Maybe<Scalars['Float']['output']>;
+  specificityDenominator?: Maybe<Scalars['Int']['output']>;
+  specimenType?: Maybe<Scalars['String']['output']>;
+  state?: Maybe<Scalars['String']['output']>;
+  studyExclusionCriteria?: Maybe<Scalars['String']['output']>;
+  studyInclusionCriteria?: Maybe<Scalars['String']['output']>;
+  testProducer: Array<Scalars['String']['output']>;
+  testValidation: Array<Scalars['String']['output']>;
+  type: MersEstimateType;
+  unRegion?: Maybe<UnRegion>;
+  whoRegion?: Maybe<WhoRegion>;
+};
+
+export type PrimaryAnimalMersViralEstimateInformation = PrimaryMersEstimateInformationInterface & {
+  __typename?: 'PrimaryAnimalMersViralEstimateInformation';
+  animalAgeGroup: Array<Scalars['String']['output']>;
+  animalDetectionSettings: Array<Scalars['String']['output']>;
+  animalImportedOrLocal?: Maybe<Scalars['String']['output']>;
+  animalPurpose?: Maybe<Scalars['String']['output']>;
+  animalSpecies: MersAnimalSpecies;
+  animalType: Array<MersAnimalType>;
+  assay: Array<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country: Scalars['String']['output'];
+  countryAlphaThreeCode: Scalars['String']['output'];
+  countryAlphaTwoCode: Scalars['String']['output'];
+  estimateId: Scalars['String']['output'];
+  firstAuthorFullName: Scalars['String']['output'];
+  geographicScope?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  insitutution?: Maybe<Scalars['String']['output']>;
+  isotypes: Array<Scalars['String']['output']>;
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  positivePrevalence: Scalars['Float']['output'];
+  positivePrevalence95CILower?: Maybe<Scalars['Float']['output']>;
+  positivePrevalence95CIUpper?: Maybe<Scalars['Float']['output']>;
+  sampleDenominator?: Maybe<Scalars['Int']['output']>;
+  sampleNumerator?: Maybe<Scalars['Int']['output']>;
+  samplingEndDate?: Maybe<Scalars['String']['output']>;
+  samplingMethod?: Maybe<Scalars['String']['output']>;
+  samplingMidDate?: Maybe<Scalars['String']['output']>;
+  samplingStartDate?: Maybe<Scalars['String']['output']>;
+  sensitivity?: Maybe<Scalars['Float']['output']>;
+  sensitivity95CILower?: Maybe<Scalars['Float']['output']>;
+  sensitivity95CIUpper?: Maybe<Scalars['Float']['output']>;
+  sensitivityDenominator?: Maybe<Scalars['Int']['output']>;
+  sex?: Maybe<Scalars['String']['output']>;
+  sourceTitle: Scalars['String']['output'];
+  sourceType: Scalars['String']['output'];
+  sourceUrl: Scalars['String']['output'];
+  specificity?: Maybe<Scalars['Float']['output']>;
+  specificity95CILower?: Maybe<Scalars['Float']['output']>;
+  specificity95CIUpper?: Maybe<Scalars['Float']['output']>;
+  specificityDenominator?: Maybe<Scalars['Int']['output']>;
+  specimenType?: Maybe<Scalars['String']['output']>;
+  state?: Maybe<Scalars['String']['output']>;
+  studyExclusionCriteria?: Maybe<Scalars['String']['output']>;
+  studyInclusionCriteria?: Maybe<Scalars['String']['output']>;
+  testProducer: Array<Scalars['String']['output']>;
+  testValidation: Array<Scalars['String']['output']>;
+  type: MersEstimateType;
+  unRegion?: Maybe<UnRegion>;
+  whoRegion?: Maybe<WhoRegion>;
+};
+
+export type PrimaryHumanMersEstimateInformation = PrimaryMersEstimateInformationInterface & {
+  __typename?: 'PrimaryHumanMersEstimateInformation';
+  ageGroup: Array<Scalars['String']['output']>;
+  assay: Array<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country: Scalars['String']['output'];
+  countryAlphaThreeCode: Scalars['String']['output'];
+  countryAlphaTwoCode: Scalars['String']['output'];
+  estimateId: Scalars['String']['output'];
+  firstAuthorFullName: Scalars['String']['output'];
+  geographicScope?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  insitutution?: Maybe<Scalars['String']['output']>;
+  isotypes: Array<Scalars['String']['output']>;
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  sampleDenominator?: Maybe<Scalars['Int']['output']>;
+  sampleFrame?: Maybe<Scalars['String']['output']>;
+  sampleNumerator?: Maybe<Scalars['Int']['output']>;
+  samplingEndDate?: Maybe<Scalars['String']['output']>;
+  samplingMethod?: Maybe<Scalars['String']['output']>;
+  samplingMidDate?: Maybe<Scalars['String']['output']>;
+  samplingStartDate?: Maybe<Scalars['String']['output']>;
+  sensitivity?: Maybe<Scalars['Float']['output']>;
+  sensitivity95CILower?: Maybe<Scalars['Float']['output']>;
+  sensitivity95CIUpper?: Maybe<Scalars['Float']['output']>;
+  sensitivityDenominator?: Maybe<Scalars['Int']['output']>;
+  seroprevalence: Scalars['Float']['output'];
+  seroprevalence95CILower?: Maybe<Scalars['Float']['output']>;
+  seroprevalence95CIUpper?: Maybe<Scalars['Float']['output']>;
+  sex?: Maybe<Scalars['String']['output']>;
+  sourceTitle: Scalars['String']['output'];
+  sourceType: Scalars['String']['output'];
+  sourceUrl: Scalars['String']['output'];
+  specificity?: Maybe<Scalars['Float']['output']>;
+  specificity95CILower?: Maybe<Scalars['Float']['output']>;
+  specificity95CIUpper?: Maybe<Scalars['Float']['output']>;
+  specificityDenominator?: Maybe<Scalars['Int']['output']>;
+  specimenType?: Maybe<Scalars['String']['output']>;
+  state?: Maybe<Scalars['String']['output']>;
+  studyExclusionCriteria?: Maybe<Scalars['String']['output']>;
+  studyInclusionCriteria?: Maybe<Scalars['String']['output']>;
+  testProducer: Array<Scalars['String']['output']>;
+  testValidation: Array<Scalars['String']['output']>;
+  type: MersEstimateType;
+  unRegion?: Maybe<UnRegion>;
+  whoRegion?: Maybe<WhoRegion>;
+};
+
+export type PrimaryHumanMersViralEstimateInformation = PrimaryMersEstimateInformationInterface & {
+  __typename?: 'PrimaryHumanMersViralEstimateInformation';
+  ageGroup: Array<Scalars['String']['output']>;
+  assay: Array<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country: Scalars['String']['output'];
+  countryAlphaThreeCode: Scalars['String']['output'];
+  countryAlphaTwoCode: Scalars['String']['output'];
+  estimateId: Scalars['String']['output'];
+  firstAuthorFullName: Scalars['String']['output'];
+  geographicScope?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  insitutution?: Maybe<Scalars['String']['output']>;
+  isotypes: Array<Scalars['String']['output']>;
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  positivePrevalence: Scalars['Float']['output'];
+  positivePrevalence95CILower?: Maybe<Scalars['Float']['output']>;
+  positivePrevalence95CIUpper?: Maybe<Scalars['Float']['output']>;
+  sampleDenominator?: Maybe<Scalars['Int']['output']>;
+  sampleFrame?: Maybe<Scalars['String']['output']>;
+  sampleNumerator?: Maybe<Scalars['Int']['output']>;
+  samplingEndDate?: Maybe<Scalars['String']['output']>;
+  samplingMethod?: Maybe<Scalars['String']['output']>;
+  samplingMidDate?: Maybe<Scalars['String']['output']>;
+  samplingStartDate?: Maybe<Scalars['String']['output']>;
+  sensitivity?: Maybe<Scalars['Float']['output']>;
+  sensitivity95CILower?: Maybe<Scalars['Float']['output']>;
+  sensitivity95CIUpper?: Maybe<Scalars['Float']['output']>;
+  sensitivityDenominator?: Maybe<Scalars['Int']['output']>;
+  sex?: Maybe<Scalars['String']['output']>;
+  sourceTitle: Scalars['String']['output'];
+  sourceType: Scalars['String']['output'];
+  sourceUrl: Scalars['String']['output'];
+  specificity?: Maybe<Scalars['Float']['output']>;
+  specificity95CILower?: Maybe<Scalars['Float']['output']>;
+  specificity95CIUpper?: Maybe<Scalars['Float']['output']>;
+  specificityDenominator?: Maybe<Scalars['Int']['output']>;
+  specimenType?: Maybe<Scalars['String']['output']>;
+  state?: Maybe<Scalars['String']['output']>;
+  studyExclusionCriteria?: Maybe<Scalars['String']['output']>;
+  studyInclusionCriteria?: Maybe<Scalars['String']['output']>;
+  testProducer: Array<Scalars['String']['output']>;
+  testValidation: Array<Scalars['String']['output']>;
+  type: MersEstimateType;
+  unRegion?: Maybe<UnRegion>;
+  whoRegion?: Maybe<WhoRegion>;
+};
+
+export type PrimaryMersEstimateInformation = PrimaryAnimalMersEstimateInformation | PrimaryAnimalMersViralEstimateInformation | PrimaryHumanMersEstimateInformation | PrimaryHumanMersViralEstimateInformation;
+
+export type PrimaryMersEstimateInformationInterface = {
+  assay: Array<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country: Scalars['String']['output'];
+  countryAlphaThreeCode: Scalars['String']['output'];
+  countryAlphaTwoCode: Scalars['String']['output'];
+  estimateId: Scalars['String']['output'];
+  firstAuthorFullName: Scalars['String']['output'];
+  geographicScope?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  insitutution?: Maybe<Scalars['String']['output']>;
+  isotypes: Array<Scalars['String']['output']>;
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  sampleDenominator?: Maybe<Scalars['Int']['output']>;
+  sampleNumerator?: Maybe<Scalars['Int']['output']>;
+  samplingEndDate?: Maybe<Scalars['String']['output']>;
+  samplingMethod?: Maybe<Scalars['String']['output']>;
+  samplingMidDate?: Maybe<Scalars['String']['output']>;
+  samplingStartDate?: Maybe<Scalars['String']['output']>;
+  sensitivity?: Maybe<Scalars['Float']['output']>;
+  sensitivity95CILower?: Maybe<Scalars['Float']['output']>;
+  sensitivity95CIUpper?: Maybe<Scalars['Float']['output']>;
+  sensitivityDenominator?: Maybe<Scalars['Int']['output']>;
+  sex?: Maybe<Scalars['String']['output']>;
+  sourceTitle: Scalars['String']['output'];
+  sourceType: Scalars['String']['output'];
+  sourceUrl: Scalars['String']['output'];
+  specificity?: Maybe<Scalars['Float']['output']>;
+  specificity95CILower?: Maybe<Scalars['Float']['output']>;
+  specificity95CIUpper?: Maybe<Scalars['Float']['output']>;
+  specificityDenominator?: Maybe<Scalars['Int']['output']>;
+  specimenType?: Maybe<Scalars['String']['output']>;
+  state?: Maybe<Scalars['String']['output']>;
+  studyExclusionCriteria?: Maybe<Scalars['String']['output']>;
+  studyInclusionCriteria?: Maybe<Scalars['String']['output']>;
+  testProducer: Array<Scalars['String']['output']>;
+  testValidation: Array<Scalars['String']['output']>;
+  type: MersEstimateType;
+  unRegion?: Maybe<UnRegion>;
+  whoRegion?: Maybe<WhoRegion>;
+};
+
 export type Query = {
   __typename?: 'Query';
   allFaoMersEventPartitionKeys: Array<Scalars['Int']['output']>;
@@ -633,6 +984,7 @@ export type Query = {
   mersEstimatesFilterOptions: MersEstimateFilterOptions;
   mersEstimates_V2: Array<MersEstimate_V2>;
   mersFilterOptions: MersFilterOptions;
+  mersPrimaryEstimates: Array<MersPrimaryEstimate>;
   monthlySarsCov2CountryInformation: Array<MonthlySarsCov2CountryInformationEntry>;
   partitionedFaoMersEvents: PartitionedFeoMersEventsOutput;
   partitionedMonthlySarsCov2CountryInformation: PartitionedMonthlySarsCov2CountryInformationOutput;
