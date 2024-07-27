@@ -5,7 +5,6 @@ import { GetCountryHighlightingLayerInformationOutput, PathogenMap } from "@/com
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { useMersData } from "@/hooks/mers/useMersData";
 import { MersCountryPopupContent } from "./mers-country-pop-up-content";
 import { HumanMersSeroprevalenceEstimatePopupContent } from "./human-mers-seroprevalence-estimate-pop-up-content";
 import { AnimalMersSeroprevalenceEstimatePopupContent } from "./animal-mers-seroprevalence-estimate-pop-up-content";
@@ -32,6 +31,7 @@ import { useCamelsPerCapitaLayer } from "./country-highlight-layers/camels-per-c
 import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
 import { AnimalMersViralEstimatePopupContent } from "./animal-mers-viral-estimate-pop-up-content";
 import { HumanMersViralEstimatePopupContent } from "./human-mers-viral-estimate-pop-up-content";
+import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
 
 const MapPinColours = {
   'HumanMersEvent': "#8abded",
@@ -48,7 +48,7 @@ const MapPinColours = {
 export const MersMap = () => {
   const { filteredData, faoMersEventData } = useContext(MersContext);
   const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);
-  const { data } = useMersData();
+  const { data } = useMersPrimaryEstimates(); 
   const { faoMersEvents } = useFaoMersEventData();
   const {
     currentMapCountryHighlightingSettings,

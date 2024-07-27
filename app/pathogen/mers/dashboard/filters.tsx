@@ -4,11 +4,11 @@ import React, { useContext } from "react";
 import { Filters } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { useMersData } from "@/hooks/mers/useMersData";
 import { useMersFilters } from "@/hooks/mers/useMersFilters";
 import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
 import { useFaoMersEventFilterOptions } from "@/hooks/mers/useFaoMersEventFilterOptions";
 import { useMersEstimatesFilterOptions } from "@/hooks/mers/useMersEstimatesFilters";
+import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
 
 interface MersFiltersProps {
   className?: string;
@@ -16,7 +16,7 @@ interface MersFiltersProps {
 
 export const MersFilters = (props: MersFiltersProps) => {
   const state = useContext(MersContext);
-  const { data } = useMersData();
+  const { data } = useMersPrimaryEstimates();
   const { faoMersEvents } = useFaoMersEventData();
   const { data: sharedFilterData } = useMersFilters();
   const { data: eventFilterData } = useFaoMersEventFilterOptions();
@@ -135,7 +135,7 @@ export const MersFilters = (props: MersFiltersProps) => {
         } : {})
       }}
       data={{
-        mersEstimates: data?.mersEstimates_V2 ?? [],
+        mersEstimates: data?.mersPrimaryEstimates ?? [],
         faoMersEventData: faoMersEvents ?? [],
       }}
       resetAllFiltersButtonEnabled={true}
