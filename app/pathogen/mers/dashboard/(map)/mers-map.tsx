@@ -137,15 +137,19 @@ export const MersMap = () => {
                   `${MapPinColours['HumanMersEvent']}`,
                   "AnimalMersEvent",
                   `${MapPinColours['AnimalMersEvent']}`,
-                  "PrimaryHumanMersSeroprevalenceEstimateInformation",
-                  `${MapPinColours['PrimaryHumanMersSeroprevalenceEstimateInformation']}`,
-                  "PrimaryHumanMersViralEstimateInformation",
-                  `${MapPinColours['PrimaryHumanMersViralEstimateInformation']}`,
-                  "PrimaryAnimalMersSeroprevalenceEstimateInformation",
-                  `${MapPinColours['PrimaryAnimalMersSeroprevalenceEstimateInformation']}`,
-                  "PrimaryAnimalMersViralEstimateInformation",
-                  `${MapPinColours['PrimaryAnimalMersViralEstimateInformation']}`,
-                  "#FFFFFF"
+                  [
+                    "match",
+                    ["get", "__typename", ["get", "primaryEstimateInfo"]],
+                    "PrimaryHumanMersSeroprevalenceEstimateInformation",
+                    `${MapPinColours['PrimaryHumanMersSeroprevalenceEstimateInformation']}`,
+                    "PrimaryHumanMersViralEstimateInformation",
+                    `${MapPinColours['PrimaryHumanMersViralEstimateInformation']}`,
+                    "PrimaryAnimalMersSeroprevalenceEstimateInformation",
+                    `${MapPinColours['PrimaryAnimalMersSeroprevalenceEstimateInformation']}`,
+                    "PrimaryAnimalMersViralEstimateInformation",
+                    `${MapPinColours['PrimaryAnimalMersViralEstimateInformation']}`,
+                    "#FFFFFF"
+                  ]
                 ],
                 "circle-radius": 8,
                 "circle-stroke-color": "#333333",
