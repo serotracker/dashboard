@@ -1,5 +1,5 @@
+import validator from "validator";
 import { MapRef, Popup, useMap } from "react-map-gl";
-
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
 
@@ -102,6 +102,10 @@ export function PathogenMapPopup<
             .split(",")
             .map((innerString: string) => innerString.slice(1, -1)),
         ];
+      }
+
+      if(typeof value === 'string' && validator.isJSON(value)) {
+        return [key, JSON.parse(value)];
       }
 
       return [key, value];

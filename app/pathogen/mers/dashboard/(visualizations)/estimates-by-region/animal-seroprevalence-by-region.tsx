@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { AnimalMersSeroprevalenceEstimate, MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { AnimalMersSeroprevalenceEstimate, MersEstimate, isAnimalMersSeroprevalenceEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
@@ -59,26 +59,26 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
 
   const consideredData = useMemo(() =>
     data
-      .filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimate => dataPoint.__typename === 'AnimalMersEstimate')
+      .filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimate => 'primaryEstimateInfo' in dataPoint && isAnimalMersSeroprevalenceEstimate(dataPoint))
       .map((dataPoint) => ({ ...dataPoint, region: regionGroupingFunction(dataPoint) }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
-      .sort((dataPointA, dataPointB) => dataPointA.seroprevalence - dataPointB.seroprevalence)
+      .sort((dataPointA, dataPointB) => dataPointA.primaryEstimateInfo.seroprevalence - dataPointB.primaryEstimateInfo.seroprevalence)
       .map(( dataPoint, index ) => ({
         ...dataPoint,
         seroprevalence: parseFloat(
-          (dataPoint.seroprevalence * 100).toFixed(1)
+          (dataPoint.primaryEstimateInfo.seroprevalence * 100).toFixed(1)
         ),
         seroprevalenceError: [
-          dataPoint.seroprevalence95CILower ? parseFloat(
+          dataPoint.primaryEstimateInfo.seroprevalence95CILower ? parseFloat(
             (
-              dataPoint.seroprevalence * 100 -
-              dataPoint.seroprevalence95CILower * 100
+              dataPoint.primaryEstimateInfo.seroprevalence * 100 -
+              dataPoint.primaryEstimateInfo.seroprevalence95CILower * 100
             ).toFixed(1)
           ) : 0,
-          dataPoint.seroprevalence95CIUpper ? parseFloat(
+          dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ? parseFloat(
             (
-              dataPoint.seroprevalence95CIUpper * 100 -
-              dataPoint.seroprevalence * 100
+              dataPoint.primaryEstimateInfo.seroprevalence95CIUpper * 100 -
+              dataPoint.primaryEstimateInfo.seroprevalence * 100
             ).toFixed(1)
           ) : 0,
         ],

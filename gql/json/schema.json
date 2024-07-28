@@ -7336,9 +7336,13 @@
             "description": null,
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -8265,7 +8269,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "PrimaryAnimalMersEstimateInformation",
+        "name": "PrimaryAnimalMersSeroprevalenceEstimateInformation",
         "description": null,
         "isOneOf": null,
         "fields": [
@@ -9757,7 +9761,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "PrimaryHumanMersEstimateInformation",
+        "name": "PrimaryHumanMersSeroprevalenceEstimateInformation",
         "description": null,
         "isOneOf": null,
         "fields": [
@@ -11107,7 +11111,7 @@
         "possibleTypes": [
           {
             "kind": "OBJECT",
-            "name": "PrimaryAnimalMersEstimateInformation",
+            "name": "PrimaryAnimalMersSeroprevalenceEstimateInformation",
             "ofType": null
           },
           {
@@ -11117,7 +11121,7 @@
           },
           {
             "kind": "OBJECT",
-            "name": "PrimaryHumanMersEstimateInformation",
+            "name": "PrimaryHumanMersSeroprevalenceEstimateInformation",
             "ofType": null
           },
           {
@@ -11716,7 +11720,7 @@
         "possibleTypes": [
           {
             "kind": "OBJECT",
-            "name": "PrimaryAnimalMersEstimateInformation",
+            "name": "PrimaryAnimalMersSeroprevalenceEstimateInformation",
             "ofType": null
           },
           {
@@ -11726,7 +11730,7 @@
           },
           {
             "kind": "OBJECT",
-            "name": "PrimaryHumanMersEstimateInformation",
+            "name": "PrimaryHumanMersSeroprevalenceEstimateInformation",
             "ofType": null
           },
           {

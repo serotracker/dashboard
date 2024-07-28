@@ -12,35 +12,35 @@ import {
   mersDataTypeToColourClassnameMap,
   mersDataTypeToLabelMap
 } from "../(map)/shared-mers-map-pop-up-variables";
-import { mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { mapMersEstimateBaseForDataTable, mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 
 const mersViralEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
-  fieldName: 'estimateId',
+  fieldName: 'primaryEstimateId',
   label: 'Estimate ID',
   isHideable: false,
   isFixed: true,
-  fieldNameForLink: 'sourceUrl',
+  fieldNameForLink: 'primaryEstimateSourceUrl',
   size: 700,
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: '__typename',
+  fieldName: 'primaryEstimateTypename',
   valueToDisplayLabel: (typename: string) => isMersViralEstimateTypename(typename) ? mersDataTypeToLabelMap[typename] : typename,
   valueToColourSchemeClassnameMap: mersDataTypeToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Estimate Type'
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'positivePrevalence',
+  fieldName: 'primaryEstimatePositivePrevalence',
   label: 'Positive Prevalence'
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'positivePrevalence95CILower',
+  fieldName: 'primaryEstimatePositivePrevalence95CILower',
   label: 'Positive Prevalence (95% Confidence Interval Lower Bound)',
   initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'positivePrevalence95CIUpper',
+  fieldName: 'primaryEstimatePositivePrevalence95CIUpper',
   label: 'Positive Prevalence (95% Confidence Interval Upper Bound)',
   initiallyVisible: false
 },
@@ -61,8 +61,8 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
     generateExpandedRowStatement: (input) => {
       const estimateId = input.row.getValue('estimateId');
       const estimate = estimateId ? input.data.find((dataPoint) => dataPoint.estimateId === estimateId) : undefined;
-      const inclusionCriteriaStatement = estimate?.studyInclusionCriteria ? `The inclusion criteria for the study was "${estimate.studyInclusionCriteria}"` : "No inclusion criteria was specified"
-      const exclusionCriteriaStatement = estimate?.studyExclusionCriteria ? `The exclusion criteria for the study was "${estimate.studyExclusionCriteria}"` : "No exclusion criteria was specified"
+      const inclusionCriteriaStatement = estimate?.primaryEstimateInfo.studyInclusionCriteria ? `The inclusion criteria for the study was "${estimate.primaryEstimateInfo.studyInclusionCriteria}"` : "No inclusion criteria was specified"
+      const exclusionCriteriaStatement = estimate?.primaryEstimateInfo.studyExclusionCriteria ? `The exclusion criteria for the study was "${estimate.primaryEstimateInfo.studyExclusionCriteria}"` : "No exclusion criteria was specified"
 
       return `${inclusionCriteriaStatement}. ${exclusionCriteriaStatement}. Clicking on this row in the table again will minimize it.`
     },
@@ -79,10 +79,10 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
         return null;
       }
 
-      const countryName = estimate.country;
+      const countryName = estimate.primaryEstimateInfo.country;
 
       const filteredData = data
-        .filter((dataPoint) => dataPoint.country === countryName)
+        .filter((dataPoint) => dataPoint.primaryEstimateInfo.country === countryName)
 
       return (
         <RechartsVisualization
@@ -126,6 +126,15 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={state.filteredData
         .filter((dataPoint): dataPoint is MersViralEstimate => isMersViralEstimate(dataPoint))
+        .map((dataPoint) => ({
+          ...dataPoint,
+          ...mapMersEstimateBaseForDataTable(dataPoint),
+          primaryEstimateId: dataPoint.primaryEstimateInfo.estimateId,
+          primaryEstimateTypename: dataPoint.primaryEstimateInfo.__typename,
+          primaryEstimatePositivePrevalence: dataPoint.primaryEstimateInfo.positivePrevalence,
+          primaryEstimatePositivePrevalence95CILower: dataPoint.primaryEstimateInfo.positivePrevalence95CILower,
+          primaryEstimatePositivePrevalence95CIUpper: dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper,
+        }))
       }
     />
   )

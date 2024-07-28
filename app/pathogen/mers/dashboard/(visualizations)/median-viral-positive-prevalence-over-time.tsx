@@ -1,6 +1,6 @@
 import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
-import { MersEstimate, MersSeroprevalenceEstimate, MersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { MersEstimate, MersSeroprevalenceEstimate, MersViralEstimate, isMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { parseISO } from 'date-fns';
@@ -11,13 +11,13 @@ interface MedianViralPositivePrevalenceOverTimeProps {
 }
 
 const typenameToLabel = {
-  ['HumanMersViralEstimate']: 'Human MERS Viral Positive Prevalence',
-  ['AnimalMersViralEstimate']: 'Animal MERS Viral Positive Prevalence',
+  ['PrimaryHumanMersViralEstimateInformation']: 'Human MERS Viral Positive Prevalence',
+  ['PrimaryAnimalMersViralEstimateInformation']: 'Animal MERS Viral Positive Prevalence',
 }
 
 const typenameToLineColour = {
-  ['HumanMersViralEstimate']: '#e37712',
-  ['AnimalMersViralEstimate']: '#de141b',
+  ['PrimaryHumanMersViralEstimateInformation']: '#e37712',
+  ['PrimaryAnimalMersViralEstimateInformation']: '#de141b',
 }
 
 export const MedianViralPositivePrevalenceOverTime = (props: MedianViralPositivePrevalenceOverTimeProps) => {
@@ -25,7 +25,7 @@ export const MedianViralPositivePrevalenceOverTime = (props: MedianViralPositive
 
   const consideredData = useMemo(() => data
     .filter((dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry): dataPoint is MersViralEstimate => {
-      return dataPoint.__typename === 'HumanMersViralEstimate' || dataPoint.__typename === 'AnimalMersViralEstimate'
+      return 'primaryEstimateInfo' in dataPoint && isMersViralEstimate(dataPoint);
     })
     .map((dataPoint) => ({
       ...dataPoint,
@@ -39,7 +39,7 @@ export const MedianViralPositivePrevalenceOverTime = (props: MedianViralPositive
     <SplitTimeBucketedBarChart
       graphId='median-viral-positive-prevalence-over-time'
       data={consideredData}
-      primaryGroupingFunction={(dataPoint) => dataPoint.__typename}
+      primaryGroupingFunction={(dataPoint) => dataPoint.primaryEstimateInfo.__typename}
       currentPageIndex={0}
       bucketingConfiguration={{
         desiredBucketCount: 10,
@@ -57,7 +57,7 @@ export const MedianViralPositivePrevalenceOverTime = (props: MedianViralPositive
       percentageFormattingEnabled={true}
       getBarName={(__typename) => typenameToLabel[__typename]}
       getChartTitle={(__typename) => typenameToLabel[__typename]}
-      transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.positivePrevalence * 100))}
+      transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.primaryEstimateInfo.positivePrevalence * 100))}
     />
   );
 };

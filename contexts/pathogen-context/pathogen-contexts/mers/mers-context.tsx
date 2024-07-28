@@ -2,9 +2,7 @@
 import { createContext, useEffect, useMemo } from "react";
 import { pipe } from "fp-ts/lib/function";
 import { PathogenContextActionType, PathogenContextState, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../../pathogen-context";
-import { MersEstimates_V2Query } from "@/gql/graphql";
 import { CountryDataContext } from "../../country-information-context";
-import { useMersData } from "@/hooks/mers/useMersData";
 import { useMersFilters } from "@/hooks/mers/useMersFilters";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
@@ -12,16 +10,19 @@ import { CamelPopulationDataProvider } from "./camel-population-data-context";
 import { filterData } from "../../filter-update-steps/apply-new-selected-filters";
 import { addActionToSelectedFilters } from "../../filter-update-steps/add-action-to-selected-filters";
 import { adjustMapPosition } from "../../filter-update-steps/adjust-map-position";
+import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
+import { MersPrimaryEstimatesQuery } from "@/gql/graphql";
+import { filterMersEstimates } from "./mers-data-filtering";
 
 const initialMersContextState = {
   filteredData: [],
   faoMersEventData: [],
   selectedFilters: {
     ["__typename"]: [
-      "HumanMersEstimate",
-      "HumanMersViralEstimate",
-      "AnimalMersEstimate",
-      "AnimalMersViralEstimate",
+      "PrimaryHumanMersSeroprevalenceEstimateInformation",
+      "PrimaryHumanMersViralEstimateInformation",
+      "PrimaryAnimalMersSeroprevalenceEstimateInformation",
+      "PrimaryAnimalMersViralEstimateInformation",
       "AnimalMersEvent",
       "HumanMersEvent"
     ],
@@ -29,30 +30,50 @@ const initialMersContextState = {
   dataFiltered: false,
 }
 
-export type HumanMersSeroprevalenceEstimate = Extract<MersEstimates_V2Query['mersEstimates_V2'][number], {
-  __typename: 'HumanMersEstimate'
-}>;
-export type AnimalMersSeroprevalenceEstimate = Extract<MersEstimates_V2Query['mersEstimates_V2'][number], {
-  __typename: 'AnimalMersEstimate'
-}>;
-export type AnimalMersViralEstimate = Extract<MersEstimates_V2Query['mersEstimates_V2'][number], {
-  __typename: 'AnimalMersViralEstimate'
-}>;
-export type HumanMersViralEstimate = Extract<MersEstimates_V2Query['mersEstimates_V2'][number], {
-  __typename: 'HumanMersViralEstimate'
-}>;
+export type HumanMersSeroprevalenceEstimate = Omit<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number], 'primaryEstimateInfo'> & {
+  primaryEstimateInfo: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryHumanMersSeroprevalenceEstimateInformation'}>
+}
+export type AnimalMersSeroprevalenceEstimate = Omit<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number], 'primaryEstimateInfo'> & {
+  primaryEstimateInfo: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryAnimalMersSeroprevalenceEstimateInformation'}>
+}
+export type AnimalMersViralEstimate = Omit<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number], 'primaryEstimateInfo'> & {
+  primaryEstimateInfo: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryAnimalMersViralEstimateInformation'}>
+}
+export type HumanMersViralEstimate = Omit<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number], 'primaryEstimateInfo'> & {
+  primaryEstimateInfo: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryHumanMersViralEstimateInformation'}>
+}
+export const isHumanMersSeroprevalenceEstimate = (estimate: MersEstimate): estimate is HumanMersSeroprevalenceEstimate =>
+  estimate.primaryEstimateInfo.__typename === 'PrimaryHumanMersSeroprevalenceEstimateInformation';
+export const isAnimalMersSeroprevalenceEstimate = (estimate: MersEstimate): estimate is AnimalMersSeroprevalenceEstimate =>
+  estimate.primaryEstimateInfo.__typename === 'PrimaryAnimalMersSeroprevalenceEstimateInformation';
+export const isAnimalMersViralEstimate = (estimate: MersEstimate): estimate is AnimalMersViralEstimate =>
+  estimate.primaryEstimateInfo.__typename === 'PrimaryAnimalMersViralEstimateInformation';
+export const isHumanMersViralEstimate = (estimate: MersEstimate): estimate is HumanMersViralEstimate =>
+  estimate.primaryEstimateInfo.__typename === 'PrimaryHumanMersViralEstimateInformation';
 
 export const isMersSeroprevalenceEstimate = (estimate: MersEstimate): estimate is MersSeroprevalenceEstimate =>
-  (estimate.__typename === 'HumanMersEstimate') || (estimate.__typename === 'AnimalMersEstimate');
+  isHumanMersSeroprevalenceEstimate(estimate) || isAnimalMersSeroprevalenceEstimate(estimate);
+
+export const isHumanMersEstimate = (estimate: MersEstimate): estimate is HumanMersEstimate =>
+  isHumanMersSeroprevalenceEstimate(estimate) || isHumanMersViralEstimate(estimate);
+
+export const isAnimalMersEstimate = (estimate: MersEstimate): estimate is AnimalMersEstimate =>
+  isAnimalMersSeroprevalenceEstimate(estimate) || isAnimalMersViralEstimate(estimate);
 
 export const isMersViralEstimate = (estimate: MersEstimate): estimate is MersViralEstimate =>
-  (estimate.__typename === 'HumanMersViralEstimate') || (estimate.__typename === 'AnimalMersViralEstimate');
+  isAnimalMersViralEstimate(estimate) || isHumanMersViralEstimate(estimate);
 
 export type MersSeroprevalenceEstimate =
   | HumanMersSeroprevalenceEstimate
   | AnimalMersSeroprevalenceEstimate;
 export type MersViralEstimate = 
   | HumanMersViralEstimate
+  | AnimalMersViralEstimate;
+export type HumanMersEstimate =
+  | HumanMersSeroprevalenceEstimate
+  | HumanMersViralEstimate;
+export type AnimalMersEstimate =
+  | AnimalMersSeroprevalenceEstimate
   | AnimalMersViralEstimate;
 
 export type MersEstimate = 
@@ -72,7 +93,7 @@ export const MersContext = createContext<MersContextType>({
 });
 
 const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersContextState>): React.ReactNode => {
-  const { data } = useMersData();
+  const { data  } = useMersPrimaryEstimates();
   const { faoMersEvents } = useFaoMersEventData()
 
   useEffect(() => {
@@ -86,7 +107,7 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
         type: PathogenContextActionType.INITIAL_DATA_FETCH,
         payload: {
           data: {
-            mersEstimates: data?.mersEstimates_V2,
+            mersEstimates: data?.mersPrimaryEstimates,
             faoMersEventData: faoMersEvents
           }
         }
@@ -141,10 +162,10 @@ export const MersProviders = (props: MersProvidersProps) => {
           ...filterUpdateData,
           state: {
             ...filterUpdateData.state,
-            filteredData: filterData(
-              filterUpdateData.action.payload.data.mersEstimates,
-              filterUpdateData.state.selectedFilters
-            ),
+            filteredData: filterMersEstimates({
+              mersEstimates: filterUpdateData.action.payload.data.mersEstimates,
+              selectedFilters: filterUpdateData.state.selectedFilters
+            }).filteredMersEstimates,
             faoMersEventData: filterData(
               filterUpdateData.action.payload.data.faoMersEventData.map((event: any) => ({
                 ...event,
@@ -166,8 +187,14 @@ export const MersProviders = (props: MersProvidersProps) => {
       })}
       filterResetHandlerOverride={({ state, action }) => ({
         ...state,
-        filteredData: filterData(action.payload.data.mersEstimates, {}),
-        faoMersEventData: filterData(action.payload.data.faoMersEventData, {}),
+        filteredData: filterMersEstimates({
+          mersEstimates: action.payload.data.mersEstimates,
+          selectedFilters: initialMersContextState.selectedFilters
+        }).filteredMersEstimates,
+        faoMersEventData: filterData(
+          action.payload.data.faoMersEventData,
+          initialMersContextState.selectedFilters
+        ),
         selectedFilters: initialMersContextState.selectedFilters,
         dataFiltered: false,
       })}

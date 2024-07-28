@@ -19,7 +19,7 @@ export function createDonutChartAndHoverPopup<
   coords: [number, number];
 }) {
   const counts = props.validClusterPropertyKeys.map((propertyKey) => ({
-    count: props.properties[propertyKey],
+    count: props.properties[propertyKey] ?? 0,
     propertyKey
   }));
   let total = 0;
@@ -243,6 +243,7 @@ export const computeClusterMarkers = <
     if (feature.geometry.type === "Point") {
       const coords = feature.geometry.coordinates;
       const properties = feature.properties;
+
       if (properties && properties.cluster && coords.length >= 2) {
         const id = properties.cluster_id;
 

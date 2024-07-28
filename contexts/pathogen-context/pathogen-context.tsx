@@ -16,7 +16,7 @@ export type PathogenContextType<
 
 export interface PathogenContextState<TData extends Record<string, unknown>> {
   filteredData: TData[];
-  selectedFilters: { [key: string]: string[] };
+  selectedFilters: Record<string, string[]>;
   dataFiltered: boolean;
 }
 

@@ -28,7 +28,7 @@ const defaultDataFilterHandler = (input: DefaultDataFilterHandlerInput): boolean
 
 export function filterData(
   data: any[],
-  filters: { [key: string]: string[] }
+  filters: Record<string, string[]>
 ): any[] {
   const filterKeys = Object.keys(filters);
 
@@ -58,6 +58,13 @@ export function filterData(
       if (!filters[key].length) return true;
 
       switch (key) {
+        case "__typename": {
+          return defaultDataFilterHandler({
+            item,
+            key,
+            filters
+          });
+        }
         case "start_date": {
           const filterStartDate = new Date(filters["start_date"][0]);
 
@@ -170,22 +177,6 @@ export function filterData(
         case "animalType": {
           if(
             item['__typename'] === 'AnimalMersEvent' ||
-            item['__typename'] === 'AnimalMersViralEstimate' ||
-            item['__typename'] === 'AnimalMersEstimate'
-          ) {
-            return defaultDataFilterHandler({
-              item,
-              key,
-              filters
-            });
-          }
-
-          return true;
-        }
-        case "animalDetectionSettings":
-        case "animalImportedOrLocal":
-        case "animalPurpose": {
-          if(
             item['__typename'] === 'AnimalMersViralEstimate' ||
             item['__typename'] === 'AnimalMersEstimate'
           ) {

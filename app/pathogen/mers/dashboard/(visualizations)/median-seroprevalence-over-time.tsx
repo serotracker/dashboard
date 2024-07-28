@@ -1,6 +1,6 @@
 import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
-import { MersEstimate, MersSeroprevalenceEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { MersEstimate, MersSeroprevalenceEstimate, isMersSeroprevalenceEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { parseISO } from 'date-fns';
@@ -11,13 +11,13 @@ interface MedianSeroprevalenceOverTimeProps {
 }
 
 const typenameToLabel = {
-  ['HumanMersEstimate']: 'Human MERS Seroprevalence',
-  ['AnimalMersEstimate']: 'Animal MERS Seroprevalence',
+  ['PrimaryHumanMersSeroprevalenceEstimateInformation']: 'Human MERS Seroprevalence',
+  ['PrimaryAnimalMersSeroprevalenceEstimateInformation']: 'Animal MERS Seroprevalence',
 }
 
 const typenameToLineColour = {
-  ['HumanMersEstimate']: '#e7ed8a',
-  ['AnimalMersEstimate']: '#13f244',
+  ['PrimaryHumanMersSeroprevalenceEstimateInformation']: '#e7ed8a',
+  ['PrimaryAnimalMersSeroprevalenceEstimateInformation']: '#13f244',
 }
 
 export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTimeProps) => {
@@ -25,7 +25,7 @@ export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTime
 
   const consideredData = useMemo(() => data
     .filter((dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry): dataPoint is MersSeroprevalenceEstimate => {
-      return dataPoint.__typename === 'HumanMersEstimate' || dataPoint.__typename === 'AnimalMersEstimate'
+      return 'primaryEstimateInfo' in dataPoint && isMersSeroprevalenceEstimate(dataPoint)
     })
     .map((dataPoint) => ({
       ...dataPoint,
@@ -39,7 +39,7 @@ export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTime
     <SplitTimeBucketedBarChart
       graphId='median-seroprevalence-over-time'
       data={consideredData}
-      primaryGroupingFunction={(dataPoint) => dataPoint.__typename}
+      primaryGroupingFunction={(dataPoint) => dataPoint.primaryEstimateInfo.__typename}
       currentPageIndex={0}
       bucketingConfiguration={{
         desiredBucketCount: 10,
@@ -57,7 +57,7 @@ export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTime
       percentageFormattingEnabled={true}
       getBarName={(__typename) => typenameToLabel[__typename]}
       getChartTitle={(__typename) => typenameToLabel[__typename]}
-      transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.seroprevalence * 100))}
+      transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.primaryEstimateInfo.seroprevalence * 100))}
     />
   );
 };
