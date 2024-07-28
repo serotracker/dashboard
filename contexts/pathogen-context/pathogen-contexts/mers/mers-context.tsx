@@ -41,13 +41,13 @@ export type AnimalMersViralEstimate = Omit<MersPrimaryEstimatesQuery['mersPrimar
 export type HumanMersViralEstimate = Omit<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number], 'primaryEstimateInfo'> & {
   primaryEstimateInfo: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryHumanMersViralEstimateInformation'}>
 }
-const isHumanMersSeroprevalenceEstimate = (estimate: MersEstimate): estimate is HumanMersSeroprevalenceEstimate =>
+export const isHumanMersSeroprevalenceEstimate = (estimate: MersEstimate): estimate is HumanMersSeroprevalenceEstimate =>
   estimate.primaryEstimateInfo.__typename === 'PrimaryHumanMersSeroprevalenceEstimateInformation';
-const isAnimalMersSeroprevalenceEstimate = (estimate: MersEstimate): estimate is AnimalMersSeroprevalenceEstimate =>
+export const isAnimalMersSeroprevalenceEstimate = (estimate: MersEstimate): estimate is AnimalMersSeroprevalenceEstimate =>
   estimate.primaryEstimateInfo.__typename === 'PrimaryAnimalMersSeroprevalenceEstimateInformation';
-const isAnimalMersViralEstimate = (estimate: MersEstimate): estimate is AnimalMersViralEstimate =>
+export const isAnimalMersViralEstimate = (estimate: MersEstimate): estimate is AnimalMersViralEstimate =>
   estimate.primaryEstimateInfo.__typename === 'PrimaryAnimalMersViralEstimateInformation';
-const isHumanMersViralEstimate = (estimate: MersEstimate): estimate is HumanMersViralEstimate =>
+export const isHumanMersViralEstimate = (estimate: MersEstimate): estimate is HumanMersViralEstimate =>
   estimate.primaryEstimateInfo.__typename === 'PrimaryHumanMersViralEstimateInformation';
 
 export const isMersSeroprevalenceEstimate = (estimate: MersEstimate): estimate is MersSeroprevalenceEstimate =>

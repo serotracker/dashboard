@@ -173,37 +173,37 @@ export const isMersFaoAnimalEventMapMarkerData = (mersMapMarkerData: MersMapMark
   mersMapMarkerData.__typename === "AnimalMersEvent";
 
 export const isHumanMersSeroprevalenceEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is HumanMersSeroprevalenceEstimateMapMarkerData => 
-  mersMapMarkerData.__typename === "HumanMersEstimate";
+  'primaryEstimateInfo' in mersMapMarkerData && mersMapMarkerData.primaryEstimateInfo.__typename === 'PrimaryHumanMersSeroprevalenceEstimateInformation';
 
 export const isAnimalMersSeroprevalenceEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is AnimalMersSeroprevalenceEstimateMapMarkerData => 
-  mersMapMarkerData.__typename === "AnimalMersEstimate";
+  'primaryEstimateInfo' in mersMapMarkerData && mersMapMarkerData.primaryEstimateInfo.__typename === 'PrimaryAnimalMersSeroprevalenceEstimateInformation';
 
 export const isHumanMersViralEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is HumanMersViralEstimateMapMarkerData => 
-  mersMapMarkerData.__typename === "HumanMersViralEstimate";
+  'primaryEstimateInfo' in mersMapMarkerData && mersMapMarkerData.primaryEstimateInfo.__typename === 'PrimaryHumanMersViralEstimateInformation';
 
 export const isAnimalMersViralEstimateMapMarkerData = (mersMapMarkerData: MersMapMarkerData): mersMapMarkerData is AnimalMersViralEstimateMapMarkerData => 
-  mersMapMarkerData.__typename === "AnimalMersViralEstimate";
+  'primaryEstimateInfo' in mersMapMarkerData && mersMapMarkerData.primaryEstimateInfo.__typename === 'PrimaryAnimalMersViralEstimateInformation';
 
 export const mersDataTypeToSortOrderMap: Record<string, number | undefined> & Record<
-  | "HumanMersEstimate"
-  | "AnimalMersEstimate"
+  | "PrimaryHumanMersSeroprevalenceEstimateInformation"
+  | "PrimaryAnimalMersSeroprevalenceEstimateInformation"
+  | "PrimaryHumanMersViralEstimateInformation"
+  | "PrimaryAnimalMersViralEstimateInformation"
   | "HumanMersEvent"
   | "AnimalMersEvent"
-  | "HumanMersViralEstimate"
-  | "AnimalMersViralEstimate"
 , number> = {
-  "HumanMersEstimate": 1,
-  "AnimalMersEstimate": 2,
-  "HumanMersViralEstimate": 3,
-  "AnimalMersViralEstimate": 4,
+  "PrimaryHumanMersSeroprevalenceEstimateInformation": 1,
+  "PrimaryAnimalMersSeroprevalenceEstimateInformation": 2,
+  "PrimaryHumanMersViralEstimateInformation": 3,
+  "PrimaryAnimalMersViralEstimateInformation": 4,
   "HumanMersEvent": 5,
   "AnimalMersEvent": 6
 };
 export const mersDataTypeToLabelMap = {
-  "HumanMersEstimate": "Human Seroprevalence Estimate",
-  "AnimalMersEstimate": "Animal Seroprevalence Estimate",
-  "HumanMersViralEstimate": "Human Viral Estimate",
-  "AnimalMersViralEstimate": "Animal Viral Estimate",
+  "PrimaryHumanMersSeroprevalenceEstimateInformation": "Human Seroprevalence Estimate",
+  "PrimaryAnimalMersSeroprevalenceEstimateInformation": "Animal Seroprevalence Estimate",
+  "PrimaryHumanMersViralEstimateInformation": "Human Viral Estimate",
+  "PrimaryAnimalMersViralEstimateInformation": "Animal Viral Estimate",
   "AnimalMersEvent": "Animal Case",
   "HumanMersEvent": "Human Case",
 };
@@ -217,14 +217,26 @@ export const isMersDataTypeSuperOption = (superOption: string): superOption is M
   Object.values(MersDataTypeSuperOption).some((element) => element === superOption);
 
 export const isMersDataType = (dataType: string): dataType is
-  "HumanMersEstimate" | "AnimalMersEstimate" | "HumanMersViralEstimate" | "AnimalMersViralEstimate" | "AnimalMersEvent" | "HumanMersEvent" =>
-  ["HumanMersEstimate", "AnimalMersEstimate", "HumanMersViralEstimate", "AnimalMersViralEstimate", "AnimalMersEvent", "HumanMersEvent"].includes(dataType)
+  | "PrimaryHumanMersSeroprevalenceEstimateInformation"
+  | "PrimaryAnimalMersSeroprevalenceEstimateInformation"
+  | "PrimaryHumanMersViralEstimateInformation"
+  | "PrimaryAnimalMersViralEstimateInformation"
+  | "AnimalMersEvent"
+  | "HumanMersEvent" =>
+  [
+    "PrimaryHumanMersSeroprevalenceEstimateInformation",
+    "PrimaryAnimalMersSeroprevalenceEstimateInformation",
+    "PrimaryHumanMersViralEstimateInformation",
+    "PrimaryAnimalMersViralEstimateInformation",
+    "AnimalMersEvent",
+    "HumanMersEvent"
+  ].includes(dataType)
 
 export const mersDataTypeToSuperOptionMap = {
-  "HumanMersEstimate": MersDataTypeSuperOption.HUMAN,
-  "AnimalMersEstimate": MersDataTypeSuperOption.ANIMAL,
-  "HumanMersViralEstimate": MersDataTypeSuperOption.HUMAN,
-  "AnimalMersViralEstimate": MersDataTypeSuperOption.ANIMAL,
+  "PrimaryHumanMersSeroprevalenceEstimateInformation": MersDataTypeSuperOption.HUMAN,
+  "PrimaryAnimalMersSeroprevalenceEstimateInformation": MersDataTypeSuperOption.ANIMAL,
+  "PrimaryHumanMersViralEstimateInformation": MersDataTypeSuperOption.HUMAN,
+  "PrimaryAnimalMersViralEstimateInformation": MersDataTypeSuperOption.ANIMAL,
   "HumanMersEvent": MersDataTypeSuperOption.HUMAN,
   "AnimalMersEvent": MersDataTypeSuperOption.ANIMAL
 }
@@ -244,17 +256,23 @@ export const mersDataTypeToColourClassnameMap = {
 }
 
 export const mersDataTypeToColourClassnameMapForCheckbox = {
-  "HumanMersEstimate": "data-[state=checked]:bg-mers-human-estimate",
+  "PrimaryHumanMersSeroprevalenceEstimateInformation": "data-[state=checked]:bg-mers-human-estimate",
   "HumanMersViralEstimate": "data-[state=checked]:bg-mers-human-viral-estimate",
-  "AnimalMersEstimate": "data-[state=checked]:bg-mers-animal-estimate",
+  "PrimaryAnimalMersSeroprevalenceEstimateInformation": "data-[state=checked]:bg-mers-animal-estimate",
   "AnimalMersViralEstimate": "data-[state=checked]:bg-mers-animal-viral-estimate",
   "AnimalMersEvent": "data-[state=checked]:bg-mers-animal-event",
   "HumanMersEvent": "data-[state=checked]:bg-mers-human-event"
 }
 
-export const isMersEventTypename = (typename: string): typename is "HumanMersEvent"|"AnimalMersEvent" => ["HumanMersEvent","AnimalMersEvent"].includes(typename);
-export const isMersSeroprevalenceEstimateTypename = (typename: string): typename is "HumanMersEstimate"|"AnimalMersEstimate" => ["HumanMersEstimate","AnimalMersEstimate"].includes(typename);
-export const isMersViralEstimateTypename = (typename: string): typename is "HumanMersViralEstimate"|"AnimalMersViralEstimate" => ["HumanMersViralEstimate","AnimalMersViralEstimate"].includes(typename);
+export const isMersEventTypename = (typename: string):
+  typename is "HumanMersEvent"|"AnimalMersEvent" =>
+    ["HumanMersEvent","AnimalMersEvent"].includes(typename);
+export const isMersSeroprevalenceEstimateTypename = (typename: string):
+  typename is "PrimaryHumanMersSeroprevalenceEstimateInformation"|"PrimaryAnimalMersSeroprevalenceEstimateInformation" =>
+    ["PrimaryHumanMersSeroprevalenceEstimateInformation","PrimaryAnimalMersSeroprevalenceEstimateInformation"].includes(typename);
+export const isMersViralEstimateTypename = (typename: string):
+  typename is "PrimaryHumanMersViralEstimateInformation"|"PrimaryAnimalMersViralEstimateInformation" =>
+    ["PrimaryHumanMersViralEstimateInformation","PrimaryAnimalMersViralEstimateInformation"].includes(typename);
 
 type AnimalMersEstimateMarkerData = 
   | AnimalMersSeroprevalenceEstimateMapMarkerData
@@ -277,74 +295,74 @@ export type MersMapMarkerData =
 export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): PopUpContentRowProps[] => [{
   title: "Location",
   type: PopUpContentRowType.LOCATION,
-  countryName: estimate.country,
-  stateName: estimate.state ?? undefined,
-  cityName: estimate.city ?? undefined
+  countryName: estimate.primaryEstimateInfo.country,
+  stateName: estimate.primaryEstimateInfo.state ?? undefined,
+  cityName: estimate.primaryEstimateInfo.city ?? undefined
 }, {
   title: "Source Type",
   type: PopUpContentRowType.TEXT,
-  text: estimate.sourceType ?? 'Not Reported'
+  text: estimate.primaryEstimateInfo.sourceType ?? 'Not Reported'
 }, {
   title: "Sampling Date Range",
   type: PopUpContentRowType.DATE_RANGE,
-  dateRangeStart: estimate.samplingStartDate ? parseISO(estimate.samplingStartDate) : undefined,
-  dateRangeEnd: estimate.samplingEndDate ? parseISO(estimate.samplingEndDate) : undefined
+  dateRangeStart: estimate.primaryEstimateInfo.samplingStartDate ? parseISO(estimate.primaryEstimateInfo.samplingStartDate) : undefined,
+  dateRangeEnd: estimate.primaryEstimateInfo.samplingEndDate ? parseISO(estimate.primaryEstimateInfo.samplingEndDate) : undefined
 }, {
   title: "First Author Full Name",
   type: PopUpContentRowType.TEXT,
-  text: estimate.firstAuthorFullName ?? 'Not Reported'
+  text: estimate.primaryEstimateInfo.firstAuthorFullName ?? 'Not Reported'
 }, {
   title: "Institution",
   type: PopUpContentRowType.TEXT,
-  text: estimate.insitutution ?? 'Not Reported'
+  text: estimate.primaryEstimateInfo.insitutution ?? 'Not Reported'
 }, {
   title: "Study Inclusion Criteria",
   type: PopUpContentRowType.TEXT,
-  text: estimate.studyInclusionCriteria ?? 'Not Reported'
+  text: estimate.primaryEstimateInfo.studyInclusionCriteria ?? 'Not Reported'
 }, {
   title: "Study Exclusion Criteria",
   type: PopUpContentRowType.TEXT,
-  text: estimate.studyExclusionCriteria ?? 'Not Reported'
+  text: estimate.primaryEstimateInfo.studyExclusionCriteria ?? 'Not Reported'
 }, {
   title: "Assay",
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.assay,
+  values: estimate.primaryEstimateInfo.assay,
   valueToColourClassnameMap: assayToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
   title: "Isotypes",
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.isotypes,
+  values: estimate.primaryEstimateInfo.isotypes,
   valueToColourClassnameMap: isotypeToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
   title: "Specimen Type",
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.specimenType ? [ estimate.specimenType ] : [],
+  values: estimate.primaryEstimateInfo.specimenType ? [ estimate.primaryEstimateInfo.specimenType ] : [],
   valueToColourClassnameMap: specimenTypeToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
   title: 'Sampling Method',
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.samplingMethod ? [ estimate.samplingMethod ] : [],
+  values: estimate.primaryEstimateInfo.samplingMethod ? [ estimate.primaryEstimateInfo.samplingMethod ] : [],
   valueToColourClassnameMap: samplingMethodToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
   title: 'Geographic Scope',
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.geographicScope ? [ estimate.geographicScope ] : [],
+  values: estimate.primaryEstimateInfo.geographicScope ? [ estimate.primaryEstimateInfo.geographicScope ] : [],
   valueToColourClassnameMap: geographicScopeToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
   title: 'Test Producer',
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.testProducer,
+  values: estimate.primaryEstimateInfo.testProducer,
   valueToColourClassnameMap: testProducerToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
   title: 'Test Validation',
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.testValidation,
+  values: estimate.primaryEstimateInfo.testValidation,
   valueToColourClassnameMap: testValidationToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }];
@@ -352,26 +370,26 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
 export const getAnimalMersEstimateRows = (estimate: AnimalMersEstimateMarkerData): PopUpContentRowProps[] => [{
   title: "Animal Type",
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.animalType,
+  values: estimate.primaryEstimateInfo.animalType,
   valueToColourClassnameMap: animalTypeToColourClassnameMap,
   valueToLabelMap: animalTypeToStringMap,
   defaultColourClassname: "bg-sky-100"
 }, {
   title: 'Animal Detection Settings',
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.animalDetectionSettings,
+  values: estimate.primaryEstimateInfo.animalDetectionSettings,
   valueToColourClassnameMap: animalDetectionSettingsToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
   title: 'Animal Purpose',
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.animalPurpose ? [ estimate.animalPurpose ] : [],
+  values: estimate.primaryEstimateInfo.animalPurpose ? [ estimate.primaryEstimateInfo.animalPurpose ] : [],
   valueToColourClassnameMap: animalPurposeSettingsToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
   title: 'Imported Or Local',
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.animalImportedOrLocal ? [ estimate.animalImportedOrLocal ] : [],
+  values: estimate.primaryEstimateInfo.animalImportedOrLocal ? [ estimate.primaryEstimateInfo.animalImportedOrLocal ] : [],
   valueToColourClassnameMap: animalImportedOrLocalToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }];
@@ -379,14 +397,14 @@ export const getAnimalMersEstimateRows = (estimate: AnimalMersEstimateMarkerData
 export const getHumanMersEstimateRows = (estimate: HumanMersEstimateMarkerData): PopUpContentRowProps[] => [{
   title: "Age Group",
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.ageGroup,
+  values: estimate.primaryEstimateInfo.ageGroup,
   valueToColourClassnameMap: ageGroupToColourClassnameMap,
   valueToLabelMap: {},
   defaultColourClassname: "bg-sky-100"
 }, {
   title: "Sample Frame",
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.sampleFrame ? [ estimate.sampleFrame ] : [],
+  values: estimate.primaryEstimateInfo.sampleFrame ? [ estimate.primaryEstimateInfo.sampleFrame ] : [],
   valueToColourClassnameMap: sampleFrameToColourClassnameMap,
   valueToLabelMap: {},
   defaultColourClassname: "bg-sky-100"

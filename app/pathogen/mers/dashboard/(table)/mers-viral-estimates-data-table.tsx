@@ -61,8 +61,8 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
     generateExpandedRowStatement: (input) => {
       const estimateId = input.row.getValue('estimateId');
       const estimate = estimateId ? input.data.find((dataPoint) => dataPoint.estimateId === estimateId) : undefined;
-      const inclusionCriteriaStatement = estimate?.studyInclusionCriteria ? `The inclusion criteria for the study was "${estimate.studyInclusionCriteria}"` : "No inclusion criteria was specified"
-      const exclusionCriteriaStatement = estimate?.studyExclusionCriteria ? `The exclusion criteria for the study was "${estimate.studyExclusionCriteria}"` : "No exclusion criteria was specified"
+      const inclusionCriteriaStatement = estimate?.primaryEstimateInfo.studyInclusionCriteria ? `The inclusion criteria for the study was "${estimate.primaryEstimateInfo.studyInclusionCriteria}"` : "No inclusion criteria was specified"
+      const exclusionCriteriaStatement = estimate?.primaryEstimateInfo.studyExclusionCriteria ? `The exclusion criteria for the study was "${estimate.primaryEstimateInfo.studyExclusionCriteria}"` : "No exclusion criteria was specified"
 
       return `${inclusionCriteriaStatement}. ${exclusionCriteriaStatement}. Clicking on this row in the table again will minimize it.`
     },
@@ -79,10 +79,10 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
         return null;
       }
 
-      const countryName = estimate.country;
+      const countryName = estimate.primaryEstimateInfo.country;
 
       const filteredData = data
-        .filter((dataPoint) => dataPoint.country === countryName)
+        .filter((dataPoint) => dataPoint.primaryEstimateInfo.country === countryName)
 
       return (
         <RechartsVisualization

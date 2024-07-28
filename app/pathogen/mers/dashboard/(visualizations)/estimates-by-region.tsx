@@ -51,20 +51,22 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
 
   const regionGroupingFunction = useCallback((dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => {
     if(selectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION) {
+      if('primaryEstimateInfo' in dataPoint) {
+        return dataPoint.primaryEstimateInfo.whoRegion;
+      }
+
       return dataPoint.whoRegion;
     }
     if(selectedRegion === EstimatesByRegionRegionDropdownOption.UN_REGION) {
+      if('primaryEstimateInfo' in dataPoint) {
+        return dataPoint.primaryEstimateInfo.unRegion;
+      }
       return dataPoint.unRegion;
     }
 
     if(selectedRegion === EstimatesByRegionRegionDropdownOption.COUNTRY) {
-      if(
-        dataPoint.__typename === 'HumanMersEstimate' ||
-        dataPoint.__typename === 'HumanMersViralEstimate' ||
-        dataPoint.__typename === 'AnimalMersEstimate' ||
-        dataPoint.__typename === 'AnimalMersViralEstimate'
-      ) {
-        return dataPoint.countryAlphaTwoCode;
+      if('primaryEstimateInfo' in dataPoint) {
+        return dataPoint.primaryEstimateInfo.countryAlphaTwoCode;
       }
 
       return dataPoint.country.alphaTwoCode;

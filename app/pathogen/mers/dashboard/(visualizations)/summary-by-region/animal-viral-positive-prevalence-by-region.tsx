@@ -1,6 +1,6 @@
 import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
-import { AnimalMersViralEstimate, HumanMersViralEstimate, MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { AnimalMersViralEstimate, HumanMersViralEstimate, MersEstimate, isAnimalMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { parseISO } from "date-fns";
@@ -20,7 +20,7 @@ export const AnimalViralPositivePrevalenceSummaryByRegion = <TRegion extends str
   const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
 
   const estimates = useMemo(() => data
-    .filter((dataPoint): dataPoint is AnimalMersViralEstimate => dataPoint.__typename === 'AnimalMersViralEstimate')
+    .filter((dataPoint): dataPoint is AnimalMersViralEstimate => 'primaryEstimateInfo' in dataPoint && isAnimalMersViralEstimate(dataPoint))
     .map((estimate) => ({
       ...estimate,
       region: regionGroupingFunction(estimate),
@@ -64,7 +64,7 @@ export const AnimalViralPositivePrevalenceSummaryByRegion = <TRegion extends str
       getChartTitle={(region) => regionToChartTitle(region)}
       percentageFormattingEnabled={true}
       getBarName={() => 'Animal Median Positive Prevalence By Region'}
-      transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.positivePrevalence * 100))}
+      transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.primaryEstimateInfo.positivePrevalence * 100))}
     />
   );
 }

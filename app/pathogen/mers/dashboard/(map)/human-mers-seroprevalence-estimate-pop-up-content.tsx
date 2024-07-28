@@ -11,7 +11,7 @@ export const HumanMersSeroprevalenceEstimatePopupContent = (props: HumanMersSero
   const { estimate } = props;
 
   const topBannerText = useMemo(() => {
-    const seroprevalencePercentageText = `Seroprevalence: ${(estimate.seroprevalence * 100).toFixed(1)}%`;
+    const seroprevalencePercentageText = `Seroprevalence: ${(estimate.primaryEstimateInfo.seroprevalence * 100).toFixed(1)}%`;
 
     return `${seroprevalencePercentageText}`
   }, [ estimate ]);
@@ -25,8 +25,8 @@ export const HumanMersSeroprevalenceEstimatePopupContent = (props: HumanMersSero
       }}
       subtitleConfiguration={{
         enabled: true,
-        text: props.estimate.sourceTitle,
-        link: props.estimate.sourceUrl ?? undefined
+        text: props.estimate.primaryEstimateInfo.sourceTitle,
+        link: props.estimate.primaryEstimateInfo.sourceUrl ?? undefined
       }}
       topBannerConfiguration={{
         enabled: true,

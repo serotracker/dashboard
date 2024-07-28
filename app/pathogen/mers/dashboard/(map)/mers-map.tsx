@@ -61,8 +61,16 @@ export const MersMap = () => {
   const totalCamelPopulationMapLayer = useTotalCamelPopulationLayer();
   const camelsPerCapitaMapLayer = useCamelsPerCapitaLayer();
 
-  const dataPoints = useMemo(() => [...filteredData, ...(faoMersEventData
-    .map((element) => ({
+  const dataPoints = useMemo(() => [
+    ...filteredData.map((element) => ({
+      ...element,
+      country: element.primaryEstimateInfo.country,
+      countryAlphaThreeCode: element.primaryEstimateInfo.countryAlphaThreeCode,
+      countryAlphaTwoCode: element.primaryEstimateInfo.countryAlphaTwoCode,
+      latitude: element.primaryEstimateInfo.latitude,
+      longitude: element.primaryEstimateInfo.longitude,
+    })),
+    ...(faoMersEventData.map((element) => ({
       ...element,
       country: element.country.name,
       countryAlphaThreeCode: element.country.alphaThreeCode,
@@ -320,7 +328,7 @@ export const MersMap = () => {
         legendEntries={countryHighlightLayerLegendEntries}
         freeTextEntries={freeTextEntries}
       />
-      <MapEstimateSummary filteredData={filteredData.map((estimate) => ({ sourceSheetName: estimate.sourceTitle }))}/>
+      <MapEstimateSummary filteredData={filteredData.map((estimate) => ({ sourceSheetName: estimate.primaryEstimateInfo.sourceTitle }))}/>
       <mersMapCustomizationModal.mapCustomizeButton />
       <mersMapCustomizationModal.customizationModal />
     </>

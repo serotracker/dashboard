@@ -10,7 +10,7 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
   const { estimate } = props;
 
   const topBannerText = useMemo(() => {
-    const seroprevalencePercentageText = `Seroprevalence: ${(estimate.seroprevalence * 100).toFixed(1)}%`;
+    const seroprevalencePercentageText = `Seroprevalence: ${(estimate.primaryEstimateInfo.seroprevalence * 100).toFixed(1)}%`;
 
     return `${seroprevalencePercentageText}`
   }, [ estimate ]);
@@ -24,8 +24,8 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
       }}
       subtitleConfiguration={{
         enabled: true,
-        text: props.estimate.sourceTitle,
-        link: props.estimate.sourceUrl ?? undefined
+        text: props.estimate.primaryEstimateInfo.sourceTitle,
+        link: props.estimate.primaryEstimateInfo.sourceUrl ?? undefined
       }}
       topBannerConfiguration={{
         enabled: true,
@@ -40,8 +40,8 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
       ]}
       bottomBannerConfiguration={{
         enabled: true,
-        bannerText: `Animal Species: ${animalSpeciesToStringMap[props.estimate.animalSpecies]}`,
-        bannerColourClassname: animalSpeciesToColourClassnameMap[props.estimate.animalSpecies],
+        bannerText: `Animal Species: ${animalSpeciesToStringMap[props.estimate.primaryEstimateInfo.animalSpecies]}`,
+        bannerColourClassname: animalSpeciesToColourClassnameMap[props.estimate.primaryEstimateInfo.animalSpecies],
         isTextBolded: true,
         isTextCentered: true
       }}
