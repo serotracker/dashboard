@@ -257,9 +257,9 @@ export const mersDataTypeToColourClassnameMap = {
 
 export const mersDataTypeToColourClassnameMapForCheckbox = {
   "PrimaryHumanMersSeroprevalenceEstimateInformation": "data-[state=checked]:bg-mers-human-estimate",
-  "HumanMersViralEstimate": "data-[state=checked]:bg-mers-human-viral-estimate",
+  "PrimaryHumanMersViralEstimateInformation": "data-[state=checked]:bg-mers-human-viral-estimate",
   "PrimaryAnimalMersSeroprevalenceEstimateInformation": "data-[state=checked]:bg-mers-animal-estimate",
-  "AnimalMersViralEstimate": "data-[state=checked]:bg-mers-animal-viral-estimate",
+  "PrimaryAnimalMersViralEstimateInformation": "data-[state=checked]:bg-mers-animal-viral-estimate",
   "AnimalMersEvent": "data-[state=checked]:bg-mers-animal-event",
   "HumanMersEvent": "data-[state=checked]:bg-mers-human-event"
 }
