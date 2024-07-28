@@ -59,10 +59,6 @@ export function filterData(
 
       switch (key) {
         case "__typename": {
-          if ("primaryEstimateInfo" in item) {
-            return filters['__typename'].includes(item['primaryEstimateInfo']['__typename']);
-          }
-
           return defaultDataFilterHandler({
             item,
             key,
@@ -181,22 +177,6 @@ export function filterData(
         case "animalType": {
           if(
             item['__typename'] === 'AnimalMersEvent' ||
-            item['__typename'] === 'AnimalMersViralEstimate' ||
-            item['__typename'] === 'AnimalMersEstimate'
-          ) {
-            return defaultDataFilterHandler({
-              item,
-              key,
-              filters
-            });
-          }
-
-          return true;
-        }
-        case "animalDetectionSettings":
-        case "animalImportedOrLocal":
-        case "animalPurpose": {
-          if(
             item['__typename'] === 'AnimalMersViralEstimate' ||
             item['__typename'] === 'AnimalMersEstimate'
           ) {
