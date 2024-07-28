@@ -38,10 +38,10 @@ const MapPinColours = {
   'human-mers-event-alt': "#2a8deb",
   'AnimalMersEvent': "#ed8ac7",
   'animal-mers-event-alt': "#eb2aa1",
-  'HumanMersEstimate': "#e7ed8a",
-  'AnimalMersEstimate': "#13f244",
-  'HumanMersViralEstimate': "#e37712",
-  'AnimalMersViralEstimate': "#de141b",
+  'PrimaryHumanMersSeroprevalenceEstimateInformation': "#e7ed8a",
+  'PrimaryAnimalMersSeroprevalenceEstimateInformation': "#13f244",
+  'PrimaryHumanMersViralEstimateInformation': "#e37712",
+  'PrimaryAnimalMersViralEstimateInformation': "#de141b",
   'mers-animal-viral-estimate-alt': "#910c10",
 } as const;
 
@@ -137,14 +137,14 @@ export const MersMap = () => {
                   `${MapPinColours['HumanMersEvent']}`,
                   "AnimalMersEvent",
                   `${MapPinColours['AnimalMersEvent']}`,
-                  "HumanMersEstimate",
-                  `${MapPinColours['HumanMersEstimate']}`,
-                  "AnimalMersEstimate",
-                  `${MapPinColours['AnimalMersEstimate']}`,
-                  "HumanMersViralEstimate",
-                  `${MapPinColours['HumanMersViralEstimate']}`,
-                  "AnimalMersViralEstimate",
-                  `${MapPinColours['AnimalMersViralEstimate']}`,
+                  "PrimaryHumanMersSeroprevalenceEstimateInformation",
+                  `${MapPinColours['PrimaryHumanMersSeroprevalenceEstimateInformation']}`,
+                  "PrimaryHumanMersViralEstimateInformation",
+                  `${MapPinColours['PrimaryHumanMersViralEstimateInformation']}`,
+                  "PrimaryAnimalMersSeroprevalenceEstimateInformation",
+                  `${MapPinColours['PrimaryAnimalMersSeroprevalenceEstimateInformation']}`,
+                  "PrimaryAnimalMersViralEstimateInformation",
+                  `${MapPinColours['PrimaryAnimalMersViralEstimateInformation']}`,
                   "#FFFFFF"
                 ],
                 "circle-radius": 8,
@@ -182,49 +182,49 @@ export const MersMap = () => {
                 ["==", ["get", "__typename"], "AnimalMersEvent"],
                 ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Sheep]
               ], 1, 0]],
-              "Human Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename"], "HumanMersEstimate"], 1, 0]],
-              "Human Viral Estimates": ["+", ["case", ["==", ["get", "__typename"], "HumanMersViralEstimate"], 1, 0]],
-              "Animal Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersEstimate"], 1, 0]],
+              "Human Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryHumanMersSeroprevalenceEstimateInformation"], 1, 0]],
+              "Human Viral Estimates": ["+", ["case", ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryHumanMersViralEstimateInformation"], 1, 0]],
+              "Animal Seroprevalence Estimates": ["+", ["case", ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersSeroprevalenceEstimateInformation"], 1, 0]],
               "Camel Seroprevalence Estimates": ["+", ["case", [ "all",
-                ["==", ["get", "__typename"], "AnimalMersEstimate"],
-                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Camel]
+                ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
+                ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Camel]
               ], 1, 0]],
               "Bat Seroprevalence Estimates": ["+", ["case", [ "all",
-                ["==", ["get", "__typename"], "AnimalMersEstimate"],
-                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Bat]
+                ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
+                ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Bat]
               ], 1, 0]],
               "Goat Seroprevalence Estimates": ["+", ["case", [ "all",
-                ["==", ["get", "__typename"], "AnimalMersEstimate"],
-                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Goat]
+                ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
+                ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Goat]
               ], 1, 0]],
               "Cattle Seroprevalence Estimates": ["+", ["case", [ "all",
-                ["==", ["get", "__typename"], "AnimalMersEstimate"],
-                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Cattle]
+                ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
+                ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Cattle]
               ], 1, 0]],
               "Sheep Seroprevalence Estimates": ["+", ["case", [ "all",
-                ["==", ["get", "__typename"], "AnimalMersEstimate"],
-                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Sheep]
+                ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
+                ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Sheep]
               ], 1, 0]],
-              "Animal Viral Estimates": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersViralEstimate"], 1, 0]],
+              "Animal Viral Estimates": ["+", ["case", ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersViralEstimateInformation"], 1, 0]],
               "Camel Viral Estimates": ["+", ["case", [ "all",
-                ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
-                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Camel]
+                ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersViralEstimateInformation"],
+                ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Camel]
               ], 1, 0]],
               "Bat Viral Estimates": ["+", ["case", [ "all",
-                ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
-                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Bat]
+                ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersViralEstimateInformation"],
+                ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Bat]
               ], 1, 0]],
               "Goat Viral Estimates": ["+", ["case", [ "all",
-                ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
-                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Goat]
+                ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersViralEstimateInformation"],
+                ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Goat]
               ], 1, 0]],
               "Cattle Viral Estimates": ["+", ["case", [ "all",
-                ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
-                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Cattle]
+                ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersViralEstimateInformation"],
+                ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Cattle]
               ], 1, 0]],
               "Sheep Viral Estimates": ["+", ["case", [ "all",
-                ["==", ["get", "__typename"], "AnimalMersViralEstimate"],
-                ["==", ["get", "animalSpecies"], MersAnimalSpecies.Sheep]
+                ["==", ["get", "__typename", ["get", "primaryEstimateInfo"]], "PrimaryAnimalMersViralEstimateInformation"],
+                ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Sheep]
               ], 1, 0]],
             },
             validClusterPropertyKeys: [
@@ -270,15 +270,15 @@ export const MersMap = () => {
               "Goat Events": MapPinColours['animal-mers-event-alt'],
               "Cattle Events": MapPinColours['animal-mers-event-alt'],
               "Sheep Events": MapPinColours['animal-mers-event-alt'],
-              "Human Seroprevalence Estimates": MapPinColours['HumanMersEstimate'],
-              "Animal Seroprevalence Estimates": MapPinColours['AnimalMersEstimate'],
+              "Human Seroprevalence Estimates": MapPinColours['PrimaryHumanMersSeroprevalenceEstimateInformation'],
+              "Animal Seroprevalence Estimates": MapPinColours['PrimaryAnimalMersSeroprevalenceEstimateInformation'],
               "Camel Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
               "Bat Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
               "Goat Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
               "Cattle Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
               "Sheep Seroprevalence Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
-              "Human Viral Estimates": MapPinColours['HumanMersViralEstimate'],
-              "Animal Viral Estimates": MapPinColours['AnimalMersViralEstimate'],
+              "Human Viral Estimates": MapPinColours['PrimaryHumanMersViralEstimateInformation'],
+              "Animal Viral Estimates": MapPinColours['PrimaryAnimalMersViralEstimateInformation'],
               "Camel Viral Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
               "Bat Viral Estimates": MapPinColours['mers-animal-viral-estimate-alt'],
               "Goat Viral Estimates": MapPinColours['mers-animal-viral-estimate-alt'],

@@ -247,10 +247,10 @@ export const mersDataTypeSuperOptionToLabelMap = {
 }
 
 export const mersDataTypeToColourClassnameMap = {
-  "HumanMersEstimate": "bg-mers-human-estimate",
-  "HumanMersViralEstimate": "bg-mers-human-viral-estimate",
-  "AnimalMersEstimate": "bg-mers-animal-estimate",
-  "AnimalMersViralEstimate": "bg-mers-animal-viral-estimate",
+  "PrimaryHumanMersSeroprevalenceEstimateInformation": "bg-mers-human-estimate",
+  "PrimaryHumanMersViralEstimateInformation": "bg-mers-human-viral-estimate",
+  "PrimaryAnimalMersSeroprevalenceEstimateInformation": "bg-mers-animal-estimate",
+  "PrimaryAnimalMersViralEstimateInformation": "bg-mers-animal-viral-estimate",
   "AnimalMersEvent": "bg-mers-animal-event",
   "HumanMersEvent": "bg-mers-human-event"
 }

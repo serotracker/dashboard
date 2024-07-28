@@ -58,6 +58,17 @@ export function filterData(
       if (!filters[key].length) return true;
 
       switch (key) {
+        case "__typename": {
+          if ("primaryEstimateInfo" in item) {
+            return filters['__typename'].includes(item['primaryEstimateInfo']['__typename']);
+          }
+
+          return defaultDataFilterHandler({
+            item,
+            key,
+            filters
+          });
+        }
         case "start_date": {
           const filterStartDate = new Date(filters["start_date"][0]);
 

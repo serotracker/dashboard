@@ -18,10 +18,10 @@ const initialMersContextState = {
   faoMersEventData: [],
   selectedFilters: {
     ["__typename"]: [
-      "HumanMersEstimate",
-      "HumanMersViralEstimate",
-      "AnimalMersEstimate",
-      "AnimalMersViralEstimate",
+      "PrimaryHumanMersSeroprevalenceEstimateInformation",
+      "PrimaryHumanMersViralEstimateInformation",
+      "PrimaryAnimalMersSeroprevalenceEstimateInformation",
+      "PrimaryAnimalMersViralEstimateInformation",
       "AnimalMersEvent",
       "HumanMersEvent"
     ],

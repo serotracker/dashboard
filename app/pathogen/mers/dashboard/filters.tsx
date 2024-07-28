@@ -101,10 +101,10 @@ export const MersFilters = (props: MersFiltersProps) => {
       filterData={{
         ...(sharedFilterData?.mersFilterOptions ? {
           __typename: [
-            "HumanMersEstimate",
-            "HumanMersViralEstimate",
-            "AnimalMersEstimate",
-            "AnimalMersViralEstimate",
+            "PrimaryHumanMersSeroprevalenceEstimateInformation",
+            "PrimaryHumanMersViralEstimateInformation",
+            "PrimaryAnimalMersSeroprevalenceEstimateInformation",
+            "PrimaryAnimalMersViralEstimateInformation",
             "AnimalMersEvent",
             "HumanMersEvent"
           ],
