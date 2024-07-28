@@ -25,6 +25,8 @@ import {
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 
 export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
+  latitude: estimate.primaryEstimateInfo.latitude,
+  longitude: estimate.primaryEstimateInfo.longitude,
   primaryEstimateWhoRegion: estimate.primaryEstimateInfo.whoRegion,
   primaryEstimateCity: estimate.primaryEstimateInfo.city,
   primaryEstimateState: estimate.primaryEstimateInfo.state,
