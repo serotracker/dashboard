@@ -307,6 +307,22 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
   type: PopUpContentRowType.DATE_RANGE,
   dateRangeStart: estimate.primaryEstimateInfo.samplingStartDate ? parseISO(estimate.primaryEstimateInfo.samplingStartDate) : undefined,
   dateRangeEnd: estimate.primaryEstimateInfo.samplingEndDate ? parseISO(estimate.primaryEstimateInfo.samplingEndDate) : undefined
+}, estimate.primaryEstimateInfo.sampleNumerator ? {
+  title: "Sample Numerator",
+  type: PopUpContentRowType.NUMBER,
+  value: estimate.primaryEstimateInfo.sampleNumerator
+} : {
+  title: "Sample Numerator",
+  type: PopUpContentRowType.TEXT,
+  text: 'N/A'
+}, estimate.primaryEstimateInfo.sampleDenominator ? {
+  title: "Sample Denominator",
+  type: PopUpContentRowType.NUMBER,
+  value: estimate.primaryEstimateInfo.sampleDenominator
+} : {
+  title: "Sample Denominator",
+  type: PopUpContentRowType.TEXT,
+  text: 'N/A'
 }, {
   title: "First Author Full Name",
   type: PopUpContentRowType.TEXT,
