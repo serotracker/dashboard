@@ -18,14 +18,6 @@ export function createDonutChartAndHoverPopup<
   map: mapboxgl.Map;
   coords: [number, number];
 }) {
-  if(
-    'Reported Human Events' in props.properties && props.properties['Reported Human Events'] === 5 &&
-    'Human Cases' in props.properties && props.properties['Human Cases'] === 5 &&
-    'Human Deaths' in props.properties && props.properties['Human Deaths'] === 0
-  ) {
-    console.log('props.properties', props.properties);
-  }
-
   const counts = props.validClusterPropertyKeys.map((propertyKey) => ({
     count: props.properties[propertyKey] ?? 0,
     propertyKey
@@ -252,7 +244,6 @@ export const computeClusterMarkers = <
       const coords = feature.geometry.coordinates;
       const properties = feature.properties;
 
-      console.log('feature.properties', feature.properties);
       if (properties && properties.cluster && coords.length >= 2) {
         const id = properties.cluster_id;
 
