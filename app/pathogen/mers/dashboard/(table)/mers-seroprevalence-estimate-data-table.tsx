@@ -13,35 +13,35 @@ import {
   mersDataTypeToColourClassnameMap,
   mersDataTypeToLabelMap
 } from "../(map)/shared-mers-map-pop-up-variables";
-import { mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { mapMersEstimateBaseForDataTable, mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 
 const mersSeroprevalenceEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
-  fieldName: 'estimateId',
+  fieldName: 'primaryEstimateId',
   label: 'Estimate ID',
   isHideable: false,
   isFixed: true,
-  fieldNameForLink: 'sourceUrl',
+  fieldNameForLink: 'primaryEstimateSourceUrl',
   size: 700,
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: '__typename',
+  fieldName: 'primaryEstimateTypename',
   valueToDisplayLabel: (typename: string) => isMersSeroprevalenceEstimateTypename(typename) ? mersDataTypeToLabelMap[typename] : typename,
   valueToColourSchemeClassnameMap: mersDataTypeToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Estimate Type'
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'seroprevalence',
+  fieldName: 'primaryEstimateSeroprevalence',
   label: 'Seroprevalence'
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'seroprevalence95CILower',
+  fieldName: 'primaryEstimateSeroprevalence95CILower',
   label: 'Seroprevalence (95% Confidence Interval Lower Bound)',
   initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'seroprevalence95CIUpper',
+  fieldName: 'primaryEstimateSeroprevalence95CIUpper',
   label: 'Seroprevalence (95% Confidence Interval Upper Bound)',
   initiallyVisible: false
 },
@@ -127,6 +127,15 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={state.filteredData
         .filter((dataPoint): dataPoint is MersSeroprevalenceEstimate => isMersSeroprevalenceEstimate(dataPoint))
+        .map((dataPoint) => ({
+          ...dataPoint,
+          ...mapMersEstimateBaseForDataTable(dataPoint),
+          primaryEstimateId: dataPoint.primaryEstimateInfo.estimateId,
+          primaryEstimateTypename: dataPoint.primaryEstimateInfo.__typename,
+          primaryEstimateSeroprevalence: dataPoint.primaryEstimateInfo.seroprevalence,
+          primaryEstimateSeroprevalence95CILower: dataPoint.primaryEstimateInfo.seroprevalence95CILower,
+          primaryEstimateSeroprevalence95CIUpper: dataPoint.primaryEstimateInfo.seroprevalence95CIUpper,
+        }))
       }
     />
   )

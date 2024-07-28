@@ -12,6 +12,7 @@ import { addActionToSelectedFilters } from "../../filter-update-steps/add-action
 import { adjustMapPosition } from "../../filter-update-steps/adjust-map-position";
 import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
 import { MersPrimaryEstimatesQuery } from "@/gql/graphql";
+import { filterMersEstimates } from "./mers-data-filtering";
 
 const initialMersContextState = {
   filteredData: [],
@@ -51,16 +52,28 @@ export const isHumanMersViralEstimate = (estimate: MersEstimate): estimate is Hu
   estimate.primaryEstimateInfo.__typename === 'PrimaryHumanMersViralEstimateInformation';
 
 export const isMersSeroprevalenceEstimate = (estimate: MersEstimate): estimate is MersSeroprevalenceEstimate =>
-  isHumanMersSeroprevalenceEstimate(estimate) && isAnimalMersSeroprevalenceEstimate(estimate);
+  isHumanMersSeroprevalenceEstimate(estimate) || isAnimalMersSeroprevalenceEstimate(estimate);
+
+export const isHumanMersEstimate = (estimate: MersEstimate): estimate is HumanMersEstimate =>
+  isHumanMersSeroprevalenceEstimate(estimate) || isHumanMersViralEstimate(estimate);
+
+export const isAnimalMersEstimate = (estimate: MersEstimate): estimate is AnimalMersEstimate =>
+  isAnimalMersSeroprevalenceEstimate(estimate) || isAnimalMersViralEstimate(estimate);
 
 export const isMersViralEstimate = (estimate: MersEstimate): estimate is MersViralEstimate =>
-  isAnimalMersViralEstimate(estimate) && isHumanMersViralEstimate(estimate);
+  isAnimalMersViralEstimate(estimate) || isHumanMersViralEstimate(estimate);
 
 export type MersSeroprevalenceEstimate =
   | HumanMersSeroprevalenceEstimate
   | AnimalMersSeroprevalenceEstimate;
 export type MersViralEstimate = 
   | HumanMersViralEstimate
+  | AnimalMersViralEstimate;
+export type HumanMersEstimate =
+  | HumanMersSeroprevalenceEstimate
+  | HumanMersViralEstimate;
+export type AnimalMersEstimate =
+  | AnimalMersSeroprevalenceEstimate
   | AnimalMersViralEstimate;
 
 export type MersEstimate = 
@@ -149,10 +162,10 @@ export const MersProviders = (props: MersProvidersProps) => {
           ...filterUpdateData,
           state: {
             ...filterUpdateData.state,
-            filteredData: filterData(
-              filterUpdateData.action.payload.data.mersEstimates,
-              filterUpdateData.state.selectedFilters
-            ),
+            filteredData: filterMersEstimates({
+              mersEstimates: filterUpdateData.action.payload.data.mersEstimates,
+              selectedFilters: filterUpdateData.state.selectedFilters
+            }).filteredMersEstimates,
             faoMersEventData: filterData(
               filterUpdateData.action.payload.data.faoMersEventData.map((event: any) => ({
                 ...event,
@@ -174,8 +187,14 @@ export const MersProviders = (props: MersProvidersProps) => {
       })}
       filterResetHandlerOverride={({ state, action }) => ({
         ...state,
-        filteredData: filterData(action.payload.data.mersEstimates, {}),
-        faoMersEventData: filterData(action.payload.data.faoMersEventData, {}),
+        filteredData: filterMersEstimates({
+          mersEstimates: action.payload.data.mersEstimates,
+          selectedFilters: initialMersContextState.selectedFilters
+        }).filteredMersEstimates,
+        faoMersEventData: filterData(
+          action.payload.data.faoMersEventData,
+          initialMersContextState.selectedFilters
+        ),
         selectedFilters: initialMersContextState.selectedFilters,
         dataFiltered: false,
       })}

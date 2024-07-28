@@ -12,35 +12,35 @@ import {
   mersDataTypeToColourClassnameMap,
   mersDataTypeToLabelMap
 } from "../(map)/shared-mers-map-pop-up-variables";
-import { mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { mapMersEstimateBaseForDataTable, mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 
 const mersViralEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
-  fieldName: 'estimateId',
+  fieldName: 'primaryEstimateId',
   label: 'Estimate ID',
   isHideable: false,
   isFixed: true,
-  fieldNameForLink: 'sourceUrl',
+  fieldNameForLink: 'primaryEstimateSourceUrl',
   size: 700,
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: '__typename',
+  fieldName: 'primaryEstimateTypename',
   valueToDisplayLabel: (typename: string) => isMersViralEstimateTypename(typename) ? mersDataTypeToLabelMap[typename] : typename,
   valueToColourSchemeClassnameMap: mersDataTypeToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Estimate Type'
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'positivePrevalence',
+  fieldName: 'primaryEstimatePositivePrevalence',
   label: 'Positive Prevalence'
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'positivePrevalence95CILower',
+  fieldName: 'primaryEstimatePositivePrevalence95CILower',
   label: 'Positive Prevalence (95% Confidence Interval Lower Bound)',
   initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'positivePrevalence95CIUpper',
+  fieldName: 'primaryEstimatePositivePrevalence95CIUpper',
   label: 'Positive Prevalence (95% Confidence Interval Upper Bound)',
   initiallyVisible: false
 },
@@ -126,6 +126,15 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={state.filteredData
         .filter((dataPoint): dataPoint is MersViralEstimate => isMersViralEstimate(dataPoint))
+        .map((dataPoint) => ({
+          ...dataPoint,
+          ...mapMersEstimateBaseForDataTable(dataPoint),
+          primaryEstimateId: dataPoint.primaryEstimateInfo.estimateId,
+          primaryEstimateTypename: dataPoint.primaryEstimateInfo.__typename,
+          primaryEstimatePositivePrevalence: dataPoint.primaryEstimateInfo.positivePrevalence,
+          primaryEstimatePositivePrevalence95CILower: dataPoint.primaryEstimateInfo.positivePrevalence95CILower,
+          primaryEstimatePositivePrevalence95CIUpper: dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper,
+        }))
       }
     />
   )

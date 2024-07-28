@@ -28,7 +28,7 @@ const defaultDataFilterHandler = (input: DefaultDataFilterHandlerInput): boolean
 
 export function filterData(
   data: any[],
-  filters: { [key: string]: string[] }
+  filters: Record<string, string[]>
 ): any[] {
   const filterKeys = Object.keys(filters);
 

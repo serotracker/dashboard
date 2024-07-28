@@ -1,7 +1,7 @@
-import { TimeInterval, doTimeIntervalsOverlap } from "./date-utils";
+import { FullyBoundedTimeInterval, doTimeIntervalsOverlap } from "./date-utils";
 import { isAfter, isBefore, startOfYear, addYears, endOfYear, parseISO } from "date-fns";
 
-type GroupableIntoTimeBuckets = { groupingTimeInterval: TimeInterval };
+type GroupableIntoTimeBuckets = { groupingTimeInterval: FullyBoundedTimeInterval };
 
 interface ValidBucketSizes {
   years: number
@@ -19,7 +19,7 @@ interface GroupDataPointsIntoTimeBucketsOutput<
   TDataPoint extends GroupableIntoTimeBuckets
 > {
   groupedDataPoints: {
-    interval: TimeInterval;
+    interval: FullyBoundedTimeInterval;
     dataPoints: TDataPoint[];
   }[];
 }
@@ -33,12 +33,12 @@ interface GenerateBucketsForTimeIntervalInput {
 }
 
 interface GenerateBucketsForTimeIntervalOutput {
-  buckets: TimeInterval[];
+  buckets: FullyBoundedTimeInterval[];
 }
 
 const generateBucketsForTimeInterval = (input: GenerateBucketsForTimeIntervalInput): GenerateBucketsForTimeIntervalOutput => {
   let currentIntervalStartDate = startOfYear(input.earliestDate);
-  const buckets: TimeInterval[] = [];
+  const buckets: FullyBoundedTimeInterval[] = [];
 
   if(input.groupingBucketSize.years === 0) {
     throw new Error("Unable to group data points with a bucket size of zero years.")
