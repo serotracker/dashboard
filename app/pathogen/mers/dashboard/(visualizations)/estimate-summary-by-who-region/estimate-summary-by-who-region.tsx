@@ -311,7 +311,7 @@ export const EstimateSummaryByWhoRegion = (props: EstimateSummaryByWhoRegionProp
                   .find(({primaryKey}) => primaryKey === whoRegion);
                 const dataForCell = dataForRow
                   ? group === 'All'
-                    ? validGroups.filter((group) => group !== 'All').flatMap((group) => dataForRow[group]?.data ?? [])
+                    ? validGroups.flatMap((group) => dataForRow[group]?.data ?? [])
                     : (dataForRow[group]?.data ?? [])
                   : [];
 
