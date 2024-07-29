@@ -119,7 +119,7 @@ export function PathogenMapPopup<
       // the correct location when clicking on one data point while having the popup already open.
       key={transformedProperties.id}
       closeOnClick={false}
-      maxWidth="560px"
+      maxWidth="660px"
       anchor="top"
       latitude={latitude}
       longitude={longitude}

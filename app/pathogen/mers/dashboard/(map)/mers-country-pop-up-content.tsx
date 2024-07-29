@@ -67,6 +67,7 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
       topBannerConfiguration={{
         enabled: false
       }}
+      alternateViewConfiguration={{ enabled: false }}
       rows={[
         {
           title: 'Human Seroprevalence Estimates'.replace(' ', '\u00A0'),

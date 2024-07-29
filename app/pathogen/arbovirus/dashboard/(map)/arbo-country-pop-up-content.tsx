@@ -45,8 +45,10 @@ export const ArboCountryPopupContent = ({ record }: ArboCountryPopupContentProps
         label: "Total Estimates".replace(' ', '\u00A0'),
         value: record.dataPoints.length.toString(),
         valueTextAlignment: PopupContentTextAlignment.RIGHT,
-        bannerColourClassname: "bg-gray-200"
+        bannerColourClassname: "bg-gray-200",
+        alternateViewButtonEnabled: false
       }}
+      alternateViewConfiguration={{ enabled: false }}
       rows={allArbovirusesPresentInData
         .sort((arbovirusA, arbovirusB) => filterArbovirusToSortOrderMap[arbovirusA] - filterArbovirusToSortOrderMap[arbovirusB])
         .map((arbovirus) => ({

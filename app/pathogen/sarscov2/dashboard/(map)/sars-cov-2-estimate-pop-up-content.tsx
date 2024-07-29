@@ -37,6 +37,7 @@ export const SarsCov2EstimatePopupContent = (props: SarsCov2EstimatePopupContent
       topBannerConfiguration={{
         enabled: false
       }}
+      alternateViewConfiguration={{ enabled: false }}
       rows={[{
         title: "Population Group",
         type: PopUpContentRowType.TEXT,
@@ -90,7 +91,8 @@ export const SarsCov2EstimatePopupContent = (props: SarsCov2EstimatePopupContent
         bannerText: `${riskOfBias} Risk of Bias`,
         bannerColourClassname: riskOfBiasToColourClassnameMap[riskOfBias] ?? 'bg-gray-200',
         isTextBolded: false,
-        isTextCentered: true
+        isTextCentered: true,
+        alternateViewButtonEnabled: false
       } : {
         enabled: false
       }}
