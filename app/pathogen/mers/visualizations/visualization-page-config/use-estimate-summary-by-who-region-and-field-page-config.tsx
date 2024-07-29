@@ -2,25 +2,19 @@ import { useState, useCallback, useMemo } from "react";
 import { MersVisualizationInformation } from "../visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { WHORegionsTooltip } from "@/components/customs/tooltip-content";
+import { EstimateSummaryByWhoRegion } from "../../dashboard/(visualizations)/estimate-summary-by-who-region/estimate-summary-by-who-region";
 
 export enum EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption {
-  MEDIAN_HUMAN_SEROPREVALENCE = "MEDIAN_HUMAN_SEROPREVALENCE",
-  HUMAN_SEROPREVALENCE_ESTIMATE_COUNT = "HUMAN_SEROPREVALENCE_ESTIMATE_COUNT",
-  MEDIAN_ANIMAL_SEROPREVALENCE = "MEDIAN_ANIMAL_SEROPREVALENCE",
-  ANIMAL_SEROPREVALENCE_ESTIMATE_COUNT = "ANIMAL_SEROPREVALENCE_ESTIMATE_COUNT",
-  MEDIAN_HUMAN_VIRAL_PREVALENCE = "MEDIAN_HUMAN_VIRAL_PREVALENCE",
-  HUMAN_VIRAL_PREVALENCE_ESTIMATE_COUNT = "HUMAN_VIRAL_PREVALENCE_ESTIMATE_COUNT",
-  MEDIAN_ANIMAL_VIRAL_PREVALENCE = "MEDIAN_ANIMAL_VIRAL_PREVALENCE",
-  ANIMAL_VIRAL_PREVALENCE_ESTIMATE_COUNT = "ANIMAL_VIRAL_PREVALENCE_ESTIMATE_COUNT",
+  AGGREGATED_HUMAN_SEROPREVALENCE = "AGGREGATED_HUMAN_SEROPREVALENCE",
+  AGGREGATED_ANIMAL_SEROPREVALENCE = "AGGREGATED_ANIMAL_SEROPREVALENCE",
+  AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE = "AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE",
+  AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE = "AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE",
 }
 
 export enum EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption {
   AGE_GROUP = "AGE_GROUP",
-  SAMPLE_FRAME = "SAMPLE_FRAME",
-  SOURCE_TYPE = "SOURCE_TYPE",
-  ASSAY = "ASSAY",
-  ISOTYPES = "ISOTYPES",
-  TEST_PRODUCER = "TEST_PRODUCER",
+  SEX = "SEX",
+  ANIMAL_SPECIES = "ANIMAL_SPECIES"
 }
 
 export const useEstimateSummaryByWhoRegionAndFieldPageConfig = () => {
@@ -28,7 +22,7 @@ export const useEstimateSummaryByWhoRegionAndFieldPageConfig = () => {
     estimateSummaryByWhoRegionVariableOfInterest,
     setEstimateSummaryByWhoRegionVariableOfInterest,
   ] = useState<EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption>(
-    EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.MEDIAN_HUMAN_SEROPREVALENCE
+    EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE
   );
 
   const [
@@ -53,30 +47,22 @@ export const useEstimateSummaryByWhoRegionAndFieldPageConfig = () => {
       dropdownOptionGroups: [{
         groupHeader: 'Seroprevalence Estimates',
         options: [
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.MEDIAN_HUMAN_SEROPREVALENCE,
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE_ESTIMATE_COUNT,
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.MEDIAN_ANIMAL_SEROPREVALENCE,
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE_ESTIMATE_COUNT
+          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE,
+          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE
         ]
       }, {
         groupHeader: 'Viral Positive Prevalence Estimates',
         options: [
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.MEDIAN_HUMAN_VIRAL_PREVALENCE,
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE_ESTIMATE_COUNT,
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.MEDIAN_ANIMAL_VIRAL_PREVALENCE,
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE_ESTIMATE_COUNT
+          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE,
+          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE
         ]
       }],
       chosenDropdownOption: estimateSummaryByWhoRegionVariableOfInterest,
       dropdownOptionToLabelMap: {
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.MEDIAN_HUMAN_SEROPREVALENCE]: '',
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE_ESTIMATE_COUNT]: '',
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.MEDIAN_ANIMAL_SEROPREVALENCE]: '',
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE_ESTIMATE_COUNT]: '',
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.MEDIAN_HUMAN_VIRAL_PREVALENCE]: '',
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE_ESTIMATE_COUNT]: '',
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.MEDIAN_ANIMAL_VIRAL_PREVALENCE]: '',
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE_ESTIMATE_COUNT]: '',
+        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE]: 'Aggregated Human Seroprevalence',
+        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE]: 'Aggregated Animal Seroprevalence',
+        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE]: 'Aggregated Human Viral Positive Prevalence',
+        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE]: 'Aggregated Animal Viral Positive Prevalence',
       },
       onDropdownOptionChange: (option) => {
         setEstimateSummaryByWhoRegionVariableOfInterest(option);
@@ -89,32 +75,18 @@ export const useEstimateSummaryByWhoRegionAndFieldPageConfig = () => {
       hoverColourClassname: 'hover:bg-mersHover/50',
       highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
       dropdownOptionGroups: [{
-        groupHeader: 'Study Information',
-        options: [
-          EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.SOURCE_TYPE,
-        ]
-      }, {
         groupHeader: 'Population Sampled',
         options: [
-          EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.SAMPLE_FRAME,
           EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.AGE_GROUP,
-        ]
-      }, {
-        groupHeader: 'Test Parameters',
-        options: [
-          EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.ASSAY,
-          EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.ISOTYPES,
-          EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.TEST_PRODUCER,
+          EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.ANIMAL_SPECIES,
+          EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.SEX,
         ]
       }],
       chosenDropdownOption: estimateSummaryByWhoRegionFieldOfInterest,
       dropdownOptionToLabelMap: {
-        [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.SOURCE_TYPE]: "Source Type",
-        [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.SAMPLE_FRAME]: "Sample Frame",
         [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.AGE_GROUP]: "Age Group",
-        [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.ASSAY]: "Assay",
-        [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.ISOTYPES]: "Isotype",
-        [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.TEST_PRODUCER]: "Test Producer",
+        [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.ANIMAL_SPECIES]: "Animal Species",
+        [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.SEX]: "Sex",
       },
       onDropdownOptionChange: (option) => {
         setEstimateSummaryByWhoRegionFieldOfInterest(option);
@@ -136,7 +108,7 @@ export const useEstimateSummaryByWhoRegionAndFieldPageConfig = () => {
     EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption,
     EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption
   >['renderVisualization'] = useCallback(({ data }) => (
-    <div> ABC </div>
+    <EstimateSummaryByWhoRegion/>
   ), []);
 
   return {

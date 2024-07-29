@@ -24,11 +24,15 @@ export const MersVisualizationsSection = () => {
   }, {
     ...mersVisualizationInformation[MersVisualizationId.ESTIMATES_BY_REGION],
      className: "h-full-screen"
+  }, {
+    ...mersVisualizationInformation[MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION],
+     className: "h-fit"
   }];
 
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
     MersVisualizationId.SUMMARY_BY_REGION,
     MersVisualizationId.ESTIMATES_BY_REGION,
+    MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION
   ].includes(visualizationInfo.id));
 
   const { filteredData, faoMersEventData } = useContext(MersContext);
