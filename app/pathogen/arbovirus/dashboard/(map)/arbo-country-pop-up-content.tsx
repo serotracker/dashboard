@@ -46,7 +46,6 @@ export const ArboCountryPopupContent = ({ record }: ArboCountryPopupContentProps
         value: record.dataPoints.length.toString(),
         valueTextAlignment: PopupContentTextAlignment.RIGHT,
         bannerColourClassname: "bg-gray-200",
-        alternateViewButtonEnabled: false
       }}
       alternateViewConfiguration={{ enabled: false }}
       rows={allArbovirusesPresentInData

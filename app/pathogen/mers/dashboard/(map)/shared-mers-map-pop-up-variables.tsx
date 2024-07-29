@@ -621,7 +621,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
         ...element.rows,
-        'Animal Species': element.subestimate.animalSpecies
+        'Animal Species': animalSpeciesToStringMap[element.subestimate.animalSpecies]
       }))
   }] : []),
   ...(input.estimate.geographicalAreaSubestimates.length > 0 ? [{
