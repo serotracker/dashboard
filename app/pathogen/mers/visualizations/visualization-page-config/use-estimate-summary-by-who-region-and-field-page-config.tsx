@@ -2,20 +2,11 @@ import { useState, useCallback, useMemo } from "react";
 import { MersVisualizationInformation } from "../visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { WHORegionsTooltip } from "@/components/customs/tooltip-content";
-import { EstimateSummaryByWhoRegion } from "../../dashboard/(visualizations)/estimate-summary-by-who-region/estimate-summary-by-who-region";
-
-export enum EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption {
-  AGGREGATED_HUMAN_SEROPREVALENCE = "AGGREGATED_HUMAN_SEROPREVALENCE",
-  AGGREGATED_ANIMAL_SEROPREVALENCE = "AGGREGATED_ANIMAL_SEROPREVALENCE",
-  AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE = "AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE",
-  AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE = "AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE",
-}
-
-export enum EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption {
-  AGE_GROUP = "AGE_GROUP",
-  SEX = "SEX",
-  ANIMAL_SPECIES = "ANIMAL_SPECIES"
-}
+import {
+  EstimateSummaryByWhoRegion,
+  EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption,
+  EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption
+} from "../../dashboard/(visualizations)/estimate-summary-by-who-region/estimate-summary-by-who-region";
 
 export const useEstimateSummaryByWhoRegionAndFieldPageConfig = () => {
   const [
@@ -108,8 +99,12 @@ export const useEstimateSummaryByWhoRegionAndFieldPageConfig = () => {
     EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption,
     EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption
   >['renderVisualization'] = useCallback(({ data }) => (
-    <EstimateSummaryByWhoRegion/>
-  ), []);
+    <EstimateSummaryByWhoRegion
+      variableOfInterest={estimateSummaryByWhoRegionVariableOfInterest}
+      fieldOfInterest={estimateSummaryByWhoRegionFieldOfInterest}
+      data={data}
+    />
+  ), [ estimateSummaryByWhoRegionVariableOfInterest, estimateSummaryByWhoRegionFieldOfInterest ]);
 
   return {
     getDisplayNameForEstimateSummaryByWhoRegionAndField,

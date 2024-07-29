@@ -153,6 +153,7 @@ export const mersPrimaryEstimates = gql`
           animalDetectionSettings
           animalPurpose
           animalImportedOrLocal
+          animalAgeGroup 
         }
         ... on PrimaryAnimalMersViralEstimateInformation {
           __typename
@@ -203,6 +204,7 @@ export const mersPrimaryEstimates = gql`
           animalDetectionSettings
           animalPurpose
           animalImportedOrLocal
+          animalAgeGroup 
         }
       }
       geographicalAreaSubestimates {

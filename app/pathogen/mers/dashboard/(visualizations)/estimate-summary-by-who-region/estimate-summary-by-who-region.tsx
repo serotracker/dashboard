@@ -12,49 +12,245 @@ import { WhoRegion } from "@/gql/graphql";
 import uniq from "lodash/uniq";
 import { groupDataForRechartsTwice } from "@/components/customs/visualizations/group-data-for-recharts/group-data-for-recharts-twice";
 import sum from "lodash/sum";
+import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
+import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
+import { useMemo } from "react";
+import {
+  MersEstimate,
+  isAnimalMersEstimate,
+  isAnimalMersSeroprevalenceEstimate,
+  isAnimalMersViralEstimate,
+  isHumanMersAgeGroupSubEstimate,
+  isHumanMersSeroprevalenceEstimate,
+  isHumanMersViralEstimate,
+} from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 
-export const EstimateSummaryByWhoRegion = () => {
+export enum EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption {
+  AGGREGATED_HUMAN_SEROPREVALENCE = "AGGREGATED_HUMAN_SEROPREVALENCE",
+  AGGREGATED_ANIMAL_SEROPREVALENCE = "AGGREGATED_ANIMAL_SEROPREVALENCE",
+  AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE = "AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE",
+  AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE = "AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE",
+}
+
+export enum EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption {
+  AGE_GROUP = "AGE_GROUP",
+  SEX = "SEX",
+  ANIMAL_SPECIES = "ANIMAL_SPECIES"
+}
+
+
+export const variableOfInterestToEstimateFilteringFunction: Record<EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption, (estimate: MersEstimate) => boolean> = {
+  [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE]: (estimate) => isHumanMersSeroprevalenceEstimate(estimate),
+  [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE]: (estimate) => isAnimalMersSeroprevalenceEstimate(estimate),
+  [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE]: (estimate) => isHumanMersViralEstimate(estimate),
+  [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE]: (estimate) => isAnimalMersViralEstimate(estimate),
+} 
+
+
+type FieldOfInterestExtractingFunctionResult = Array<{
+  whoRegion: WhoRegion;
+  sampleNumerator: number;
+  sampleDenominator: number;
+  group: string;
+}>;
+
+export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption, (estimate: MersEstimate) => FieldOfInterestExtractingFunctionResult> = {
+  [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.SEX]: (estimate) => {
+    const { whoRegion, sex, sampleDenominator, sampleNumerator } = estimate.primaryEstimateInfo;
+
+    if(!whoRegion) {
+      return [];
+    }
+
+    if(estimate.sexSubestimates.length === 0) {
+      if(
+        sampleNumerator === undefined ||
+        sampleNumerator === null ||
+        sampleDenominator === undefined ||
+        sampleDenominator === null
+      ) {
+        return [];
+      }
+
+      return sex ? [{
+        whoRegion: whoRegion,
+        sampleDenominator,
+        sampleNumerator,
+        group: sex
+      }] : []
+    }
+
+    return estimate.sexSubestimates.map((subestimate) => {
+      const subestimateSampleNumerator = subestimate.estimateInfo.sampleNumerator;
+      const subestimateSampleDenominator = subestimate.estimateInfo.sampleDenominator;
+
+      if(
+        subestimateSampleNumerator === undefined ||
+        subestimateSampleNumerator === null ||
+        subestimateSampleDenominator === undefined ||
+        subestimateSampleDenominator === null
+      ) {
+        return undefined;
+      }
+
+      return {
+        whoRegion,
+        group: subestimate.sex,
+        sampleNumerator: subestimateSampleNumerator,
+        sampleDenominator: subestimateSampleDenominator
+      }
+    }).filter((element): element is NonNullable<typeof element> => !!element);
+  },
+  [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.AGE_GROUP]: (estimate) => {
+    const { whoRegion, sampleDenominator, sampleNumerator } = estimate.primaryEstimateInfo;
+    const ageGroups = isAnimalMersEstimate(estimate)
+      ? estimate.primaryEstimateInfo.animalAgeGroup
+      : estimate.primaryEstimateInfo.ageGroup
+
+    if(!whoRegion) {
+      return [];
+    }
+
+    if(estimate.ageGroupSubestimates.length === 0) {
+      if(
+        sampleNumerator === undefined ||
+        sampleNumerator === null ||
+        sampleDenominator === undefined ||
+        sampleDenominator === null
+      ) {
+        return [];
+      }
+
+      return ageGroups.map((ageGroup) => ({
+        whoRegion: whoRegion,
+        sampleDenominator: Math.floor(sampleDenominator / ageGroups.length),
+        sampleNumerator: Math.floor(sampleNumerator / ageGroups.length),
+        group: ageGroup
+      }));
+    }
+
+    return estimate.ageGroupSubestimates.flatMap((subestimate) => {
+      const subestimateSampleNumerator = subestimate.estimateInfo.sampleNumerator;
+      const subestimateSampleDenominator = subestimate.estimateInfo.sampleDenominator;
+
+      if(
+        subestimateSampleNumerator === undefined ||
+        subestimateSampleNumerator === null ||
+        subestimateSampleDenominator === undefined ||
+        subestimateSampleDenominator === null
+      ) {
+        return undefined;
+      }
+      
+      const ageGroups = isHumanMersAgeGroupSubEstimate(subestimate)
+        ? subestimate.ageGroup
+        : subestimate.animalAgeGroup;
+
+      return ageGroups.map((ageGroup) => ({
+        whoRegion: whoRegion,
+        sampleDenominator: Math.floor(subestimateSampleDenominator / ageGroups.length),
+        sampleNumerator: Math.floor(subestimateSampleNumerator / ageGroups.length),
+        group: ageGroup
+      }));
+    }).filter((element): element is NonNullable<typeof element> => !!element);
+  },
+  [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.ANIMAL_SPECIES]: (estimate) => {
+    const { whoRegion, sampleDenominator, sampleNumerator } = estimate.primaryEstimateInfo;
+
+    if(!whoRegion) {
+      return [];
+    }
+
+    if(!isAnimalMersEstimate(estimate)) {
+      return [];
+    }
+
+    const { animalSpecies } = estimate.primaryEstimateInfo;
+
+    if(estimate.animalSpeciesSubestimates.length === 0) {
+      if(
+        sampleNumerator === undefined ||
+        sampleNumerator === null ||
+        sampleDenominator === undefined ||
+        sampleDenominator === null
+      ) {
+        return [];
+      }
+
+      return animalSpecies ? [{
+        whoRegion: whoRegion,
+        sampleDenominator,
+        sampleNumerator,
+        group: animalSpecies
+      }] : []
+    }
+
+    return estimate.animalSpeciesSubestimates.map((subestimate) => {
+      const subestimateSampleNumerator = subestimate.estimateInfo.sampleNumerator;
+      const subestimateSampleDenominator = subestimate.estimateInfo.sampleDenominator;
+
+      if(
+        subestimateSampleNumerator === undefined ||
+        subestimateSampleNumerator === null ||
+        subestimateSampleDenominator === undefined ||
+        subestimateSampleDenominator === null
+      ) {
+        return undefined;
+      }
+
+      return {
+        whoRegion,
+        group: subestimate.animalSpecies,
+        sampleNumerator: subestimateSampleNumerator,
+        sampleDenominator: subestimateSampleDenominator
+      }
+    }).filter((element): element is NonNullable<typeof element> => !!element);
+  }
+}
+
+interface EstimateSummaryByWhoRegionProps {
+  data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  variableOfInterest: EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption;
+  fieldOfInterest: EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption;
+}
+
+export const EstimateSummaryByWhoRegion = (props: EstimateSummaryByWhoRegionProps) => {
+  const { data, variableOfInterest, fieldOfInterest } = props;
+
   const zeroValuedColourHexCode = "#f9f1f0";
   const oneValuedColourHexCode = "#f79489";
 
-  const brokenDownEstimates = [
-    { sampleNumerator: 1, sampleDenominator: 10, whoRegion: WhoRegion.Afr, sex: 'Male' },
-    { sampleNumerator: 100, sampleDenominator: 200, whoRegion: WhoRegion.Afr, sex: 'Male' },
-    { sampleNumerator: 100, sampleDenominator: 200, whoRegion: WhoRegion.Afr, sex: 'Female' },
-    { sampleNumerator: 100, sampleDenominator: 200, whoRegion: undefined, sex: 'Male' },
-    { sampleNumerator: 100, sampleDenominator: 200, whoRegion: WhoRegion.Emr, sex: 'Female' },
-    { sampleNumerator: 100, sampleDenominator: 200, whoRegion: WhoRegion.Emr, sex: undefined },
-  ]
-  const validGroups = ['All', ...uniq(brokenDownEstimates.map((estimate) => estimate.sex))
+  const brokenDownEstimates = useMemo(() => data
+    .filter((dataPoint): dataPoint is MersEstimate => 'primaryEstimateInfo' in dataPoint)
+    .filter((estimate) => variableOfInterestToEstimateFilteringFunction[variableOfInterest](estimate))
+    .flatMap((estimate) => fieldOfInterestToFieldOfInterestExtractingFunction[fieldOfInterest](estimate))
+  , [ data, variableOfInterest, fieldOfInterest ]);
+
+  const validGroups = uniq(['All', ...(brokenDownEstimates.map((estimate) => estimate.group))
     .filter((group): group is NonNullable<typeof group> => !!group)
     .sort()
-  ];
+  ]);
 
   const validWhoRegions = uniq(brokenDownEstimates.map((estimate) => estimate.whoRegion))
-    .filter((group): group is NonNullable<typeof group> => !!group)
+    .filter((whoRegion): whoRegion is NonNullable<typeof whoRegion> => !!whoRegion)
     .sort();
-
-  const filteredData = brokenDownEstimates
-    .filter((estimate): estimate is Omit<typeof estimate, 'whoRegion'|'sex'|'sampleNumerator'|'sampleDenominator'> & {
-      whoRegion: NonNullable<typeof estimate['whoRegion']>,
-      sex: NonNullable<typeof estimate['sex']>,
-      sampleNumerator: NonNullable<typeof estimate['sampleNumerator']>,
-      sampleDenominator: NonNullable<typeof estimate['sampleDenominator']>
-    } => 
-      estimate.whoRegion !== undefined && estimate.whoRegion !== null &&
-      estimate.sex !== undefined && estimate.sex !== null &&
-      estimate.sampleNumerator !== undefined && estimate.sampleNumerator !== null &&
-      estimate.sampleDenominator !== undefined && estimate.sampleDenominator !== null
-    )
 
   const {
     rechartsData: groupedBrokenDownEstimates,
   } = groupDataForRechartsTwice({
-    data: filteredData,
+    data: brokenDownEstimates,
     primaryGroupingFunction: (data) => data.whoRegion,
-    secondaryGroupingFunction: (data) => data.sex,
+    secondaryGroupingFunction: (data) => data.group,
     transformOutputValue: (data) => data
   })
+
+  if(validWhoRegions.length === 0) {
+    return (
+      <div className="p-2 w-full">
+       <p> No data available.</p>
+      </div>
+    )
+  }
 
   return (
     <div className="p-2">
