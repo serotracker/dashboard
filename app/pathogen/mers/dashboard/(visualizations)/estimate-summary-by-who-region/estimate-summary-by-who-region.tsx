@@ -24,6 +24,7 @@ import {
   isHumanMersSeroprevalenceEstimate,
   isHumanMersViralEstimate,
 } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { animalSpeciesToStringMap } from "../../(map)/shared-mers-map-pop-up-variables";
 
 export enum EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption {
   AGGREGATED_HUMAN_SEROPREVALENCE = "AGGREGATED_HUMAN_SEROPREVALENCE",
@@ -181,7 +182,7 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         whoRegion: whoRegion,
         sampleDenominator,
         sampleNumerator,
-        group: animalSpecies
+        group: animalSpeciesToStringMap[animalSpecies]
       }] : []
     }
 
@@ -200,7 +201,7 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
 
       return {
         whoRegion,
-        group: subestimate.animalSpecies,
+        group: animalSpeciesToStringMap[subestimate.animalSpecies],
         sampleNumerator: subestimateSampleNumerator,
         sampleDenominator: subestimateSampleDenominator
       }
