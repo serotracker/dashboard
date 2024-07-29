@@ -2,13 +2,14 @@
 
 import React, { useContext } from "react";
 import { Filters } from "@/components/customs/filters";
-import { FilterableField } from "@/components/customs/filters/available-filters";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { useMersFilters } from "@/hooks/mers/useMersFilters";
 import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
 import { useFaoMersEventFilterOptions } from "@/hooks/mers/useFaoMersEventFilterOptions";
 import { useMersEstimatesFilterOptions } from "@/hooks/mers/useMersEstimatesFilters";
 import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
+import { MersFilterableField } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-data-filtering";
+import { FilterableField } from "@/components/customs/filters/available-filters";
 
 interface MersFiltersProps {
   className?: string;
