@@ -1,9 +1,15 @@
+import { AlternateViewConfigurationTableConfiguration } from "@/components/ui/pathogen-map/map-pop-up/map-pop-up-alternate-configuration";
 import { PopUpContentRowProps, PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import {
   AnimalMersSeroprevalenceEstimate,
   AnimalMersViralEstimate,
   HumanMersSeroprevalenceEstimate,
-  HumanMersViralEstimate
+  HumanMersViralEstimate,
+  MersEstimate,
+  MersSubEstimateInformation,
+  isHumanMersAgeGroupSubEstimate,
+  isMersSeroprevalenceSubEstimateInformation,
+  isMersViralSubEstimateInformation
 } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import {
   AnimalMersEvent,
@@ -15,6 +21,7 @@ import {
   MersAnimalType,
   MersAnimalSpecies
 } from "@/gql/graphql"
+import assertNever from "assert-never";
 import { parseISO } from "date-fns";
 
 export const diagnosisStatusToStringMap = {
@@ -425,3 +432,214 @@ export const getHumanMersEstimateRows = (estimate: HumanMersEstimateMarkerData):
   valueToLabelMap: {},
   defaultColourClassname: "bg-sky-100"
 }];
+
+
+interface GenerateAlternateViewBannerConfigurationInput {
+  estimate: MersEstimate;
+}
+
+type GenerateAlternateViewBannerConfigurationOutput = {
+  alternateViewButtonEnabled: true;
+  alternateViewEnableButtonText: string;
+  alternateViewDisableButtonText: string;
+  alternateViewButtonClassname: string;
+} | {
+  alternateViewButtonEnabled: false;
+}
+
+export const generateAlternateViewBannerConfiguration = (
+  input: GenerateAlternateViewBannerConfigurationInput
+): GenerateAlternateViewBannerConfigurationOutput  => {
+  if(
+    input.estimate.ageGroupSubestimates.length === 0 &&
+    input.estimate.animalSpeciesSubestimates.length === 0 &&
+    input.estimate.geographicalAreaSubestimates.length === 0 &&
+    input.estimate.sexSubestimates.length === 0 &&
+    input.estimate.testUsedSubestimates.length === 0
+  ) {
+    return {
+      alternateViewButtonEnabled: false,
+    }
+  }
+
+  return {
+    alternateViewButtonEnabled: true,
+    alternateViewEnableButtonText: 'See subestimate details',
+    alternateViewDisableButtonText: 'See primary estimate details',
+    alternateViewButtonClassname: 'bg-mers hover:bg-mersHover text-white hover:text-black',
+  }
+}
+
+export enum GenerateMersEstimateTableConfigurationsType {
+  SEROPREVALENCE_ESTIMATES = 'SEROPREVALENCE_ESTIMATES',
+  VIRAL_ESTIMATES = 'VIRAL_ESTIMATES'
+}
+
+interface GenerateTableFieldsInput {
+  type: GenerateMersEstimateTableConfigurationsType;
+}
+
+const generateTableFields = (input: GenerateTableFieldsInput) => [
+  'Sample Numerator',
+  'Sample Denominator',
+  ...(input.type === GenerateMersEstimateTableConfigurationsType.SEROPREVALENCE_ESTIMATES ? [
+    'Seroprevalence',
+    'Seroprevalence (95% CI)'
+  ] : []),
+  ...(input.type === GenerateMersEstimateTableConfigurationsType.VIRAL_ESTIMATES ? [
+    'Positive Prevalence',
+    'Positive Prevalence (95% CI)'
+  ] : [])
+]
+
+interface GenerateTableRowsForSubestimateInput<TSubEstimate extends {
+  estimateInfo: MersSubEstimateInformation
+}> {
+  type: GenerateMersEstimateTableConfigurationsType;
+  subestimate: TSubEstimate;
+}
+
+interface GenerateTableRowsForSubestimateOutput<TSubEstimate extends {
+  estimateInfo: MersSubEstimateInformation
+}> {
+  subestimate: TSubEstimate;
+  rows: Record<string, string | undefined>;
+}
+
+const generateTableRowsForSubestimate = <
+  TSubEstimate extends { estimateInfo: MersSubEstimateInformation }
+>(
+  input: GenerateTableRowsForSubestimateInput<TSubEstimate>
+): GenerateTableRowsForSubestimateOutput<TSubEstimate> | undefined => {
+  const { estimateInfo } = input.subestimate;
+
+  if(input.type === GenerateMersEstimateTableConfigurationsType.SEROPREVALENCE_ESTIMATES) {
+    if(!isMersSeroprevalenceSubEstimateInformation(estimateInfo)) {
+      return undefined;
+    }
+
+    return {
+      subestimate: input.subestimate,
+      rows: {
+        'Sample Numerator': estimateInfo.sampleNumerator?.toFixed(0),
+        'Sample Denominator': estimateInfo.sampleDenominator?.toFixed(0),
+        'Seroprevalence': `${(estimateInfo.seroprevalence * 100).toFixed(1)}%`,
+        'Seroprevalence (95% CI)': (estimateInfo.seroprevalence95CILower === undefined || estimateInfo.seroprevalence95CILower === null)
+          ? (estimateInfo.seroprevalence95CIUpper === undefined || estimateInfo.seroprevalence95CIUpper === null)
+            ? 'Not reported'
+            : `Unknown - ${(estimateInfo.seroprevalence95CIUpper * 100).toFixed(1)}%`
+          : (estimateInfo.seroprevalence95CIUpper === undefined || estimateInfo.seroprevalence95CIUpper === null)
+            ? `${(estimateInfo.seroprevalence95CILower * 100).toFixed(1)}% - Unknown`
+            : `${(estimateInfo.seroprevalence95CILower * 100).toFixed(1)}% - ${(estimateInfo.seroprevalence95CIUpper * 100).toFixed(1)}%`
+      }
+    }
+  }
+
+  if(input.type === GenerateMersEstimateTableConfigurationsType.VIRAL_ESTIMATES) {
+    if(!isMersViralSubEstimateInformation(estimateInfo)) {
+      return undefined;
+    }
+
+    return {
+      subestimate: input.subestimate,
+      rows: {
+        'Sample Numerator': estimateInfo.sampleNumerator?.toFixed(0),
+        'Sample Denominator': estimateInfo.sampleDenominator?.toFixed(0),
+        'Seroprevalence': `${(estimateInfo.positivePrevalence * 100).toFixed(1)}%`,
+        'Seroprevalence (95% CI)': (estimateInfo.positivePrevalence95CILower === undefined || estimateInfo.positivePrevalence95CILower === null)
+          ? (estimateInfo.positivePrevalence95CIUpper === undefined || estimateInfo.positivePrevalence95CIUpper === null)
+            ? 'Not reported'
+            : `Unknown - ${(estimateInfo.positivePrevalence95CIUpper * 100).toFixed(1)}%`
+          : (estimateInfo.positivePrevalence95CIUpper === undefined || estimateInfo.positivePrevalence95CIUpper === null)
+            ? `${(estimateInfo.positivePrevalence95CILower * 100).toFixed(1)}% - Unknown`
+            : `${(estimateInfo.positivePrevalence95CILower * 100).toFixed(1)}% - ${(estimateInfo.positivePrevalence95CIUpper * 100).toFixed(1)}%`
+      }
+    }
+  }
+
+  assertNever(input.type)
+}
+
+interface GenerateMersEstimateTableConfigurationsInput {
+  type: GenerateMersEstimateTableConfigurationsType;
+  estimate: MersEstimate;
+}
+
+export const generateMersEstimateTableConfigurations = (input: GenerateMersEstimateTableConfigurationsInput): AlternateViewConfigurationTableConfiguration[] => [
+  ...(input.estimate.sexSubestimates.length > 0 ? [{
+    tableHeader: 'Sex Subestimates',
+    tableFields: [
+      'Sex',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.sexSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        ...element.rows,
+        'Sex': element.subestimate.sex,
+      }))
+  }] : []),
+  ...(input.estimate.ageGroupSubestimates.length > 0 ? [{
+    tableHeader: 'Age Group Subestimates',
+    tableFields: [
+      'Age Group',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.ageGroupSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        ...element.rows,
+        'Age Group': isHumanMersAgeGroupSubEstimate(element.subestimate)
+          ? element.subestimate.ageGroup.join(',')
+          : element.subestimate.animalAgeGroup.join(',')
+      }))
+  }] : []),
+  ...(input.estimate.testUsedSubestimates.length > 0 ? [{
+    tableHeader: 'Test Used Subestimates',
+    tableFields: [
+      'Test Used',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.testUsedSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        ...element.rows,
+        'Test Used': element.subestimate.assay.join(',')
+      }))
+  }] : []),
+  ...(input.estimate.animalSpeciesSubestimates.length > 0 ? [{
+    tableHeader: 'Animal Species Subestimates',
+    tableFields: [
+      'Animal Species',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.animalSpeciesSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        ...element.rows,
+        'Animal Species': animalSpeciesToStringMap[element.subestimate.animalSpecies]
+      }))
+  }] : []),
+  ...(input.estimate.geographicalAreaSubestimates.length > 0 ? [{
+    tableHeader: 'Geographical Area Subestimates',
+    tableFields: [
+      'Country',
+      'State',
+      'City',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.geographicalAreaSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        ...element.rows,
+        'Country': element.subestimate.country,
+        'State': element.subestimate.state ?? 'Unspecified',
+        'City': element.subestimate.city ?? 'Unspecified',
+      }))
+  }] : []),
+]

@@ -30,6 +30,25 @@ const initialMersContextState = {
   dataFiltered: false,
 }
 
+export type MersSubEstimateInformation = MersEstimate['ageGroupSubestimates'][number]['estimateInfo'];
+export type MersViralSubEstimateInformation = Extract<MersSubEstimateInformation, {__typename: 'MersViralSubEstimateInformation'}>;
+export type MersSeroprevalenceSubEstimateInformation = Extract<MersSubEstimateInformation, {__typename: 'MersSeroprevalenceSubEstimateInformation'}>;
+export type MersAgeGroupSubEstimate = MersEstimate['ageGroupSubestimates'][number];
+export type HumanMersAgeGroupSubEstimate = Extract<MersEstimate['ageGroupSubestimates'][number], {__typename: 'HumanMersAgeGroupSubEstimate'}>;
+export type AnimalMersAgeGroupSubEstimate = Extract<MersEstimate['ageGroupSubestimates'][number], {__typename: 'AnimalMersAgeGroupSubEstimate'}>;
+
+export const isHumanMersAgeGroupSubEstimate = (subestimate: MersAgeGroupSubEstimate): subestimate is HumanMersAgeGroupSubEstimate =>
+  subestimate.__typename === 'HumanMersAgeGroupSubEstimate';
+
+export const isAnimalMersAgeGroupSubEstimate = (subestimate: MersAgeGroupSubEstimate): subestimate is AnimalMersAgeGroupSubEstimate =>
+  subestimate.__typename === 'AnimalMersAgeGroupSubEstimate';
+
+export const isMersViralSubEstimateInformation = (subestimateInformation: MersSubEstimateInformation): subestimateInformation is MersViralSubEstimateInformation =>
+  subestimateInformation.__typename === 'MersViralSubEstimateInformation';
+
+export const isMersSeroprevalenceSubEstimateInformation = (subestimateInformation: MersSubEstimateInformation): subestimateInformation is MersSeroprevalenceSubEstimateInformation =>
+  subestimateInformation.__typename === 'MersSeroprevalenceSubEstimateInformation';
+
 export type HumanMersSeroprevalenceEstimate = Omit<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number], 'primaryEstimateInfo'> & {
   primaryEstimateInfo: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryHumanMersSeroprevalenceEstimateInformation'}>
 }

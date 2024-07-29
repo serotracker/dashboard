@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
-import { HumanMersSeroprevalenceEstimateMapMarkerData, ageGroupToColourClassnameMap, getHumanMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
+import { GenerateMersEstimateTableConfigurationsType, HumanMersSeroprevalenceEstimateMapMarkerData, ageGroupToColourClassnameMap, generateAlternateViewBannerConfiguration, generateMersEstimateTableConfigurations, getHumanMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
 
 interface HumanMersSeroprevalenceEstimatePopupContentProps {
   estimate: HumanMersSeroprevalenceEstimateMapMarkerData;
@@ -18,7 +18,7 @@ export const HumanMersSeroprevalenceEstimatePopupContent = (props: HumanMersSero
 
   return (
     <GenericMapPopUp
-      width={GenericMapPopUpWidth.EXTRA_WIDE}
+      width={GenericMapPopUpWidth.EXTRA_EXTRA_WIDE}
       headerConfiguration={{
         text: "Human Seroprevalence Estimate",
         textAlignment: HeaderConfigurationTextAlignment.CENTER
@@ -33,7 +33,17 @@ export const HumanMersSeroprevalenceEstimatePopupContent = (props: HumanMersSero
         bannerText: topBannerText,
         bannerColourClassname: 'bg-mers-human-estimate',
         isTextBolded: true,
-        isTextCentered: false
+        isTextCentered: false,
+        ...generateAlternateViewBannerConfiguration({
+          estimate: props.estimate,
+        })
+      }}
+      alternateViewConfiguration={{
+        enabled: true,
+        tableConfigurations: generateMersEstimateTableConfigurations({
+          type: GenerateMersEstimateTableConfigurationsType.SEROPREVALENCE_ESTIMATES,
+          estimate
+        })
       }}
       rows={[
         ...getSharedMersEstimateRows(props.estimate),

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
-import { AnimalMersSeroprevalenceEstimateMapMarkerData, animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, getAnimalMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
+import { AnimalMersSeroprevalenceEstimateMapMarkerData, GenerateMersEstimateTableConfigurationsType, animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, generateAlternateViewBannerConfiguration, generateMersEstimateTableConfigurations, getAnimalMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
 
 interface AnimalMersSeroprevalenceEstimatePopupContentProps {
   estimate: AnimalMersSeroprevalenceEstimateMapMarkerData;
@@ -17,7 +17,7 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
 
   return (
     <GenericMapPopUp
-      width={GenericMapPopUpWidth.EXTRA_WIDE}
+      width={GenericMapPopUpWidth.EXTRA_EXTRA_WIDE}
       headerConfiguration={{
         text: "Animal Seroprevalence Estimate",
         textAlignment: HeaderConfigurationTextAlignment.CENTER
@@ -32,7 +32,17 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
         bannerText: topBannerText,
         bannerColourClassname: 'bg-mers-animal-estimate',
         isTextBolded: true,
-        isTextCentered: false
+        isTextCentered: false,
+        ...generateAlternateViewBannerConfiguration({
+          estimate: props.estimate,
+        })
+      }}
+      alternateViewConfiguration={{
+        enabled: true,
+        tableConfigurations: generateMersEstimateTableConfigurations({
+          type: GenerateMersEstimateTableConfigurationsType.SEROPREVALENCE_ESTIMATES,
+          estimate
+        })
       }}
       rows={[
         ...getSharedMersEstimateRows(props.estimate),
@@ -43,7 +53,8 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
         bannerText: `Animal Species: ${animalSpeciesToStringMap[props.estimate.primaryEstimateInfo.animalSpecies]}`,
         bannerColourClassname: animalSpeciesToColourClassnameMap[props.estimate.primaryEstimateInfo.animalSpecies],
         isTextBolded: true,
-        isTextCentered: true
+        isTextCentered: true,
+        alternateViewButtonEnabled: false
       }}
     />
   );

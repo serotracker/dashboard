@@ -1,30 +1,29 @@
-import { FilterableField } from "@/components/customs/filters/available-filters"
 import { MersEstimate, isAnimalMersEstimate, isHumanMersEstimate } from "./mers-context"
-import { typedObjectKeys } from "@/lib/utils";
 import { doTimeIntervalsOverlap } from "@/lib/date-utils";
 import { parseISO } from "date-fns";
 
-export type MersFilterableField =
-  | FilterableField.__typename
-  | FilterableField.whoRegion
-  | FilterableField.unRegion
-  | FilterableField.countryAlphaTwoCode
-  | FilterableField.sourceType
-  | FilterableField.samplingStartDate
-  | FilterableField.samplingEndDate
-  | FilterableField.samplingMethod
-  | FilterableField.assay
-  | FilterableField.specimenType
-  | FilterableField.sex
-  | FilterableField.isotypes
-  | FilterableField.ageGroup
-  | FilterableField.sampleFrame
-  | FilterableField.animalDetectionSettings
-  | FilterableField.animalPurpose
-  | FilterableField.animalImportedOrLocal
-  | FilterableField.diagnosisSource
-  | FilterableField.animalType
-  | FilterableField.animalSpecies
+export enum MersFilterableField {
+  __typename = "__typename",
+  whoRegion = "whoRegion",
+  unRegion = "unRegion",
+  countryAlphaTwoCode = "countryAlphaTwoCode",
+  sourceType = "sourceType",
+  samplingStartDate = "samplingStartDate",
+  samplingEndDate = "samplingEndDate",
+  samplingMethod = "samplingMethod",
+  assay = "assay",
+  specimenType = "specimenType",
+  sex = "sex",
+  isotypes = "isotypes",
+  ageGroup = "ageGroup",
+  sampleFrame = "sampleFrame",
+  animalDetectionSettings = "animalDetectionSettings",
+  animalPurpose = "animalPurpose",
+  animalImportedOrLocal = "animalImportedOrLocal",
+  diagnosisSource = "diagnosisSource",
+  animalType = "animalType",
+  animalSpecies = "animalSpecies"
+}
 
 interface FilterMersEstimatesInput {
   mersEstimates: MersEstimate[];
@@ -87,94 +86,94 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
   estimate: MersEstimate;
   selectedFilters: Partial<Record<MersFilterableField, string[]>>;
 }) => boolean> = {
-  [FilterableField.__typename]: (input) => {
-    if((input.selectedFilters[FilterableField.__typename] ?? []).length == 0) {
+  [MersFilterableField.__typename]: (input) => {
+    if((input.selectedFilters[MersFilterableField.__typename] ?? []).length == 0) {
       return false;
     }
 
     return mersEstimateStringFieldHandler({
-      filterKey: FilterableField.__typename,
+      filterKey: MersFilterableField.__typename,
       estimate: input.estimate,
       selectedFilters: {
         ...input.selectedFilters,
-        [FilterableField.__typename]: input.selectedFilters[FilterableField.__typename] ?? []
+        [MersFilterableField.__typename]: input.selectedFilters[MersFilterableField.__typename] ?? []
       }
     })
   },
-  [FilterableField.assay]: (input) => mersEstimateArrayFieldHandler({
-    filterKey: FilterableField.assay,
+  [MersFilterableField.assay]: (input) => mersEstimateArrayFieldHandler({
+    filterKey: MersFilterableField.assay,
     estimate: input.estimate,
     selectedFilters: {
       ...input.selectedFilters,
-      [FilterableField.assay]: input.selectedFilters[FilterableField.assay] ?? []
+      [MersFilterableField.assay]: input.selectedFilters[MersFilterableField.assay] ?? []
     }
   }),
-  [FilterableField.isotypes]: (input) => mersEstimateArrayFieldHandler({
-    filterKey: FilterableField.isotypes,
+  [MersFilterableField.isotypes]: (input) => mersEstimateArrayFieldHandler({
+    filterKey: MersFilterableField.isotypes,
     estimate: input.estimate,
     selectedFilters: {
       ...input.selectedFilters,
-      [FilterableField.isotypes]: input.selectedFilters[FilterableField.isotypes] ?? []
+      [MersFilterableField.isotypes]: input.selectedFilters[MersFilterableField.isotypes] ?? []
     }
   }),
-  [FilterableField.whoRegion]: (input) => mersEstimateStringFieldHandler({
-    filterKey: FilterableField.whoRegion,
+  [MersFilterableField.whoRegion]: (input) => mersEstimateStringFieldHandler({
+    filterKey: MersFilterableField.whoRegion,
     estimate: input.estimate,
     selectedFilters: {
       ...input.selectedFilters,
-      [FilterableField.whoRegion]: input.selectedFilters[FilterableField.whoRegion] ?? []
+      [MersFilterableField.whoRegion]: input.selectedFilters[MersFilterableField.whoRegion] ?? []
     }
   }),
-  [FilterableField.sex]: (input) => mersEstimateStringFieldHandler({
-    filterKey: FilterableField.sex,
+  [MersFilterableField.sex]: (input) => mersEstimateStringFieldHandler({
+    filterKey: MersFilterableField.sex,
     estimate: input.estimate,
     selectedFilters: {
       ...input.selectedFilters,
-      [FilterableField.sex]: input.selectedFilters[FilterableField.sex] ?? []
+      [MersFilterableField.sex]: input.selectedFilters[MersFilterableField.sex] ?? []
     }
   }),
-  [FilterableField.specimenType]: (input) => mersEstimateStringFieldHandler({
-    filterKey: FilterableField.specimenType,
+  [MersFilterableField.specimenType]: (input) => mersEstimateStringFieldHandler({
+    filterKey: MersFilterableField.specimenType,
     estimate: input.estimate,
     selectedFilters: {
       ...input.selectedFilters,
-      [FilterableField.specimenType]: input.selectedFilters[FilterableField.specimenType] ?? []
+      [MersFilterableField.specimenType]: input.selectedFilters[MersFilterableField.specimenType] ?? []
     }
   }),
-  [FilterableField.samplingMethod]: (input) => mersEstimateStringFieldHandler({
-    filterKey: FilterableField.samplingMethod,
+  [MersFilterableField.samplingMethod]: (input) => mersEstimateStringFieldHandler({
+    filterKey: MersFilterableField.samplingMethod,
     estimate: input.estimate,
     selectedFilters: {
       ...input.selectedFilters,
-      [FilterableField.samplingMethod]: input.selectedFilters[FilterableField.samplingMethod] ?? []
+      [MersFilterableField.samplingMethod]: input.selectedFilters[MersFilterableField.samplingMethod] ?? []
     }
   }),
-  [FilterableField.sourceType]: (input) => mersEstimateStringFieldHandler({
-    filterKey: FilterableField.sourceType,
+  [MersFilterableField.sourceType]: (input) => mersEstimateStringFieldHandler({
+    filterKey: MersFilterableField.sourceType,
     estimate: input.estimate,
     selectedFilters: {
       ...input.selectedFilters,
-      [FilterableField.sourceType]: input.selectedFilters[FilterableField.sourceType] ?? []
+      [MersFilterableField.sourceType]: input.selectedFilters[MersFilterableField.sourceType] ?? []
     }
   }),
-  [FilterableField.countryAlphaTwoCode]: (input) => mersEstimateStringFieldHandler({
-    filterKey: FilterableField.countryAlphaTwoCode,
+  [MersFilterableField.countryAlphaTwoCode]: (input) => mersEstimateStringFieldHandler({
+    filterKey: MersFilterableField.countryAlphaTwoCode,
     estimate: input.estimate,
     selectedFilters: {
       ...input.selectedFilters,
-      [FilterableField.countryAlphaTwoCode]: input.selectedFilters[FilterableField.countryAlphaTwoCode] ?? []
+      [MersFilterableField.countryAlphaTwoCode]: input.selectedFilters[MersFilterableField.countryAlphaTwoCode] ?? []
     }
   }),
-  [FilterableField.unRegion]: (input) => mersEstimateStringFieldHandler({
-    filterKey: FilterableField.unRegion,
+  [MersFilterableField.unRegion]: (input) => mersEstimateStringFieldHandler({
+    filterKey: MersFilterableField.unRegion,
     estimate: input.estimate,
     selectedFilters: {
       ...input.selectedFilters,
-      [FilterableField.unRegion]: input.selectedFilters[FilterableField.unRegion] ?? []
+      [MersFilterableField.unRegion]: input.selectedFilters[MersFilterableField.unRegion] ?? []
     }
   }),
-  [FilterableField.samplingStartDate]: (input) => {
-    const samplingStartDateFromFilters = (input.selectedFilters[FilterableField.samplingStartDate] ?? []).at(0);
+  [MersFilterableField.samplingStartDate]: (input) => {
+    const samplingStartDateFromFilters = (input.selectedFilters[MersFilterableField.samplingStartDate] ?? []).at(0);
 
     return doTimeIntervalsOverlap(
       {
@@ -191,8 +190,8 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       }
     )
   },
-  [FilterableField.samplingEndDate]: (input) => {
-    const samplingEndDateFromFilters = (input.selectedFilters[FilterableField.samplingEndDate] ?? []).at(0);
+  [MersFilterableField.samplingEndDate]: (input) => {
+    const samplingEndDateFromFilters = (input.selectedFilters[MersFilterableField.samplingEndDate] ?? []).at(0);
     return doTimeIntervalsOverlap(
       {
         intervalStartDate: undefined,
@@ -208,7 +207,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       }
     )
   },
-  [FilterableField.animalPurpose]: (input) => {
+  [MersFilterableField.animalPurpose]: (input) => {
     const { estimate } = input;
 
     if(isHumanMersEstimate(estimate)) {
@@ -216,15 +215,15 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     }
 
     return mersEstimateStringFieldHandler({
-      filterKey: FilterableField.animalPurpose,
+      filterKey: MersFilterableField.animalPurpose,
       estimate: estimate,
       selectedFilters: {
         ...input.selectedFilters,
-        [FilterableField.animalPurpose]: input.selectedFilters[FilterableField.animalPurpose] ?? []
+        [MersFilterableField.animalPurpose]: input.selectedFilters[MersFilterableField.animalPurpose] ?? []
       }
     })
   },
-  [FilterableField.animalSpecies]: (input) => {
+  [MersFilterableField.animalSpecies]: (input) => {
     const { estimate } = input;
 
     if(isHumanMersEstimate(estimate)) {
@@ -232,15 +231,15 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     }
 
     return mersEstimateStringFieldHandler({
-      filterKey: FilterableField.animalSpecies,
+      filterKey: MersFilterableField.animalSpecies,
       estimate: estimate,
       selectedFilters: {
         ...input.selectedFilters,
-        [FilterableField.animalSpecies]: input.selectedFilters[FilterableField.animalSpecies] ?? []
+        [MersFilterableField.animalSpecies]: input.selectedFilters[MersFilterableField.animalSpecies] ?? []
       }
     })
   },
-  [FilterableField.animalImportedOrLocal]: (input) => {
+  [MersFilterableField.animalImportedOrLocal]: (input) => {
     const { estimate } = input;
 
     if(isHumanMersEstimate(estimate)) {
@@ -248,15 +247,15 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     }
 
     return mersEstimateStringFieldHandler({
-      filterKey: FilterableField.animalImportedOrLocal,
+      filterKey: MersFilterableField.animalImportedOrLocal,
       estimate: estimate,
       selectedFilters: {
         ...input.selectedFilters,
-        [FilterableField.animalImportedOrLocal]: input.selectedFilters[FilterableField.animalImportedOrLocal] ?? []
+        [MersFilterableField.animalImportedOrLocal]: input.selectedFilters[MersFilterableField.animalImportedOrLocal] ?? []
       }
     })
   },
-  [FilterableField.animalType]: (input) => {
+  [MersFilterableField.animalType]: (input) => {
     const { estimate } = input;
 
     if(isHumanMersEstimate(estimate)) {
@@ -264,15 +263,15 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     }
 
     return mersEstimateArrayFieldHandler({
-      filterKey: FilterableField.animalType,
+      filterKey: MersFilterableField.animalType,
       estimate: estimate,
       selectedFilters: {
         ...input.selectedFilters,
-        [FilterableField.animalType]: input.selectedFilters[FilterableField.animalType] ?? []
+        [MersFilterableField.animalType]: input.selectedFilters[MersFilterableField.animalType] ?? []
       }
     })
   },
-  [FilterableField.animalDetectionSettings]: (input) => {
+  [MersFilterableField.animalDetectionSettings]: (input) => {
     const { estimate } = input;
 
     if(isHumanMersEstimate(estimate)) {
@@ -280,15 +279,15 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     }
 
     return mersEstimateArrayFieldHandler({
-      filterKey: FilterableField.animalDetectionSettings,
+      filterKey: MersFilterableField.animalDetectionSettings,
       estimate: estimate,
       selectedFilters: {
         ...input.selectedFilters,
-        [FilterableField.animalDetectionSettings]: input.selectedFilters[FilterableField.animalDetectionSettings] ?? []
+        [MersFilterableField.animalDetectionSettings]: input.selectedFilters[MersFilterableField.animalDetectionSettings] ?? []
       }
     })
   },
-  [FilterableField.ageGroup]: (input) => {
+  [MersFilterableField.ageGroup]: (input) => {
     const { estimate } = input;
 
     if(isAnimalMersEstimate(estimate)) {
@@ -296,15 +295,15 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     }
 
     return mersEstimateArrayFieldHandler({
-      filterKey: FilterableField.ageGroup,
+      filterKey: MersFilterableField.ageGroup,
       estimate: estimate,
       selectedFilters: {
         ...input.selectedFilters,
-        [FilterableField.ageGroup]: input.selectedFilters[FilterableField.ageGroup] ?? []
+        [MersFilterableField.ageGroup]: input.selectedFilters[MersFilterableField.ageGroup] ?? []
       }
     })
   },
-  [FilterableField.sampleFrame]: (input) => {
+  [MersFilterableField.sampleFrame]: (input) => {
     const { estimate } = input;
 
     if(isAnimalMersEstimate(estimate)) {
@@ -312,15 +311,15 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     }
 
     return mersEstimateStringFieldHandler({
-      filterKey: FilterableField.sampleFrame,
+      filterKey: MersFilterableField.sampleFrame,
       estimate: estimate,
       selectedFilters: {
         ...input.selectedFilters,
-        [FilterableField.sampleFrame]: input.selectedFilters[FilterableField.sampleFrame] ?? []
+        [MersFilterableField.sampleFrame]: input.selectedFilters[MersFilterableField.sampleFrame] ?? []
       }
     })
   },
-  [FilterableField.diagnosisSource]: () => true
+  [MersFilterableField.diagnosisSource]: () => true
 }
 
 export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMersEstimatesOutput => {
