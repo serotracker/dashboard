@@ -1,5 +1,5 @@
+import validator from "validator";
 import { MapRef, Popup, useMap } from "react-map-gl";
-
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
 
@@ -104,6 +104,10 @@ export function PathogenMapPopup<
         ];
       }
 
+      if(typeof value === 'string' && validator.isJSON(value)) {
+        return [key, JSON.parse(value)];
+      }
+
       return [key, value];
     })
   ) as VisiblePopupInfo<TPathogenDataPointProperties>["properties"];
@@ -115,7 +119,7 @@ export function PathogenMapPopup<
       // the correct location when clicking on one data point while having the popup already open.
       key={transformedProperties.id}
       closeOnClick={false}
-      maxWidth="560px"
+      maxWidth="660px"
       anchor="top"
       latitude={latitude}
       longitude={longitude}

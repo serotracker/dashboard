@@ -76,6 +76,7 @@ export const SarsCov2CountryPopupContent = (props: SarsCov2CountryPopupContentPr
         valueTextAlignment: PopupContentTextAlignment.RIGHT,
         bannerColourClassname: "bg-gray-200"
       }}
+      alternateViewConfiguration={{ enabled: false }}
       rows={
         [
           {

@@ -68,8 +68,10 @@ export const ArbovirusEstimatePopupContent = (props: ArbovirusEstimatePopupConte
         bannerText: topBannerText,
         bannerColourClassname: `bg-${props.estimate.pathogen.toLowerCase()}`,
         isTextBolded: true,
-        isTextCentered: false
+        isTextCentered: false,
+        alternateViewButtonEnabled: false
       }}
+      alternateViewConfiguration={{ enabled: false }}
       rows={[{
         title: "Sampling Date Range",
         type: PopUpContentRowType.DATE_RANGE,

@@ -23,8 +23,10 @@ export const MersFaoAnimalEventPopupContent = (props: MersFaoAnimalEventPopupCon
         bannerText: `${diagnosisStatusToStringMap[props.event.diagnosisStatus]} Case`,
         bannerColourClassname: diagnosisStatusToColourClassnameMap[props.event.diagnosisStatus],
         isTextBolded: true,
-        isTextCentered: true
+        isTextCentered: true,
+        alternateViewButtonEnabled: false
       }}
+      alternateViewConfiguration={{ enabled: false }}
       rows={[{
         title: "Location",
         type: PopUpContentRowType.LOCATION,
@@ -64,7 +66,8 @@ export const MersFaoAnimalEventPopupContent = (props: MersFaoAnimalEventPopupCon
         bannerText: `Animal Species: ${animalSpeciesToStringMap[props.event.animalSpecies]}`,
         bannerColourClassname: animalSpeciesToColourClassnameMap[props.event.animalSpecies],
         isTextBolded: true,
-        isTextCentered: true
+        isTextCentered: true,
+        alternateViewButtonEnabled: false
       }}
     />
   );

@@ -1,6 +1,8 @@
-import React from "react";
+import { useState } from "react";
 import { PopUpContentRow, PopUpContentRowProps, PopUpContentRowType, PopupContentTextAlignment } from "./pop-up-content-rows";
 import { cn } from "@/lib/utils";
+import { AlternateViewConfiguration, AlternateViewGenericMapPopUpContent } from "./map-pop-up-alternate-configuration";
+import { Button } from "../../button";
 
 export enum HeaderConfigurationTextAlignment {
   LEFT = 'LEFT',
@@ -44,13 +46,20 @@ const GenericMapPopUpSubtitle = (props: EnabledSubtitleConfiguration): React.Rea
   </div>
 );
 
-interface EnabledBannerTextConfiguration {
+type EnabledBannerTextConfiguration = {
   enabled: true;
   bannerText: string
   bannerColourClassname: string;
   isTextBolded: boolean;
   isTextCentered: boolean;
-}
+} & ({
+  alternateViewButtonEnabled: true;
+  alternateViewEnableButtonText: string;
+  alternateViewDisableButtonText: string;
+  alternateViewButtonClassname: string;
+} | {
+  alternateViewButtonEnabled: false;
+})
 
 interface EnabledBannerRowValueConfiguration {
   enabled: true;
@@ -74,14 +83,32 @@ const isEnabledBannerRowValueConfiguration = (
 
 type BannerConfiguration = EnabledBannerTextConfiguration | Omit<EnabledBannerRowValueConfiguration, 'popUpWidth'> | DisabledBannerConfiguration;
 
-const GenericMapPopUpTextBanner = (props: EnabledBannerTextConfiguration): React.ReactNode => (
+const GenericMapPopUpTextBanner = (props: EnabledBannerTextConfiguration & {
+  alternateViewEnabled: boolean;
+  enableAlternateView: () => void;
+  disableAlternateView: () => void;
+}): React.ReactNode => (
   <div className={cn('flex justify-between w-full py-2 px-4', props.bannerColourClassname)}>
-    <div className={cn("w-full", props.isTextBolded ? "font-semibold" : "", props.isTextCentered ? "text-center" : "")}>
+    <div className={cn(
+      !props.alternateViewButtonEnabled ? "w-full" : "",
+      props.isTextBolded ? "font-semibold" : "",
+      props.isTextCentered ? "text-center" : ""
+    )}>
       {!!props.isTextBolded
         ? <b> {props.bannerText} </b>
         : <p className="text-sm"> {props.bannerText} </p>
       }
     </div>
+    {(!!props.alternateViewButtonEnabled && !props.alternateViewEnabled) &&
+      <Button className={cn("h-5", props.alternateViewButtonClassname)} onClick={() => props.enableAlternateView()}>
+        {props.alternateViewEnableButtonText}
+      </Button>
+    }
+    {(!!props.alternateViewButtonEnabled && props.alternateViewEnabled) &&
+      <Button className={cn("h-5", props.alternateViewButtonClassname)} onClick={() => props.disableAlternateView()}>
+        {props.alternateViewDisableButtonText}
+      </Button>
+    }
   </div>
 );
 
@@ -104,6 +131,7 @@ export enum GenericMapPopUpWidth {
   MEDIUM = 'MEDIUM',
   WIDE = 'WIDE',
   EXTRA_WIDE = 'EXTRA_WIDE',
+  EXTRA_EXTRA_WIDE = 'EXTRA_EXTRA_WIDE',
   AUTO = 'AUTO'
 }
 
@@ -111,14 +139,26 @@ const widthEnumToWidthClassnameMap: {[key in Exclude<GenericMapPopUpWidth, Gener
   [GenericMapPopUpWidth.THIN]: 'w-[260px]',
   [GenericMapPopUpWidth.MEDIUM]: 'w-[360px]',
   [GenericMapPopUpWidth.WIDE]: 'w-[460px]',
-  [GenericMapPopUpWidth.EXTRA_WIDE]: 'w-[560px]'
+  [GenericMapPopUpWidth.EXTRA_WIDE]: 'w-[560px]',
+  [GenericMapPopUpWidth.EXTRA_EXTRA_WIDE]: 'w-[660px]'
 }
 
 export const genericMapPopUpWidthEnumToWidthPxMap: {[key in Exclude<GenericMapPopUpWidth, GenericMapPopUpWidth.AUTO>]: number } = {
   [GenericMapPopUpWidth.THIN]: 260,
   [GenericMapPopUpWidth.MEDIUM]: 360,
   [GenericMapPopUpWidth.WIDE]: 460,
-  [GenericMapPopUpWidth.EXTRA_WIDE]: 560
+  [GenericMapPopUpWidth.EXTRA_WIDE]: 560,
+  [GenericMapPopUpWidth.EXTRA_EXTRA_WIDE]: 660
+}
+
+interface StandardViewGenericMapPopUpContentProps {
+  rows: PopUpContentRowProps[];
+}
+
+const StandardViewGenericMapPopUpContent = (props: StandardViewGenericMapPopUpContentProps) => {
+  return props.rows.map((row) => 
+    <PopUpContentRow key={row.title} {...row} />
+  );
 }
 
 interface GenericMapPopUpProps {
@@ -128,9 +168,12 @@ interface GenericMapPopUpProps {
   topBannerConfiguration: BannerConfiguration;
   rows: PopUpContentRowProps[];
   bottomBannerConfiguration: BannerConfiguration;
+  alternateViewConfiguration: AlternateViewConfiguration;
 }
 
 export const GenericMapPopUp = (props: GenericMapPopUpProps) => {
+  const [ alternateViewEnabled, setAlternateViewEnabled ] = useState<boolean>(false);
+
   return (
     <div className={cn(
       props.width !== GenericMapPopUpWidth.AUTO ? widthEnumToWidthClassnameMap[props.width] : '',
@@ -140,15 +183,32 @@ export const GenericMapPopUp = (props: GenericMapPopUpProps) => {
         <GenericMapPopUpHeader {...props.headerConfiguration} />
         {props.subtitleConfiguration.enabled === true && <GenericMapPopUpSubtitle {...props.subtitleConfiguration}/>}
       </div>
-      {(props.topBannerConfiguration.enabled === true && isEnabledBannerTextConfiguration(props.topBannerConfiguration)) && <GenericMapPopUpTextBanner {...props.topBannerConfiguration}/>}
-      {(props.topBannerConfiguration.enabled === true && isEnabledBannerRowValueConfiguration(props.topBannerConfiguration)) && <GenericMapPopUpRowValueBanner {...props.topBannerConfiguration}/>}
+      {(props.topBannerConfiguration.enabled === true && isEnabledBannerTextConfiguration(props.topBannerConfiguration)) &&
+        <GenericMapPopUpTextBanner
+          {...props.topBannerConfiguration}
+          alternateViewEnabled={alternateViewEnabled}
+          enableAlternateView={() => setAlternateViewEnabled(true)}
+          disableAlternateView={() => setAlternateViewEnabled(false)}
+        />
+      }
+      {(props.topBannerConfiguration.enabled === true && isEnabledBannerRowValueConfiguration(props.topBannerConfiguration)) &&
+        <GenericMapPopUpRowValueBanner {...props.topBannerConfiguration}/>
+      }
       <div className={"py-2 px-4 max-h-[250px] overflow-auto"}>
-        {props.rows.map((row) => 
-          <PopUpContentRow key={row.title} {...row} />
-        )}
+        {(!alternateViewEnabled || props.alternateViewConfiguration.enabled === false) && <StandardViewGenericMapPopUpContent rows={props.rows} />}
+        {alternateViewEnabled && props.alternateViewConfiguration.enabled === true && <AlternateViewGenericMapPopUpContent alternateViewConfiguration={props.alternateViewConfiguration} />}
       </div>
-      {(props.bottomBannerConfiguration.enabled === true && isEnabledBannerTextConfiguration(props.bottomBannerConfiguration)) && <GenericMapPopUpTextBanner {...props.bottomBannerConfiguration}/>}
-      {(props.bottomBannerConfiguration.enabled === true && isEnabledBannerRowValueConfiguration(props.bottomBannerConfiguration)) && <GenericMapPopUpRowValueBanner {...props.bottomBannerConfiguration}/>}
+      {(props.bottomBannerConfiguration.enabled === true && isEnabledBannerTextConfiguration(props.bottomBannerConfiguration)) &&
+        <GenericMapPopUpTextBanner
+          {...props.bottomBannerConfiguration}
+          alternateViewEnabled={alternateViewEnabled}
+          enableAlternateView={() => setAlternateViewEnabled(true)}
+          disableAlternateView={() => setAlternateViewEnabled(false)}
+        />
+      }
+      {(props.bottomBannerConfiguration.enabled === true && isEnabledBannerRowValueConfiguration(props.bottomBannerConfiguration)) &&
+        <GenericMapPopUpRowValueBanner {...props.bottomBannerConfiguration}/>
+      }
     </div>
   );
 }

@@ -4,7 +4,7 @@ import getQueryClient from "@/components/customs/getQueryClient";
 import { request } from 'graphql-request';
 import { notFound } from 'next/navigation'
 import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
-import { mersEstimates_V2 } from "@/hooks/mers/useMersData";
+import { mersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
 import { MersProviders } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { mersFilters } from "@/hooks/mers/useMersFilters";
 import { AllFaoMersEventPartitionKeysQuery, YearlyFaoCamelPopulationDataPartitionKeysQuery } from "@/gql/graphql";
@@ -23,8 +23,8 @@ export default async function MersLayout({
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["mersEstimates_V2"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', mersEstimates_V2)
+    queryKey: ["mersPrimaryEstimates"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', mersPrimaryEstimates)
   });
   await queryClient.prefetchQuery({
     queryKey: ["mersFilterOptions"],
