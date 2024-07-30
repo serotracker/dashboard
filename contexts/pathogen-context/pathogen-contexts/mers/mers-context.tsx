@@ -33,9 +33,16 @@ const initialMersContextState = {
 export type MersSubEstimateInformation = MersEstimate['ageGroupSubestimates'][number]['estimateInfo'];
 export type MersViralSubEstimateInformation = Extract<MersSubEstimateInformation, {__typename: 'MersViralSubEstimateInformation'}>;
 export type MersSeroprevalenceSubEstimateInformation = Extract<MersSubEstimateInformation, {__typename: 'MersSeroprevalenceSubEstimateInformation'}>;
-export type MersAgeGroupSubEstimate = MersEstimate['ageGroupSubestimates'][number];
-export type HumanMersAgeGroupSubEstimate = Extract<MersEstimate['ageGroupSubestimates'][number], {__typename: 'HumanMersAgeGroupSubEstimate'}>;
-export type AnimalMersAgeGroupSubEstimate = Extract<MersEstimate['ageGroupSubestimates'][number], {__typename: 'AnimalMersAgeGroupSubEstimate'}>;
+
+export type HumanMersAgeGroupSubEstimate = Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['ageGroupSubestimates'][number], {__typename: 'HumanMersAgeGroupSubEstimate'}> & {
+  markedAsFiltered: boolean
+};
+export type AnimalMersAgeGroupSubEstimate = Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['ageGroupSubestimates'][number], {__typename: 'AnimalMersAgeGroupSubEstimate'}> & {
+  markedAsFiltered: boolean
+};
+export type MersAgeGroupSubEstimate =
+  | HumanMersAgeGroupSubEstimate
+  | AnimalMersAgeGroupSubEstimate;
 
 export const isHumanMersAgeGroupSubEstimate = (subestimate: MersAgeGroupSubEstimate): subestimate is HumanMersAgeGroupSubEstimate =>
   subestimate.__typename === 'HumanMersAgeGroupSubEstimate';
@@ -51,11 +58,18 @@ export const isMersSeroprevalenceSubEstimateInformation = (subestimateInformatio
 
 type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
   MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number],
-  'sexSubestimates'
+  'sexSubestimates'|'ageGroupSubestimates'|'animalSpeciesSubestimates'|'testUsedSubestimates'
 > & {
   sexSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['sexSubestimates'][number] & {
     markedAsFiltered: boolean;
-  }>
+  }>,
+  ageGroupSubestimates: MersAgeGroupSubEstimate[];
+  animalSpeciesSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['animalSpeciesSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
+  testUsedSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['testUsedSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
 }
 
 export type HumanMersSeroprevalenceEstimate = Omit<MersSeroprevalenceEstimateWithAdditionalFields, 'primaryEstimateInfo'> & {

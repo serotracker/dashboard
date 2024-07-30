@@ -151,6 +151,10 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
     }
 
     return estimate.ageGroupSubestimates.flatMap((subestimate) => {
+      if(subestimate.markedAsFiltered === true) {
+        return undefined;
+      }
+
       const subestimateSampleNumerator = subestimate.estimateInfo.sampleNumerator;
       const subestimateSampleDenominator = subestimate.estimateInfo.sampleDenominator;
 
@@ -211,6 +215,10 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
     }
 
     return estimate.animalSpeciesSubestimates.map((subestimate) => {
+      if(subestimate.markedAsFiltered === true) {
+        return undefined;
+      }
+
       const subestimateSampleNumerator = subestimate.estimateInfo.sampleNumerator;
       const subestimateSampleDenominator = subestimate.estimateInfo.sampleDenominator;
 

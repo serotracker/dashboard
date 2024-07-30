@@ -593,6 +593,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
           'Age Group': isHumanMersAgeGroupSubEstimate(element.subestimate)
@@ -611,6 +612,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
           'Test Used': element.subestimate.assay.join(',')
@@ -627,6 +629,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
           'Animal Species': animalSpeciesToStringMap[element.subestimate.animalSpecies]

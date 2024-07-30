@@ -115,7 +115,11 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       filterKey: MersFilterableField.assay,
       estimate: {
         ...input.estimate,
-        assay: input.estimate.primaryEstimateInfo.assay
+        assay: [
+          ...input.estimate.primaryEstimateInfo.assay,
+          ...input.estimate.testUsedSubestimates
+            .flatMap((subestimate) => subestimate.assay)
+        ]
       },
       selectedFilters: {
         ...input.selectedFilters,
@@ -298,11 +302,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       return { included: true };
     }
 
-    const included = mersEstimateStringFieldHandler({
+    const included = mersEstimateArrayFieldHandler({
       filterKey: MersFilterableField.animalSpecies,
       estimate: {
         ...estimate,
-        animalSpecies: estimate.primaryEstimateInfo.animalSpecies
+        animalSpecies: [
+          estimate.primaryEstimateInfo.animalSpecies,
+          ...input.estimate.animalSpeciesSubestimates.map((subestimate) => subestimate.animalSpecies)
+        ].filter((element): element is NonNullable<typeof element> => !!element)
       },
       selectedFilters: {
         ...input.selectedFilters,
@@ -400,7 +407,12 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       filterKey: MersFilterableField.ageGroup,
       estimate: {
         ...estimate,
-        ageGroup: estimate.primaryEstimateInfo.ageGroup
+        ageGroup: [
+          ...estimate.primaryEstimateInfo.ageGroup,
+          ...input.estimate.ageGroupSubestimates
+            .filter((subestimate): subestimate is HumanMersAgeGroupSubEstimate => isHumanMersAgeGroupSubEstimate(subestimate))
+            .flatMap((subestimate) => subestimate.ageGroup)
+        ]
       },
       selectedFilters: {
         ...input.selectedFilters,
@@ -510,9 +522,9 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       }))
     }))
     .filter((estimate) => !(
-      (estimate.sexSubestimates.length > 0 && estimate.sexSubestimates.every((subestimate) => subestimate.markedAsFiltered)) &&
-      (estimate.ageGroupSubestimates.length > 0 && estimate.ageGroupSubestimates.every((subestimate) => subestimate.markedAsFiltered)) &&
-      (estimate.animalSpeciesSubestimates.length > 0 && estimate.animalSpeciesSubestimates.every((subestimate) => subestimate.markedAsFiltered)) &&
+      (estimate.sexSubestimates.length > 0 && estimate.sexSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
+      (estimate.ageGroupSubestimates.length > 0 && estimate.ageGroupSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
+      (estimate.animalSpeciesSubestimates.length > 0 && estimate.animalSpeciesSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
       (estimate.testUsedSubestimates.length > 0 && estimate.testUsedSubestimates.every((subestimate) => subestimate.markedAsFiltered))
     ))
 
