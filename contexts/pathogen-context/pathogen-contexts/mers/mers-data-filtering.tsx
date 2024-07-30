@@ -1,4 +1,4 @@
-import { MersEstimate, isAnimalMersEstimate, isHumanMersEstimate } from "./mers-context"
+import { HumanMersAgeGroupSubEstimate, MersEstimate, isAnimalMersEstimate, isHumanMersAgeGroupSubEstimate, isHumanMersEstimate } from "./mers-context"
 import { doTimeIntervalsOverlap } from "@/lib/date-utils";
 import { parseISO } from "date-fns";
 import uniq from "lodash/uniq";
@@ -82,6 +82,9 @@ const mersEstimateStringFieldHandler = <TFilterKey extends MersFilterableField>(
 interface MersEstimateFilteringHandlerOutput {
   included: boolean;
   sexSubestimateIdsToMarkAsFiltered?: string[];
+  humanAgeGroupSubestimateIdsToMarkAsFiltered?: string[];
+  animalSpeciesSubestimateIdstoMarkAsFiltered?: string[];
+  testUsedSubestimateIdstoMarkAsFiltered?: string[];
 }
 
 const allMersEstimateHandlers: Record<MersFilterableField, (input: {
@@ -112,13 +115,23 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       filterKey: MersFilterableField.assay,
       estimate: {
         ...input.estimate,
-        assay: input.estimate.primaryEstimateInfo.assay
+        assay: [
+          ...input.estimate.primaryEstimateInfo.assay,
+          ...input.estimate.testUsedSubestimates
+            .flatMap((subestimate) => subestimate.assay)
+        ]
       },
       selectedFilters: {
         ...input.selectedFilters,
         [MersFilterableField.assay]: input.selectedFilters[MersFilterableField.assay] ?? []
       }
-    })
+    }),
+    testUsedSubestimateIdstoMarkAsFiltered: input.estimate.testUsedSubestimates
+      .filter((subestimate) =>
+        ((input.selectedFilters[MersFilterableField.assay] ?? []).length > 0) &&
+        !input.selectedFilters[MersFilterableField.assay]?.some((element) => subestimate.assay.includes(element))
+      )
+      .map((subestimate) => subestimate.id)
   }),
   [MersFilterableField.isotypes]: (input) => ({
     included: mersEstimateArrayFieldHandler({
@@ -289,11 +302,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       return { included: true };
     }
 
-    const included = mersEstimateStringFieldHandler({
+    const included = mersEstimateArrayFieldHandler({
       filterKey: MersFilterableField.animalSpecies,
       estimate: {
         ...estimate,
-        animalSpecies: estimate.primaryEstimateInfo.animalSpecies
+        animalSpecies: [
+          estimate.primaryEstimateInfo.animalSpecies,
+          ...input.estimate.animalSpeciesSubestimates.map((subestimate) => subestimate.animalSpecies)
+        ].filter((element): element is NonNullable<typeof element> => !!element)
       },
       selectedFilters: {
         ...input.selectedFilters,
@@ -302,7 +318,13 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     })
 
     return {
-      included
+      included,
+      animalSpeciesSubestimateIdstoMarkAsFiltered: input.estimate.animalSpeciesSubestimates
+        .filter((subestimate) =>
+          ((input.selectedFilters[MersFilterableField.animalSpecies] ?? []).length > 0) &&
+          !input.selectedFilters[MersFilterableField.animalSpecies]?.includes(subestimate.animalSpecies)
+        )
+        .map((subestimate) => subestimate.id)
     }
   },
   [MersFilterableField.animalImportedOrLocal]: (input) => {
@@ -385,7 +407,12 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       filterKey: MersFilterableField.ageGroup,
       estimate: {
         ...estimate,
-        ageGroup: estimate.primaryEstimateInfo.ageGroup
+        ageGroup: [
+          ...estimate.primaryEstimateInfo.ageGroup,
+          ...input.estimate.ageGroupSubestimates
+            .filter((subestimate): subestimate is HumanMersAgeGroupSubEstimate => isHumanMersAgeGroupSubEstimate(subestimate))
+            .flatMap((subestimate) => subestimate.ageGroup)
+        ]
       },
       selectedFilters: {
         ...input.selectedFilters,
@@ -394,7 +421,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     })
 
     return {
-      included
+      included,
+      humanAgeGroupSubestimateIdsToMarkAsFiltered: input.estimate.ageGroupSubestimates
+        .filter((subestimate): subestimate is HumanMersAgeGroupSubEstimate => isHumanMersAgeGroupSubEstimate(subestimate))
+        .filter((subestimate) =>
+          ((input.selectedFilters[MersFilterableField.ageGroup] ?? []).length > 0) &&
+          !input.selectedFilters[MersFilterableField.ageGroup]?.some((element) => subestimate.ageGroup.includes(element))
+        )
+        .map((subestimate) => subestimate.id)
     }
   },
   [MersFilterableField.sampleFrame]: (input) => {
@@ -432,14 +466,23 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       appliedFilters: allAppliedFilterKeys.map((filterKey) => {
         const filteringFunction = allMersEstimateHandlers[filterKey];
 
-        const { included, sexSubestimateIdsToMarkAsFiltered } = filteringFunction({
+        const {
+          included,
+          sexSubestimateIdsToMarkAsFiltered,
+          humanAgeGroupSubestimateIdsToMarkAsFiltered,
+          animalSpeciesSubestimateIdstoMarkAsFiltered,
+          testUsedSubestimateIdstoMarkAsFiltered
+        } = filteringFunction({
           estimate,
           selectedFilters: input.selectedFilters
         })
 
         return {
           included,
-          sexSubestimateIdsToMarkAsFiltered
+          sexSubestimateIdsToMarkAsFiltered,
+          humanAgeGroupSubestimateIdsToMarkAsFiltered,
+          animalSpeciesSubestimateIdstoMarkAsFiltered,
+          testUsedSubestimateIdstoMarkAsFiltered
         }
       })
     }))
@@ -448,17 +491,41 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       estimate,
       sexSubestimateIdsToMarkAsFiltered: uniq(
         appliedFilters.flatMap(({ sexSubestimateIdsToMarkAsFiltered }) => sexSubestimateIdsToMarkAsFiltered)
+      ),
+      ageGroupSubestimateIdsToMarkAsFiltered: uniq(
+        appliedFilters.flatMap(({ humanAgeGroupSubestimateIdsToMarkAsFiltered }) => humanAgeGroupSubestimateIdsToMarkAsFiltered)
+      ),
+      animalSpeciesSubestimateIdstoMarkAsFiltered: uniq(
+        appliedFilters.flatMap(({ animalSpeciesSubestimateIdstoMarkAsFiltered }) => animalSpeciesSubestimateIdstoMarkAsFiltered)
+      ),
+      testUsedSubestimateIdstoMarkAsFiltered: uniq(
+        appliedFilters.flatMap(({ testUsedSubestimateIdstoMarkAsFiltered }) => testUsedSubestimateIdstoMarkAsFiltered)
       )
     }))
-    .map(({ estimate, sexSubestimateIdsToMarkAsFiltered }) => ({
+    .map(({ estimate, sexSubestimateIdsToMarkAsFiltered, ageGroupSubestimateIdsToMarkAsFiltered, animalSpeciesSubestimateIdstoMarkAsFiltered, testUsedSubestimateIdstoMarkAsFiltered }) => ({
       ...estimate,
       sexSubestimates: estimate.sexSubestimates.map((subestimate) => ({
         ...subestimate,
         markedAsFiltered: sexSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
+      })),
+      ageGroupSubestimates: estimate.ageGroupSubestimates.map((subestimate) => ({
+        ...subestimate,
+        markedAsFiltered: ageGroupSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
+      })),
+      animalSpeciesSubestimates: estimate.animalSpeciesSubestimates.map((subestimate) => ({
+        ...subestimate,
+        markedAsFiltered: animalSpeciesSubestimateIdstoMarkAsFiltered.includes(subestimate.id)
+      })),
+      testUsedSubestimates: estimate.testUsedSubestimates.map((subestimate) => ({
+        ...subestimate,
+        markedAsFiltered: testUsedSubestimateIdstoMarkAsFiltered.includes(subestimate.id)
       }))
     }))
     .filter((estimate) => !(
-      (estimate.sexSubestimates.length > 0 && estimate.sexSubestimates.every((subestimate) => subestimate.markedAsFiltered))
+      (estimate.sexSubestimates.length > 0 && estimate.sexSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
+      (estimate.ageGroupSubestimates.length > 0 && estimate.ageGroupSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
+      (estimate.animalSpeciesSubestimates.length > 0 && estimate.animalSpeciesSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
+      (estimate.testUsedSubestimates.length > 0 && estimate.testUsedSubestimates.every((subestimate) => subestimate.markedAsFiltered))
     ))
 
   return {
