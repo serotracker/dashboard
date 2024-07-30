@@ -3,33 +3,42 @@ import { MersVisualizationInformation } from "../visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { WHORegionsTooltip } from "@/components/customs/tooltip-content";
 import {
-  EstimateSummaryByWhoRegion,
-  EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption,
-  EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption
-} from "../../dashboard/(visualizations)/estimate-summary-by-who-region/estimate-summary-by-who-region";
+  EstimateBreakdownTable,
+  EstimateBreakdownTableFieldOfInterestDropdownOption,
+  EstimateBreakdownTableRegionTypeOfInterestDropdownOption,
+  EstimateBreakdownTableVariableOfInterestDropdownOption
+} from "../../dashboard/(visualizations)/estimate-breakdown-table/estimate-breakdown-table";
 
-export const useEstimateSummaryByWhoRegionAndFieldPageConfig = () => {
+export const useEstimateBreakdownTableAndFieldPageConfig = () => {
   const [
-    estimateSummaryByWhoRegionVariableOfInterest,
-    setEstimateSummaryByWhoRegionVariableOfInterest,
-  ] = useState<EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption>(
-    EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE
+    estimateBreakdownTableVariableOfInterest,
+    setEstimateBreakdownTableVariableOfInterest,
+  ] = useState<EstimateBreakdownTableVariableOfInterestDropdownOption>(
+    EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE
   );
 
   const [
-    estimateSummaryByWhoRegionFieldOfInterest,
-    setEstimateSummaryByWhoRegionFieldOfInterest,
-  ] = useState<EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption>(
-    EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.AGE_GROUP
+    estimateBreakdownTableFieldOfInterest,
+    setEstimateBreakdownTableFieldOfInterest,
+  ] = useState<EstimateBreakdownTableFieldOfInterestDropdownOption>(
+    EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP
   );
 
-  const getDisplayNameForEstimateSummaryByWhoRegionAndField: MersVisualizationInformation<
+  const [
+    estimateBreakdownTableRegionTypeOfInterest,
+    setEstimateBreakdownTableRegionTypeOfInterest,
+  ] = useState<EstimateBreakdownTableRegionTypeOfInterestDropdownOption>(
+    EstimateBreakdownTableRegionTypeOfInterestDropdownOption.WHO_REGION
+  );
+
+  const getDisplayNameForEstimateBreakdownTableAndField: MersVisualizationInformation<
     string,
-    EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption,
-    EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption
+    EstimateBreakdownTableVariableOfInterestDropdownOption,
+    EstimateBreakdownTableFieldOfInterestDropdownOption,
+    EstimateBreakdownTableRegionTypeOfInterestDropdownOption
   >['getDisplayName'] = useCallback(() => ({
-    type: VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN,
-    beforeBothDropdownsHeaderText: "",
+    type: VisualizationDisplayNameType.WITH_TRIPLE_DROPDOWN,
+    beforeAllDropdownsHeaderText: "",
     firstDropdownProps: {
       dropdownName: 'Variable of Interest Selection',
       borderColourClassname: 'border-mers',
@@ -38,28 +47,28 @@ export const useEstimateSummaryByWhoRegionAndFieldPageConfig = () => {
       dropdownOptionGroups: [{
         groupHeader: 'Seroprevalence Estimates',
         options: [
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE,
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE
+          EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE,
+          EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE
         ]
       }, {
         groupHeader: 'Viral Positive Prevalence Estimates',
         options: [
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE,
-          EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE
+          EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE,
+          EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE
         ]
       }],
-      chosenDropdownOption: estimateSummaryByWhoRegionVariableOfInterest,
+      chosenDropdownOption: estimateBreakdownTableVariableOfInterest,
       dropdownOptionToLabelMap: {
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE]: 'Aggregated Human Seroprevalence',
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE]: 'Aggregated Animal Seroprevalence',
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE]: 'Aggregated Human Viral Positive Prevalence',
-        [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE]: 'Aggregated Animal Viral Positive Prevalence',
+        [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE]: 'Aggregated Human Seroprevalence',
+        [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE]: 'Aggregated Animal Seroprevalence',
+        [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE]: 'Aggregated Human Viral Positive Prevalence',
+        [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE]: 'Aggregated Animal Viral Positive Prevalence',
       },
       onDropdownOptionChange: (option) => {
-        setEstimateSummaryByWhoRegionVariableOfInterest(option);
+        setEstimateBreakdownTableVariableOfInterest(option);
       }
     },
-    betweenDropdownsHeaderText: " Grouped By ",
+    betweenFirstAndSecondDropdownHeaderText: " Grouped By ",
     secondDropdownProps: {
       dropdownName: 'Field of Interest Selection',
       borderColourClassname: 'border-mers',
@@ -68,47 +77,81 @@ export const useEstimateSummaryByWhoRegionAndFieldPageConfig = () => {
       dropdownOptionGroups: [{
         groupHeader: 'Population Sampled',
         options: [
-          EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.AGE_GROUP,
-          EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.ANIMAL_SPECIES,
-          EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.SEX,
+          EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP,
+          EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES,
+          EstimateBreakdownTableFieldOfInterestDropdownOption.SEX,
         ]
       }],
-      chosenDropdownOption: estimateSummaryByWhoRegionFieldOfInterest,
+      chosenDropdownOption: estimateBreakdownTableFieldOfInterest,
       dropdownOptionToLabelMap: {
-        [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.AGE_GROUP]: "Age Group",
-        [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.ANIMAL_SPECIES]: "Animal Species",
-        [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.SEX]: "Sex",
+        [EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP]: "Age Group",
+        [EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES]: "Animal Species",
+        [EstimateBreakdownTableFieldOfInterestDropdownOption.SEX]: "Sex",
       },
       onDropdownOptionChange: (option) => {
-        setEstimateSummaryByWhoRegionFieldOfInterest(option);
+        setEstimateBreakdownTableFieldOfInterest(option);
       }
     },
-    afterBothDropdownsHeaderText: " and WHO Region"
-  }), [ estimateSummaryByWhoRegionVariableOfInterest, setEstimateSummaryByWhoRegionVariableOfInterest, estimateSummaryByWhoRegionFieldOfInterest, setEstimateSummaryByWhoRegionFieldOfInterest ])
+    betweenSecondAndThirdDropdownHeaderText: " and ",
+    thirdDropdownProps: {
+      dropdownName: 'Region Type of Interest Selection',
+      borderColourClassname: 'border-mers',
+      hoverColourClassname: 'hover:bg-mersHover/50',
+      highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
+      dropdownOptionGroups: [{
+        groupHeader: 'Region Type',
+        options: [
+          EstimateBreakdownTableRegionTypeOfInterestDropdownOption.WHO_REGION,
+          EstimateBreakdownTableRegionTypeOfInterestDropdownOption.UN_REGION,
+          EstimateBreakdownTableRegionTypeOfInterestDropdownOption.COUNTRY,
+        ]
+      }],
+      chosenDropdownOption: estimateBreakdownTableRegionTypeOfInterest,
+      dropdownOptionToLabelMap: {
+        [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.WHO_REGION]: "WHO Region",
+        [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.UN_REGION]: "UN Region",
+        [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.COUNTRY]: "Country",
+      },
+      onDropdownOptionChange: (option) => {
+        setEstimateBreakdownTableRegionTypeOfInterest(option);
+      }
+    },
+    afterAllDropdownsHeaderText: ""
+  }), [
+    estimateBreakdownTableVariableOfInterest,
+    setEstimateBreakdownTableVariableOfInterest,
+    estimateBreakdownTableFieldOfInterest,
+    setEstimateBreakdownTableFieldOfInterest,
+    estimateBreakdownTableRegionTypeOfInterest,
+    setEstimateBreakdownTableRegionTypeOfInterest
+  ])
 
-  const estimateSummaryByWhoRegionAndFieldTooltipContent: MersVisualizationInformation<
+  const estimateBreakdownTableAndFieldTooltipContent: MersVisualizationInformation<
     string,
-    EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption,
-    EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption
+    EstimateBreakdownTableVariableOfInterestDropdownOption,
+    EstimateBreakdownTableFieldOfInterestDropdownOption,
+    string
   >['titleTooltipContent'] = useMemo(() => {
     return <WHORegionsTooltip />
   }, []);
 
-  const renderVisualizationForEstimateSummaryByWhoRegionAndField: MersVisualizationInformation<
+  const renderVisualizationForEstimateBreakdownTableAndField: MersVisualizationInformation<
     string,
-    EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption,
-    EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption
+    EstimateBreakdownTableVariableOfInterestDropdownOption,
+    EstimateBreakdownTableFieldOfInterestDropdownOption,
+    string
   >['renderVisualization'] = useCallback(({ data }) => (
-    <EstimateSummaryByWhoRegion
-      variableOfInterest={estimateSummaryByWhoRegionVariableOfInterest}
-      fieldOfInterest={estimateSummaryByWhoRegionFieldOfInterest}
+    <EstimateBreakdownTable
+      variableOfInterest={estimateBreakdownTableVariableOfInterest}
+      fieldOfInterest={estimateBreakdownTableFieldOfInterest}
+      regionTypeOfInterest={estimateBreakdownTableRegionTypeOfInterest}
       data={data}
     />
-  ), [ estimateSummaryByWhoRegionVariableOfInterest, estimateSummaryByWhoRegionFieldOfInterest ]);
+  ), [ estimateBreakdownTableVariableOfInterest, estimateBreakdownTableFieldOfInterest, estimateBreakdownTableRegionTypeOfInterest ]);
 
   return {
-    getDisplayNameForEstimateSummaryByWhoRegionAndField,
-    estimateSummaryByWhoRegionAndFieldTooltipContent,
-    renderVisualizationForEstimateSummaryByWhoRegionAndField
+    getDisplayNameForEstimateBreakdownTableAndField,
+    estimateBreakdownTableAndFieldTooltipContent,
+    renderVisualizationForEstimateBreakdownTableAndField
   }
 }

@@ -8,13 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { WhoRegion } from "@/gql/graphql";
+import { UnRegion, WhoRegion } from "@/gql/graphql";
 import uniq from "lodash/uniq";
 import { groupDataForRechartsTwice } from "@/components/customs/visualizations/group-data-for-recharts/group-data-for-recharts-twice";
 import sum from "lodash/sum";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
-import { useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import {
   MersEstimate,
   isAnimalMersEstimate,
@@ -25,41 +25,51 @@ import {
   isHumanMersViralEstimate,
 } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { animalSpeciesToStringMap } from "../../(map)/shared-mers-map-pop-up-variables";
+import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
+import { download, generateCsv, mkConfig } from "export-to-csv";
 
-export enum EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption {
+export enum EstimateBreakdownTableVariableOfInterestDropdownOption {
   AGGREGATED_HUMAN_SEROPREVALENCE = "AGGREGATED_HUMAN_SEROPREVALENCE",
   AGGREGATED_ANIMAL_SEROPREVALENCE = "AGGREGATED_ANIMAL_SEROPREVALENCE",
   AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE = "AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE",
   AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE = "AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE",
 }
 
-export enum EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption {
+export enum EstimateBreakdownTableFieldOfInterestDropdownOption {
   AGE_GROUP = "AGE_GROUP",
   SEX = "SEX",
   ANIMAL_SPECIES = "ANIMAL_SPECIES"
 }
 
+export enum EstimateBreakdownTableRegionTypeOfInterestDropdownOption {
+  WHO_REGION = "WHO_REGION",
+  UN_REGION = "UN_REGION",
+  COUNTRY = "COUNTRY",
+}
 
-export const variableOfInterestToEstimateFilteringFunction: Record<EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption, (estimate: MersEstimate) => boolean> = {
-  [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE]: (estimate) => isHumanMersSeroprevalenceEstimate(estimate),
-  [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE]: (estimate) => isAnimalMersSeroprevalenceEstimate(estimate),
-  [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE]: (estimate) => isHumanMersViralEstimate(estimate),
-  [EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE]: (estimate) => isAnimalMersViralEstimate(estimate),
+
+export const variableOfInterestToEstimateFilteringFunction: Record<EstimateBreakdownTableVariableOfInterestDropdownOption, (estimate: MersEstimate) => boolean> = {
+  [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE]: (estimate) => isHumanMersSeroprevalenceEstimate(estimate),
+  [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE]: (estimate) => isAnimalMersSeroprevalenceEstimate(estimate),
+  [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE]: (estimate) => isHumanMersViralEstimate(estimate),
+  [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE]: (estimate) => isAnimalMersViralEstimate(estimate),
 } 
 
 
 type FieldOfInterestExtractingFunctionResult = Array<{
   whoRegion: WhoRegion;
+  unRegion: UnRegion;
+  countryAlphaTwoCode: string;
   sampleNumerator: number;
   sampleDenominator: number;
   group: string;
 }>;
 
-export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption, (estimate: MersEstimate) => FieldOfInterestExtractingFunctionResult> = {
-  [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.SEX]: (estimate) => {
-    const { whoRegion, sex, sampleDenominator, sampleNumerator } = estimate.primaryEstimateInfo;
+export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<EstimateBreakdownTableFieldOfInterestDropdownOption, (estimate: MersEstimate) => FieldOfInterestExtractingFunctionResult> = {
+  [EstimateBreakdownTableFieldOfInterestDropdownOption.SEX]: (estimate) => {
+    const { whoRegion, unRegion, countryAlphaTwoCode, sex, sampleDenominator, sampleNumerator } = estimate.primaryEstimateInfo;
 
-    if(!whoRegion) {
+    if(!whoRegion || !unRegion) {
       return [];
     }
 
@@ -74,7 +84,9 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
       }
 
       return sex ? [{
-        whoRegion: whoRegion,
+        whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
         sampleDenominator,
         sampleNumerator,
         group: sex
@@ -96,19 +108,21 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
 
       return {
         whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
         group: subestimate.sex,
         sampleNumerator: subestimateSampleNumerator,
         sampleDenominator: subestimateSampleDenominator
       }
     }).filter((element): element is NonNullable<typeof element> => !!element);
   },
-  [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.AGE_GROUP]: (estimate) => {
-    const { whoRegion, sampleDenominator, sampleNumerator } = estimate.primaryEstimateInfo;
+  [EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP]: (estimate) => {
+    const { whoRegion, unRegion, countryAlphaTwoCode, sampleDenominator, sampleNumerator } = estimate.primaryEstimateInfo;
     const ageGroups = isAnimalMersEstimate(estimate)
       ? estimate.primaryEstimateInfo.animalAgeGroup
       : estimate.primaryEstimateInfo.ageGroup
 
-    if(!whoRegion) {
+    if(!whoRegion || !unRegion) {
       return [];
     }
 
@@ -123,7 +137,9 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
       }
 
       return ageGroups.map((ageGroup) => ({
-        whoRegion: whoRegion,
+        whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
         sampleDenominator: Math.floor(sampleDenominator / ageGroups.length),
         sampleNumerator: Math.floor(sampleNumerator / ageGroups.length),
         group: ageGroup
@@ -148,17 +164,19 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         : subestimate.animalAgeGroup;
 
       return ageGroups.map((ageGroup) => ({
-        whoRegion: whoRegion,
+        whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
         sampleDenominator: Math.floor(subestimateSampleDenominator / ageGroups.length),
         sampleNumerator: Math.floor(subestimateSampleNumerator / ageGroups.length),
         group: ageGroup
       }));
     }).filter((element): element is NonNullable<typeof element> => !!element);
   },
-  [EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption.ANIMAL_SPECIES]: (estimate) => {
-    const { whoRegion, sampleDenominator, sampleNumerator } = estimate.primaryEstimateInfo;
+  [EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES]: (estimate) => {
+    const { whoRegion, unRegion, countryAlphaTwoCode, sampleDenominator, sampleNumerator } = estimate.primaryEstimateInfo;
 
-    if(!whoRegion) {
+    if(!whoRegion || !unRegion) {
       return [];
     }
 
@@ -179,7 +197,9 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
       }
 
       return animalSpecies ? [{
-        whoRegion: whoRegion,
+        whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
         sampleDenominator,
         sampleNumerator,
         group: animalSpeciesToStringMap[animalSpecies]
@@ -201,6 +221,8 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
 
       return {
         whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
         group: animalSpeciesToStringMap[subestimate.animalSpecies],
         sampleNumerator: subestimateSampleNumerator,
         sampleDenominator: subestimateSampleDenominator
@@ -209,43 +231,73 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
   }
 }
 
-interface EstimateSummaryByWhoRegionProps {
-  data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
-  variableOfInterest: EstimateSummaryByWhoRegionAndFieldVariableOfInterestDropdownOption;
-  fieldOfInterest: EstimateSummaryByWhoRegionAndFieldFieldOfInterestDropdownOption;
+export const regionOfInterestToRegionOfInterestExtractingFunction: Record<EstimateBreakdownTableRegionTypeOfInterestDropdownOption, (
+  dataPoint: {
+    whoRegion: WhoRegion;
+    unRegion: UnRegion;
+    countryAlphaTwoCode: string;
+  },
+  countryAlphaTwoCodeToCountryNameMap: Record<string, string | undefined>
+) => string> = {
+  [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.WHO_REGION]: (dataPoint) => dataPoint.whoRegion,
+  [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.UN_REGION]: (dataPoint) => dataPoint.unRegion,
+  [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.COUNTRY]: (dataPoint, countryAlphaTwoCodeToCountryNameMap) => countryAlphaTwoCodeToCountryNameMap[dataPoint.countryAlphaTwoCode] ?? 'Unknown',
 }
 
-export const EstimateSummaryByWhoRegion = (props: EstimateSummaryByWhoRegionProps) => {
-  const { data, variableOfInterest, fieldOfInterest } = props;
+interface EstimateBreakdownTableProps {
+  data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  variableOfInterest: EstimateBreakdownTableVariableOfInterestDropdownOption;
+  fieldOfInterest: EstimateBreakdownTableFieldOfInterestDropdownOption;
+  regionTypeOfInterest: EstimateBreakdownTableRegionTypeOfInterestDropdownOption;
+}
 
-  const zeroValuedColourHexCode = "#f9f1f0";
-  const oneValuedColourHexCode = "#f79489";
+const zeroValuedColourHexCode = "#f9f1f0";
+const oneValuedColourHexCode = "#f79489";
+
+export const EstimateBreakdownTable = (props: EstimateBreakdownTableProps) => {
+  const { data, variableOfInterest, fieldOfInterest, regionTypeOfInterest } = props;
+  const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext)
 
   const brokenDownEstimates = useMemo(() => data
     .filter((dataPoint): dataPoint is MersEstimate => 'primaryEstimateInfo' in dataPoint)
     .filter((estimate) => variableOfInterestToEstimateFilteringFunction[variableOfInterest](estimate))
     .flatMap((estimate) => fieldOfInterestToFieldOfInterestExtractingFunction[fieldOfInterest](estimate))
-  , [ data, variableOfInterest, fieldOfInterest ]);
+    .map((estimate) => ({ ...estimate, region: regionOfInterestToRegionOfInterestExtractingFunction[regionTypeOfInterest](
+      estimate,
+      countryAlphaTwoCodeToCountryNameMap
+    )}))
+  , [ data, variableOfInterest, fieldOfInterest, countryAlphaTwoCodeToCountryNameMap, regionTypeOfInterest ]);
 
-  const validGroups = uniq(['All', ...(brokenDownEstimates.map((estimate) => estimate.group))
+  const validGroups = useMemo(() => uniq(['All', ...(brokenDownEstimates.map((estimate) => estimate.group))
     .filter((group): group is NonNullable<typeof group> => !!group)
     .sort()
-  ]);
+  ]), [ brokenDownEstimates ]);
 
-  const validWhoRegions = uniq(brokenDownEstimates.map((estimate) => estimate.whoRegion))
-    .filter((whoRegion): whoRegion is NonNullable<typeof whoRegion> => !!whoRegion)
-    .sort();
+  const validRegions = useMemo(() => uniq(
+    brokenDownEstimates.map((estimate) => estimate.region)).sort()
+  , [ brokenDownEstimates ]);
+
+  const downloadCsv = useCallback(() => {
+    const dataForCsv = [{}];
+
+    const csvConfig = mkConfig({
+      useKeysAsHeaders: true,
+      filename: "estimate-breakdown",
+    });
+    const csv = generateCsv(csvConfig)(dataForCsv);
+    download(csvConfig)(csv);
+  }, []);
 
   const {
     rechartsData: groupedBrokenDownEstimates,
   } = groupDataForRechartsTwice({
     data: brokenDownEstimates,
-    primaryGroupingFunction: (data) => data.whoRegion,
+    primaryGroupingFunction: (data) => data.region,
     secondaryGroupingFunction: (data) => data.group,
     transformOutputValue: (data) => data
   })
 
-  if(validWhoRegions.length === 0) {
+  if(validRegions.length === 0) {
     return (
       <div className="p-2 w-full">
        <p> No data available.</p>
@@ -277,7 +329,7 @@ export const EstimateSummaryByWhoRegion = (props: EstimateSummaryByWhoRegionProp
             variant="outline"
             size="sm"
             className={cn("text-white", validGroups.length === 0 ? 'hidden' : '')}
-            onClick={() => {}}
+            onClick={() => downloadCsv()}
           >
             Download CSV
           </Button>
@@ -290,7 +342,7 @@ export const EstimateSummaryByWhoRegion = (props: EstimateSummaryByWhoRegionProp
             {validGroups.map((group) => (
               <TableHead
                 className="border bg-white whitespace-nowrap"
-                key={`estimate-summary-by-who-region-table-${group}-header`}
+                key={`estimate-breakdown-table-${group}-header`}
               >
                 {group}
               </TableHead>
@@ -298,18 +350,18 @@ export const EstimateSummaryByWhoRegion = (props: EstimateSummaryByWhoRegionProp
           </TableRow>
         </TableHeader>
         <TableBody>
-          {validWhoRegions
+          {validRegions
             .sort()
-            .map((whoRegion) => (
+            .map((region) => (
             <TableRow
-              key={`estimate-summary-by-who-region-table-${whoRegion}-row`}
+              key={`estimate-breakdown-table-${region}-row`}
             >
               <TableCell className="border-l border-b bg-white group-hover:bg-zinc-100 whitespace-nowrap">
-                {whoRegion}
+                {region}
               </TableCell>
               {validGroups.map((group) => {
                 const dataForRow = groupedBrokenDownEstimates
-                  .find(({primaryKey}) => primaryKey === whoRegion);
+                  .find(({primaryKey}) => primaryKey === region);
                 const dataForCell = dataForRow
                   ? group === 'All'
                     ? validGroups.flatMap((group) => dataForRow[group]?.data ?? [])
@@ -332,7 +384,7 @@ export const EstimateSummaryByWhoRegion = (props: EstimateSummaryByWhoRegionProp
                 return (
                   <TableCell
                     className="border-l border-r border-b bg-white group-hover:bg-zinc-100 whitespace-nowrap"
-                    key={`estimate-summary-by-who-region-table-${whoRegion}-${group}-cell`}
+                    key={`estimate-breakdown-table-${region}-${group}-cell`}
                     style={{ backgroundColor: backgroundColourHexCode }}
                   >
                     {seroprevalencePercentageString}

@@ -12,7 +12,7 @@ import { MedianSeroprevalenceOverTime } from "../dashboard/(visualizations)/medi
 import { useSummaryByRegionVisualizationPageConfig } from "./visualization-page-config/use-summary-by-region-visualization-page-config";
 import { MedianViralPositivePrevalenceOverTime } from "../dashboard/(visualizations)/median-viral-positive-prevalence-over-time";
 import { useEstimatesByRegionVisualizationPageConfig } from "./visualization-page-config/use-estimates-by-region-visualization-page-config";
-import { useEstimateSummaryByWhoRegionAndFieldPageConfig } from "./visualization-page-config/use-estimate-summary-by-who-region-and-field-page-config";
+import { useEstimateBreakdownTableAndFieldPageConfig } from "./visualization-page-config/use-estimate-summary-by-who-region-and-field-page-config";
 
 export enum MersVisualizationId {
   REPORTED_EVENT_SUMMARY_OVER_TIME = "REPORTED_EVENT_SUMMARY_OVER_TIME",
@@ -21,7 +21,7 @@ export enum MersVisualizationId {
   MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME = "MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME",
   SUMMARY_BY_REGION = "SUMMARY_BY_REGION",
   ESTIMATES_BY_REGION = "ESTIMATES_BY_REGION",
-  ESTIMATE_SUMMARY_BY_WHO_REGION = "ESTIMATE_SUMMARY_BY_WHO_REGION",
+  ESTIMATE_BREAKDOWN_TABLE = "ESTIMATE_BREAKDOWN_TABLE",
 }
 
 export const isMersVisualizationId = (
@@ -36,20 +36,22 @@ export enum MersVisualizationUrlParameter {
   "median_viral_positive_prevalence_over_time" = "median_viral_positive_prevalence_over_time",
   "summary_by_region" = "summary_by_region",
   "estimates_by_region" = "estimates_by_region",
-  "estimate_summary_by_who_region" = "estimate_summary_by_who_region"
+  "estimate_breakdown_table" = "estimate_breakdown_table"
 }
 
 export type MersVisualizationInformation<
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
-  TSecondVisualizationDisplayNameDropdownOption extends string
+  TSecondVisualizationDisplayNameDropdownOption extends string,
+  TThirdVisualizationDisplayNameDropdownOption extends string
 > = VisualizationInformation<
   MersVisualizationId,
   MersVisualizationUrlParameter,
   MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry,
   TCustomizationModalDropdownOption,
   TVisualizationDisplayNameDropdownOption,
-  TSecondVisualizationDisplayNameDropdownOption
+  TSecondVisualizationDisplayNameDropdownOption,
+  TThirdVisualizationDisplayNameDropdownOption
 >
 
 export const isMersVisualizationUrlParameter = (
@@ -57,7 +59,7 @@ export const isMersVisualizationUrlParameter = (
 ): visualizationUrlParameter is MersVisualizationUrlParameter =>
   Object.values(MersVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string, string, string>> = {
+const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string, string, string, string>> = {
   [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]: {
     id: MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME,
     urlParameter:
@@ -120,11 +122,11 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
     titleTooltipContent: <p> Requires state. Initialized in following step. </p>,
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>
   },
-  [MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION]: {
-    id: MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION,
+  [MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE]: {
+    id: MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE,
     urlParameter:
       MersVisualizationUrlParameter[
-        "estimate_summary_by_who_region"
+        "estimate_breakdown_table"
       ],
     getDisplayName: () => ({
       type: VisualizationDisplayNameType.STANDARD,
@@ -154,10 +156,10 @@ export const useVisualizationPageConfiguration = () => {
   } = useEstimatesByRegionVisualizationPageConfig();
 
   const {
-    getDisplayNameForEstimateSummaryByWhoRegionAndField,
-    estimateSummaryByWhoRegionAndFieldTooltipContent,
-    renderVisualizationForEstimateSummaryByWhoRegionAndField
-  } = useEstimateSummaryByWhoRegionAndFieldPageConfig();
+    getDisplayNameForEstimateBreakdownTableAndField,
+    estimateBreakdownTableAndFieldTooltipContent,
+    renderVisualizationForEstimateBreakdownTableAndField
+  } = useEstimateBreakdownTableAndFieldPageConfig();
 
   const completedMersVisualizationInformation = useMemo(() => ({
     [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]:
@@ -187,11 +189,11 @@ export const useVisualizationPageConfiguration = () => {
       customizationModalConfiguration: customizationModalConfigurationForEstimatesByRegion,
       titleTooltipContent: estimatesByRegionTitleTooltipContent,
     },
-    [MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION]: {
-      ...mersVisualizationInformation[MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION],
-      getDisplayName: getDisplayNameForEstimateSummaryByWhoRegionAndField,
-      renderVisualization: renderVisualizationForEstimateSummaryByWhoRegionAndField,
-      titleTooltipContent: estimateSummaryByWhoRegionAndFieldTooltipContent,
+    [MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE]: {
+      ...mersVisualizationInformation[MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE],
+      getDisplayName: getDisplayNameForEstimateBreakdownTableAndField,
+      renderVisualization: renderVisualizationForEstimateBreakdownTableAndField,
+      titleTooltipContent: estimateBreakdownTableAndFieldTooltipContent,
     }
   }), [
     getDisplayNameForEstimatesByRegion,
@@ -205,9 +207,9 @@ export const useVisualizationPageConfiguration = () => {
     numberOfPagesAvailable,
     currentPageIndex,
     setCurrentPageIndex,
-    getDisplayNameForEstimateSummaryByWhoRegionAndField,
-    renderVisualizationForEstimateSummaryByWhoRegionAndField,
-    estimateSummaryByWhoRegionAndFieldTooltipContent
+    getDisplayNameForEstimateBreakdownTableAndField,
+    renderVisualizationForEstimateBreakdownTableAndField,
+    estimateBreakdownTableAndFieldTooltipContent
   ])
 
   return {

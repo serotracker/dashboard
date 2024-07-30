@@ -53,14 +53,16 @@ export enum ArbovirusVisualizationUrlParameter {
 export type ArbovirusVisualizationInformation<
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
-  TSecondVisualizationDisplayNameDropdownOption extends string
+  TSecondVisualizationDisplayNameDropdownOption extends string,
+  TThirdVisualizationDisplayNameDropdownOption extends string
 > = VisualizationInformation<
   ArbovirusVisualizationId,
   ArbovirusVisualizationUrlParameter,
   ArbovirusEstimate,
   TCustomizationModalDropdownOption,
   TVisualizationDisplayNameDropdownOption,
-  TSecondVisualizationDisplayNameDropdownOption
+  TSecondVisualizationDisplayNameDropdownOption,
+  TThirdVisualizationDisplayNameDropdownOption
 >;
 
 export const isArbovirusVisualizationUrlParameter = (
@@ -68,7 +70,7 @@ export const isArbovirusVisualizationUrlParameter = (
 ): visualizationUrlParameter is ArbovirusVisualizationUrlParameter =>
   Object.values(ArbovirusVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, ArbovirusVisualizationInformation<string, string, string>> = {
+export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, ArbovirusVisualizationInformation<string, string, string, string>> = {
   [ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS]: {
     id: ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS,
     urlParameter:

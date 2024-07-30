@@ -35,7 +35,8 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   const getDisplayNameForEstimatesByRegion: MersVisualizationInformation<
     string,
     EstimatesByRegionVariableOfInterestDropdownOption,
-    EstimatesByRegionRegionDropdownOption
+    EstimatesByRegionRegionDropdownOption,
+    string
   >['getDisplayName'] = useCallback(() => ({
     type: VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN,
     beforeBothDropdownsHeaderText: "",
@@ -96,7 +97,10 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   }), [ estimatesByRegionVariableOfInterest, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion ])
 
   const renderVisualizationForEstimatesByRegion: MersVisualizationInformation<
-    string, EstimatesByRegionVariableOfInterestDropdownOption, EstimatesByRegionRegionDropdownOption
+    string,
+    EstimatesByRegionVariableOfInterestDropdownOption,
+    EstimatesByRegionRegionDropdownOption,
+    string
   >['renderVisualization'] = useCallback(({ data }) => (
     <EstimatesByRegion
       data={data}
@@ -111,7 +115,8 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   const customizationModalConfigurationForEstimatesByRegion: MersVisualizationInformation<
     string,
     EstimatesByRegionVariableOfInterestDropdownOption,
-    EstimatesByRegionRegionDropdownOption
+    EstimatesByRegionRegionDropdownOption,
+    string
   >['customizationModalConfiguration'] = useMemo(() => {
     if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.COUNTRY) {
       return undefined;
@@ -149,7 +154,10 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   }, [ barColoursForWhoRegions, setBarColoursForWhoRegions, barColoursForUnRegions, setBarColoursForUnRegions, estimatesByRegionSelectedRegion ]);
 
   const estimatesByRegionTitleTooltipContent: MersVisualizationInformation<
-    string, EstimatesByRegionVariableOfInterestDropdownOption, EstimatesByRegionRegionDropdownOption
+    string,
+    EstimatesByRegionVariableOfInterestDropdownOption,
+    EstimatesByRegionRegionDropdownOption,
+    string
   >['titleTooltipContent'] = useMemo(() => {
     if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION) {
       return <WHORegionsTooltip />

@@ -10,6 +10,9 @@ export const MersVisualizationsSection = () => {
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
 
   const allVisualizationInformationWithClassnames = [{
+    ...mersVisualizationInformation[MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE],
+     className: "h-fit"
+  }, {
     ...mersVisualizationInformation[MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME],
      className: "h-full-screen"
   }, {
@@ -24,15 +27,12 @@ export const MersVisualizationsSection = () => {
   }, {
     ...mersVisualizationInformation[MersVisualizationId.ESTIMATES_BY_REGION],
      className: "h-full-screen"
-  }, {
-    ...mersVisualizationInformation[MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION],
-     className: "h-fit"
   }];
 
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
+    MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE,
     MersVisualizationId.SUMMARY_BY_REGION,
     MersVisualizationId.ESTIMATES_BY_REGION,
-    MersVisualizationId.ESTIMATE_SUMMARY_BY_WHO_REGION
   ].includes(visualizationInfo.id));
 
   const { filteredData, faoMersEventData } = useContext(MersContext);
@@ -40,7 +40,7 @@ export const MersVisualizationsSection = () => {
 
   const renderVisualizationList = useCallback(<
     TCustomizationModalDropdownOption extends string,
-  >(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption, any, any> & {className: string}>) => {
+  >(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption, any, any, any> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

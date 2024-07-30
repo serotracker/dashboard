@@ -38,14 +38,16 @@ export enum SarsCov2VisualizationUrlParameter {
 export type SarsCov2VisualizationInformation<
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
-  TSecondVisualizationDisplayNameDropdownOption extends string
+  TSecondVisualizationDisplayNameDropdownOption extends string,
+  TThirdVisualizationDisplayNameDropdownOption extends string
 > = VisualizationInformation<
   SarsCov2VisualizationId,
   SarsCov2VisualizationUrlParameter,
   SarsCov2Estimate,
   TCustomizationModalDropdownOption,
   TVisualizationDisplayNameDropdownOption,
-  TSecondVisualizationDisplayNameDropdownOption
+  TSecondVisualizationDisplayNameDropdownOption,
+  TThirdVisualizationDisplayNameDropdownOption
 >;
 
 export const isSarsCov2VisualizationUrlParameter = (
@@ -53,7 +55,7 @@ export const isSarsCov2VisualizationUrlParameter = (
 ): visualizationUrlParameter is SarsCov2VisualizationUrlParameter =>
   Object.values(SarsCov2VisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2VisualizationInformation<string, string, string>> = {
+const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2VisualizationInformation<string, string, string, string>> = {
   [SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION]: {
     id: SarsCov2VisualizationId.PUBLISHED_STUDY_COUNT_BY_GBD_REGION,
     urlParameter:
