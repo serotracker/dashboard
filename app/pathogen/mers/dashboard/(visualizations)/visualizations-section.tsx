@@ -10,6 +10,9 @@ export const MersVisualizationsSection = () => {
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
 
   const allVisualizationInformationWithClassnames = [{
+    ...mersVisualizationInformation[MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE],
+     className: "h-fit"
+  }, {
     ...mersVisualizationInformation[MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME],
      className: "h-full-screen"
   }, {
@@ -27,6 +30,7 @@ export const MersVisualizationsSection = () => {
   }];
 
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
+    MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE,
     MersVisualizationId.SUMMARY_BY_REGION,
     MersVisualizationId.ESTIMATES_BY_REGION,
   ].includes(visualizationInfo.id));
@@ -36,7 +40,7 @@ export const MersVisualizationsSection = () => {
 
   const renderVisualizationList = useCallback(<
     TCustomizationModalDropdownOption extends string,
-  >(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption, any, any> & {className: string}>) => {
+  >(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption, any, any, any> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

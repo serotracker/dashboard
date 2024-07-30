@@ -62,7 +62,8 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
   const getDisplayNameForSummaryByWhoRegion: MersVisualizationInformation<
     string,
     SummaryByRegionVariableOfInterestDropdownOption,
-    SummaryByRegionRegionDropdownOption
+    SummaryByRegionRegionDropdownOption,
+    string
   >['getDisplayName'] = useCallback(() => ({
     type: VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN,
     beforeBothDropdownsHeaderText: "",
@@ -137,7 +138,8 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
   const customizationModalConfigurationForSummaryByRegion: MersVisualizationInformation<
     string,
     SummaryByRegionVariableOfInterestDropdownOption,
-    SummaryByRegionRegionDropdownOption
+    SummaryByRegionRegionDropdownOption,
+    string
   >['customizationModalConfiguration'] = useMemo(() => {
     if(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.COUNTRY) {
       return undefined;
@@ -175,7 +177,10 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
   }, [ barColoursForWhoRegions, setBarColoursForWhoRegions, barColoursForUnRegions, setBarColoursForUnRegions, summaryByRegionSelectedDropdownOption ]);
 
   const renderVisualizationForSummaryByWhoRegion: MersVisualizationInformation<
-    string, SummaryByRegionVariableOfInterestDropdownOption, SummaryByRegionRegionDropdownOption
+    string,
+    SummaryByRegionVariableOfInterestDropdownOption,
+    SummaryByRegionRegionDropdownOption,
+    string
   >['renderVisualization'] = useCallback(({ data }) => (
     <SummaryByRegion
       data={data}
@@ -190,7 +195,10 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
   ), [ summaryByRegionVariableOfInterestSelectedDropdownOption, summaryByRegionSelectedDropdownOption, numberOfPagesAvailable, setNumberOfPagesAvailable, currentPageIndex, barColoursForUnRegions, barColoursForWhoRegions ]);
 
   const summaryByWhoRegionTitleTooltipContent: MersVisualizationInformation<
-    string, SummaryByRegionVariableOfInterestDropdownOption, SummaryByRegionRegionDropdownOption
+    string,
+    SummaryByRegionVariableOfInterestDropdownOption,
+    SummaryByRegionRegionDropdownOption,
+    string
   >['titleTooltipContent'] = useMemo(() => {
     if(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.WHO_REGION) {
       return <WHORegionsTooltip />

@@ -545,8 +545,8 @@ const generateTableRowsForSubestimate = <
       rows: {
         'Sample Numerator': estimateInfo.sampleNumerator?.toFixed(0),
         'Sample Denominator': estimateInfo.sampleDenominator?.toFixed(0),
-        'Seroprevalence': `${(estimateInfo.positivePrevalence * 100).toFixed(1)}%`,
-        'Seroprevalence (95% CI)': (estimateInfo.positivePrevalence95CILower === undefined || estimateInfo.positivePrevalence95CILower === null)
+        'Positive Prevalence': `${(estimateInfo.positivePrevalence * 100).toFixed(1)}%`,
+        'Positive Prevalence (95% CI)': (estimateInfo.positivePrevalence95CILower === undefined || estimateInfo.positivePrevalence95CILower === null)
           ? (estimateInfo.positivePrevalence95CIUpper === undefined || estimateInfo.positivePrevalence95CIUpper === null)
             ? 'Not reported'
             : `Unknown - ${(estimateInfo.positivePrevalence95CIUpper * 100).toFixed(1)}%`

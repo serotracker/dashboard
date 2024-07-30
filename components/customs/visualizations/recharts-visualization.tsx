@@ -17,7 +17,8 @@ interface RechartsVisualizationProps<
   TEstimate extends Record<string, unknown>,
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
-  TSecondVisualizationDisplayNameDropdownOption extends string
+  TSecondVisualizationDisplayNameDropdownOption extends string,
+  TThirdVisualizationDisplayNameDropdownOption extends string
 > {
   visualizationInformation: VisualizationInformation<
     TVisualizationId,
@@ -25,7 +26,8 @@ interface RechartsVisualizationProps<
     TEstimate,
     TCustomizationModalDropdownOption,
     TVisualizationDisplayNameDropdownOption,
-    TSecondVisualizationDisplayNameDropdownOption
+    TSecondVisualizationDisplayNameDropdownOption,
+    TThirdVisualizationDisplayNameDropdownOption
   >;
   data: TEstimate[];
   highlightedDataPoint: TEstimate | undefined;
@@ -42,7 +44,8 @@ export const RechartsVisualization = <
   TEstimate extends Record<string, unknown>,
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
-  TSecondVisualizationDisplayNameDropdownOption extends string
+  TSecondVisualizationDisplayNameDropdownOption extends string,
+  TThirdVisualizationDisplayNameDropdownOption extends string
 >(
   props: RechartsVisualizationProps<
     TVisualizationId,
@@ -50,7 +53,8 @@ export const RechartsVisualization = <
     TEstimate,
     TCustomizationModalDropdownOption,
     TVisualizationDisplayNameDropdownOption,
-    TSecondVisualizationDisplayNameDropdownOption
+    TSecondVisualizationDisplayNameDropdownOption,
+    TThirdVisualizationDisplayNameDropdownOption
   >
 ) => {
   const { ref, downloadVisualization } = useDownloadVisualization({

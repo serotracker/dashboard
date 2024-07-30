@@ -180,7 +180,8 @@ interface VisualizationHeaderProps<
   TEstimate extends Record<string, unknown>,
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
-  TSecondVisualizationDisplayNameDropdownOption extends string
+  TSecondVisualizationDisplayNameDropdownOption extends string,
+  TThirdVisualizationDisplayNameDropdownOption extends string
 > {
   visualizationInformation: VisualizationInformation<
     TVisualizationId,
@@ -188,7 +189,8 @@ interface VisualizationHeaderProps<
     TEstimate,
     TCustomizationModalDropdownOption,
     TVisualizationDisplayNameDropdownOption,
-    TSecondVisualizationDisplayNameDropdownOption
+    TSecondVisualizationDisplayNameDropdownOption,
+    TThirdVisualizationDisplayNameDropdownOption
   >;
   data: TEstimate[];
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
@@ -202,7 +204,8 @@ export const VisualizationHeader = <
   TEstimate extends Record<string, unknown>,
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
-  TSecondVisualizationDisplayNameDropdownOption extends string
+  TSecondVisualizationDisplayNameDropdownOption extends string,
+  TThirdVisualizationDisplayNameDropdownOption extends string
 >(
   props: VisualizationHeaderProps<
     TVisualizationId,
@@ -210,7 +213,8 @@ export const VisualizationHeader = <
     TEstimate,
     TCustomizationModalDropdownOption,
     TVisualizationDisplayNameDropdownOption,
-    TSecondVisualizationDisplayNameDropdownOption
+    TSecondVisualizationDisplayNameDropdownOption,
+    TThirdVisualizationDisplayNameDropdownOption
   >
 ) => {
   const router = useRouter();
@@ -284,6 +288,27 @@ export const VisualizationHeader = <
             <Dropdown {...displayName.secondDropdownProps}/>
           </div>
           <h3 className="inline">{displayName.afterBothDropdownsHeaderText} </h3>
+          {titleTooltip}
+        </div>
+      )
+    }
+
+    if(displayName.type === VisualizationDisplayNameType.WITH_TRIPLE_DROPDOWN) {
+      return (
+        <div className="w-full text-center text-lg inline">
+          <h3 className="inline">{displayName.beforeAllDropdownsHeaderText} </h3>
+          <div className="inline">
+            <Dropdown {...displayName.firstDropdownProps}/>
+          </div>
+          <h3 className="inline">{displayName.betweenFirstAndSecondDropdownHeaderText} </h3>
+          <div className="inline">
+            <Dropdown {...displayName.secondDropdownProps}/>
+          </div>
+          <h3 className="inline">{displayName.betweenSecondAndThirdDropdownHeaderText} </h3>
+          <div className="inline">
+            <Dropdown {...displayName.thirdDropdownProps}/>
+          </div>
+          <h3 className="inline">{displayName.afterAllDropdownsHeaderText} </h3>
           {titleTooltip}
         </div>
       )
