@@ -27,6 +27,7 @@ import {
 import { animalSpeciesToStringMap } from "../../(map)/shared-mers-map-pop-up-variables";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
 import { download, generateCsv, mkConfig } from "export-to-csv";
+import { unRegionEnumToLabelMap } from "@/lib/un-regions";
 
 export enum EstimateBreakdownTableVariableOfInterestDropdownOption {
   AGGREGATED_HUMAN_SEROPREVALENCE = "AGGREGATED_HUMAN_SEROPREVALENCE",
@@ -252,7 +253,7 @@ export const regionOfInterestToRegionOfInterestExtractingFunction: Record<Estima
   countryAlphaTwoCodeToCountryNameMap: Record<string, string | undefined>
 ) => string> = {
   [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.WHO_REGION]: (dataPoint) => dataPoint.whoRegion,
-  [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.UN_REGION]: (dataPoint) => dataPoint.unRegion,
+  [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.UN_REGION]: (dataPoint) => unRegionEnumToLabelMap[dataPoint.unRegion],
   [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.COUNTRY]: (dataPoint, countryAlphaTwoCodeToCountryNameMap) => countryAlphaTwoCodeToCountryNameMap[dataPoint.countryAlphaTwoCode] ?? 'Unknown',
 }
 
