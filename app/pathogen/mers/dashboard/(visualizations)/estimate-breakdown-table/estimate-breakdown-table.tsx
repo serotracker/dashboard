@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { cn, mixColours, typedGroupBy, typedObjectKeys } from "@/lib/utils";
+import { cn, mixColours, typedGroupBy, typedObjectEntries, typedObjectKeys } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -268,7 +268,7 @@ export const EstimateBreakdownTable = (props: EstimateBreakdownTableProps) => {
     )}))
   , [ data, variableOfInterest, fieldOfInterest, countryAlphaTwoCodeToCountryNameMap, regionTypeOfInterest ]);
 
-  const validGroups = useMemo(() => uniq(['All', ...(brokenDownEstimates.map((estimate) => estimate.group))
+  const validGroups = useMemo(() => uniq(['Overall', ...(brokenDownEstimates.map((estimate) => estimate.group))
     .filter((group): group is NonNullable<typeof group> => !!group)
     .sort()
   ]), [ brokenDownEstimates ]);
@@ -277,8 +277,78 @@ export const EstimateBreakdownTable = (props: EstimateBreakdownTableProps) => {
     brokenDownEstimates.map((estimate) => estimate.region)).sort()
   , [ brokenDownEstimates ]);
 
+  const {
+    rechartsData: groupedBrokenDownEstimates,
+  } = groupDataForRechartsTwice({
+    data: brokenDownEstimates,
+    primaryGroupingFunction: (data) => data.region,
+    secondaryGroupingFunction: (data) => uniq([ data.group, 'Overall' ]),
+    transformOutputValue: ({ data }) => {
+      const totalNumerator = sum(data.map((subestimate) => subestimate.sampleNumerator));
+      const totalDenominator = sum(data.map((subestimate) => subestimate.sampleDenominator));
+      const seroprevalencePercentageString = (totalDenominator !== 0)
+        ? `${((totalNumerator / totalDenominator) * 100).toFixed(1)}%`
+        : 'N/A'
+      const backgroundColourHexCode = (totalDenominator !== 0)
+        ? mixColours({
+          zeroValuedColourHexCode,
+          oneValuedColourHexCode,
+          value: (totalNumerator / totalDenominator)
+        })
+        : "#ffffff";
+      
+      return {
+        seroprevalencePercentageString,
+        backgroundColourHexCode
+      }
+    }
+  })
+
   const downloadCsv = useCallback(() => {
-    const dataForCsv = [{}];
+    const dataForCsv = validRegions.flatMap((region) => {
+      const dataForRegion = groupedBrokenDownEstimates.find((estimate) => estimate.primaryKey === region);
+
+      if(!dataForRegion) {
+        return [];
+      }
+
+      const { primaryKey, ...dataWithoutPrimaryKey } = dataForRegion;
+
+      return typedObjectEntries(dataWithoutPrimaryKey)
+        .filter(([key, value]) => value.seroprevalencePercentageString !== 'N/A')
+        .map(([key, value]) => ({
+          ...(regionTypeOfInterest === EstimateBreakdownTableRegionTypeOfInterestDropdownOption.WHO_REGION ? {
+            whoRegion: region
+          } : {}),
+          ...(regionTypeOfInterest === EstimateBreakdownTableRegionTypeOfInterestDropdownOption.UN_REGION ? {
+            unRegion: region
+          } : {}),
+          ...(regionTypeOfInterest === EstimateBreakdownTableRegionTypeOfInterestDropdownOption.COUNTRY ? {
+            country: region
+          } : {}),
+          ...((
+            variableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE
+            || variableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE
+          ) ? {
+            seroprevalence: value.seroprevalencePercentageString,
+          } : {}),
+          ...((
+            variableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE
+            || variableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE
+          ) ? {
+            viralPositivePrevalence: value.seroprevalencePercentageString,
+          } : {}),
+          ...(fieldOfInterest === EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP ? {
+            ageGroup: key,
+          } : {}),
+          ...(fieldOfInterest === EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES ? {
+            animalSpecies: key,
+          } : {}),
+          ...(fieldOfInterest === EstimateBreakdownTableFieldOfInterestDropdownOption.SEX ? {
+            sex: key,
+          } : {}),
+        }))
+    });
 
     const csvConfig = mkConfig({
       useKeysAsHeaders: true,
@@ -286,16 +356,8 @@ export const EstimateBreakdownTable = (props: EstimateBreakdownTableProps) => {
     });
     const csv = generateCsv(csvConfig)(dataForCsv);
     download(csvConfig)(csv);
-  }, []);
+  }, [ variableOfInterest, regionTypeOfInterest, groupedBrokenDownEstimates, fieldOfInterest ]);
 
-  const {
-    rechartsData: groupedBrokenDownEstimates,
-  } = groupDataForRechartsTwice({
-    data: brokenDownEstimates,
-    primaryGroupingFunction: (data) => data.region,
-    secondaryGroupingFunction: (data) => data.group,
-    transformOutputValue: (data) => data
-  })
 
   if(validRegions.length === 0) {
     return (
@@ -362,32 +424,18 @@ export const EstimateBreakdownTable = (props: EstimateBreakdownTableProps) => {
               {validGroups.map((group) => {
                 const dataForRow = groupedBrokenDownEstimates
                   .find(({primaryKey}) => primaryKey === region);
-                const dataForCell = dataForRow
-                  ? group === 'All'
-                    ? validGroups.flatMap((group) => dataForRow[group]?.data ?? [])
-                    : (dataForRow[group]?.data ?? [])
-                  : [];
 
-                const totalNumerator = sum(dataForCell.map((subestimate) => subestimate.sampleNumerator));
-                const totalDenominator = sum(dataForCell.map((subestimate) => subestimate.sampleDenominator));
-                const seroprevalencePercentageString = (totalDenominator !== 0)
-                  ? `${((totalNumerator / totalDenominator) * 100).toFixed(1)}%`
-                  : 'N/A'
-                const backgroundColourHexCode = (totalDenominator !== 0)
-                  ? mixColours({
-                      zeroValuedColourHexCode,
-                      oneValuedColourHexCode,
-                      value: (totalNumerator / totalDenominator)
-                    })
-                  : "#ffffff";
+                const dataForCell = dataForRow && dataForRow[group]
+                  ? dataForRow[group]
+                  : { seroprevalencePercentageString: 'N/A', backgroundColourHexCode: "#FFFFFF"}
 
                 return (
                   <TableCell
                     className="border-l border-r border-b bg-white group-hover:bg-zinc-100 whitespace-nowrap"
                     key={`estimate-breakdown-table-${region}-${group}-cell`}
-                    style={{ backgroundColor: backgroundColourHexCode }}
+                    style={{ backgroundColor: dataForCell.backgroundColourHexCode }}
                   >
-                    {seroprevalencePercentageString}
+                    {dataForCell.seroprevalencePercentageString}
                   </TableCell>
                 );
               })}
