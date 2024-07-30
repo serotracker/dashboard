@@ -139,7 +139,11 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
               ...primaryEstimate,
               sexSubestimates: primaryEstimate.sexSubestimates.map((subestimate) => ({
                 ...subestimate,
-                markedAsFiltered: false
+                markedAsFiltered: false,
+              })),
+              ageGroupSubestimates: primaryEstimate.ageGroupSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
               }))
             })),
             faoMersEventData: faoMersEvents
