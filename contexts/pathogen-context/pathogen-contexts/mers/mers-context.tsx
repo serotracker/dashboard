@@ -49,17 +49,26 @@ export const isMersViralSubEstimateInformation = (subestimateInformation: MersSu
 export const isMersSeroprevalenceSubEstimateInformation = (subestimateInformation: MersSubEstimateInformation): subestimateInformation is MersSeroprevalenceSubEstimateInformation =>
   subestimateInformation.__typename === 'MersSeroprevalenceSubEstimateInformation';
 
-export type HumanMersSeroprevalenceEstimate = Omit<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number], 'primaryEstimateInfo'> & {
-  primaryEstimateInfo: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryHumanMersSeroprevalenceEstimateInformation'}>
+type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
+  MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number],
+  'sexSubestimates'
+> & {
+  sexSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['sexSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>
 }
-export type AnimalMersSeroprevalenceEstimate = Omit<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number], 'primaryEstimateInfo'> & {
-  primaryEstimateInfo: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryAnimalMersSeroprevalenceEstimateInformation'}>
+
+export type HumanMersSeroprevalenceEstimate = Omit<MersSeroprevalenceEstimateWithAdditionalFields, 'primaryEstimateInfo'> & {
+  primaryEstimateInfo: Extract<MersSeroprevalenceEstimateWithAdditionalFields['primaryEstimateInfo'], { __typename: 'PrimaryHumanMersSeroprevalenceEstimateInformation'}>
+};
+export type AnimalMersSeroprevalenceEstimate = Omit<MersSeroprevalenceEstimateWithAdditionalFields, 'primaryEstimateInfo'> & {
+  primaryEstimateInfo: Extract<MersSeroprevalenceEstimateWithAdditionalFields['primaryEstimateInfo'], { __typename: 'PrimaryAnimalMersSeroprevalenceEstimateInformation'}>
 }
-export type AnimalMersViralEstimate = Omit<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number], 'primaryEstimateInfo'> & {
-  primaryEstimateInfo: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryAnimalMersViralEstimateInformation'}>
+export type AnimalMersViralEstimate = Omit<MersSeroprevalenceEstimateWithAdditionalFields, 'primaryEstimateInfo'> & {
+  primaryEstimateInfo: Extract<MersSeroprevalenceEstimateWithAdditionalFields['primaryEstimateInfo'], { __typename: 'PrimaryAnimalMersViralEstimateInformation'}>
 }
-export type HumanMersViralEstimate = Omit<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number], 'primaryEstimateInfo'> & {
-  primaryEstimateInfo: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryHumanMersViralEstimateInformation'}>
+export type HumanMersViralEstimate = Omit<MersSeroprevalenceEstimateWithAdditionalFields, 'primaryEstimateInfo'> & {
+  primaryEstimateInfo: Extract<MersSeroprevalenceEstimateWithAdditionalFields['primaryEstimateInfo'], { __typename: 'PrimaryHumanMersViralEstimateInformation'}>
 }
 export const isHumanMersSeroprevalenceEstimate = (estimate: MersEstimate): estimate is HumanMersSeroprevalenceEstimate =>
   estimate.primaryEstimateInfo.__typename === 'PrimaryHumanMersSeroprevalenceEstimateInformation';
@@ -112,7 +121,7 @@ export const MersContext = createContext<MersContextType>({
 });
 
 const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersContextState>): React.ReactNode => {
-  const { data  } = useMersPrimaryEstimates();
+  const { data } = useMersPrimaryEstimates();
   const { faoMersEvents } = useFaoMersEventData()
 
   useEffect(() => {
@@ -126,7 +135,13 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
         type: PathogenContextActionType.INITIAL_DATA_FETCH,
         payload: {
           data: {
-            mersEstimates: data?.mersPrimaryEstimates,
+            mersEstimates: data.mersPrimaryEstimates.map((primaryEstimate) => ({
+              ...primaryEstimate,
+              sexSubestimates: primaryEstimate.sexSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false
+              }))
+            })),
             faoMersEventData: faoMersEvents
           }
         }

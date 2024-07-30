@@ -15,6 +15,11 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
     return `${seroprevalencePercentageText}`
   }, [ estimate ]);
 
+  const tableConfigurations = useMemo(() => generateMersEstimateTableConfigurations({
+    type: GenerateMersEstimateTableConfigurationsType.SEROPREVALENCE_ESTIMATES,
+    estimate
+  }), [ estimate ]);
+
   return (
     <GenericMapPopUp
       width={GenericMapPopUpWidth.EXTRA_EXTRA_WIDE}
@@ -39,10 +44,7 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
       }}
       alternateViewConfiguration={{
         enabled: true,
-        tableConfigurations: generateMersEstimateTableConfigurations({
-          type: GenerateMersEstimateTableConfigurationsType.SEROPREVALENCE_ESTIMATES,
-          estimate
-        })
+        tableConfigurations,
       }}
       rows={[
         ...getSharedMersEstimateRows(props.estimate),

@@ -94,6 +94,10 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
     }
 
     return estimate.sexSubestimates.map((subestimate) => {
+      if(subestimate.markedAsFiltered === true) {
+        return undefined;
+      }
+
       const subestimateSampleNumerator = subestimate.estimateInfo.sampleNumerator;
       const subestimateSampleDenominator = subestimate.estimateInfo.sampleDenominator;
 
@@ -356,7 +360,7 @@ export const EstimateBreakdownTable = (props: EstimateBreakdownTableProps) => {
     });
     const csv = generateCsv(csvConfig)(dataForCsv);
     download(csvConfig)(csv);
-  }, [ variableOfInterest, regionTypeOfInterest, groupedBrokenDownEstimates, fieldOfInterest ]);
+  }, [ variableOfInterest, regionTypeOfInterest, groupedBrokenDownEstimates, fieldOfInterest, validRegions ]);
 
 
   if(validRegions.length === 0) {

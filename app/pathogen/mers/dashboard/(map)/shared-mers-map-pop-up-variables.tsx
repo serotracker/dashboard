@@ -576,8 +576,11 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
-        ...element.rows,
-        'Sex': element.subestimate.sex,
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
+        values: {
+          ...element.rows,
+          'Sex': element.subestimate.sex,
+        }
       }))
   }] : []),
   ...(input.estimate.ageGroupSubestimates.length > 0 ? [{
@@ -590,10 +593,12 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
-        ...element.rows,
-        'Age Group': isHumanMersAgeGroupSubEstimate(element.subestimate)
-          ? element.subestimate.ageGroup.join(',')
-          : element.subestimate.animalAgeGroup.join(',')
+        values: {
+          ...element.rows,
+          'Age Group': isHumanMersAgeGroupSubEstimate(element.subestimate)
+            ? element.subestimate.ageGroup.join(',')
+            : element.subestimate.animalAgeGroup.join(',')
+        }
       }))
   }] : []),
   ...(input.estimate.testUsedSubestimates.length > 0 ? [{
@@ -606,8 +611,10 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
-        ...element.rows,
-        'Test Used': element.subestimate.assay.join(',')
+        values: {
+          ...element.rows,
+          'Test Used': element.subestimate.assay.join(',')
+        }
       }))
   }] : []),
   ...(input.estimate.animalSpeciesSubestimates.length > 0 ? [{
@@ -620,8 +627,10 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
-        ...element.rows,
-        'Animal Species': animalSpeciesToStringMap[element.subestimate.animalSpecies]
+        values: {
+          ...element.rows,
+          'Animal Species': animalSpeciesToStringMap[element.subestimate.animalSpecies]
+        }
       }))
   }] : []),
   ...(input.estimate.geographicalAreaSubestimates.length > 0 ? [{
@@ -636,10 +645,12 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
-        ...element.rows,
-        'Country': element.subestimate.country,
-        'State': element.subestimate.state ?? 'Unspecified',
-        'City': element.subestimate.city ?? 'Unspecified',
+        values: {
+          ...element.rows,
+          'Country': element.subestimate.country,
+          'State': element.subestimate.state ?? 'Unspecified',
+          'City': element.subestimate.city ?? 'Unspecified',
+        }
       }))
   }] : []),
 ]
