@@ -2,6 +2,7 @@ import validator from "validator";
 import { MapRef, Popup, useMap } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
+import { useMemo } from "react";
 
 type PopupEstimateLayerContentGeneratorInput<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
@@ -82,14 +83,7 @@ export function PathogenMapPopup<
     return 120 / Math.pow(2, mapZoom);
   };
 
-  if (popUpInfo.visible === false) {
-    return null;
-  }
-
-  const latitude = popUpInfo.properties.latitude ?? 0;
-  const longitude = popUpInfo.properties.longitude ?? 0;
-
-  const transformedProperties = Object.fromEntries(
+  const transformedProperties = useMemo(() => popUpInfo.visible === true ? Object.fromEntries(
     Object.entries(popUpInfo.properties).map(([key, value]) => {
       // Arrays in popUpInfo.properties that reach this point have been converted from
       // ["ABC", "DEF"] to '["ABC", "DEF"]'
@@ -110,7 +104,21 @@ export function PathogenMapPopup<
 
       return [key, value];
     })
-  ) as VisiblePopupInfo<TPathogenDataPointProperties>["properties"];
+  ) as VisiblePopupInfo<TPathogenDataPointProperties>["properties"] : undefined, [ popUpInfo ]);
+
+  const popupContent = useMemo(() => {
+    return (popUpInfo.visible === true && transformedProperties !== undefined) ? generatePopupContent({
+      layerId: popUpInfo.layerId,
+      data: transformedProperties
+    }) : undefined;
+  }, [ transformedProperties, generatePopupContent, popUpInfo ]);
+
+  if (popUpInfo.visible === false || transformedProperties === undefined) {
+    return null;
+  }
+
+  const latitude = popUpInfo.properties.latitude ?? 0;
+  const longitude = popUpInfo.properties.longitude ?? 0;
 
   return (
     <Popup
@@ -135,7 +143,7 @@ export function PathogenMapPopup<
         });
       }}
     >
-      {generatePopupContent({layerId: popUpInfo.layerId, data:transformedProperties})}
+      {popupContent}
     </Popup>
   );
 }

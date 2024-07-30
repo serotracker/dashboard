@@ -3,7 +3,10 @@ import { cn } from "@/lib/utils";
 export interface AlternateViewConfigurationTableConfiguration {
   tableHeader: string;
   tableFields: string[];
-  tableRows: Record<string, string | undefined>[];
+  tableRows: Array<{
+    rowColourClassname?: string;
+    values: Record<string, string | undefined>
+  }>;
 }
 
 interface EnabledAlternateViewConfiguration {
@@ -30,12 +33,23 @@ export const AlternateViewGenericMapPopUpContent = (props: AlternateViewGenericM
           <table className="w-full">
             <thead>
               <tr>
-                {tableConfiguration.tableFields.map((tableField) => <th className="border px-1" key={tableField}> {tableField} </th>)}
+                {tableConfiguration.tableFields.map((tableField) => (
+                  <th className="border px-1" key={tableField}>
+                    {tableField}
+                  </th>
+                ))}
               </tr>
             </thead>
             {tableConfiguration.tableRows.map((tableRow) => (
-              <tr key={JSON.stringify(tableRow)}>
-                {tableConfiguration.tableFields.map((tableField) => <td className="border px-1 text-center" key={tableField}> {tableRow[tableField] ?? 'Not reported'} </td>)}
+              <tr key={JSON.stringify(tableRow.values)}>
+                {tableConfiguration.tableFields.map((tableField) => (
+                  <td className={cn(
+                    "border px-1 text-center",
+                    tableRow.rowColourClassname ?? ''
+                  )} key={tableField}>
+                    {tableRow.values[tableField] ?? 'Not reported'}
+                  </td>
+                ))}
               </tr>
             ))}
           </table>

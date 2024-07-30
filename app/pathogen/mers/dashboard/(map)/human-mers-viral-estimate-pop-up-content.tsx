@@ -16,6 +16,11 @@ export const HumanMersViralEstimatePopupContent = (props: HumanMersViralEstimate
     return `${positivePrevalencePercentageText}`
   }, [ estimate ]);
 
+  const tableConfigurations = useMemo(() => generateMersEstimateTableConfigurations({
+    type: GenerateMersEstimateTableConfigurationsType.VIRAL_ESTIMATES,
+    estimate
+  }), [ estimate ]);
+
   return (
     <GenericMapPopUp
       width={GenericMapPopUpWidth.EXTRA_EXTRA_WIDE}
@@ -40,10 +45,7 @@ export const HumanMersViralEstimatePopupContent = (props: HumanMersViralEstimate
       }}
       alternateViewConfiguration={{
         enabled: true,
-        tableConfigurations: generateMersEstimateTableConfigurations({
-          type: GenerateMersEstimateTableConfigurationsType.VIRAL_ESTIMATES,
-          estimate
-        })
+        tableConfigurations
       }}
       rows={[
         ...getSharedMersEstimateRows(props.estimate),
