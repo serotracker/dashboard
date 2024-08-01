@@ -479,6 +479,9 @@ export const EstimateBreakdownTable = (props: EstimateBreakdownTableProps) => {
           ...(fieldOfInterest === EstimateBreakdownTableFieldOfInterestDropdownOption.SPECIMEN_TYPE ? {
             specimenType: key,
           } : {}),
+          ...(fieldOfInterest === EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SAMPLE_FRAME ? {
+            animalSampleFrame: key,
+          } : {}),
         }))
     });
 
