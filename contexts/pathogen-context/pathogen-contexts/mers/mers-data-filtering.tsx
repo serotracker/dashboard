@@ -88,7 +88,7 @@ interface MersEstimateFilteringHandlerOutput {
   timeFrameSubestimateIdsToMarkAsFiltered?: string[];
   sampleTypeSubestimateIdsToMarkAsFiltered?: string[];
   animalSourceLocationSubestimateIdsToMarkAsFiltered?: string[];
-  animalSamplingContentSubestimateIdsToMarkAsFiltered?: string[];
+  animalSamplingContextSubestimateIdsToMarkAsFiltered?: string[];
 }
 
 const allMersEstimateHandlers: Record<MersFilterableField, (input: {
@@ -186,17 +186,26 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       .map((subestimate) => subestimate.id)
   }),
   [MersFilterableField.specimenType]: (input) => ({
-    included: mersEstimateStringFieldHandler({
+    included: mersEstimateArrayFieldHandler({
       filterKey: MersFilterableField.specimenType,
       estimate: {
         ...input.estimate,
-        specimenType: input.estimate.primaryEstimateInfo.specimenType
+        specimenType: uniq([
+          input.estimate.primaryEstimateInfo.specimenType,
+          ...input.estimate.sampleTypeSubestimates.map((subestimate) => subestimate.specimenType)
+        ]).filter((element): element is NonNullable<typeof element> => !!element)
       },
       selectedFilters: {
         ...input.selectedFilters,
         [MersFilterableField.specimenType]: input.selectedFilters[MersFilterableField.specimenType] ?? []
       }
-    })
+    }),
+    sampleTypeSubestimateIdsToMarkAsFiltered: input.estimate.sampleTypeSubestimates
+      .filter((subestimate) =>
+        ((input.selectedFilters[MersFilterableField.specimenType] ?? []).length > 0) &&
+        !input.selectedFilters[MersFilterableField.specimenType]?.includes(subestimate.specimenType)
+      )
+      .map((subestimate) => subestimate.id)
   }),
   [MersFilterableField.samplingMethod]: (input) => ({
     included: mersEstimateStringFieldHandler({
@@ -253,27 +262,41 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
   [MersFilterableField.samplingStartDate]: (input) => {
     const samplingStartDateFromFilters = (input.selectedFilters[MersFilterableField.samplingStartDate] ?? []).at(0);
 
+    const primaryEstimateSamplingStartDate = input.estimate.primaryEstimateInfo.samplingStartDate;
+    const primaryEstimateSamplingEndDate = input.estimate.primaryEstimateInfo.samplingEndDate;
+
     const included = doTimeIntervalsOverlap(
       {
         intervalStartDate: samplingStartDateFromFilters ? parseISO(samplingStartDateFromFilters) : undefined,
         intervalEndDate: undefined
       },
       {
-        intervalStartDate: input.estimate.primaryEstimateInfo.samplingStartDate
-          ? parseISO(input.estimate.primaryEstimateInfo.samplingStartDate)
-          : undefined,
-        intervalEndDate: input.estimate.primaryEstimateInfo.samplingEndDate
-          ? parseISO(input.estimate.primaryEstimateInfo.samplingEndDate)
-          : undefined
+        intervalStartDate: primaryEstimateSamplingStartDate ? parseISO(primaryEstimateSamplingStartDate) : undefined,
+        intervalEndDate: primaryEstimateSamplingEndDate ? parseISO(primaryEstimateSamplingEndDate) : undefined
       }
     )
 
     return {
-      included
+      included,
+      timeFrameSubestimateIdsToMarkAsFiltered: input.estimate.timeFrameSubestimates
+        .filter((subestimate) =>
+          ((input.selectedFilters[MersFilterableField.samplingStartDate] ?? []).length > 0) &&
+          !doTimeIntervalsOverlap({
+            intervalStartDate: samplingStartDateFromFilters ? parseISO(samplingStartDateFromFilters) : undefined,
+            intervalEndDate: undefined
+          }, {
+            intervalStartDate: subestimate.samplingStartDate ? parseISO(subestimate.samplingStartDate) : undefined,
+            intervalEndDate: subestimate.samplingEndDate ? parseISO(subestimate.samplingEndDate) : undefined
+          })
+        )
+        .map((subestimate) => subestimate.id)
     }
   },
   [MersFilterableField.samplingEndDate]: (input) => {
     const samplingEndDateFromFilters = (input.selectedFilters[MersFilterableField.samplingEndDate] ?? []).at(0);
+
+    const primaryEstimateSamplingStartDate = input.estimate.primaryEstimateInfo.samplingStartDate;
+    const primaryEstimateSamplingEndDate = input.estimate.primaryEstimateInfo.samplingEndDate;
 
     const included = doTimeIntervalsOverlap(
       {
@@ -281,17 +304,25 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
         intervalEndDate: samplingEndDateFromFilters ? parseISO(samplingEndDateFromFilters) : undefined,
       },
       {
-        intervalStartDate: input.estimate.primaryEstimateInfo.samplingStartDate
-          ? parseISO(input.estimate.primaryEstimateInfo.samplingStartDate)
-          : undefined,
-        intervalEndDate: input.estimate.primaryEstimateInfo.samplingEndDate
-          ? parseISO(input.estimate.primaryEstimateInfo.samplingEndDate)
-          : undefined
+        intervalStartDate: primaryEstimateSamplingStartDate ? parseISO(primaryEstimateSamplingStartDate) : undefined,
+        intervalEndDate: primaryEstimateSamplingEndDate ? parseISO(primaryEstimateSamplingEndDate) : undefined
       }
     )
 
     return {
-      included
+      included,
+      timeFrameSubestimateIdsToMarkAsFiltered: input.estimate.timeFrameSubestimates
+        .filter((subestimate) =>
+          ((input.selectedFilters[MersFilterableField.samplingEndDate] ?? []).length > 0) &&
+          !doTimeIntervalsOverlap({
+            intervalStartDate: undefined,
+            intervalEndDate: samplingEndDateFromFilters ? parseISO(samplingEndDateFromFilters) : undefined,
+          }, {
+            intervalStartDate: subestimate.samplingStartDate ? parseISO(subestimate.samplingStartDate) : undefined,
+            intervalEndDate: subestimate.samplingEndDate ? parseISO(subestimate.samplingEndDate) : undefined
+          })
+        )
+        .map((subestimate) => subestimate.id)
     }
   },
   [MersFilterableField.animalPurpose]: (input) => {
@@ -369,7 +400,13 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     })
 
     return {
-      included
+      included,
+      animalSourceLocationSubestimateIdsToMarkAsFiltered: input.estimate.animalSourceLocationSubestimates
+        .filter((subestimate) =>
+          ((input.selectedFilters[MersFilterableField.animalImportedOrLocal] ?? []).length > 0) &&
+          !input.selectedFilters[MersFilterableField.animalImportedOrLocal]?.includes(subestimate.animalImportedOrLocal)
+        )
+        .map((subestimate) => subestimate.id)
     }
   },
   [MersFilterableField.animalType]: (input) => {
@@ -406,7 +443,10 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       filterKey: MersFilterableField.animalDetectionSettings,
       estimate: {
         ...estimate,
-        animalDetectionSettings: estimate.primaryEstimateInfo.animalDetectionSettings
+        animalDetectionSettings: uniq([
+          ...estimate.primaryEstimateInfo.animalDetectionSettings,
+          ...estimate.animalSamplingContextSubestimates.flatMap((subestimate) => subestimate.animalDetectionSettings)
+        ])
       },
       selectedFilters: {
         ...input.selectedFilters,
@@ -415,7 +455,15 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     })
 
     return {
-      included
+      included,
+      animalSamplingContextSubestimateIdsToMarkAsFiltered: input.estimate.animalSamplingContextSubestimates
+        .filter((subestimate) =>
+          ((input.selectedFilters[MersFilterableField.animalDetectionSettings] ?? []).length > 0) &&
+          !input.selectedFilters[MersFilterableField.animalDetectionSettings]?.some(
+            (element) => subestimate.animalDetectionSettings.includes(element)
+          )
+        )
+        .map((subestimate) => subestimate.id)
     }
   },
   [MersFilterableField.ageGroup]: (input) => {
@@ -497,7 +545,7 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
           timeFrameSubestimateIdsToMarkAsFiltered,
           sampleTypeSubestimateIdsToMarkAsFiltered,
           animalSourceLocationSubestimateIdsToMarkAsFiltered,
-          animalSamplingContentSubestimateIdsToMarkAsFiltered
+          animalSamplingContextSubestimateIdsToMarkAsFiltered
         } = filteringFunction({
           estimate,
           selectedFilters: input.selectedFilters
@@ -512,7 +560,7 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
           timeFrameSubestimateIdsToMarkAsFiltered,
           sampleTypeSubestimateIdsToMarkAsFiltered,
           animalSourceLocationSubestimateIdsToMarkAsFiltered,
-          animalSamplingContentSubestimateIdsToMarkAsFiltered
+          animalSamplingContextSubestimateIdsToMarkAsFiltered
         }
       })
     }))
@@ -540,8 +588,8 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       animalSourceLocationSubestimateIdsToMarkAsFiltered: uniq(
         appliedFilters.flatMap(({ animalSourceLocationSubestimateIdsToMarkAsFiltered }) => animalSourceLocationSubestimateIdsToMarkAsFiltered)
       ),
-      animalSamplingContentSubestimateIdsToMarkAsFiltered: uniq(
-        appliedFilters.flatMap(({ animalSamplingContentSubestimateIdsToMarkAsFiltered }) => animalSamplingContentSubestimateIdsToMarkAsFiltered)
+      animalSamplingContextSubestimateIdsToMarkAsFiltered: uniq(
+        appliedFilters.flatMap(({ animalSamplingContextSubestimateIdsToMarkAsFiltered }) => animalSamplingContextSubestimateIdsToMarkAsFiltered)
       ),
     }))
     .map(({
@@ -553,7 +601,7 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       timeFrameSubestimateIdsToMarkAsFiltered,
       sampleTypeSubestimateIdsToMarkAsFiltered,
       animalSourceLocationSubestimateIdsToMarkAsFiltered,
-      animalSamplingContentSubestimateIdsToMarkAsFiltered,
+      animalSamplingContextSubestimateIdsToMarkAsFiltered,
     }) => ({
       ...estimate,
       sexSubestimates: estimate.sexSubestimates.map((subestimate) => ({
@@ -586,7 +634,7 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       })),
       animalSamplingContextSubestimates: estimate.animalSamplingContextSubestimates.map((subestimate) => ({
         ...subestimate,
-        markedAsFiltered: animalSamplingContentSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
+        markedAsFiltered: animalSamplingContextSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
       })),
     }))
     .filter((estimate) => !(
