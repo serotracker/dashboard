@@ -28,10 +28,10 @@ const AnimalViralPositivePrevalenceByRegionTooltip: TooltipContentType<string, s
     }
 
     const positivePrevalence = positivePrevalencePayload.positivePrevalence;
-    const positivePrevalence95CILower = positivePrevalencePayload.positivePrevalence95CILower
+    const positivePrevalence95CILower = typeof positivePrevalencePayload.positivePrevalence95CILower === 'number'
       ? `${positivePrevalencePayload.positivePrevalence95CILower}%`
       : 'Unknown';
-    const positivePrevalence95CIUpper = positivePrevalencePayload.positivePrevalence95CIUpper
+    const positivePrevalence95CIUpper = typeof positivePrevalencePayload.positivePrevalence95CIUpper === 'number'
       ? `${positivePrevalencePayload.positivePrevalence95CIUpper}%`
       : 'Unknown';
 
@@ -68,6 +68,12 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
         positivePrevalence: parseFloat(
           (dataPoint.primaryEstimateInfo.positivePrevalence * 100).toFixed(1)
         ),
+        positivePrevalence95CILower: dataPoint.primaryEstimateInfo.positivePrevalence95CILower
+          ? parseFloat((dataPoint.primaryEstimateInfo.positivePrevalence95CILower * 100).toFixed(1))
+          : 'Unknown',
+        positivePrevalence95CIUpper: dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper
+          ? parseFloat((dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper * 100).toFixed(1))
+          : 'Unknown',
         positivePrevalenceError: [
           dataPoint.primaryEstimateInfo.positivePrevalence95CILower ? parseFloat(
             (

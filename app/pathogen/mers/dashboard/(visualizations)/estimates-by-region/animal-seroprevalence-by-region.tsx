@@ -28,10 +28,10 @@ const AnimalSeroprevalenceByRegionTooltip: TooltipContentType<string, string> = 
     }
 
     const seroprevalence = seroprevalencePayload.seroprevalence;
-    const seroprevalence95CILower = seroprevalencePayload.seroprevalence95CILower
+    const seroprevalence95CILower = typeof seroprevalencePayload.seroprevalence95CILower === 'number' 
       ? `${seroprevalencePayload.seroprevalence95CILower}%`
       : 'Unknown';
-    const seroprevalence95CIUpper = seroprevalencePayload.seroprevalence95CIUpper
+    const seroprevalence95CIUpper = typeof seroprevalencePayload.seroprevalence95CIUpper === 'number' 
       ? `${seroprevalencePayload.seroprevalence95CIUpper}%`
       : 'Unknown';
 
@@ -68,6 +68,12 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
         seroprevalence: parseFloat(
           (dataPoint.primaryEstimateInfo.seroprevalence * 100).toFixed(1)
         ),
+        seroprevalence95CILower: dataPoint.primaryEstimateInfo.seroprevalence95CILower
+          ? parseFloat((dataPoint.primaryEstimateInfo.seroprevalence95CILower * 100).toFixed(1))
+          : 'Unknown',
+        seroprevalence95CIUpper: dataPoint.primaryEstimateInfo.seroprevalence95CIUpper
+          ? parseFloat((dataPoint.primaryEstimateInfo.seroprevalence95CIUpper * 100).toFixed(1))
+          : 'Unknown',
         seroprevalenceError: [
           dataPoint.primaryEstimateInfo.seroprevalence95CILower ? parseFloat(
             (
