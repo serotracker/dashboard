@@ -362,6 +362,130 @@ export const mersPrimaryEstimates = gql`
         }
         sex
       }
+      timeFrameSubestimates {
+        __typename
+        id
+        estimateId
+        estimateInfo {
+          ... on MersViralSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            positivePrevalence
+            positivePrevalence95CILower
+            positivePrevalence95CIUpper
+          }
+          ... on MersSeroprevalenceSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            seroprevalence
+            seroprevalence95CILower
+            seroprevalence95CIUpper
+          }
+        }
+        samplingStartDate
+        samplingEndDate
+      }
+      sampleTypeSubestimates {
+        __typename
+        id
+        estimateId
+        estimateInfo {
+          ... on MersViralSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            positivePrevalence
+            positivePrevalence95CILower
+            positivePrevalence95CIUpper
+          }
+          ... on MersSeroprevalenceSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            seroprevalence
+            seroprevalence95CILower
+            seroprevalence95CIUpper
+          }
+        }
+        specimenType
+      }
+      occupationSubestimates {
+        __typename
+        id
+        estimateId
+        estimateInfo {
+          ... on MersViralSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            positivePrevalence
+            positivePrevalence95CILower
+            positivePrevalence95CIUpper
+          }
+          ... on MersSeroprevalenceSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            seroprevalence
+            seroprevalence95CILower
+            seroprevalence95CIUpper
+          }
+        }
+        occupation
+      }
+      animalSourceLocationSubestimates {
+        __typename
+        id
+        estimateId
+        estimateInfo {
+          ... on MersViralSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            positivePrevalence
+            positivePrevalence95CILower
+            positivePrevalence95CIUpper
+          }
+          ... on MersSeroprevalenceSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            seroprevalence
+            seroprevalence95CILower
+            seroprevalence95CIUpper
+          }
+        }
+        animalImportedOrLocal
+        animalCountryOfImport
+        animalCountryOfImportAlphaTwoCode
+        animalCountryOfImportAlphaThreeCode
+      }
+      animalSamplingContextSubestimates {
+        __typename
+        id
+        estimateId
+        estimateInfo {
+          ... on MersViralSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            positivePrevalence
+            positivePrevalence95CILower
+            positivePrevalence95CIUpper
+          }
+          ... on MersSeroprevalenceSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            seroprevalence
+            seroprevalence95CILower
+            seroprevalence95CIUpper
+          }
+        }
+        animalDetectionSettings
+      }
     }
   }
 `
