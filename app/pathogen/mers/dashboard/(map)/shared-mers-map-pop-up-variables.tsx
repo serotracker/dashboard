@@ -21,6 +21,7 @@ import {
   MersAnimalType,
   MersAnimalSpecies
 } from "@/gql/graphql"
+import { TranslateDate } from "@/utils/translate-util/translate-service";
 import assertNever from "assert-never";
 import { parseISO } from "date-fns";
 
@@ -455,7 +456,12 @@ export const generateAlternateViewBannerConfiguration = (
     input.estimate.animalSpeciesSubestimates.length === 0 &&
     input.estimate.geographicalAreaSubestimates.length === 0 &&
     input.estimate.sexSubestimates.length === 0 &&
-    input.estimate.testUsedSubestimates.length === 0
+    input.estimate.testUsedSubestimates.length === 0 &&
+    input.estimate.timeFrameSubestimates.length === 0 &&
+    input.estimate.sampleTypeSubestimates.length === 0 &&
+    input.estimate.occupationSubestimates.length === 0 &&
+    input.estimate.animalSourceLocationSubestimates.length === 0 &&
+    input.estimate.animalSamplingContextSubestimates.length === 0
   ) {
     return {
       alternateViewButtonEnabled: false,
@@ -653,6 +659,94 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
           'Country': element.subestimate.country,
           'State': element.subestimate.state ?? 'Unspecified',
           'City': element.subestimate.city ?? 'Unspecified',
+        }
+      }))
+  }] : []),
+  ...(input.estimate.timeFrameSubestimates.length > 0 ? [{
+    tableHeader: 'Time Frame Subestimates',
+    tableFields: [
+      'Sampling Start Date',
+      'Sampling End Date',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.timeFrameSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
+        values: {
+          ...element.rows,
+          'Sampling Start Date': TranslateDate(element.subestimate.samplingStartDate),
+          'Sampling End Date': TranslateDate(element.subestimate.samplingEndDate),
+        }
+      }))
+  }] : []),
+  ...(input.estimate.sampleTypeSubestimates.length > 0 ? [{
+    tableHeader: 'Specimen Type Subestimates',
+    tableFields: [
+      'Specimen Type',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.sampleTypeSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
+        values: {
+          ...element.rows,
+          'Specimen Type': element.subestimate.specimenType
+        }
+      }))
+  }] : []),
+  ...(input.estimate.occupationSubestimates.length > 0 ? [{
+    tableHeader: 'Occupation Subestimates',
+    tableFields: [
+      'Occupation',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.occupationSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        values: {
+          ...element.rows,
+          'Occupation': element.subestimate.occupation
+        }
+      }))
+  }] : []),
+  ...(input.estimate.animalSourceLocationSubestimates.length > 0 ? [{
+    tableHeader: 'Animal Source Location Subestimates',
+    tableFields: [
+      'Imported or Local',
+      'Source Country',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.animalSourceLocationSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
+        values: {
+          ...element.rows,
+          'Imported or Local': element.subestimate.animalImportedOrLocal,
+          'Source Country': element.subestimate.animalCountryOfImport
+        }
+      }))
+  }] : []),
+  ...(input.estimate.animalSamplingContextSubestimates.length > 0 ? [{
+    tableHeader: 'Animal Sample Frame Subestimates',
+    tableFields: [
+      'Sample Frame',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.animalSamplingContextSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
+        values: {
+          ...element.rows,
+          'Sample Frame': element.subestimate.animalDetectionSettings.join(',')
         }
       }))
   }] : []),

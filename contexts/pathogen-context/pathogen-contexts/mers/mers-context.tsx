@@ -58,7 +58,8 @@ export const isMersSeroprevalenceSubEstimateInformation = (subestimateInformatio
 
 type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
   MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number],
-  'sexSubestimates'|'ageGroupSubestimates'|'animalSpeciesSubestimates'|'testUsedSubestimates'
+  'sexSubestimates'|'ageGroupSubestimates'|'animalSpeciesSubestimates'|'testUsedSubestimates'|
+  'timeFrameSubestimates'|'sampleTypeSubestimates'|'animalSourceLocationSubestimates'|'animalSamplingContextSubestimates'
 > & {
   sexSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['sexSubestimates'][number] & {
     markedAsFiltered: boolean;
@@ -68,6 +69,18 @@ type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
     markedAsFiltered: boolean;
   }>,
   testUsedSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['testUsedSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
+  timeFrameSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['timeFrameSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
+  sampleTypeSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['sampleTypeSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
+  animalSourceLocationSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['animalSourceLocationSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
+  animalSamplingContextSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['animalSamplingContextSubestimates'][number] & {
     markedAsFiltered: boolean;
   }>,
 }
@@ -158,7 +171,31 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
               ageGroupSubestimates: primaryEstimate.ageGroupSubestimates.map((subestimate) => ({
                 ...subestimate,
                 markedAsFiltered: false,
-              }))
+              })),
+              animalSpeciesSubestimates: primaryEstimate.animalSpeciesSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
+              })),
+              testUsedSubestimates: primaryEstimate.testUsedSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
+              })),
+              timeFrameSubestimates: primaryEstimate.timeFrameSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
+              })),
+              sampleTypeSubestimates: primaryEstimate.sampleTypeSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
+              })),
+              animalSourceLocationSubestimates: primaryEstimate.animalSourceLocationSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
+              })),
+              animalSamplingContextSubestimates: primaryEstimate.animalSamplingContextSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
+              })),
             })),
             faoMersEventData: faoMersEvents
           }
