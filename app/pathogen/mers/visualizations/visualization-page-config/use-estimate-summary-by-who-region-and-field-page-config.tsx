@@ -79,14 +79,22 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
         options: [
           EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP,
           EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES,
+          EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SAMPLE_FRAME,
           EstimateBreakdownTableFieldOfInterestDropdownOption.SEX,
+        ]
+      }, {
+        groupHeader: 'Test Parameters',
+        options: [
+          EstimateBreakdownTableFieldOfInterestDropdownOption.SPECIMEN_TYPE
         ]
       }],
       chosenDropdownOption: estimateBreakdownTableFieldOfInterest,
       dropdownOptionToLabelMap: {
         [EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP]: "Age Group",
         [EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES]: "Animal Species",
+        [EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SAMPLE_FRAME]: "Animal Sample Frame",
         [EstimateBreakdownTableFieldOfInterestDropdownOption.SEX]: "Sex",
+        [EstimateBreakdownTableFieldOfInterestDropdownOption.SPECIMEN_TYPE]: "Specimen Type"
       },
       onDropdownOptionChange: (option) => {
         setEstimateBreakdownTableFieldOfInterest(option);

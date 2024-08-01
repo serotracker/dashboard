@@ -39,7 +39,9 @@ export enum EstimateBreakdownTableVariableOfInterestDropdownOption {
 export enum EstimateBreakdownTableFieldOfInterestDropdownOption {
   AGE_GROUP = "AGE_GROUP",
   SEX = "SEX",
-  ANIMAL_SPECIES = "ANIMAL_SPECIES"
+  ANIMAL_SPECIES = "ANIMAL_SPECIES",
+  ANIMAL_SAMPLE_FRAME = "ANIMAL_SAMPLE_FRAME",
+  SPECIMEN_TYPE = "SPECIMEN_TYPE"
 }
 
 export enum EstimateBreakdownTableRegionTypeOfInterestDropdownOption {
@@ -241,7 +243,121 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         sampleDenominator: subestimateSampleDenominator
       }
     }).filter((element): element is NonNullable<typeof element> => !!element);
-  }
+  },
+  [EstimateBreakdownTableFieldOfInterestDropdownOption.SPECIMEN_TYPE]: (estimate) => {
+    const { whoRegion, unRegion, countryAlphaTwoCode, specimenType, sampleDenominator, sampleNumerator } = estimate.primaryEstimateInfo;
+
+    if(!whoRegion || !unRegion) {
+      return [];
+    }
+
+    if(estimate.sampleTypeSubestimates.length === 0) {
+      if(
+        sampleNumerator === undefined ||
+        sampleNumerator === null ||
+        sampleDenominator === undefined ||
+        sampleDenominator === null
+      ) {
+        return [];
+      }
+
+      return specimenType ? [{
+        whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
+        sampleDenominator,
+        sampleNumerator,
+        group: specimenType
+      }] : []
+    }
+
+    return estimate.sampleTypeSubestimates.map((subestimate) => {
+      if(subestimate.markedAsFiltered === true) {
+        return undefined;
+      }
+
+      const subestimateSampleNumerator = subestimate.estimateInfo.sampleNumerator;
+      const subestimateSampleDenominator = subestimate.estimateInfo.sampleDenominator;
+
+      if(
+        subestimateSampleNumerator === undefined ||
+        subestimateSampleNumerator === null ||
+        subestimateSampleDenominator === undefined ||
+        subestimateSampleDenominator === null
+      ) {
+        return undefined;
+      }
+
+      return {
+        whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
+        group: subestimate.specimenType,
+        sampleNumerator: subestimateSampleNumerator,
+        sampleDenominator: subestimateSampleDenominator
+      }
+    }).filter((element): element is NonNullable<typeof element> => !!element);
+  },
+  [EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SAMPLE_FRAME]: (estimate) => {
+    const { whoRegion, unRegion, sampleNumerator, countryAlphaTwoCode, sampleDenominator } = estimate.primaryEstimateInfo;
+
+    if(!whoRegion || !unRegion) {
+      return [];
+    }
+
+    if(!isAnimalMersEstimate(estimate)) {
+      return [];
+    }
+
+    const { animalDetectionSettings } = estimate.primaryEstimateInfo;
+
+    if(estimate.animalSamplingContextSubestimates.length === 0) {
+      if(
+        sampleNumerator === undefined ||
+        sampleNumerator === null ||
+        sampleDenominator === undefined ||
+        sampleDenominator === null
+      ) {
+        return [];
+      }
+
+      return animalDetectionSettings.map((animalSampleFrame) => ({
+        whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
+        sampleDenominator: Math.floor(sampleDenominator / animalSampleFrame.length),
+        sampleNumerator: Math.floor(sampleNumerator / animalSampleFrame.length),
+        group: animalSampleFrame
+      }));
+    }
+
+    return estimate.animalSamplingContextSubestimates.flatMap((subestimate) => {
+      if(subestimate.markedAsFiltered === true) {
+        return undefined;
+      }
+
+      const subestimateSampleNumerator = subestimate.estimateInfo.sampleNumerator;
+      const subestimateSampleDenominator = subestimate.estimateInfo.sampleDenominator;
+
+      if(
+        subestimateSampleNumerator === undefined ||
+        subestimateSampleNumerator === null ||
+        subestimateSampleDenominator === undefined ||
+        subestimateSampleDenominator === null
+      ) {
+        return undefined;
+      }
+      
+      return subestimate.animalDetectionSettings.map((animalSampleFrame) => ({
+        whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
+        sampleDenominator: Math.floor(subestimateSampleDenominator / animalSampleFrame.length),
+        sampleNumerator: Math.floor(subestimateSampleNumerator / animalSampleFrame.length),
+        group: animalSampleFrame
+      }));
+    }).filter((element): element is NonNullable<typeof element> => !!element);
+  },
 }
 
 export const regionOfInterestToRegionOfInterestExtractingFunction: Record<EstimateBreakdownTableRegionTypeOfInterestDropdownOption, (
@@ -359,6 +475,12 @@ export const EstimateBreakdownTable = (props: EstimateBreakdownTableProps) => {
           } : {}),
           ...(fieldOfInterest === EstimateBreakdownTableFieldOfInterestDropdownOption.SEX ? {
             sex: key,
+          } : {}),
+          ...(fieldOfInterest === EstimateBreakdownTableFieldOfInterestDropdownOption.SPECIMEN_TYPE ? {
+            specimenType: key,
+          } : {}),
+          ...(fieldOfInterest === EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SAMPLE_FRAME ? {
+            animalSampleFrame: key,
           } : {}),
         }))
     });
