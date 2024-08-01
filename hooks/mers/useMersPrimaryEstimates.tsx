@@ -264,6 +264,7 @@ export const mersPrimaryEstimates = gql`
             }
           }
           ageGroup
+          ageGroupLabel
         }
         ... on AnimalMersAgeGroupSubEstimate {
           __typename
@@ -288,6 +289,7 @@ export const mersPrimaryEstimates = gql`
             }
           }
           animalAgeGroup
+          animalAgeGroupLabel
         }
       }
       testUsedSubestimates {

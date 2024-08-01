@@ -603,8 +603,8 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         values: {
           ...element.rows,
           'Age Group': isHumanMersAgeGroupSubEstimate(element.subestimate)
-            ? element.subestimate.ageGroup.join(',')
-            : element.subestimate.animalAgeGroup.join(',')
+            ? element.subestimate.ageGroupLabel
+            : element.subestimate.animalAgeGroupLabel
         }
       }))
   }] : []),
