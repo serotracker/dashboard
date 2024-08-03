@@ -238,7 +238,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       filterKey: MersFilterableField.countryAlphaTwoCode,
       estimate: {
         ...input.estimate,
-        sourceType: input.estimate.primaryEstimateInfo.countryAlphaTwoCode
+        countryAlphaTwoCode: input.estimate.primaryEstimateInfo.countryAlphaTwoCode
       },
       selectedFilters: {
         ...input.selectedFilters,
