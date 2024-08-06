@@ -11,6 +11,7 @@ import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizati
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { useFaoYearlyCamelPopulationData } from "@/hooks/mers/useFaoYearlyCamelPopulationData";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import { unformatFaoCamelPopulationDataFromTable } from "./use-mers-data-table-data";
 
 const camelPopulationDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
@@ -81,13 +82,6 @@ const formatDataForTable = (dataPoint: FaoYearlyCamelPopulationDataEntry): FaoYe
   rawCountryAlphaThreeCode: dataPoint.countryAlphaThreeCode,
 })
 
-const unformatDataFromTable = (dataPoint: FaoYearlyCamelPopulationDataEntryForTable): FaoYearlyCamelPopulationDataEntry => ({
-  ...dataPoint,
-  country: dataPoint.rawCountry,
-  camelCountPerCapita: dataPoint.rawCamelCountPerCapita,
-  countryAlphaThreeCode: dataPoint.rawCountryAlphaThreeCode
-})
-
 export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) => {
   const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
@@ -112,7 +106,7 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
 
       const countryName = camelDataPoint.country
 
-      const formattedDataPoint = unformatDataFromTable(camelDataPoint);
+      const formattedDataPoint = unformatFaoCamelPopulationDataFromTable(camelDataPoint);
       const formattedData = (yearlyFaoCamelPopulationData ?? [])
         .filter((dataPoint) => dataPoint.country.name === countryName)
       

@@ -1,15 +1,17 @@
 import { DropdownTableHeader, RowExpansionConfiguration, TableHeaderType } from "@/components/ui/data-table/data-table";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { MersSeroprevalenceEstimateDataTable } from "./mers-seroprevalence-estimate-data-table";
 import { MersCasesDataTable } from "./mers-cases-data-table";
 import { CamelPopulationDataTable } from "./camel-population-data-table";
 import { MersViralEstimateDataTable } from "./mers-viral-estimates-data-table";
+import { useMersDataTableData } from "./use-mers-data-table-data";
 
 export enum AvailableMersDataTables {
   MERS_SEROPREVALENCE_ESTIMATES = "MERS_SEROPREVALENCE_ESTIMATES",
   MERS_VIRAL_ESTIMATES = "MERS_VIRAL_ESTIMATES",
   MERS_CASES = "MERS_CASES",
   CAMEL_POPULATION_DATA = "CAMEL_POPULATION_DATA",
+  UNAVAILABLE = "UNAVAILABLE"
 }
 
 export const MersDataTable = () => {
@@ -17,6 +19,38 @@ export const MersDataTable = () => {
     currentlySelectedDataTable,
     setCurrentlySelectedDataTable 
   ] = useState<AvailableMersDataTables>(AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES);
+
+  const {
+    mersSeroprevalenceEstimateData,
+    mersViralEstimateData,
+    mersEventData,
+    camelPopulationData,
+  } = useMersDataTableData();
+
+  const availableDropdownOptionGroups = useMemo(() => {
+    const returnValue = [
+      ...(mersSeroprevalenceEstimateData.length > 0 ? [ AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES ] : []),
+      ...(mersViralEstimateData.length > 0 ? [ AvailableMersDataTables.MERS_VIRAL_ESTIMATES ] : []),
+      ...(mersEventData.length > 0 ? [ AvailableMersDataTables.MERS_CASES ] : []),
+      ...(camelPopulationData.length > 0 ? [ AvailableMersDataTables.CAMEL_POPULATION_DATA ] : []),
+    ];
+
+    if(returnValue.length === 0) {
+      return [
+        AvailableMersDataTables.UNAVAILABLE
+      ];
+    }
+
+    return returnValue;
+  }, [ mersSeroprevalenceEstimateData, mersViralEstimateData, camelPopulationData, mersEventData ])
+
+  const cleanedSelectedDataTable = useMemo(() => {
+    if(availableDropdownOptionGroups.includes(currentlySelectedDataTable)) {
+      return currentlySelectedDataTable;
+    }
+
+    return availableDropdownOptionGroups.at(0) ?? AvailableMersDataTables.UNAVAILABLE;
+  }, [ currentlySelectedDataTable, availableDropdownOptionGroups ])
 
   const tableHeaderForAllDataTables: DropdownTableHeader<AvailableMersDataTables> = {
     type: TableHeaderType.DROPDOWN,
@@ -28,19 +62,15 @@ export const MersDataTable = () => {
       highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
       dropdownOptionGroups: [{
         groupHeader: 'Available data tables',
-        options: [
-          AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES,
-          AvailableMersDataTables.MERS_VIRAL_ESTIMATES,
-          AvailableMersDataTables.MERS_CASES,
-          AvailableMersDataTables.CAMEL_POPULATION_DATA,
-        ]
+        options: availableDropdownOptionGroups
       }],
-      chosenDropdownOption: currentlySelectedDataTable,
+      chosenDropdownOption: cleanedSelectedDataTable,
       dropdownOptionToLabelMap: {
         [AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES]: "MERS seroprevalence estimates",
         [AvailableMersDataTables.MERS_VIRAL_ESTIMATES]: "MERS viral estimates",
         [AvailableMersDataTables.MERS_CASES]: "Confirmed MERS cases",
         [AvailableMersDataTables.CAMEL_POPULATION_DATA]: "Camel population data",
+        [AvailableMersDataTables.UNAVAILABLE]: "Unavailable",
       },
       onDropdownOptionChange: (option) => setCurrentlySelectedDataTable(option)
     },
@@ -51,7 +81,8 @@ export const MersDataTable = () => {
     [AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES]: () => <MersSeroprevalenceEstimateDataTable tableHeader={tableHeaderForAllDataTables} />,
     [AvailableMersDataTables.MERS_VIRAL_ESTIMATES]: () => <MersViralEstimateDataTable tableHeader={tableHeaderForAllDataTables} />,
     [AvailableMersDataTables.MERS_CASES]: () => <MersCasesDataTable tableHeader={tableHeaderForAllDataTables} />,
-    [AvailableMersDataTables.CAMEL_POPULATION_DATA]: () => <CamelPopulationDataTable tableHeader={tableHeaderForAllDataTables} />
+    [AvailableMersDataTables.CAMEL_POPULATION_DATA]: () => <CamelPopulationDataTable tableHeader={tableHeaderForAllDataTables} />,
+    [AvailableMersDataTables.UNAVAILABLE]: () => <p> No data available for table. </p>
   }
 
   return dataTableComponentMap[currentlySelectedDataTable]();

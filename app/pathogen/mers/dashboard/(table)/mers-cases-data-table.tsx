@@ -26,6 +26,7 @@ import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-hand
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import { unformatMersEventDataFromTable } from "./use-mers-data-table-data";
 
 const mersCasesColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.DATE as const,
@@ -187,24 +188,6 @@ const formatDataForTable = (dataPoint: FaoMersEvent): FaoMersEventForTable => {
   }
 }
 
-const unformatDataFromTable = (dataPoint: FaoMersEventForTable): FaoMersEvent => {
-  if(dataPoint.__typename === "HumanMersEvent") {
-    return {
-      ...dataPoint,
-      latitude: dataPoint.eventRawLatitude,
-      longitude: dataPoint.eventRawLongitude,
-      country: dataPoint.eventRawCountry,
-    }
-  } else {
-    return {
-      ...dataPoint,
-      latitude: dataPoint.eventRawLatitude,
-      longitude: dataPoint.eventRawLongitude,
-      country: dataPoint.eventRawCountry,
-    }
-  }
-}
-
 export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
   const { faoMersEventData } = useContext(MersContext);
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
@@ -228,10 +211,10 @@ export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
 
       const countryName = event.country
 
-      const formattedEvent = unformatDataFromTable(event);
+      const formattedEvent = unformatMersEventDataFromTable(event);
       const formattedData: FaoMersEvent[] = data
         .filter((dataPoint) => dataPoint.country === event.country)
-        .map((dataPoint) => unformatDataFromTable(dataPoint));
+        .map((dataPoint) => unformatMersEventDataFromTable(dataPoint));
 
       return (
         <RechartsVisualization
