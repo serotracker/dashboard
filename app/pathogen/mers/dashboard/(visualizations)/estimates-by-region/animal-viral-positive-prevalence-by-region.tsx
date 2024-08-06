@@ -176,7 +176,7 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
             {...props}
           />)}
           wrapperStyle={{
-            pointerEvents: 'all'
+            pointerEvents: 'auto'
           }}
           {...(isMouseOnTooltip === true) ? { active: true } : {} }
         />
