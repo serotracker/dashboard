@@ -13,6 +13,7 @@ import {
   mersDataTypeToLabelMap
 } from "../(map)/shared-mers-map-pop-up-variables";
 import { mapMersEstimateBaseForDataTable, mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { MersViralEstimateForDataTable } from "./use-mers-data-table-data";
 
 const mersViralEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -48,6 +49,7 @@ const mersViralEstimateColumnConfiguration = [{
 ];
 
 interface MersViralEstimateDataTableProps {
+  tableData: MersViralEstimateForDataTable[];
   tableHeader: DropdownTableHeader<AvailableMersDataTables>;
 }
 
@@ -56,7 +58,7 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
 
-  const rowExpansionConfiguration: RowExpansionConfiguration<MersEstimate> = useMemo(() => ({
+  const rowExpansionConfiguration: RowExpansionConfiguration<MersViralEstimateForDataTable> = useMemo(() => ({
     enabled: true,
     generateExpandedRowStatement: (input) => {
       const idOfEstimate = input.row.getValue('id');
@@ -124,18 +126,7 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
         enabled: false
       }}
       rowExpansionConfiguration={rowExpansionConfiguration}
-      data={state.filteredData
-        .filter((dataPoint): dataPoint is MersViralEstimate => isMersViralEstimate(dataPoint))
-        .map((dataPoint) => ({
-          ...dataPoint,
-          ...mapMersEstimateBaseForDataTable(dataPoint),
-          primaryEstimateId: dataPoint.primaryEstimateInfo.estimateId,
-          primaryEstimateTypename: dataPoint.primaryEstimateInfo.__typename,
-          primaryEstimatePositivePrevalence: dataPoint.primaryEstimateInfo.positivePrevalence,
-          primaryEstimatePositivePrevalence95CILower: dataPoint.primaryEstimateInfo.positivePrevalence95CILower,
-          primaryEstimatePositivePrevalence95CIUpper: dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper,
-        }))
-      }
+      data={props.tableData}
     />
   )
 }

@@ -26,6 +26,7 @@ import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-hand
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import { FaoMersEventForTable, unformatMersEventDataFromTable } from "./use-mers-data-table-data";
 
 const mersCasesColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.DATE as const,
@@ -123,90 +124,11 @@ const mersCasesColumnConfiguration = [{
 }];
 
 interface MersCasesDataTableProps {
+  tableData: FaoMersEventForTable[];
   tableHeader: DropdownTableHeader<AvailableMersDataTables>;
 }
 
-type FaoMersEventForTableBase = {
-  id: FaoMersEvent['id'];
-  diagnosisStatus: FaoMersEvent['diagnosisStatus'];
-  diagnosisSource: FaoMersEvent['diagnosisSource'];
-  eventRawCountry: FaoMersEvent['country'];
-  state: FaoMersEvent['state'];
-  city: FaoMersEvent['city'];
-  eventRawLatitude: FaoMersEvent['latitude'];
-  eventRawLongitude: FaoMersEvent['longitude'];
-  whoRegion?: FaoMersEvent['whoRegion'];
-  observationDate?: FaoMersEvent['observationDate'];
-  reportDate: FaoMersEvent['reportDate'];
-  country: string;
-  latitude: string;
-  longitude: string;
-} & Record<string, unknown>;
-
-type AnimalFaoMersEventForTable = FaoMersEventForTableBase & {
-  __typename: "AnimalMersEvent"
-  type: MersEventType.Animal,
-  animalType: MersEventAnimalType,
-  animalSpecies: MersEventAnimalSpecies
-}
-
-type HumanFaoMersEventForTable = FaoMersEventForTableBase & {
-  __typename: "HumanMersEvent"
-  type: MersEventType.Human,
-  humansAffected: number,
-  humanDeaths: number,
-}
-
-type FaoMersEventForTable = 
-  | AnimalFaoMersEventForTable
-  | HumanFaoMersEventForTable;
-
-const formatDataForTable = (dataPoint: FaoMersEvent): FaoMersEventForTable => {
-  if(dataPoint.__typename === "HumanMersEvent") {
-    return {
-      ...dataPoint,
-      type: MersEventType.Human,
-      eventRawLatitude: dataPoint.latitude,
-      eventRawLongitude: dataPoint.longitude,
-      eventRawCountry: dataPoint.country,
-      country: dataPoint.country.name,
-      latitude: dataPoint.latitude.toFixed(2),
-      longitude: dataPoint.longitude.toFixed(2),
-    }
-  } else {
-    return {
-      ...dataPoint,
-      type: MersEventType.Animal,
-      eventRawLatitude: dataPoint.latitude,
-      eventRawLongitude: dataPoint.longitude,
-      eventRawCountry: dataPoint.country,
-      country: dataPoint.country.name,
-      latitude: dataPoint.latitude.toFixed(2),
-      longitude: dataPoint.longitude.toFixed(2),
-    }
-  }
-}
-
-const unformatDataFromTable = (dataPoint: FaoMersEventForTable): FaoMersEvent => {
-  if(dataPoint.__typename === "HumanMersEvent") {
-    return {
-      ...dataPoint,
-      latitude: dataPoint.eventRawLatitude,
-      longitude: dataPoint.eventRawLongitude,
-      country: dataPoint.eventRawCountry,
-    }
-  } else {
-    return {
-      ...dataPoint,
-      latitude: dataPoint.eventRawLatitude,
-      longitude: dataPoint.eventRawLongitude,
-      country: dataPoint.eventRawCountry,
-    }
-  }
-}
-
 export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
-  const { faoMersEventData } = useContext(MersContext);
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
 
@@ -228,10 +150,10 @@ export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
 
       const countryName = event.country
 
-      const formattedEvent = unformatDataFromTable(event);
+      const formattedEvent = unformatMersEventDataFromTable(event);
       const formattedData: FaoMersEvent[] = data
         .filter((dataPoint) => dataPoint.country === event.country)
-        .map((dataPoint) => unformatDataFromTable(dataPoint));
+        .map((dataPoint) => unformatMersEventDataFromTable(dataPoint));
 
       return (
         <RechartsVisualization
@@ -273,10 +195,7 @@ export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
         enabled: false
       }}
       rowExpansionConfiguration={rowExpansionConfiguration}
-      data={faoMersEventData
-        .filter((event) => event.diagnosisStatus === MersDiagnosisStatus.Confirmed)
-        .map((event) => formatDataForTable(event))
-      }
+      data={props.tableData}
     />
   )
 }

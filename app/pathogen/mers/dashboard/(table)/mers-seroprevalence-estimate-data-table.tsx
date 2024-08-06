@@ -14,6 +14,7 @@ import {
   mersDataTypeToLabelMap
 } from "../(map)/shared-mers-map-pop-up-variables";
 import { mapMersEstimateBaseForDataTable, mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { MersSeroprevalenceEstimateForDataTable } from "./use-mers-data-table-data";
 
 const mersSeroprevalenceEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -49,15 +50,15 @@ const mersSeroprevalenceEstimateColumnConfiguration = [{
 ];
 
 interface MersSeroprevalenceEstimateDataTableProps {
+  tableData: MersSeroprevalenceEstimateForDataTable[];
   tableHeader: DropdownTableHeader<AvailableMersDataTables>;
 }
 
 export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEstimateDataTableProps) => {
-  const state = useContext(MersContext);
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
 
-  const rowExpansionConfiguration: RowExpansionConfiguration<MersEstimate> = useMemo(() => ({
+  const rowExpansionConfiguration: RowExpansionConfiguration<MersSeroprevalenceEstimateForDataTable> = useMemo(() => ({
     enabled: true,
     generateExpandedRowStatement: (input) => {
       const idOfEstimate = input.row.getValue('id');
@@ -125,18 +126,7 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
         enabled: false
       }}
       rowExpansionConfiguration={rowExpansionConfiguration}
-      data={state.filteredData
-        .filter((dataPoint): dataPoint is MersSeroprevalenceEstimate => isMersSeroprevalenceEstimate(dataPoint))
-        .map((dataPoint) => ({
-          ...dataPoint,
-          ...mapMersEstimateBaseForDataTable(dataPoint),
-          primaryEstimateId: dataPoint.primaryEstimateInfo.estimateId,
-          primaryEstimateTypename: dataPoint.primaryEstimateInfo.__typename,
-          primaryEstimateSeroprevalence: dataPoint.primaryEstimateInfo.seroprevalence,
-          primaryEstimateSeroprevalence95CILower: dataPoint.primaryEstimateInfo.seroprevalence95CILower,
-          primaryEstimateSeroprevalence95CIUpper: dataPoint.primaryEstimateInfo.seroprevalence95CIUpper,
-        }))
-      }
+      data={props.tableData}
     />
   )
 }
