@@ -95,5 +95,5 @@ export const MersDataTable = () => {
     )
   }), [ tableHeaderForAllDataTables, mersSeroprevalenceEstimateData, mersViralEstimateData, mersEventData, camelPopulationData ]);
 
-  return dataTableComponentMap[currentlySelectedDataTable]();
+  return dataTableComponentMap[cleanedSelectedDataTable]();
 }
