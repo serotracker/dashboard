@@ -11,7 +11,7 @@ import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizati
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { useFaoYearlyCamelPopulationData } from "@/hooks/mers/useFaoYearlyCamelPopulationData";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { unformatFaoCamelPopulationDataFromTable } from "./use-mers-data-table-data";
+import { FaoYearlyCamelPopulationDataEntryForTable, unformatFaoCamelPopulationDataFromTable } from "./use-mers-data-table-data";
 
 const camelPopulationDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
@@ -58,32 +58,11 @@ const camelPopulationDataTableColumnConfiguration = [{
 }];
 
 interface CamelPopulationDataTableProps {
+  tableData: FaoYearlyCamelPopulationDataEntryForTable[];
   tableHeader: DropdownTableHeader<AvailableMersDataTables>;
 }
 
-type FaoYearlyCamelPopulationDataEntryForTable = Omit<FaoYearlyCamelPopulationDataEntry, 'country'|'camelCountPerCapita'|'countryAlphaThreeCode'|'countryAlphaTwoCode'> & {
-  country: string;
-  camelCountPerCapita: string | undefined;
-  countryAlphaThreeCode: string;
-  countryAlphaTwoCode: string;
-  rawCountry: FaoYearlyCamelPopulationDataEntry['country'],
-  rawCamelCountPerCapita: FaoYearlyCamelPopulationDataEntry['camelCountPerCapita'],
-  rawCountryAlphaThreeCode: FaoYearlyCamelPopulationDataEntry['countryAlphaThreeCode'],
-}
-
-const formatDataForTable = (dataPoint: FaoYearlyCamelPopulationDataEntry): FaoYearlyCamelPopulationDataEntryForTable => ({
-  ...dataPoint,
-  country: dataPoint.country.name,
-  camelCountPerCapita: dataPoint.camelCountPerCapita ? formatCamelsPerCapita(dataPoint.camelCountPerCapita) : undefined,
-  countryAlphaThreeCode: dataPoint.country.alphaThreeCode,
-  countryAlphaTwoCode: dataPoint.country.alphaTwoCode,
-  rawCountry: dataPoint.country,
-  rawCamelCountPerCapita: dataPoint.camelCountPerCapita,
-  rawCountryAlphaThreeCode: dataPoint.countryAlphaThreeCode,
-})
-
 export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) => {
-  const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { yearlyFaoCamelPopulationData } = useFaoYearlyCamelPopulationData();
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
@@ -150,7 +129,7 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
         enabled: false
       }}
       rowExpansionConfiguration={rowExpansionConfiguration}
-      data={(latestFaoCamelPopulationDataPointsByCountry ?? []).map((dataPoint) => formatDataForTable(dataPoint))}
+      data={props.tableData}
     />
   )
 }

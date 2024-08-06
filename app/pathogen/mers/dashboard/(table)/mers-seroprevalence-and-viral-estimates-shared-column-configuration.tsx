@@ -24,6 +24,8 @@ import {
 } from "../(map)/shared-mers-map-pop-up-variables";
 import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 
+export type MersEstimateBaseForDataTable = ReturnType<typeof mapMersEstimateBaseForDataTable>;
+
 export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   latitude: estimate.primaryEstimateInfo.latitude,
   longitude: estimate.primaryEstimateInfo.longitude,

@@ -9,14 +9,14 @@ import {
   MersSeroprevalenceEstimate,
   MersViralEstimate
 } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { mapMersEstimateBaseForDataTable } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { mapMersEstimateBaseForDataTable, MersEstimateBaseForDataTable } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { formatCamelsPerCapita } from "../(map)/country-highlight-layers/camels-per-capita-layer";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { MersDiagnosisStatus, MersEventAnimalSpecies, MersEventAnimalType, MersEventType } from "@/gql/graphql";
 
-type FaoYearlyCamelPopulationDataEntryForTable = Omit<FaoYearlyCamelPopulationDataEntry, 'country'|'camelCountPerCapita'|'countryAlphaThreeCode'|'countryAlphaTwoCode'> & {
+export type FaoYearlyCamelPopulationDataEntryForTable = Omit<FaoYearlyCamelPopulationDataEntry, 'country'|'camelCountPerCapita'|'countryAlphaThreeCode'|'countryAlphaTwoCode'> & {
   country: string;
   camelCountPerCapita: string | undefined;
   countryAlphaThreeCode: string;
@@ -75,7 +75,7 @@ type HumanFaoMersEventForTable = FaoMersEventForTableBase & {
   humanDeaths: number,
 }
 
-type FaoMersEventForTable = 
+export type FaoMersEventForTable = 
   | AnimalFaoMersEventForTable
   | HumanFaoMersEventForTable;
 
@@ -123,7 +123,30 @@ export const unformatMersEventDataFromTable = (dataPoint: FaoMersEventForTable):
   }
 }
 
-export const useMersDataTableData = () => {
+export type MersSeroprevalenceEstimateForDataTable = MersSeroprevalenceEstimate & MersEstimateBaseForDataTable & {
+  primaryEstimateId: string;
+  primaryEstimateTypename: "PrimaryHumanMersSeroprevalenceEstimateInformation" | "PrimaryAnimalMersSeroprevalenceEstimateInformation";
+  primaryEstimateSeroprevalence: number;
+  primaryEstimateSeroprevalence95CILower: number | undefined | null;
+  primaryEstimateSeroprevalence95CIUpper: number | undefined | null;
+}
+
+export type MersViralEstimateForDataTable = MersViralEstimate & MersEstimateBaseForDataTable & {
+  primaryEstimateId: string;
+  primaryEstimateTypename: "PrimaryHumanMersViralEstimateInformation" | "PrimaryAnimalMersViralEstimateInformation";
+  primaryEstimatePositivePrevalence: number;
+  primaryEstimatePositivePrevalence95CILower: number | undefined | null;
+  primaryEstimatePositivePrevalence95CIUpper: number | undefined | null;
+}
+
+export interface UseMersDataTableDataOutput {
+  mersSeroprevalenceEstimateData: MersSeroprevalenceEstimateForDataTable[],
+  mersViralEstimateData: MersViralEstimateForDataTable[],
+  mersEventData: FaoMersEventForTable[],
+  camelPopulationData: FaoYearlyCamelPopulationDataEntryForTable[]
+}
+
+export const useMersDataTableData = (): UseMersDataTableDataOutput => {
   const { filteredData } = useContext(MersContext);
   const { faoMersEventData } = useContext(MersContext);
   const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);

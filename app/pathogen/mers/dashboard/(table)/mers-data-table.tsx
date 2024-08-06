@@ -42,7 +42,7 @@ export const MersDataTable = () => {
     }
 
     return returnValue;
-  }, [ mersSeroprevalenceEstimateData, mersViralEstimateData, camelPopulationData, mersEventData ])
+  }, [ mersSeroprevalenceEstimateData, mersViralEstimateData, mersEventData, camelPopulationData ])
 
   const cleanedSelectedDataTable = useMemo(() => {
     if(availableDropdownOptionGroups.includes(currentlySelectedDataTable)) {
@@ -52,7 +52,7 @@ export const MersDataTable = () => {
     return availableDropdownOptionGroups.at(0) ?? AvailableMersDataTables.UNAVAILABLE;
   }, [ currentlySelectedDataTable, availableDropdownOptionGroups ])
 
-  const tableHeaderForAllDataTables: DropdownTableHeader<AvailableMersDataTables> = {
+  const tableHeaderForAllDataTables: DropdownTableHeader<AvailableMersDataTables> = useMemo(() => ({
     type: TableHeaderType.DROPDOWN,
     beforeDropdownHeaderText: "Explore ",
     dropdownProps: {
@@ -75,15 +75,25 @@ export const MersDataTable = () => {
       onDropdownOptionChange: (option) => setCurrentlySelectedDataTable(option)
     },
     afterDropdownHeaderText: " in our database"
-  }
+  }), [ availableDropdownOptionGroups, cleanedSelectedDataTable, setCurrentlySelectedDataTable ]);
 
-  const dataTableComponentMap = {
-    [AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES]: () => <MersSeroprevalenceEstimateDataTable tableHeader={tableHeaderForAllDataTables} />,
-    [AvailableMersDataTables.MERS_VIRAL_ESTIMATES]: () => <MersViralEstimateDataTable tableHeader={tableHeaderForAllDataTables} />,
-    [AvailableMersDataTables.MERS_CASES]: () => <MersCasesDataTable tableHeader={tableHeaderForAllDataTables} />,
-    [AvailableMersDataTables.CAMEL_POPULATION_DATA]: () => <CamelPopulationDataTable tableHeader={tableHeaderForAllDataTables} />,
-    [AvailableMersDataTables.UNAVAILABLE]: () => <p> No data available for table. </p>
-  }
+  const dataTableComponentMap = useMemo(() => ({
+    [AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES]: () => (
+      <MersSeroprevalenceEstimateDataTable tableHeader={tableHeaderForAllDataTables} tableData={mersSeroprevalenceEstimateData}/>
+    ),
+    [AvailableMersDataTables.MERS_VIRAL_ESTIMATES]: () => (
+      <MersViralEstimateDataTable tableHeader={tableHeaderForAllDataTables} tableData={mersViralEstimateData}/>
+    ),
+    [AvailableMersDataTables.MERS_CASES]: () => (
+      <MersCasesDataTable tableHeader={tableHeaderForAllDataTables} tableData={mersEventData} />
+    ),
+    [AvailableMersDataTables.CAMEL_POPULATION_DATA]: () => (
+      <CamelPopulationDataTable tableHeader={tableHeaderForAllDataTables} tableData={camelPopulationData} />
+    ),
+    [AvailableMersDataTables.UNAVAILABLE]: () => (
+      <p> No data available for table. </p>
+    )
+  }), [ tableHeaderForAllDataTables, mersSeroprevalenceEstimateData, mersViralEstimateData, mersEventData, camelPopulationData ]);
 
   return dataTableComponentMap[currentlySelectedDataTable]();
 }
