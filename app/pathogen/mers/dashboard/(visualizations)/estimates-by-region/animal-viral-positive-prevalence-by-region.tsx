@@ -17,7 +17,7 @@ import {
 } from "recharts";
 import { typedGroupBy, typedObjectKeys } from "@/lib/utils";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
-import { ContentType as TooltipContentType, TooltipProps } from "recharts/types/component/Tooltip";
+import { TooltipProps } from "recharts/types/component/Tooltip";
 import { AnimalMersViralEstimatePopupContent } from "../../(map)/animal-mers-viral-estimate-pop-up-content";
 
 const AnimalViralPositivePrevalenceByRegionTooltip = <
@@ -40,6 +40,7 @@ const AnimalViralPositivePrevalenceByRegionTooltip = <
       <AnimalMersViralEstimatePopupContent
         onMouseEnter={props.onMouseEnter}
         onMouseLeave={props.onMouseLeave}
+        className="border border-black text-sm"
         estimate={positivePrevalencePayload}
       />
     );
@@ -56,12 +57,7 @@ interface AnimalViralPositivePrevalenceByRegionProps {
 
 export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositivePrevalenceByRegionProps) => {
   const { data, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
-  const [ isMouseOnTooltip, _setIsMouseOnTooltip ] = useState<boolean>(false);
-
-  const setIsMouseOnTooltip = (input: boolean) => {
-    console.log('setIsMouseOnTooltip', input)
-    _setIsMouseOnTooltip(input);
-  }
+  const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const consideredData = useMemo(() =>
     data
@@ -74,12 +70,6 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
         positivePrevalence: parseFloat(
           (dataPoint.primaryEstimateInfo.positivePrevalence * 100).toFixed(1)
         ),
-        positivePrevalence95CILower: dataPoint.primaryEstimateInfo.positivePrevalence95CILower
-          ? parseFloat((dataPoint.primaryEstimateInfo.positivePrevalence95CILower * 100).toFixed(1))
-          : 'Unknown',
-        positivePrevalence95CIUpper: dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper
-          ? parseFloat((dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper * 100).toFixed(1))
-          : 'Unknown',
         positivePrevalenceError: [
           dataPoint.primaryEstimateInfo.positivePrevalence95CILower ? parseFloat(
             (

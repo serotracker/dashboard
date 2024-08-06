@@ -1,10 +1,12 @@
-import { useMemo } from 'react';
+import { MouseEventHandler, useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
-import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import { GenerateMersEstimateTableConfigurationsType, HumanMersSeroprevalenceEstimateMapMarkerData, ageGroupToColourClassnameMap, generateAlternateViewBannerConfiguration, generateMersEstimateTableConfigurations, getHumanMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
 
 interface HumanMersSeroprevalenceEstimatePopupContentProps {
   estimate: HumanMersSeroprevalenceEstimateMapMarkerData;
+  onMouseEnter?: MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>;
+  className?: string;
 }
 
 export const HumanMersSeroprevalenceEstimatePopupContent = (props: HumanMersSeroprevalenceEstimatePopupContentProps) => {
@@ -54,6 +56,9 @@ export const HumanMersSeroprevalenceEstimatePopupContent = (props: HumanMersSero
       bottomBannerConfiguration={{
         enabled: false
       }}
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
+      className={props.className}
     />
   );
 }

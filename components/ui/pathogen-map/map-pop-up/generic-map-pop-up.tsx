@@ -171,6 +171,7 @@ interface GenericMapPopUpProps {
   alternateViewConfiguration: AlternateViewConfiguration;
   onMouseEnter?: MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: MouseEventHandler<HTMLDivElement>;
+  className?: string;
 }
 
 export const GenericMapPopUp = (props: GenericMapPopUpProps) => {
@@ -180,7 +181,8 @@ export const GenericMapPopUp = (props: GenericMapPopUpProps) => {
     <div
       className={cn(
         props.width !== GenericMapPopUpWidth.AUTO ? widthEnumToWidthClassnameMap[props.width] : '',
-        "bg-white/60 backdrop-blur-md pt-2 rounded-lg z-30"
+        "bg-white/60 backdrop-blur-md pt-2 rounded-lg",
+        props.className ? props.className : ''
       )}
       onMouseEnter={props.onMouseEnter}
       onMouseLeave={props.onMouseLeave}

@@ -6,6 +6,7 @@ interface AnimalMersViralEstimatePopupContentProps {
   estimate: AnimalMersViralEstimateMapMarkerData;
   onMouseEnter?: MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: MouseEventHandler<HTMLDivElement>;
+  className?: string;
 }
 
 export const AnimalMersViralEstimatePopupContent = (props: AnimalMersViralEstimatePopupContentProps) => {
@@ -62,6 +63,7 @@ export const AnimalMersViralEstimatePopupContent = (props: AnimalMersViralEstima
       }}
       onMouseEnter={props.onMouseEnter}
       onMouseLeave={props.onMouseLeave}
+      className={props.className}
     />
   );
 }

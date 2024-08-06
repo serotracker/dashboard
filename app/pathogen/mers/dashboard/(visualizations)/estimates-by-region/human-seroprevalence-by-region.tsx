@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { MouseEventHandler, useMemo, useState } from "react";
 import { HumanMersSeroprevalenceEstimate, MersEstimate, isHumanMersSeroprevalenceEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
@@ -17,9 +17,18 @@ import {
 } from "recharts";
 import { typedGroupBy, typedObjectKeys } from "@/lib/utils";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
-import { ContentType as TooltipContentType } from "recharts/types/component/Tooltip";
+import { TooltipProps } from "recharts/types/component/Tooltip";
+import { HumanMersSeroprevalenceEstimatePopupContent } from "../../(map)/human-mers-seroprevalence-estimate-pop-up-content";
 
-const HumanSeroprevalenceByRegionTooltip: TooltipContentType<string, string> = ({ active, payload, label }) => {
+const HumanSeroprevalenceByRegionTooltip = <
+  TValueType extends number | string | Array<number | string>,
+  TNameType extends number | string
+>(props: TooltipProps<TValueType, TNameType> & {
+  onMouseEnter?: MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>;
+}) => {
+  const { active, payload, label } = props;
+
   if (active && payload && payload.length) {
     const seroprevalencePayload = payload.find((element) => element.name === 'seroprevalence')?.payload;
 
@@ -27,19 +36,13 @@ const HumanSeroprevalenceByRegionTooltip: TooltipContentType<string, string> = (
       return null;
     }
 
-    const seroprevalence = seroprevalencePayload.seroprevalence;
-    const seroprevalence95CILower = typeof seroprevalencePayload.seroprevalence95CILower === 'number' 
-      ? `${seroprevalencePayload.seroprevalence95CILower}%`
-      : 'Unknown';
-    const seroprevalence95CIUpper = typeof seroprevalencePayload.seroprevalence95CIUpper === 'number' 
-      ? `${seroprevalencePayload.seroprevalence95CIUpper}%`
-      : 'Unknown';
-
     return (
-      <div className="bg-white p-4">
-        <p> Seroprevalence: {seroprevalence}% </p>
-        <p> 95% CI: [{seroprevalence95CILower}, {seroprevalence95CIUpper}] </p>
-      </div>
+      <HumanMersSeroprevalenceEstimatePopupContent
+        onMouseEnter={props.onMouseEnter}
+        onMouseLeave={props.onMouseLeave}
+        className="border border-black text-sm"
+        estimate={seroprevalencePayload}
+      />
     );
   }
 
@@ -56,6 +59,7 @@ interface HumanSeroprevalenceByRegionProps {
 
 export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionProps) => {
   const { data, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
+  const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const consideredData = useMemo(() =>
     data
@@ -68,12 +72,6 @@ export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionPr
         seroprevalence: parseFloat(
           (dataPoint.primaryEstimateInfo.seroprevalence * 100).toFixed(1)
         ),
-        seroprevalence95CILower: dataPoint.primaryEstimateInfo.seroprevalence95CILower
-          ? parseFloat((dataPoint.primaryEstimateInfo.seroprevalence95CILower * 100).toFixed(1))
-          : 'Unknown',
-        seroprevalence95CIUpper: dataPoint.primaryEstimateInfo.seroprevalence95CIUpper
-          ? parseFloat((dataPoint.primaryEstimateInfo.seroprevalence95CIUpper * 100).toFixed(1))
-          : 'Unknown',
         seroprevalenceError: [
           dataPoint.primaryEstimateInfo.seroprevalence95CILower ? parseFloat(
             (
@@ -163,7 +161,16 @@ export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionPr
           }}
         />
         <Tooltip
-          content={HumanSeroprevalenceByRegionTooltip}
+          offset={0}
+          content={(props) => (<HumanSeroprevalenceByRegionTooltip
+            onMouseEnter={() => setIsMouseOnTooltip(true)}
+            onMouseLeave={() => setIsMouseOnTooltip(false)}
+            {...props}
+          />)}
+          wrapperStyle={{
+            pointerEvents: 'auto'
+          }}
+          {...(isMouseOnTooltip === true) ? { active: true } : {} }
         />
         <Legend {...legendProps}/>
         {allRegions.map((region, regionIndex) => (

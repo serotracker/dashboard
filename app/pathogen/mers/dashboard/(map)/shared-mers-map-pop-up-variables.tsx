@@ -336,17 +336,17 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
   title: "Positive Prevalence 95% Confidence Interval",
   type: PopUpContentRowType.TEXT,
   text: `[
-    ${estimate.primaryEstimateInfo.positivePrevalence95CILower ? `${estimate.primaryEstimateInfo.positivePrevalence95CILower.toFixed(1)}%` : 'Unknown'}
+    ${estimate.primaryEstimateInfo.positivePrevalence95CILower ? `${(estimate.primaryEstimateInfo.positivePrevalence95CILower * 100).toFixed(1)}%` : 'Unknown'}
     -
-    ${estimate.primaryEstimateInfo.positivePrevalence95CIUpper ? `${estimate.primaryEstimateInfo.positivePrevalence95CIUpper.toFixed(1)}%` : 'Unknown'}
+    ${estimate.primaryEstimateInfo.positivePrevalence95CIUpper ? `${(estimate.primaryEstimateInfo.positivePrevalence95CIUpper * 100).toFixed(1)}%` : 'Unknown'}
   ]`
 } : {
   title: "Seroprevalence 95% Confidence Interval",
   type: PopUpContentRowType.TEXT,
   text: `[
-    ${estimate.primaryEstimateInfo.seroprevalence95CILower ? `${estimate.primaryEstimateInfo.seroprevalence95CILower.toFixed(1)}%` : 'Unknown'}
+    ${estimate.primaryEstimateInfo.seroprevalence95CILower ? `${(estimate.primaryEstimateInfo.seroprevalence95CILower * 100).toFixed(1)}%` : 'Unknown'}
     -
-    ${estimate.primaryEstimateInfo.seroprevalence95CIUpper ? `${estimate.primaryEstimateInfo.seroprevalence95CIUpper.toFixed(1)}%` : 'Unknown'}
+    ${estimate.primaryEstimateInfo.seroprevalence95CIUpper ? `${(estimate.primaryEstimateInfo.seroprevalence95CIUpper * 100).toFixed(1)}%` : 'Unknown'}
   ]`
 }, {
   title: "First Author Full Name",
