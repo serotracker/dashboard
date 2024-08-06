@@ -1,9 +1,12 @@
-import { useMemo } from 'react';
+import { MouseEventHandler, useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { AnimalMersSeroprevalenceEstimateMapMarkerData, GenerateMersEstimateTableConfigurationsType, animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, generateAlternateViewBannerConfiguration, generateMersEstimateTableConfigurations, getAnimalMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
 
 interface AnimalMersSeroprevalenceEstimatePopupContentProps {
   estimate: AnimalMersSeroprevalenceEstimateMapMarkerData;
+  onMouseEnter?: MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>;
+  className?: string;
 }
 
 export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSeroprevalenceEstimatePopupContentProps) => {
@@ -58,6 +61,9 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
         isTextCentered: true,
         alternateViewButtonEnabled: false
       }}
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
+      className={props.className}
     />
   );
 }

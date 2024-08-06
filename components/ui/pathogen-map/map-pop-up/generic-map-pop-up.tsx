@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import { PopUpContentRow, PopUpContentRowProps, PopUpContentRowType, PopupContentTextAlignment } from "./pop-up-content-rows";
 import { cn } from "@/lib/utils";
 import { AlternateViewConfiguration, AlternateViewGenericMapPopUpContent } from "./map-pop-up-alternate-configuration";
@@ -169,16 +169,24 @@ interface GenericMapPopUpProps {
   rows: PopUpContentRowProps[];
   bottomBannerConfiguration: BannerConfiguration;
   alternateViewConfiguration: AlternateViewConfiguration;
+  onMouseEnter?: MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>;
+  className?: string;
 }
 
 export const GenericMapPopUp = (props: GenericMapPopUpProps) => {
   const [ alternateViewEnabled, setAlternateViewEnabled ] = useState<boolean>(false);
 
   return (
-    <div className={cn(
-      props.width !== GenericMapPopUpWidth.AUTO ? widthEnumToWidthClassnameMap[props.width] : '',
-      "bg-white/60 backdrop-blur-md pt-2 rounded-lg"
-    )}>
+    <div
+      className={cn(
+        props.width !== GenericMapPopUpWidth.AUTO ? widthEnumToWidthClassnameMap[props.width] : '',
+        "bg-white/60 backdrop-blur-md pt-2 rounded-lg",
+        props.className ? props.className : ''
+      )}
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
+    >
       <div className={"py-2 px-4"}>
         <GenericMapPopUpHeader {...props.headerConfiguration} />
         {props.subtitleConfiguration.enabled === true && <GenericMapPopUpSubtitle {...props.subtitleConfiguration}/>}

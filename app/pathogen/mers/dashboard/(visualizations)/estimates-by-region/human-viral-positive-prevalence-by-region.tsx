@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { MouseEventHandler, useMemo, useState } from "react";
 import { HumanMersViralEstimate, MersEstimate, isHumanMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
@@ -17,9 +17,18 @@ import {
 } from "recharts";
 import { typedGroupBy, typedObjectKeys } from "@/lib/utils";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
-import { ContentType as TooltipContentType } from "recharts/types/component/Tooltip";
+import { TooltipProps } from "recharts/types/component/Tooltip";
+import { HumanMersViralEstimatePopupContent } from "../../(map)/human-mers-viral-estimate-pop-up-content";
 
-const HumanViralPositivePrevalenceByRegionTooltip: TooltipContentType<string, string> = ({ active, payload, label }) => {
+const HumanViralPositivePrevalenceByRegionTooltip = <
+  TValueType extends number | string | Array<number | string>,
+  TNameType extends number | string
+>(props: TooltipProps<TValueType, TNameType> & {
+  onMouseEnter?: MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>;
+}) => {
+  const { active, payload, label } = props;
+
   if (active && payload && payload.length) {
     const positivePrevalencePayload = payload.find((element) => element.name === 'positivePrevalence')?.payload;
 
@@ -27,19 +36,13 @@ const HumanViralPositivePrevalenceByRegionTooltip: TooltipContentType<string, st
       return null;
     }
 
-    const positivePrevalence = positivePrevalencePayload.positivePrevalence;
-    const positivePrevalence95CILower = typeof positivePrevalencePayload.positivePrevalence95CILower === 'number'
-      ? `${positivePrevalencePayload.positivePrevalence95CILower}%`
-      : 'Unknown';
-    const positivePrevalence95CIUpper = typeof positivePrevalencePayload.positivePrevalence95CIUpper === 'number'
-      ? `${positivePrevalencePayload.positivePrevalence95CIUpper}%`
-      : 'Unknown';
-
     return (
-      <div className="bg-white p-4">
-        <p> Viral Positive Prevalence: {positivePrevalence}% </p>
-        <p> 95% CI: [{positivePrevalence95CILower}, {positivePrevalence95CIUpper}] </p>
-      </div>
+      <HumanMersViralEstimatePopupContent
+        onMouseEnter={props.onMouseEnter}
+        onMouseLeave={props.onMouseLeave}
+        className="border border-black text-sm"
+        estimate={positivePrevalencePayload}
+      />
     );
   }
 
@@ -56,6 +59,7 @@ interface HumanViralPositivePrevalenceByRegionProps {
 
 export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePrevalenceByRegionProps) => {
   const { data, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
+  const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const consideredData = useMemo(() =>
     data
@@ -68,12 +72,6 @@ export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePr
         positivePrevalence: parseFloat(
           (dataPoint.primaryEstimateInfo.positivePrevalence * 100).toFixed(1)
         ),
-        positivePrevalence95CILower: dataPoint.primaryEstimateInfo.positivePrevalence95CILower
-          ? parseFloat((dataPoint.primaryEstimateInfo.positivePrevalence95CILower * 100).toFixed(1))
-          : 'Unknown',
-        positivePrevalence95CIUpper: dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper
-          ? parseFloat((dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper * 100).toFixed(1))
-          : 'Unknown',
         positivePrevalenceError: [
           dataPoint.primaryEstimateInfo.positivePrevalence95CILower ? parseFloat(
             (
@@ -163,7 +161,16 @@ export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePr
           }}
         />
         <Tooltip
-          content={HumanViralPositivePrevalenceByRegionTooltip}
+          offset={0}
+          content={(props) => (<HumanViralPositivePrevalenceByRegionTooltip
+            onMouseEnter={() => setIsMouseOnTooltip(true)}
+            onMouseLeave={() => setIsMouseOnTooltip(false)}
+            {...props}
+          />)}
+          wrapperStyle={{
+            pointerEvents: 'auto'
+          }}
+          {...(isMouseOnTooltip === true) ? { active: true } : {} }
         />
         <Legend {...legendProps}/>
         {allRegions.map((region, regionIndex) => (

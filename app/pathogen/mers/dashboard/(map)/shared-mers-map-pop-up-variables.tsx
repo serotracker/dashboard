@@ -9,6 +9,7 @@ import {
   MersSubEstimateInformation,
   isHumanMersAgeGroupSubEstimate,
   isMersSeroprevalenceSubEstimateInformation,
+  isMersViralEstimate,
   isMersViralSubEstimateInformation
 } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import {
@@ -331,6 +332,22 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
   title: "Sample Denominator",
   type: PopUpContentRowType.TEXT,
   text: 'N/A'
+}, isMersViralEstimate(estimate) ? {
+  title: "Positive Prevalence 95% Confidence Interval",
+  type: PopUpContentRowType.TEXT,
+  text: `[
+    ${estimate.primaryEstimateInfo.positivePrevalence95CILower ? `${(estimate.primaryEstimateInfo.positivePrevalence95CILower * 100).toFixed(1)}%` : 'Unknown'}
+    -
+    ${estimate.primaryEstimateInfo.positivePrevalence95CIUpper ? `${(estimate.primaryEstimateInfo.positivePrevalence95CIUpper * 100).toFixed(1)}%` : 'Unknown'}
+  ]`
+} : {
+  title: "Seroprevalence 95% Confidence Interval",
+  type: PopUpContentRowType.TEXT,
+  text: `[
+    ${estimate.primaryEstimateInfo.seroprevalence95CILower ? `${(estimate.primaryEstimateInfo.seroprevalence95CILower * 100).toFixed(1)}%` : 'Unknown'}
+    -
+    ${estimate.primaryEstimateInfo.seroprevalence95CIUpper ? `${(estimate.primaryEstimateInfo.seroprevalence95CIUpper * 100).toFixed(1)}%` : 'Unknown'}
+  ]`
 }, {
   title: "First Author Full Name",
   type: PopUpContentRowType.TEXT,
