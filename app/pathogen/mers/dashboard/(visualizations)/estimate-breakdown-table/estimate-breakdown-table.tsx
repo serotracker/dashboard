@@ -267,7 +267,7 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         countryAlphaTwoCode,
         sampleDenominator,
         sampleNumerator,
-        group: specimenType
+        group: specimenType.join(',')
       }] : []
     }
 
@@ -292,7 +292,7 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         whoRegion,
         unRegion,
         countryAlphaTwoCode,
-        group: subestimate.specimenType,
+        group: subestimate.specimenType.join(','),
         sampleNumerator: subestimateSampleNumerator,
         sampleDenominator: subestimateSampleDenominator
       }
