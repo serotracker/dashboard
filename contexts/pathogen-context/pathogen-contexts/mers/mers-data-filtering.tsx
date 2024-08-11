@@ -191,9 +191,10 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       estimate: {
         ...input.estimate,
         specimenType: uniq([
-          input.estimate.primaryEstimateInfo.specimenType,
-          ...input.estimate.sampleTypeSubestimates.map((subestimate) => subestimate.specimenType)
-        ]).filter((element): element is NonNullable<typeof element> => !!element)
+          ...input.estimate.primaryEstimateInfo.specimenType,
+          ...input.estimate.sampleTypeSubestimates
+            .flatMap((subestimate) => subestimate.specimenType)
+        ])
       },
       selectedFilters: {
         ...input.selectedFilters,
@@ -203,7 +204,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     sampleTypeSubestimateIdsToMarkAsFiltered: input.estimate.sampleTypeSubestimates
       .filter((subestimate) =>
         ((input.selectedFilters[MersFilterableField.specimenType] ?? []).length > 0) &&
-        !input.selectedFilters[MersFilterableField.specimenType]?.includes(subestimate.specimenType)
+        !input.selectedFilters[MersFilterableField.specimenType]?.some((element) => subestimate.specimenType.includes(element))
       )
       .map((subestimate) => subestimate.id)
   }),
