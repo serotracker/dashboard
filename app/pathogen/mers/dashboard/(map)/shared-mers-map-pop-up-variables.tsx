@@ -379,7 +379,7 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
 }, {
   title: "Specimen Type",
   type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.specimenType ? [ estimate.primaryEstimateInfo.specimenType ] : [],
+  values: estimate.primaryEstimateInfo.specimenType,
   valueToColourClassnameMap: specimenTypeToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
@@ -711,7 +711,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
-          'Specimen Type': element.subestimate.specimenType
+          'Specimen Type': element.subestimate.specimenType.join(',')
         }
       }))
   }] : []),
