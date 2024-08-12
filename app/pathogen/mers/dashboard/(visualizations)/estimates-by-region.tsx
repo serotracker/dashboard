@@ -1,6 +1,6 @@
 import { useMemo, useCallback, useContext } from "react";
 import assertNever from "assert-never";
-import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { AnimalMersSeroprevalenceEstimate, AnimalMersViralEstimate, HumanMersSeroprevalenceEstimate, HumanMersViralEstimate, MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { isUNRegion, unRegionEnumToLabelMap } from "@/lib/un-regions";
@@ -29,7 +29,10 @@ export enum EstimatesByRegionRegionDropdownOption {
 }
 
 interface EstimatesByRegionProps {
-  data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  humanMersSeroprevalenceEstimates: HumanMersSeroprevalenceEstimate[];
+  animalMersSeroprevalenceEstimates: AnimalMersSeroprevalenceEstimate[];
+  humanMersViralEstimates: HumanMersViralEstimate[];
+  animalMersViralEstimates: AnimalMersViralEstimate[];
   barColoursForWhoRegions: Record<WhoRegion, string>;
   barColoursForUnRegions: Record<UnRegion, string>;
   selectedVariableOfInterest: EstimatesByRegionVariableOfInterestDropdownOption;
@@ -39,7 +42,10 @@ interface EstimatesByRegionProps {
 
 export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
   const {
-    data,
+    humanMersSeroprevalenceEstimates,
+    animalMersSeroprevalenceEstimates,
+    humanMersViralEstimates,
+    animalMersViralEstimates,
     selectedVariableOfInterest,
     selectedRegion,
     barColoursForWhoRegions,
@@ -115,7 +121,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
   const graph = useMemo(() => {
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE) {
       return <HumanSeroprevalenceByRegion
-        data={data}
+        humanMersSeroprevalenceEstimates={humanMersSeroprevalenceEstimates}
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
@@ -124,7 +130,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     }
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE) {
       return <HumanViralPositivePrevalenceByRegion
-        data={data}
+        humanMersViralEstimates={humanMersViralEstimates}
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
@@ -133,7 +139,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     }
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE) {
       return <AnimalSeroprevalenceByRegion
-        data={data}
+        animalMersSeroprevalenceEstimates={animalMersSeroprevalenceEstimates}
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
@@ -142,7 +148,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     }
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE) {
       return <AnimalViralPositivePrevalenceByRegion
-        data={data}
+        animalMersViralEstimates={animalMersViralEstimates}
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
@@ -150,7 +156,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
       />
     }
     assertNever(selectedVariableOfInterest);
-  }, [ data, selectedVariableOfInterest, regionGroupingFunction, regionToDotColour, regionToLegendLabel, legendConfiguration ]);
+  }, [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, selectedVariableOfInterest, regionGroupingFunction, regionToDotColour, regionToLegendLabel, legendConfiguration ]);
 
   return graph;
 }

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { UNRegionsTooltip, WHORegionsTooltip } from "@/components/customs/tooltip-content";
 import assertNever from "assert-never";
 import { MersVisualizationInformation } from "../visualization-page-config";
@@ -11,6 +11,7 @@ import { defaultColoursForUnRegions, unRegionEnumToLabelMap } from "@/lib/un-reg
 import { ModalState, ModalType } from "@/components/ui/modal/modal";
 import { ColourPickerCustomizationSettingProps } from "@/components/ui/modal/customization-modal/colour-picker-customization-setting";
 import { CustomizationSettingType } from "@/components/ui/modal/customization-modal/customization-settings";
+import { AnimalMersSeroprevalenceEstimate, AnimalMersViralEstimate, HumanMersSeroprevalenceEstimate, HumanMersViralEstimate, isAnimalMersSeroprevalenceEstimate, isAnimalMersViralEstimate, isHumanMersSeroprevalenceEstimate, isHumanMersViralEstimate, MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 
 export const useEstimatesByRegionVisualizationPageConfig = () => {
   const [
@@ -31,6 +32,36 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
     barColoursForUnRegions,
     setBarColoursForUnRegions,
   ] = useState<Record<UnRegion, string>>(defaultColoursForUnRegions);
+
+  const { filteredData } = useContext(MersContext)
+
+  const humanMersSeroprevalenceEstimates = useMemo(() => filteredData.filter((dataPoint): dataPoint is HumanMersSeroprevalenceEstimate => isHumanMersSeroprevalenceEstimate(dataPoint)), [ filteredData ]);
+  const animalMersSeroprevalenceEstimates = useMemo(() => filteredData.filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimate => isAnimalMersSeroprevalenceEstimate(dataPoint)), [ filteredData ]);
+  const humanMersViralEstimates = useMemo(() => filteredData.filter((dataPoint): dataPoint is HumanMersViralEstimate => isHumanMersViralEstimate(dataPoint)), [ filteredData ]);
+  const animalMersViralEstimates = useMemo(() => filteredData.filter((dataPoint): dataPoint is AnimalMersViralEstimate => isAnimalMersViralEstimate(dataPoint)), [ filteredData ]);
+
+  const availableDropdownOptionGroups = useMemo(() => {
+    const returnValue = [
+      ...(humanMersSeroprevalenceEstimates.length > 0 ? [ EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE ] : []),
+      ...(animalMersSeroprevalenceEstimates.length > 0 ? [ EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE ] : []),
+      ...(humanMersViralEstimates.length > 0 ? [ EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE ] : []),
+      ...(animalMersViralEstimates.length > 0 ? [ EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE ] : []),
+    ];
+
+    if(returnValue.length === 0) {
+      return [ EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE ];
+    }
+
+    return returnValue;
+  }, [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates ])
+
+  const cleanedChosenDropdownOption = useMemo(() => {
+    if(availableDropdownOptionGroups.includes(estimatesByRegionVariableOfInterest)) {
+      return estimatesByRegionVariableOfInterest;
+    }
+
+    return availableDropdownOptionGroups.at(0) ?? EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE;
+  }, [ estimatesByRegionVariableOfInterest, availableDropdownOptionGroups ])
 
   const getDisplayNameForEstimatesByRegion: MersVisualizationInformation<
     string,
@@ -58,7 +89,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
           EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE,
         ]
       }],
-      chosenDropdownOption: estimatesByRegionVariableOfInterest,
+      chosenDropdownOption: cleanedChosenDropdownOption,
       dropdownOptionToLabelMap: {
         [EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE]: "Human Seroprevalence Estimates",
         [EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE]: "Animal Seroprevalence Estimates",
@@ -94,23 +125,26 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       }
     },
     afterBothDropdownsHeaderText: " With 95% Confidence Intervals"
-  }), [ estimatesByRegionVariableOfInterest, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion ])
+  }), [ cleanedChosenDropdownOption, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion ])
 
   const renderVisualizationForEstimatesByRegion: MersVisualizationInformation<
     string,
     EstimatesByRegionVariableOfInterestDropdownOption,
     EstimatesByRegionRegionDropdownOption,
     string
-  >['renderVisualization'] = useCallback(({ data }) => (
+  >['renderVisualization'] = useCallback(() => (
     <EstimatesByRegion
-      data={data}
+      humanMersSeroprevalenceEstimates={humanMersSeroprevalenceEstimates}
+      animalMersSeroprevalenceEstimates={animalMersSeroprevalenceEstimates}
+      humanMersViralEstimates={humanMersViralEstimates}
+      animalMersViralEstimates={animalMersViralEstimates}
       barColoursForWhoRegions={barColoursForWhoRegions}
       barColoursForUnRegions={barColoursForUnRegions}
-      selectedVariableOfInterest={estimatesByRegionVariableOfInterest}
+      selectedVariableOfInterest={cleanedChosenDropdownOption}
       selectedRegion={estimatesByRegionSelectedRegion}
       legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
     />
-  ), [ estimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, barColoursForWhoRegions, barColoursForUnRegions ]);
+  ), [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, cleanedChosenDropdownOption, estimatesByRegionSelectedRegion, barColoursForWhoRegions, barColoursForUnRegions ]);
 
   const customizationModalConfigurationForEstimatesByRegion: MersVisualizationInformation<
     string,

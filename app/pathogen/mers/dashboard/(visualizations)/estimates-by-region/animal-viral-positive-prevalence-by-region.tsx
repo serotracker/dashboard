@@ -48,7 +48,7 @@ const AnimalViralPositivePrevalenceByRegionTooltip = <
 }
 
 interface AnimalViralPositivePrevalenceByRegionProps {
-  data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  animalMersViralEstimates: AnimalMersViralEstimate[];
   regionGroupingFunction: (dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => WhoRegion | UnRegion | string | null | undefined;
   regionToDotColour: (region:WhoRegion | UnRegion | string, regionIndex: number) => string;
   regionToLegendLabel: (region:WhoRegion | UnRegion | string) => string;
@@ -56,12 +56,11 @@ interface AnimalViralPositivePrevalenceByRegionProps {
 }
 
 export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositivePrevalenceByRegionProps) => {
-  const { data, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
+  const { animalMersViralEstimates, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const consideredData = useMemo(() =>
-    data
-      .filter((dataPoint): dataPoint is AnimalMersViralEstimate => 'primaryEstimateInfo' in dataPoint && isAnimalMersViralEstimate(dataPoint))
+    animalMersViralEstimates
       .map((dataPoint) => ({ ...dataPoint, region: regionGroupingFunction(dataPoint) }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .sort((dataPointA, dataPointB) => dataPointA.primaryEstimateInfo.positivePrevalence - dataPointB.primaryEstimateInfo.positivePrevalence)
@@ -86,7 +85,7 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
         ],
         estimateNumber: index + 1
       }))
-  , [ data, regionGroupingFunction ]);
+  , [ animalMersViralEstimates, regionGroupingFunction ]);
 
   const consideredDataByRegion = useMemo(() =>
     typedGroupBy(consideredData, (dataPoint) => dataPoint.region)
