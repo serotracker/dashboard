@@ -50,7 +50,7 @@ const HumanViralPositivePrevalenceByRegionTooltip = <
 };
 
 interface HumanViralPositivePrevalenceByRegionProps {
-  data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  humanMersViralEstimates: HumanMersViralEstimate[];
   regionGroupingFunction: (dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => WhoRegion | UnRegion | string | null | undefined;
   regionToDotColour: (region:WhoRegion | UnRegion | string, regionIndex: number) => string;
   regionToLegendLabel: (region:WhoRegion | UnRegion | string) => string;
@@ -58,12 +58,11 @@ interface HumanViralPositivePrevalenceByRegionProps {
 }
 
 export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePrevalenceByRegionProps) => {
-  const { data, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
+  const { humanMersViralEstimates, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const consideredData = useMemo(() =>
-    data
-      .filter((dataPoint): dataPoint is HumanMersViralEstimate => 'primaryEstimateInfo' in dataPoint && isHumanMersViralEstimate(dataPoint))
+    humanMersViralEstimates
       .map((dataPoint) => ({ ...dataPoint, region: regionGroupingFunction(dataPoint) }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .sort((dataPointA, dataPointB) => dataPointA.primaryEstimateInfo.positivePrevalence - dataPointB.primaryEstimateInfo.positivePrevalence)
@@ -88,7 +87,7 @@ export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePr
         ],
         estimateNumber: index + 1
       }))
-  , [ data, regionGroupingFunction ]);
+  , [ humanMersViralEstimates, regionGroupingFunction ]);
 
   const consideredDataByRegion = useMemo(() =>
     typedGroupBy(consideredData, (dataPoint) => dataPoint.region)

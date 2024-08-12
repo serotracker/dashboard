@@ -50,7 +50,7 @@ const AnimalSeroprevalenceByRegionTooltip = <
 };
 
 interface AnimalSeroprevalenceByRegionProps {
-  data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  animalMersSeroprevalenceEstimates: AnimalMersSeroprevalenceEstimate[];
   regionGroupingFunction: (dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => WhoRegion | UnRegion | string | null | undefined;
   regionToDotColour: (region:WhoRegion | UnRegion | string, regionIndex: number) => string;
   regionToLegendLabel: (region:WhoRegion | UnRegion | string) => string;
@@ -58,12 +58,11 @@ interface AnimalSeroprevalenceByRegionProps {
 }
 
 export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegionProps) => {
-  const { data, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
+  const { animalMersSeroprevalenceEstimates, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const consideredData = useMemo(() =>
-    data
-      .filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimate => 'primaryEstimateInfo' in dataPoint && isAnimalMersSeroprevalenceEstimate(dataPoint))
+    animalMersSeroprevalenceEstimates
       .map((dataPoint) => ({ ...dataPoint, region: regionGroupingFunction(dataPoint) }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .sort((dataPointA, dataPointB) => dataPointA.primaryEstimateInfo.seroprevalence - dataPointB.primaryEstimateInfo.seroprevalence)
@@ -88,7 +87,7 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
         ],
         estimateNumber: index + 1
       }))
-  , [ data, regionGroupingFunction ]);
+  , [ animalMersSeroprevalenceEstimates, regionGroupingFunction ]);
 
   const consideredDataByRegion = useMemo(() =>
     typedGroupBy(consideredData, (dataPoint) => dataPoint.region)

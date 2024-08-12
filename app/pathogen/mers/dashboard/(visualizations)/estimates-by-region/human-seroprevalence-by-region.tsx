@@ -50,7 +50,7 @@ const HumanSeroprevalenceByRegionTooltip = <
 };
 
 interface HumanSeroprevalenceByRegionProps {
-  data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  humanMersSeroprevalenceEstimates: HumanMersSeroprevalenceEstimate[];
   regionGroupingFunction: (dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => WhoRegion | UnRegion | string | null | undefined;
   regionToDotColour: (region:WhoRegion | UnRegion | string, regionIndex: number) => string;
   regionToLegendLabel: (region:WhoRegion | UnRegion | string) => string;
@@ -58,12 +58,11 @@ interface HumanSeroprevalenceByRegionProps {
 }
 
 export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionProps) => {
-  const { data, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
+  const { humanMersSeroprevalenceEstimates, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const consideredData = useMemo(() =>
-    data
-      .filter((dataPoint): dataPoint is HumanMersSeroprevalenceEstimate => 'primaryEstimateInfo' in dataPoint && isHumanMersSeroprevalenceEstimate(dataPoint))
+    humanMersSeroprevalenceEstimates
       .map((dataPoint) => ({ ...dataPoint, region: regionGroupingFunction(dataPoint) }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .sort((dataPointA, dataPointB) => dataPointA.primaryEstimateInfo.seroprevalence - dataPointB.primaryEstimateInfo.seroprevalence)
@@ -88,7 +87,7 @@ export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionPr
         ],
         estimateNumber: index + 1
       }))
-  , [ data, regionGroupingFunction ]);
+  , [ humanMersSeroprevalenceEstimates, regionGroupingFunction ]);
 
   const consideredDataByRegion = useMemo(() =>
     typedGroupBy(consideredData, (dataPoint) => dataPoint.region)
