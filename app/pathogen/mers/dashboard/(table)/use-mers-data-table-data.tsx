@@ -12,9 +12,9 @@ import {
 import { mapMersEstimateBaseForDataTable, MersEstimateBaseForDataTable } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
-import { formatCamelsPerCapita } from "../(map)/country-highlight-layers/camels-per-capita-layer";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { MersDiagnosisStatus, MersEventAnimalSpecies, MersEventAnimalType, MersEventType } from "@/gql/graphql";
+import { formatPerCapitaNumberForLegend } from "../(map)/country-highlight-layers/helpers";
 
 export type FaoYearlyCamelPopulationDataEntryForTable = Omit<FaoYearlyCamelPopulationDataEntry, 'country'|'camelCountPerCapita'|'countryAlphaThreeCode'|'countryAlphaTwoCode'> & {
   country: string;
@@ -29,7 +29,7 @@ export type FaoYearlyCamelPopulationDataEntryForTable = Omit<FaoYearlyCamelPopul
 const formatFaoCamelPopulationDataForTable = (dataPoint: FaoYearlyCamelPopulationDataEntry): FaoYearlyCamelPopulationDataEntryForTable => ({
   ...dataPoint,
   country: dataPoint.country.name,
-  camelCountPerCapita: dataPoint.camelCountPerCapita ? formatCamelsPerCapita(dataPoint.camelCountPerCapita) : undefined,
+  camelCountPerCapita: dataPoint.camelCountPerCapita ? formatPerCapitaNumberForLegend({ value: dataPoint.camelCountPerCapita, isExclusiveInRange: false }) : undefined,
   countryAlphaThreeCode: dataPoint.country.alphaThreeCode,
   countryAlphaTwoCode: dataPoint.country.alphaTwoCode,
   rawCountry: dataPoint.country,

@@ -15,16 +15,20 @@ const isCountryPaintChangeSetting = (input: string): input is CountryPaintChange
 export enum MersMapCountryHighlightingSettings {
   EVENTS_AND_ESTIMATES = 'EVENTS_AND_ESTIMATES',
   TOTAL_CAMEL_POPULATION = 'TOTAL_CAMEL_POPULATION',
-  CAMELS_PER_CAPITA = 'CAMELS_PER_CAPITA'
+  CAMELS_PER_CAPITA = 'CAMELS_PER_CAPITA',
+  MERS_HUMAN_CASES = 'MERS_HUMAN_CASES',
+  MERS_ANIMAL_CASES = 'MERS_ANIMAL_CASES',
 }
 
 const isMersMapCountryHighlightingSettings = (input: string): input is MersMapCountryHighlightingSettings =>
   Object.values(MersMapCountryHighlightingSettings).some((element) => element === input);
 
 const dropdownOptionToLabelMap = {
-  [MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES]: "Presence of MERS events or seroprevalence estimates",
+  [MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES]: "Presence of MERS prevalence estimates",
   [MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION]: "Total camel population",
   [MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA]: "Camels per capita",
+  [MersMapCountryHighlightingSettings.MERS_HUMAN_CASES]: "MERS Human Cases",
+  [MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES]: "MERS Animal Cases",
   [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
   [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
   [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
@@ -55,7 +59,7 @@ export const useMersMapCustomizationModal = () => {
         hoverColourClassname: 'hover:bg-mersHover/50',
         highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
         dropdownOptionGroups: [{
-          groupHeader: 'Events and estimates',
+          groupHeader: 'Seroprevalence and Viral Positive Prevalence Estimates',
           options: [
             MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES
           ]
@@ -64,6 +68,12 @@ export const useMersMapCustomizationModal = () => {
           options: [
             MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION,
             MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA,
+          ]
+        }, {
+          groupHeader: 'Reported Positive Cases',
+          options: [
+            MersMapCountryHighlightingSettings.MERS_HUMAN_CASES,
+            MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES
           ]
         }],
         chosenDropdownOption: currentMapCountryHighlightingSettings,

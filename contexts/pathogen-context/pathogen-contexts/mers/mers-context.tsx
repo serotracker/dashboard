@@ -11,7 +11,7 @@ import { filterData } from "../../filter-update-steps/apply-new-selected-filters
 import { addActionToSelectedFilters } from "../../filter-update-steps/add-action-to-selected-filters";
 import { adjustMapPosition } from "../../filter-update-steps/adjust-map-position";
 import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
-import { MersPrimaryEstimatesQuery } from "@/gql/graphql";
+import { MersPrimaryEstimatesQuery, PartitionedFaoMersEventsQuery } from "@/gql/graphql";
 import { filterMersEstimates } from "./mers-data-filtering";
 
 const initialMersContextState = {
@@ -134,6 +134,13 @@ export type AnimalMersEstimate =
 export type MersEstimate = 
   | MersSeroprevalenceEstimate
   | MersViralEstimate;
+
+export type MersEvent = PartitionedFaoMersEventsQuery['partitionedFaoMersEvents']['mersEvents'][number];
+export type HumanMersEvent = Extract<MersEvent, { __typename: 'HumanMersEvent'}>;
+export type AnimalMersEvent = Extract<MersEvent, { __typename: 'AnimalMersEvent'}>;
+
+export const isHumanMersEvent = (event: MersEvent): event is HumanMersEvent => event.__typename === 'HumanMersEvent';
+export const isAnimalMersEvent = (event: MersEvent): event is AnimalMersEvent => event.__typename === 'AnimalMersEvent';
 
 type MersContextState = PathogenContextState<MersEstimate> & {
   faoMersEventData: FaoMersEvent[];

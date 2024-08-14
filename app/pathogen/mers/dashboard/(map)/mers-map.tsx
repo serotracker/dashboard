@@ -4,7 +4,7 @@ import React, { useContext, useMemo } from "react";
 import { GetCountryHighlightingLayerInformationOutput, PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
-import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { AnimalMersEvent, HumanMersEvent, isAnimalMersEvent, isHumanMersEvent, MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { MersCountryPopupContent } from "./mers-country-pop-up-content";
 import { HumanMersSeroprevalenceEstimatePopupContent } from "./human-mers-seroprevalence-estimate-pop-up-content";
 import { AnimalMersSeroprevalenceEstimatePopupContent } from "./animal-mers-seroprevalence-estimate-pop-up-content";
@@ -32,6 +32,8 @@ import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/countr
 import { AnimalMersViralEstimatePopupContent } from "./animal-mers-viral-estimate-pop-up-content";
 import { HumanMersViralEstimatePopupContent } from "./human-mers-viral-estimate-pop-up-content";
 import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
+import { useMersReportedHumanCasesMapLayer } from "./country-highlight-layers/mers-reported-human-cases-map-layer";
+import { useMersReportedAnimalCasesMapLayer } from "./country-highlight-layers/mers-reported-animal-cases-map-layer";
 
 const MapPinColours = {
   'HumanMersEvent': "#8abded",
@@ -60,6 +62,8 @@ export const MersMap = () => {
   const dataPointPresentMapLayer = useDataPointPresentLayer();
   const totalCamelPopulationMapLayer = useTotalCamelPopulationLayer();
   const camelsPerCapitaMapLayer = useCamelsPerCapitaLayer();
+  const reportedMersHumanCasesMapLayer = useMersReportedHumanCasesMapLayer();
+  const reportedMersAnimalCasesMapLayer = useMersReportedAnimalCasesMapLayer();
 
   const dataPoints = useMemo(() => [
     ...filteredData.map((element) => ({
@@ -109,8 +113,32 @@ export const MersMap = () => {
         countryOutlinesEnabled
       });
     }
+    if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_HUMAN_CASES) {
+      const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
+
+      return reportedMersHumanCasesMapLayer.getCountryHighlightingLayerInformation({
+        data: faoMersEventData
+          .filter((dataPoint) => dataPoint.diagnosisStatus === MersDiagnosisStatus.Confirmed)
+          .filter((dataPoint): dataPoint is HumanMersEvent => isHumanMersEvent(dataPoint))
+          .map((dataPoint) => ({ humansAffected: dataPoint.humansAffected, countryAlphaThreeCode: dataPoint.country.alphaThreeCode })),
+        countryOutlineData: dataPoints,
+        countryOutlinesEnabled
+      });
+    }
+    if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES) {
+      const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
+
+      return reportedMersAnimalCasesMapLayer.getCountryHighlightingLayerInformation({
+        data: faoMersEventData
+          .filter((dataPoint) => dataPoint.diagnosisStatus === MersDiagnosisStatus.Confirmed)
+          .filter((dataPoint): dataPoint is AnimalMersEvent => isAnimalMersEvent(dataPoint))
+          .map((dataPoint) => ({ animalsAffected: 1, countryAlphaThreeCode: dataPoint.country.alphaThreeCode })),
+        countryOutlineData: dataPoints,
+        countryOutlinesEnabled
+      });
+    }
     assertNever(currentMapCountryHighlightingSettings);
-  }, [dataPointPresentMapLayer, totalCamelPopulationMapLayer, camelsPerCapitaMapLayer, currentMapCountryHighlightingSettings, dataPoints, latestFaoCamelPopulationDataPointsByCountry, countryOutlinesSetting]);
+  }, [dataPointPresentMapLayer, totalCamelPopulationMapLayer, camelsPerCapitaMapLayer, currentMapCountryHighlightingSettings, dataPoints, latestFaoCamelPopulationDataPointsByCountry, countryOutlinesSetting, faoMersEventData, reportedMersHumanCasesMapLayer ]);
 
   if (!data || !faoMersEvents) {
     return <span> Loading... </span>;
