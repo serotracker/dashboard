@@ -3,6 +3,7 @@ import { MapRef, Popup, useMap } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
 import { useMemo } from "react";
+import { cn } from "@/lib/utils";
 
 type PopupEstimateLayerContentGeneratorInput<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
@@ -131,7 +132,10 @@ export function PathogenMapPopup<
       anchor="top"
       latitude={latitude}
       longitude={longitude}
-      className={detectBrowser() === Browser.CHROME ? "[&>*]:!bg-transparent" : ""}
+      className={cn([
+        'z-30',
+        detectBrowser() === Browser.CHROME ? "[&>*]:!bg-transparent" : ""
+      ])}
       onOpen={() => {
         map?.flyTo({
           center: {

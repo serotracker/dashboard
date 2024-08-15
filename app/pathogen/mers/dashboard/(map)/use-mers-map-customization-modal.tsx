@@ -9,6 +9,16 @@ export enum CountryPaintChangeSetting {
   ALWAYS_DISABLED = "ALWAYS_DISABLED",
 }
 
+export enum MapDataPointVisibilityOptions {
+  ESTIMATES_ONLY = 'ESTIMATES_ONLY',
+  EVENTS_ONLY = 'EVENTS_ONLY',
+  EVENTS_AND_ESTIMATES_VISIBLE = 'EVENTS_AND_ESTIMATES_VISIBLE',
+  NOTHING_VISIBLE = 'NOTHING_VISIBLE',
+}
+
+const isMapDataPointVisibilityOptions = (input: string): input is MapDataPointVisibilityOptions =>
+  Object.values(MapDataPointVisibilityOptions).some((element) => element === input);
+
 const isCountryPaintChangeSetting = (input: string): input is CountryPaintChangeSetting =>
   Object.values(CountryPaintChangeSetting).some((element) => element === input);
 
@@ -32,6 +42,10 @@ const dropdownOptionToLabelMap = {
   [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
   [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
   [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
+  [MapDataPointVisibilityOptions.ESTIMATES_ONLY]: "Only Estimates Visible",
+  [MapDataPointVisibilityOptions.EVENTS_ONLY]: "Only Events Visible",
+  [MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE]: "Events And Estimates Visible",
+  [MapDataPointVisibilityOptions.NOTHING_VISIBLE]: "No Data Visible on Map",
 }
 
 export const useMersMapCustomizationModal = () => {
@@ -43,9 +57,13 @@ export const useMersMapCustomizationModal = () => {
     countryOutlinesSetting,
     setCountryOutlinesSetting
   ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.WHEN_RECOMMENDED);
+  const [
+    mapDataPointVisibilitySetting,
+    setMapDataPointVisibilitySetting
+  ] = useState<MapDataPointVisibilityOptions>(MapDataPointVisibilityOptions.ESTIMATES_ONLY);
   const [countryPopUpEnabled, setCountryPopUpEnabled] = useState<boolean>(true);
 
-  const useModalInput: UseModalInput<MersMapCountryHighlightingSettings | CountryPaintChangeSetting> = useMemo(() => ({
+  const useModalInput: UseModalInput<MersMapCountryHighlightingSettings | CountryPaintChangeSetting | MapDataPointVisibilityOptions> = useMemo(() => ({
     initialModalState: ModalState.CLOSED,
     disabled: false,
     modalType: ModalType.CUSTOMIZATION_MODAL,
@@ -105,13 +123,35 @@ export const useMersMapCustomizationModal = () => {
           }
         }
       }, {
+        type: CustomizationSettingType.DROPDOWN,
+        dropdownName: 'Data point types shown on map',
+        borderColourClassname: 'border-mers',
+        hoverColourClassname: 'hover:bg-mersHover/50',
+        highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
+        dropdownOptionGroups: [{
+          groupHeader: 'Data Points Shown',
+          options: [
+            MapDataPointVisibilityOptions.ESTIMATES_ONLY,
+            MapDataPointVisibilityOptions.EVENTS_ONLY,
+            MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE,
+            MapDataPointVisibilityOptions.NOTHING_VISIBLE
+          ]
+        }],
+        chosenDropdownOption: mapDataPointVisibilitySetting,
+        dropdownOptionToLabelMap,
+        onDropdownOptionChange: (option) => {
+          if(isMapDataPointVisibilityOptions(option)) {
+            setMapDataPointVisibilitySetting(option)
+          }
+        }
+      }, {
         type: CustomizationSettingType.SWITCH,
         switchName: `Country pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
         switchValue: countryPopUpEnabled,
         onSwitchValueChange: (newSwitchValue) => setCountryPopUpEnabled(newSwitchValue),
       }]
     }
-  }), [ countryOutlinesSetting, setCountryOutlinesSetting, currentMapCountryHighlightingSettings, setCurrentMapCountryHighlightingSettings, countryPopUpEnabled, setCountryPopUpEnabled ])
+  }), [ countryOutlinesSetting, setCountryOutlinesSetting, currentMapCountryHighlightingSettings, setCurrentMapCountryHighlightingSettings, countryPopUpEnabled, setCountryPopUpEnabled, mapDataPointVisibilitySetting, setMapDataPointVisibilitySetting ])
 
   const {
     modal: customizationModal,
@@ -130,6 +170,7 @@ export const useMersMapCustomizationModal = () => {
     countryPopUpEnabled,
     currentMapCountryHighlightingSettings,
     countryOutlinesSetting,
+    mapDataPointVisibilitySetting,
     mapCustomizeButton: () => mapCustomizeButton
   }
 }
