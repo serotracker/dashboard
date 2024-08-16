@@ -85,6 +85,8 @@ export enum FilterableField {
   producer = "producer",
   sampleFrame = "sampleFrame",
   antibody = "antibody",
+  antigen = "antigen",
+  exposureToCamels = "exposureToCamels",
   pathogen = "pathogen",
   specimenType = "specimenType",
   start_date = "start_date",
@@ -102,7 +104,7 @@ export enum FilterableField {
   populationGroup = "populationGroup",
   diagnosisSource = "diagnosisSource",
   animalType = "animalType",
-  animalSpecies = "animalSpecies"
+  animalSpecies = "animalSpecies",
 }
 
 const RiskOfBiasTooltip: TooltipContentRenderingFunction = (input) => (
@@ -351,6 +353,18 @@ export const useAvailableFilters = () => {
     [FilterableField.antibodies]: {
       field: FilterableField.antibodies,
       label: "Antibodies",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.antigen]: {
+      field: FilterableField.antigen,
+      label: "Antigen(s) / Gene(s)",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.exposureToCamels]: {
+      field: FilterableField.exposureToCamels,
+      label: "Exposure Level To Camels",
       valueToLabelMap: {},
       filterRenderingFunction: MultiSelectFilter
     },

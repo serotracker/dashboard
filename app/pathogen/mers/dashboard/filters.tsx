@@ -40,12 +40,14 @@ export const MersFilters = (props: MersFiltersProps) => {
     FilterableField.assay,
     FilterableField.specimenType,
     FilterableField.sex,
-    FilterableField.isotypes
+    FilterableField.isotypes,
+    FilterableField.antigen
   ];
 
   const humanEstimatesFilters = [
     FilterableField.ageGroup,
-    FilterableField.sampleFrame
+    FilterableField.sampleFrame,
+    FilterableField.exposureToCamels
   ]
 
   const animalEstimatesFilters = [
@@ -127,6 +129,8 @@ export const MersFilters = (props: MersFiltersProps) => {
           animalDetectionSettings: estimateFilterData.mersEstimatesFilterOptions.animalDetectionSettings,
           animalPurpose: estimateFilterData.mersEstimatesFilterOptions.animalPurpose,
           animalImportedOrLocal: estimateFilterData.mersEstimatesFilterOptions.animalImportedOrLocal,
+          antigen: estimateFilterData.mersEstimatesFilterOptions.antigen,
+          exposureToCamels: estimateFilterData.mersEstimatesFilterOptions.exposureToCamels,
         } : {}),
         ...(eventFilterData?.faoMersEventFilterOptions ? {
           diagnosisSource: eventFilterData.faoMersEventFilterOptions.diagnosisSource,
