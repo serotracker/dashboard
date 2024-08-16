@@ -131,6 +131,7 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Cattle Seroprevalence Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Sheep Seroprevalence Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Human Viral Estimates"]] : []),
+      ...(estimateDataShown ? [MersMapClusteringPropertyKey["Animal Viral Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Camel Viral Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Bat Viral Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Goat Viral Estimates"]] : []),
