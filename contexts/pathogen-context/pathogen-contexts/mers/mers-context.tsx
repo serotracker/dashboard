@@ -58,8 +58,11 @@ export const isMersSeroprevalenceSubEstimateInformation = (subestimateInformatio
 
 type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
   MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number],
-  'sexSubestimates'|'ageGroupSubestimates'|'animalSpeciesSubestimates'|'testUsedSubestimates'|
-  'timeFrameSubestimates'|'sampleTypeSubestimates'|'animalSourceLocationSubestimates'|'animalSamplingContextSubestimates'
+  'sexSubestimates'|'ageGroupSubestimates'|
+  'animalSpeciesSubestimates'|'testUsedSubestimates'|
+  'timeFrameSubestimates'|'sampleTypeSubestimates'|
+  'animalSourceLocationSubestimates'|'animalSamplingContextSubestimates'|
+  'occupationSubestimates'
 > & {
   sexSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['sexSubestimates'][number] & {
     markedAsFiltered: boolean;
@@ -81,6 +84,9 @@ type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
     markedAsFiltered: boolean;
   }>,
   animalSamplingContextSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['animalSamplingContextSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
+  occupationSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['occupationSubestimates'][number] & {
     markedAsFiltered: boolean;
   }>,
 }
@@ -200,6 +206,10 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
                 markedAsFiltered: false,
               })),
               animalSamplingContextSubestimates: primaryEstimate.animalSamplingContextSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
+              })),
+              occupationSubestimates: primaryEstimate.occupationSubestimates.map((subestimate) => ({
                 ...subestimate,
                 markedAsFiltered: false,
               })),
