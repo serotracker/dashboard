@@ -54,6 +54,14 @@ export const mersPrimaryEstimates = gql`
           geographicScope
           testProducer
           testValidation
+          socioeconomicStatus
+          exposureToCamels
+          antigen
+          testProducerOther
+          testValidatedOn
+          positiveCutoff
+          symptomPrevalenceOfPositives
+          symptomDefinition
           sampleFrame
           ageGroup
         }
@@ -101,6 +109,14 @@ export const mersPrimaryEstimates = gql`
           geographicScope
           testProducer
           testValidation
+          socioeconomicStatus
+          exposureToCamels
+          antigen
+          testProducerOther
+          testValidatedOn
+          positiveCutoff
+          symptomPrevalenceOfPositives
+          symptomDefinition
           sampleFrame
           ageGroup
         }
@@ -148,6 +164,14 @@ export const mersPrimaryEstimates = gql`
           geographicScope
           testProducer
           testValidation
+          socioeconomicStatus
+          exposureToCamels
+          antigen
+          testProducerOther
+          testValidatedOn
+          positiveCutoff
+          symptomPrevalenceOfPositives
+          symptomDefinition
           animalType
           animalSpecies
           animalDetectionSettings
@@ -199,6 +223,14 @@ export const mersPrimaryEstimates = gql`
           geographicScope
           testProducer
           testValidation
+          socioeconomicStatus
+          exposureToCamels
+          antigen
+          testProducerOther
+          testValidatedOn
+          positiveCutoff
+          symptomPrevalenceOfPositives
+          symptomDefinition
           animalType
           animalSpecies
           animalDetectionSettings
@@ -436,6 +468,8 @@ export const mersPrimaryEstimates = gql`
           }
         }
         occupation
+        sampleFrame
+        exposureToCamels
       }
       animalSourceLocationSubestimates {
         __typename

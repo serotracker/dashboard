@@ -20,6 +20,8 @@ export const mersEstimatesFilterOptions = gql`
       sampleFrame
       testProducer
       testValidation
+      antigen
+      exposureToCamels
     }
   }
 `
