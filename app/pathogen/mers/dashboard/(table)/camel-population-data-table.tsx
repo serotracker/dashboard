@@ -1,11 +1,8 @@
 import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
-import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
-import { WhoRegion, YearlyFaoCamelPopulationDataEntry } from "@/gql/graphql";
-import { formatCamelsPerCapita } from "../(map)/country-highlight-layers/camels-per-capita-layer";
-import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
+import { WhoRegion } from "@/gql/graphql";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";

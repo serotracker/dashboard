@@ -56,7 +56,13 @@ export const mixColours = (input: MixColoursInput): string => {
     Math.round((oneValuedColourRGB[2] * input.value) + (zeroValuedColourRGB[2] * (1 - input.value)))
   ]
 
-  return `#${mixedColourRGB[0].toString(16)}${mixedColourRGB[1].toString(16)}${mixedColourRGB[2].toString(16)}`
+  return `#${
+    mixedColourRGB[0].toString(16).padStart(2, '0')
+  }${
+    mixedColourRGB[1].toString(16).padStart(2, '0')
+  }${
+    mixedColourRGB[2].toString(16).padStart(2, '0')
+  }`
 }
 
 interface GenerateRandomIntegerInput {

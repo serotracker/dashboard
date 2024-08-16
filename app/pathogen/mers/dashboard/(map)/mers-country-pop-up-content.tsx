@@ -30,10 +30,13 @@ interface MersCountryPopupContentProps {
     longitude: string,
     dataPoints: MersMapMarkerData[]
   }
+  estimateDataShown: boolean;
+  eventDataShown: boolean;
 }
 
 export const MersCountryPopupContent = (props: MersCountryPopupContentProps): React.ReactNode => {
   const { dataPoints } = props.record;
+  const { estimateDataShown, eventDataShown } = props;
 
   const allHumanMersSeroprevalenceEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is HumanMersSeroprevalenceEstimateMapMarkerData =>
     isHumanMersSeroprevalenceEstimateMapMarkerData(dataPoint))
@@ -69,62 +72,62 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
       }}
       alternateViewConfiguration={{ enabled: false }}
       rows={[
-        {
+        ...(estimateDataShown ? [{
           title: 'Human Seroprevalence Estimates'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
           value: allHumanMersSeroprevalenceEstimates.length,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-human-estimate' },
           rightPaddingEnabled: false
-        },
-        {
+        }] : []),
+        ...(estimateDataShown ? [{
           title: 'Animal Seroprevalence Estimates'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
           value: allAnimalMersSeroprevalenceEstimates.length,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-animal-estimate' },
           rightPaddingEnabled: false
-        },
-        {
+        }] : []),
+        ...(estimateDataShown ? [{
           title: 'Human Viral Estimates'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
           value: allHumanMersViralEstimates.length,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-human-viral-estimate' },
           rightPaddingEnabled: false
-        },
-        {
+        }] : []),
+        ...(estimateDataShown ? [{
           title: 'Animal Viral Estimates'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
           value: allAnimalMersViralEstimates.length,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-animal-viral-estimate' },
           rightPaddingEnabled: false
-        },
-        {
+        }] : []),
+        ...(eventDataShown ? [{
           title: 'Human Cases'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
           value: allHumanMersEvents.reduce((accumulator, value) => accumulator + value.humansAffected, 0),
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-human-event' },
           rightPaddingEnabled: false
-        },
-        {
+        }] : []),
+        ...(eventDataShown ? [{
           title: 'Human Deaths'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
           value: allHumanMersEvents.reduce((accumulator, value) => accumulator + value.humanDeaths, 0),
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-human-event-alt' },
           rightPaddingEnabled: false
-        },
-        {
+        }] : []),
+        ...(eventDataShown ? [{
           title: 'Animal Cases'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
           value: allAnimalMersEvents.length,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-animal-event' },
           rightPaddingEnabled: false
-        },
+        }] : []),
       ]}
       bottomBannerConfiguration={{
         enabled: false
