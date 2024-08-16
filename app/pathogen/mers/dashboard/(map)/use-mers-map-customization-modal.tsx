@@ -34,7 +34,7 @@ const isMersMapCountryHighlightingSettings = (input: string): input is MersMapCo
   Object.values(MersMapCountryHighlightingSettings).some((element) => element === input);
 
 const dropdownOptionToLabelMap = {
-  [MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES]: "Presence of MERS prevalence estimates",
+  [MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES]: "Presence of MERS estimates or events",
   [MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION]: "Total camel population",
   [MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA]: "Camels per capita",
   [MersMapCountryHighlightingSettings.MERS_HUMAN_CASES]: "MERS Human Cases",
