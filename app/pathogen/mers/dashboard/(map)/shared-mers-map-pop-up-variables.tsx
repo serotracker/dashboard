@@ -377,6 +377,12 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
   valueToColourClassnameMap: isotypeToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
+  title: "Antigens",
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.primaryEstimateInfo.antigen,
+  valueToColourClassnameMap: {},
+  defaultColourClassname: "bg-sky-100",
+}, {
   title: "Specimen Type",
   type: PopUpContentRowType.COLOURED_PILL_LIST,
   values: estimate.primaryEstimateInfo.specimenType,
@@ -395,17 +401,43 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
   valueToColourClassnameMap: geographicScopeToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
+  title: "Socioeconomic Status",
+  type: PopUpContentRowType.TEXT,
+  text: estimate.primaryEstimateInfo.socioeconomicStatus ?? 'Not Reported'
+}, {
   title: 'Test Producer',
   type: PopUpContentRowType.COLOURED_PILL_LIST,
   values: estimate.primaryEstimateInfo.testProducer,
   valueToColourClassnameMap: testProducerToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
+  title: "Test Producer (If Other)",
+  type: PopUpContentRowType.TEXT,
+  text: estimate.primaryEstimateInfo.testProducerOther ?? 'Not Reported'
+}, {
+  title: "Positive Cutoff",
+  type: PopUpContentRowType.TEXT,
+  text: estimate.primaryEstimateInfo.positiveCutoff ?? 'Not Reported'
+}, {
   title: 'Test Validation',
   type: PopUpContentRowType.COLOURED_PILL_LIST,
   values: estimate.primaryEstimateInfo.testValidation,
   valueToColourClassnameMap: testValidationToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
+}, {
+  title: "Test Validated On",
+  type: PopUpContentRowType.TEXT,
+  text: estimate.primaryEstimateInfo.testValidatedOn ?? 'Not Reported'
+}, {
+  title: "Symptom Prevalence in Postive Cases",
+  type: PopUpContentRowType.TEXT,
+  text: estimate.primaryEstimateInfo.symptomPrevalenceOfPositives
+    ? `${(estimate.primaryEstimateInfo.symptomPrevalenceOfPositives * 100).toFixed(1)}%`
+    : "Unknown"
+}, {
+  title: "Symptom Definiiton",
+  type: PopUpContentRowType.TEXT,
+  text: estimate.primaryEstimateInfo.symptomDefinition ?? 'Not Reported'
 }];
 
 export const getAnimalMersEstimateRows = (estimate: AnimalMersEstimateMarkerData): PopUpContentRowProps[] => [{
@@ -447,6 +479,13 @@ export const getHumanMersEstimateRows = (estimate: HumanMersEstimateMarkerData):
   type: PopUpContentRowType.COLOURED_PILL_LIST,
   values: estimate.primaryEstimateInfo.sampleFrame ? [ estimate.primaryEstimateInfo.sampleFrame ] : [],
   valueToColourClassnameMap: sampleFrameToColourClassnameMap,
+  valueToLabelMap: {},
+  defaultColourClassname: "bg-sky-100"
+}, {
+  title: "Exposure To Camels",
+  type: PopUpContentRowType.COLOURED_PILL_LIST,
+  values: estimate.primaryEstimateInfo.exposureToCamels ? [ estimate.primaryEstimateInfo.exposureToCamels ] : [],
+  valueToColourClassnameMap: {},
   valueToLabelMap: {},
   defaultColourClassname: "bg-sky-100"
 }];
@@ -719,15 +758,20 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
     tableHeader: 'Occupation Subestimates',
     tableFields: [
       'Occupation',
+      'Sample Frame',
+      'Exposure To Camels',
       ...generateTableFields({ type: input.type })
     ],
     tableRows: input.estimate.occupationSubestimates
       .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
-          'Occupation': element.subestimate.occupation
+          'Occupation': element.subestimate.occupation,
+          'Sample Frame': element.subestimate.sampleFrame ?? 'Unknown',
+          'Exposure To Camels': element.subestimate.exposureToCamels ?? 'Unknown',
         }
       }))
   }] : []),

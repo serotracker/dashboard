@@ -23,7 +23,9 @@ export enum MersFilterableField {
   animalImportedOrLocal = "animalImportedOrLocal",
   diagnosisSource = "diagnosisSource",
   animalType = "animalType",
-  animalSpecies = "animalSpecies"
+  animalSpecies = "animalSpecies",
+  antigen = "antigen",
+  exposureToCamels = "exposureToCamels"
 }
 
 interface FilterMersEstimatesInput {
@@ -89,6 +91,7 @@ interface MersEstimateFilteringHandlerOutput {
   sampleTypeSubestimateIdsToMarkAsFiltered?: string[];
   animalSourceLocationSubestimateIdsToMarkAsFiltered?: string[];
   animalSamplingContextSubestimateIdsToMarkAsFiltered?: string[];
+  occupationSubestimateIdsToMarkAsFiltered?: string[];
 }
 
 const allMersEstimateHandlers: Record<MersFilterableField, (input: {
@@ -134,6 +137,43 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       .filter((subestimate) =>
         ((input.selectedFilters[MersFilterableField.assay] ?? []).length > 0) &&
         !input.selectedFilters[MersFilterableField.assay]?.some((element) => subestimate.assay.includes(element))
+      )
+      .map((subestimate) => subestimate.id)
+  }),
+  [MersFilterableField.antigen]: (input) => ({
+    included: mersEstimateArrayFieldHandler({
+      filterKey: MersFilterableField.antigen,
+      estimate: {
+        ...input.estimate,
+        antigen: input.estimate.primaryEstimateInfo.antigen
+      },
+      selectedFilters: {
+        ...input.selectedFilters,
+        [MersFilterableField.antigen]: input.selectedFilters[MersFilterableField.antigen] ?? []
+      }
+    })
+  }),
+  [MersFilterableField.exposureToCamels]: (input) => ({
+    included: mersEstimateArrayFieldHandler({
+      filterKey: MersFilterableField.exposureToCamels,
+      estimate: {
+        ...input.estimate,
+        exposureToCamels: [
+          input.estimate.primaryEstimateInfo.exposureToCamels,
+          ...input.estimate.occupationSubestimates.map((subestimate) => subestimate.exposureToCamels)
+        ].filter((element): element is NonNullable<typeof element> => !!element)
+      },
+      selectedFilters: {
+        ...input.selectedFilters,
+        [MersFilterableField.exposureToCamels]: input.selectedFilters[MersFilterableField.exposureToCamels] ?? []
+      }
+    }),
+    occupationSubestimateIdsToMarkAsFiltered: input.estimate.occupationSubestimates
+      .filter((subestimate) =>
+        ((input.selectedFilters[MersFilterableField.exposureToCamels] ?? []).length > 0) && (
+          !subestimate.exposureToCamels ||
+          !input.selectedFilters[MersFilterableField.exposureToCamels]?.includes(subestimate.exposureToCamels)
+        )
       )
       .map((subestimate) => subestimate.id)
   }),
@@ -546,7 +586,8 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
           timeFrameSubestimateIdsToMarkAsFiltered,
           sampleTypeSubestimateIdsToMarkAsFiltered,
           animalSourceLocationSubestimateIdsToMarkAsFiltered,
-          animalSamplingContextSubestimateIdsToMarkAsFiltered
+          animalSamplingContextSubestimateIdsToMarkAsFiltered,
+          occupationSubestimateIdsToMarkAsFiltered
         } = filteringFunction({
           estimate,
           selectedFilters: input.selectedFilters
@@ -561,7 +602,8 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
           timeFrameSubestimateIdsToMarkAsFiltered,
           sampleTypeSubestimateIdsToMarkAsFiltered,
           animalSourceLocationSubestimateIdsToMarkAsFiltered,
-          animalSamplingContextSubestimateIdsToMarkAsFiltered
+          animalSamplingContextSubestimateIdsToMarkAsFiltered,
+          occupationSubestimateIdsToMarkAsFiltered
         }
       })
     }))
@@ -592,6 +634,9 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       animalSamplingContextSubestimateIdsToMarkAsFiltered: uniq(
         appliedFilters.flatMap(({ animalSamplingContextSubestimateIdsToMarkAsFiltered }) => animalSamplingContextSubestimateIdsToMarkAsFiltered)
       ),
+      occupationSubestimateIdsToMarkAsFiltered: uniq(
+        appliedFilters.flatMap(({ occupationSubestimateIdsToMarkAsFiltered }) => occupationSubestimateIdsToMarkAsFiltered)
+      ),
     }))
     .map(({
       estimate,
@@ -603,6 +648,7 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       sampleTypeSubestimateIdsToMarkAsFiltered,
       animalSourceLocationSubestimateIdsToMarkAsFiltered,
       animalSamplingContextSubestimateIdsToMarkAsFiltered,
+      occupationSubestimateIdsToMarkAsFiltered
     }) => ({
       ...estimate,
       sexSubestimates: estimate.sexSubestimates.map((subestimate) => ({
@@ -637,6 +683,10 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
         ...subestimate,
         markedAsFiltered: animalSamplingContextSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
       })),
+      occupationSubestimates: estimate.occupationSubestimates.map((subestimate) => ({
+        ...subestimate,
+        markedAsFiltered: occupationSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
+      })),
     }))
     .filter((estimate) => !(
       (estimate.sexSubestimates.length > 0 && estimate.sexSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
@@ -646,7 +696,8 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       (estimate.timeFrameSubestimates.length > 0 && estimate.timeFrameSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
       (estimate.sampleTypeSubestimates.length > 0 && estimate.sampleTypeSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
       (estimate.animalSourceLocationSubestimates.length > 0 && estimate.animalSourceLocationSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
-      (estimate.animalSamplingContextSubestimates.length > 0 && estimate.animalSamplingContextSubestimates.every((subestimate) => subestimate.markedAsFiltered))
+      (estimate.animalSamplingContextSubestimates.length > 0 && estimate.animalSamplingContextSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
+      (estimate.occupationSubestimates.length > 0 && estimate.occupationSubestimates.every((subestimate) => subestimate.markedAsFiltered))
     ))
 
   return {
