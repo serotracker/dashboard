@@ -15,6 +15,7 @@ interface DataTableExpandedRowContentProps<
   columns: DataTableColumnDef<Record<string, unknown>, TValue>[];
   data: TData[];
   visualization: (props: {className: string, data: TData[], row: Row<Record<string, unknown>>}) => React.ReactNode;
+  additionalTable?: (props: {data: TData[], row: Row<Record<string, unknown>>}) => React.ReactNode;
   viewOnMapHandler: (props: {data: TData[], row: Row<Record<string, unknown>>}) => void;
 }
 
@@ -82,6 +83,7 @@ export const DataTableExpandedRowContent = <
               data={props.data}
               row={props.row}
             />
+            {props.additionalTable && <props.additionalTable row={props.row} data={props.data} />}
           </div>
         </div>
       </TableCell>
