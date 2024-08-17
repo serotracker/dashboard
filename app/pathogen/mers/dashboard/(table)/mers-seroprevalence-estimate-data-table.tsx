@@ -9,12 +9,15 @@ import { RechartsVisualization } from "@/components/customs/visualizations/recha
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import {
+  generateMersEstimateTableConfigurations,
+  GenerateMersEstimateTableConfigurationsType,
   isMersSeroprevalenceEstimateTypename,
   mersDataTypeToColourClassnameMap,
   mersDataTypeToLabelMap
 } from "../(map)/shared-mers-map-pop-up-variables";
 import { mapMersEstimateBaseForDataTable, mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { MersSeroprevalenceEstimateForDataTable } from "./use-mers-data-table-data";
+import { SubestimateTable } from "@/components/ui/pathogen-map/map-pop-up/subestimate-table";
 
 const mersSeroprevalenceEstimateColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -113,6 +116,26 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
           }}
         />
       );
+    },
+    additionalTable: ({ data, row }) => {
+      const idOfEstimate = row.getValue('id');
+
+      if(!idOfEstimate) {
+        return null;
+      }
+
+      const estimate = data.find((dataPoint) => dataPoint.id === idOfEstimate);
+
+      if(!estimate) {
+        return null;
+      }
+
+      const tableConfigurations = generateMersEstimateTableConfigurations({
+        type: GenerateMersEstimateTableConfigurationsType.SEROPREVALENCE_ESTIMATES,
+        estimate
+      });
+
+      return <SubestimateTable tableConfigurations={tableConfigurations} />
     },
     viewOnMapHandler
   }), [ viewOnMapHandler, mersVisualizationInformation ]);
