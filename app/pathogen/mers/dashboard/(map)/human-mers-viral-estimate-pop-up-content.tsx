@@ -1,6 +1,6 @@
 import { MouseEventHandler, useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
-import { GenerateMersEstimateTableConfigurationsType, HumanMersViralEstimateMapMarkerData, ageGroupToColourClassnameMap, generateAlternateViewBannerConfiguration, generateMersEstimateTableConfigurations, getHumanMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
+import { GenerateMersEstimateTableConfigurationsType, HumanMersViralEstimateMapMarkerData, generateAlternateViewBannerConfiguration, generateMersEstimateTableConfigurations, getHumanMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
 
 interface HumanMersViralEstimatePopupContentProps {
   estimate: HumanMersViralEstimateMapMarkerData;

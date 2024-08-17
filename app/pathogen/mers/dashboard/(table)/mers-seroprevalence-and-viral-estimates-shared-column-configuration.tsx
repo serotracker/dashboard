@@ -1,7 +1,6 @@
 import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { WhoRegion } from "@/gql/graphql";
 import {
-  ageGroupToColourClassnameMap,
   animalDetectionSettingsToColourClassnameMap,
   animalImportedOrLocalToColourClassnameMap,
   animalPurposeSettingsToColourClassnameMap,
@@ -9,8 +8,11 @@ import {
   animalSpeciesToStringMap,
   animalTypeToColourClassnameMap,
   animalTypeToStringMap,
+  antigenToColourClassnameMap,
   assayToColourClassnameMap,
+  exposureToCamelLevelToColourClassnameMap,
   geographicScopeToColourClassnameMap,
+  humanAgeGroupToColourClassnameMap,
   isMersAnimalSpecies,
   isMersAnimalType,
   isotypeToColourClassnameMap,
@@ -155,7 +157,7 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'primaryEstimateAntigen',
-  valueToColourSchemeClassnameMap: {},
+  valueToColourSchemeClassnameMap: antigenToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Antigen'
 }, {
@@ -209,13 +211,13 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'primaryEstimateAgeGroup',
-  valueToColourSchemeClassnameMap: ageGroupToColourClassnameMap,
+  valueToColourSchemeClassnameMap: humanAgeGroupToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Age Group'
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'primaryEstimateExposureToCamels',
-  valueToColourSchemeClassnameMap: {},
+  valueToColourSchemeClassnameMap: exposureToCamelLevelToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Exposure To Camels'
 }, {
