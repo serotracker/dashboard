@@ -39,7 +39,9 @@ export const diagnosisStatusToColourClassnameMap = {
 export const isMersDiagnosisStatus = (diagnosisStatus: string): diagnosisStatus is MersDiagnosisStatus => Object.values(MersDiagnosisStatus).some((element) => element === diagnosisStatus);
 
 export const sexToColourClassnameMap = {
-  'All': 'bg-indigo-300'
+  'All': 'bg-indigo-300',
+  'Female': 'bg-pink-300',
+  'Male': 'bg-blue-300'
 }
 
 export const sourceTypeToColourClassnameMap = {
@@ -48,6 +50,7 @@ export const sourceTypeToColourClassnameMap = {
 
 export const assayToColourClassnameMap = {
   "ELISA": "bg-red-300",
+  "RT-PCR": "bg-yellow-300",
   "N2 RT-qPCR": "bg-green-300",
   "N3 RT-qPCR": "bg-violet-300",
   "Neutralization": "bg-cyan-300"
@@ -58,48 +61,80 @@ export const isotypeToColourClassnameMap = {
 }
 
 export const specimenTypeToColourClassnameMap = {
-  "Nasal Swab": "bg-lime-300",
-  "Serum": "bg-orange-300"
+  "Nasal Swab or NP": "bg-lime-200",
+  "Throat swab or OP": "bg-purple-200",
+  "Serum": "bg-orange-200",
+  "Saliva": "bg-pink-200",
+  "Rectal swab": "bg-teal-200"
 }
 
 export const animalDetectionSettingsToColourClassnameMap = {
   "Abattoirs": "bg-orange-200",
   "Free-roaming herds": "bg-lime-200",
-  "Livestock markets": "bg-cyan-200"
+  "Livestock markets": "bg-cyan-200",
+  "Not reported": "bg-red-200",
+  "Animal contacts of human cases": "bg-violet-200",
+  "Farms": "bg-rose-200"
 }
 
 export const animalPurposeSettingsToColourClassnameMap = {
-  "Multiple purposes": "bg-emerald-200"
+  "Multiple purposes": "bg-emerald-200",
+  "Not reported": "bg-sky-200"
 }
 
 export const animalImportedOrLocalToColourClassnameMap = {
   "Local": "bg-purple-200",
   "Imported": "bg-yellow-200",
+  "Not reported": "bg-sky-200"
 }
 
 export const sampleFrameToColourClassnameMap = {
-  "Livestock workers": "bg-teal-200"
+  "Livestock workers": "bg-teal-200",
+  "Multiple populations": "bg-orange-200",
+  "Pilgrims": "bg-amber-200",
+  "Livestock handlers": "bg-violet-200",
+  "Household and community sample": "bg-emerald-200",
+  "Close contacts of camels": "bg-pink-200"
 }
 
 export const samplingMethodToColourClassnameMap = {
   "Convenience": "bg-violet-400",
-  "Stratified probability": "bg-lime-400"
+  "Stratified probability": "bg-lime-400",
+  "Unclear": "bg-amber-400"
 }
 
 export const geographicScopeToColourClassnameMap = {
-  "National": "bg-orange-400",
+  "National": "bg-blue-400",
+  "Regional": "bg-orange-400",
+  "Local": "bg-red-400"
 }
 
 export const testProducerToColourClassnameMap = {
   "Euroimmun": "bg-teal-400",
   "Roche": "bg-fuchsia-400",
   "In-house": "bg-red-400",
-  "Not reported": "bg-pink-400"
+  "Not reported": "bg-pink-400",
+  "Altona Diagnostics": "bg-sky-400",
+  "Other": "bg-orange-400"
 }
 
 export const testValidationToColourClassnameMap = {
   "Validated by developers": "bg-yellow-400",
+  "Validated by independent authors": "bg-red-400",
   "Not reported": "bg-pink-400"
+}
+
+export const antigenToColourClassnameMap = {
+  "S1": "bg-orange-300",
+  "Not reported": "bg-lime-300",
+  "UpE": "bg-sky-300",
+  "N": "bg-violet-300"
+}
+
+export const exposureToCamelLevelToColourClassnameMap = {
+  "Mixed exposure": "bg-fuchsia-500",
+  "Direct exposure": "bg-indigo-500",
+  "No exposure": "bg-teal-500"
 }
 
 export const animalTypeToStringMap = {
@@ -123,16 +158,19 @@ export const animalSpeciesToStringMap = {
   [MersEventAnimalSpecies.Sheep]: "Sheep",
 }
 
-export const ageGroupToColourClassnameMap = {
-  "Adults": "bg-lime-200"
-}
-
 export const animalSpeciesToColourClassnameMap = {
   [MersEventAnimalSpecies.Bat]: "bg-orange-700",
   [MersEventAnimalSpecies.Camel]: "bg-yellow-300",
   [MersEventAnimalSpecies.Goat]: "bg-sky-300",
   [MersEventAnimalSpecies.Cattle]: "bg-pink-300",
   [MersEventAnimalSpecies.Sheep]: "bg-red-200",
+}
+
+export const humanAgeGroupToColourClassnameMap = {
+  'Adults (18-45 years)': "bg-red-300",
+  'Adults (46-59 years)': "bg-cyan-300",
+  'Children and youth (0-17 years)': "bg-lime-300",
+  'Seniors (≥60 years)': "bg-amber-300",
 }
 
 export const isMersEventAnimalSpecies = (animalSpecies: string): animalSpecies is MersEventAnimalSpecies => Object.values(MersEventAnimalSpecies).some((element) => element === animalSpecies);
@@ -380,7 +418,7 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
   title: "Antigens",
   type: PopUpContentRowType.COLOURED_PILL_LIST,
   values: estimate.primaryEstimateInfo.antigen,
-  valueToColourClassnameMap: {},
+  valueToColourClassnameMap: antigenToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }, {
   title: "Specimen Type",
@@ -471,7 +509,7 @@ export const getHumanMersEstimateRows = (estimate: HumanMersEstimateMarkerData):
   title: "Age Group",
   type: PopUpContentRowType.COLOURED_PILL_LIST,
   values: estimate.primaryEstimateInfo.ageGroup,
-  valueToColourClassnameMap: ageGroupToColourClassnameMap,
+  valueToColourClassnameMap: humanAgeGroupToColourClassnameMap,
   valueToLabelMap: {},
   defaultColourClassname: "bg-sky-100"
 }, {
@@ -485,7 +523,7 @@ export const getHumanMersEstimateRows = (estimate: HumanMersEstimateMarkerData):
   title: "Exposure To Camels",
   type: PopUpContentRowType.COLOURED_PILL_LIST,
   values: estimate.primaryEstimateInfo.exposureToCamels ? [ estimate.primaryEstimateInfo.exposureToCamels ] : [],
-  valueToColourClassnameMap: {},
+  valueToColourClassnameMap: exposureToCamelLevelToColourClassnameMap,
   valueToLabelMap: {},
   defaultColourClassname: "bg-sky-100"
 }];
