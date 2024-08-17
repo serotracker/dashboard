@@ -281,7 +281,7 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimateTestProducerOther',
-  label: 'Test Producer (If other)'
+  label: 'Test Producer (If Other)'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimateTestValidatedOn',

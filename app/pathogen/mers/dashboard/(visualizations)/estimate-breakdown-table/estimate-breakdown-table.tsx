@@ -21,6 +21,7 @@ import {
   isAnimalMersSeroprevalenceEstimate,
   isAnimalMersViralEstimate,
   isHumanMersAgeGroupSubEstimate,
+  isHumanMersEstimate,
   isHumanMersSeroprevalenceEstimate,
   isHumanMersViralEstimate,
 } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
@@ -40,6 +41,7 @@ export enum EstimateBreakdownTableFieldOfInterestDropdownOption {
   AGE_GROUP = "AGE_GROUP",
   SEX = "SEX",
   ANIMAL_SPECIES = "ANIMAL_SPECIES",
+  CAMEL_EXPOSURE_LEVEL = "CAMEL_EXPOSURE_LEVEL",
   ANIMAL_SAMPLE_FRAME = "ANIMAL_SAMPLE_FRAME",
   SPECIMEN_TYPE = "SPECIMEN_TYPE"
 }
@@ -182,6 +184,99 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         sampleNumerator: Math.floor(subestimateSampleNumerator / ageGroups.length),
         group: ageGroup
       }));
+    }).filter((element): element is NonNullable<typeof element> => !!element);
+  },
+  [EstimateBreakdownTableFieldOfInterestDropdownOption.CAMEL_EXPOSURE_LEVEL]: (estimate) => {
+    const { whoRegion, unRegion, countryAlphaTwoCode, sampleDenominator, sampleNumerator } = estimate.primaryEstimateInfo;
+
+    if(!whoRegion || !unRegion) {
+      return [];
+    }
+
+    if(!isHumanMersEstimate(estimate)) {
+      return [];
+    }
+
+    const { exposureToCamels } = estimate.primaryEstimateInfo;
+
+    if(!exposureToCamels) {
+      if(
+        sampleNumerator === undefined ||
+        sampleNumerator === null ||
+        sampleDenominator === undefined ||
+        sampleDenominator === null
+      ) {
+        return [];
+      }
+
+      return [{
+        whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
+        sampleDenominator,
+        sampleNumerator,
+        group: 'Not reported'
+      }];
+    }
+
+    if(estimate.occupationSubestimates.length === 0) {
+      if(
+        sampleNumerator === undefined ||
+        sampleNumerator === null ||
+        sampleDenominator === undefined ||
+        sampleDenominator === null
+      ) {
+        return [];
+      }
+
+      return exposureToCamels ? [{
+        whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
+        sampleDenominator,
+        sampleNumerator,
+        group: exposureToCamels
+      }] : []
+    }
+
+    return estimate.occupationSubestimates.map((subestimate) => {
+      if(subestimate.markedAsFiltered === true) {
+        return undefined;
+      }
+
+      const subestimateSampleNumerator = subestimate.estimateInfo.sampleNumerator;
+      const subestimateSampleDenominator = subestimate.estimateInfo.sampleDenominator;
+
+      if(
+        subestimateSampleNumerator === undefined ||
+        subestimateSampleNumerator === null ||
+        subestimateSampleDenominator === undefined ||
+        subestimateSampleDenominator === null
+      ) {
+        return undefined;
+      }
+
+      const { exposureToCamels } = subestimate;
+
+      if(!exposureToCamels) {
+        return {
+          whoRegion,
+          unRegion,
+          countryAlphaTwoCode,
+          sampleNumerator: subestimateSampleNumerator,
+          sampleDenominator: subestimateSampleDenominator,
+          group: 'Not reported'
+        };
+      }
+
+      return {
+        whoRegion,
+        unRegion,
+        countryAlphaTwoCode,
+        group: exposureToCamels,
+        sampleNumerator: subestimateSampleNumerator,
+        sampleDenominator: subestimateSampleDenominator
+      }
     }).filter((element): element is NonNullable<typeof element> => !!element);
   },
   [EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES]: (estimate) => {
@@ -481,6 +576,9 @@ export const EstimateBreakdownTable = (props: EstimateBreakdownTableProps) => {
           } : {}),
           ...(fieldOfInterest === EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SAMPLE_FRAME ? {
             animalSampleFrame: key,
+          } : {}),
+          ...(fieldOfInterest === EstimateBreakdownTableFieldOfInterestDropdownOption.CAMEL_EXPOSURE_LEVEL ? {
+            exposureToCamels: key,
           } : {}),
         }))
     });

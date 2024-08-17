@@ -683,7 +683,7 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
         ...subestimate,
         markedAsFiltered: animalSamplingContextSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
       })),
-      occupationSubestimateIdsToMarkAsFiltered: estimate.occupationSubestimates.map((subestimate) => ({
+      occupationSubestimates: estimate.occupationSubestimates.map((subestimate) => ({
         ...subestimate,
         markedAsFiltered: occupationSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
       })),

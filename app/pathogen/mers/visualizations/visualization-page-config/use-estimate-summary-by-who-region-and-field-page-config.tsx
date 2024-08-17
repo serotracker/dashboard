@@ -80,6 +80,7 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
           EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP,
           EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES,
           EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SAMPLE_FRAME,
+          EstimateBreakdownTableFieldOfInterestDropdownOption.CAMEL_EXPOSURE_LEVEL,
           EstimateBreakdownTableFieldOfInterestDropdownOption.SEX,
         ]
       }, {
@@ -93,6 +94,7 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
         [EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP]: "Age Group",
         [EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES]: "Animal Species",
         [EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SAMPLE_FRAME]: "Animal Sample Frame",
+        [EstimateBreakdownTableFieldOfInterestDropdownOption.CAMEL_EXPOSURE_LEVEL]: "Camel Exposure Level",
         [EstimateBreakdownTableFieldOfInterestDropdownOption.SEX]: "Sex",
         [EstimateBreakdownTableFieldOfInterestDropdownOption.SPECIMEN_TYPE]: "Specimen Type"
       },
