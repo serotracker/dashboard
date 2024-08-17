@@ -54,12 +54,17 @@ function Calendar({
         day_hidden: "invisible",
         ...classNames,
       }}
-      captionLayout="dropdown-buttons"
-      fromYear={1900}
-      toYear={new Date().getFullYear()}
+      captionLayout="dropdown"
+      startMonth={new Date(1900, 0)}
+      endMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+        Chevron: (props) => {
+          if(props.orientation === 'left') {
+            return <ChevronLeft className="h-4 w-4" />;
+          }
+
+          return <ChevronRight className="h-4 w-4" />;
+        }
       }}
       {...props}
     />

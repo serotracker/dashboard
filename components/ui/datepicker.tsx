@@ -73,7 +73,7 @@ export function DatePicker({
             mode="single"
             selected={date}
             onSelect={handleDateSelect} // Call handleDateSelect when a date is selected
-            initialFocus
+            autoFocus={true}
           />
         )}
       </PopoverContent>

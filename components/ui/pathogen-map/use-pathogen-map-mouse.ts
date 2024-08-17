@@ -29,7 +29,12 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
       return;
     }
 
-    const enteredLayerId = event.features[0].layer.id;
+    const enteredLayerId = event.features[0].layer?.id;
+
+    if(!enteredLayerId) {
+      return;
+    }
+
     const enteredLayer = layers.find((layer) => layer.id === enteredLayerId);
 
     if (!enteredLayer) {
@@ -46,7 +51,12 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
       return;
     }
 
-    const clickedLayerId = event.features[0].layer.id;
+    const clickedLayerId = event.features[0].layer?.id;
+
+    if(!clickedLayerId) {
+      return;
+    }
+
     const clickedLayer = layers.find((layer) => layer.id === clickedLayerId);
 
     if (!clickedLayer && clickedLayerId !== 'country-highlight-layer') {
