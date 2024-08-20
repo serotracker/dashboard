@@ -52,7 +52,6 @@ export const MersFilters = (props: MersFiltersProps) => {
 
   const animalEstimatesFilters = [
     FilterableField.animalDetectionSettings,
-    FilterableField.animalPurpose,
     FilterableField.animalImportedOrLocal
   ]
 
