@@ -318,7 +318,7 @@ export const useAvailableFilters = () => {
     },
     [FilterableField.animalDetectionSettings]: {
       field: FilterableField.animalDetectionSettings,
-      label: "Detection Setting",
+      label: "Sample Frame",
       valueToLabelMap: {},
       filterRenderingFunction: MultiSelectFilter
     },

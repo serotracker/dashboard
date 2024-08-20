@@ -180,7 +180,7 @@ export const diagnosisSourceToStringMap = {
   [MersDiagnosisSource.FaoFieldOfficer]: "FAO Field Officer",
   [MersDiagnosisSource.Media]: "Media",
   [MersDiagnosisSource.NationalAuthorities]: "National Authorities",
-  [MersDiagnosisSource.WorldOrganisationForAnimalHealth]: "World Organization For Animal Health",
+  [MersDiagnosisSource.WorldOrganisationForAnimalHealth]: "World Organisation For Animal Health",
   [MersDiagnosisSource.WorldHealthOrganization]: "World Health Organization",
   [MersDiagnosisSource.Publications]: "Publications",
 }
@@ -486,7 +486,7 @@ export const getAnimalMersEstimateRows = (estimate: AnimalMersEstimateMarkerData
   valueToLabelMap: animalTypeToStringMap,
   defaultColourClassname: "bg-sky-100"
 }, {
-  title: 'Animal Detection Settings',
+  title: 'Animal Sample Frame',
   type: PopUpContentRowType.COLOURED_PILL_LIST,
   values: estimate.primaryEstimateInfo.animalDetectionSettings,
   valueToColourClassnameMap: animalDetectionSettingsToColourClassnameMap,

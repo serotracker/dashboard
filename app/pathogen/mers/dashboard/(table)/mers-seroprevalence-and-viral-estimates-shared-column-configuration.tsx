@@ -195,7 +195,7 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   fieldName: 'primaryEstimateAnimalDetectionSettings',
   valueToColourSchemeClassnameMap: animalDetectionSettingsToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Animal Detection Settings',
+  label: 'Animal Sample Frame',
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'primaryEstimateAnimalPurpose',
