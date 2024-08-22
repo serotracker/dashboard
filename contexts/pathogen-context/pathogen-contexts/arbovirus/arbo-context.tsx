@@ -1,10 +1,13 @@
 "use client";
 import { createContext, useEffect, useMemo } from "react";
+import uniqBy from "lodash/uniqBy";
 import { PathogenContextActionType, PathogenContextState, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../../pathogen-context";
 import { useArboData } from "@/hooks/arbovirus/useArboData";
 import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
 import { CountryDataContext } from "../../country-information-context";
 import { ArbovirusEstimatesQueryQuery } from "@/gql/graphql";
+import { ArbovirusEnvironmentalSuitabilityCountryDataProvider } from "./arbo-environmental-suitability-country-data-context";
+import { useArboEnviromentalSuitabilityData } from "@/hooks/arbovirus/useArboEnviromentalSuitabilityData";
 
 export type ArbovirusEstimate = ArbovirusEstimatesQueryQuery['arbovirusEstimates'][number];
 
@@ -56,8 +59,9 @@ const ArboDataFetcher = (props: PathogenDataFetcherProps<ArbovirusEstimate, Arbo
 
 const CountryDataProvider = (props: {children: React.ReactNode}) => {
   const { data: filterData } = useArboFilters();
-  const value = useMemo(() =>
-    filterData?.arbovirusFilterOptions.countryIdentifiers.map(({
+  const { data: esmData } = useArboEnviromentalSuitabilityData();
+  const value = useMemo(() => {
+    const countriesFromFilters = filterData?.arbovirusFilterOptions.countryIdentifiers.map(({
       name,
       alphaTwoCode,
       alphaThreeCode
@@ -66,7 +70,22 @@ const CountryDataProvider = (props: {children: React.ReactNode}) => {
       countryAlphaTwoCode: alphaTwoCode,
       countryAlphaThreeCode: alphaThreeCode
     })) ?? []
-  , [filterData])
+
+    const countriesFromEsmData = esmData?.arbovirusEnviromentalSuitabilityData.map(({
+      countryAlphaThreeCode,
+      countryAlphaTwoCode,
+      countryName
+    }) => ({
+      countryName,
+      countryAlphaTwoCode,
+      countryAlphaThreeCode
+    })) ?? []
+
+    return uniqBy([
+      ...countriesFromFilters,
+      ...countriesFromEsmData
+    ], (country) => country.countryAlphaThreeCode)
+  }, [filterData])
 
   return (
     <CountryDataContext.Provider value={value}>
@@ -88,7 +107,9 @@ export const ArboProviders = (props: ArboProvidersProps) => {
       mapId={'arboMap'}
       dataFetcher={ArboDataFetcher}
     >
-      {props.children}
+      <ArbovirusEnvironmentalSuitabilityCountryDataProvider>
+        {props.children}
+      </ArbovirusEnvironmentalSuitabilityCountryDataProvider>
     </PathogenProviders>
   )
 }

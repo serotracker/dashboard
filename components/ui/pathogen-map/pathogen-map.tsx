@@ -23,6 +23,7 @@ import { computeClusterMarkers } from "@/app/pathogen/arbovirus/dashboard/(map)/
 import { GenericMapPopUpWidth } from "./map-pop-up/generic-map-pop-up";
 import { CountryHighlightLayerLegendEntry, FreeTextEntry } from "./country-highlight-layers/country-highlight-layer-legend";
 import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
+import { CountryDataContextType } from "@/contexts/pathogen-context/country-information-context";
 
 export interface MarkerCollection<TClusterPropertyKey extends string> {
   [key: string]: {
@@ -96,6 +97,8 @@ interface PathogenMapProps<
   dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
   clusteringSettings: ClusteringSettings<TClusterPropertyKey>;
   paint: PaintForCountries;
+  allowCountryPopUpsWithEmptyData: boolean;
+  countryDataContext: CountryDataContextType;
   sourceId: string;
 }
 
@@ -111,6 +114,8 @@ export function PathogenMap<
   dataPoints,
   clusteringSettings,
   paint,
+  allowCountryPopUpsWithEmptyData,
+  countryDataContext,
   sourceId,
 }: PathogenMapProps<
   TPathogenDataPointProperties,
@@ -131,6 +136,8 @@ export function PathogenMap<
       }
 
       setPopUpInfoForCountryHighlightLayer({
+        allowCountryPopUpsWithEmptyData,
+        countryDataContext,
         newPopUpInfo,
         setPopUpInfo: _setPopUpInfo,
         dataPoints

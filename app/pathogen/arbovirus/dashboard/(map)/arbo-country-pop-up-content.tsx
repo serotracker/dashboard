@@ -1,12 +1,18 @@
-import uniq from "lodash/uniq";
-import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { Arbovirus } from "@/gql/graphql";
-import { PopUpContentRowType, PopupContentTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
-import { typedGroupBy } from "@/lib/utils";
-import { filterArbovirusToSortOrderMap } from "@/components/customs/filters/available-filters";
-import { arboShortformToFullNameMap } from "../(visualizations)/recharts";
+import { ArbovirusEnvironmentalSuitabilityCountryDataContextType } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-environmental-suitability-country-data-context";
+import { Dengue2015EsmArboCountryPopupContent } from "./arbo-country-pop-up-content/dengue-2015-esm-arbo-country-pop-up-content";
+import { Dengue2050EsmArboCountryPopupContent } from "./arbo-country-pop-up-content/dengue-2050-esm-arbo-country-pop-up-content";
+import { ZikaEsmArboCountryPopupContent } from "./arbo-country-pop-up-content/zika-esm-arbo-country-pop-up-content";
+import { StandardArboCountryPopupContent } from "./arbo-country-pop-up-content/standard-arbo-country-pop-up-content";
 
-interface ArboCountryPopupContentProps {
+export enum SelectedArbovirusEnvironmentalSuitabilityMap {
+  NO_ESM_SELECTED = "NO_ESM_SELECTED",
+  ZIKA = "ZIKA",
+  DENGUE_2015 = "DENGUE_2015",
+  DENGUE_2050 = "DENGUE_2050",
+}
+
+export interface ArboCountryPopupContentProps {
   record: {
     id: string,
     alpha3CountryCode: string,
@@ -15,9 +21,12 @@ interface ArboCountryPopupContentProps {
     longitude: string,
     dataPoints: { pathogen: Arbovirus }[],
   }
+  arbovirusEnvironmentalSuitabilityCountryData:
+    ArbovirusEnvironmentalSuitabilityCountryDataContextType['arbovirusEnvironmentalSuitabilityCountryData'],
+  selectedEsm: SelectedArbovirusEnvironmentalSuitabilityMap
 }
 
-const arbovirusToRibbonColourClassname: Record<Arbovirus, string> = {
+export const arbovirusToRibbonColourClassname: Record<Arbovirus, string> = {
   [Arbovirus.Zikv]: 'bg-zikv',
   [Arbovirus.Denv]: 'bg-denv',
   [Arbovirus.Chikv]: 'bg-chikv',
@@ -26,44 +35,30 @@ const arbovirusToRibbonColourClassname: Record<Arbovirus, string> = {
   [Arbovirus.Mayv]: 'bg-mayv',
 }
 
-export const ArboCountryPopupContent = ({ record }: ArboCountryPopupContentProps): React.ReactNode => {
-  const allArbovirusesPresentInData = uniq(record.dataPoints.map((dataPoint) => dataPoint.pathogen));
-  const dataGroupedByArbovirus = typedGroupBy(record.dataPoints, (dataPoint) => dataPoint.pathogen);
+export const ArboCountryPopupContent = (input: ArboCountryPopupContentProps): React.ReactNode => {
+  const { record, arbovirusEnvironmentalSuitabilityCountryData, selectedEsm } = input;
 
   return (
-    <GenericMapPopUp
-      width={GenericMapPopUpWidth.THIN}
-      headerConfiguration={{
-        text: record.countryName,
-        textAlignment: HeaderConfigurationTextAlignment.CENTER
-      }}
-      subtitleConfiguration={{
-        enabled: false
-      }}
-      topBannerConfiguration={{
-        enabled: true,
-        label: "Total Estimates".replace(' ', '\u00A0'),
-        value: record.dataPoints.length.toString(),
-        valueTextAlignment: PopupContentTextAlignment.RIGHT,
-        bannerColourClassname: "bg-gray-200",
-      }}
-      alternateViewConfiguration={{ enabled: false }}
-      rows={allArbovirusesPresentInData
-        .sort((arbovirusA, arbovirusB) => filterArbovirusToSortOrderMap[arbovirusA] - filterArbovirusToSortOrderMap[arbovirusB])
-        .map((arbovirus) => ({
-          title: `${arboShortformToFullNameMap[arbovirus]} estimates`.replace(' ', '\u00A0'),
-          type: PopUpContentRowType.NUMBER,
-          value: dataGroupedByArbovirus[arbovirus].length,
-          contentTextAlignment: PopupContentTextAlignment.RIGHT,
-          ribbonConfiguration: {
-            ribbonColourClassname: arbovirusToRibbonColourClassname[arbovirus],
-          },
-          rightPaddingEnabled: false
-        }))
-      }
-      bottomBannerConfiguration={{
-        enabled: false
-      }}
-    />
+    <>
+      <Dengue2015EsmArboCountryPopupContent
+        record={record}
+        arbovirusEnvironmentalSuitabilityCountryData={arbovirusEnvironmentalSuitabilityCountryData}
+        hidden={selectedEsm !== SelectedArbovirusEnvironmentalSuitabilityMap.DENGUE_2015}
+      />
+      <Dengue2050EsmArboCountryPopupContent
+        record={record}
+        arbovirusEnvironmentalSuitabilityCountryData={arbovirusEnvironmentalSuitabilityCountryData}
+        hidden={selectedEsm !== SelectedArbovirusEnvironmentalSuitabilityMap.DENGUE_2050}
+      />
+      <ZikaEsmArboCountryPopupContent
+        record={record}
+        arbovirusEnvironmentalSuitabilityCountryData={arbovirusEnvironmentalSuitabilityCountryData}
+        hidden={selectedEsm !== SelectedArbovirusEnvironmentalSuitabilityMap.ZIKA}
+      />
+      <StandardArboCountryPopupContent
+        record={record}
+        hidden={selectedEsm !== SelectedArbovirusEnvironmentalSuitabilityMap.NO_ESM_SELECTED}
+      />
+    </>
   );
 }

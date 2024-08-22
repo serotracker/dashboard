@@ -1,3 +1,4 @@
+import { CountryDataContextType } from "@/contexts/pathogen-context/country-information-context";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { VisiblePopupInfo } from "./pathogen-map-popup";
 import { getBoundingBoxCenter, getBoundingBoxFromCountryAlphaTwoCode } from "@/lib/bounding-boxes";
@@ -8,6 +9,8 @@ interface SetPopUpInfoForCountryHighlightLayerInput<
   newPopUpInfo: VisiblePopupInfo<TPathogenDataPointProperties>;
   setPopUpInfo: (input: VisiblePopupInfo<TPathogenDataPointProperties>) => void;
   dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
+  allowCountryPopUpsWithEmptyData: boolean;
+  countryDataContext: CountryDataContextType;
 }
 
 export const useCountryHighlightLayer = () => {
@@ -21,6 +24,37 @@ export const useCountryHighlightLayer = () => {
         .filter((dataPoint) => dataPoint.countryAlphaThreeCode === alpha3CountryCode);
 
       if(dataForCountry.length === 0) {
+        if(input.allowCountryPopUpsWithEmptyData) {
+          const country = input.countryDataContext
+            .find((element) => element.countryAlphaThreeCode === alpha3CountryCode);
+
+          if(!country) {
+            return;
+          }
+
+          const countryBoundingBox = getBoundingBoxFromCountryAlphaTwoCode(country.countryAlphaTwoCode);
+
+          if(!countryBoundingBox) {
+            return;
+          }
+
+          const countryBoundingBoxCenter = getBoundingBoxCenter(countryBoundingBox);
+
+          input.setPopUpInfo({
+            layerId: input.newPopUpInfo.layerId,
+            visible: input.newPopUpInfo.visible,
+            properties: {
+              ...input.newPopUpInfo.properties,
+              id: alpha3CountryCode,
+              alpha3CountryCode,
+              countryName: country.countryName,
+              latitude: countryBoundingBoxCenter.latitude,
+              longitude: countryBoundingBoxCenter.longitude,
+              dataPoints: []
+            }
+          });
+        }
+
         return;
       }
 

@@ -6,6 +6,7 @@ import { arbovirusEstimatesQuery } from "@/hooks/arbovirus/useArboData";
 import { arbovirusFiltersQuery } from "@/hooks/arbovirus/useArboFilters";
 import { ArboProviders } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
+import { arbovirusEnviromentalSuitabilityDataQuery } from "@/hooks/arbovirus/useArboEnviromentalSuitabilityData";
 
 export default async function ArboLayout({
   children,
@@ -21,6 +22,10 @@ export default async function ArboLayout({
   await queryClient.prefetchQuery({
     queryKey: ["arbovirusFiltersQuery"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ["arbovirusEnviromentalSuitabilityDataQuery"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEnviromentalSuitabilityDataQuery)
   });
 
   const dehydratedState = dehydrate(queryClient);
