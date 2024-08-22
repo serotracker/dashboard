@@ -32,6 +32,7 @@ import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
 import { useMersMapPaint } from "./use-mers-map-paint";
 import { useMersMapClusterProperties } from "./use-mers-map-cluster-properties";
 import { useMersMapDataPoints } from "./use-mers-map-data-points";
+import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
 
 export const MapPinColours = {
   'HumanMersEvent': "#8abded",
@@ -48,6 +49,7 @@ export const MapPinColours = {
 export const MersMap = () => {
   const { filteredData, faoMersEventData } = useContext(MersContext);
   const { data } = useMersPrimaryEstimates(); 
+  const countryDataContext = useContext(CountryDataContext);
   const { faoMersEvents } = useFaoMersEventData();
   const {
     currentMapCountryHighlightingSettings,
@@ -97,6 +99,8 @@ export const MersMap = () => {
         <PathogenMap
           id="mersMap"
           countryPopUpEnabled={countryPopUpEnabled}
+          allowCountryPopUpsWithEmptyData={false}
+          countryDataContext={countryDataContext}
           baseCursor=""
           sourceId="mers-[GENERATED-SOURCE-ID]"
           layers={[

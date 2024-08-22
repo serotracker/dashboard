@@ -1,7 +1,7 @@
 "use client"
 import React, { useMemo, createContext, useContext } from "react";
 
-type CountryDataContextType = Array<{
+export type CountryDataContextType = Array<{
   countryName: string,
   countryAlphaTwoCode: string,
   countryAlphaThreeCode: string

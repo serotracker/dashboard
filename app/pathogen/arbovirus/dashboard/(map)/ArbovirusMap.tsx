@@ -12,7 +12,7 @@ import { useArboData } from "@/hooks/arbovirus/useArboData";
 import { ArbovirusEstimatePopupContent } from "./arbovirus-estimate-pop-up-content";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
-import { ArboCountryPopupContent } from "./arbo-country-pop-up-content";
+import { ArboCountryPopupContent, SelectedArbovirusEnvironmentalSuitabilityMap } from "./arbo-country-pop-up-content";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
@@ -22,6 +22,8 @@ import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-h
 import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
 import { useEsmCountryHighlightLayer } from "./country-highlight-layers/esm-country-highlight-layer";
 import { CountryPaintChangeSetting, useArbovirusMapCustomizationModal } from "./use-arbovirus-map-customization-modal";
+import { ArbovirusEnvironmentalSuitabilityCountryDataContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-environmental-suitability-country-data-context";
+import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -33,9 +35,17 @@ export const pathogenColors: Record<Arbovirus, string> = {
   [Arbovirus.Mayv]: "#c5a3ff",
 };
 
+const esmValueToSelectedEsm: Record<string, SelectedArbovirusEnvironmentalSuitabilityMap | undefined> = {
+  'dengue2015': SelectedArbovirusEnvironmentalSuitabilityMap.DENGUE_2015,
+  'dengue2050': SelectedArbovirusEnvironmentalSuitabilityMap.DENGUE_2050,
+  'zika': SelectedArbovirusEnvironmentalSuitabilityMap.ZIKA
+}
+
 export function ArbovirusMap() {
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
+  const countryDataContext = useContext(CountryDataContext);
   const { filteredData, selectedFilters } = useContext(ArboContext);
+  const { arbovirusEnvironmentalSuitabilityCountryData } = useContext(ArbovirusEnvironmentalSuitabilityCountryDataContext);
   const { data } = useArboData();
   const { getCountryHighlightingLayerInformation: getDataPointPresentCountryHighlightingLayerInformation } = useDataPointPresentLayer();
   const { getCountryHighlightingLayerInformation: getESMCountryHighlightingLayerInformation } = useEsmCountryHighlightLayer();
@@ -74,6 +84,18 @@ export function ArbovirusMap() {
     ...(selectedFilters.esm?.length > 0 ? [{ colour: "rgba(54,2,4,0.5)", description: "Suitable Environment"}] : []),
   ], [countryHighlightLayerLegendEntries, selectedFilters]);
 
+  const selectedEsm = useMemo(() => {
+    const isEsmMapSelected = selectedFilters.esm?.length === 1;
+
+    if(!isEsmMapSelected) {
+      return SelectedArbovirusEnvironmentalSuitabilityMap.NO_ESM_SELECTED;
+    }
+
+    const selectedEsmFilter = selectedFilters.esm[0];
+
+    return esmValueToSelectedEsm[selectedEsmFilter] ?? SelectedArbovirusEnvironmentalSuitabilityMap.NO_ESM_SELECTED;
+  }, [ selectedFilters ]);
+
   if (!data) {
     return <span> Loading... </span>;
   }
@@ -83,6 +105,8 @@ export function ArbovirusMap() {
       <div className={"w-full h-full p-0"}>
         <PathogenMap
           id="arboMap"
+          allowCountryPopUpsWithEmptyData={selectedEsm !== SelectedArbovirusEnvironmentalSuitabilityMap.NO_ESM_SELECTED}
+          countryDataContext={countryDataContext}
           countryPopUpEnabled={countryPopUpEnabled}
           baseCursor=""
           sourceId="arbo-[GENERATED-SOURCE-ID]"
@@ -119,7 +143,11 @@ export function ArbovirusMap() {
           ]}
           generatePopupContent={(input) => {
             if(isPopupCountryHighlightLayerContentGeneratorInput(input)) {
-              return <ArboCountryPopupContent record={input.data} />
+              return <ArboCountryPopupContent
+                arbovirusEnvironmentalSuitabilityCountryData={arbovirusEnvironmentalSuitabilityCountryData}
+                selectedEsm={selectedEsm}
+                record={input.data}
+              />
             }
           
             return <ArbovirusEstimatePopupContent estimate={input.data} />

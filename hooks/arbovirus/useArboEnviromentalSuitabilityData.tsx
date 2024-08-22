@@ -9,6 +9,8 @@ export const arbovirusEnviromentalSuitabilityDataQuery = gql`
       __typename
       id
       countryAlphaThreeCode
+      countryAlphaTwoCode
+      countryName
       zikaData {
         __typename
         minimumValue
@@ -40,7 +42,7 @@ export const arbovirusEnviromentalSuitabilityDataQuery = gql`
   }
 `
 
-export function useArboEnviromentalSuitabilityData() {
+export const useArboEnviromentalSuitabilityData = () => {
   return useQuery<ArbovirusEnviromentalSuitabilityDataQueryQuery>({
     queryKey: ["arbovirusEnviromentalSuitabilityDataQuery"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEnviromentalSuitabilityDataQuery)

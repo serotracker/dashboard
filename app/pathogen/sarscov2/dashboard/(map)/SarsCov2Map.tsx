@@ -12,9 +12,11 @@ import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/ge
 import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-highlight-layers/data-point-present-layer";
 import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
 import { useSarsCov2MapCustomizationModal } from "./use-sars-cov-2-map-customization-modal";
+import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
 
 export function SarsCov2Map() {
   const { filteredData } = useContext(SarsCov2Context);
+  const countryDataContext = useContext(CountryDataContext);
   const { getCountryHighlightingLayerInformation } = useDataPointPresentLayer();
   const { countryPopUpEnabled, ...sarsCov2MapCustomizationModal } = useSarsCov2MapCustomizationModal();
 
@@ -34,6 +36,8 @@ export function SarsCov2Map() {
         <PathogenMap
           id="sarsCov2Map"
           countryPopUpEnabled={countryPopUpEnabled}
+          allowCountryPopUpsWithEmptyData={false}
+          countryDataContext={countryDataContext}
           baseCursor=""
           sourceId="sc2-[GENERATED-SOURCE-ID]"
           layers={[
