@@ -25,6 +25,7 @@ export interface GroupedColouredCheckboxFilterProps<
   filterOptions: Array<string | undefined | null>;
   optionToLabelMap: Record<string, string | undefined>;
   optionToColourClassnameMap: Record<string, string | undefined>;
+  hiddenOptions: string[];
   clearAllButtonText: string;
 }
 
@@ -32,7 +33,7 @@ export const GroupedColouredCheckboxFilter = <
   TEstimate extends Record<string, unknown>,
   TPathogenContextState extends PathogenContextState<TEstimate>
 >(props: GroupedColouredCheckboxFilterProps<TEstimate, TPathogenContextState>) => {
-  const { filterOptions, optionSortingFunction, optionToSuperOptionFunction } = props;
+  const { filterOptions, optionSortingFunction, optionToSuperOptionFunction, hiddenOptions } = props;
 
   const handleOnClickCheckbox = (option: string, checked: boolean) => {
     const value = props.state.selectedFilters[props.filter] ?? [];
@@ -64,10 +65,11 @@ export const GroupedColouredCheckboxFilter = <
     pipe(
       filterOptions,
       (filterOptions) => filterOptions.filter((option): option is NonNullable<typeof option> => !!option),
+      (filterOptions) => filterOptions.filter((option) => ! hiddenOptions.includes(option)),
       (filterOptions) => filterOptions.sort((a, b) => optionSortingFunction ? optionSortingFunction(a, b) : 0),
       (filterOptions) => typedGroupBy(filterOptions, (filterOption) => optionToSuperOptionFunction ? optionToSuperOptionFunction(filterOption) : filterOption)
     )
-  , [ filterOptions, optionSortingFunction, optionToSuperOptionFunction ]);
+  , [ filterOptions, optionSortingFunction, optionToSuperOptionFunction, hiddenOptions ]);
 
   return (
     <div className={"flex justify-between lg:justify-center flex-wrap lg:flex-col pb-3"}>

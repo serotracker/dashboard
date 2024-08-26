@@ -12,9 +12,10 @@ import { CountryInformationContext } from "@/contexts/pathogen-context/country-i
 import { Arbovirus } from "@/gql/graphql";
 import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
-import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, isMersDataType, isMersDataTypeSuperOption, mersDataTypeSuperOptionToLabelMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap, mersDataTypeToSuperOptionMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
+import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, isMersDataType, isMersDataTypeSuperOption, mersDataTypeSuperOptionToLabelMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap, mersDataTypeToSuperOptionMap, mersMapPointVisibilitySettingToHiddenOptionsMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
 import { UNRegionsTooltip, WHORegionsTooltip } from "../tooltip-content";
 import { GroupedColouredCheckboxFilter } from "./grouped-coloured-checkbox-filter";
+import { MersMapCustomizationsContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -26,6 +27,7 @@ export interface FieldInformation {
   superOptionToLabelMap?: (superOption: string) => string;
   renderTooltipContent?: TooltipContentRenderingFunction
   filterRenderingFunction: FilterRenderingFunction;
+  hiddenOptions?: string[];
   clearAllButtonText?: string;
 }
 
@@ -56,6 +58,7 @@ interface FilterRenderingFunctionInput<
   superOptionToLabelMap?: ((superOption: string) => string) | undefined;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
+  hiddenOptions: string[];
   optionToColourClassnameMap: Record<string, string | undefined>;
   clearAllButtonText: string;
 }
@@ -196,6 +199,10 @@ const scopeToLabelForFilter: Record<string, string | undefined> = {
 
 export const useAvailableFilters = () => {
   const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
+  const {
+    mapDataPointVisibilitySetting,
+    setMapDataPointVisibilitySetting
+  } = useContext(MersMapCustomizationsContext);
 
   const availableFilters: {[key in FilterableField]: FieldInformation } = {
     [FilterableField.pathogen]: {
@@ -438,6 +445,7 @@ export const useAvailableFilters = () => {
       optionToSuperOptionFunction: (typename) => isMersDataType(typename) ? mersDataTypeToSuperOptionMap[typename] : typename,
       superOptionToLabelMap: (superOption) => isMersDataTypeSuperOption(superOption) ? mersDataTypeSuperOptionToLabelMap[superOption] : superOption,
       filterRenderingFunction: GroupedColouredCheckboxFilter,
+      hiddenOptions: mersMapPointVisibilitySettingToHiddenOptionsMap[mapDataPointVisibilitySetting],
       clearAllButtonText: 'Clear all data types'
     },
     [FilterableField.diagnosisSource]: {

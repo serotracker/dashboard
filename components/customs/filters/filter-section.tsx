@@ -41,6 +41,7 @@ export const FilterSection = <
         renderTooltipContent={fieldInformation.renderTooltipContent}
         sendFilterChangeDispatch={props.sendFilterChangeDispatch}
         optionSortingFunction={fieldInformation.optionSortingFunction}
+        hiddenOptions={fieldInformation.hiddenOptions ?? []}
         optionToColourClassnameMap={fieldInformation.optionToColourClassnameMap ?? {}}
         clearAllButtonText={fieldInformation.clearAllButtonText ?? 'Clear all'}
       />
