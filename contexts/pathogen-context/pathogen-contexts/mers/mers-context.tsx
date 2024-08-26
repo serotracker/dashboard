@@ -13,6 +13,7 @@ import { adjustMapPosition } from "../../filter-update-steps/adjust-map-position
 import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
 import { MersPrimaryEstimatesQuery, PartitionedFaoMersEventsQuery } from "@/gql/graphql";
 import { filterMersEstimates } from "./mers-data-filtering";
+import { MersMapCustomizationsProvider } from "./map-customizations-context";
 
 const initialMersContextState = {
   filteredData: [],
@@ -307,7 +308,9 @@ export const MersProviders = (props: MersProvidersProps) => {
       dataFetcher={MersDataFetcher}
     >
       <CamelPopulationDataProvider>
-        {props.children}
+        <MersMapCustomizationsProvider>
+          {props.children}
+        </MersMapCustomizationsProvider>
       </CamelPopulationDataProvider>
     </PathogenProviders>
   )

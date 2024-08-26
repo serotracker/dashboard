@@ -47,6 +47,7 @@ export interface ColouredCheckboxFilterProps<
   filterOptions: Array<string | undefined | null>;
   optionToLabelMap: Record<string, string | undefined>;
   optionToColourClassnameMap: Record<string, string | undefined>;
+  hiddenOptions: string[];
   clearAllButtonText: string;
 }
 
@@ -84,6 +85,7 @@ export const ColouredCheckboxFilter = <
     <div className={"flex justify-between lg:justify-center flex-wrap lg:flex-col pb-3"}>
       {props.filterOptions
         .filter((option): option is NonNullable<typeof option> => !!option)
+        .filter((option) => ! props.hiddenOptions.includes(option))
         .sort((a, b) => props.optionSortingFunction ? props.optionSortingFunction(a, b) : 0)
         .map((option) => <ColouredCheckbox
           key={option}

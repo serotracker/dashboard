@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { ModalState, ModalType, UseModalInput, useModal } from "@/components/ui/modal/modal";
 import { CustomizationSettingType } from "@/components/ui/modal/customization-modal/customization-settings";
 import { MapCustomizeButton } from "@/components/ui/pathogen-map/map-customize-button";
+import { MersMapCustomizationsContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context";
 
 export enum CountryPaintChangeSetting {
   WHEN_RECOMMENDED = "WHEN_RECOMMENDED",
@@ -57,10 +58,10 @@ export const useMersMapCustomizationModal = () => {
     countryOutlinesSetting,
     setCountryOutlinesSetting
   ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.WHEN_RECOMMENDED);
-  const [
+  const {
     mapDataPointVisibilitySetting,
     setMapDataPointVisibilitySetting
-  ] = useState<MapDataPointVisibilityOptions>(MapDataPointVisibilityOptions.ESTIMATES_ONLY);
+  } = useContext(MersMapCustomizationsContext);
   const [countryPopUpEnabled, setCountryPopUpEnabled] = useState<boolean>(true);
 
   const useModalInput: UseModalInput<MersMapCountryHighlightingSettings | CountryPaintChangeSetting | MapDataPointVisibilityOptions> = useMemo(() => ({

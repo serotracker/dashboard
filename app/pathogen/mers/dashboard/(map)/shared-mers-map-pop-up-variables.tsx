@@ -25,6 +25,7 @@ import {
 import { TranslateDate } from "@/utils/translate-util/translate-service";
 import assertNever from "assert-never";
 import { parseISO } from "date-fns";
+import { MapDataPointVisibilityOptions } from "./use-mers-map-customization-modal";
 
 export const diagnosisStatusToStringMap = {
   [MersDiagnosisStatus.Confirmed]: "Confirmed",
@@ -254,6 +255,28 @@ export const mersDataTypeToLabelMap = {
   "AnimalMersEvent": "Animal Case",
   "HumanMersEvent": "Human Case",
 };
+
+export const mersMapPointVisibilitySettingToHiddenOptionsMap = {
+  [MapDataPointVisibilityOptions.NOTHING_VISIBLE]: [
+    'PrimaryHumanMersSeroprevalenceEstimateInformation',
+    'PrimaryAnimalMersSeroprevalenceEstimateInformation',
+    'PrimaryHumanMersViralEstimateInformation',
+    'PrimaryAnimalMersViralEstimateInformation',
+    'AnimalMersEvent',
+    'HumanMersEvent'
+  ],
+  [MapDataPointVisibilityOptions.EVENTS_ONLY]: [
+    'PrimaryHumanMersSeroprevalenceEstimateInformation',
+    'PrimaryAnimalMersSeroprevalenceEstimateInformation',
+    'PrimaryHumanMersViralEstimateInformation',
+    'PrimaryAnimalMersViralEstimateInformation',
+  ],
+  [MapDataPointVisibilityOptions.ESTIMATES_ONLY]: [
+    'AnimalMersEvent',
+    'HumanMersEvent'
+  ],
+  [MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE]: []
+}
 
 export enum MersDataTypeSuperOption {
   HUMAN = 'HUMAN',
