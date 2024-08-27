@@ -54,11 +54,16 @@ export const assayToColourClassnameMap = {
   "RT-PCR": "bg-yellow-300",
   "N2 RT-qPCR": "bg-green-300",
   "N3 RT-qPCR": "bg-violet-300",
-  "Neutralization": "bg-cyan-300"
+  "Neutralization": "bg-cyan-300",
+  "Protein microarray": "bg-orange-300",
+  "Microneutralization": "bg-rose-300",
+  "Pseudoparticle Neutralization": "bg-emerald-300"
 }
 
 export const isotypeToColourClassnameMap = {
-  "IgG": "bg-teal-300"
+  "IgG": "bg-teal-300",
+  "Neutralizing": "bg-red-300",
+  "N/A": "bg-emerald-300"
 }
 
 export const specimenTypeToColourClassnameMap = {
@@ -66,7 +71,11 @@ export const specimenTypeToColourClassnameMap = {
   "Throat swab or OP": "bg-purple-200",
   "Serum": "bg-orange-200",
   "Saliva": "bg-pink-200",
-  "Rectal swab": "bg-teal-200"
+  "Rectal swab": "bg-teal-200",
+	"Milk": "bg-red-200",
+	"Lymph nodes": "bg-emerald-200",
+	"Whole Blood": "bg-yellow-200",
+  "Plasma": "bg-rose-200"
 }
 
 export const animalDetectionSettingsToColourClassnameMap = {
@@ -79,8 +88,14 @@ export const animalDetectionSettingsToColourClassnameMap = {
 }
 
 export const animalPurposeSettingsToColourClassnameMap = {
-  "Multiple purposes": "bg-emerald-200",
-  "Not reported": "bg-sky-200"
+  "Slaughter": "bg-emerald-200",
+  "Multiple purposes": "bg-sky-200",
+  "Not reported": "bg-rose-200",
+  "Milking": "bg-purple-200",
+  "Meat": "bg-yellow-200",
+  "Meat and milk": "bg-orange-200",
+  "Meat, milk, racing": "bg-red-200",
+  "Meat production": "bg-lime-200"
 }
 
 export const animalImportedOrLocalToColourClassnameMap = {
@@ -90,18 +105,24 @@ export const animalImportedOrLocalToColourClassnameMap = {
 }
 
 export const sampleFrameToColourClassnameMap = {
+  "Blood donors": "bg-yellow-200",
+  "Camel traders": "bg-emerald-200",
   "Livestock workers": "bg-teal-200",
   "Multiple populations": "bg-orange-200",
   "Pilgrims": "bg-amber-200",
   "Livestock handlers": "bg-violet-200",
   "Household and community sample": "bg-emerald-200",
-  "Close contacts of camels": "bg-pink-200"
+  "Close contacts of camels": "bg-pink-200",
+  "Close contacts of cases": "bg-fuchsia-200",
+  "Suspected cases": "bg-indigo-200",
 }
 
 export const samplingMethodToColourClassnameMap = {
   "Convenience": "bg-violet-400",
+  "Sequential": "bg-orange-400",
   "Stratified probability": "bg-lime-400",
-  "Unclear": "bg-amber-400"
+  "Unclear": "bg-amber-400",
+  "Simplified probability": "bg-sky-400",
 }
 
 export const geographicScopeToColourClassnameMap = {
@@ -129,11 +150,14 @@ export const antigenToColourClassnameMap = {
   "S1": "bg-orange-300",
   "Not reported": "bg-lime-300",
   "UpE": "bg-sky-300",
-  "N": "bg-violet-300"
+  "N": "bg-violet-300",
+  "Spike RBD": "bg-red-300",
+  "ORF1a": "bg-yellow-300",
 }
 
 export const exposureToCamelLevelToColourClassnameMap = {
   "Mixed exposure": "bg-fuchsia-500",
+  "Unknown exposure": "bg-lime-500",
   "Direct exposure": "bg-indigo-500",
   "No exposure": "bg-teal-500"
 }
