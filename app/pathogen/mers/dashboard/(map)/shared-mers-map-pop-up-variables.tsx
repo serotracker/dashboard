@@ -786,10 +786,10 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
   ...(input.estimate.geographicalAreaSubestimates.length > 0 ? [{
     tableHeader: 'Geographical Area Subestimates',
     tableFields: [
-      'Country',
-      'State',
-      'District',
-      'City',
+      ...(input.estimate.geographicalAreaSubestimates.some((element) => !!element.country) ? ['Country'] : []),
+      ...(input.estimate.geographicalAreaSubestimates.some((element) => !!element.state) ? ['State'] : []),
+      ...(input.estimate.geographicalAreaSubestimates.some((element) => !!element.district) ? ['District'] : []),
+      ...(input.estimate.geographicalAreaSubestimates.some((element) => !!element.city) ? ['City'] : []),
       ...generateTableFields({ type: input.type })
     ],
     tableRows: input.estimate.geographicalAreaSubestimates
