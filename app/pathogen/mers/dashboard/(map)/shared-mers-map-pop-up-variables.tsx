@@ -788,6 +788,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
     tableFields: [
       'Country',
       'State',
+      'District',
       'City',
       ...generateTableFields({ type: input.type })
     ],
@@ -799,6 +800,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
           ...element.rows,
           'Country': element.subestimate.country,
           'State': element.subestimate.state ?? 'Unspecified',
+          'District': element.subestimate.district ?? 'Unspecified',
           'City': element.subestimate.city ?? 'Unspecified',
         }
       }))
