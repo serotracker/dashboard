@@ -17,6 +17,7 @@ export const mersPrimaryEstimates = gql`
           estimateId
           city
           state
+          district
           country
           countryAlphaTwoCode
           countryAlphaThreeCode
@@ -72,6 +73,7 @@ export const mersPrimaryEstimates = gql`
           estimateId
           city
           state
+          district
           country
           countryAlphaTwoCode
           countryAlphaThreeCode
@@ -127,6 +129,7 @@ export const mersPrimaryEstimates = gql`
           estimateId
           city
           state
+          district
           country
           countryAlphaTwoCode
           countryAlphaThreeCode
@@ -186,6 +189,7 @@ export const mersPrimaryEstimates = gql`
           estimateId
           city
           state
+          district
           country
           countryAlphaTwoCode
           countryAlphaThreeCode
@@ -263,6 +267,7 @@ export const mersPrimaryEstimates = gql`
         }
         city
         state
+        district
         country
         countryAlphaTwoCode
         countryAlphaThreeCode
