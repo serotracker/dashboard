@@ -219,7 +219,7 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
       }];
     }
 
-    if(estimate.occupationSubestimates.length === 0) {
+    if(estimate.occupationSubestimates.length === 0 && estimate.occupationSubestimates.length === 0) {
       if(
         sampleNumerator === undefined ||
         sampleNumerator === null ||
@@ -239,7 +239,12 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
       }] : []
     }
 
-    return estimate.occupationSubestimates.map((subestimate) => {
+    const subestimatesToMap = [
+      ...estimate.occupationSubestimates,
+      ...estimate.camelExposureLevelSubestimates
+    ]
+
+    return subestimatesToMap.map((subestimate) => {
       if(subestimate.markedAsFiltered === true) {
         return undefined;
       }

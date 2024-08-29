@@ -63,7 +63,7 @@ type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
   'animalSpeciesSubestimates'|'testUsedSubestimates'|
   'timeFrameSubestimates'|'sampleTypeSubestimates'|
   'animalSourceLocationSubestimates'|'animalSamplingContextSubestimates'|
-  'occupationSubestimates'
+  'occupationSubestimates'|'camelExposureLevelSubestimates'
 > & {
   sexSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['sexSubestimates'][number] & {
     markedAsFiltered: boolean;
@@ -88,6 +88,9 @@ type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
     markedAsFiltered: boolean;
   }>,
   occupationSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['occupationSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
+  camelExposureLevelSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['camelExposureLevelSubestimates'][number] & {
     markedAsFiltered: boolean;
   }>,
 }
@@ -211,6 +214,14 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
                 markedAsFiltered: false,
               })),
               occupationSubestimates: primaryEstimate.occupationSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
+              })),
+              camelExposureLevelSubestimates: primaryEstimate.camelExposureLevelSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
+              })),
+              nomadismSubestimates: primaryEstimate.nomadismSubestimates.map((subestimate) => ({
                 ...subestimate,
                 markedAsFiltered: false,
               })),

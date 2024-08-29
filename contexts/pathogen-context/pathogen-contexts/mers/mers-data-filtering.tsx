@@ -92,6 +92,7 @@ interface MersEstimateFilteringHandlerOutput {
   animalSourceLocationSubestimateIdsToMarkAsFiltered?: string[];
   animalSamplingContextSubestimateIdsToMarkAsFiltered?: string[];
   occupationSubestimateIdsToMarkAsFiltered?: string[];
+  camelExposureLevelSubestimateIdsToMarkAsFiltered?: string[];
 }
 
 const allMersEstimateHandlers: Record<MersFilterableField, (input: {
@@ -160,7 +161,8 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
         ...input.estimate,
         exposureToCamels: [
           input.estimate.primaryEstimateInfo.exposureToCamels,
-          ...input.estimate.occupationSubestimates.map((subestimate) => subestimate.exposureToCamels)
+          ...input.estimate.occupationSubestimates.map((subestimate) => subestimate.exposureToCamels),
+          ...input.estimate.camelExposureLevelSubestimates.map((subestimate) => subestimate.exposureToCamels)
         ].filter((element): element is NonNullable<typeof element> => !!element)
       },
       selectedFilters: {
@@ -169,6 +171,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       }
     }),
     occupationSubestimateIdsToMarkAsFiltered: input.estimate.occupationSubestimates
+      .filter((subestimate) =>
+        ((input.selectedFilters[MersFilterableField.exposureToCamels] ?? []).length > 0) && (
+          !subestimate.exposureToCamels ||
+          !input.selectedFilters[MersFilterableField.exposureToCamels]?.includes(subestimate.exposureToCamels)
+        )
+      )
+      .map((subestimate) => subestimate.id),
+    camelExposureLevelSubestimateIdsToMarkAsFiltered: input.estimate.camelExposureLevelSubestimates
       .filter((subestimate) =>
         ((input.selectedFilters[MersFilterableField.exposureToCamels] ?? []).length > 0) && (
           !subestimate.exposureToCamels ||
@@ -549,11 +559,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       return { included: true };
     }
 
-    const included = mersEstimateStringFieldHandler({
+    const included = mersEstimateArrayFieldHandler({
       filterKey: MersFilterableField.sampleFrame,
       estimate: {
         ...estimate,
-        sampleFrame: estimate.primaryEstimateInfo.sampleFrame
+        sampleFrame: [
+          ...(estimate.primaryEstimateInfo.sampleFrame ? [estimate.primaryEstimateInfo.sampleFrame] : []),
+          ...estimate.camelExposureLevelSubestimates.map((subestimate) => subestimate.sampleFrame)
+        ]
       },
       selectedFilters: {
         ...input.selectedFilters,
@@ -562,7 +575,15 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     })
 
     return {
-      included
+      included,
+      camelExposureLevelSubestimateIdsToMarkAsFiltered: input.estimate.camelExposureLevelSubestimates
+        .filter((subestimate) =>
+          ((input.selectedFilters[MersFilterableField.sampleFrame] ?? []).length > 0) && (
+            !subestimate.sampleFrame ||
+            !input.selectedFilters[MersFilterableField.sampleFrame]?.includes(subestimate.sampleFrame)
+          )
+        )
+        .map((subestimate) => subestimate.id)
     }
   },
   [MersFilterableField.diagnosisSource]: () => ({ included: true })
@@ -587,7 +608,8 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
           sampleTypeSubestimateIdsToMarkAsFiltered,
           animalSourceLocationSubestimateIdsToMarkAsFiltered,
           animalSamplingContextSubestimateIdsToMarkAsFiltered,
-          occupationSubestimateIdsToMarkAsFiltered
+          occupationSubestimateIdsToMarkAsFiltered,
+          camelExposureLevelSubestimateIdsToMarkAsFiltered
         } = filteringFunction({
           estimate,
           selectedFilters: input.selectedFilters
@@ -603,7 +625,8 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
           sampleTypeSubestimateIdsToMarkAsFiltered,
           animalSourceLocationSubestimateIdsToMarkAsFiltered,
           animalSamplingContextSubestimateIdsToMarkAsFiltered,
-          occupationSubestimateIdsToMarkAsFiltered
+          occupationSubestimateIdsToMarkAsFiltered,
+          camelExposureLevelSubestimateIdsToMarkAsFiltered
         }
       })
     }))
@@ -637,6 +660,9 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       occupationSubestimateIdsToMarkAsFiltered: uniq(
         appliedFilters.flatMap(({ occupationSubestimateIdsToMarkAsFiltered }) => occupationSubestimateIdsToMarkAsFiltered)
       ),
+      camelExposureLevelSubestimateIdsToMarkAsFiltered: uniq(
+        appliedFilters.flatMap(({ camelExposureLevelSubestimateIdsToMarkAsFiltered }) => camelExposureLevelSubestimateIdsToMarkAsFiltered)
+      )
     }))
     .map(({
       estimate,
@@ -648,7 +674,8 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       sampleTypeSubestimateIdsToMarkAsFiltered,
       animalSourceLocationSubestimateIdsToMarkAsFiltered,
       animalSamplingContextSubestimateIdsToMarkAsFiltered,
-      occupationSubestimateIdsToMarkAsFiltered
+      occupationSubestimateIdsToMarkAsFiltered,
+      camelExposureLevelSubestimateIdsToMarkAsFiltered
     }) => ({
       ...estimate,
       sexSubestimates: estimate.sexSubestimates.map((subestimate) => ({
@@ -687,6 +714,10 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
         ...subestimate,
         markedAsFiltered: occupationSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
       })),
+      camelExposureLevelSubestimates: estimate.camelExposureLevelSubestimates.map((subestimate) => ({
+        ...subestimate,
+        markedAsFiltered: camelExposureLevelSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
+      }))
     }))
     .filter((estimate) => !(
       (estimate.sexSubestimates.length > 0 && estimate.sexSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
@@ -697,7 +728,8 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       (estimate.sampleTypeSubestimates.length > 0 && estimate.sampleTypeSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
       (estimate.animalSourceLocationSubestimates.length > 0 && estimate.animalSourceLocationSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
       (estimate.animalSamplingContextSubestimates.length > 0 && estimate.animalSamplingContextSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
-      (estimate.occupationSubestimates.length > 0 && estimate.occupationSubestimates.every((subestimate) => subestimate.markedAsFiltered))
+      (estimate.occupationSubestimates.length > 0 && estimate.occupationSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
+      (estimate.camelExposureLevelSubestimates.length > 0 && estimate.camelExposureLevelSubestimates.every((subestimate) => subestimate.markedAsFiltered))
     ))
 
   return {
