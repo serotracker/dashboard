@@ -527,6 +527,56 @@ export const mersPrimaryEstimates = gql`
         }
         animalDetectionSettings
       }
+      camelExposureLevelSubestimates {
+        __typename
+        id
+        estimateId
+        estimateInfo {
+          ... on MersViralSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            positivePrevalence
+            positivePrevalence95CILower
+            positivePrevalence95CIUpper
+          }
+          ... on MersSeroprevalenceSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            seroprevalence
+            seroprevalence95CILower
+            seroprevalence95CIUpper
+          }
+        }
+        details
+        sampleFrame
+        exposureToCamels
+      }
+      nomadismSubestimates {
+        __typename
+        id
+        estimateId
+        estimateInfo {
+          ... on MersViralSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            positivePrevalence
+            positivePrevalence95CILower
+            positivePrevalence95CIUpper
+          }
+          ... on MersSeroprevalenceSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            seroprevalence
+            seroprevalence95CILower
+            seroprevalence95CIUpper
+          }
+        }
+        details
+      }
     }
   }
 `

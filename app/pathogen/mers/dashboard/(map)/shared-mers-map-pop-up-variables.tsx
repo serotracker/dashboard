@@ -602,7 +602,9 @@ export const generateAlternateViewBannerConfiguration = (
     input.estimate.sampleTypeSubestimates.length === 0 &&
     input.estimate.occupationSubestimates.length === 0 &&
     input.estimate.animalSourceLocationSubestimates.length === 0 &&
-    input.estimate.animalSamplingContextSubestimates.length === 0
+    input.estimate.animalSamplingContextSubestimates.length === 0 &&
+    input.estimate.camelExposureLevelSubestimates.length === 0 &&
+    input.estimate.nomadismSubestimates.length === 0
   ) {
     return {
       alternateViewButtonEnabled: false,
@@ -895,6 +897,44 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         values: {
           ...element.rows,
           'Sample Frame': element.subestimate.animalDetectionSettings.join(',')
+        }
+      }))
+  }] : []),
+  ...(input.estimate.camelExposureLevelSubestimates.length > 0 ? [{
+    tableHeader: 'Camel Exposure Level Subestimates',
+    tableFields: [
+      'Details',
+      'Sample Frame',
+      'Exposure Level To Camels',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.camelExposureLevelSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
+        values: {
+          ...element.rows,
+          'Details': element.subestimate.details,
+          'Sample Frame': element.subestimate.sampleFrame,
+          'Exposure Level To Camels': element.subestimate.exposureToCamels
+        }
+      }))
+  }] : []),
+  ...(input.estimate.nomadismSubestimates.length > 0 ? [{
+    tableHeader: 'Nomadism Subestimates',
+    tableFields: [
+      'Details',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.nomadismSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        rowColourClassname: '',
+        values: {
+          ...element.rows,
+          'Details': element.subestimate.details,
         }
       }))
   }] : []),
