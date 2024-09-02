@@ -5397,6 +5397,12 @@
             "deprecationReason": null
           },
           {
+            "name": "DONKEY",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "GOAT",
             "description": null,
             "isDeprecated": false,
@@ -7085,6 +7091,12 @@
           },
           {
             "name": "CATTLE",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "DONKEY",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null

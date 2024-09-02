@@ -451,6 +451,7 @@ export enum MersAnimalSpecies {
   Bat = 'BAT',
   Camel = 'CAMEL',
   Cattle = 'CATTLE',
+  Donkey = 'DONKEY',
   Goat = 'GOAT',
   Sheep = 'SHEEP'
 }
@@ -591,6 +592,7 @@ export enum MersEventAnimalSpecies {
   Bat = 'BAT',
   Camel = 'CAMEL',
   Cattle = 'CATTLE',
+  Donkey = 'DONKEY',
   Goat = 'GOAT',
   Sheep = 'SHEEP'
 }
