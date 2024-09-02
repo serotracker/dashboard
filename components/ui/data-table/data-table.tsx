@@ -10,9 +10,7 @@ import {
   VisibilityState,
   getFilteredRowModel,
 } from "@tanstack/table-core";
-import * as Select from '@radix-ui/react-select';
 import { assertNever } from "assert-never";
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { ColumnDef, ExpandedState, Row, flexRender, useReactTable } from "@tanstack/react-table";
 import {
   Table,
@@ -38,6 +36,7 @@ import { DataTableExpandedRow } from "./data-table-expanded-row";
 import { DataTableExpandedRowContent } from "./data-table-expanded-row-content";
 import { Dropdown, DropdownProps } from "@/components/customs/dropdown/dropdown";
 import { typedObjectFromEntries } from "@/lib/utils";
+import { GenericTooltip } from "@/components/customs/generic-tooltip";
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   initiallyVisible: boolean;
@@ -76,6 +75,7 @@ export enum TableHeaderType {
 interface StandardTableHeader {
   type: TableHeaderType.STANDARD;
   headerText: string;
+  headerTooltipContent?: React.ReactNode | undefined;
 }
 
 export interface DropdownTableHeader<TDropdownOption extends string> {
@@ -83,6 +83,7 @@ export interface DropdownTableHeader<TDropdownOption extends string> {
   beforeDropdownHeaderText: string;
   dropdownProps: DropdownProps<TDropdownOption>
   afterDropdownHeaderText: string;
+  headerTooltipContent?: React.ReactNode | undefined;
 }
 
 type TableHeader<TDropdownOption extends string> = 
@@ -235,10 +236,11 @@ export function DataTable<
 
     if(tableHeader.type === TableHeaderType.DROPDOWN) {
       return (
-        <div>
-          <h3 className='inline'>{tableHeader.beforeDropdownHeaderText}</h3>
+        <div className='flex items-center'>
+          <h3 className='inline mr-2'>{tableHeader.beforeDropdownHeaderText}</h3>
           <Dropdown {...tableHeader.dropdownProps} />
-          <h3 className='inline'>{tableHeader.afterDropdownHeaderText}</h3>
+          <h3 className='inline ml-2'>{tableHeader.afterDropdownHeaderText}</h3>
+          {tableHeader.headerTooltipContent && <GenericTooltip className='inline ml-2' tooltipContent={tableHeader.headerTooltipContent} /> }
         </div>
       );
     }

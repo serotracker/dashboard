@@ -1,6 +1,6 @@
 import { rose } from 'tailwindcss/colors'
 import uniq from 'lodash/uniq';
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 import {
   GetCountryHighlightingLayerInformationInput as GenericGetCountryHighlightingLayerInformationInput,
   GetCountryHighlightingLayerInformationOutput,
@@ -8,6 +8,9 @@ import {
 import { generateMapColourBuckets } from "@/components/ui/pathogen-map/country-highlight-layers/generate-map-colour-buckets";
 import { MapSymbology } from '@/app/pathogen/sarscov2/dashboard/(map)/map-config';
 import { formatPerCapitaNumberRangeForLegend } from './helpers';
+import { MersMapCustomizationsContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context';
+import { MapDataPointVisibilityOptions } from '../use-mers-map-customization-modal';
+import { assertNever } from 'assert-never';
 
 type GetCountryHighlightingLayerInformationInput<
   TData extends { countryAlphaThreeCode: string },
@@ -17,7 +20,39 @@ type GetCountryHighlightingLayerInformationInput<
   countryOutlineData: TCountryOutlineData[];
 }
 
+interface GetFreeTextEntriesInput {
+  countryOutlinesEnabled: boolean;
+}
+
 export const useCamelsPerCapitaLayer = () => {
+  const { mapDataPointVisibilitySetting } = useContext(MersMapCustomizationsContext);
+
+  const getFreeTextEntries = useCallback((input: GetFreeTextEntriesInput) => {
+    if(!input.countryOutlinesEnabled || mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.NOTHING_VISIBLE) {
+      return [];
+    }
+
+    if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.ESTIMATES_ONLY) {
+      return [
+        { text: 'Countries with a black outline contain seroprevalence data.' }
+      ];
+    }
+
+    if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY) {
+      return [
+        { text: 'Countries with a black outline contain MERS events.' }
+      ];
+    }
+
+    if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE) {
+      return [
+        { text: 'Countries with a black outline contain seroprevalence data or MERS events.' }
+      ];
+    }
+
+    assertNever(mapDataPointVisibilitySetting)
+  }, [ mapDataPointVisibilitySetting ]);
+
   const getCountryHighlightingLayerInformation = useCallback(<
     TData extends {
       countryAlphaThreeCode: string;
@@ -93,11 +128,9 @@ export const useCamelsPerCapitaLayer = () => {
         }
       },
       countryHighlightLayerLegendEntries,
-      freeTextEntries: input.countryOutlinesEnabled ? [{
-        text: 'Countries with a black outline contain seroprevalence or positive case data.'
-      }] : []
+      freeTextEntries: getFreeTextEntries({ countryOutlinesEnabled: input.countryOutlinesEnabled }),
     }
-  }, []);
+  }, [ getFreeTextEntries ]);
 
   return {
     getCountryHighlightingLayerInformation

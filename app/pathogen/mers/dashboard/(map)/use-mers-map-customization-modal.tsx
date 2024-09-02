@@ -3,6 +3,7 @@ import { ModalState, ModalType, UseModalInput, useModal } from "@/components/ui/
 import { CustomizationSettingType } from "@/components/ui/modal/customization-modal/customization-settings";
 import { MapCustomizeButton } from "@/components/ui/pathogen-map/map-customize-button";
 import { MersMapCustomizationsContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context";
+import Link from "next/link";
 
 export enum CountryPaintChangeSetting {
   WHEN_RECOMMENDED = "WHEN_RECOMMENDED",
@@ -47,6 +48,37 @@ const dropdownOptionToLabelMap = {
   [MapDataPointVisibilityOptions.EVENTS_ONLY]: "Only Events Visible",
   [MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE]: "Events And Estimates Visible",
   [MapDataPointVisibilityOptions.NOTHING_VISIBLE]: "No Data Visible on Map",
+}
+
+export const eventsProvidedCourtesyOfFaoTooltipContent = (
+  <>
+    <p className="inline">MERS events are provided courtesy of the </p>
+    <Link className='inline text-link' href='https://empres-i.apps.fao.org/' target="__blank" rel="noopener noreferrer">FAO&apos;s Empres-i dashboard</Link>
+    <p> which collects MERS events as they are reported by national authorities.</p>
+  </>
+)
+
+export const camelPopulationProvidedCourtesyOfFaoTooltipContent = (
+  <>
+    <p className="inline">Camel population data is provided courtesy of the </p>
+    <Link className='inline text-link' href='https://empres-i.apps.fao.org/' target="__blank" rel="noopener noreferrer">FAO&apos;s Empres-i dashboard</Link>
+    <p> which collects data on the population of various different livestock.</p>
+  </>
+)
+
+const countryHighlightingSettingToTooltipContent = {
+  [MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES]: undefined,
+  [MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION]: camelPopulationProvidedCourtesyOfFaoTooltipContent,
+  [MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA]: camelPopulationProvidedCourtesyOfFaoTooltipContent,
+  [MersMapCountryHighlightingSettings.MERS_HUMAN_CASES]: eventsProvidedCourtesyOfFaoTooltipContent,
+  [MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES]: eventsProvidedCourtesyOfFaoTooltipContent,
+}
+
+const mapDataPointVisibilityOptionToTooltipContent = {
+  [MapDataPointVisibilityOptions.ESTIMATES_ONLY]: undefined,
+  [MapDataPointVisibilityOptions.EVENTS_ONLY]: eventsProvidedCourtesyOfFaoTooltipContent,
+  [MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE]: eventsProvidedCourtesyOfFaoTooltipContent,
+  [MapDataPointVisibilityOptions.NOTHING_VISIBLE]: undefined,
 }
 
 export const useMersMapCustomizationModal = () => {
@@ -101,7 +133,8 @@ export const useMersMapCustomizationModal = () => {
           if(isMersMapCountryHighlightingSettings(option)) {
             setCurrentMapCountryHighlightingSettings(option)
           }
-        }
+        },
+        tooltipContent: countryHighlightingSettingToTooltipContent[currentMapCountryHighlightingSettings]
       }, {
         type: CustomizationSettingType.DROPDOWN,
         dropdownName: 'Country outlines for countries with data',
@@ -144,7 +177,8 @@ export const useMersMapCustomizationModal = () => {
           if(isMapDataPointVisibilityOptions(option)) {
             setMapDataPointVisibilitySetting(option)
           }
-        }
+        },
+        tooltipContent: mapDataPointVisibilityOptionToTooltipContent[mapDataPointVisibilitySetting]
       }, {
         type: CustomizationSettingType.SWITCH,
         switchName: `Country pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,

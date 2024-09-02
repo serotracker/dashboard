@@ -11,6 +11,7 @@ import { CustomizationSettingType } from "@/components/ui/modal/customization-mo
 import { defaultColoursForWhoRegions } from "@/lib/who-regions";
 import { defaultColoursForUnRegions, unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { ColourPickerCustomizationSettingProps } from "@/components/ui/modal/customization-modal/colour-picker-customization-setting";
+import { eventsProvidedCourtesyOfFaoTooltipContent } from "../../dashboard/(map)/use-mers-map-customization-modal";
 
 export const useSummaryByRegionVisualizationPageConfig = () => {
   const [
@@ -200,6 +201,14 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     SummaryByRegionRegionDropdownOption,
     string
   >['titleTooltipContent'] = useMemo(() => {
+    if(
+      summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES
+      || summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES
+      || summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS
+    ) {
+      return eventsProvidedCourtesyOfFaoTooltipContent;
+    }
+
     if(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.WHO_REGION) {
       return <WHORegionsTooltip />
     }
@@ -213,7 +222,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     }
 
     assertNever(summaryByRegionSelectedDropdownOption);
-  }, [ summaryByRegionSelectedDropdownOption ]);
+  }, [ summaryByRegionSelectedDropdownOption, summaryByRegionVariableOfInterestSelectedDropdownOption ]);
 
   return {
     getDisplayNameForSummaryByWhoRegion,
