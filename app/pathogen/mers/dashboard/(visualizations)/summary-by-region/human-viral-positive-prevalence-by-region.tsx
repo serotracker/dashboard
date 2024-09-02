@@ -24,11 +24,14 @@ export const HumanViralPositivePrevalenceSummaryByRegion = <TRegion extends stri
     .map((estimate) => ({
       ...estimate,
       region: regionGroupingFunction(estimate),
-      //TODO remove these when we have real data
-      samplingStartDate: '2024-07-09T00:28:53Z',
-      samplingEndDate: '2024-07-09T00:28:53Z',
+      samplingStartDate: estimate.primaryEstimateInfo.samplingStartDate,
+      samplingEndDate: estimate.primaryEstimateInfo.samplingEndDate
     }))
-    .filter((estimate): estimate is Omit<typeof estimate, 'region'> & {region: NonNullable<typeof estimate['region']>} => !!estimate.region)
+    .filter((estimate): estimate is Omit<typeof estimate, 'region'|'samplingStartDate'|'samplingEndDate'> & {
+      region: NonNullable<typeof estimate['region']>;
+      samplingStartDate: NonNullable<typeof estimate['samplingStartDate']>;
+      samplingEndDate: NonNullable<typeof estimate['samplingEndDate']>;
+    } => !!estimate.region && !!estimate.samplingStartDate && !!estimate.samplingEndDate)
   , [ data, regionGroupingFunction ]);
 
   const numberOfPagesAvailable = useMemo(() => {

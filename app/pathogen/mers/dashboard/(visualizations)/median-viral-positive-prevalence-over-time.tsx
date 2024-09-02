@@ -1,6 +1,6 @@
 import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
-import { MersEstimate, MersSeroprevalenceEstimate, MersViralEstimate, isMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { AnimalMersViralEstimate, HumanMersViralEstimate, MersEstimate, MersSeroprevalenceEstimate, MersViralEstimate, isMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { parseISO } from 'date-fns';
@@ -29,10 +29,16 @@ export const MedianViralPositivePrevalenceOverTime = (props: MedianViralPositive
     })
     .map((dataPoint) => ({
       ...dataPoint,
-      //TODO remove these when we have real data
-      samplingStartDate: '2024-07-09T00:28:53Z',
-      samplingEndDate: '2024-07-09T00:28:53Z',
+      samplingStartDate: dataPoint.primaryEstimateInfo.samplingStartDate,
+      samplingEndDate: dataPoint.primaryEstimateInfo.samplingEndDate,
     }))
+    .filter((dataPoint): dataPoint is (
+      Omit<HumanMersViralEstimate, 'samplingStartDate'|'samplingEndDate'> |
+      Omit<AnimalMersViralEstimate, 'samplingStartDate'|'samplingEndDate'>
+    ) & {
+      samplingStartDate: NonNullable<typeof dataPoint['samplingStartDate']>
+      samplingEndDate: NonNullable<typeof dataPoint['samplingEndDate']>
+    } => !!dataPoint.samplingStartDate && !!dataPoint.samplingEndDate)
   , [ data ]);
 
   return (
