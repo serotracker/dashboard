@@ -1,10 +1,11 @@
-import { DropdownTableHeader, RowExpansionConfiguration, TableHeaderType } from "@/components/ui/data-table/data-table";
+import { DropdownTableHeader, TableHeaderType } from "@/components/ui/data-table/data-table";
 import { useMemo, useState } from "react";
 import { MersSeroprevalenceEstimateDataTable } from "./mers-seroprevalence-estimate-data-table";
 import { MersCasesDataTable } from "./mers-cases-data-table";
 import { CamelPopulationDataTable } from "./camel-population-data-table";
 import { MersViralEstimateDataTable } from "./mers-viral-estimates-data-table";
 import { useMersDataTableData } from "./use-mers-data-table-data";
+import { camelPopulationProvidedCourtesyOfFaoTooltipContent, eventsProvidedCourtesyOfFaoTooltipContent } from "../(map)/use-mers-map-customization-modal";
 
 export enum AvailableMersDataTables {
   MERS_SEROPREVALENCE_ESTIMATES = "MERS_SEROPREVALENCE_ESTIMATES",
@@ -12,6 +13,14 @@ export enum AvailableMersDataTables {
   MERS_CASES = "MERS_CASES",
   CAMEL_POPULATION_DATA = "CAMEL_POPULATION_DATA",
   UNAVAILABLE = "UNAVAILABLE"
+}
+
+const availableMersDataTableToHeaderTooltipContent = {
+  [AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES]: undefined,
+  [AvailableMersDataTables.MERS_VIRAL_ESTIMATES]: undefined,
+  [AvailableMersDataTables.MERS_CASES]: eventsProvidedCourtesyOfFaoTooltipContent,
+  [AvailableMersDataTables.CAMEL_POPULATION_DATA]: camelPopulationProvidedCourtesyOfFaoTooltipContent,
+  [AvailableMersDataTables.UNAVAILABLE]: undefined,
 }
 
 export const MersDataTable = () => {
@@ -74,7 +83,8 @@ export const MersDataTable = () => {
       },
       onDropdownOptionChange: (option) => setCurrentlySelectedDataTable(option)
     },
-    afterDropdownHeaderText: " in our database"
+    afterDropdownHeaderText: " in our database",
+    headerTooltipContent: availableMersDataTableToHeaderTooltipContent[cleanedSelectedDataTable]
   }), [ availableDropdownOptionGroups, cleanedSelectedDataTable, setCurrentlySelectedDataTable ]);
 
   const dataTableComponentMap = useMemo(() => ({
