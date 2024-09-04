@@ -824,6 +824,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
           'Country': element.subestimate.country,
