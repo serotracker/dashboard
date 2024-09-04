@@ -63,6 +63,10 @@ export const mersPrimaryEstimates = gql`
           positiveCutoff
           symptomPrevalenceOfPositives
           symptomDefinition
+          sequencingDone
+          clade
+          accessionNumbers
+          genomeSequenced
           sampleFrame
           ageGroup
         }
@@ -119,6 +123,10 @@ export const mersPrimaryEstimates = gql`
           positiveCutoff
           symptomPrevalenceOfPositives
           symptomDefinition
+          sequencingDone
+          clade
+          accessionNumbers
+          genomeSequenced
           sampleFrame
           ageGroup
         }
@@ -175,6 +183,10 @@ export const mersPrimaryEstimates = gql`
           positiveCutoff
           symptomPrevalenceOfPositives
           symptomDefinition
+          sequencingDone
+          clade
+          accessionNumbers
+          genomeSequenced
           animalType
           animalSpecies
           animalDetectionSettings
@@ -235,6 +247,10 @@ export const mersPrimaryEstimates = gql`
           positiveCutoff
           symptomPrevalenceOfPositives
           symptomDefinition
+          sequencingDone
+          clade
+          accessionNumbers
+          genomeSequenced
           animalType
           animalSpecies
           animalDetectionSettings
