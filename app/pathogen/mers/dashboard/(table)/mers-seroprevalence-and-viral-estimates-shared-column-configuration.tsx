@@ -89,6 +89,10 @@ export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   primaryEstimatePositiveCutoff: estimate.primaryEstimateInfo.positiveCutoff,
   primaryEstimateSymptomPrevalenceOfPositives: estimate.primaryEstimateInfo.symptomPrevalenceOfPositives,
   primaryEstimateSymptomDefinition: estimate.primaryEstimateInfo.symptomDefinition,
+  primaryEstimateSequencingDone: estimate.primaryEstimateInfo.sequencingDone,
+  primaryEstimateClade: estimate.primaryEstimateInfo.clade,
+  primaryEstimateAccessionNumbers: estimate.primaryEstimateInfo.accessionNumbers,
+  primaryEstimateGenomeSequenced: estimate.primaryEstimateInfo.genomeSequenced,
 })
 
 export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
@@ -160,6 +164,10 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   valueToColourSchemeClassnameMap: antigenToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Antigen'
+}, {
+  type: DataTableColumnConfigurationEntryType.BOOLEAN as const,
+  fieldName: 'primaryEstimateSequencingDone',
+  label: 'Genomic Sequencing Done?'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimateFirstAuthorFullName',

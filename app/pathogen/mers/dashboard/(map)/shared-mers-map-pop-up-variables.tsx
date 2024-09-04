@@ -20,7 +20,9 @@ import {
   MersEventAnimalSpecies,
   MersEventAnimalType,
   MersAnimalType,
-  MersAnimalSpecies
+  MersAnimalSpecies,
+  Clade,
+  GenomeSequenced
 } from "@/gql/graphql"
 import { TranslateDate } from "@/utils/translate-util/translate-service";
 import assertNever from "assert-never";
@@ -182,6 +184,28 @@ export const animalSpeciesToStringMap = {
   [MersEventAnimalSpecies.Cattle]: "Cattle",
   [MersEventAnimalSpecies.Sheep]: "Sheep",
   [MersEventAnimalSpecies.Donkey]: "Donkey",
+}
+
+export const cladeToColourClassnameMap = {
+  [Clade.A]: "bg-yellow-200",
+  [Clade.B]: "bg-emerald-200",
+  [Clade.C1]: "bg-teal-200",
+  [Clade.C2]: "bg-orange-200",
+  [Clade.C]: "bg-amber-200",
+}
+
+export const isGenomeSequenced = (genomeSequenced: string): genomeSequenced is GenomeSequenced => Object.values(GenomeSequenced).some((element) => element === genomeSequenced);
+
+export const genomeSequenceToColourClassnameMap = {
+  [GenomeSequenced.FullLength]: "bg-pink-300",
+  [GenomeSequenced.PartialNGene]: "bg-red-200",
+  [GenomeSequenced.PartialSGene]: "bg-green-200",
+}
+
+export const genomeSequenceToStringMap = {
+  [GenomeSequenced.FullLength]: "Full length",
+  [GenomeSequenced.PartialNGene]: "Partial N gene",
+  [GenomeSequenced.PartialSGene]: "Partial S gene"
 }
 
 export const animalSpeciesToColourClassnameMap = {
