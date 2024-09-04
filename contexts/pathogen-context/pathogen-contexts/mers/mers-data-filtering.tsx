@@ -83,6 +83,7 @@ const mersEstimateStringFieldHandler = <TFilterKey extends MersFilterableField>(
 
 interface MersEstimateFilteringHandlerOutput {
   included: boolean;
+  geographicalAreaSubestimateIdsToMarkAsFiltered?: string[];
   sexSubestimateIdsToMarkAsFiltered?: string[];
   humanAgeGroupSubestimateIdsToMarkAsFiltered?: string[];
   animalSpeciesSubestimateIdstoMarkAsFiltered?: string[];
@@ -201,17 +202,31 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     })
   }),
   [MersFilterableField.whoRegion]: (input) => ({
-    included: mersEstimateStringFieldHandler({
+    included: mersEstimateArrayFieldHandler({
       filterKey: MersFilterableField.whoRegion,
       estimate: {
         ...input.estimate,
-        whoRegion: input.estimate.primaryEstimateInfo.whoRegion
+        whoRegion: uniq([
+          ...(input.estimate.primaryEstimateInfo.whoRegion
+            ? [ input.estimate.primaryEstimateInfo.whoRegion ]
+            : []
+          ),
+          ...input.estimate.geographicalAreaSubestimates
+            .map((subestimate) => subestimate.whoRegion)
+            .filter((whoRegion): whoRegion is NonNullable<typeof whoRegion> => !!whoRegion)
+        ])
       },
       selectedFilters: {
         ...input.selectedFilters,
         [MersFilterableField.whoRegion]: input.selectedFilters[MersFilterableField.whoRegion] ?? []
       }
-    })
+    }),
+    geographicalAreaSubestimateIdsToMarkAsFiltered: input.estimate.geographicalAreaSubestimates
+      .filter((subestimate) =>
+        ((input.selectedFilters[MersFilterableField.whoRegion] ?? []).length > 0) && 
+        !input.selectedFilters[MersFilterableField.whoRegion]?.some((element) => element === subestimate.whoRegion)
+      )
+      .map((subestimate) => subestimate.id)
   }),
   [MersFilterableField.sex]: (input) => ({
     included: mersEstimateArrayFieldHandler({
@@ -285,30 +300,54 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     })
   }),
   [MersFilterableField.countryAlphaTwoCode]: (input) => ({
-    included: mersEstimateStringFieldHandler({
+    included: mersEstimateArrayFieldHandler({
       filterKey: MersFilterableField.countryAlphaTwoCode,
       estimate: {
         ...input.estimate,
-        countryAlphaTwoCode: input.estimate.primaryEstimateInfo.countryAlphaTwoCode
+        countryAlphaTwoCode: uniq([
+          input.estimate.primaryEstimateInfo.countryAlphaTwoCode,
+          ...input.estimate.geographicalAreaSubestimates
+            .map((subestimate) => subestimate.countryAlphaTwoCode)
+        ])
       },
       selectedFilters: {
         ...input.selectedFilters,
         [MersFilterableField.countryAlphaTwoCode]: input.selectedFilters[MersFilterableField.countryAlphaTwoCode] ?? []
       }
-    })
+    }),
+    geographicalAreaSubestimateIdsToMarkAsFiltered: input.estimate.geographicalAreaSubestimates
+      .filter((subestimate) =>
+        ((input.selectedFilters[MersFilterableField.countryAlphaTwoCode] ?? []).length > 0) && 
+        !input.selectedFilters[MersFilterableField.countryAlphaTwoCode]?.some((element) => element === subestimate.countryAlphaTwoCode)
+      )
+      .map((subestimate) => subestimate.id)
   }),
   [MersFilterableField.unRegion]: (input) => ({
-    included: mersEstimateStringFieldHandler({
+    included: mersEstimateArrayFieldHandler({
       filterKey: MersFilterableField.unRegion,
       estimate: {
         ...input.estimate,
-        unRegion: input.estimate.primaryEstimateInfo.unRegion
+        unRegion: uniq([
+          ...(input.estimate.primaryEstimateInfo.unRegion
+            ? [ input.estimate.primaryEstimateInfo.unRegion ]
+            : []
+          ),
+          ...input.estimate.geographicalAreaSubestimates
+            .map((subestimate) => subestimate.unRegion)
+            .filter((unRegion): unRegion is NonNullable<typeof unRegion> => !!unRegion)
+        ])
       },
       selectedFilters: {
         ...input.selectedFilters,
         [MersFilterableField.unRegion]: input.selectedFilters[MersFilterableField.unRegion] ?? []
       }
-    })
+    }),
+    geographicalAreaSubestimateIdsToMarkAsFiltered: input.estimate.geographicalAreaSubestimates
+      .filter((subestimate) =>
+        ((input.selectedFilters[MersFilterableField.unRegion] ?? []).length > 0) && 
+        !input.selectedFilters[MersFilterableField.unRegion]?.some((element) => element === subestimate.unRegion)
+      )
+      .map((subestimate) => subestimate.id)
   }),
   [MersFilterableField.samplingStartDate]: (input) => {
     const samplingStartDateFromFilters = (input.selectedFilters[MersFilterableField.samplingStartDate] ?? []).at(0);
@@ -600,6 +639,7 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
 
         const {
           included,
+          geographicalAreaSubestimateIdsToMarkAsFiltered,
           sexSubestimateIdsToMarkAsFiltered,
           humanAgeGroupSubestimateIdsToMarkAsFiltered,
           animalSpeciesSubestimateIdstoMarkAsFiltered,
@@ -617,6 +657,7 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
 
         return {
           included,
+          geographicalAreaSubestimateIdsToMarkAsFiltered,
           sexSubestimateIdsToMarkAsFiltered,
           humanAgeGroupSubestimateIdsToMarkAsFiltered,
           animalSpeciesSubestimateIdstoMarkAsFiltered,
@@ -633,6 +674,9 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
     .filter(({ appliedFilters }) => appliedFilters.every((appliedFilter) => appliedFilter.included))
     .map(({ estimate, appliedFilters }) => ({
       estimate,
+      geographicalAreaSubestimateIdsToMarkAsFiltered: uniq(
+        appliedFilters.flatMap(({ geographicalAreaSubestimateIdsToMarkAsFiltered }) => geographicalAreaSubestimateIdsToMarkAsFiltered)
+      ),
       sexSubestimateIdsToMarkAsFiltered: uniq(
         appliedFilters.flatMap(({ sexSubestimateIdsToMarkAsFiltered }) => sexSubestimateIdsToMarkAsFiltered)
       ),
@@ -666,6 +710,7 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
     }))
     .map(({
       estimate,
+      geographicalAreaSubestimateIdsToMarkAsFiltered,
       sexSubestimateIdsToMarkAsFiltered,
       ageGroupSubestimateIdsToMarkAsFiltered,
       animalSpeciesSubestimateIdstoMarkAsFiltered,
@@ -678,6 +723,10 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       camelExposureLevelSubestimateIdsToMarkAsFiltered
     }) => ({
       ...estimate,
+      geographicalAreaSubestimates: estimate.geographicalAreaSubestimates.map((subestimate) => ({
+        ...subestimate,
+        markedAsFiltered: geographicalAreaSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
+      })),
       sexSubestimates: estimate.sexSubestimates.map((subestimate) => ({
         ...subestimate,
         markedAsFiltered: sexSubestimateIdsToMarkAsFiltered.includes(subestimate.id)
@@ -720,6 +769,7 @@ export const filterMersEstimates = (input: FilterMersEstimatesInput): FilterMers
       }))
     }))
     .filter((estimate) => !(
+      (estimate.geographicalAreaSubestimates.length > 0 && estimate.geographicalAreaSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
       (estimate.sexSubestimates.length > 0 && estimate.sexSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
       (estimate.ageGroupSubestimates.length > 0 && estimate.ageGroupSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
       (estimate.animalSpeciesSubestimates.length > 0 && estimate.animalSpeciesSubestimates.every((subestimate) => subestimate.markedAsFiltered)) ||
