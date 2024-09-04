@@ -1,6 +1,6 @@
 import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
-import { MersContext, MersEstimate, MersViralEstimate, isMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
@@ -12,7 +12,7 @@ import {
   mersDataTypeToColourClassnameMap,
   mersDataTypeToLabelMap
 } from "../(map)/shared-mers-map-pop-up-variables";
-import { mapMersEstimateBaseForDataTable, mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { MersViralEstimateForDataTable } from "./use-mers-data-table-data";
 
 const mersViralEstimateColumnConfiguration = [{

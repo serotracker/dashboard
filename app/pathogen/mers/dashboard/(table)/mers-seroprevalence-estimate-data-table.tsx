@@ -1,8 +1,6 @@
 import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
-import { MersContext, MersEstimate, MersSeroprevalenceEstimate, isMersSeroprevalenceEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { WhoRegion } from "@/gql/graphql";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
@@ -15,7 +13,7 @@ import {
   mersDataTypeToColourClassnameMap,
   mersDataTypeToLabelMap
 } from "../(map)/shared-mers-map-pop-up-variables";
-import { mapMersEstimateBaseForDataTable, mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { MersSeroprevalenceEstimateForDataTable } from "./use-mers-data-table-data";
 import { SubestimateTable } from "@/components/ui/pathogen-map/map-pop-up/subestimate-table";
 
