@@ -1,4 +1,4 @@
-import { MouseEventHandler, useMemo, useState } from "react";
+import { MouseEventHandler, useCallback, useMemo, useState } from "react";
 import { HumanMersViralEstimate, MersEstimate, isHumanMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
@@ -19,6 +19,7 @@ import { typedGroupBy, typedObjectKeys } from "@/lib/utils";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { TooltipProps } from "recharts/types/component/Tooltip";
 import { HumanMersViralEstimatePopupContent } from "../../(map)/human-mers-viral-estimate-pop-up-content";
+import { useEstimatesByRegionLegendProps } from "./use-estimates-by-region-legend-props";
 
 const HumanViralPositivePrevalenceByRegionTooltip = <
   TValueType extends number | string | Array<number | string>,
@@ -58,8 +59,17 @@ interface HumanViralPositivePrevalenceByRegionProps {
 }
 
 export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePrevalenceByRegionProps) => {
-  const { humanMersViralEstimates, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
+  const { humanMersViralEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
+
+  const {
+    regionToDotColour,
+    legendProps
+  } = useEstimatesByRegionLegendProps({
+    regionToDotColourDefault,
+    regionToLegendLabel,
+    legendConfiguration
+  })
 
   const consideredData = useMemo(() =>
     humanMersViralEstimates
@@ -94,24 +104,6 @@ export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePr
   , [ consideredData ]);
 
   const allRegions = useMemo(() => typedObjectKeys(consideredDataByRegion), [ consideredDataByRegion ]);
-
-  const legendProps =
-    props.legendConfiguration === LegendConfiguration.RIGHT_ALIGNED
-      ? {
-          layout: "vertical" as const,
-          verticalAlign: "middle" as const,
-          align: "right" as const,
-          wrapperStyle: { right: -10 },
-        }
-      : {
-          layout: "horizontal" as const,
-          verticalAlign: "bottom" as const,
-          align: "center" as const,
-          wrapperStyle: {
-            paddingTop: 10,
-            bottom: 0,
-          },
-        };
 
   return (
     <ResponsiveContainer

@@ -19,6 +19,7 @@ import { typedGroupBy, typedObjectKeys } from "@/lib/utils";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { TooltipProps } from "recharts/types/component/Tooltip";
 import { HumanMersSeroprevalenceEstimatePopupContent } from "../../(map)/human-mers-seroprevalence-estimate-pop-up-content";
+import { useEstimatesByRegionLegendProps } from "./use-estimates-by-region-legend-props";
 
 const HumanSeroprevalenceByRegionTooltip = <
   TValueType extends number | string | Array<number | string>,
@@ -58,8 +59,17 @@ interface HumanSeroprevalenceByRegionProps {
 }
 
 export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionProps) => {
-  const { humanMersSeroprevalenceEstimates, regionGroupingFunction, regionToDotColour, regionToLegendLabel } = props;
+  const { humanMersSeroprevalenceEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
+
+  const {
+    regionToDotColour,
+    legendProps
+  } = useEstimatesByRegionLegendProps({
+    regionToDotColourDefault,
+    regionToLegendLabel,
+    legendConfiguration
+  });
 
   const consideredData = useMemo(() =>
     humanMersSeroprevalenceEstimates
@@ -94,24 +104,6 @@ export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionPr
   , [ consideredData ]);
 
   const allRegions = useMemo(() => typedObjectKeys(consideredDataByRegion), [ consideredDataByRegion ]);
-
-  const legendProps =
-    props.legendConfiguration === LegendConfiguration.RIGHT_ALIGNED
-      ? {
-          layout: "vertical" as const,
-          verticalAlign: "middle" as const,
-          align: "right" as const,
-          wrapperStyle: { right: -10 },
-        }
-      : {
-          layout: "horizontal" as const,
-          verticalAlign: "bottom" as const,
-          align: "center" as const,
-          wrapperStyle: {
-            paddingTop: 10,
-            bottom: 0,
-          },
-        };
 
   return (
     <ResponsiveContainer
