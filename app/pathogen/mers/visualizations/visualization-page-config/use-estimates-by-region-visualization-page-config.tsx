@@ -79,14 +79,26 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       dropdownOptionGroups: [{
         groupHeader: 'Seroprevalence Estimates',
         options: [
-          EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE,
-          EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE,
+          ...(availableDropdownOptionGroups.includes(EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE)
+            ? [ EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE ]
+            : []
+          ),
+          ...(availableDropdownOptionGroups.includes(EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE)
+            ? [ EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE ]
+            : []
+          ),
         ]
       }, {
         groupHeader: 'Viral Positive Prevalence Estimates',
         options: [
-          EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE,
-          EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE,
+          ...(availableDropdownOptionGroups.includes(EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE)
+            ? [ EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE ]
+            : []
+          ),
+          ...(availableDropdownOptionGroups.includes(EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE)
+            ? [ EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE ]
+            : []
+          ),
         ]
       }],
       chosenDropdownOption: cleanedChosenDropdownOption,
@@ -125,7 +137,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       }
     },
     afterBothDropdownsHeaderText: " With 95% Confidence Intervals"
-  }), [ cleanedChosenDropdownOption, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion ])
+  }), [ cleanedChosenDropdownOption, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion, availableDropdownOptionGroups ])
 
   const renderVisualizationForEstimatesByRegion: MersVisualizationInformation<
     string,
