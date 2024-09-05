@@ -218,6 +218,16 @@ export const Header = (props: HeaderProps) => {
                     navItems={sc2TrackerNavItems}
                   />
                 )}
+                {!process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED && (
+                  <TabGroup
+                    title={"Original SARS-CoV-2 Tracker"}
+                    navItems={[{
+                      title: "Dashboard",
+                      href: "https://serotracker.com",
+                      description: "Visit our original dashboard for tracking SARS-CoV-2 Seroprevalence",
+                    }]}
+                  />
+                )}
                 <TabGroup
                   title={"Arbotracker"}
                   navItems={arbotrackerNavItems}
