@@ -546,9 +546,17 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
     ? `${(estimate.primaryEstimateInfo.symptomPrevalenceOfPositives * 100).toFixed(1)}%`
     : "Unknown"
 }, {
-  title: "Symptom Definiiton",
+  title: "Symptom Definition",
   type: PopUpContentRowType.TEXT,
   text: estimate.primaryEstimateInfo.symptomDefinition ?? 'Not Reported'
+}, estimate.primaryEstimateInfo.sequencingDone ? {
+  title: "Genomic Sequencing Done?",
+  type: PopUpContentRowType.TEXT,
+  text: 'Yes'
+} : {
+  title: "Genomic Sequencing Done?",
+  type: PopUpContentRowType.TEXT,
+  text: 'No'
 }];
 
 export const getAnimalMersEstimateRows = (estimate: AnimalMersEstimateMarkerData): PopUpContentRowProps[] => [{
