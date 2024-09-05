@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import ListItem from "@/components/customs/list-item";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { CircleHelp } from "lucide-react";
@@ -184,7 +185,13 @@ export const Header = (props: HeaderProps) => {
     >
       <div className="cursor-pointer pl-2">
         <Link href={"/"} className="flex items-center text-h1">
-          <h2>
+          <Image
+            src='/SerotrackerLogo.svg'
+            alt=''
+            width={40}
+            height={40}
+          />
+          <h2 className="ml-4">
             <span
               className={cn(
                 "p-1 mr-1 bg-white rounded-md transition-colors duration-300",
