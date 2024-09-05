@@ -218,6 +218,24 @@ export const Header = (props: HeaderProps) => {
                     navItems={sc2TrackerNavItems}
                   />
                 )}
+                {!process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED && (
+                  <TabGroup
+                    title={"Original SARS-CoV-2 Tracker"}
+                    navItems={[{
+                      title: "Dashboard",
+                      href: "https://serotracker.com",
+                      description: "Visit our original dashboard for tracking SARS-CoV-2 Seroprevalence",
+                    }, {
+                      title: "Data",
+                      href: "https://serotracker.com/en/Data",
+                      description: "View or download our dataset for SARS-CoV-2",
+                    }, {
+                      title: "Visualizations",
+                      href: "https://serotracker.com/en/Analyze",
+                      description: "A collection of visualizations for our SARS-CoV-2 dataset",
+                    }]}
+                  />
+                )}
                 <TabGroup
                   title={"Arbotracker"}
                   navItems={arbotrackerNavItems}
