@@ -53,10 +53,17 @@ export const MersDataTable = () => {
       longitude: estimate.longitude,
       estimateId: estimate.estimateId,
       country: estimate.primaryEstimateCountry,
+      state: estimate.primaryEstimateState,
+      city: estimate.primaryEstimateCity,
       clade: estimate.primaryEstimateClade,
       accessionNumbers: estimate.primaryEstimateAccessionNumbers,
       genomeSequenced: estimate.primaryEstimateGenomeSequenced,
-      sourceUrl: estimate.primaryEstimateSourceUrl
+      sourceUrl: estimate.primaryEstimateSourceUrl,
+      animalSpecies: estimate.primaryEstimateAnimalSpecies,
+      specimenType: estimate.primaryEstimateSpecimenType,
+      whoRegion: estimate.primaryEstimateWhoRegion,
+      samplingStartDate: estimate.primaryEstimateSamplingStartDate,
+      samplingEndDate: estimate.primaryEstimateSamplingEndDate,
     }))
   , [ mersSeroprevalenceEstimateData, mersViralEstimateData ]);
 

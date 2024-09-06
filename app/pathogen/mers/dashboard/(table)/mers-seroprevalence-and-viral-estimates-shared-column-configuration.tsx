@@ -110,16 +110,16 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   defaultColourSchemeClassname: 'bg-sky-100'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateCity',
-  label: 'City'
+  fieldName: 'primaryEstimateCountry',
+  label: 'Country'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimateState',
   label: 'State'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateCountry',
-  label: 'Country'
+  fieldName: 'primaryEstimateCity',
+  label: 'City'
 }, {
   type: DataTableColumnConfigurationEntryType.DATE as const,
   fieldName: 'primaryEstimateSamplingStartDate',
@@ -153,7 +153,7 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Isotypes'
 }, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'primaryEstimateSpecimenType',
   valueToColourSchemeClassnameMap: specimenTypeToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
@@ -211,7 +211,7 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Animal Purpose',
 }, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'primaryEstimateAnimalImportedOrLocal',
   valueToColourSchemeClassnameMap: animalImportedOrLocalToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
@@ -229,7 +229,7 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Exposure To Camels'
 }, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'primaryEstimateSampleFrame',
   valueToColourSchemeClassnameMap: sampleFrameToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
