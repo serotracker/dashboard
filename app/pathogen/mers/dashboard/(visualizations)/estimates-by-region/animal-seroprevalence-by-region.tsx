@@ -19,7 +19,7 @@ import { typedGroupBy, typedObjectKeys } from "@/lib/utils";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { TooltipProps } from "recharts/types/component/Tooltip";
 import { AnimalMersSeroprevalenceEstimatePopupContent } from "../../(map)/animal-mers-seroprevalence-estimate-pop-up-content";
-import { useEstimatesByRegionLegendProps } from "./use-estimates-by-region-legend-props";
+import { useBarColourAndLegendProps } from "@/components/customs/visualizations/use-bar-colour-and-legend-props";
 
 const AnimalSeroprevalenceByRegionTooltip = <
   TValueType extends number | string | Array<number | string>,
@@ -63,11 +63,11 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const {
-    regionToDotColour,
+    getColourForSecondaryKey,
     legendProps
-  } = useEstimatesByRegionLegendProps({
-    regionToDotColourDefault,
-    regionToLegendLabel,
+  } = useBarColourAndLegendProps({
+    getColourForSecondaryKeyDefault: regionToDotColourDefault,
+    secondaryGroupingKeyToLabel: regionToLegendLabel,
     legendConfiguration
   });
 
@@ -169,11 +169,11 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
             key={region}
             data={consideredDataByRegion[region]}
             name={regionToLegendLabel(region)}
-            fill={regionToDotColour(region, regionIndex)}
+            fill={getColourForSecondaryKey(region, regionIndex)}
           >
             <ErrorBar
               dataKey="seroprevalenceError"
-              stroke={regionToDotColour(region, regionIndex)}
+              stroke={getColourForSecondaryKey(region, regionIndex)}
               width={0}
               direction="x"
             />

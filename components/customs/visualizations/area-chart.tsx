@@ -15,6 +15,7 @@ import {
 import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from "./group-data-for-recharts/group-data-for-recharts-twice";
 import { useMemo } from "react";
 import { applyLabelsToGroupedRechartsData } from "./group-data-for-recharts/apply-labels-to-grouped-recharts-data";
+import { useBarColourAndLegendProps } from "./use-bar-colour-and-legend-props";
 
 interface AreaChartProps<
   TData,
@@ -54,6 +55,13 @@ export const AreaChart = <
   props: AreaChartProps<TData, TPrimaryGroupingKey, TSecondaryGroupingKey>
 ) => {
   const { primaryGroupingKeyToLabel, secondaryGroupingKeyToLabel, primaryGroupingSortFunction } = props;
+
+  const { getColourForSecondaryKey, legendProps } = useBarColourAndLegendProps({
+    getColourForSecondaryKeyDefault: (secondaryKey, index) => props.getBarColour(secondaryKey),
+    secondaryGroupingKeyToLabel,
+    legendConfiguration: undefined
+  });
+
   const { rechartsData, allSecondaryKeys } = groupDataForRechartsTwice({
     data: props.data,
     primaryGroupingFunction: props.primaryGroupingFunction,
@@ -96,15 +104,15 @@ export const AreaChart = <
         <XAxis {...xAxisProps} />
         <YAxis />
         <Tooltip itemStyle={{"color": "black"}} />
-        <Legend />
-        {allSecondaryKeys.map((secondaryKey) => (
+        <Legend {...legendProps} />
+        {allSecondaryKeys.map((secondaryKey, index) => (
           <Area
             key={secondaryKey}
             type="monotone"
             dataKey={props.secondaryGroupingKeyToLabel ? props.secondaryGroupingKeyToLabel(secondaryKey) : secondaryKey}
             stackId="1"
-            stroke={props.getBarColour(secondaryKey)}
-            fill={props.getBarColour(secondaryKey)}
+            stroke={getColourForSecondaryKey(secondaryKey, index)}
+            fill={getColourForSecondaryKey(secondaryKey, index)}
           />
         ))}
       </RechartsAreaChart>

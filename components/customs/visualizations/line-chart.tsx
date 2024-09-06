@@ -16,6 +16,7 @@ import { LegendConfiguration } from "./stacked-bar-chart";
 import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from './group-data-for-recharts/group-data-for-recharts-twice';
 import { applyLabelsToGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
 import { Formatter } from 'recharts/types/component/DefaultTooltipContent';
+import { useBarColourAndLegendProps } from './use-bar-colour-and-legend-props';
 
 const percentageTooltipFormatter: Formatter<number, string> = (value) => `${value.toFixed(2)}%`
 
@@ -77,6 +78,12 @@ export const LineChart = <
     transformOutputValue: props.transformOutputValue,
   });
 
+  const { getColourForSecondaryKey, legendProps } = useBarColourAndLegendProps({
+    getColourForSecondaryKeyDefault: (secondaryKey, index) => props.getLineColour(secondaryKey, index),
+    secondaryGroupingKeyToLabel,
+    legendConfiguration: props.legendConfiguration
+  });
+
   const { rechartsDataUsingLabels } = useMemo(() => applyLabelsToGroupedRechartsData({
     rechartsData,
     primaryGroupingKeyToLabel,
@@ -93,24 +100,6 @@ export const LineChart = <
     } : {})
   };
 
-  const legendProps =
-    props.legendConfiguration === LegendConfiguration.RIGHT_ALIGNED
-      ? {
-          layout: "vertical" as const,
-          verticalAlign: "middle" as const,
-          align: "right" as const,
-          wrapperStyle: { right: -10 },
-        }
-      : {
-          layout: "horizontal" as const,
-          verticalAlign: "bottom" as const,
-          align: "center" as const,
-          wrapperStyle: {
-            paddingTop: 10,
-            bottom: 0,
-          },
-        };
-  
   const tooltipFormatter = useMemo(() => {
     if(tooltipFormatterOverride) {
       return tooltipFormatterOverride;
@@ -152,7 +141,7 @@ export const LineChart = <
             key={secondaryKey}
             type="monotone"
             dataKey={props.secondaryGroupingKeyToLabel ? props.secondaryGroupingKeyToLabel(secondaryKey) : secondaryKey}
-            stroke={props.getLineColour(secondaryKey, index)}
+            stroke={getColourForSecondaryKey(secondaryKey, index)}
           />
         ))}
       </RechartsLineChart>
