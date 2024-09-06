@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -10,10 +10,10 @@ import {
   YAxis,
 } from "recharts";
 import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
-import { typedObjectKeys } from '@/lib/utils';
 import { CustomXAxisTick } from './custom-x-axis-tick';
 import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from './group-data-for-recharts/group-data-for-recharts-twice';
 import { applyLabelsToGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
+import { useBarColourAndLegendProps } from './use-bar-colour-and-legend-props';
 
 export enum LegendConfiguration {
   RIGHT_ALIGNED = 'RIGHT_ALIGNED',
@@ -58,23 +58,13 @@ export const StackedBarChart = <
 >(
   props: StackedBarChartProps<TData, TPrimaryGroupingKey, TSecondaryGroupingKey>
 ) => {
-  const legendProps =
-    props.legendConfiguration === LegendConfiguration.RIGHT_ALIGNED
-      ? {
-          layout: "vertical" as const,
-          verticalAlign: "middle" as const,
-          align: "right" as const,
-          wrapperStyle: { right: -10 },
-        }
-      : {
-          layout: "horizontal" as const,
-          verticalAlign: "bottom" as const,
-          align: "center" as const,
-          wrapperStyle: {
-            paddingTop: 10,
-            bottom: 0,
-          },
-        };
+  const { xAxisTickSettings, primaryGroupingKeyToLabel, secondaryGroupingKeyToLabel } = props;
+
+  const { getColourForSecondaryKey, legendProps } = useBarColourAndLegendProps({
+    getColourForSecondaryKeyDefault: (secondaryKey, index) => props.getBarColour(secondaryKey),
+    secondaryGroupingKeyToLabel,
+    legendConfiguration: props.legendConfiguration
+  });
 
   const { rechartsData, allSecondaryKeys } = groupDataForRechartsTwice({
     data: props.data,
@@ -89,7 +79,6 @@ export const StackedBarChart = <
     dataKey: "primaryKey",
     interval: 0,
   };
-  const { xAxisTickSettings, primaryGroupingKeyToLabel, secondaryGroupingKeyToLabel } = props;
 
   if (xAxisTickSettings) {
     xAxisProps = {
@@ -127,12 +116,12 @@ export const StackedBarChart = <
         <YAxis />
         <Tooltip itemStyle={{ color: "black" }} />
         <Legend {...legendProps} />
-        {allSecondaryKeys.map((secondaryKey) => (
+        {allSecondaryKeys.map((secondaryKey, index) => (
           <Bar
             key={`${props.graphId}-${secondaryKey}-bar`}
             dataKey={props.secondaryGroupingKeyToLabel ? props.secondaryGroupingKeyToLabel(secondaryKey) : secondaryKey}
             stackId="a"
-            fill={props.getBarColour(secondaryKey)}
+            fill={getColourForSecondaryKey(secondaryKey, index)}
           />
         ))}
       </BarChart>

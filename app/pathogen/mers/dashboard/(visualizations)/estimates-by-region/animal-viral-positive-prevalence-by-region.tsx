@@ -19,7 +19,7 @@ import { typedGroupBy, typedObjectKeys } from "@/lib/utils";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { TooltipProps } from "recharts/types/component/Tooltip";
 import { AnimalMersViralEstimatePopupContent } from "../../(map)/animal-mers-viral-estimate-pop-up-content";
-import { useEstimatesByRegionLegendProps } from "./use-estimates-by-region-legend-props";
+import { useBarColourAndLegendProps } from "@/components/customs/visualizations/use-bar-colour-and-legend-props";
 
 const AnimalViralPositivePrevalenceByRegionTooltip = <
   TValueType extends number | string | Array<number | string>,
@@ -61,11 +61,11 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const {
-    regionToDotColour,
+    getColourForSecondaryKey,
     legendProps
-  } = useEstimatesByRegionLegendProps({
-    regionToDotColourDefault,
-    regionToLegendLabel,
+  } = useBarColourAndLegendProps({
+    getColourForSecondaryKeyDefault: regionToDotColourDefault,
+    secondaryGroupingKeyToLabel: regionToLegendLabel,
     legendConfiguration
   });
 
@@ -167,11 +167,11 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
             key={region}
             data={consideredDataByRegion[region]}
             name={regionToLegendLabel(region)}
-            fill={regionToDotColour(region, regionIndex)}
+            fill={getColourForSecondaryKey(region, regionIndex)}
           >
             <ErrorBar
               dataKey="positivePrevalenceError"
-              stroke={regionToDotColour(region, regionIndex)}
+              stroke={getColourForSecondaryKey(region, regionIndex)}
               width={0}
               direction="x"
             />
