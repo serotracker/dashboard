@@ -8,6 +8,7 @@ export enum MersFilterableField {
   whoRegion = "whoRegion",
   unRegion = "unRegion",
   countryAlphaTwoCode = "countryAlphaTwoCode",
+  sourceType = "sourceType",
   samplingStartDate = "samplingStartDate",
   samplingEndDate = "samplingEndDate",
   samplingMethod = "samplingMethod",
@@ -282,6 +283,19 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       selectedFilters: {
         ...input.selectedFilters,
         [MersFilterableField.samplingMethod]: input.selectedFilters[MersFilterableField.samplingMethod] ?? []
+      }
+    })
+  }),
+  [MersFilterableField.sourceType]: (input) => ({
+    included: mersEstimateStringFieldHandler({
+      filterKey: MersFilterableField.sourceType,
+      estimate: {
+        ...input.estimate,
+        sourceType: input.estimate.primaryEstimateInfo.sourceType
+      },
+      selectedFilters: {
+        ...input.selectedFilters,
+        [MersFilterableField.sourceType]: input.selectedFilters[MersFilterableField.sourceType] ?? []
       }
     })
   }),

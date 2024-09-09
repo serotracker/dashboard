@@ -23,7 +23,6 @@ export const SarsCov2Filters = (props: SarsCov2FiltersProps) => {
   const studyInformationFilters = [
     FilterableField.isWHOUnityAligned,
     FilterableField.riskOfBias,
-    FilterableField.sourceType
   ]
 
   const dateFilters = [
