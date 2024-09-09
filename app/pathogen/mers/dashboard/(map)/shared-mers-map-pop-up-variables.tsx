@@ -419,10 +419,6 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
   stateName: estimate.primaryEstimateInfo.state ?? undefined,
   cityName: estimate.primaryEstimateInfo.city ?? undefined
 }, {
-  title: "Source Type",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.sourceType ?? 'Not Reported'
-}, {
   title: "Sampling Date Range",
   type: PopUpContentRowType.DATE_RANGE,
   dateRangeStart: estimate.primaryEstimateInfo.samplingStartDate ? parseISO(estimate.primaryEstimateInfo.samplingStartDate) : undefined,
