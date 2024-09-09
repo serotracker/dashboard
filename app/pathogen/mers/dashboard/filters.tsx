@@ -33,7 +33,6 @@ export const MersFilters = (props: MersFiltersProps) => {
   ];
 
   const seroprevalenceEstimateFilters = [
-    FilterableField.sourceType,
     FilterableField.samplingStartDate,
     FilterableField.samplingEndDate,
     FilterableField.samplingMethod,
