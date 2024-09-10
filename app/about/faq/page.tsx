@@ -26,19 +26,6 @@ export default function FAQPage() {
           FAQPageOptionId.CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS
         ]}
       />
-      <FaqAccordion
-        headerClassName={cn(
-          "mt-8 mb-2",
-          !process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED ? 'hidden' : ''
-        )}
-        header="MERSTracker"
-        optionIds={[
-          FAQPageOptionId.WHERE_DOES_MERSTRACKER_DATA_COME_FROM,
-          FAQPageOptionId.HOW_IS_MERSTRACKER_DATA_EXTRACTED_FROM_SOURCES,
-          FAQPageOptionId.HOW_DOES_MERSTRACKER_DATA_SHOW_UP_ON_THE_MAP,
-          FAQPageOptionId.CAN_I_DOWNLOAD_MERSTRACKER_DATA_FOR_MY_OWN_ANALYSIS
-        ]}
-      />
     </>
   );
 }
