@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { GetCountryHighlightingLayerInformationOutput, PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
@@ -33,6 +33,7 @@ import { useMersMapPaint } from "./use-mers-map-paint";
 import { useMersMapClusterProperties } from "./use-mers-map-cluster-properties";
 import { useMersMapDataPoints } from "./use-mers-map-data-points";
 import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
+import { MersMapStudySubmissionPrompt } from "./mers-map-study-submission-prompt";
 
 export const MapPinColours = {
   'HumanMersEvent': "#8abded",
@@ -48,6 +49,7 @@ export const MapPinColours = {
 
 export const MersMap = () => {
   const { filteredData, faoMersEventData } = useContext(MersContext);
+  const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const { data } = useMersPrimaryEstimates(); 
   const countryDataContext = useContext(CountryDataContext);
   const { faoMersEvents } = useFaoMersEventData();
@@ -180,6 +182,11 @@ export const MersMap = () => {
           paint={paint}
           />
       </div>
+      <MersMapStudySubmissionPrompt
+        hidden={!isStudySubmissionPromptVisible}
+        onClose={() => setStudySubmissionPromptVisibility(false)}
+        className={"absolute bottom-1 left-1 mx-auto w-1/2 text-center bg-white/60 backdrop-blur-md"}
+      />
       <CountryHighlightLayerLegend
         className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"}
         legendEntries={countryHighlightLayerLegendEntries}
