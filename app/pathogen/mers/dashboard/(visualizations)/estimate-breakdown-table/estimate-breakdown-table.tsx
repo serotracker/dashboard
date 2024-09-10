@@ -145,12 +145,19 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         return [];
       }
 
-      return ageGroups.map((ageGroup) => ({
+      const numeratorRemainder = sampleNumerator % ageGroups.length
+      const denominatorRemainder = sampleDenominator % ageGroups.length
+
+      return ageGroups.map((ageGroup, index) => ({
         whoRegion,
         unRegion,
         countryAlphaTwoCode,
-        sampleDenominator: Math.floor(sampleDenominator / ageGroups.length),
-        sampleNumerator: Math.floor(sampleNumerator / ageGroups.length),
+        sampleDenominator: denominatorRemainder > index  
+          ? Math.max(Math.floor(sampleDenominator / ageGroups.length) + 1, 1)
+          : Math.max(Math.floor(sampleDenominator / ageGroups.length), 1),
+        sampleNumerator: numeratorRemainder > index 
+          ? Math.floor(sampleNumerator / ageGroups.length) + 1
+          : Math.floor(sampleNumerator / ageGroups.length),
         group: ageGroup
       }));
     }
@@ -176,12 +183,19 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         ? subestimate.ageGroup
         : subestimate.animalAgeGroup;
 
-      return ageGroups.map((ageGroup) => ({
+      const numeratorRemainder = subestimateSampleNumerator % ageGroups.length
+      const denominatorRemainder = subestimateSampleDenominator % ageGroups.length
+
+      return ageGroups.map((ageGroup, index) => ({
         whoRegion,
         unRegion,
         countryAlphaTwoCode,
-        sampleDenominator: Math.floor(subestimateSampleDenominator / ageGroups.length),
-        sampleNumerator: Math.floor(subestimateSampleNumerator / ageGroups.length),
+        sampleDenominator: denominatorRemainder > index
+          ? Math.max(Math.floor(subestimateSampleDenominator / ageGroups.length) + 1, 1)
+          : Math.max(Math.floor(subestimateSampleDenominator / ageGroups.length), 1),
+        sampleNumerator: numeratorRemainder > index
+          ? Math.floor(subestimateSampleNumerator / ageGroups.length) + 1
+          : Math.floor(subestimateSampleNumerator / ageGroups.length),
         group: ageGroup
       }));
     }).filter((element): element is NonNullable<typeof element> => !!element);
@@ -421,12 +435,19 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         return [];
       }
 
-      return animalDetectionSettings.map((animalSampleFrame) => ({
+      const numeratorRemainder = sampleNumerator % animalDetectionSettings.length
+      const denominatorRemainder = sampleDenominator % animalDetectionSettings.length
+
+      return animalDetectionSettings.map((animalSampleFrame, index) => ({
         whoRegion,
         unRegion,
         countryAlphaTwoCode,
-        sampleDenominator: Math.floor(sampleDenominator / animalSampleFrame.length),
-        sampleNumerator: Math.floor(sampleNumerator / animalSampleFrame.length),
+        sampleDenominator: denominatorRemainder > index
+          ? Math.max(Math.floor(sampleDenominator / animalDetectionSettings.length) + 1, 1)
+          : Math.max(Math.floor(sampleDenominator / animalDetectionSettings.length), 1),
+        sampleNumerator: numeratorRemainder > index
+          ? Math.floor(sampleNumerator / animalDetectionSettings.length) + 1
+          : Math.floor(sampleNumerator / animalDetectionSettings.length),
         group: animalSampleFrame
       }));
     }
@@ -447,13 +468,20 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
       ) {
         return undefined;
       }
+
+      const numeratorRemainder = subestimateSampleNumerator % subestimate.animalDetectionSettings.length;
+      const denominatorRemainder = subestimateSampleDenominator % subestimate.animalDetectionSettings.length;
       
-      return subestimate.animalDetectionSettings.map((animalSampleFrame) => ({
+      return subestimate.animalDetectionSettings.map((animalSampleFrame, index) => ({
         whoRegion,
         unRegion,
         countryAlphaTwoCode,
-        sampleDenominator: Math.floor(subestimateSampleDenominator / animalSampleFrame.length),
-        sampleNumerator: Math.floor(subestimateSampleNumerator / animalSampleFrame.length),
+        sampleDenominator: denominatorRemainder > index
+          ? Math.max(Math.floor(subestimateSampleDenominator / subestimate.animalDetectionSettings.length) + 1, 1)
+          : Math.max(Math.floor(subestimateSampleDenominator / subestimate.animalDetectionSettings.length), 1),
+        sampleNumerator: numeratorRemainder > index
+          ? Math.floor(subestimateSampleNumerator / subestimate.animalDetectionSettings.length) + 1
+          : Math.floor(subestimateSampleNumerator / subestimate.animalDetectionSettings.length),
         group: animalSampleFrame
       }));
     }).filter((element): element is NonNullable<typeof element> => !!element);
