@@ -1,14 +1,18 @@
 import { createContext, useState } from "react";
-import { MapDataPointVisibilityOptions } from "@/app/pathogen/mers/dashboard/(map)/use-mers-map-customization-modal";
+import { MapDataPointVisibilityOptions, MersMapCountryHighlightingSettings } from "@/app/pathogen/mers/dashboard/(map)/use-mers-map-customization-modal";
 
 interface MersMapCustomizationsContextType {
   mapDataPointVisibilitySetting: MapDataPointVisibilityOptions;
   setMapDataPointVisibilitySetting: (newValue: MapDataPointVisibilityOptions) => void;
+  currentMapCountryHighlightingSettings: MersMapCountryHighlightingSettings;
+  setCurrentMapCountryHighlightingSettings: (newValue: MersMapCountryHighlightingSettings) => void;
 }
 
 const initialMersMapCustomizationsContext: MersMapCustomizationsContextType = {
   mapDataPointVisibilitySetting: MapDataPointVisibilityOptions.ESTIMATES_ONLY,
   setMapDataPointVisibilitySetting: () => {},
+  currentMapCountryHighlightingSettings: MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES,
+  setCurrentMapCountryHighlightingSettings: () => {}
 };
 
 export const MersMapCustomizationsContext = createContext<
@@ -24,12 +28,18 @@ export const MersMapCustomizationsProvider = (props: MersMapCustomizationsProvid
     mapDataPointVisibilitySetting,
     setMapDataPointVisibilitySetting
   ] = useState<MapDataPointVisibilityOptions>(MapDataPointVisibilityOptions.ESTIMATES_ONLY);
+  const [
+    currentMapCountryHighlightingSettings,
+    setCurrentMapCountryHighlightingSettings
+  ] = useState<MersMapCountryHighlightingSettings>(MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES);
 
   return (
     <MersMapCustomizationsContext.Provider
       value={{
         mapDataPointVisibilitySetting: mapDataPointVisibilitySetting,
         setMapDataPointVisibilitySetting: setMapDataPointVisibilitySetting,
+        currentMapCountryHighlightingSettings: currentMapCountryHighlightingSettings,
+        setCurrentMapCountryHighlightingSettings: setCurrentMapCountryHighlightingSettings,
       }}
     >
       {props.children}

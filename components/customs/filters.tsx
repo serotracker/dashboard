@@ -40,7 +40,7 @@ const sendFilterChangeDispatch = <
   });
 };
 
-interface FilterSectionConfiguration {
+export interface FilterSectionConfiguration {
   headerText: string;
   headerTooltipText: string;
   includedFilters: FilterableField[];

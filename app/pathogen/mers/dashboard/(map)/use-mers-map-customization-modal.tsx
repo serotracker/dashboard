@@ -83,16 +83,14 @@ const mapDataPointVisibilityOptionToTooltipContent = {
 
 export const useMersMapCustomizationModal = () => {
   const [
-    currentMapCountryHighlightingSettings,
-    setCurrentMapCountryHighlightingSettings
-  ] = useState<MersMapCountryHighlightingSettings>(MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES);
-  const [
     countryOutlinesSetting,
     setCountryOutlinesSetting
   ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.WHEN_RECOMMENDED);
   const {
     mapDataPointVisibilitySetting,
-    setMapDataPointVisibilitySetting
+    setMapDataPointVisibilitySetting,
+    currentMapCountryHighlightingSettings,
+    setCurrentMapCountryHighlightingSettings
   } = useContext(MersMapCustomizationsContext);
   const [countryPopUpEnabled, setCountryPopUpEnabled] = useState<boolean>(true);
 
