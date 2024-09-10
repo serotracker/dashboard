@@ -11,13 +11,14 @@ import {
 export interface FAQAccordionProps {
   header: string;
   headerClassName?: string;
+  accordionClassName?: string;
   optionIds: FAQPageOptionId[]
 }
 
 export const FaqAccordion = (
   props: FAQAccordionProps
 ) => {
-  const { header, headerClassName, optionIds } = props;
+  const { header, headerClassName, optionIds, accordionClassName } = props;
 
   const options = useMemo(() => {
     return optionIds.map((optionId) => ({
@@ -30,7 +31,7 @@ export const FaqAccordion = (
   return (
     <>
       <h2 className={headerClassName ?? ''}> {header} </h2>
-      <Accordion type="single" collapsible={true}>
+      <Accordion type="single" collapsible={true} className={accordionClassName ?? ''}>
         {options.map((option) => (
           <AccordionItem key={option.id} value={option.id} >
             <AccordionTrigger className="text-left">
