@@ -5451,6 +5451,12 @@
         "interfaces": null,
         "enumValues": [
           {
+            "name": "BABOON",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "BAT",
             "description": null,
             "isDeprecated": false,
@@ -5482,6 +5488,12 @@
           },
           {
             "name": "SHEEP",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "WATER_BUFFALO",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -7150,6 +7162,12 @@
         "interfaces": null,
         "enumValues": [
           {
+            "name": "BABOON",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "BAT",
             "description": null,
             "isDeprecated": false,
@@ -7181,6 +7199,12 @@
           },
           {
             "name": "SHEEP",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "WATER_BUFFALO",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null

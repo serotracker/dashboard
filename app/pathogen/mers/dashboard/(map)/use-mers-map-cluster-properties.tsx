@@ -21,6 +21,8 @@ export enum MersMapClusteringPropertyKey {
   "Cattle Events" = "Cattle Events",
   "Sheep Events" = "Sheep Events",
   "Donkey Events" = "Donkey Events",
+  "Water Buffalo Events" = "Water Buffalo Events",
+  "Baboon Events" = "Baboon Events",
   "Human Seroprevalence Estimates" = "Human Seroprevalence Estimates",
   "Animal Seroprevalence Estimates" = "Animal Seroprevalence Estimates",
   "Camel Seroprevalence Estimates" = "Camel Seroprevalence Estimates",
@@ -29,6 +31,8 @@ export enum MersMapClusteringPropertyKey {
   "Cattle Seroprevalence Estimates" = "Cattle Seroprevalence Estimates",
   "Sheep Seroprevalence Estimates" = "Sheep Seroprevalence Estimates",
   "Donkey Seroprevalence Estimates" = "Donkey Seroprevalence Estimates",
+  "Water Buffalo Seroprevalence Estimates" = "Water Buffalo Seroprevalence Estimates",
+  "Baboon Seroprevalence Estimates" = "Baboon Seroprevalence Estimates",
   "Human Viral Estimates" = "Human Viral Estimates",
   "Animal Viral Estimates" = "Animal Viral Estimates",
   "Camel Viral Estimates" = "Camel Viral Estimates",
@@ -37,6 +41,8 @@ export enum MersMapClusteringPropertyKey {
   "Cattle Viral Estimates" = "Cattle Viral Estimates",
   "Sheep Viral Estimates" = "Sheep Viral Estimates",
   "Donkey Viral Estimates" = "Donkey Viral Estimates",
+  "Water Buffalo Viral Estimates" = "Water Buffalo Viral Estimates",
+  "Baboon Viral Estimates" = "Baboon Viral Estimates",
 }
 
 export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesInput) => {
@@ -75,6 +81,14 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
         ["==", ["get", "__typename"], "AnimalMersEvent"],
         ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Donkey]
       ], 1, 0]],
+      "Water Buffalo Events": ["+", ["case", [ "all",
+        ["==", ["get", "__typename"], "AnimalMersEvent"],
+        ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.WaterBuffalo]
+      ], 1, 0]],
+      "Baboon Events": ["+", ["case", [ "all",
+        ["==", ["get", "__typename"], "AnimalMersEvent"],
+        ["==", ["get", "animalSpecies"], MersEventAnimalSpecies.Baboon]
+      ], 1, 0]],
       "Human Seroprevalence Estimates": ["+", ["case", ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryHumanMersSeroprevalenceEstimateInformation"], 1, 0]],
       "Human Viral Estimates": ["+", ["case", ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryHumanMersViralEstimateInformation"], 1, 0]],
       "Animal Seroprevalence Estimates": ["+", ["case", ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"], 1, 0]],
@@ -102,6 +116,14 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
         ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Donkey]
       ], 1, 0]],
+      "Water Buffalo Seroprevalence Estimates": ["+", ["case", [ "all",
+        ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
+        ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.WaterBuffalo]
+      ], 1, 0]],
+      "Baboon Seroprevalence Estimates": ["+", ["case", [ "all",
+        ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
+        ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Baboon]
+      ], 1, 0]],
       "Animal Viral Estimates": ["+", ["case", ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"], 1, 0]],
       "Camel Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
@@ -127,6 +149,14 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
         ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Donkey]
       ], 1, 0]],
+      "Water Buffalo Viral Estimates": ["+", ["case", [ "all",
+        ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
+        ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.WaterBuffalo]
+      ], 1, 0]],
+      "Baboon Viral Estimates": ["+", ["case", [ "all",
+        ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
+        ["==", ["get", "animalSpecies", ["get", "primaryEstimateInfo"]], MersAnimalSpecies.Baboon]
+      ], 1, 0]],
     },
     validClusterPropertyKeys: [
       ...(eventDataShown ? [MersMapClusteringPropertyKey["Reported Human Events"]] : []),
@@ -139,6 +169,8 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
       ...(eventDataShown ? [MersMapClusteringPropertyKey["Cattle Events"]] : []),
       ...(eventDataShown ? [MersMapClusteringPropertyKey["Sheep Events"]] : []),
       ...(eventDataShown ? [MersMapClusteringPropertyKey["Donkey Events"]] : []),
+      ...(eventDataShown ? [MersMapClusteringPropertyKey["Water Buffalo Events"]] : []),
+      ...(eventDataShown ? [MersMapClusteringPropertyKey["Baboon Events"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Human Seroprevalence Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Animal Seroprevalence Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Camel Seroprevalence Estimates"]] : []),
@@ -147,6 +179,8 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Cattle Seroprevalence Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Sheep Seroprevalence Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Donkey Seroprevalence Estimates"]] : []),
+      ...(estimateDataShown ? [MersMapClusteringPropertyKey["Water Buffalo Seroprevalence Estimates"]] : []),
+      ...(estimateDataShown ? [MersMapClusteringPropertyKey["Baboon Seroprevalence Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Human Viral Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Animal Viral Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Camel Viral Estimates"]] : []),
@@ -154,7 +188,9 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Goat Viral Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Cattle Viral Estimates"]] : []),
       ...(estimateDataShown ? [MersMapClusteringPropertyKey["Sheep Viral Estimates"]] : []),
-      ...(estimateDataShown ? [MersMapClusteringPropertyKey["Donkey Viral Estimates"]] : [])
+      ...(estimateDataShown ? [MersMapClusteringPropertyKey["Donkey Viral Estimates"]] : []),
+      ...(estimateDataShown ? [MersMapClusteringPropertyKey["Water Buffalo Viral Estimates"]] : []),
+      ...(estimateDataShown ? [MersMapClusteringPropertyKey["Baboon Viral Estimates"]] : [])
     ],
     clusterPropertyKeysIncludedInSum: [
       MersMapClusteringPropertyKey["Reported Human Events"],
@@ -175,6 +211,8 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
       [MersMapClusteringPropertyKey["Cattle Events"]]: MapPinColours['animal-mers-event-alt'],
       [MersMapClusteringPropertyKey["Sheep Events"]]: MapPinColours['animal-mers-event-alt'],
       [MersMapClusteringPropertyKey["Donkey Events"]]: MapPinColours['animal-mers-event-alt'],
+      [MersMapClusteringPropertyKey["Water Buffalo Events"]]: MapPinColours['animal-mers-event-alt'],
+      [MersMapClusteringPropertyKey["Baboon Events"]]: MapPinColours['animal-mers-event-alt'],
       [MersMapClusteringPropertyKey["Human Seroprevalence Estimates"]]: MapPinColours['PrimaryHumanMersSeroprevalenceEstimateInformation'],
       [MersMapClusteringPropertyKey["Animal Seroprevalence Estimates"]]: MapPinColours['PrimaryAnimalMersSeroprevalenceEstimateInformation'],
       [MersMapClusteringPropertyKey["Camel Seroprevalence Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
@@ -183,6 +221,8 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
       [MersMapClusteringPropertyKey["Cattle Seroprevalence Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
       [MersMapClusteringPropertyKey["Sheep Seroprevalence Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
       [MersMapClusteringPropertyKey["Donkey Seroprevalence Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
+      [MersMapClusteringPropertyKey["Water Buffalo Seroprevalence Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
+      [MersMapClusteringPropertyKey["Baboon Seroprevalence Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
       [MersMapClusteringPropertyKey["Human Viral Estimates"]]: MapPinColours['PrimaryHumanMersViralEstimateInformation'],
       [MersMapClusteringPropertyKey["Animal Viral Estimates"]]: MapPinColours['PrimaryAnimalMersViralEstimateInformation'],
       [MersMapClusteringPropertyKey["Camel Viral Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
@@ -190,7 +230,9 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
       [MersMapClusteringPropertyKey["Goat Viral Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
       [MersMapClusteringPropertyKey["Cattle Viral Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
       [MersMapClusteringPropertyKey["Sheep Viral Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
-      [MersMapClusteringPropertyKey["Donkey Viral Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt']
+      [MersMapClusteringPropertyKey["Donkey Viral Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
+      [MersMapClusteringPropertyKey["Water Buffalo Viral Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
+      [MersMapClusteringPropertyKey["Baboon Viral Estimates"]]: MapPinColours['mers-animal-viral-estimate-alt'],
     }
   }), [ estimateDataShown, eventDataShown ]);
 

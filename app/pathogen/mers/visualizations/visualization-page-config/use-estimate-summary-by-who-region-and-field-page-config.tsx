@@ -18,7 +18,7 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
   );
 
   const [
-    estimateBreakdownTableFieldOfInterest,
+    _estimateBreakdownTableFieldOfInterest,
     setEstimateBreakdownTableFieldOfInterest,
   ] = useState<EstimateBreakdownTableFieldOfInterestDropdownOption>(
     EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP
@@ -30,6 +30,44 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
   ] = useState<EstimateBreakdownTableRegionTypeOfInterestDropdownOption>(
     EstimateBreakdownTableRegionTypeOfInterestDropdownOption.WHO_REGION
   );
+
+  const fieldOfInterestDropdownOptionGroups = useMemo(() => [{
+    groupHeader: 'Population Sampled',
+    options: [
+      EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP,
+      ...((
+        estimateBreakdownTableVariableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE ||
+        estimateBreakdownTableVariableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE
+      )
+        ? [EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES, EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SAMPLE_FRAME ]
+        : []
+      ),
+      ...((
+        estimateBreakdownTableVariableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE ||
+        estimateBreakdownTableVariableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE
+      )
+        ? [EstimateBreakdownTableFieldOfInterestDropdownOption.CAMEL_EXPOSURE_LEVEL ]
+        : []
+      ),
+      EstimateBreakdownTableFieldOfInterestDropdownOption.SEX,
+    ]
+  }, {
+    groupHeader: 'Test Parameters',
+    options: [
+      EstimateBreakdownTableFieldOfInterestDropdownOption.SPECIMEN_TYPE
+    ]
+  }], [ estimateBreakdownTableVariableOfInterest ]);
+
+  const estimateBreakdownTableFieldOfInterest = useMemo(() => {
+    const availableFieldsOfInterest = fieldOfInterestDropdownOptionGroups
+      .flatMap((element) => element.options);
+
+    if(availableFieldsOfInterest.includes(_estimateBreakdownTableFieldOfInterest)) {
+      return _estimateBreakdownTableFieldOfInterest;
+    }
+
+    return availableFieldsOfInterest.at(0) ?? EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP;
+  }, [ _estimateBreakdownTableFieldOfInterest, fieldOfInterestDropdownOptionGroups ]);
 
   const getDisplayNameForEstimateBreakdownTableAndField: MersVisualizationInformation<
     string,
@@ -74,21 +112,7 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
       borderColourClassname: 'border-mers',
       hoverColourClassname: 'hover:bg-mersHover/50',
       highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
-      dropdownOptionGroups: [{
-        groupHeader: 'Population Sampled',
-        options: [
-          EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP,
-          EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES,
-          EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SAMPLE_FRAME,
-          EstimateBreakdownTableFieldOfInterestDropdownOption.CAMEL_EXPOSURE_LEVEL,
-          EstimateBreakdownTableFieldOfInterestDropdownOption.SEX,
-        ]
-      }, {
-        groupHeader: 'Test Parameters',
-        options: [
-          EstimateBreakdownTableFieldOfInterestDropdownOption.SPECIMEN_TYPE
-        ]
-      }],
+      dropdownOptionGroups: fieldOfInterestDropdownOptionGroups,
       chosenDropdownOption: estimateBreakdownTableFieldOfInterest,
       dropdownOptionToLabelMap: {
         [EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP]: "Age Group",
@@ -133,7 +157,8 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
     estimateBreakdownTableFieldOfInterest,
     setEstimateBreakdownTableFieldOfInterest,
     estimateBreakdownTableRegionTypeOfInterest,
-    setEstimateBreakdownTableRegionTypeOfInterest
+    setEstimateBreakdownTableRegionTypeOfInterest,
+    fieldOfInterestDropdownOptionGroups
   ])
 
   const estimateBreakdownTableAndFieldTooltipContent: MersVisualizationInformation<

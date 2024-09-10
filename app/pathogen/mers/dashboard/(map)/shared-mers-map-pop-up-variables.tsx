@@ -184,6 +184,8 @@ export const animalSpeciesToStringMap = {
   [MersEventAnimalSpecies.Cattle]: "Cattle",
   [MersEventAnimalSpecies.Sheep]: "Sheep",
   [MersEventAnimalSpecies.Donkey]: "Donkey",
+  [MersEventAnimalSpecies.WaterBuffalo]: "Water Buffalo",
+  [MersEventAnimalSpecies.Baboon]: "Baboon",
 }
 
 export const cladeToColourClassnameMap = {
@@ -215,6 +217,8 @@ export const animalSpeciesToColourClassnameMap = {
   [MersEventAnimalSpecies.Cattle]: "bg-pink-300",
   [MersEventAnimalSpecies.Sheep]: "bg-red-200",
   [MersEventAnimalSpecies.Donkey]: "bg-green-200",
+  [MersEventAnimalSpecies.WaterBuffalo]: "bg-teal-400",
+  [MersEventAnimalSpecies.Baboon]: "bg-blue-400",
 }
 
 export const humanAgeGroupToColourClassnameMap = {

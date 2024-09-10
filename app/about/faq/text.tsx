@@ -8,7 +8,11 @@ export enum FAQPageOptionId {
   HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES = 'HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES',
   HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED = 'HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED',
   HOW_DOES_ARBOTRACKER_DATA_SHOW_UP_ON_THE_MAP = 'HOW_DOES_ARBOTRACKER_DATA_SHOW_UP_ON_THE_MAP',
-  CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS = 'CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS'
+  CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS = 'CAN_I_DOWNLOAD_ARBOTRACKER_DATA_FOR_MY_OWN_ANALYSIS',
+  WHERE_DOES_MERSTRACKER_DATA_COME_FROM = 'WHERE_DOES_MERSTRACKER_DATA_COME_FROM',
+  HOW_IS_MERSTRACKER_DATA_EXTRACTED_FROM_SOURCES = 'HOW_IS_MERSTRACKER_DATA_EXTRACTED_FROM_SOURCES',
+  HOW_DOES_MERSTRACKER_DATA_SHOW_UP_ON_THE_MAP = 'HOW_DOES_MERSTRACKER_DATA_SHOW_UP_ON_THE_MAP',
+  CAN_I_DOWNLOAD_MERSTRACKER_DATA_FOR_MY_OWN_ANALYSIS = 'CAN_I_DOWNLOAD_MERSTRACKER_DATA_FOR_MY_OWN_ANALYSIS'
 }
 
 export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.Element}> = {
@@ -70,6 +74,39 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
         <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://new.serotracker.com/pathogen/arbovirus/dashboard#TABLE">This is a link to the ArboTracker data table where it is possible to download a csv containing all of our arbovirus seroprevalence estimates</Link>
         <p className='inline'>. This is the recommended citation for our data: </p>
         <p className='inline italic'>Harriet Ware, Mairead Whelan, Anabel Selemon, Emilie Toews, Shaila Akter, Niklas Bobrovitz, Rahul Arora, Yannik Roell, Thomas Jaenisch. A living systematic review of arbovirus seroprevalence studies. PROSPERO 2024 CRD42024551000 Available from: https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000</p>
+        <p className='inline'>.</p>
+      </>
+    )
+  },
+  [FAQPageOptionId.WHERE_DOES_MERSTRACKER_DATA_COME_FROM]: {
+    label: 'Where does MERSTracker data come from?',
+    content:(
+      <>
+        <p className='inline'> MERSTracker data was collected from peer reviewed journal articles in collaboration with the </p>
+        <Link className="inline text-link" href="https://www.who.int/" target="__blank" rel="noopener noreferrer">World Health Organization</Link>
+        <p className='inline'> and the </p>
+        <Link className="inline text-link" href="https://www.fao.org/" target="__blank" rel="noopener noreferrer">Food and Agriculture Organization of the United Nations</Link>
+        <p className='inline'>. </p>
+        <p className='inline'> Event data and camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation&apos;s </p>
+        <Link className="inline text-link" href="https://empres-i.apps.fao.org/" target="__blank" rel="noopener noreferrer">EMPRES-i dashboard</Link>
+        <p className='inline'> which collects MERS events as they are reported by national authorities and population data for various different species of livestock.</p>
+      </>
+    )
+  },
+  [FAQPageOptionId.HOW_IS_MERSTRACKER_DATA_EXTRACTED_FROM_SOURCES]: {
+    label: 'How is the data extracted from the sources?',
+    content: <p className='inline'> We have an extensive research team trained in health sciences and epidemiology who manually reviews articles and records seroprevalence estimates into a data management platform called Airtable.</p>
+  },
+  [FAQPageOptionId.HOW_DOES_MERSTRACKER_DATA_SHOW_UP_ON_THE_MAP]: {
+    label: 'How does MERSTracker data show up on the map?',
+    content: <p className='inline'> Data inputted into Airtable is automatically run through a software pipeline that cleans it and computes additional information (e.g. a study’s geographic coordinates). The outputs of the pipeline are then stored in a separate database, which is queried by <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://new.serotracker.com/">new.serotracker.com</Link> to serve the map, data tables, and data visualizations. Our data pipeline code is open source and can be found <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://github.com/serotracker/iit-backend-v2">here</Link>. </p>
+  },
+  [FAQPageOptionId.CAN_I_DOWNLOAD_MERSTRACKER_DATA_FOR_MY_OWN_ANALYSIS]: {
+    label: 'How does MERSTracker data show up on the map?',
+    content: (
+      <>
+        <p className='inline'> Yes, our data is open-source and free for anyone to use. Every data table on the dashboard has a button next to it that allows you to download a csv of the data in the table. </p>
+        <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://new.serotracker.com/pathogen/mers/dashboard#TABLE">This is a link to the MERSTracker data table where it is possible to download several csv files which contain all of our MERS seroprevalence estimates</Link>
         <p className='inline'>.</p>
       </>
     )
