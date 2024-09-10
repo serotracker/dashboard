@@ -76,27 +76,32 @@ export const MersFilters = (props: MersFiltersProps) => {
     const areEstimatesVisibleOnMap = 
       mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.ESTIMATES_ONLY ||
       mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE;
-    const areEventsVisibleOnMap = 
-      mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY ||
-      mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE ||
-      currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_HUMAN_CASES ||
-      currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES;
+
     const areHumanEstimatesVisibleOnMap =
       areEstimatesVisibleOnMap && (
         selectedDataTypes.includes('PrimaryHumanMersSeroprevalenceEstimateInformation') ||
         selectedDataTypes.includes('PrimaryHumanMersViralEstimateInformation')
       );
+
     const areAnimalEstimatesVisibleOnMap =
       areEstimatesVisibleOnMap && (
         selectedDataTypes.includes('PrimaryAnimalMersSeroprevalenceEstimateInformation') ||
         selectedDataTypes.includes('PrimaryAnimalMersSeroprevalenceEstimateInformation')
       );
-    const areHumanEventsVisibleOnMap =
-      areEventsVisibleOnMap &&
-      selectedDataTypes.includes('HumanMersEvent');
-    const areAnimalEventsVisibleOnMap =
-      areEventsVisibleOnMap &&
-      selectedDataTypes.includes('AnimalMersEvent');
+
+    const areHumanEventsVisibleOnMap = ((
+        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY ||
+        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE
+      ) &&
+      selectedDataTypes.includes('HumanMersEvent')
+    ) || currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_HUMAN_CASES;
+
+    const areAnimalEventsVisibleOnMap = ((
+        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY ||
+        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE
+      ) &&
+      selectedDataTypes.includes('AnimalMersEvent')
+    ) || currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES;
 
     filterSectionsArray.push({
       headerText: 'Data Type',
