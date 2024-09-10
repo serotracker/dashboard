@@ -448,20 +448,32 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
   type: PopUpContentRowType.TEXT,
   text: 'N/A'
 }, isMersViralEstimate(estimate) ? {
-  title: "Positive Prevalence 95% Confidence Interval",
+  title: (
+    estimate.primaryEstimateInfo.positivePrevalence95CILower !== null &&
+    estimate.primaryEstimateInfo.positivePrevalence95CILower !== undefined &&
+    estimate.primaryEstimateInfo.positivePrevalence95CIUpper !== null &&
+    estimate.primaryEstimateInfo.positivePrevalence95CIUpper !== undefined
+  ) ? "Positive Prevalence 95% Confidence Interval"
+    : "Positive Prevalence 95% Confidence Interval (Calculated using the Clopper-Pearson method)",
   type: PopUpContentRowType.TEXT,
   text: `[
-    ${estimate.primaryEstimateInfo.positivePrevalence95CILower ? `${(estimate.primaryEstimateInfo.positivePrevalence95CILower * 100).toFixed(1)}%` : 'Unknown'}
+    ${((estimate.primaryEstimateInfo.positivePrevalence95CILower ?? estimate.primaryEstimateInfo.positivePrevalenceCalculated95CILower) * 100).toFixed(1)}%
     -
-    ${estimate.primaryEstimateInfo.positivePrevalence95CIUpper ? `${(estimate.primaryEstimateInfo.positivePrevalence95CIUpper * 100).toFixed(1)}%` : 'Unknown'}
+    ${((estimate.primaryEstimateInfo.positivePrevalence95CIUpper ?? estimate.primaryEstimateInfo.positivePrevalenceCalculated95CIUpper) * 100).toFixed(1)}%
   ]`
 } : {
-  title: "Seroprevalence 95% Confidence Interval",
+  title: (
+    estimate.primaryEstimateInfo.seroprevalence95CILower !== null &&
+    estimate.primaryEstimateInfo.seroprevalence95CILower !== undefined &&
+    estimate.primaryEstimateInfo.seroprevalence95CIUpper !== null &&
+    estimate.primaryEstimateInfo.seroprevalence95CIUpper !== undefined
+  ) ? "Seroprevalence 95% Confidence Interval"
+    : "Seroprevalence 95% Confidence Interval (Calculated using the Clopper-Pearson method)",
   type: PopUpContentRowType.TEXT,
   text: `[
-    ${estimate.primaryEstimateInfo.seroprevalence95CILower ? `${(estimate.primaryEstimateInfo.seroprevalence95CILower * 100).toFixed(1)}%` : 'Unknown'}
+    ${((estimate.primaryEstimateInfo.seroprevalence95CILower ?? estimate.primaryEstimateInfo.seroprevalenceCalculated95CILower) * 100).toFixed(1)}%
     -
-    ${estimate.primaryEstimateInfo.seroprevalence95CIUpper ? `${(estimate.primaryEstimateInfo.seroprevalence95CIUpper * 100).toFixed(1)}%` : 'Unknown'}
+    ${((estimate.primaryEstimateInfo.seroprevalence95CIUpper ?? estimate.primaryEstimateInfo.seroprevalenceCalculated95CIUpper) * 100).toFixed(1)}%
   ]`
 }, {
   title: "First Author Full Name",
