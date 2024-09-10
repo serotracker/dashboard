@@ -1,6 +1,7 @@
 import React from "react";
 import { FAQPageOptionId } from "./text";
 import { FaqAccordion } from "./faq-accordion";
+import { cn } from "@/lib/utils";
 
 export default function FAQPage() {
   return (
@@ -26,7 +27,10 @@ export default function FAQPage() {
         ]}
       />
       <FaqAccordion
-        headerClassName="mt-8 mb-2"
+        headerClassName={cn(
+          "mt-8 mb-2",
+          !process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED ? 'hidden' : ''
+        )}
         header="MERSTracker"
         optionIds={[
           FAQPageOptionId.WHERE_DOES_MERSTRACKER_DATA_COME_FROM,
