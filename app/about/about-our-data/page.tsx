@@ -86,7 +86,7 @@ export default function DataExtractionPage() {
           className="mb-4"
           sponsors={[ Sponsor.WORLD_HEALTH_ORGANIZATION ]}
         />
-        <p className='inline'> Event data and camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation's </p>
+        <p className='inline'> Event data and camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation&apos;s </p>
         <Link className="inline text-link" href="https://empres-i.apps.fao.org/" target="__blank" rel="noopener noreferrer">EMPRES-i dashboard</Link>
         <p className='inline'> which collects MERS events as they are reported by national authorities and population data for various different species of livestock.</p>
       </>}
