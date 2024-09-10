@@ -140,7 +140,10 @@ export const MersFilters = (props: MersFiltersProps) => {
       });
     }
 
-    if(areEventsVisibleOnMap) {
+    if(
+      areHumanEventsVisibleOnMap ||
+      areAnimalEventsVisibleOnMap
+    ) {
       filterSectionsArray.push({
         headerText: 'Confirmed Cases',
         headerTooltipText: 'Filters that only apply to confirmed cases.',
