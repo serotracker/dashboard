@@ -462,12 +462,14 @@ export type MersAnimalSourceLocationSubEstimate = MersSubEstimateInterface & {
 };
 
 export enum MersAnimalSpecies {
+  Baboon = 'BABOON',
   Bat = 'BAT',
   Camel = 'CAMEL',
   Cattle = 'CATTLE',
   Donkey = 'DONKEY',
   Goat = 'GOAT',
-  Sheep = 'SHEEP'
+  Sheep = 'SHEEP',
+  WaterBuffalo = 'WATER_BUFFALO'
 }
 
 export type MersAnimalSpeciesSubEstimate = MersSubEstimateInterface & {
@@ -603,12 +605,14 @@ export type MersEstimate_V2 = AnimalMersEstimate | AnimalMersViralEstimate | Hum
 export type MersEvent = AnimalMersEvent | HumanMersEvent;
 
 export enum MersEventAnimalSpecies {
+  Baboon = 'BABOON',
   Bat = 'BAT',
   Camel = 'CAMEL',
   Cattle = 'CATTLE',
   Donkey = 'DONKEY',
   Goat = 'GOAT',
-  Sheep = 'SHEEP'
+  Sheep = 'SHEEP',
+  WaterBuffalo = 'WATER_BUFFALO'
 }
 
 export enum MersEventAnimalType {
