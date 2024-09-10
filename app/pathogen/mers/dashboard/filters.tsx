@@ -129,10 +129,7 @@ export const MersFilters = (props: MersFiltersProps) => {
       });
     }
 
-    if(
-      areHumanEventsVisibleOnMap ||
-      areAnimalEventsVisibleOnMap
-    ) {
+    if(areAnimalEstimatesVisibleOnMap) {
       filterSectionsArray.push({
         headerText: 'Animal Estimates',
         headerTooltipText: 'Filters that only apply to animal seroprevalence and viral estimates.',
