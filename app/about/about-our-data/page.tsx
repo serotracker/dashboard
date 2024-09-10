@@ -42,7 +42,8 @@ export default function DataExtractionPage() {
         <Link className="inline text-link" href="https://www.mapbox.com/" target="__blank" rel="noopener noreferrer">Mapbox </Link>
         <p className='mb-4 inline'>supports SeroTracker&apos;s mapping infrastructure.</p>
       </div>
-      <h2 className={headerClassname}>New dashboard: ArboTracker </h2>
+      {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && <h2 className={headerClassname}>ArboTracker </h2> }
+      {!process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && <h2 className={headerClassname}>New dashboard: ArboTracker </h2> }
       <div className="mb-4">
         <p className='inline'> ArboTracker data was collected through a systematic review of published arbovirus seroprevalence studies in collaboration with partners at the </p>
         <Link className='inline text-link' href='https://coloradosph.cuanschutz.edu/research-and-practice/centers-programs/globalhealth/research-projects/arbovirus-research-consortium' target="__blank" rel="noopener noreferrer">Arbovirus Research Consortium</Link>
@@ -74,6 +75,21 @@ export default function DataExtractionPage() {
         <Link className='inline text-link' href='https://cihr-irsc.gc.ca/e/13147.html' target="__blank" rel="noopener noreferrer">Canadian Institutes of Health Research Institute of Genetics</Link>
         <p className='inline'> (CIHR-IG) under Grant Agreement No 01886-000.</p>
       </div>
+      {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && <>
+        <h2 className={headerClassname}>New dashboard: MERSTracker </h2>
+        <p className='inline'> MERSTracker data was collected from peer reviewed journal articles in collaboration with the </p>
+        <Link className="inline text-link" href="https://www.who.int/" target="__blank" rel="noopener noreferrer">World Health Organization</Link>
+        <p className='inline'> and the </p>
+        <Link className="inline text-link" href="https://www.fao.org/" target="__blank" rel="noopener noreferrer">Food and Agriculture Organization of the United Nations</Link>
+        <p className='inline'>. </p>
+        <SponsorBanner
+          className="mb-4"
+          sponsors={[ Sponsor.WORLD_HEALTH_ORGANIZATION ]}
+        />
+        <p className='inline'> Event data and camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation's </p>
+        <Link className="inline text-link" href="https://empres-i.apps.fao.org/" target="__blank" rel="noopener noreferrer">EMPRES-i dashboard</Link>
+        <p className='inline'> which collects MERS events as they are reported by national authorities and population data for various different species of livestock.</p>
+      </>}
       <h2 className={headerClassname}>Contact Us</h2>
       <div className="mb-4">
         <p className="inline">For all SeroTracker inquiries (including to support our efforts, collaborate with us, or if you are a journalist interested in reporting on our findings), please contact Mairéad Whelan at </p>
