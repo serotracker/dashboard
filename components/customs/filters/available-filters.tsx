@@ -260,14 +260,14 @@ export const useAvailableFilters = () => {
       field: FilterableField.whoRegion,
       label: "WHO Region",
       valueToLabelMap: {},
-      renderTooltipContent: WHORegionsTooltip,
+      renderTooltipContent: () => <WHORegionsTooltip />,
       filterRenderingFunction: MultiSelectFilter
     },
     [FilterableField.unRegion]: {
       field: FilterableField.unRegion,
       label: "UN Region",
       valueToLabelMap: unRegionEnumToLabelMap,
-      renderTooltipContent: UNRegionsTooltip,
+      renderTooltipContent: () => <UNRegionsTooltip />,
       filterRenderingFunction: MultiSelectFilter
     },
     [FilterableField.countryAlphaTwoCode]: {

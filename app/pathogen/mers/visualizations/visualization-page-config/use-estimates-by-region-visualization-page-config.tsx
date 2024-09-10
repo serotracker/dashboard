@@ -1,5 +1,5 @@
 import { useCallback, useContext, useMemo, useState } from "react";
-import { UNRegionsTooltip, WHORegionsTooltip } from "@/components/customs/tooltip-content";
+import { ClopperPearsonConfidenceIntervalCalculationTooltip, UNRegionsTooltip, WHORegionsTooltip } from "@/components/customs/tooltip-content";
 import assertNever from "assert-never";
 import { MersVisualizationInformation } from "../visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
@@ -206,15 +206,23 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
     string
   >['titleTooltipContent'] = useMemo(() => {
     if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION) {
-      return <WHORegionsTooltip />
+      return (
+        <WHORegionsTooltip>
+          <ClopperPearsonConfidenceIntervalCalculationTooltip />
+        </WHORegionsTooltip>
+      );
     }
 
     if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.UN_REGION) {
-      return <UNRegionsTooltip />
+      return (
+        <UNRegionsTooltip>
+          <ClopperPearsonConfidenceIntervalCalculationTooltip />
+        </UNRegionsTooltip>
+      );
     }
 
     if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.COUNTRY) {
-      return null;
+      return <ClopperPearsonConfidenceIntervalCalculationTooltip />;
     }
 
     assertNever(estimatesByRegionSelectedRegion);

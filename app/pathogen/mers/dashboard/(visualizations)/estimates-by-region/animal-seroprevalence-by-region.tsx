@@ -73,7 +73,14 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
 
   const consideredData = useMemo(() =>
     animalMersSeroprevalenceEstimates
-      .map((dataPoint) => ({ ...dataPoint, region: regionGroupingFunction(dataPoint) }))
+      .map((dataPoint) => ({
+        ...dataPoint,
+        region: regionGroupingFunction(dataPoint),
+        seroprevalence95CILower:
+          dataPoint.primaryEstimateInfo.seroprevalence95CILower ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CILower,
+        seroprevalence95CIUpper:
+          dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CIUpper,
+      }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .sort((dataPointA, dataPointB) => dataPointA.primaryEstimateInfo.seroprevalence - dataPointB.primaryEstimateInfo.seroprevalence)
       .map(( dataPoint, index ) => ({
@@ -82,18 +89,14 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
           (dataPoint.primaryEstimateInfo.seroprevalence * 100).toFixed(1)
         ),
         seroprevalenceError: [
-          dataPoint.primaryEstimateInfo.seroprevalence95CILower ? parseFloat(
-            (
-              dataPoint.primaryEstimateInfo.seroprevalence * 100 -
-              dataPoint.primaryEstimateInfo.seroprevalence95CILower * 100
-            ).toFixed(1)
-          ) : 0,
-          dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ? parseFloat(
-            (
-              dataPoint.primaryEstimateInfo.seroprevalence95CIUpper * 100 -
-              dataPoint.primaryEstimateInfo.seroprevalence * 100
-            ).toFixed(1)
-          ) : 0,
+          parseFloat((
+            dataPoint.primaryEstimateInfo.seroprevalence * 100 -
+            dataPoint.seroprevalence95CILower * 100
+          ).toFixed(1)),
+          parseFloat((
+            dataPoint.seroprevalence95CIUpper * 100 - 
+            dataPoint.primaryEstimateInfo.seroprevalence * 100
+          ).toFixed(1))
         ],
         estimateNumber: index + 1
       }))

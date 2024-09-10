@@ -71,7 +71,14 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
 
   const consideredData = useMemo(() =>
     animalMersViralEstimates
-      .map((dataPoint) => ({ ...dataPoint, region: regionGroupingFunction(dataPoint) }))
+      .map((dataPoint) => ({
+        ...dataPoint,
+        region: regionGroupingFunction(dataPoint),
+        positivePrevalence95CILower:
+          dataPoint.primaryEstimateInfo.positivePrevalence95CILower ?? dataPoint.primaryEstimateInfo.positivePrevalenceCalculated95CILower,
+        positivePrevalence95CIUpper:
+          dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper ?? dataPoint.primaryEstimateInfo.positivePrevalenceCalculated95CIUpper,
+      }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .sort((dataPointA, dataPointB) => dataPointA.primaryEstimateInfo.positivePrevalence - dataPointB.primaryEstimateInfo.positivePrevalence)
       .map(( dataPoint, index ) => ({
@@ -80,18 +87,14 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
           (dataPoint.primaryEstimateInfo.positivePrevalence * 100).toFixed(1)
         ),
         positivePrevalenceError: [
-          dataPoint.primaryEstimateInfo.positivePrevalence95CILower ? parseFloat(
-            (
-              dataPoint.primaryEstimateInfo.positivePrevalence * 100 -
-              dataPoint.primaryEstimateInfo.positivePrevalence95CILower * 100
-            ).toFixed(1)
-          ) : 0,
-          dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper ? parseFloat(
-            (
-              dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper * 100 -
-              dataPoint.primaryEstimateInfo.positivePrevalence * 100
-            ).toFixed(1)
-          ) : 0,
+          parseFloat((
+            dataPoint.primaryEstimateInfo.positivePrevalence * 100 -
+            dataPoint.positivePrevalence95CILower * 100
+          ).toFixed(1)),
+          parseFloat((
+            dataPoint.positivePrevalence95CIUpper * 100 - 
+            dataPoint.primaryEstimateInfo.positivePrevalence * 100
+          ).toFixed(1))
         ],
         estimateNumber: index + 1
       }))
