@@ -1,5 +1,5 @@
 import { MutableRefObject, useRef, useState } from 'react';
-import domtoimage from "dom-to-image-more";
+import domtoimage from "dom-to-image";
 import fileDownload from "js-file-download";
 
 interface UseDownloadVisualizationInput<TVisualizationId extends string> {

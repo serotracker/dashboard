@@ -75,7 +75,7 @@ export const RechartsVisualization = <
   const rightArrowButtonId = `${props.visualizationInformation.id}-right-arrow-button-icon`
 
   return (
-    <div className={cn(props.className, 'flex flex-col rounded-md border border-background mb-4 p-2')} ref={ref}>
+    <div className={cn(props.className, 'flex flex-col rounded-md border border-background my-4 p-2')} ref={ref}>
       <VisualizationHeader
         visualizationInformation={props.visualizationInformation}
         data={props.data}
