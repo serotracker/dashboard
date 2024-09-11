@@ -1,4 +1,4 @@
-import { SuggestedArboTrackerCitation } from "@/contexts/toast-provider";
+import { SuggestedArboTrackerCitation } from "@/app/pathogen/arbovirus/arbotracker-citations";
 import Link from "next/link";
 
 export enum FAQPageOptionId {
