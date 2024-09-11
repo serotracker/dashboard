@@ -9,6 +9,7 @@ import { ToastId } from "@/contexts/toast-provider";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { ArbovirusVisualizationId, arbovirusVisualizationInformation, getUrlParameterFromVisualizationId } from "../../visualizations/visualization-page-config";
 import { useMap } from "react-map-gl";
+import { suggestedArboTrackerCitationText } from "../../arbotracker-citations";
 
 const arboColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -210,7 +211,7 @@ export const ArboDataTable = () => {
         }}
         csvCitationConfiguration={{
           enabled: true,
-          citationText: "Harriet Ware, Mairead Whelan, Anabel Selemon, Emilie Toews, Shaila Akter, Niklas Bobrovitz, Rahul Arora, Yannik Roell, Thomas Jaenisch. A living systematic review of arbovirus seroprevalence studies. PROSPERO 2024 CRD42024551000 Available from: https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000",
+          citationText: suggestedArboTrackerCitationText,
           toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST
         }}
         rowExpansionConfiguration={rowExpansionConfiguration}
