@@ -37,6 +37,7 @@ import { DataTableExpandedRowContent } from "./data-table-expanded-row-content";
 import { Dropdown, DropdownProps } from "@/components/customs/dropdown/dropdown";
 import { typedObjectFromEntries } from "@/lib/utils";
 import { GenericTooltip } from "@/components/customs/generic-tooltip";
+import { ArboTrackerCitationButtonContent } from "@/app/pathogen/arbovirus/arbotracker-citations";
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   initiallyVisible: boolean;
@@ -224,7 +225,7 @@ export function DataTable<
           openToast({ toastId: csvCitationConfiguration.toastId });
         }}
       >
-        Get Citation for CSV
+        <ArboTrackerCitationButtonContent />
       </Button>
     )
   }, [csvCitationConfiguration, openToast])
