@@ -6,7 +6,6 @@ export const SuggestedArboTrackerCitation = () => (
   <div className="inline italic">
     <p className="inline italic">Whelan, Mairead G, Harriet Ware, Himanshu Ranka, Sean Kenny, Sabah Shaikh, Yannik Roell, Shaila Akter, et al. “Arbotracker: A Multipathogen Dashboard and Data Platform for Arbovirus Seroprevalence Studies.” The Lancet Infectious Diseases, September 10, 2024. </p>
     <Link className="inline text-link italic" href="https://doi.org/10.1016/s1473-3099(24)00585-1" target="__blank" rel="noopener noreferrer">https://doi.org/10.1016/s1473-3099(24)00585-1</Link>
-    <p className="inline italic">.</p>
   </div>
 )
 
