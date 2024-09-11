@@ -1,7 +1,6 @@
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-export const suggestedArboTrackerCitationText = "Mairead G Whelan, Harriet Ware, Himanshu Ranka, Sean Kenny, Sabah Shaikh, Yannik Roell, Shaila Akter, Anabel Selemon, Emilie Toews, May Chu, Niklas Bobrovitz, Rahul K Arora, Thomas Jaenisch, ArboTracker: a multipathogen dashboard and data platform for arbovirus seroprevalence studies, The Lancet Infectious Diseases, 2024, ISSN 1473-3099, https://doi.org/10.1016/S1473-3099(24)00585-1. (https://www.sciencedirect.com/science/article/pii/S1473309924005851)";
+export const suggestedArboTrackerCitationText = "Whelan, Mairead G, Harriet Ware, Himanshu Ranka, Sean Kenny, Sabah Shaikh, Yannik Roell, Shaila Akter, et al. “Arbotracker: A Multipathogen Dashboard and Data Platform for Arbovirus Seroprevalence Studies.” The Lancet Infectious Diseases, September 10, 2024. https://doi.org/10.1016/s1473-3099(24)00585-1";
 
 export const SuggestedArboTrackerCitation = () => (
   <div className="inline italic">
