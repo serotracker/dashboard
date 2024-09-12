@@ -20,6 +20,8 @@ import { LegendConfiguration } from "@/components/customs/visualizations/stacked
 import { TooltipProps } from "recharts/types/component/Tooltip";
 import { AnimalMersViralEstimatePopupContent } from "../../(map)/animal-mers-viral-estimate-pop-up-content";
 import { useBarColourAndLegendProps } from "@/components/customs/visualizations/use-bar-colour-and-legend-props";
+import { generateConciseSourceId } from "../../(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { EstimatesByRegionYAxisTick } from "../estimates-by-region";
 
 const AnimalViralPositivePrevalenceByRegionTooltip = <
   TValueType extends number | string | Array<number | string>,
@@ -80,7 +82,13 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
           dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper ?? dataPoint.primaryEstimateInfo.positivePrevalenceCalculated95CIUpper,
       }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
-      .sort((dataPointA, dataPointB) => dataPointA.primaryEstimateInfo.positivePrevalence - dataPointB.primaryEstimateInfo.positivePrevalence)
+      .sort((dataPointA, dataPointB) => {
+        if(dataPointA.region !== dataPointB.region) {
+          return dataPointA.region > dataPointB.region ? 1 : -1
+        }
+
+        return dataPointA.primaryEstimateInfo.positivePrevalence - dataPointB.primaryEstimateInfo.positivePrevalence;
+      })
       .map(( dataPoint, index ) => ({
         ...dataPoint,
         positivePrevalence: parseFloat(
@@ -100,6 +108,16 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
       }))
   , [ animalMersViralEstimates, regionGroupingFunction ]);
 
+  const estimateNumberToEstimateNameMap = useMemo(() => {
+    return typedGroupBy(
+      consideredData.map((estimate) => ({
+        estimateNumber: estimate.estimateNumber.toString(),
+        estimateName: generateConciseSourceId(estimate)
+      })),
+      (dataPoint) => dataPoint.estimateNumber
+    )
+  }, [ consideredData ]);
+
   const consideredDataByRegion = useMemo(() =>
     typedGroupBy(consideredData, (dataPoint) => dataPoint.region)
   , [ consideredData ]);
@@ -115,7 +133,7 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
       <ScatterChart
         width={730}
         height={250}
-        margin={{ bottom: 40, left: 8, top: 50, right: 10 }}
+        margin={{ bottom: 40, left: 200, top: 50, right: 10 }}
       >
         <text
           x='50%'
@@ -126,11 +144,12 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
         >
           <tspan fontSize="20">Animal Viral Positive Prevalence</tspan>
         </text>
-        <CartesianGrid />
+        <CartesianGrid strokeDasharray={"4 8"}/>
         <XAxis
           dataKey="positivePrevalence"
           type="number"
-          domain={[0, 100]}
+          domain={[-25, 100]}
+          ticks={[0, 25, 50, 75, 100]}
           unit="%"
         >
           <Label
@@ -144,13 +163,8 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
           type="number"
           domain={[0, consideredData.length + 1]}
           allowDataOverflow={true}
-          tick={false}
-          label={{
-            value: "Study estimates",
-            angle: -90,
-            offset: 40,
-            position: "insideLeft",
-          }}
+          ticks={Array(consideredData.length).fill(0).map((_, index) => index + 1)}
+          tick={(tickProps) => EstimatesByRegionYAxisTick({ tickProps, estimateNumberToEstimateNameMap })}
         />
         <Tooltip
           offset={0}

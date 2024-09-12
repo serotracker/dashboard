@@ -21,6 +21,7 @@ import { TooltipProps } from "recharts/types/component/Tooltip";
 import { AnimalMersSeroprevalenceEstimatePopupContent } from "../../(map)/animal-mers-seroprevalence-estimate-pop-up-content";
 import { useBarColourAndLegendProps } from "@/components/customs/visualizations/use-bar-colour-and-legend-props";
 import { generateConciseEstimateId, generateConciseSourceId } from "../../(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { EstimatesByRegionYAxisTick } from "../estimates-by-region";
 
 const AnimalSeroprevalenceByRegionTooltip = <
   TValueType extends number | string | Array<number | string>,
@@ -165,25 +166,7 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
           domain={[0, consideredData.length + 1]}
           allowDataOverflow={true}
           ticks={Array(consideredData.length).fill(0).map((_, index) => index + 1)}
-          tick={(props) => {
-            const { x, y, payload } = props;
-
-            const estimateNumberString = payload.value.toString();
-
-            return (
-              <g transform={`translate(${x},${y})`}>
-                <text
-                  x={0}
-                  y={0}
-                  dy={8}
-                  textAnchor="end"
-                  fill="#666"
-                >
-                  {estimateNumberToEstimateNameMap[estimateNumberString].at(0)?.estimateName}
-                </text>
-              </g>
-            );
-          }}
+          tick={(tickProps) => EstimatesByRegionYAxisTick({ tickProps, estimateNumberToEstimateNameMap })}
         />
         <Tooltip
           offset={0}
