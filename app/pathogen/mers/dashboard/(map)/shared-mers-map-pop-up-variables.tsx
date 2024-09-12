@@ -228,6 +228,12 @@ export const humanAgeGroupToColourClassnameMap = {
   'Seniors (≥60 years)': "bg-amber-300",
 }
 
+export const animalAgeGroupToColourClassnameMap = {
+  'Adult (>2 years)': "bg-orange-300",
+  'Juvenile (6 months-2 years)': 'bg-purple-300',
+  'Neonatal (≤6 months)': 'bg-rose-300'
+}
+
 export const isMersEventAnimalSpecies = (animalSpecies: string): animalSpecies is MersEventAnimalSpecies => Object.values(MersEventAnimalSpecies).some((element) => element === animalSpecies);
 export const isMersAnimalSpecies = (animalSpecies: string): animalSpecies is MersAnimalSpecies => Object.values(MersAnimalSpecies).some((element) => element === animalSpecies);
 

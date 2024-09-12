@@ -1,6 +1,7 @@
 import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { WhoRegion } from "@/gql/graphql";
 import {
+  animalAgeGroupToColourClassnameMap,
   animalDetectionSettingsToColourClassnameMap,
   animalImportedOrLocalToColourClassnameMap,
   animalPurposeSettingsToColourClassnameMap,
@@ -15,7 +16,10 @@ import {
   humanAgeGroupToColourClassnameMap,
   isMersAnimalSpecies,
   isMersAnimalType,
+  isMersSeroprevalenceEstimateTypename,
+  isMersViralEstimateTypename,
   isotypeToColourClassnameMap,
+  mersDataTypeToColourClassnameMap,
   sampleFrameToColourClassnameMap,
   samplingMethodToColourClassnameMap,
   sexToColourClassnameMap,
@@ -49,7 +53,14 @@ export const generateConciseEstimateId = (estimate: MersEstimate) => {
     : undefined;
 
 
-  return `${humanOrAnimal}_${country}_${sampleFrame}_${samplingYearString}`.replaceAll(/ /g, '_');
+  return `${humanOrAnimal}_${country}_${sampleFrame}_${samplingYearString}`.replaceAll(/ /g, '');
+}
+
+export const mersEstimateTypeToTypeMap = {
+  "PrimaryHumanMersSeroprevalenceEstimateInformation": "Human",
+  "PrimaryAnimalMersSeroprevalenceEstimateInformation": "Animal",
+  "PrimaryHumanMersViralEstimateInformation": "Human",
+  "PrimaryAnimalMersViralEstimateInformation": "Animal",
 }
 
 export const generateConciseSourceId = (estimate: MersEstimate) => {
@@ -59,9 +70,44 @@ export const generateConciseSourceId = (estimate: MersEstimate) => {
   return `${firstAuthorFullName}_${sourcePublicationYear}`.replaceAll(/ /g, '_');
 }
 
+export const generatePrimaryEstimateSamplingYearRange = (estimate: MersEstimate) => {
+  const samplingStartYear = estimate.primaryEstimateInfo.samplingStartDate
+    ? parseISO(estimate.primaryEstimateInfo.samplingStartDate).getFullYear()
+    : undefined;
+  const samplingEndYear = estimate.primaryEstimateInfo.samplingEndDate
+    ? parseISO(estimate.primaryEstimateInfo.samplingEndDate).getFullYear()
+    : undefined;
+
+  if(samplingStartYear === undefined && samplingEndYear === undefined) {
+    return 'Unknown';
+  }
+
+  if(samplingStartYear === undefined) {
+    return samplingEndYear?.toString() ?? 'Unknown';
+  }
+
+  if(samplingEndYear === undefined) {
+    return samplingStartYear?.toString() ?? 'Unknown';
+  }
+
+  if(samplingStartYear === samplingEndYear) {
+    return samplingStartYear.toString();
+  }
+
+  return `${samplingStartYear.toString()}-${samplingEndYear.toString()}`;
+}
+
 export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   latitude: estimate.primaryEstimateInfo.latitude,
   longitude: estimate.primaryEstimateInfo.longitude,
+  conciseEstimateId: generateConciseEstimateId(estimate),
+  primaryEstimateSamplingYearRange: generatePrimaryEstimateSamplingYearRange(estimate),
+  primaryEstimateHumanAndAnimalSampleFrame: isHumanMersEstimate(estimate)
+    ? (estimate.primaryEstimateInfo.sampleFrame ? [ estimate.primaryEstimateInfo.sampleFrame ] : [] )
+    : estimate.primaryEstimateInfo.animalDetectionSettings,
+  primaryEstimateHumanAndAnimalAgeGroup: isHumanMersEstimate(estimate)
+    ? estimate.primaryEstimateInfo.ageGroup
+    : estimate.primaryEstimateInfo.animalAgeGroup,
   primaryEstimateWhoRegion: estimate.primaryEstimateInfo.whoRegion,
   primaryEstimateCity: estimate.primaryEstimateInfo.city,
   primaryEstimateState: estimate.primaryEstimateInfo.state,
@@ -124,9 +170,99 @@ export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   primaryEstimateClade: estimate.primaryEstimateInfo.clade,
   primaryEstimateAccessionNumbers: estimate.primaryEstimateInfo.accessionNumbers,
   primaryEstimateGenomeSequenced: estimate.primaryEstimateInfo.genomeSequenced,
-})
+});
 
-export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
+const getEstimateTypeColumns = (
+  input: GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput
+) => {
+  if(input.dataTableType === MersEstimateDataTableType.SEROPREVALENCE_ESTIMATES) {
+    return [{
+      type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+      fieldName: 'primaryEstimateTypename',
+      valueToDisplayLabel: (typename: string) => isMersSeroprevalenceEstimateTypename(typename) ? mersEstimateTypeToTypeMap[typename] : typename,
+      valueToColourSchemeClassnameMap: mersDataTypeToColourClassnameMap,
+      defaultColourSchemeClassname: "bg-sky-100",
+      label: 'Type'
+    }]
+  }
+
+  return [{
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'primaryEstimateTypename',
+    valueToDisplayLabel: (typename: string) => isMersViralEstimateTypename(typename) ? mersEstimateTypeToTypeMap[typename] : typename,
+    valueToColourSchemeClassnameMap: mersDataTypeToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Type'
+  }];
+}
+
+const getPrevalenceColumns = (
+  input: GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput
+) => {
+  if(input.dataTableType === MersEstimateDataTableType.SEROPREVALENCE_ESTIMATES) {
+    return [
+      {
+        type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+        fieldName: 'primaryEstimateSeroprevalence',
+        label: 'Seroprevalence'
+      }, {
+        type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+        fieldName: 'primaryEstimateSeroprevalence95CILower',
+        label: 'Seroprevalence (95% Confidence Interval Lower Bound)',
+        initiallyVisible: false
+      }, {
+        type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+        fieldName: 'primaryEstimateSeroprevalence95CIUpper',
+        label: 'Seroprevalence (95% Confidence Interval Upper Bound)',
+        initiallyVisible: false
+      }
+    ];
+  }
+
+  return [
+    {
+      type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+      fieldName: 'primaryEstimatePositivePrevalence',
+      label: 'Positive Prevalence'
+    }, {
+      type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+      fieldName: 'primaryEstimatePositivePrevalence95CILower',
+      label: 'Positive Prevalence (95% Confidence Interval Lower Bound)',
+      initiallyVisible: false
+    }, {
+      type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+      fieldName: 'primaryEstimatePositivePrevalence95CIUpper',
+      label: 'Positive Prevalence (95% Confidence Interval Upper Bound)',
+      initiallyVisible: false
+    }
+  ]
+}
+
+export enum MersEstimateDataTableType {
+  SEROPREVALENCE_ESTIMATES = 'SEROPREVALENCE_ESTIMATES',
+  VIRAL_ESTIMATES = 'VIRAL_ESTIMATES'
+}
+
+interface GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput {
+  dataTableType: MersEstimateDataTableType;
+}
+
+export const getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration = (
+  input: GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput
+) => [{
+  type: DataTableColumnConfigurationEntryType.LINK as const,
+  fieldName: 'conciseEstimateId',
+  label: 'Estimate ID',
+  isHideable: false,
+  isFixed: true,
+  fieldNameForLink: 'primaryEstimateSourceUrl',
+  size: 400,
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'primaryEstimateId',
+  label: 'Full Estimate ID',
+  initiallyVisible: false
+}, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'primaryEstimateWhoRegion',
   label: 'WHO Region',
@@ -143,6 +279,31 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimateCountry',
   label: 'Country'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'primaryEstimateSamplingYearRange',
+  label: 'Year(s)'
+},
+...getEstimateTypeColumns(input),
+{
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+  fieldName: 'primaryEstimateHumanAndAnimalSampleFrame',
+  valueToColourSchemeClassnameMap: {
+    ...sampleFrameToColourClassnameMap,
+    ...animalDetectionSettingsToColourClassnameMap
+  },
+  defaultColourSchemeClassname: "bg-sky-100",
+  label: 'Sample Frame',
+},
+...getPrevalenceColumns(input),
+{
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'primaryEstimateSampleDenominator',
+  label: 'Denominator'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'primaryEstimateSampleNumerator',
+  label: 'Numerator'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimateState',
@@ -205,16 +366,8 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   label: 'First Author Full Name'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateSourceTitle',
-  label: 'Source Title'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimateInsitutution',
   label: 'Institution'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateSocioeconomicStatus',
-  label: 'Socioeconomic Status'
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'primaryEstimateAnimalType',
@@ -230,12 +383,6 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Animal Species'
 }, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'primaryEstimateAnimalDetectionSettings',
-  valueToColourSchemeClassnameMap: animalDetectionSettingsToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Animal Sample Frame',
-}, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'primaryEstimateAnimalPurpose',
   valueToColourSchemeClassnameMap: animalPurposeSettingsToColourClassnameMap,
@@ -249,8 +396,11 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   label: 'Animal Imported Or Local',
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'primaryEstimateAgeGroup',
-  valueToColourSchemeClassnameMap: humanAgeGroupToColourClassnameMap,
+  fieldName: 'primaryEstimateHumanAndAnimalAgeGroup',
+  valueToColourSchemeClassnameMap: {
+    ...humanAgeGroupToColourClassnameMap,
+    ...animalAgeGroupToColourClassnameMap
+  },
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Age Group'
 }, {
@@ -260,23 +410,15 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Exposure To Camels'
 }, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'primaryEstimateSampleFrame',
-  valueToColourSchemeClassnameMap: sampleFrameToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Sample Frame'
-}, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateSampleDenominator',
-  label: 'Sample Size (Denominator)'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateSampleNumerator',
-  label: 'Sample Numerator'
+  fieldName: 'primaryEstimateSocioeconomicStatus',
+  label: 'Socioeconomic Status',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
   fieldName: 'primaryEstimateSensitivity',
-  label: 'Test Sensitivity'
+  label: 'Test Sensitivity',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
   fieldName: 'primaryEstimateSensitivity95CILower',
@@ -290,7 +432,8 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
   fieldName: 'primaryEstimateSpecificity',
-  label: 'Test Specificity'
+  label: 'Test Specificity',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
   fieldName: 'primaryEstimateSpecificity95CILower',
@@ -307,44 +450,53 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   valueToColourSchemeClassnameMap: samplingMethodToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Sampling Method',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'primaryEstimateGeographicScope',
   valueToColourSchemeClassnameMap: geographicScopeToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Geographic Scope',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'primaryEstimateTestProducer',
   valueToColourSchemeClassnameMap: testProducerToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Test Producer',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimateTestProducerOther',
-  label: 'Test Producer (If Other)'
+  label: 'Test Producer (If Other)',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimateTestValidatedOn',
-  label: 'Test Validated On'
+  label: 'Test Validated On',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimatePostiveCutoff',
-  label: 'Positive Cutoff'
+  label: 'Positive Cutoff',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
   fieldName: 'primaryEstimateSymptomPrevalenceOfPositives',
-  label: 'Symptom Prevalence in Positive Cases'
+  label: 'Symptom Prevalence in Positive Cases',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimateSymptomDefinition',
-  label: 'Symptom Definition'
+  label: 'Symptom Definition',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'primaryEstimateTestValidation',
   valueToColourSchemeClassnameMap: testValidationToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Test Validation',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'primaryEstimateStudyInclusionCriteria',
@@ -360,7 +512,12 @@ export const mersSeroprevalenceAndViralEstimateSharedColumnConfiguration = [{
   fieldName: 'primaryEstimateSourceUrl',
   label: 'Source',
   fieldNameForLink: 'primaryEstimateSourceUrl',
-  isSortable: false
+  isSortable: false,
+  initiallyVisible: false
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'primaryEstimateSourceTitle',
+  label: 'Source Title'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'id',
