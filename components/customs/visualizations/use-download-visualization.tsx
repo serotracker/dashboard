@@ -41,13 +41,13 @@ export const useDownloadVisualization = <TVisualizationId extends string>(input:
           return true;
         }
       })
-      .then(function (blob) {
+      .then((blob) => {
         fileDownload(blob, `${input.visualizationId.toLowerCase().replaceAll('_', '-')}.png`);
-      });
+      })
   }
 
   return {
     ref,
-    downloadVisualization
+    downloadVisualization,
   }
 }
