@@ -14,8 +14,7 @@ import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
 import { StudyCountOverTimeBySampleFrame } from '../dashboard/(visualizations)/study-count-over-time-by-sample-frame';
 import { EstimateCountByArbovirusAndAntibodyTypeGraph } from '../dashboard/(visualizations)/estimate-count-by-arbovirus-and-antibody-type-graph';
-import Link from 'next/link';
-import { UNRegionsTooltip, WHORegionsTooltip } from '@/components/customs/tooltip-content';
+import { ClopperPearsonConfidenceIntervalCalculationTooltip, UNRegionsTooltip, WHORegionsTooltip } from '@/components/customs/tooltip-content';
 import { shortenedArboTrackerCitationText } from '../arbotracker-citations';
 
 export enum ArbovirusVisualizationId {
@@ -193,9 +192,7 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
         displayName: `${convertArboSFtoArbo(selectedPathogen)} study estimates with 95% CIs`
       }
     },
-    titleTooltipContent: (
-      <p>95% confidence intervals were calculated using the Clopper-Pearson method if not reported in the source.</p>
-    ),
+    titleTooltipContent: <ClopperPearsonConfidenceIntervalCalculationTooltip />,
     renderVisualization: ({ data, highlightedDataPoint, hideArbovirusDropdown }) => CountrySeroprevalenceComparisonScatterPlot({ data, highlightedDataPoint, hideArbovirusDropdown }),
     visualizationDownloadFootnote: shortenedArboTrackerCitationText
   },

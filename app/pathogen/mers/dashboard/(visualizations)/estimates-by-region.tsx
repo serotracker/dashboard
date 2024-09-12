@@ -28,6 +28,38 @@ export enum EstimatesByRegionRegionDropdownOption {
   COUNTRY = "COUNTRY"
 }
 
+interface EstimatesByRegionYAxisTickProps {
+  tickProps: {
+    x: number;
+    y: number;
+    payload: {
+      value: number
+    }
+  }
+  estimateNumberToEstimateNameMap: Record<string, Array<{ estimateName: string }>>
+}
+
+export const EstimatesByRegionYAxisTick = (props: EstimatesByRegionYAxisTickProps) => {
+  const { estimateNumberToEstimateNameMap, tickProps } = props;
+  const { x, y, payload } = tickProps;
+
+  const estimateNumberString = payload.value.toString();
+
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={0}
+        y={0}
+        dy={8}
+        textAnchor="end"
+        fill="#666"
+      >
+        {estimateNumberToEstimateNameMap[estimateNumberString]?.at(0)?.estimateName ?? 'Unknown Estimate Name'}
+      </text>
+    </g>
+  );
+}
+
 interface EstimatesByRegionProps {
   humanMersSeroprevalenceEstimates: HumanMersSeroprevalenceEstimate[];
   animalMersSeroprevalenceEstimates: AnimalMersSeroprevalenceEstimate[];

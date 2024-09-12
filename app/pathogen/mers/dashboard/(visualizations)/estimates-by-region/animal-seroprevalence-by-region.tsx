@@ -20,6 +20,8 @@ import { LegendConfiguration } from "@/components/customs/visualizations/stacked
 import { TooltipProps } from "recharts/types/component/Tooltip";
 import { AnimalMersSeroprevalenceEstimatePopupContent } from "../../(map)/animal-mers-seroprevalence-estimate-pop-up-content";
 import { useBarColourAndLegendProps } from "@/components/customs/visualizations/use-bar-colour-and-legend-props";
+import { generateConciseEstimateId, generateConciseSourceId } from "../../(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { EstimatesByRegionYAxisTick } from "../estimates-by-region";
 
 const AnimalSeroprevalenceByRegionTooltip = <
   TValueType extends number | string | Array<number | string>,
@@ -73,31 +75,50 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
 
   const consideredData = useMemo(() =>
     animalMersSeroprevalenceEstimates
-      .map((dataPoint) => ({ ...dataPoint, region: regionGroupingFunction(dataPoint) }))
+      .map((dataPoint) => ({
+        ...dataPoint,
+        region: regionGroupingFunction(dataPoint),
+        seroprevalence95CILower:
+          dataPoint.primaryEstimateInfo.seroprevalence95CILower ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CILower,
+        seroprevalence95CIUpper:
+          dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CIUpper,
+      }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
-      .sort((dataPointA, dataPointB) => dataPointA.primaryEstimateInfo.seroprevalence - dataPointB.primaryEstimateInfo.seroprevalence)
+      .sort((dataPointA, dataPointB) => {
+        if(dataPointA.region !== dataPointB.region) {
+          return dataPointA.region > dataPointB.region ? 1 : -1
+        }
+        
+        return dataPointA.primaryEstimateInfo.seroprevalence - dataPointB.primaryEstimateInfo.seroprevalence;
+      })
       .map(( dataPoint, index ) => ({
         ...dataPoint,
         seroprevalence: parseFloat(
           (dataPoint.primaryEstimateInfo.seroprevalence * 100).toFixed(1)
         ),
         seroprevalenceError: [
-          dataPoint.primaryEstimateInfo.seroprevalence95CILower ? parseFloat(
-            (
-              dataPoint.primaryEstimateInfo.seroprevalence * 100 -
-              dataPoint.primaryEstimateInfo.seroprevalence95CILower * 100
-            ).toFixed(1)
-          ) : 0,
-          dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ? parseFloat(
-            (
-              dataPoint.primaryEstimateInfo.seroprevalence95CIUpper * 100 -
-              dataPoint.primaryEstimateInfo.seroprevalence * 100
-            ).toFixed(1)
-          ) : 0,
+          parseFloat((
+            dataPoint.primaryEstimateInfo.seroprevalence * 100 -
+            dataPoint.seroprevalence95CILower * 100
+          ).toFixed(1)),
+          parseFloat((
+            dataPoint.seroprevalence95CIUpper * 100 - 
+            dataPoint.primaryEstimateInfo.seroprevalence * 100
+          ).toFixed(1))
         ],
         estimateNumber: index + 1
       }))
   , [ animalMersSeroprevalenceEstimates, regionGroupingFunction ]);
+
+  const estimateNumberToEstimateNameMap = useMemo(() => {
+    return typedGroupBy(
+      consideredData.map((estimate) => ({
+        estimateNumber: estimate.estimateNumber.toString(),
+        estimateName: generateConciseSourceId(estimate)
+      })),
+      (dataPoint) => dataPoint.estimateNumber
+    )
+  }, [ consideredData ]);
 
   const consideredDataByRegion = useMemo(() =>
     typedGroupBy(consideredData, (dataPoint) => dataPoint.region)
@@ -114,7 +135,7 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
       <ScatterChart
         width={730}
         height={250}
-        margin={{ bottom: 40, left: 8, top: 50, right: 10 }}
+        margin={{ bottom: 40, left: 200, top: 50, right: 10 }}
       >
         <text
           x='50%'
@@ -125,11 +146,12 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
         >
           <tspan fontSize="20">Animal Seroprevalence</tspan>
         </text>
-        <CartesianGrid />
+        <CartesianGrid strokeDasharray={"4 8"}/>
         <XAxis
           dataKey="seroprevalence"
           type="number"
-          domain={[0, 100]}
+          domain={[-25, 100]}
+          ticks={[0, 25, 50, 75, 100]}
           unit="%"
         >
           <Label
@@ -143,13 +165,8 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
           type="number"
           domain={[0, consideredData.length + 1]}
           allowDataOverflow={true}
-          tick={false}
-          label={{
-            value: "Study estimates",
-            angle: -90,
-            offset: 40,
-            position: "insideLeft",
-          }}
+          ticks={Array(consideredData.length).fill(0).map((_, index) => index + 1)}
+          tick={(tickProps) => EstimatesByRegionYAxisTick({ tickProps, estimateNumberToEstimateNameMap })}
         />
         <Tooltip
           offset={0}

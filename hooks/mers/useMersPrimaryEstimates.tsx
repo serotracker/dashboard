@@ -28,6 +28,7 @@ export const mersPrimaryEstimates = gql`
           whoRegion
           unRegion
           firstAuthorFullName
+          sourcePublicationYear
           sourceUrl
           sourceType
           sourceTitle
@@ -51,6 +52,8 @@ export const mersPrimaryEstimates = gql`
           seroprevalence
           seroprevalence95CILower
           seroprevalence95CIUpper
+          seroprevalenceCalculated95CILower
+          seroprevalenceCalculated95CIUpper
           samplingMethod
           geographicScope
           testProducer
@@ -88,6 +91,7 @@ export const mersPrimaryEstimates = gql`
           whoRegion
           unRegion
           firstAuthorFullName
+          sourcePublicationYear
           sourceUrl
           sourceType
           sourceTitle
@@ -111,6 +115,8 @@ export const mersPrimaryEstimates = gql`
           positivePrevalence
           positivePrevalence95CILower
           positivePrevalence95CIUpper
+          positivePrevalenceCalculated95CILower
+          positivePrevalenceCalculated95CIUpper
           samplingMethod
           geographicScope
           testProducer
@@ -148,6 +154,7 @@ export const mersPrimaryEstimates = gql`
           whoRegion
           unRegion
           firstAuthorFullName
+          sourcePublicationYear
           sourceUrl
           sourceType
           sourceTitle
@@ -171,6 +178,8 @@ export const mersPrimaryEstimates = gql`
           seroprevalence
           seroprevalence95CILower
           seroprevalence95CIUpper
+          seroprevalenceCalculated95CILower
+          seroprevalenceCalculated95CIUpper
           samplingMethod
           geographicScope
           testProducer
@@ -212,6 +221,7 @@ export const mersPrimaryEstimates = gql`
           whoRegion
           unRegion
           firstAuthorFullName
+          sourcePublicationYear
           sourceUrl
           sourceType
           sourceTitle
@@ -235,6 +245,8 @@ export const mersPrimaryEstimates = gql`
           positivePrevalence
           positivePrevalence95CILower
           positivePrevalence95CIUpper
+          positivePrevalenceCalculated95CILower
+          positivePrevalenceCalculated95CIUpper
           samplingMethod
           geographicScope
           testProducer
@@ -271,6 +283,8 @@ export const mersPrimaryEstimates = gql`
             positivePrevalence
             positivePrevalence95CILower
             positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
           }
           ... on MersSeroprevalenceSubEstimateInformation {
             __typename
@@ -279,6 +293,8 @@ export const mersPrimaryEstimates = gql`
             seroprevalence
             seroprevalence95CILower
             seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
           }
         }
         city
@@ -306,6 +322,8 @@ export const mersPrimaryEstimates = gql`
               positivePrevalence
               positivePrevalence95CILower
               positivePrevalence95CIUpper
+              positivePrevalenceCalculated95CILower
+              positivePrevalenceCalculated95CIUpper
             }
             ... on MersSeroprevalenceSubEstimateInformation {
               __typename
@@ -314,6 +332,8 @@ export const mersPrimaryEstimates = gql`
               seroprevalence
               seroprevalence95CILower
               seroprevalence95CIUpper
+              seroprevalenceCalculated95CILower
+              seroprevalenceCalculated95CIUpper
             }
           }
           ageGroup
@@ -331,6 +351,8 @@ export const mersPrimaryEstimates = gql`
               positivePrevalence
               positivePrevalence95CILower
               positivePrevalence95CIUpper
+              positivePrevalenceCalculated95CILower
+              positivePrevalenceCalculated95CIUpper
             }
             ... on MersSeroprevalenceSubEstimateInformation {
               __typename
@@ -339,6 +361,8 @@ export const mersPrimaryEstimates = gql`
               seroprevalence
               seroprevalence95CILower
               seroprevalence95CIUpper
+              seroprevalenceCalculated95CILower
+              seroprevalenceCalculated95CIUpper
             }
           }
           animalAgeGroup
@@ -357,6 +381,8 @@ export const mersPrimaryEstimates = gql`
             positivePrevalence
             positivePrevalence95CILower
             positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
           }
           ... on MersSeroprevalenceSubEstimateInformation {
             __typename
@@ -365,6 +391,8 @@ export const mersPrimaryEstimates = gql`
             seroprevalence
             seroprevalence95CILower
             seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
           }
         }
         assay
@@ -381,6 +409,8 @@ export const mersPrimaryEstimates = gql`
             positivePrevalence
             positivePrevalence95CILower
             positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
           }
           ... on MersSeroprevalenceSubEstimateInformation {
             __typename
@@ -389,6 +419,8 @@ export const mersPrimaryEstimates = gql`
             seroprevalence
             seroprevalence95CILower
             seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
           }
         }
         animalSpecies
@@ -405,6 +437,8 @@ export const mersPrimaryEstimates = gql`
             positivePrevalence
             positivePrevalence95CILower
             positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
           }
           ... on MersSeroprevalenceSubEstimateInformation {
             __typename
@@ -413,6 +447,8 @@ export const mersPrimaryEstimates = gql`
             seroprevalence
             seroprevalence95CILower
             seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
           }
         }
         sex
@@ -429,6 +465,8 @@ export const mersPrimaryEstimates = gql`
             positivePrevalence
             positivePrevalence95CILower
             positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
           }
           ... on MersSeroprevalenceSubEstimateInformation {
             __typename
@@ -437,6 +475,8 @@ export const mersPrimaryEstimates = gql`
             seroprevalence
             seroprevalence95CILower
             seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
           }
         }
         samplingStartDate
@@ -454,6 +494,8 @@ export const mersPrimaryEstimates = gql`
             positivePrevalence
             positivePrevalence95CILower
             positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
           }
           ... on MersSeroprevalenceSubEstimateInformation {
             __typename
@@ -462,6 +504,8 @@ export const mersPrimaryEstimates = gql`
             seroprevalence
             seroprevalence95CILower
             seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
           }
         }
         specimenType
@@ -478,6 +522,8 @@ export const mersPrimaryEstimates = gql`
             positivePrevalence
             positivePrevalence95CILower
             positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
           }
           ... on MersSeroprevalenceSubEstimateInformation {
             __typename
@@ -486,6 +532,8 @@ export const mersPrimaryEstimates = gql`
             seroprevalence
             seroprevalence95CILower
             seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
           }
         }
         occupation
@@ -504,6 +552,8 @@ export const mersPrimaryEstimates = gql`
             positivePrevalence
             positivePrevalence95CILower
             positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
           }
           ... on MersSeroprevalenceSubEstimateInformation {
             __typename
@@ -512,6 +562,8 @@ export const mersPrimaryEstimates = gql`
             seroprevalence
             seroprevalence95CILower
             seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
           }
         }
         animalImportedOrLocal
@@ -531,6 +583,8 @@ export const mersPrimaryEstimates = gql`
             positivePrevalence
             positivePrevalence95CILower
             positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
           }
           ... on MersSeroprevalenceSubEstimateInformation {
             __typename
@@ -539,6 +593,8 @@ export const mersPrimaryEstimates = gql`
             seroprevalence
             seroprevalence95CILower
             seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
           }
         }
         animalDetectionSettings
@@ -555,6 +611,8 @@ export const mersPrimaryEstimates = gql`
             positivePrevalence
             positivePrevalence95CILower
             positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
           }
           ... on MersSeroprevalenceSubEstimateInformation {
             __typename
@@ -563,6 +621,8 @@ export const mersPrimaryEstimates = gql`
             seroprevalence
             seroprevalence95CILower
             seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
           }
         }
         details
@@ -581,6 +641,8 @@ export const mersPrimaryEstimates = gql`
             positivePrevalence
             positivePrevalence95CILower
             positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
           }
           ... on MersSeroprevalenceSubEstimateInformation {
             __typename
@@ -589,6 +651,8 @@ export const mersPrimaryEstimates = gql`
             seroprevalence
             seroprevalence95CILower
             seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
           }
         }
         details

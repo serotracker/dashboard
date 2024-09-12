@@ -24,9 +24,40 @@ import {
   testProducerToColourClassnameMap,
   testValidationToColourClassnameMap
 } from "../(map)/shared-mers-map-pop-up-variables";
-import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { isHumanMersEstimate, MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { parseISO } from "date-fns";
 
 export type MersEstimateBaseForDataTable = ReturnType<typeof mapMersEstimateBaseForDataTable>;
+
+export const generateConciseEstimateId = (estimate: MersEstimate) => {
+  const humanOrAnimal = isHumanMersEstimate(estimate) ? 'Human' : 'Animal';
+  const country = estimate.primaryEstimateInfo.country;
+  const sampleFrame = isHumanMersEstimate(estimate)
+    ? estimate.primaryEstimateInfo.sampleFrame
+    : estimate.primaryEstimateInfo.animalDetectionSettings.at(0)
+  const samplingStartYear = estimate.primaryEstimateInfo.samplingStartDate
+    ? parseISO(estimate.primaryEstimateInfo.samplingStartDate).getFullYear()
+    : undefined;
+  const samplingEndYear = estimate.primaryEstimateInfo.samplingEndDate
+    ? parseISO(estimate.primaryEstimateInfo.samplingEndDate).getFullYear()
+    : undefined;
+  const samplingYearString = samplingStartYear !== undefined && samplingEndYear !== undefined
+    ? (samplingStartYear !== samplingEndYear
+      ? `${samplingStartYear}_${samplingEndYear}`
+      : `${samplingStartYear}`
+    )
+    : undefined;
+
+
+  return `${humanOrAnimal}_${country}_${sampleFrame}_${samplingYearString}`.replaceAll(/ /g, '_');
+}
+
+export const generateConciseSourceId = (estimate: MersEstimate) => {
+  const firstAuthorFullName = estimate.primaryEstimateInfo.firstAuthorFullName;
+  const sourcePublicationYear = estimate.primaryEstimateInfo.sourcePublicationYear.toString();
+
+  return `${firstAuthorFullName}_${sourcePublicationYear}`.replaceAll(/ /g, '_');
+}
 
 export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   latitude: estimate.primaryEstimateInfo.latitude,
