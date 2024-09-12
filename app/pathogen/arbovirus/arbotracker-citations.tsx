@@ -17,7 +17,6 @@ export const ArboTrackerCitationButtonContent = () => (
   <div className="inline">
     <p className="inline">How to cite us: </p>
     <Link className="inline text-link bg-stone-300 px-2 py-1 rounded-md" href="https://doi.org/10.1016/S1473-3099(24)00585-1" target="__blank" rel="noopener noreferrer" onClick={(event) => { event.stopPropagation(); }}>
-
       Lancet Inf. Dis.
     </Link>
   </div>
