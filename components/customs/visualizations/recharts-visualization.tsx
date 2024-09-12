@@ -136,11 +136,14 @@ export const RechartsVisualization = <
             hideArbovirusDropdown: props.hideArbovirusDropdown
           })}
         </div>
-        <div className="relative w-full">
-          <p
-            className="h-full text-xs italic"
-          >
-            Whelan MG, Ware H et al. (2024) ArboTracker: a multi-pathogen dashboard and data platform for arbovirus seroprevalence studies. Lancet Inf. Dis. DOI: https://doi.org/10.1016/S1473-3099(24)00585-1
+        <div
+          className={cn(
+            "relative w-full",
+            !props.visualizationInformation.visualizationDownloadFootnote ? 'hidden' : ''
+          )}
+        >
+          <p className={cn("h-full text-xs italic")}>
+            {props.visualizationInformation.visualizationDownloadFootnote}
           </p>
           <div className="w-full h-full absolute top-0 left-0 bg-white z-30 ignore-for-visualization-download"/>
         </div>

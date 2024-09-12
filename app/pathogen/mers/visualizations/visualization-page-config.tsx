@@ -67,7 +67,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
         "reported_event_summary_over_time"
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Reported MERS Cases Over Time" }),
-    renderVisualization: ({ data }) => <ReportedEventSummaryOverTime data={data} />
+    renderVisualization: ({ data }) => <ReportedEventSummaryOverTime data={data} />,
+    visualizationDownloadFootnote: undefined
   },
   [MersVisualizationId.CAMEL_POPULATION_OVER_TIME]: {
     id: MersVisualizationId.CAMEL_POPULATION_OVER_TIME,
@@ -76,7 +77,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
         "camel_population_over_time"
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Camel Population Over Time" }),
-    renderVisualization: ({ data }) => <CamelPopulationOverTime data={data} />
+    renderVisualization: ({ data }) => <CamelPopulationOverTime data={data} />,
+    visualizationDownloadFootnote: undefined
   },
   [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME]: {
     id: MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME,
@@ -85,7 +87,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
         "median_seroprevalence_over_time"
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median Seroprevalence Over Time" }),
-    renderVisualization: ({ data }) => <MedianSeroprevalenceOverTime data={data} />
+    renderVisualization: ({ data }) => <MedianSeroprevalenceOverTime data={data} />,
+    visualizationDownloadFootnote: undefined
   },
   [MersVisualizationId.MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME]: {
     id: MersVisualizationId.MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME,
@@ -94,7 +97,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
         "median_viral_positive_prevalence_over_time"
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median Viral Positive Prevalenc eOver Time" }),
-    renderVisualization: ({ data }) => <MedianViralPositivePrevalenceOverTime data={data} />
+    renderVisualization: ({ data }) => <MedianViralPositivePrevalenceOverTime data={data} />,
+    visualizationDownloadFootnote: undefined
   },
   [MersVisualizationId.SUMMARY_BY_REGION]: {
     id: MersVisualizationId.SUMMARY_BY_REGION,
@@ -107,7 +111,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
       displayName: "Requires state. Initialized in following step."
     }),
     titleTooltipContent: <p> Requires state. Initialized in following step. </p>,
-    renderVisualization: () => <p> Requires state. Initialized in following step. </p>
+    renderVisualization: () => <p> Requires state. Initialized in following step. </p>,
+    visualizationDownloadFootnote: undefined
   },
   [MersVisualizationId.ESTIMATES_BY_REGION]: {
     id: MersVisualizationId.ESTIMATES_BY_REGION,
@@ -120,7 +125,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
       displayName: "Requires state. Initialized in following step."
     }),
     titleTooltipContent: <p> Requires state. Initialized in following step. </p>,
-    renderVisualization: () => <p> Requires state. Initialized in following step. </p>
+    renderVisualization: () => <p> Requires state. Initialized in following step. </p>,
+    visualizationDownloadFootnote: undefined
   },
   [MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE]: {
     id: MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE,
@@ -133,7 +139,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
       displayName: "Requires state. Initialized in following step."
     }),
     titleTooltipContent: <p> Requires state. Initialized in following step. </p>,
-    renderVisualization: () => <p> Requires state. Initialized in following step. </p>
+    renderVisualization: () => <p> Requires state. Initialized in following step. </p>,
+    visualizationDownloadFootnote: undefined
   }
 }
 
