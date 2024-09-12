@@ -25,7 +25,7 @@ export const MersMapStudySubmissionPrompt = ({
         </button>
       </CardHeader>
       <CardContent className={"p-2"}>
-        <p className="inline"> Are we missing a MERS seroprevalence or viral positive prevalence study that we should include? Submit it to us via </p>
+        <p className="inline"> Are we missing a MERS seroprevalence or viral prevalence study that we should include? Submit it to us via </p>
         <Link className="inline text-link underline text-end" target="_blank" rel="noopener noreferrer" href="https://forms.gle/ifwicQVVjj9CeNoA9">this form</Link>
         
       </CardContent>

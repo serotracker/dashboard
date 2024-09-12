@@ -108,7 +108,7 @@ export const useMersMapCustomizationModal = () => {
         hoverColourClassname: 'hover:bg-mersHover/50',
         highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
         dropdownOptionGroups: [{
-          groupHeader: 'Seroprevalence and Viral Positive Prevalence Estimates',
+          groupHeader: 'Seroprevalence and Viral Prevalence Estimates',
           options: [
             MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES
           ]

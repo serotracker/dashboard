@@ -80,10 +80,10 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
           SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE
         ]
       }, {
-        groupHeader: 'Viral Positive Prevalence Estimates',
+        groupHeader: 'Viral Prevalence Estimates',
         options: [
-          SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_POSITIVE_PREVALENCE,
-          SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_VIRAL_POSITIVE_PREVALENCE
+          SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE,
+          SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_VIRAL_PREVALENCE
         ]
       }, {
         groupHeader: 'Cases and Deaths',
@@ -97,8 +97,8 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       dropdownOptionToLabelMap: {
         [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE]: "Median Human Seroprevalence",
         [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE]: "Median Animal Seroprevalence",
-        [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_POSITIVE_PREVALENCE]: "Median Human Viral Positive Prevalence",
-        [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_VIRAL_POSITIVE_PREVALENCE]: "Median Animal Viral Positive Prevalence",
+        [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE]: "Median Human Viral Prevalence",
+        [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_VIRAL_PREVALENCE]: "Median Animal Viral Prevalence",
         [SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES]: "Confirmed Animal Cases",
         [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES]: "Confirmed Human Cases",
         [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS]: "Confirmed Human Deaths"

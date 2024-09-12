@@ -142,7 +142,7 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
           textAnchor="middle"
           dominantBaseline="central"
         >
-          <tspan fontSize="20">Animal Viral Positive Prevalence</tspan>
+          <tspan fontSize="20">Animal Viral Prevalence</tspan>
         </text>
         <CartesianGrid strokeDasharray={"4 8"}/>
         <XAxis
@@ -153,7 +153,7 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
           unit="%"
         >
           <Label
-            value="Viral Positive Prevalence"
+            value="Viral Prevalence"
             offset={-8}
             position="insideBottom"
           />
