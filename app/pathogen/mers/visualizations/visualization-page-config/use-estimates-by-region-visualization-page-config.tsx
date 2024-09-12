@@ -89,7 +89,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
           ),
         ]
       }, {
-        groupHeader: 'Viral Positive Prevalence Estimates',
+        groupHeader: 'Viral Prevalence Estimates',
         options: [
           ...(availableDropdownOptionGroups.includes(EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE)
             ? [ EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE ]

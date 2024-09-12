@@ -59,10 +59,10 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
           highlightedDataPoint={estimate}
           hideArbovirusDropdown={true}
           visualizationInformation={{
-            ...mersVisualizationInformation[MersVisualizationId.MEDIAN_VIRAL_POSITIVE_PREVALENCE_OVER_TIME],
+            ...mersVisualizationInformation[MersVisualizationId.MEDIAN_VIRAL_PREVALENCE_OVER_TIME],
             getDisplayName: () => ({
               type: VisualizationDisplayNameType.STANDARD,
-              displayName: `Median Viral Positive Prevalence for ${countryName} over time`
+              displayName: `Median Viral Prevalence for ${countryName} over time`
             })
           }}
           getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}

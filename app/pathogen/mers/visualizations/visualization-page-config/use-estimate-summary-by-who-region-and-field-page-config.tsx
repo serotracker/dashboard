@@ -37,14 +37,14 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
       EstimateBreakdownTableFieldOfInterestDropdownOption.AGE_GROUP,
       ...((
         estimateBreakdownTableVariableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE ||
-        estimateBreakdownTableVariableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE
+        estimateBreakdownTableVariableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_PREVALENCE
       )
         ? [EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SPECIES, EstimateBreakdownTableFieldOfInterestDropdownOption.ANIMAL_SAMPLE_FRAME ]
         : []
       ),
       ...((
         estimateBreakdownTableVariableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE ||
-        estimateBreakdownTableVariableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE
+        estimateBreakdownTableVariableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_PREVALENCE
       )
         ? [EstimateBreakdownTableFieldOfInterestDropdownOption.CAMEL_EXPOSURE_LEVEL ]
         : []
@@ -89,18 +89,18 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
           EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE
         ]
       }, {
-        groupHeader: 'Viral Positive Prevalence Estimates',
+        groupHeader: 'Viral Prevalence Estimates',
         options: [
-          EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE,
-          EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE
+          EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_PREVALENCE,
+          EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_PREVALENCE
         ]
       }],
       chosenDropdownOption: estimateBreakdownTableVariableOfInterest,
       dropdownOptionToLabelMap: {
         [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE]: 'Aggregated Human Seroprevalence',
         [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE]: 'Aggregated Animal Seroprevalence',
-        [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE]: 'Aggregated Human Viral Positive Prevalence',
-        [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE]: 'Aggregated Animal Viral Positive Prevalence',
+        [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_PREVALENCE]: 'Aggregated Human Viral Prevalence',
+        [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_PREVALENCE]: 'Aggregated Animal Viral Prevalence',
       },
       onDropdownOptionChange: (option) => {
         setEstimateBreakdownTableVariableOfInterest(option);

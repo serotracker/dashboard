@@ -9,7 +9,6 @@ import {
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import ArboStats, { formatNumber } from "@/components/customs/arboStats";
 import CustomQueryClientProvider from "@/contexts/custom-query-client-provider";
 import getQueryClient from "@/components/customs/getQueryClient";
 import {
@@ -30,6 +29,10 @@ interface TrackerButtonProps {
   bgColor: string;
   href: string;
   className?: string
+}
+
+const formatNumber = (numericValue?: number) => {
+  return (numericValue?.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') ?? 0);
 }
 
 function TrackerButton(props: TrackerButtonProps) {

@@ -11,8 +11,8 @@ interface MedianViralPositivePrevalenceOverTimeProps {
 }
 
 const typenameToLabel = {
-  ['PrimaryHumanMersViralEstimateInformation']: 'Human MERS Viral Positive Prevalence',
-  ['PrimaryAnimalMersViralEstimateInformation']: 'Animal MERS Viral Positive Prevalence',
+  ['PrimaryHumanMersViralEstimateInformation']: 'Human MERS Viral Prevalence',
+  ['PrimaryAnimalMersViralEstimateInformation']: 'Animal MERS Viral Prevalence',
 }
 
 const typenameToLineColour = {

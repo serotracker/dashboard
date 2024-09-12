@@ -19,7 +19,7 @@ export enum AvailableMersDataTables {
 
 export const genomicSequencingDataTooltipContent = (
   <>
-    <p className="inline">Our genomic sequencing data is pulled from the seroprevalence and viral positive prevalence estimates which reported genomic sequencing data.</p>
+    <p className="inline">Our genomic sequencing data is pulled from the seroprevalence and viral prevalence estimates which reported genomic sequencing data.</p>
   </>
 )
 

@@ -33,8 +33,8 @@ import { unRegionEnumToLabelMap } from "@/lib/un-regions";
 export enum EstimateBreakdownTableVariableOfInterestDropdownOption {
   AGGREGATED_HUMAN_SEROPREVALENCE = "AGGREGATED_HUMAN_SEROPREVALENCE",
   AGGREGATED_ANIMAL_SEROPREVALENCE = "AGGREGATED_ANIMAL_SEROPREVALENCE",
-  AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE = "AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE",
-  AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE = "AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE",
+  AGGREGATED_HUMAN_VIRAL_PREVALENCE = "AGGREGATED_HUMAN_VIRAL_PREVALENCE",
+  AGGREGATED_ANIMAL_VIRAL_PREVALENCE = "AGGREGATED_ANIMAL_VIRAL_PREVALENCE",
 }
 
 export enum EstimateBreakdownTableFieldOfInterestDropdownOption {
@@ -56,8 +56,8 @@ export enum EstimateBreakdownTableRegionTypeOfInterestDropdownOption {
 export const variableOfInterestToEstimateFilteringFunction: Record<EstimateBreakdownTableVariableOfInterestDropdownOption, (estimate: MersEstimate) => boolean> = {
   [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_SEROPREVALENCE]: (estimate) => isHumanMersSeroprevalenceEstimate(estimate),
   [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_SEROPREVALENCE]: (estimate) => isAnimalMersSeroprevalenceEstimate(estimate),
-  [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE]: (estimate) => isHumanMersViralEstimate(estimate),
-  [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE]: (estimate) => isAnimalMersViralEstimate(estimate),
+  [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_PREVALENCE]: (estimate) => isHumanMersViralEstimate(estimate),
+  [EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_PREVALENCE]: (estimate) => isAnimalMersViralEstimate(estimate),
 } 
 
 
@@ -590,8 +590,8 @@ export const EstimateBreakdownTable = (props: EstimateBreakdownTableProps) => {
             seroprevalence: value.seroprevalencePercentageString,
           } : {}),
           ...((
-            variableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_POSITIVE_PREVALENCE
-            || variableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_POSITIVE_PREVALENCE
+            variableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_HUMAN_VIRAL_PREVALENCE
+            || variableOfInterest === EstimateBreakdownTableVariableOfInterestDropdownOption.AGGREGATED_ANIMAL_VIRAL_PREVALENCE
           ) ? {
             viralPositivePrevalence: value.seroprevalencePercentageString,
           } : {}),
