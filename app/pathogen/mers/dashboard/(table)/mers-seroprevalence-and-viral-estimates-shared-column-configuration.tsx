@@ -258,6 +258,10 @@ export const getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration = (
   fieldNameForLink: 'primaryEstimateSourceUrl',
   size: 400,
 }, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'primaryEstimateId',
+  label: 'Full Estimate ID'
+}, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'primaryEstimateWhoRegion',
   label: 'WHO Region',
