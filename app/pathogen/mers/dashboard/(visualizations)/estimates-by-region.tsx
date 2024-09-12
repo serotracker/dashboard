@@ -54,7 +54,7 @@ export const EstimatesByRegionYAxisTick = (props: EstimatesByRegionYAxisTickProp
         textAnchor="end"
         fill="#666"
       >
-        {estimateNumberToEstimateNameMap[estimateNumberString].at(0)?.estimateName}
+        {estimateNumberToEstimateNameMap[estimateNumberString]?.at(0)?.estimateName ?? 'Unknown Estimate Name'}
       </text>
     </g>
   );
