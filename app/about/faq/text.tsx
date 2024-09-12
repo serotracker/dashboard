@@ -1,3 +1,4 @@
+import { SuggestedArboTrackerCitation } from "@/app/pathogen/arbovirus/arbotracker-citations";
 import Link from "next/link";
 
 export enum FAQPageOptionId {
@@ -73,7 +74,7 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
         <p className='inline'> Yes, our data is open-source and free for anyone to use. Every data table on the dashboard has a button next to it that allows you to download a csv of the data in the table. </p>
         <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://new.serotracker.com/pathogen/arbovirus/dashboard#TABLE">This is a link to the ArboTracker data table where it is possible to download a csv containing all of our arbovirus seroprevalence estimates</Link>
         <p className='inline'>. This is the recommended citation for our data: </p>
-        <p className='inline italic'>Harriet Ware, Mairead Whelan, Anabel Selemon, Emilie Toews, Shaila Akter, Niklas Bobrovitz, Rahul Arora, Yannik Roell, Thomas Jaenisch. A living systematic review of arbovirus seroprevalence studies. PROSPERO 2024 CRD42024551000 Available from: https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000</p>
+        <SuggestedArboTrackerCitation />
         <p className='inline'>.</p>
       </>
     )

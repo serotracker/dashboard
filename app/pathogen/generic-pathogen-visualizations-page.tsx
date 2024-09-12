@@ -122,6 +122,7 @@ export interface VisualizationInformation<
   renderVisualization: (input: RenderVisualizationInput<TEstimate>) => React.ReactNode;
   customizationModalConfiguration?: UseModalInput<TCustomizationModalDropdownOption>;
   paginationConfiguration?: PaginationConfiguration;
+  visualizationDownloadFootnote: string | undefined;
 }
 
 interface FiltersComponentProps {

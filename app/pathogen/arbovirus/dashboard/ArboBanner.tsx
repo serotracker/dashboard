@@ -8,6 +8,7 @@ import { ToastContext, ToastId } from "@/contexts/toast-provider";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { typedObjectFromEntries, typedObjectKeys } from "@/lib/utils";
 import { arboDataTableRows } from "./(table)/ArboDataTable";
+import { ArboTrackerCitationButtonContent, suggestedArboTrackerCitationText } from "../arbotracker-citations";
 
 export const ArboBanner = () => {
     const state = useContext(ArboContext);
@@ -50,13 +51,11 @@ export const ArboBanner = () => {
           Download CSV
         </Button>
         <Button className="w-[30%] bg-background hover:bg-backgroundHover ml-2" onClick={() => {
-          navigator.clipboard.writeText(
-            "Harriet Ware, Mairead Whelan, Anabel Selemon, Emilie Toews, Shaila Akter, Niklas Bobrovitz, Rahul Arora, Yannik Roell, Thomas Jaenisch. A living systematic review of arbovirus seroprevalence studies. PROSPERO 2024 CRD42024551000 Available from: https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000"
-          );
+          navigator.clipboard.writeText(suggestedArboTrackerCitationText);
 
           openToast({ toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST })
         }}>
-          Get Citation for CSV
+          <ArboTrackerCitationButtonContent />
         </Button>
       </div>
     );

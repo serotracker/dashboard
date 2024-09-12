@@ -75,7 +75,7 @@ export const RechartsVisualization = <
   const rightArrowButtonId = `${props.visualizationInformation.id}-right-arrow-button-icon`
 
   return (
-    <div className={cn(props.className, 'flex flex-col rounded-md border border-background my-4 p-2')} ref={ref}>
+    <div className={cn(props.className, 'flex flex-col rounded-md border border-background mb-4 p-2')} ref={ref}>
       <VisualizationHeader
         visualizationInformation={props.visualizationInformation}
         data={props.data}
@@ -128,12 +128,25 @@ export const RechartsVisualization = <
           }
         }}
       />
-      <div className="flex-1 overflow-y-hidden">
-        {props.visualizationInformation.renderVisualization({
-          data: props.data,
-          highlightedDataPoint: props.highlightedDataPoint,
-          hideArbovirusDropdown: props.hideArbovirusDropdown
-        })}
+      <div className="flex-1 overflow-y-hidden flex flex-col">
+        <div className="flex-1">
+          {props.visualizationInformation.renderVisualization({
+            data: props.data,
+            highlightedDataPoint: props.highlightedDataPoint,
+            hideArbovirusDropdown: props.hideArbovirusDropdown
+          })}
+        </div>
+        <div
+          className={cn(
+            "relative w-full",
+            !props.visualizationInformation.visualizationDownloadFootnote ? 'hidden' : ''
+          )}
+        >
+          <p className={cn("h-full text-xs italic")}>
+            {props.visualizationInformation.visualizationDownloadFootnote}
+          </p>
+          <div className="w-full h-full absolute top-0 left-0 bg-white z-30 ignore-for-visualization-download"/>
+        </div>
       </div>
       <ModalWrapper
         modalState={customizationModalState}

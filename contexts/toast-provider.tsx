@@ -5,6 +5,7 @@ import * as RadixUIToast from "@radix-ui/react-toast";
 import { cn } from "@/lib/utils";
 import { Toast } from "@/components/customs/toast";
 import { Breakpoint, useBreakpoint } from "@/hooks/useBreakpoint";
+import { ArboTrackerCitationToastMessage } from "@/app/pathogen/arbovirus/arbotracker-citations";
 
 export enum ToastId {
   DOWNLOAD_CSV_CITATION_TOAST = "DOWNLOAD_CSV_CITATION_TOAST",
@@ -20,13 +21,7 @@ const toastInformation: Record<ToastId, ToastInformation> = {
   [ToastId.DOWNLOAD_CSV_CITATION_TOAST]: {
     openByDefault: false,
     title: <p className="font-bold mb-2"> Citation Copied!</p>,
-    message: (
-      <>
-        <p className="inline">Our suggested citation for the CSV file has been copied to your clipboard (</p>
-        <p className="inline italic">Harriet Ware, Mairead Whelan, Anabel Selemon, Emilie Toews, Shaila Akter, Niklas Bobrovitz, Rahul Arora, Yannik Roell, Thomas Jaenisch. A living systematic review of arbovirus seroprevalence studies. PROSPERO 2024 CRD42024551000 Available from: https://www.crd.york.ac.uk/prospero/display_record.php?ID=CRD42024551000</p>
-        <p className="inline">).</p>
-      </>
-    )
+    message: <ArboTrackerCitationToastMessage />
   },
 };
 
