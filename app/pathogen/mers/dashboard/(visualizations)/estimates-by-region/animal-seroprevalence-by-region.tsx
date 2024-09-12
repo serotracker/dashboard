@@ -20,6 +20,7 @@ import { LegendConfiguration } from "@/components/customs/visualizations/stacked
 import { TooltipProps } from "recharts/types/component/Tooltip";
 import { AnimalMersSeroprevalenceEstimatePopupContent } from "../../(map)/animal-mers-seroprevalence-estimate-pop-up-content";
 import { useBarColourAndLegendProps } from "@/components/customs/visualizations/use-bar-colour-and-legend-props";
+import { generateConciseEstimateId, generateConciseSourceId } from "../../(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 
 const AnimalSeroprevalenceByRegionTooltip = <
   TValueType extends number | string | Array<number | string>,
@@ -82,7 +83,13 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
           dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CIUpper,
       }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
-      .sort((dataPointA, dataPointB) => dataPointA.primaryEstimateInfo.seroprevalence - dataPointB.primaryEstimateInfo.seroprevalence)
+      .sort((dataPointA, dataPointB) => {
+        if(dataPointA.region !== dataPointB.region) {
+          return dataPointA.region > dataPointB.region ? 1 : -1
+        }
+        
+        return dataPointA.primaryEstimateInfo.seroprevalence - dataPointB.primaryEstimateInfo.seroprevalence;
+      })
       .map(( dataPoint, index ) => ({
         ...dataPoint,
         seroprevalence: parseFloat(
@@ -102,6 +109,16 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
       }))
   , [ animalMersSeroprevalenceEstimates, regionGroupingFunction ]);
 
+  const estimateNumberToEstimateNameMap = useMemo(() => {
+    return typedGroupBy(
+      consideredData.map((estimate) => ({
+        estimateNumber: estimate.estimateNumber.toString(),
+        estimateName: generateConciseSourceId(estimate)
+      })),
+      (dataPoint) => dataPoint.estimateNumber
+    )
+  }, [ consideredData ]);
+
   const consideredDataByRegion = useMemo(() =>
     typedGroupBy(consideredData, (dataPoint) => dataPoint.region)
   , [ consideredData ]);
@@ -117,7 +134,7 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
       <ScatterChart
         width={730}
         height={250}
-        margin={{ bottom: 40, left: 8, top: 50, right: 10 }}
+        margin={{ bottom: 40, left: 200, top: 50, right: 10 }}
       >
         <text
           x='50%'
@@ -128,11 +145,12 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
         >
           <tspan fontSize="20">Animal Seroprevalence</tspan>
         </text>
-        <CartesianGrid />
+        <CartesianGrid strokeDasharray={"4 8"}/>
         <XAxis
           dataKey="seroprevalence"
           type="number"
-          domain={[0, 100]}
+          domain={[-25, 100]}
+          ticks={[0, 25, 50, 75, 100]}
           unit="%"
         >
           <Label
@@ -146,12 +164,25 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
           type="number"
           domain={[0, consideredData.length + 1]}
           allowDataOverflow={true}
-          tick={false}
-          label={{
-            value: "Study estimates",
-            angle: -90,
-            offset: 40,
-            position: "insideLeft",
+          ticks={Array(consideredData.length).fill(0).map((_, index) => index + 1)}
+          tick={(props) => {
+            const { x, y, payload } = props;
+
+            const estimateNumberString = payload.value.toString();
+
+            return (
+              <g transform={`translate(${x},${y})`}>
+                <text
+                  x={0}
+                  y={0}
+                  dy={8}
+                  textAnchor="end"
+                  fill="#666"
+                >
+                  {estimateNumberToEstimateNameMap[estimateNumberString].at(0)?.estimateName}
+                </text>
+              </g>
+            );
           }}
         />
         <Tooltip

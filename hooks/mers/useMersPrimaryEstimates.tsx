@@ -28,6 +28,7 @@ export const mersPrimaryEstimates = gql`
           whoRegion
           unRegion
           firstAuthorFullName
+          sourcePublicationYear
           sourceUrl
           sourceType
           sourceTitle
@@ -90,6 +91,7 @@ export const mersPrimaryEstimates = gql`
           whoRegion
           unRegion
           firstAuthorFullName
+          sourcePublicationYear
           sourceUrl
           sourceType
           sourceTitle
@@ -152,6 +154,7 @@ export const mersPrimaryEstimates = gql`
           whoRegion
           unRegion
           firstAuthorFullName
+          sourcePublicationYear
           sourceUrl
           sourceType
           sourceTitle
@@ -218,6 +221,7 @@ export const mersPrimaryEstimates = gql`
           whoRegion
           unRegion
           firstAuthorFullName
+          sourcePublicationYear
           sourceUrl
           sourceType
           sourceTitle

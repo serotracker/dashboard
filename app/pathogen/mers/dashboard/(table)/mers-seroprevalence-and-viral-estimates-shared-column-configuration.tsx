@@ -52,6 +52,13 @@ export const generateConciseEstimateId = (estimate: MersEstimate) => {
   return `${humanOrAnimal}_${country}_${sampleFrame}_${samplingYearString}`.replaceAll(/ /g, '_');
 }
 
+export const generateConciseSourceId = (estimate: MersEstimate) => {
+  const firstAuthorFullName = estimate.primaryEstimateInfo.firstAuthorFullName;
+  const sourcePublicationYear = estimate.primaryEstimateInfo.sourcePublicationYear.toString();
+
+  return `${firstAuthorFullName}_${sourcePublicationYear}`.replaceAll(/ /g, '_');
+}
+
 export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   latitude: estimate.primaryEstimateInfo.latitude,
   longitude: estimate.primaryEstimateInfo.longitude,
