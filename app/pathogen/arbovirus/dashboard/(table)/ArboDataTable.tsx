@@ -9,7 +9,7 @@ import { ToastId } from "@/contexts/toast-provider";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { ArbovirusVisualizationId, arbovirusVisualizationInformation, getUrlParameterFromVisualizationId } from "../../visualizations/visualization-page-config";
 import { useMap } from "react-map-gl";
-import { suggestedArboTrackerCitationText } from "../../arbotracker-citations";
+import { shortenedArboTrackerCitationText, suggestedArboTrackerCitationText } from "../../arbotracker-citations";
 
 const arboColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -212,6 +212,7 @@ export const ArboDataTable = () => {
         csvCitationConfiguration={{
           enabled: true,
           citationText: suggestedArboTrackerCitationText,
+          csvDownloadCitationText: shortenedArboTrackerCitationText,
           toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST
         }}
         rowExpansionConfiguration={rowExpansionConfiguration}
