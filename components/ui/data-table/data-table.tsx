@@ -53,6 +53,7 @@ interface CsvCitationConfigurationDisabled {
 interface CsvCitationConfigurationEnabled {
   enabled: true;
   citationText: string;
+  csvDownloadCitationText: string;
   toastId: ToastId;
 }
 
@@ -185,8 +186,14 @@ export function DataTable<
           }
           newObj[headerLabel] = temp_data;
         });
+
+        if(props.csvCitationConfiguration.enabled === true) {
+          newObj['Citation'] = props.csvCitationConfiguration.csvDownloadCitationText
+        }
+
         return newObj;
       });
+    
     const csvConfig = mkConfig({
       useKeysAsHeaders: true,
       filename: props.csvFilename

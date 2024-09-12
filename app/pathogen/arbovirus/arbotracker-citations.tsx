@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+export const shortenedArboTrackerCitationText = 'Whelan MG, Ware H et al. (2024) ArboTracker: a multi-pathogen dashboard and data platform for arbovirus seroprevalence studies. Lancet Inf. Dis. DOI: https://doi.org/10.1016/S1473-3099(24)00585-1';
 export const suggestedArboTrackerCitationText = "Whelan, Mairead G, Harriet Ware, Himanshu Ranka, Sean Kenny, Sabah Shaikh, Yannik Roell, Shaila Akter, et al. “Arbotracker: A Multipathogen Dashboard and Data Platform for Arbovirus Seroprevalence Studies.” The Lancet Infectious Diseases, September 10, 2024. https://doi.org/10.1016/s1473-3099(24)00585-1";
 
 export const SuggestedArboTrackerCitation = () => (
