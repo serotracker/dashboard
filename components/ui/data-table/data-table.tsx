@@ -272,7 +272,7 @@ export function DataTable<
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="mx-2 whitespace-nowrap">
-                Columns
+                Add/Remove Columns
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="p-2 overflow-y-scroll max-h-half-screen">

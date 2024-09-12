@@ -1,6 +1,6 @@
-import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
-import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { useMemo } from "react";
+import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
+import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { AvailableMersDataTables } from "./mers-data-table";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
@@ -8,47 +8,15 @@ import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizati
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import {
   generateMersEstimateTableConfigurations,
-  GenerateMersEstimateTableConfigurationsType,
-  isMersSeroprevalenceEstimateTypename,
-  mersDataTypeToColourClassnameMap,
-  mersDataTypeToLabelMap
+  GenerateMersEstimateTableConfigurationsType
 } from "../(map)/shared-mers-map-pop-up-variables";
-import { mersSeroprevalenceAndViralEstimateSharedColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration, MersEstimateDataTableType, mersEstimateTypeToTypeMap } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { MersSeroprevalenceEstimateForDataTable } from "./use-mers-data-table-data";
 import { SubestimateTable } from "@/components/ui/pathogen-map/map-pop-up/subestimate-table";
 
-const mersSeroprevalenceEstimateColumnConfiguration = [{
-  type: DataTableColumnConfigurationEntryType.LINK as const,
-  fieldName: 'primaryEstimateId',
-  label: 'Estimate ID',
-  isHideable: false,
-  isFixed: true,
-  fieldNameForLink: 'primaryEstimateSourceUrl',
-  size: 700,
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'primaryEstimateTypename',
-  valueToDisplayLabel: (typename: string) => isMersSeroprevalenceEstimateTypename(typename) ? mersDataTypeToLabelMap[typename] : typename,
-  valueToColourSchemeClassnameMap: mersDataTypeToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Estimate Type'
-}, {
-  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'primaryEstimateSeroprevalence',
-  label: 'Seroprevalence'
-}, {
-  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'primaryEstimateSeroprevalence95CILower',
-  label: 'Seroprevalence (95% Confidence Interval Lower Bound)',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'primaryEstimateSeroprevalence95CIUpper',
-  label: 'Seroprevalence (95% Confidence Interval Upper Bound)',
-  initiallyVisible: false
-},
-...mersSeroprevalenceAndViralEstimateSharedColumnConfiguration
-];
+const mersSeroprevalenceEstimateColumnConfiguration = getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration({
+  dataTableType: MersEstimateDataTableType.SEROPREVALENCE_ESTIMATES
+})
 
 interface MersSeroprevalenceEstimateDataTableProps {
   tableData: MersSeroprevalenceEstimateForDataTable[];
