@@ -12,8 +12,6 @@ export const ArboBanner = () => {
   const state = useContext(ArboContext);
 
   return <DashboardTopBanner
-    filteredData={state.filteredData}
-    dataTableRows={arboDataTableRows}
     headerContent={
       <div>
         <p className="inline"> ArboTracker is a dashboard and platform for Arbovirus serosurveys. We conduct an </p>
@@ -21,8 +19,14 @@ export const ArboBanner = () => {
         <p className="inline"> to track serosurveys (antibody testing-based surveillance efforts) around the world and visualize findings on this dashboard.</p>
       </div>
     }
-    downloadCsvButtonConfiguration={{
-      buttonContent: "Download CSV"
+    downloadCsvButtonOneConfiguration={{
+      enabled: true,
+      buttonContent: "Download CSV",
+      filteredData: state.filteredData,
+      dataTableRows: arboDataTableRows
+    }}
+    downloadCsvButtonTwoConfiguration={{
+      enabled: false
     }}
     citationButtonConfiguration={{
       enabled: true,

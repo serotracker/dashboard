@@ -146,6 +146,30 @@ export interface UseMersDataTableDataOutput {
   camelPopulationData: FaoYearlyCamelPopulationDataEntryForTable[]
 }
 
+export const formatMersSeroprevalenceEstimateForTable = (
+  estimate: MersSeroprevalenceEstimate
+): MersSeroprevalenceEstimateForDataTable => ({
+  ...estimate,
+  ...mapMersEstimateBaseForDataTable(estimate),
+  primaryEstimateId: estimate.primaryEstimateInfo.estimateId,
+  primaryEstimateTypename: estimate.primaryEstimateInfo.__typename,
+  primaryEstimateSeroprevalence: estimate.primaryEstimateInfo.seroprevalence,
+  primaryEstimateSeroprevalence95CILower: estimate.primaryEstimateInfo.seroprevalence95CILower,
+  primaryEstimateSeroprevalence95CIUpper: estimate.primaryEstimateInfo.seroprevalence95CIUpper,
+});
+
+export const formatMersViralEstimateForTable = (
+  estimate: MersViralEstimate
+): MersViralEstimateForDataTable => ({
+  ...estimate,
+  ...mapMersEstimateBaseForDataTable(estimate),
+  primaryEstimateId: estimate.primaryEstimateInfo.estimateId,
+  primaryEstimateTypename: estimate.primaryEstimateInfo.__typename,
+  primaryEstimatePositivePrevalence: estimate.primaryEstimateInfo.positivePrevalence,
+  primaryEstimatePositivePrevalence95CILower: estimate.primaryEstimateInfo.positivePrevalence95CILower,
+  primaryEstimatePositivePrevalence95CIUpper: estimate.primaryEstimateInfo.positivePrevalence95CIUpper,
+})
+
 export const useMersDataTableData = (): UseMersDataTableDataOutput => {
   const { filteredData } = useContext(MersContext);
   const { faoMersEventData } = useContext(MersContext);
@@ -153,28 +177,12 @@ export const useMersDataTableData = (): UseMersDataTableDataOutput => {
 
   const mersSeroprevalenceEstimateData = useMemo(() => (filteredData
     .filter((dataPoint): dataPoint is MersSeroprevalenceEstimate => isMersSeroprevalenceEstimate(dataPoint))
-    .map((dataPoint) => ({
-      ...dataPoint,
-      ...mapMersEstimateBaseForDataTable(dataPoint),
-      primaryEstimateId: dataPoint.primaryEstimateInfo.estimateId,
-      primaryEstimateTypename: dataPoint.primaryEstimateInfo.__typename,
-      primaryEstimateSeroprevalence: dataPoint.primaryEstimateInfo.seroprevalence,
-      primaryEstimateSeroprevalence95CILower: dataPoint.primaryEstimateInfo.seroprevalence95CILower,
-      primaryEstimateSeroprevalence95CIUpper: dataPoint.primaryEstimateInfo.seroprevalence95CIUpper,
-    }))
+    .map((dataPoint) => formatMersSeroprevalenceEstimateForTable(dataPoint))
   ), [ filteredData ]);
 
   const mersViralEstimateData = useMemo(() => (filteredData
     .filter((dataPoint): dataPoint is MersViralEstimate => isMersViralEstimate(dataPoint))
-    .map((dataPoint) => ({
-      ...dataPoint,
-      ...mapMersEstimateBaseForDataTable(dataPoint),
-      primaryEstimateId: dataPoint.primaryEstimateInfo.estimateId,
-      primaryEstimateTypename: dataPoint.primaryEstimateInfo.__typename,
-      primaryEstimatePositivePrevalence: dataPoint.primaryEstimateInfo.positivePrevalence,
-      primaryEstimatePositivePrevalence95CILower: dataPoint.primaryEstimateInfo.positivePrevalence95CILower,
-      primaryEstimatePositivePrevalence95CIUpper: dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper,
-    }))
+    .map((dataPoint) => formatMersViralEstimateForTable(dataPoint))
   ), [ filteredData ]);
 
   const mersEventData = useMemo(() => (faoMersEventData

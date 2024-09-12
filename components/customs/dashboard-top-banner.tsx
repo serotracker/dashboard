@@ -6,7 +6,15 @@ import { cn, typedObjectFromEntries } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 interface DownloadCsvButtonConfiguration {
+  enabled: true;
   buttonContent: React.ReactNode | string;
+  filteredData: Array<
+    Record<string, string | number | string[] | undefined | null | boolean>
+  >;
+  dataTableRows: Array<{
+    fieldName: string;
+    label: string;
+  }>;
 }
 
 interface EnabledCitationButtonConfiguration {
@@ -24,23 +32,19 @@ interface DisabledCitationButtonConfiguration {
 type CitationButtonConfiguration = EnabledCitationButtonConfiguration | DisabledCitationButtonConfiguration;
 
 interface DashboardTopBannerProps {
-  filteredData: Array<
-    Record<string, string | number | string[] | undefined | null>
-  >;
-  dataTableRows: Array<{
-    fieldName: string;
-    label: string;
-  }>;
   headerContent: React.ReactNode;
-  downloadCsvButtonConfiguration: DownloadCsvButtonConfiguration;
+  downloadCsvButtonOneConfiguration: DownloadCsvButtonConfiguration;
+  downloadCsvButtonTwoConfiguration: DownloadCsvButtonConfiguration | {
+    enabled: false;
+  };
   citationButtonConfiguration: CitationButtonConfiguration;
 }
 
 export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
   const { openToast } = useContext(ToastContext);
-  const { filteredData, dataTableRows, citationButtonConfiguration } = props;
+  const { downloadCsvButtonOneConfiguration, downloadCsvButtonTwoConfiguration, citationButtonConfiguration } = props;
 
-  const downloadData = useCallback(() => {
+  const downloadData = useCallback((downloadCsvButtonConfiguration: DownloadCsvButtonConfiguration) => {
     if(citationButtonConfiguration.enabled === false) {
       return;
     }
@@ -51,8 +55,8 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
     });
 
     const csv = generateCsv(csvConfig)(
-      filteredData.map((dataPoint) => (
-        typedObjectFromEntries(dataTableRows.map(({ fieldName, label }) => {
+      downloadCsvButtonConfiguration.filteredData.map((dataPoint) => (
+        typedObjectFromEntries(downloadCsvButtonConfiguration.dataTableRows.map(({ fieldName, label }) => {
           const value = dataPoint[fieldName]
 
           if(Array.isArray(value)) {
@@ -67,16 +71,30 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
     );
 
     download(csvConfig)(csv);
-  }, [ filteredData, dataTableRows, citationButtonConfiguration ]);
+  }, [ citationButtonConfiguration ]);
 
   return (
     <div className="w-full h-fit relative row-span-2 rounded-md mt-4 border border-background p-4">
       {props.headerContent}
       <Button
         className="w-[30%] bg-background hover:bg-backgroundHover"
-        onClick={downloadData}
+        onClick={() => downloadData(downloadCsvButtonOneConfiguration)}
       >
-        {props.downloadCsvButtonConfiguration.buttonContent}
+        {props.downloadCsvButtonOneConfiguration.buttonContent}
+      </Button>
+      <Button
+        className={cn(
+          "w-[30%] bg-background hover:bg-backgroundHover ml-2",
+          props.downloadCsvButtonTwoConfiguration.enabled ? '' : 'hidden'
+        )}
+        onClick={() => {
+          if(downloadCsvButtonTwoConfiguration.enabled === false) {
+            return;
+          }
+          downloadData(downloadCsvButtonTwoConfiguration)
+        }}
+      >
+        {props.downloadCsvButtonTwoConfiguration.enabled ? props.downloadCsvButtonTwoConfiguration.buttonContent : 'No text'}
       </Button>
       <Button
         className={cn(
