@@ -102,6 +102,16 @@ const arboColumnConfiguration = [{
   label: 'Sex',
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'ageMinimum',
+  label: 'Minimum Age',
+  initiallyVisible: false
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'ageMaximum',
+  label: 'Maximum Age',
+  initiallyVisible: false
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'ageGroup',
   label: 'Age Group',
 }, {
