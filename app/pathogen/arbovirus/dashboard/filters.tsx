@@ -134,6 +134,7 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
         producer: filterData.arbovirusFilterOptions.producer,
         antibody: filterData.arbovirusFilterOptions.antibody,
         serotype: filterData.arbovirusFilterOptions.serotype,
+        pediatricAgeGroup: filterData.arbovirusFilterOptions.pediatricAgeGroup
       } : {}}
       data={data?.arbovirusEstimates ?? []}
       resetAllFiltersButtonEnabled={true}
