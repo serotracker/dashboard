@@ -567,9 +567,11 @@ export const mersPrimaryEstimates = gql`
           }
         }
         animalImportedOrLocal
-        animalCountryOfImport
-        animalCountryOfImportAlphaTwoCode
-        animalCountryOfImportAlphaThreeCode
+        animalCountriesOfImport {
+          name
+          alphaTwoCode
+          alphaThreeCode
+        }
       }
       animalSamplingContextSubestimates {
         __typename
