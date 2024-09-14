@@ -5318,6 +5318,30 @@
         "isOneOf": null,
         "fields": [
           {
+            "name": "animalCountriesOfImport",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "CountryIdentifiers",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "animalCountryOfImport",
             "description": null,
             "args": [],
@@ -5330,8 +5354,8 @@
                 "ofType": null
               }
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "use animalCountriesOfImport instead"
           },
           {
             "name": "animalCountryOfImportAlphaThreeCode",
@@ -5346,8 +5370,8 @@
                 "ofType": null
               }
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "use animalCountriesOfImport instead"
           },
           {
             "name": "animalCountryOfImportAlphaTwoCode",
@@ -5362,8 +5386,8 @@
                 "ofType": null
               }
             },
-            "isDeprecated": false,
-            "deprecationReason": null
+            "isDeprecated": true,
+            "deprecationReason": "use animalCountriesOfImport instead"
           },
           {
             "name": "animalImportedOrLocal",
