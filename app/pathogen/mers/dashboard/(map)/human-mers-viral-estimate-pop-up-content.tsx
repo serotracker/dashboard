@@ -5,7 +5,6 @@ import {
   HumanMersViralEstimateMapMarkerData,
   generateAlternateViewBannerConfiguration,
   generateMersEstimateTableConfigurations,
-  getHumanMersEstimateRows,
   useMersEstimateRows
 } from "./shared-mers-map-pop-up-variables";
 
@@ -58,10 +57,7 @@ export const HumanMersViralEstimatePopupContent = (props: HumanMersViralEstimate
         enabled: true,
         tableConfigurations
       }}
-      rows={[
-        ...getSharedMersEstimateRows(props.estimate),
-        ...getHumanMersEstimateRows(props.estimate)
-      ]}
+      rows={getSharedMersEstimateRows(props.estimate)}
       bottomBannerConfiguration={{
         enabled: false
       }}

@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { AlternateViewConfigurationTableConfiguration } from "@/components/ui/pathogen-map/map-pop-up/map-pop-up-alternate-configuration";
 import { PopUpContentRowProps, PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import {
@@ -9,6 +10,7 @@ import {
   MersSubEstimateInformation,
   isAnimalMersEstimate,
   isHumanMersAgeGroupSubEstimate,
+  isHumanMersEstimate,
   isMersSeroprevalenceSubEstimateInformation,
   isMersViralEstimate,
   isMersViralSubEstimateInformation
@@ -23,7 +25,8 @@ import {
   MersAnimalType,
   MersAnimalSpecies,
   Clade,
-  GenomeSequenced
+  GenomeSequenced,
+  WhoRegion
 } from "@/gql/graphql"
 import { TranslateDate } from "@/utils/translate-util/translate-service";
 import assertNever from "assert-never";
@@ -397,6 +400,15 @@ export const mersDataTypeToColourClassnameMapForCheckbox = {
   "HumanMersEvent": "data-[state=checked]:bg-mers-human-event"
 }
 
+export const whoRegionToColourClassnameMap: Record<WhoRegion, string> = {
+  [WhoRegion.Afr]: "bg-who-region-afr",
+  [WhoRegion.Amr]: "bg-who-region-amr",
+  [WhoRegion.Emr]: "bg-who-region-emr",
+  [WhoRegion.Eur]: "bg-who-region-eur",
+  [WhoRegion.Sear]: "bg-who-region-sear",
+  [WhoRegion.Wpr]: "bg-who-region-wpr text-white"
+};
+
 export const isMersEventTypename = (typename: string):
   typename is "HumanMersEvent"|"AnimalMersEvent" =>
     ["HumanMersEvent","AnimalMersEvent"].includes(typename);
@@ -480,59 +492,202 @@ const getCountryOfTravelOrImportRows = ({ estimate, countryNameToColourClassname
   defaultColourClassname: "bg-sky-100",
 }];
 
+interface GetSampleNumeratorAndDenominatorRowsInput {
+  estimate: MersEstimateMapMarkerData;
+}
+
+const getSampleNumeratorAndDenominatorRows = ({ estimate }: GetSampleNumeratorAndDenominatorRowsInput) => [
+  ...(estimate.primaryEstimateInfo.sampleNumerator !== undefined && estimate.primaryEstimateInfo.sampleNumerator !== null
+    ? [{
+      title: "Sample Numerator",
+      type: PopUpContentRowType.NUMBER as const,
+      value: estimate.primaryEstimateInfo.sampleNumerator
+    }]
+    : [{
+      title: "Sample Numerator",
+      type: PopUpContentRowType.TEXT as const,
+      text: 'N/A'
+    }]
+  ),
+  ...(estimate.primaryEstimateInfo.sampleDenominator !== undefined && estimate.primaryEstimateInfo.sampleDenominator !== null
+    ? [{
+      title: "Sample Denominator",
+      type: PopUpContentRowType.NUMBER as const,
+      value: estimate.primaryEstimateInfo.sampleDenominator
+    }]
+    : [{
+      title: "Sample Denominator",
+      type: PopUpContentRowType.TEXT as const,
+      text: 'N/A'
+    }]
+  ),
+];
+
+interface GetSampleFrameRowsInput {
+  estimate: MersEstimateMapMarkerData;
+}
+
+const getSampleFrameRows = ({ estimate }: GetSampleFrameRowsInput) => isAnimalMersEstimate(estimate) ? [{
+  title: 'Animal Sample Frame',
+  type: PopUpContentRowType.COLOURED_PILL_LIST as const,
+  values: estimate.primaryEstimateInfo.animalDetectionSettings,
+  valueToColourClassnameMap: animalDetectionSettingsToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}] : [{
+  title: "Sample Frame",
+  type: PopUpContentRowType.COLOURED_PILL_LIST as const,
+  values: estimate.primaryEstimateInfo.sampleFrame ? [ estimate.primaryEstimateInfo.sampleFrame ] : [],
+  valueToColourClassnameMap: sampleFrameToColourClassnameMap,
+  valueToLabelMap: {},
+  defaultColourClassname: "bg-sky-100"
+}];
+
+interface GetGenomicSequencingDoneRowsInput {
+  estimate: MersEstimateMapMarkerData;
+}
+
+const getGenomicSequencingDoneRows = ({ estimate }: GetGenomicSequencingDoneRowsInput) => estimate.primaryEstimateInfo.sequencingDone ? [{
+  title: "Genomic Sequencing Done?",
+  type: PopUpContentRowType.TEXT as const,
+  text: 'Yes'
+}] : [{
+  title: "Genomic Sequencing Done?",
+  type: PopUpContentRowType.TEXT as const,
+  text: 'No'
+}];
+
+interface GetAnimalFieldRowsInput {
+  estimate: MersEstimateMapMarkerData;
+}
+
+const getAnimalFieldRows = ({ estimate }: GetAnimalFieldRowsInput) => isAnimalMersEstimate(estimate) ? [{
+  title: "Animal Type",
+  type: PopUpContentRowType.COLOURED_PILL_LIST as const,
+  values: estimate.primaryEstimateInfo.animalType,
+  valueToColourClassnameMap: animalTypeToColourClassnameMap,
+  valueToLabelMap: animalTypeToStringMap,
+  defaultColourClassname: "bg-sky-100"
+}, {
+  title: 'Animal Purpose',
+  type: PopUpContentRowType.COLOURED_PILL_LIST as const,
+  values: estimate.primaryEstimateInfo.animalPurpose ? [ estimate.primaryEstimateInfo.animalPurpose ] : [],
+  valueToColourClassnameMap: animalPurposeSettingsToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}, {
+  title: 'Imported Or Local',
+  type: PopUpContentRowType.COLOURED_PILL_LIST as const,
+  values: estimate.primaryEstimateInfo.animalImportedOrLocal ? [ estimate.primaryEstimateInfo.animalImportedOrLocal ] : [],
+  valueToColourClassnameMap: animalImportedOrLocalToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}] : [];
+
+interface GetAgeGroupRowsInput {
+  estimate: MersEstimateMapMarkerData;
+}
+
+const getAgeGroupRows = ({ estimate }: GetAgeGroupRowsInput) => isAnimalMersEstimate(estimate) ? [{
+  title: "Age Group",
+  type: PopUpContentRowType.COLOURED_PILL_LIST as const,
+  values: estimate.primaryEstimateInfo.animalAgeGroup,
+  valueToColourClassnameMap: animalAgeGroupToColourClassnameMap,
+  valueToLabelMap: {},
+  defaultColourClassname: "bg-sky-100"
+}] : [{
+  title: "Age Group",
+  type: PopUpContentRowType.COLOURED_PILL_LIST as const,
+  values: estimate.primaryEstimateInfo.ageGroup,
+  valueToColourClassnameMap: humanAgeGroupToColourClassnameMap,
+  valueToLabelMap: {},
+  defaultColourClassname: "bg-sky-100"
+}];
+
+interface GetHumanFieldRowsInput {
+  estimate: MersEstimateMapMarkerData;
+}
+
+const getHumanFieldRows = ({ estimate }: GetHumanFieldRowsInput) => isHumanMersEstimate(estimate) ? [{
+  title: "Exposure To Camels",
+  type: PopUpContentRowType.COLOURED_PILL_LIST as const,
+  values: estimate.primaryEstimateInfo.exposureToCamels ? [ estimate.primaryEstimateInfo.exposureToCamels ] : [],
+  valueToColourClassnameMap: exposureToCamelLevelToColourClassnameMap,
+  valueToLabelMap: {},
+  defaultColourClassname: "bg-sky-100"
+}] : [];
+
+interface GetTestSensitivityFieldsInput {
+  estimate: MersEstimateMapMarkerData;
+}
+
+const getTestSensitivityFields = ({ estimate }: GetTestSensitivityFieldsInput) => [{
+  title: "Test Sensitivity",
+  type: PopUpContentRowType.TEXT as const,
+  text:  estimate.primaryEstimateInfo.sensitivity !== null && estimate.primaryEstimateInfo.sensitivity !== undefined
+    ? `${(estimate.primaryEstimateInfo.sensitivity * 100).toFixed(1)}%`
+    : 'Not reported'
+}, {
+  title: "Test Sensitivity 95% Confidence Interval",
+  type: PopUpContentRowType.TEXT as const,
+  text: (
+    estimate.primaryEstimateInfo.sensitivity95CILower !== null && estimate.primaryEstimateInfo.sensitivity95CILower !== undefined &&
+    estimate.primaryEstimateInfo.sensitivity95CIUpper !== null && estimate.primaryEstimateInfo.sensitivity95CIUpper !== undefined
+  ) ? `[${(estimate.primaryEstimateInfo.sensitivity95CILower * 100).toFixed(1)}% - ${(estimate.primaryEstimateInfo.sensitivity95CIUpper * 100).toFixed(1)}]`
+    : 'Not reported'
+}];
+
+interface GetTestSpecificityFieldsInput {
+  estimate: MersEstimateMapMarkerData;
+}
+
+const getTestSpecificityFields = ({ estimate }: GetTestSpecificityFieldsInput) => [{
+  title: "Test Specificity",
+  type: PopUpContentRowType.TEXT as const,
+  text:  estimate.primaryEstimateInfo.specificity !== null && estimate.primaryEstimateInfo.specificity !== undefined
+    ? `${(estimate.primaryEstimateInfo.specificity * 100).toFixed(1)}%`
+    : 'Not reported'
+}, {
+  title: "Test Specificity 95% Confidence Interval",
+  type: PopUpContentRowType.TEXT as const,
+  text: (
+    estimate.primaryEstimateInfo.specificity95CILower !== null && estimate.primaryEstimateInfo.specificity95CILower !== undefined &&
+    estimate.primaryEstimateInfo.specificity95CIUpper !== null && estimate.primaryEstimateInfo.specificity95CIUpper !== undefined
+  ) ? `[${(estimate.primaryEstimateInfo.specificity95CILower * 100).toFixed(1)}% - ${(estimate.primaryEstimateInfo.specificity95CIUpper * 100).toFixed(1)}]`
+    : 'Not reported'
+}];
+
 export const useMersEstimateRows = () => {
   const { countryNameToColourClassnameMap } = useContext(CountryInformationContext);
 
-  const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): PopUpContentRowProps[] => [{
+  const getSharedMersEstimateRows = useCallback((estimate: MersEstimateMapMarkerData): PopUpContentRowProps[] => [{
+    title: "WHO Region",
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.whoRegion ? [ estimate.primaryEstimateInfo.whoRegion ] : [],
+    valueToColourClassnameMap: whoRegionToColourClassnameMap,
+    valueToLabelMap: {},
+    defaultColourClassname: "bg-sky-100"
+  }, {
     title: "Location",
     type: PopUpContentRowType.LOCATION,
     countryName: estimate.primaryEstimateInfo.country,
     stateName: estimate.primaryEstimateInfo.state ?? undefined,
     cityName: estimate.primaryEstimateInfo.city ?? undefined
   }, {
-    title: "Source Type",
-    type: PopUpContentRowType.TEXT,
-    text: estimate.primaryEstimateInfo.sourceType ?? 'Not Reported'
-  }, {
     title: "Sampling Date Range",
     type: PopUpContentRowType.DATE_RANGE,
     dateRangeStart: estimate.primaryEstimateInfo.samplingStartDate ? parseISO(estimate.primaryEstimateInfo.samplingStartDate) : undefined,
     dateRangeEnd: estimate.primaryEstimateInfo.samplingEndDate ? parseISO(estimate.primaryEstimateInfo.samplingEndDate) : undefined
-  }, estimate.primaryEstimateInfo.sampleNumerator !== undefined && estimate.primaryEstimateInfo.sampleNumerator !== null ? {
-    title: "Sample Numerator",
-    type: PopUpContentRowType.NUMBER,
-    value: estimate.primaryEstimateInfo.sampleNumerator
-  } : {
-    title: "Sample Numerator",
-    type: PopUpContentRowType.TEXT,
-    text: 'N/A'
-  }, estimate.primaryEstimateInfo.sampleDenominator ? {
-    title: "Sample Denominator",
-    type: PopUpContentRowType.NUMBER,
-    value: estimate.primaryEstimateInfo.sampleDenominator
-  } : {
-    title: "Sample Denominator",
-    type: PopUpContentRowType.TEXT,
-    text: 'N/A'
   },
+  ...getSampleFrameRows({ estimate }),
   ...getPrevalenceConfidenceIntervalRows({ estimate }),
+  ...getSampleNumeratorAndDenominatorRows({ estimate }),
   ...getCountryOfTravelOrImportRows({ estimate, countryNameToColourClassnameMap }),
   {
-    title: "First Author Full Name",
+    title: "Sex",
     type: PopUpContentRowType.TEXT,
-    text: estimate.primaryEstimateInfo.firstAuthorFullName ?? 'Not Reported'
+    text: estimate.primaryEstimateInfo.sex ?? 'Not Reported'
   }, {
-    title: "Institution",
+    title: "Source Type",
     type: PopUpContentRowType.TEXT,
-    text: estimate.primaryEstimateInfo.insitutution ?? 'Not Reported'
-  }, {
-    title: "Study Inclusion Criteria",
-    type: PopUpContentRowType.TEXT,
-    text: estimate.primaryEstimateInfo.studyInclusionCriteria ?? 'Not Reported'
-  }, {
-    title: "Study Exclusion Criteria",
-    type: PopUpContentRowType.TEXT,
-    text: estimate.primaryEstimateInfo.studyExclusionCriteria ?? 'Not Reported'
+    text: estimate.primaryEstimateInfo.sourceType ?? 'Not Reported'
   }, {
     title: "Assay",
     type: PopUpContentRowType.COLOURED_PILL_LIST,
@@ -546,18 +701,39 @@ export const useMersEstimateRows = () => {
     valueToColourClassnameMap: isotypeToColourClassnameMap,
     defaultColourClassname: "bg-sky-100",
   }, {
-    title: "Antigens",
-    type: PopUpContentRowType.COLOURED_PILL_LIST,
-    values: estimate.primaryEstimateInfo.antigen,
-    valueToColourClassnameMap: antigenToColourClassnameMap,
-    defaultColourClassname: "bg-sky-100",
-  }, {
     title: "Specimen Type",
     type: PopUpContentRowType.COLOURED_PILL_LIST,
     values: estimate.primaryEstimateInfo.specimenType,
     valueToColourClassnameMap: specimenTypeToColourClassnameMap,
     defaultColourClassname: "bg-sky-100",
   }, {
+    title: "Antigens",
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.antigen,
+    valueToColourClassnameMap: antigenToColourClassnameMap,
+    defaultColourClassname: "bg-sky-100",
+  },
+  ...getGenomicSequencingDoneRows({ estimate }),
+  {
+    title: "First Author Full Name",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.firstAuthorFullName ?? 'Not Reported'
+  }, {
+    title: "Institution",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.insitutution ?? 'Not Reported'
+  },
+  ...getAnimalFieldRows({ estimate }),
+  ...getAgeGroupRows({ estimate }),
+  ...getHumanFieldRows({ estimate }),
+  {
+    title: "Socioeconomic Status",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.socioeconomicStatus ?? 'Not Reported'
+  }, 
+  ...getTestSensitivityFields({ estimate }),
+  ...getTestSpecificityFields({ estimate }),
+  {
     title: 'Sampling Method',
     type: PopUpContentRowType.COLOURED_PILL_LIST,
     values: estimate.primaryEstimateInfo.samplingMethod ? [ estimate.primaryEstimateInfo.samplingMethod ] : [],
@@ -570,10 +746,6 @@ export const useMersEstimateRows = () => {
     valueToColourClassnameMap: geographicScopeToColourClassnameMap,
     defaultColourClassname: "bg-sky-100",
   }, {
-    title: "Socioeconomic Status",
-    type: PopUpContentRowType.TEXT,
-    text: estimate.primaryEstimateInfo.socioeconomicStatus ?? 'Not Reported'
-  }, {
     title: 'Test Producer',
     type: PopUpContentRowType.COLOURED_PILL_LIST,
     values: estimate.primaryEstimateInfo.testProducer,
@@ -584,19 +756,13 @@ export const useMersEstimateRows = () => {
     type: PopUpContentRowType.TEXT,
     text: estimate.primaryEstimateInfo.testProducerOther ?? 'Not Reported'
   }, {
-    title: "Positive Cutoff",
-    type: PopUpContentRowType.TEXT,
-    text: estimate.primaryEstimateInfo.positiveCutoff ?? 'Not Reported'
-  }, {
-    title: 'Test Validation',
-    type: PopUpContentRowType.COLOURED_PILL_LIST,
-    values: estimate.primaryEstimateInfo.testValidation,
-    valueToColourClassnameMap: testValidationToColourClassnameMap,
-    defaultColourClassname: "bg-sky-100",
-  }, {
     title: "Test Validated On",
     type: PopUpContentRowType.TEXT,
     text: estimate.primaryEstimateInfo.testValidatedOn ?? 'Not Reported'
+  }, {
+    title: "Positive Cutoff",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.positiveCutoff ?? 'Not Reported'
   }, {
     title: "Symptom Prevalence in Postive Cases",
     type: PopUpContentRowType.TEXT,
@@ -607,72 +773,26 @@ export const useMersEstimateRows = () => {
     title: "Symptom Definition",
     type: PopUpContentRowType.TEXT,
     text: estimate.primaryEstimateInfo.symptomDefinition ?? 'Not Reported'
-  }, estimate.primaryEstimateInfo.sequencingDone ? {
-    title: "Genomic Sequencing Done?",
+  }, {
+    title: 'Test Validation',
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.testValidation,
+    valueToColourClassnameMap: testValidationToColourClassnameMap,
+    defaultColourClassname: "bg-sky-100",
+  }, {
+    title: "Study Inclusion Criteria",
     type: PopUpContentRowType.TEXT,
-    text: 'Yes'
-  } : {
-    title: "Genomic Sequencing Done?",
+    text: estimate.primaryEstimateInfo.studyInclusionCriteria ?? 'Not Reported'
+  }, {
+    title: "Study Exclusion Criteria",
     type: PopUpContentRowType.TEXT,
-    text: 'No'
-  }];
+    text: estimate.primaryEstimateInfo.studyExclusionCriteria ?? 'Not Reported'
+  }], [ countryNameToColourClassnameMap ]);
 
   return {
     getSharedMersEstimateRows
   };
 }
-
-
-export const getAnimalMersEstimateRows = (estimate: AnimalMersEstimateMarkerData): PopUpContentRowProps[] => [{
-  title: "Animal Type",
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.animalType,
-  valueToColourClassnameMap: animalTypeToColourClassnameMap,
-  valueToLabelMap: animalTypeToStringMap,
-  defaultColourClassname: "bg-sky-100"
-}, {
-  title: 'Animal Sample Frame',
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.animalDetectionSettings,
-  valueToColourClassnameMap: animalDetectionSettingsToColourClassnameMap,
-  defaultColourClassname: "bg-sky-100",
-}, {
-  title: 'Animal Purpose',
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.animalPurpose ? [ estimate.primaryEstimateInfo.animalPurpose ] : [],
-  valueToColourClassnameMap: animalPurposeSettingsToColourClassnameMap,
-  defaultColourClassname: "bg-sky-100",
-}, {
-  title: 'Imported Or Local',
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.animalImportedOrLocal ? [ estimate.primaryEstimateInfo.animalImportedOrLocal ] : [],
-  valueToColourClassnameMap: animalImportedOrLocalToColourClassnameMap,
-  defaultColourClassname: "bg-sky-100",
-}];
-
-export const getHumanMersEstimateRows = (estimate: HumanMersEstimateMarkerData): PopUpContentRowProps[] => [{
-  title: "Age Group",
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.ageGroup,
-  valueToColourClassnameMap: humanAgeGroupToColourClassnameMap,
-  valueToLabelMap: {},
-  defaultColourClassname: "bg-sky-100"
-}, {
-  title: "Sample Frame",
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.sampleFrame ? [ estimate.primaryEstimateInfo.sampleFrame ] : [],
-  valueToColourClassnameMap: sampleFrameToColourClassnameMap,
-  valueToLabelMap: {},
-  defaultColourClassname: "bg-sky-100"
-}, {
-  title: "Exposure To Camels",
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.exposureToCamels ? [ estimate.primaryEstimateInfo.exposureToCamels ] : [],
-  valueToColourClassnameMap: exposureToCamelLevelToColourClassnameMap,
-  valueToLabelMap: {},
-  defaultColourClassname: "bg-sky-100"
-}];
-
 
 interface GenerateAlternateViewBannerConfigurationInput {
   estimate: MersEstimate;

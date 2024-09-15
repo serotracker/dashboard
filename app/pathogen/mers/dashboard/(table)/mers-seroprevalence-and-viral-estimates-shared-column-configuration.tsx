@@ -26,7 +26,8 @@ import {
   sourceTypeToColourClassnameMap,
   specimenTypeToColourClassnameMap,
   testProducerToColourClassnameMap,
-  testValidationToColourClassnameMap
+  testValidationToColourClassnameMap,
+  whoRegionToColourClassnameMap
 } from "../(map)/shared-mers-map-pop-up-variables";
 import { isHumanMersEstimate, MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { parseISO } from "date-fns";
@@ -276,14 +277,7 @@ export const useMersEstimateColumnConfiguration = () => {
     type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
     fieldName: 'primaryEstimateWhoRegion',
     label: 'WHO Region',
-    valueToColourSchemeClassnameMap: {
-      [WhoRegion.Afr]: "bg-who-region-afr",
-      [WhoRegion.Amr]: "bg-who-region-amr",
-      [WhoRegion.Emr]: "bg-who-region-emr",
-      [WhoRegion.Eur]: "bg-who-region-eur",
-      [WhoRegion.Sear]: "bg-who-region-sear",
-      [WhoRegion.Wpr]: "bg-who-region-wpr text-white"
-    },
+    valueToColourSchemeClassnameMap: whoRegionToColourClassnameMap,
     defaultColourSchemeClassname: 'bg-sky-100'
   }, {
     type: DataTableColumnConfigurationEntryType.STANDARD as const,
