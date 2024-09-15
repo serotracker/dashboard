@@ -925,7 +925,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
     tableHeader: 'Animal Source Location Subestimates',
     tableFields: [
       'Imported or Local',
-      'Source Country',
+      'Source Country/Countries',
       ...generateTableFields({ type: input.type })
     ],
     tableRows: input.estimate.animalSourceLocationSubestimates
@@ -936,7 +936,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         values: {
           ...element.rows,
           'Imported or Local': element.subestimate.animalImportedOrLocal,
-          'Source Country': element.subestimate.animalCountryOfImport
+          'Source Country/Countries': element.subestimate.animalCountriesOfImport.join(', ')
         }
       }))
   }] : []),
