@@ -72,6 +72,11 @@ export const mersPrimaryEstimates = gql`
           genomeSequenced
           sampleFrame
           ageGroup
+          humanCountriesOfTravel {
+            name
+            alphaTwoCode
+            alphaThreeCode
+          }
         }
         ... on PrimaryHumanMersViralEstimateInformation {
           __typename
@@ -135,6 +140,11 @@ export const mersPrimaryEstimates = gql`
           genomeSequenced
           sampleFrame
           ageGroup
+          humanCountriesOfTravel {
+            name
+            alphaTwoCode
+            alphaThreeCode
+          }
         }
         ... on PrimaryAnimalMersSeroprevalenceEstimateInformation {
           __typename
@@ -202,6 +212,11 @@ export const mersPrimaryEstimates = gql`
           animalPurpose
           animalImportedOrLocal
           animalAgeGroup 
+          animalCountriesOfImport {
+            name
+            alphaTwoCode
+            alphaThreeCode
+          }
         }
         ... on PrimaryAnimalMersViralEstimateInformation {
           __typename
@@ -269,6 +284,11 @@ export const mersPrimaryEstimates = gql`
           animalPurpose
           animalImportedOrLocal
           animalAgeGroup 
+          animalCountriesOfImport {
+            name
+            alphaTwoCode
+            alphaThreeCode
+          }
         }
       }
       geographicalAreaSubestimates {
@@ -658,6 +678,38 @@ export const mersPrimaryEstimates = gql`
           }
         }
         details
+      }
+      humanCountriesOfTravelSubestimates {
+        __typename
+        id
+        estimateId
+        estimateInfo {
+          ... on MersViralSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            positivePrevalence
+            positivePrevalence95CILower
+            positivePrevalence95CIUpper
+            positivePrevalenceCalculated95CILower
+            positivePrevalenceCalculated95CIUpper
+          }
+          ... on MersSeroprevalenceSubEstimateInformation {
+            __typename
+            sampleDenominator
+            sampleNumerator
+            seroprevalence
+            seroprevalence95CILower
+            seroprevalence95CIUpper
+            seroprevalenceCalculated95CILower
+            seroprevalenceCalculated95CIUpper
+          }
+        }
+        humanCountriesOfTravel {
+          name
+          alphaTwoCode
+          alphaThreeCode
+        }
       }
     }
   }
