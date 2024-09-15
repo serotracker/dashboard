@@ -10,7 +10,7 @@ import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-vi
 import { getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration, MersEstimateDataTableType, mersEstimateTypeToTypeMap } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { MersViralEstimateForDataTable } from "./use-mers-data-table-data";
 
-const mersViralEstimateColumnConfiguration = getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration({
+export const mersViralEstimateColumnConfiguration = getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration({
   dataTableType: MersEstimateDataTableType.VIRAL_ESTIMATES
 })
 

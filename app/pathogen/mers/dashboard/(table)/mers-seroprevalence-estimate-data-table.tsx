@@ -14,7 +14,7 @@ import { getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration, MersEst
 import { MersSeroprevalenceEstimateForDataTable } from "./use-mers-data-table-data";
 import { SubestimateTable } from "@/components/ui/pathogen-map/map-pop-up/subestimate-table";
 
-const mersSeroprevalenceEstimateColumnConfiguration = getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration({
+export const mersSeroprevalenceEstimateColumnConfiguration = getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration({
   dataTableType: MersEstimateDataTableType.SEROPREVALENCE_ESTIMATES
 })
 
