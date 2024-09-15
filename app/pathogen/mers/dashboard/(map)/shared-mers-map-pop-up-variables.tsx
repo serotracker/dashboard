@@ -660,7 +660,8 @@ export const generateAlternateViewBannerConfiguration = (
     input.estimate.animalSourceLocationSubestimates.length === 0 &&
     input.estimate.animalSamplingContextSubestimates.length === 0 &&
     input.estimate.camelExposureLevelSubestimates.length === 0 &&
-    input.estimate.nomadismSubestimates.length === 0
+    input.estimate.nomadismSubestimates.length === 0 &&
+    input.estimate.humanCountriesOfTravelSubestimates.length === 0
   ) {
     return {
       alternateViewButtonEnabled: false,
@@ -988,11 +989,30 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
       .filter((element): element is NonNullable<typeof element> => !!element)
       .map((element) => ({
-        rowColourClassname: '',
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
           'Details': element.subestimate.details,
         }
       }))
   }] : []),
+  ...(input.estimate.humanCountriesOfTravelSubestimates.length > 0 ? [{
+    tableHeader: 'Country Of Travel Subestimates',
+    tableFields: [
+      'Country/Countries of Travel',
+      ...generateTableFields({ type: input.type })
+    ],
+    tableRows: input.estimate.humanCountriesOfTravelSubestimates
+      .map((subestimate) => generateTableRowsForSubestimate({ type: input.type, subestimate }))
+      .filter((element): element is NonNullable<typeof element> => !!element)
+      .map((element) => ({
+        rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
+        values: {
+          ...element.rows,
+          'Country/Countries of Travel': element.subestimate.humanCountriesOfTravel
+            .map((countryOfTravel) => countryOfTravel.name)
+            .join(', '),
+        }
+      }))
+  }] : [])
 ]

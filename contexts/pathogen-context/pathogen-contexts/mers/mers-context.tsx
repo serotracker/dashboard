@@ -63,7 +63,8 @@ type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
   'animalSpeciesSubestimates'|'testUsedSubestimates'|
   'timeFrameSubestimates'|'sampleTypeSubestimates'|
   'animalSourceLocationSubestimates'|'animalSamplingContextSubestimates'|
-  'occupationSubestimates'|'camelExposureLevelSubestimates'
+  'occupationSubestimates'|'camelExposureLevelSubestimates' |
+  'nomadismSubestimates'|'humanCountriesOfTravelSubestimates'
 > & {
   geographicalAreaSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['geographicalAreaSubestimates'][number] & {
     markedAsFiltered: boolean;
@@ -94,6 +95,12 @@ type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
     markedAsFiltered: boolean;
   }>,
   camelExposureLevelSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['camelExposureLevelSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
+  nomadismSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['nomadismSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
+  humanCountriesOfTravelSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['humanCountriesOfTravelSubestimates'][number] & {
     markedAsFiltered: boolean;
   }>,
 }
@@ -229,6 +236,10 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
                 markedAsFiltered: false,
               })),
               nomadismSubestimates: primaryEstimate.nomadismSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
+              })),
+              humanCountriesOfTravelSubestimates: primaryEstimate.humanCountriesOfTravelSubestimates.map((subestimate) => ({
                 ...subestimate,
                 markedAsFiltered: false,
               })),

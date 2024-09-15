@@ -25,6 +25,7 @@ export const cleanEstimateForMersBanner = (
     occupationSubestimates,
     camelExposureLevelSubestimates,
     nomadismSubestimates,
+    humanCountriesOfTravelSubestimates,
     ...cleanedEstimate
   } = estimate;
 
