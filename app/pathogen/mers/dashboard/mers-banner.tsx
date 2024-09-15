@@ -46,9 +46,6 @@ export const MersBanner = () => {
     .map((estimate) => cleanEstimateForMersBanner(estimate))
   , [ filteredData ])
 
-  console.log('seroprevalenceEstimateData', seroprevalenceEstimateData)
-  console.log('viralEstimateData', viralEstimateData)
-
   return <DashboardTopBanner
     headerContent={
       <div>
