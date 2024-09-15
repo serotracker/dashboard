@@ -1,7 +1,7 @@
 "use client"
 import { distinctBackgroundColoursMap, typedObjectFromEntries } from "@/lib/utils";
 import { pipe } from "fp-ts/lib/function";
-import React, { useMemo, createContext, useContext } from "react";
+import React, { useMemo, createContext, useContext, useEffect } from "react";
 
 export type CountryDataContextType = Array<{
   countryName: string,

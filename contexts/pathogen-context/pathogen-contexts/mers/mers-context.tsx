@@ -260,17 +260,42 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
 
 const CountryDataProvider = (props: {children: React.ReactNode}) => {
   const { data: filterData } = useMersFilters();
-  const value = useMemo(() =>
-    filterData?.mersFilterOptions.countryIdentifiers.map(({
-      name,
-      alphaTwoCode,
-      alphaThreeCode
-    }) => ({
+  const { data: primaryEstimates } = useMersPrimaryEstimates();
+
+  const countriesFromFilterOptions = useMemo(() => filterData?.mersFilterOptions.countryIdentifiers
+    .map(({ name, alphaTwoCode, alphaThreeCode }) => ({
       countryName: name,
       countryAlphaTwoCode: alphaTwoCode,
       countryAlphaThreeCode: alphaThreeCode
     })) ?? []
-  , [filterData])
+  , [ filterData ]);
+
+  const countriesFromCountriesOfImportAndTravel = useMemo(() => 
+    pipe(
+      primaryEstimates?.mersPrimaryEstimates ?? [],
+      (estimates) => estimates.flatMap(({ primaryEstimateInfo, animalSourceLocationSubestimates, humanCountriesOfTravelSubestimates }) => ([
+        ...animalSourceLocationSubestimates.flatMap((subestimate) => subestimate.animalCountriesOfImport),
+        ...humanCountriesOfTravelSubestimates.flatMap((subestimate) => subestimate.humanCountriesOfTravel),
+        ...((
+          primaryEstimateInfo.__typename === 'PrimaryHumanMersSeroprevalenceEstimateInformation' ||
+          primaryEstimateInfo.__typename === 'PrimaryHumanMersViralEstimateInformation'
+        )
+          ? primaryEstimateInfo.humanCountriesOfTravel
+          : primaryEstimateInfo.animalCountriesOfImport
+        )
+      ]))
+      .map(({ name, alphaTwoCode, alphaThreeCode }) => ({
+        countryName: name,
+        countryAlphaTwoCode: alphaTwoCode,
+        countryAlphaThreeCode: alphaThreeCode
+      }))
+    )
+  , [ primaryEstimates ]);
+
+  const value = useMemo(() => [
+    ...countriesFromCountriesOfImportAndTravel,
+    ...countriesFromFilterOptions,
+  ], [ countriesFromFilterOptions, countriesFromCountriesOfImportAndTravel ]);
 
   return (
     <CountryDataContext.Provider value={value}>
