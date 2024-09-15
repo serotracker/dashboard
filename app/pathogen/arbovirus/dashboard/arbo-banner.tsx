@@ -21,6 +21,7 @@ export const ArboBanner = () => {
     }
     downloadCsvButtonOneConfiguration={{
       enabled: true,
+      csvDownloadFilename: "arbotracker_dataset",
       buttonContent: "Download CSV",
       filteredData: state.filteredData,
       dataTableRows: arboDataTableRows
@@ -31,7 +32,6 @@ export const ArboBanner = () => {
     citationButtonConfiguration={{
       enabled: true,
       suggestedCitationText: suggestedArboTrackerCitationText,
-      csvDownloadFilename: "arbotracker_dataset",
       citationToastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST,
       buttonContent: <ArboTrackerCitationButtonContent />
     }}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import Link from "next/link";
 import { DashboardTopBanner } from "@/components/customs/dashboard-top-banner";
 import { isMersSeroprevalenceEstimate, isMersViralEstimate, MersContext, MersSeroprevalenceEstimate, MersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
@@ -32,7 +32,22 @@ export const cleanEstimateForMersBanner = (
 }
 
 export const MersBanner = () => {
-  const state = useContext(MersContext);
+  const { filteredData }= useContext(MersContext);
+
+  const seroprevalenceEstimateData = useMemo(() => filteredData
+    .filter((dataPoint): dataPoint is MersSeroprevalenceEstimate => isMersSeroprevalenceEstimate(dataPoint))
+    .map((dataPoint) => formatMersSeroprevalenceEstimateForTable(dataPoint))
+    .map((estimate) => cleanEstimateForMersBanner(estimate))
+  , [ filteredData ]);
+
+  const viralEstimateData = useMemo(() => filteredData
+    .filter((dataPoint): dataPoint is MersViralEstimate => isMersViralEstimate(dataPoint))
+    .map((estimate) => formatMersViralEstimateForTable(estimate))
+    .map((estimate) => cleanEstimateForMersBanner(estimate))
+  , [ filteredData ])
+
+  console.log('seroprevalenceEstimateData', seroprevalenceEstimateData)
+  console.log('viralEstimateData', viralEstimateData)
 
   return <DashboardTopBanner
     headerContent={
@@ -44,20 +59,16 @@ export const MersBanner = () => {
     }
     downloadCsvButtonOneConfiguration={{
       enabled: true,
+      csvDownloadFilename: "merstracker_seroprevalence_dataset",
       buttonContent: "Download CSV with Seroprevalence Estimates",
-      filteredData: state.filteredData
-        .filter((dataPoint): dataPoint is MersSeroprevalenceEstimate => isMersSeroprevalenceEstimate(dataPoint))
-        .map((dataPoint) => formatMersSeroprevalenceEstimateForTable(dataPoint))
-        .map((estimate) => cleanEstimateForMersBanner(estimate)),
+      filteredData: seroprevalenceEstimateData,
       dataTableRows: mersSeroprevalenceEstimateColumnConfiguration
     }}
     downloadCsvButtonTwoConfiguration={{
       enabled: true,
+      csvDownloadFilename: "merstracker_viral_dataset",
       buttonContent: "Download CSV with Viral Estimates",
-      filteredData: state.filteredData
-        .filter((dataPoint): dataPoint is MersViralEstimate => isMersViralEstimate(dataPoint))
-        .map((estimate) => formatMersViralEstimateForTable(estimate))
-        .map((estimate) => cleanEstimateForMersBanner(estimate)),
+      filteredData: viralEstimateData,
       dataTableRows: mersViralEstimateColumnConfiguration
     }}
     citationButtonConfiguration={{

@@ -15,12 +15,12 @@ interface DownloadCsvButtonConfiguration {
     fieldName: string;
     label: string;
   }>;
+  csvDownloadFilename: string;
 }
 
 interface EnabledCitationButtonConfiguration {
   enabled: true;
   suggestedCitationText: string;
-  csvDownloadFilename: string;
   citationToastId: ToastId;
   buttonContent: React.ReactNode | string;
 }
@@ -45,13 +45,9 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
   const { downloadCsvButtonOneConfiguration, downloadCsvButtonTwoConfiguration, citationButtonConfiguration } = props;
 
   const downloadData = useCallback((downloadCsvButtonConfiguration: DownloadCsvButtonConfiguration) => {
-    if(citationButtonConfiguration.enabled === false) {
-      return;
-    }
-
     const csvConfig = mkConfig({
       useKeysAsHeaders: true,
-      filename: citationButtonConfiguration.csvDownloadFilename
+      filename: downloadCsvButtonConfiguration.csvDownloadFilename
     });
 
     const csv = generateCsv(csvConfig)(
