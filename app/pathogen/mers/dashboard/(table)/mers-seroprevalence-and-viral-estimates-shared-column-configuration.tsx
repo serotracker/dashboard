@@ -30,6 +30,10 @@ import {
 } from "../(map)/shared-mers-map-pop-up-variables";
 import { isHumanMersEstimate, MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { parseISO } from "date-fns";
+import { useContext, useMemo, useCallback } from "react";
+import { CountryDataContext, CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
+import { pipe } from "fp-ts/lib/function";
+import { distinctBackgroundColoursMap, distinctColoursMap, typedObjectFromEntries } from "@/lib/utils";
 
 export type MersEstimateBaseForDataTable = ReturnType<typeof mapMersEstimateBaseForDataTable>;
 
@@ -105,6 +109,9 @@ export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   primaryEstimateHumanAndAnimalSampleFrame: isHumanMersEstimate(estimate)
     ? (estimate.primaryEstimateInfo.sampleFrame ? [ estimate.primaryEstimateInfo.sampleFrame ] : [] )
     : estimate.primaryEstimateInfo.animalDetectionSettings,
+  primaryEstimateCountryOfTravelOrImport: isHumanMersEstimate(estimate)
+    ? estimate.primaryEstimateInfo.humanCountriesOfTravel.map(({ name }) => name)
+    : estimate.primaryEstimateInfo.animalCountriesOfImport.map(({ name }) => name),
   primaryEstimateHumanAndAnimalAgeGroup: isHumanMersEstimate(estimate)
     ? estimate.primaryEstimateInfo.ageGroup
     : estimate.primaryEstimateInfo.animalAgeGroup,
@@ -247,281 +254,304 @@ interface GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput {
   dataTableType: MersEstimateDataTableType;
 }
 
-export const getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration = (
-  input: GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput
-) => [{
-  type: DataTableColumnConfigurationEntryType.LINK as const,
-  fieldName: 'conciseEstimateId',
-  label: 'Estimate ID',
-  isHideable: false,
-  isFixed: true,
-  fieldNameForLink: 'primaryEstimateSourceUrl',
-  size: 400,
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateId',
-  label: 'Full Estimate ID',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'primaryEstimateWhoRegion',
-  label: 'WHO Region',
-  valueToColourSchemeClassnameMap: {
-    [WhoRegion.Afr]: "bg-who-region-afr",
-    [WhoRegion.Amr]: "bg-who-region-amr",
-    [WhoRegion.Emr]: "bg-who-region-emr",
-    [WhoRegion.Eur]: "bg-who-region-eur",
-    [WhoRegion.Sear]: "bg-who-region-sear",
-    [WhoRegion.Wpr]: "bg-who-region-wpr text-white"
+export const useMersEstimateColumnConfiguration = () => {
+  const { countryNameToColourClassnameMap } = useContext(CountryInformationContext);
+
+  const getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration = useCallback((
+    input: GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput
+  ) => [{
+    type: DataTableColumnConfigurationEntryType.LINK as const,
+    fieldName: 'conciseEstimateId',
+    label: 'Estimate ID',
+    isHideable: false,
+    isFixed: true,
+    fieldNameForLink: 'primaryEstimateSourceUrl',
+    size: 400,
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateId',
+    label: 'Full Estimate ID',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'primaryEstimateWhoRegion',
+    label: 'WHO Region',
+    valueToColourSchemeClassnameMap: {
+      [WhoRegion.Afr]: "bg-who-region-afr",
+      [WhoRegion.Amr]: "bg-who-region-amr",
+      [WhoRegion.Emr]: "bg-who-region-emr",
+      [WhoRegion.Eur]: "bg-who-region-eur",
+      [WhoRegion.Sear]: "bg-who-region-sear",
+      [WhoRegion.Wpr]: "bg-who-region-wpr text-white"
+    },
+    defaultColourSchemeClassname: 'bg-sky-100'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateCountry',
+    label: 'Country'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateSamplingYearRange',
+    label: 'Year(s)'
   },
-  defaultColourSchemeClassname: 'bg-sky-100'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateCountry',
-  label: 'Country'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateSamplingYearRange',
-  label: 'Year(s)'
-},
-...getEstimateTypeColumns(input),
-{
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'primaryEstimateHumanAndAnimalSampleFrame',
-  valueToColourSchemeClassnameMap: {
-    ...sampleFrameToColourClassnameMap,
-    ...animalDetectionSettingsToColourClassnameMap
+  ...getEstimateTypeColumns(input),
+  {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'primaryEstimateHumanAndAnimalSampleFrame',
+    valueToColourSchemeClassnameMap: {
+      ...sampleFrameToColourClassnameMap,
+      ...animalDetectionSettingsToColourClassnameMap
+    },
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Sample Frame',
   },
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Sample Frame',
-},
-...getPrevalenceColumns(input),
-{
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateSampleDenominator',
-  label: 'Denominator'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateSampleNumerator',
-  label: 'Numerator'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateState',
-  label: 'State'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateCity',
-  label: 'City'
-}, {
-  type: DataTableColumnConfigurationEntryType.DATE as const,
-  fieldName: 'primaryEstimateSamplingStartDate',
-  label: 'Sampling Start Date',
-}, {
-  type: DataTableColumnConfigurationEntryType.DATE as const,
-  fieldName: 'primaryEstimateSamplingEndDate',
-  label: 'Sampling End Date',
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'primaryEstimateSex',
-  valueToColourSchemeClassnameMap: sexToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Sex'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'primaryEstimateSourceType',
-  valueToColourSchemeClassnameMap: sourceTypeToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Source Type'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'primaryEstimateAssay',
-  valueToColourSchemeClassnameMap: assayToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Assay'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'primaryEstimateIsotypes',
-  valueToColourSchemeClassnameMap: isotypeToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Isotypes'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'primaryEstimateSpecimenType',
-  valueToColourSchemeClassnameMap: specimenTypeToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Specimen Type'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'primaryEstimateAntigen',
-  valueToColourSchemeClassnameMap: antigenToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Antigen'
-}, {
-  type: DataTableColumnConfigurationEntryType.BOOLEAN as const,
-  fieldName: 'primaryEstimateSequencingDone',
-  label: 'Genomic Sequencing Done?'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateFirstAuthorFullName',
-  label: 'First Author Full Name'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateInsitutution',
-  label: 'Institution'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'primaryEstimateAnimalType',
-  valueToDisplayLabel: (animalType: string) => isMersAnimalType(animalType) ? animalTypeToStringMap[animalType] : animalType,
-  valueToColourSchemeClassnameMap: animalTypeToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Animal Type'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'primaryEstimateAnimalSpecies',
-  valueToDisplayLabel: (animalSpecies: string) => isMersAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
-  valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Animal Species'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'primaryEstimateAnimalPurpose',
-  valueToColourSchemeClassnameMap: animalPurposeSettingsToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Animal Purpose',
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'primaryEstimateAnimalImportedOrLocal',
-  valueToColourSchemeClassnameMap: animalImportedOrLocalToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Animal Imported Or Local',
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'primaryEstimateHumanAndAnimalAgeGroup',
-  valueToColourSchemeClassnameMap: {
-    ...humanAgeGroupToColourClassnameMap,
-    ...animalAgeGroupToColourClassnameMap
-  },
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Age Group'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'primaryEstimateExposureToCamels',
-  valueToColourSchemeClassnameMap: exposureToCamelLevelToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Exposure To Camels'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateSocioeconomicStatus',
-  label: 'Socioeconomic Status',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'primaryEstimateSensitivity',
-  label: 'Test Sensitivity',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'primaryEstimateSensitivity95CILower',
-  label: 'Test Sensitivity (95% Confidence Interval Lower Bound)',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'primaryEstimateSensitivity95CIUpper',
-  label: 'Test Sensitivity (95% Confidence Interval Upper Bound)',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'primaryEstimateSpecificity',
-  label: 'Test Specificity',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'primaryEstimateSpecificity95CILower',
-  label: 'Test Specificity (95% Confidence Interval Lower Bound)',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'primaryEstimateSpecificity95CIUpper',
-  label: 'Test Specificity (95% Confidence Interval Upper Bound)',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'primaryEstimateSamplingMethod',
-  valueToColourSchemeClassnameMap: samplingMethodToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Sampling Method',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'primaryEstimateGeographicScope',
-  valueToColourSchemeClassnameMap: geographicScopeToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Geographic Scope',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'primaryEstimateTestProducer',
-  valueToColourSchemeClassnameMap: testProducerToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Test Producer',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateTestProducerOther',
-  label: 'Test Producer (If Other)',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateTestValidatedOn',
-  label: 'Test Validated On',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimatePostiveCutoff',
-  label: 'Positive Cutoff',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'primaryEstimateSymptomPrevalenceOfPositives',
-  label: 'Symptom Prevalence in Positive Cases',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateSymptomDefinition',
-  label: 'Symptom Definition',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'primaryEstimateTestValidation',
-  valueToColourSchemeClassnameMap: testValidationToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Test Validation',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateStudyInclusionCriteria',
-  label: 'Study Inclusion Criteria',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateStudyExclusionCriteria',
-  label: 'Study Exclusion Criteria',
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.LINK_BUTTON as const,
-  fieldName: 'primaryEstimateSourceUrl',
-  label: 'Source',
-  fieldNameForLink: 'primaryEstimateSourceUrl',
-  isSortable: false,
-  initiallyVisible: false
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'primaryEstimateSourceTitle',
-  label: 'Source Title'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'id',
-  label: 'ID',
-  isHideable: false,
-  initiallyVisible: false
-}]
+  ...getPrevalenceColumns(input),
+  {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateSampleDenominator',
+    label: 'Denominator'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateSampleNumerator',
+    label: 'Numerator'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'primaryEstimateCountryOfTravelOrImport',
+    valueToColourSchemeClassnameMap: countryNameToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Country of Travel/Import'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateState',
+    label: 'State'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateCity',
+    label: 'City'
+  }, {
+    type: DataTableColumnConfigurationEntryType.DATE as const,
+    fieldName: 'primaryEstimateSamplingStartDate',
+    label: 'Sampling Start Date',
+  }, {
+    type: DataTableColumnConfigurationEntryType.DATE as const,
+    fieldName: 'primaryEstimateSamplingEndDate',
+    label: 'Sampling End Date',
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'primaryEstimateSex',
+    valueToColourSchemeClassnameMap: sexToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Sex'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'primaryEstimateSourceType',
+    valueToColourSchemeClassnameMap: sourceTypeToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Source Type'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'primaryEstimateAssay',
+    valueToColourSchemeClassnameMap: assayToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Assay'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'primaryEstimateIsotypes',
+    valueToColourSchemeClassnameMap: isotypeToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Isotypes'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'primaryEstimateSpecimenType',
+    valueToColourSchemeClassnameMap: specimenTypeToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Specimen Type'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'primaryEstimateAntigen',
+    valueToColourSchemeClassnameMap: antigenToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Antigen'
+  }, {
+    type: DataTableColumnConfigurationEntryType.BOOLEAN as const,
+    fieldName: 'primaryEstimateSequencingDone',
+    label: 'Genomic Sequencing Done?'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateFirstAuthorFullName',
+    label: 'First Author Full Name'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateInsitutution',
+    label: 'Institution'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'primaryEstimateAnimalType',
+    valueToDisplayLabel: (animalType: string) => isMersAnimalType(animalType) ? animalTypeToStringMap[animalType] : animalType,
+    valueToColourSchemeClassnameMap: animalTypeToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Animal Type'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'primaryEstimateAnimalSpecies',
+    valueToDisplayLabel: (animalSpecies: string) => isMersAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
+    valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Animal Species'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'primaryEstimateAnimalPurpose',
+    valueToColourSchemeClassnameMap: animalPurposeSettingsToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Animal Purpose',
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'primaryEstimateAnimalImportedOrLocal',
+    valueToColourSchemeClassnameMap: animalImportedOrLocalToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Animal Imported Or Local',
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'primaryEstimateHumanAndAnimalAgeGroup',
+    valueToColourSchemeClassnameMap: {
+      ...humanAgeGroupToColourClassnameMap,
+      ...animalAgeGroupToColourClassnameMap
+    },
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Age Group'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'primaryEstimateExposureToCamels',
+    valueToColourSchemeClassnameMap: exposureToCamelLevelToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Exposure To Camels'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateSocioeconomicStatus',
+    label: 'Socioeconomic Status',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+    fieldName: 'primaryEstimateSensitivity',
+    label: 'Test Sensitivity',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+    fieldName: 'primaryEstimateSensitivity95CILower',
+    label: 'Test Sensitivity (95% Confidence Interval Lower Bound)',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+    fieldName: 'primaryEstimateSensitivity95CIUpper',
+    label: 'Test Sensitivity (95% Confidence Interval Upper Bound)',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+    fieldName: 'primaryEstimateSpecificity',
+    label: 'Test Specificity',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+    fieldName: 'primaryEstimateSpecificity95CILower',
+    label: 'Test Specificity (95% Confidence Interval Lower Bound)',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+    fieldName: 'primaryEstimateSpecificity95CIUpper',
+    label: 'Test Specificity (95% Confidence Interval Upper Bound)',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'primaryEstimateSamplingMethod',
+    valueToColourSchemeClassnameMap: samplingMethodToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Sampling Method',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'primaryEstimateGeographicScope',
+    valueToColourSchemeClassnameMap: geographicScopeToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Geographic Scope',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'primaryEstimateTestProducer',
+    valueToColourSchemeClassnameMap: testProducerToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Test Producer',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateTestProducerOther',
+    label: 'Test Producer (If Other)',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateTestValidatedOn',
+    label: 'Test Validated On',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimatePostiveCutoff',
+    label: 'Positive Cutoff',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+    fieldName: 'primaryEstimateSymptomPrevalenceOfPositives',
+    label: 'Symptom Prevalence in Positive Cases',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateSymptomDefinition',
+    label: 'Symptom Definition',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'primaryEstimateTestValidation',
+    valueToColourSchemeClassnameMap: testValidationToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Test Validation',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateStudyInclusionCriteria',
+    label: 'Study Inclusion Criteria',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateStudyExclusionCriteria',
+    label: 'Study Exclusion Criteria',
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.LINK_BUTTON as const,
+    fieldName: 'primaryEstimateSourceUrl',
+    label: 'Source',
+    fieldNameForLink: 'primaryEstimateSourceUrl',
+    isSortable: false,
+    initiallyVisible: false
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateSourceTitle',
+    label: 'Source Title'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'id',
+    label: 'ID',
+    isHideable: false,
+    initiallyVisible: false
+  }], [ countryNameToColourClassnameMap ]);
+
+  const mersSeroprevalenceEstimateColumnConfiguration = useMemo(() => getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration({
+    dataTableType: MersEstimateDataTableType.SEROPREVALENCE_ESTIMATES
+  }), [ getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration ]);
+
+  const mersViralEstimateColumnConfiguration = useMemo(() => getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration({
+    dataTableType: MersEstimateDataTableType.SEROPREVALENCE_ESTIMATES
+  }), [ getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration ]);
+
+  return {
+    mersSeroprevalenceEstimateColumnConfiguration,
+    mersViralEstimateColumnConfiguration
+  }
+}

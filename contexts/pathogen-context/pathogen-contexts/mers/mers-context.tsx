@@ -63,7 +63,8 @@ type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
   'animalSpeciesSubestimates'|'testUsedSubestimates'|
   'timeFrameSubestimates'|'sampleTypeSubestimates'|
   'animalSourceLocationSubestimates'|'animalSamplingContextSubestimates'|
-  'occupationSubestimates'|'camelExposureLevelSubestimates'
+  'occupationSubestimates'|'camelExposureLevelSubestimates' |
+  'nomadismSubestimates'|'humanCountriesOfTravelSubestimates'
 > & {
   geographicalAreaSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['geographicalAreaSubestimates'][number] & {
     markedAsFiltered: boolean;
@@ -94,6 +95,12 @@ type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
     markedAsFiltered: boolean;
   }>,
   camelExposureLevelSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['camelExposureLevelSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
+  nomadismSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['nomadismSubestimates'][number] & {
+    markedAsFiltered: boolean;
+  }>,
+  humanCountriesOfTravelSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['humanCountriesOfTravelSubestimates'][number] & {
     markedAsFiltered: boolean;
   }>,
 }
@@ -232,6 +239,10 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
                 ...subestimate,
                 markedAsFiltered: false,
               })),
+              humanCountriesOfTravelSubestimates: primaryEstimate.humanCountriesOfTravelSubestimates.map((subestimate) => ({
+                ...subestimate,
+                markedAsFiltered: false,
+              })),
             })),
             faoMersEventData: faoMersEvents
           }
@@ -249,17 +260,42 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
 
 const CountryDataProvider = (props: {children: React.ReactNode}) => {
   const { data: filterData } = useMersFilters();
-  const value = useMemo(() =>
-    filterData?.mersFilterOptions.countryIdentifiers.map(({
-      name,
-      alphaTwoCode,
-      alphaThreeCode
-    }) => ({
+  const { data: primaryEstimates } = useMersPrimaryEstimates();
+
+  const countriesFromFilterOptions = useMemo(() => filterData?.mersFilterOptions.countryIdentifiers
+    .map(({ name, alphaTwoCode, alphaThreeCode }) => ({
       countryName: name,
       countryAlphaTwoCode: alphaTwoCode,
       countryAlphaThreeCode: alphaThreeCode
     })) ?? []
-  , [filterData])
+  , [ filterData ]);
+
+  const countriesFromCountriesOfImportAndTravel = useMemo(() => 
+    pipe(
+      primaryEstimates?.mersPrimaryEstimates ?? [],
+      (estimates) => estimates.flatMap(({ primaryEstimateInfo, animalSourceLocationSubestimates, humanCountriesOfTravelSubestimates }) => ([
+        ...animalSourceLocationSubestimates.flatMap((subestimate) => subestimate.animalCountriesOfImport),
+        ...humanCountriesOfTravelSubestimates.flatMap((subestimate) => subestimate.humanCountriesOfTravel),
+        ...((
+          primaryEstimateInfo.__typename === 'PrimaryHumanMersSeroprevalenceEstimateInformation' ||
+          primaryEstimateInfo.__typename === 'PrimaryHumanMersViralEstimateInformation'
+        )
+          ? primaryEstimateInfo.humanCountriesOfTravel
+          : primaryEstimateInfo.animalCountriesOfImport
+        )
+      ]))
+      .map(({ name, alphaTwoCode, alphaThreeCode }) => ({
+        countryName: name,
+        countryAlphaTwoCode: alphaTwoCode,
+        countryAlphaThreeCode: alphaThreeCode
+      }))
+    )
+  , [ primaryEstimates ]);
+
+  const value = useMemo(() => [
+    ...countriesFromCountriesOfImportAndTravel,
+    ...countriesFromFilterOptions,
+  ], [ countriesFromFilterOptions, countriesFromCountriesOfImportAndTravel ]);
 
   return (
     <CountryDataContext.Provider value={value}>

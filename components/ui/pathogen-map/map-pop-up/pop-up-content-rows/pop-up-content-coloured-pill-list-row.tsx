@@ -5,6 +5,7 @@ import {
   PopUpContentRowType,
   PopupContentTextAlignment
 } from "../pop-up-content-rows";
+import { cn } from "@/lib/utils";
 
 export type PopUpContentColouredPillListRowProps = PopUpContentRowBaseProps & {
   type: PopUpContentRowType.COLOURED_PILL_LIST,
@@ -24,7 +25,10 @@ export const PopUpContentColouredPillListRow = (props: PopUpContentColouredPillL
     }
 
     return values.map((value) => (
-      <span key={value} className={`${valueToColourClassnameMap[value] ?? defaultColourClassname} mr-1 p-2 rounded-sm`}>
+      <span key={value} className={cn(
+        valueToColourClassnameMap[value] ?? defaultColourClassname,
+        'mr-1 px-1 py-1 mb-1 rounded-sm inline-block',
+      )}>
         {valueToLabelMap?.[value] ? valueToLabelMap[value] : value}
       </span>
     ))

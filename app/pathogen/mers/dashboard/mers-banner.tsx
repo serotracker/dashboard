@@ -5,8 +5,7 @@ import Link from "next/link";
 import { DashboardTopBanner } from "@/components/customs/dashboard-top-banner";
 import { isMersSeroprevalenceEstimate, isMersViralEstimate, MersContext, MersSeroprevalenceEstimate, MersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { formatMersSeroprevalenceEstimateForTable, formatMersViralEstimateForTable } from "./(table)/use-mers-data-table-data";
-import { mersSeroprevalenceEstimateColumnConfiguration } from "./(table)/mers-seroprevalence-estimate-data-table";
-import { mersViralEstimateColumnConfiguration } from "./(table)/mers-viral-estimates-data-table";
+import { useMersEstimateColumnConfiguration } from "./(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 
 export const cleanEstimateForMersBanner = (
   estimate: MersSeroprevalenceEstimate | MersViralEstimate
@@ -25,6 +24,7 @@ export const cleanEstimateForMersBanner = (
     occupationSubestimates,
     camelExposureLevelSubestimates,
     nomadismSubestimates,
+    humanCountriesOfTravelSubestimates,
     ...cleanedEstimate
   } = estimate;
 
@@ -33,6 +33,11 @@ export const cleanEstimateForMersBanner = (
 
 export const MersBanner = () => {
   const { filteredData }= useContext(MersContext);
+  
+  const {
+    mersSeroprevalenceEstimateColumnConfiguration,
+    mersViralEstimateColumnConfiguration
+  } = useMersEstimateColumnConfiguration();
 
   const seroprevalenceEstimateData = useMemo(() => filteredData
     .filter((dataPoint): dataPoint is MersSeroprevalenceEstimate => isMersSeroprevalenceEstimate(dataPoint))

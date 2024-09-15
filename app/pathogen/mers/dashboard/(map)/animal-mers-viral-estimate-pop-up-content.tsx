@@ -1,6 +1,15 @@
 import { MouseEventHandler, useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
-import { AnimalMersViralEstimateMapMarkerData, GenerateMersEstimateTableConfigurationsType, animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, animalTypeToColourClassnameMap, animalTypeToStringMap, generateAlternateViewBannerConfiguration, generateMersEstimateTableConfigurations, getAnimalMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
+import {
+  AnimalMersViralEstimateMapMarkerData,
+  GenerateMersEstimateTableConfigurationsType,
+  animalSpeciesToColourClassnameMap,
+  animalSpeciesToStringMap,
+  generateAlternateViewBannerConfiguration,
+  generateMersEstimateTableConfigurations,
+  getAnimalMersEstimateRows,
+  useMersEstimateRows
+} from "./shared-mers-map-pop-up-variables";
 
 interface AnimalMersViralEstimatePopupContentProps {
   estimate: AnimalMersViralEstimateMapMarkerData;
@@ -11,6 +20,8 @@ interface AnimalMersViralEstimatePopupContentProps {
 
 export const AnimalMersViralEstimatePopupContent = (props: AnimalMersViralEstimatePopupContentProps) => {
   const { estimate } = props;
+
+  const { getSharedMersEstimateRows } = useMersEstimateRows();
 
   const topBannerText = useMemo(() => {
     const positivePrevalencePercentageText = `Positive Prevalence: ${(estimate.primaryEstimateInfo.positivePrevalence * 100).toFixed(1)}%`;
