@@ -1,6 +1,13 @@
 import { MouseEventHandler, useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
-import { GenerateMersEstimateTableConfigurationsType, HumanMersSeroprevalenceEstimateMapMarkerData, generateAlternateViewBannerConfiguration, generateMersEstimateTableConfigurations, getHumanMersEstimateRows, getSharedMersEstimateRows } from "./shared-mers-map-pop-up-variables";
+import {
+  GenerateMersEstimateTableConfigurationsType,
+  HumanMersSeroprevalenceEstimateMapMarkerData,
+  generateAlternateViewBannerConfiguration,
+  generateMersEstimateTableConfigurations,
+  getHumanMersEstimateRows,
+  useMersEstimateRows
+} from "./shared-mers-map-pop-up-variables";
 
 interface HumanMersSeroprevalenceEstimatePopupContentProps {
   estimate: HumanMersSeroprevalenceEstimateMapMarkerData;
@@ -11,6 +18,8 @@ interface HumanMersSeroprevalenceEstimatePopupContentProps {
 
 export const HumanMersSeroprevalenceEstimatePopupContent = (props: HumanMersSeroprevalenceEstimatePopupContentProps) => {
   const { estimate } = props;
+
+  const { getSharedMersEstimateRows } = useMersEstimateRows();
 
   const topBannerText = useMemo(() => {
     const seroprevalencePercentageText = `Seroprevalence: ${(estimate.primaryEstimateInfo.seroprevalence * 100).toFixed(1)}%`;

@@ -31,7 +31,7 @@ import {
 import { isHumanMersEstimate, MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { parseISO } from "date-fns";
 import { useContext, useMemo, useCallback } from "react";
-import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
+import { CountryDataContext, CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
 import { pipe } from "fp-ts/lib/function";
 import { distinctBackgroundColoursMap, distinctColoursMap, typedObjectFromEntries } from "@/lib/utils";
 
@@ -255,21 +255,7 @@ interface GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput {
 }
 
 export const useMersEstimateColumnConfiguration = () => {
-  const countryDataContext = useContext(CountryDataContext);
-
-  const countryNameToColourClassnameMap: Record<string, string | undefined> = useMemo(() => pipe(
-    countryDataContext,
-    (context) => context
-      .map((element, index) => ({
-        ...element,
-        colourClassname: distinctBackgroundColoursMap[index % Object.keys(distinctColoursMap).length]
-      }))
-      .filter((element): element is Omit<typeof element, 'colourClassname'> & {
-        colourClassname: NonNullable<typeof element['colourClassname']>
-      } => !!element.colourClassname)
-      .map((element): [string, string] => [element.countryName, element.colourClassname]),
-    (context) => typedObjectFromEntries(context)
-  ), [ countryDataContext ])
+  const { countryNameToColourClassnameMap } = useContext(CountryInformationContext);
 
   const getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration = useCallback((
     input: GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput

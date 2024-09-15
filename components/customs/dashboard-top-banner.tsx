@@ -67,7 +67,7 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
     );
 
     download(csvConfig)(csv);
-  }, [ citationButtonConfiguration ]);
+  }, []);
 
   return (
     <div className="w-full h-fit relative row-span-2 rounded-md mt-4 border border-background p-4">

@@ -7,6 +7,7 @@ import {
   HumanMersViralEstimate,
   MersEstimate,
   MersSubEstimateInformation,
+  isAnimalMersEstimate,
   isHumanMersAgeGroupSubEstimate,
   isMersSeroprevalenceSubEstimateInformation,
   isMersViralEstimate,
@@ -28,6 +29,8 @@ import { TranslateDate } from "@/utils/translate-util/translate-service";
 import assertNever from "assert-never";
 import { parseISO } from "date-fns";
 import { MapDataPointVisibilityOptions } from "./use-mers-map-customization-modal";
+import { useContext } from "react";
+import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
 
 export const diagnosisStatusToStringMap = {
   [MersDiagnosisStatus.Confirmed]: "Confirmed",
@@ -422,38 +425,11 @@ export type MersMapMarkerData =
   | AnimalMersEventMapMarkerData;
 
 
-export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): PopUpContentRowProps[] => [{
-  title: "Location",
-  type: PopUpContentRowType.LOCATION,
-  countryName: estimate.primaryEstimateInfo.country,
-  stateName: estimate.primaryEstimateInfo.state ?? undefined,
-  cityName: estimate.primaryEstimateInfo.city ?? undefined
-}, {
-  title: "Source Type",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.sourceType ?? 'Not Reported'
-}, {
-  title: "Sampling Date Range",
-  type: PopUpContentRowType.DATE_RANGE,
-  dateRangeStart: estimate.primaryEstimateInfo.samplingStartDate ? parseISO(estimate.primaryEstimateInfo.samplingStartDate) : undefined,
-  dateRangeEnd: estimate.primaryEstimateInfo.samplingEndDate ? parseISO(estimate.primaryEstimateInfo.samplingEndDate) : undefined
-}, estimate.primaryEstimateInfo.sampleNumerator !== undefined && estimate.primaryEstimateInfo.sampleNumerator !== null ? {
-  title: "Sample Numerator",
-  type: PopUpContentRowType.NUMBER,
-  value: estimate.primaryEstimateInfo.sampleNumerator
-} : {
-  title: "Sample Numerator",
-  type: PopUpContentRowType.TEXT,
-  text: 'N/A'
-}, estimate.primaryEstimateInfo.sampleDenominator ? {
-  title: "Sample Denominator",
-  type: PopUpContentRowType.NUMBER,
-  value: estimate.primaryEstimateInfo.sampleDenominator
-} : {
-  title: "Sample Denominator",
-  type: PopUpContentRowType.TEXT,
-  text: 'N/A'
-}, isMersViralEstimate(estimate) ? {
+interface GetPrevalenceConfidenceIntervalRowsInput {
+  estimate: MersEstimateMapMarkerData;
+}
+
+const getPrevalenceConfidenceIntervalRows = ({ estimate }: GetPrevalenceConfidenceIntervalRowsInput) => isMersViralEstimate(estimate) ? [{
   title: (
     estimate.primaryEstimateInfo.positivePrevalence95CILower !== null &&
     estimate.primaryEstimateInfo.positivePrevalence95CILower !== undefined &&
@@ -461,13 +437,13 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
     estimate.primaryEstimateInfo.positivePrevalence95CIUpper !== undefined
   ) ? "Positive Prevalence 95% Confidence Interval"
     : "Positive Prevalence 95% Confidence Interval (Calculated using the Clopper-Pearson method)",
-  type: PopUpContentRowType.TEXT,
+  type: PopUpContentRowType.TEXT as const,
   text: `[
     ${((estimate.primaryEstimateInfo.positivePrevalence95CILower ?? estimate.primaryEstimateInfo.positivePrevalenceCalculated95CILower) * 100).toFixed(1)}%
     -
     ${((estimate.primaryEstimateInfo.positivePrevalence95CIUpper ?? estimate.primaryEstimateInfo.positivePrevalenceCalculated95CIUpper) * 100).toFixed(1)}%
   ]`
-} : {
+}] : [{
   title: (
     estimate.primaryEstimateInfo.seroprevalence95CILower !== null &&
     estimate.primaryEstimateInfo.seroprevalence95CILower !== undefined &&
@@ -475,111 +451,177 @@ export const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): 
     estimate.primaryEstimateInfo.seroprevalence95CIUpper !== undefined
   ) ? "Seroprevalence 95% Confidence Interval"
     : "Seroprevalence 95% Confidence Interval (Calculated using the Clopper-Pearson method)",
-  type: PopUpContentRowType.TEXT,
+  type: PopUpContentRowType.TEXT as const,
   text: `[
     ${((estimate.primaryEstimateInfo.seroprevalence95CILower ?? estimate.primaryEstimateInfo.seroprevalenceCalculated95CILower) * 100).toFixed(1)}%
     -
     ${((estimate.primaryEstimateInfo.seroprevalence95CIUpper ?? estimate.primaryEstimateInfo.seroprevalenceCalculated95CIUpper) * 100).toFixed(1)}%
   ]`
-}, {
-  title: "First Author Full Name",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.firstAuthorFullName ?? 'Not Reported'
-}, {
-  title: "Institution",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.insitutution ?? 'Not Reported'
-}, {
-  title: "Study Inclusion Criteria",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.studyInclusionCriteria ?? 'Not Reported'
-}, {
-  title: "Study Exclusion Criteria",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.studyExclusionCriteria ?? 'Not Reported'
-}, {
-  title: "Assay",
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.assay,
-  valueToColourClassnameMap: assayToColourClassnameMap,
-  defaultColourClassname: "bg-sky-100",
-}, {
-  title: "Isotypes",
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.isotypes,
-  valueToColourClassnameMap: isotypeToColourClassnameMap,
-  defaultColourClassname: "bg-sky-100",
-}, {
-  title: "Antigens",
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.antigen,
-  valueToColourClassnameMap: antigenToColourClassnameMap,
-  defaultColourClassname: "bg-sky-100",
-}, {
-  title: "Specimen Type",
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.specimenType,
-  valueToColourClassnameMap: specimenTypeToColourClassnameMap,
-  defaultColourClassname: "bg-sky-100",
-}, {
-  title: 'Sampling Method',
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.samplingMethod ? [ estimate.primaryEstimateInfo.samplingMethod ] : [],
-  valueToColourClassnameMap: samplingMethodToColourClassnameMap,
-  defaultColourClassname: "bg-sky-100",
-}, {
-  title: 'Geographic Scope',
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.geographicScope ? [ estimate.primaryEstimateInfo.geographicScope ] : [],
-  valueToColourClassnameMap: geographicScopeToColourClassnameMap,
-  defaultColourClassname: "bg-sky-100",
-}, {
-  title: "Socioeconomic Status",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.socioeconomicStatus ?? 'Not Reported'
-}, {
-  title: 'Test Producer',
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.testProducer,
-  valueToColourClassnameMap: testProducerToColourClassnameMap,
-  defaultColourClassname: "bg-sky-100",
-}, {
-  title: "Test Producer (If Other)",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.testProducerOther ?? 'Not Reported'
-}, {
-  title: "Positive Cutoff",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.positiveCutoff ?? 'Not Reported'
-}, {
-  title: 'Test Validation',
-  type: PopUpContentRowType.COLOURED_PILL_LIST,
-  values: estimate.primaryEstimateInfo.testValidation,
-  valueToColourClassnameMap: testValidationToColourClassnameMap,
-  defaultColourClassname: "bg-sky-100",
-}, {
-  title: "Test Validated On",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.testValidatedOn ?? 'Not Reported'
-}, {
-  title: "Symptom Prevalence in Postive Cases",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.symptomPrevalenceOfPositives
-    ? `${(estimate.primaryEstimateInfo.symptomPrevalenceOfPositives * 100).toFixed(1)}%`
-    : "Unknown"
-}, {
-  title: "Symptom Definition",
-  type: PopUpContentRowType.TEXT,
-  text: estimate.primaryEstimateInfo.symptomDefinition ?? 'Not Reported'
-}, estimate.primaryEstimateInfo.sequencingDone ? {
-  title: "Genomic Sequencing Done?",
-  type: PopUpContentRowType.TEXT,
-  text: 'Yes'
-} : {
-  title: "Genomic Sequencing Done?",
-  type: PopUpContentRowType.TEXT,
-  text: 'No'
 }];
+
+interface GetCountryOfTravelOrImportRowsInput {
+  estimate: MersEstimateMapMarkerData;
+  countryNameToColourClassnameMap: Record<string, string | undefined>;
+}
+
+const getCountryOfTravelOrImportRows = ({ estimate, countryNameToColourClassnameMap }: GetCountryOfTravelOrImportRowsInput) => isAnimalMersEstimate(estimate) ? [{
+  title: 'Countries of Import',
+  type: PopUpContentRowType.COLOURED_PILL_LIST as const,
+  values: estimate.primaryEstimateInfo.animalCountriesOfImport
+    .map(({ name }) => name),
+  valueToColourClassnameMap: countryNameToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}] : [{
+  title: 'Countries of Travel',
+  type: PopUpContentRowType.COLOURED_PILL_LIST as const,
+  values: estimate.primaryEstimateInfo.humanCountriesOfTravel
+    .map(({ name }) => name),
+  valueToColourClassnameMap: countryNameToColourClassnameMap,
+  defaultColourClassname: "bg-sky-100",
+}];
+
+export const useMersEstimateRows = () => {
+  const { countryNameToColourClassnameMap } = useContext(CountryInformationContext);
+
+  const getSharedMersEstimateRows = (estimate: MersEstimateMapMarkerData): PopUpContentRowProps[] => [{
+    title: "Location",
+    type: PopUpContentRowType.LOCATION,
+    countryName: estimate.primaryEstimateInfo.country,
+    stateName: estimate.primaryEstimateInfo.state ?? undefined,
+    cityName: estimate.primaryEstimateInfo.city ?? undefined
+  }, {
+    title: "Source Type",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.sourceType ?? 'Not Reported'
+  }, {
+    title: "Sampling Date Range",
+    type: PopUpContentRowType.DATE_RANGE,
+    dateRangeStart: estimate.primaryEstimateInfo.samplingStartDate ? parseISO(estimate.primaryEstimateInfo.samplingStartDate) : undefined,
+    dateRangeEnd: estimate.primaryEstimateInfo.samplingEndDate ? parseISO(estimate.primaryEstimateInfo.samplingEndDate) : undefined
+  }, estimate.primaryEstimateInfo.sampleNumerator !== undefined && estimate.primaryEstimateInfo.sampleNumerator !== null ? {
+    title: "Sample Numerator",
+    type: PopUpContentRowType.NUMBER,
+    value: estimate.primaryEstimateInfo.sampleNumerator
+  } : {
+    title: "Sample Numerator",
+    type: PopUpContentRowType.TEXT,
+    text: 'N/A'
+  }, estimate.primaryEstimateInfo.sampleDenominator ? {
+    title: "Sample Denominator",
+    type: PopUpContentRowType.NUMBER,
+    value: estimate.primaryEstimateInfo.sampleDenominator
+  } : {
+    title: "Sample Denominator",
+    type: PopUpContentRowType.TEXT,
+    text: 'N/A'
+  },
+  ...getPrevalenceConfidenceIntervalRows({ estimate }),
+  ...getCountryOfTravelOrImportRows({ estimate, countryNameToColourClassnameMap }),
+  {
+    title: "First Author Full Name",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.firstAuthorFullName ?? 'Not Reported'
+  }, {
+    title: "Institution",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.insitutution ?? 'Not Reported'
+  }, {
+    title: "Study Inclusion Criteria",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.studyInclusionCriteria ?? 'Not Reported'
+  }, {
+    title: "Study Exclusion Criteria",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.studyExclusionCriteria ?? 'Not Reported'
+  }, {
+    title: "Assay",
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.assay,
+    valueToColourClassnameMap: assayToColourClassnameMap,
+    defaultColourClassname: "bg-sky-100",
+  }, {
+    title: "Isotypes",
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.isotypes,
+    valueToColourClassnameMap: isotypeToColourClassnameMap,
+    defaultColourClassname: "bg-sky-100",
+  }, {
+    title: "Antigens",
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.antigen,
+    valueToColourClassnameMap: antigenToColourClassnameMap,
+    defaultColourClassname: "bg-sky-100",
+  }, {
+    title: "Specimen Type",
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.specimenType,
+    valueToColourClassnameMap: specimenTypeToColourClassnameMap,
+    defaultColourClassname: "bg-sky-100",
+  }, {
+    title: 'Sampling Method',
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.samplingMethod ? [ estimate.primaryEstimateInfo.samplingMethod ] : [],
+    valueToColourClassnameMap: samplingMethodToColourClassnameMap,
+    defaultColourClassname: "bg-sky-100",
+  }, {
+    title: 'Geographic Scope',
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.geographicScope ? [ estimate.primaryEstimateInfo.geographicScope ] : [],
+    valueToColourClassnameMap: geographicScopeToColourClassnameMap,
+    defaultColourClassname: "bg-sky-100",
+  }, {
+    title: "Socioeconomic Status",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.socioeconomicStatus ?? 'Not Reported'
+  }, {
+    title: 'Test Producer',
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.testProducer,
+    valueToColourClassnameMap: testProducerToColourClassnameMap,
+    defaultColourClassname: "bg-sky-100",
+  }, {
+    title: "Test Producer (If Other)",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.testProducerOther ?? 'Not Reported'
+  }, {
+    title: "Positive Cutoff",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.positiveCutoff ?? 'Not Reported'
+  }, {
+    title: 'Test Validation',
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.testValidation,
+    valueToColourClassnameMap: testValidationToColourClassnameMap,
+    defaultColourClassname: "bg-sky-100",
+  }, {
+    title: "Test Validated On",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.testValidatedOn ?? 'Not Reported'
+  }, {
+    title: "Symptom Prevalence in Postive Cases",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.symptomPrevalenceOfPositives
+      ? `${(estimate.primaryEstimateInfo.symptomPrevalenceOfPositives * 100).toFixed(1)}%`
+      : "Unknown"
+  }, {
+    title: "Symptom Definition",
+    type: PopUpContentRowType.TEXT,
+    text: estimate.primaryEstimateInfo.symptomDefinition ?? 'Not Reported'
+  }, estimate.primaryEstimateInfo.sequencingDone ? {
+    title: "Genomic Sequencing Done?",
+    type: PopUpContentRowType.TEXT,
+    text: 'Yes'
+  } : {
+    title: "Genomic Sequencing Done?",
+    type: PopUpContentRowType.TEXT,
+    text: 'No'
+  }];
+
+  return {
+    getSharedMersEstimateRows
+  };
+}
+
 
 export const getAnimalMersEstimateRows = (estimate: AnimalMersEstimateMarkerData): PopUpContentRowProps[] => [{
   title: "Animal Type",
