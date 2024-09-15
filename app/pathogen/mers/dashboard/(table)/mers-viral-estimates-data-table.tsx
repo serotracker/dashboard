@@ -1,18 +1,13 @@
 import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
-import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration, MersEstimateDataTableType, mersEstimateTypeToTypeMap } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { useMersEstimateColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { MersViralEstimateForDataTable } from "./use-mers-data-table-data";
-
-export const mersViralEstimateColumnConfiguration = getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration({
-  dataTableType: MersEstimateDataTableType.VIRAL_ESTIMATES
-})
 
 interface MersViralEstimateDataTableProps {
   tableData: MersViralEstimateForDataTable[];
@@ -20,9 +15,10 @@ interface MersViralEstimateDataTableProps {
 }
 
 export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProps) => {
-  const state = useContext(MersContext);
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
+
+  const { mersViralEstimateColumnConfiguration } = useMersEstimateColumnConfiguration();
 
   const rowExpansionConfiguration: RowExpansionConfiguration<MersViralEstimateForDataTable> = useMemo(() => ({
     enabled: true,

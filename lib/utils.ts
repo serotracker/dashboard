@@ -117,6 +117,42 @@ export const distinctColoursMap: Record<number, string | undefined> = {
   32: defaultColours.teal[800]
 };
 
+export const distinctBackgroundColoursMap: Record<number, string | undefined> = {
+  0: 'bg-red-200', 
+  1: 'bg-red-400',
+  2: 'bg-red-600',
+  3: 'bg-emerald-200',
+  4: 'bg-emerald-400',
+  5: 'bg-emerald-600',
+  6: 'bg-purple-200',
+  7: 'bg-purple-400',
+  8: 'bg-purple-600',
+  9: 'bg-yellow-200',
+  10: 'bg-yellow-400',
+  11: 'bg-yellow-600',
+  12: 'bg-blue-200',
+  13: 'bg-blue-400',
+  14: 'bg-blue-600',
+  15: 'bg-rose-200',
+  16: 'bg-rose-400',
+  17: 'bg-rose-600',
+  18: 'bg-orange-200',
+  19: 'bg-orange-400',
+  20: 'bg-orange-600',
+  21: 'bg-lime-200',
+  22: 'bg-lime-400',
+  23: 'bg-lime-600',
+  24: 'bg-cyan-200',
+  25: 'bg-cyan-400',
+  26: 'bg-cyan-600',
+  27: 'bg-amber-200',
+  28: 'bg-amber-400',
+  29: 'bg-amber-600',
+  30: 'bg-teal-200',
+  31: 'bg-teal-400',
+  32: 'bg-teal-600'
+};
+
 export const groupByArray = <TGroupingKey extends string, TGroupingValue extends string, TValue extends Record<TGroupingKey, TGroupingValue>>(values: TValue[], groupingKey: TGroupingKey): Array<Record<TGroupingKey, TGroupingValue> & {data: Omit<TValue, TGroupingKey>[]}> => {
   const valueToGroupingValue = (value: TValue): TGroupingValue => {
     return value[groupingKey]

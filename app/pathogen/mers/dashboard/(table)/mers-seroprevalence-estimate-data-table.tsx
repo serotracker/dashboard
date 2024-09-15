@@ -10,13 +10,9 @@ import {
   generateMersEstimateTableConfigurations,
   GenerateMersEstimateTableConfigurationsType
 } from "../(map)/shared-mers-map-pop-up-variables";
-import { getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration, MersEstimateDataTableType, mersEstimateTypeToTypeMap } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { useMersEstimateColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { MersSeroprevalenceEstimateForDataTable } from "./use-mers-data-table-data";
 import { SubestimateTable } from "@/components/ui/pathogen-map/map-pop-up/subestimate-table";
-
-export const mersSeroprevalenceEstimateColumnConfiguration = getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration({
-  dataTableType: MersEstimateDataTableType.SEROPREVALENCE_ESTIMATES
-})
 
 interface MersSeroprevalenceEstimateDataTableProps {
   tableData: MersSeroprevalenceEstimateForDataTable[];
@@ -27,6 +23,8 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
 
+  const { mersSeroprevalenceEstimateColumnConfiguration } = useMersEstimateColumnConfiguration();
+  
   const rowExpansionConfiguration: RowExpansionConfiguration<MersSeroprevalenceEstimateForDataTable> = useMemo(() => ({
     enabled: true,
     generateExpandedRowStatement: (input) => {
