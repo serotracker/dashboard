@@ -7,7 +7,6 @@ import {
   animalSpeciesToStringMap,
   generateAlternateViewBannerConfiguration,
   generateMersEstimateTableConfigurations,
-  getAnimalMersEstimateRows,
   useMersEstimateRows
 } from "./shared-mers-map-pop-up-variables";
 
@@ -60,10 +59,7 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
         enabled: true,
         tableConfigurations,
       }}
-      rows={[
-        ...getSharedMersEstimateRows(props.estimate),
-        ...getAnimalMersEstimateRows(props.estimate)
-      ]}
+      rows={getSharedMersEstimateRows(props.estimate)}
       bottomBannerConfiguration={{
         enabled: true,
         bannerText: `Animal Species: ${animalSpeciesToStringMap[props.estimate.primaryEstimateInfo.animalSpecies]}`,
