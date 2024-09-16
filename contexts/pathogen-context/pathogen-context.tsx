@@ -6,6 +6,7 @@ import React, { Context, Dispatch, useReducer } from "react";
 import { filterData } from "./filter-update-steps/apply-new-selected-filters";
 import { handleFilterUpdate } from "./filter-update-steps";
 import { CountryInformationProvider } from "./country-information-context";
+import { MapStyleProvider } from "../map-style-provider";
 
 export type PathogenContextType<
   TData extends Record<string, unknown>,
@@ -146,25 +147,27 @@ export const PathogenProviders = <
 
   return (
     <ToastProvider>
-      <MapProvider>
-        <QueryClientProvider client={queryClient}>
-          <FilteredDataProvider
-            initialState={props.initialState}
-            context={props.context}
-            mapId={props.mapId}
-            dataFetcher={props.dataFetcher}
-            filterUpdateHandlerOverride={props.filterUpdateHandlerOverride}
-            initialDataFetchHandlerOverride={props.initialDataFetchHandlerOverride}
-            filterResetHandlerOverride={props.filterResetHandlerOverride}
-          >
-            <props.countryDataProvider>
-              <CountryInformationProvider>
-                {props.children}
-              </CountryInformationProvider>
-            </props.countryDataProvider>
-          </FilteredDataProvider>
-        </QueryClientProvider>
-      </MapProvider>
+      <MapStyleProvider>
+        <MapProvider>
+          <QueryClientProvider client={queryClient}>
+            <FilteredDataProvider
+              initialState={props.initialState}
+              context={props.context}
+              mapId={props.mapId}
+              dataFetcher={props.dataFetcher}
+              filterUpdateHandlerOverride={props.filterUpdateHandlerOverride}
+              initialDataFetchHandlerOverride={props.initialDataFetchHandlerOverride}
+              filterResetHandlerOverride={props.filterResetHandlerOverride}
+            >
+              <props.countryDataProvider>
+                <CountryInformationProvider>
+                  {props.children}
+                </CountryInformationProvider>
+              </props.countryDataProvider>
+            </FilteredDataProvider>
+          </QueryClientProvider>
+        </MapProvider>
+      </MapStyleProvider>
     </ToastProvider>
   );
 };
