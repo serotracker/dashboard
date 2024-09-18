@@ -31,6 +31,17 @@ interface DisabledCitationButtonConfiguration {
 
 type CitationButtonConfiguration = EnabledCitationButtonConfiguration | DisabledCitationButtonConfiguration;
 
+interface EnabledDataLastUpdatedNoteConfiguration {
+  enabled: true;
+  dataLastUpdatedText: string;
+}
+
+interface DisabledDataLastUpdatedNoteConfiguration {
+  enabled: false;
+}
+
+type DataLastUpdatedNoteConfiguration = EnabledDataLastUpdatedNoteConfiguration | DisabledDataLastUpdatedNoteConfiguration;
+
 interface DashboardTopBannerProps {
   headerContent: React.ReactNode;
   downloadCsvButtonOneConfiguration: DownloadCsvButtonConfiguration;
@@ -38,11 +49,12 @@ interface DashboardTopBannerProps {
     enabled: false;
   };
   citationButtonConfiguration: CitationButtonConfiguration;
+  dataLastUpdatedNoteConfiguration: DataLastUpdatedNoteConfiguration;
 }
 
 export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
   const { openToast } = useContext(ToastContext);
-  const { downloadCsvButtonOneConfiguration, downloadCsvButtonTwoConfiguration, citationButtonConfiguration } = props;
+  const { downloadCsvButtonOneConfiguration, downloadCsvButtonTwoConfiguration, citationButtonConfiguration, dataLastUpdatedNoteConfiguration } = props;
 
   const downloadData = useCallback((downloadCsvButtonConfiguration: DownloadCsvButtonConfiguration) => {
     const csvConfig = mkConfig({
@@ -72,43 +84,57 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
   return (
     <div className="w-full h-fit relative row-span-2 rounded-md mt-4 border border-background p-4">
       {props.headerContent}
-      <Button
-        className="w-[30%] bg-background hover:bg-backgroundHover"
-        onClick={() => downloadData(downloadCsvButtonOneConfiguration)}
-      >
-        {props.downloadCsvButtonOneConfiguration.buttonContent}
-      </Button>
-      <Button
-        className={cn(
-          "w-[30%] bg-background hover:bg-backgroundHover ml-2",
-          props.downloadCsvButtonTwoConfiguration.enabled ? '' : 'hidden'
-        )}
-        onClick={() => {
-          if(downloadCsvButtonTwoConfiguration.enabled === false) {
-            return;
-          }
-          downloadData(downloadCsvButtonTwoConfiguration)
-        }}
-      >
-        {props.downloadCsvButtonTwoConfiguration.enabled ? props.downloadCsvButtonTwoConfiguration.buttonContent : 'No text'}
-      </Button>
-      <Button
-        className={cn(
-          "w-[30%] bg-background hover:bg-backgroundHover ml-2",
-          props.citationButtonConfiguration.enabled ? '' : 'hidden'
-        )}
-        onClick={() => {
-          if(props.citationButtonConfiguration.enabled === false) {
-            return;
-          }
+      <div className="relative">
+        <Button
+          className="w-[30%] bg-background hover:bg-backgroundHover"
+          onClick={() => downloadData(downloadCsvButtonOneConfiguration)}
+        >
+          {props.downloadCsvButtonOneConfiguration.buttonContent}
+        </Button>
+        <Button
+          className={cn(
+            "w-[30%] bg-background hover:bg-backgroundHover ml-2",
+            props.downloadCsvButtonTwoConfiguration.enabled ? '' : 'hidden'
+          )}
+          onClick={() => {
+            if(downloadCsvButtonTwoConfiguration.enabled === false) {
+              return;
+            }
+            downloadData(downloadCsvButtonTwoConfiguration)
+          }}
+        >
+          {props.downloadCsvButtonTwoConfiguration.enabled ? props.downloadCsvButtonTwoConfiguration.buttonContent : 'No text'}
+        </Button>
+        <Button
+          className={cn(
+            "w-[30%] bg-background hover:bg-backgroundHover ml-2",
+            citationButtonConfiguration.enabled ? '' : 'hidden'
+          )}
+          onClick={() => {
+            if(citationButtonConfiguration.enabled === false) {
+              return;
+            }
 
-          navigator.clipboard.writeText(props.citationButtonConfiguration.suggestedCitationText);
+            navigator.clipboard.writeText(citationButtonConfiguration.suggestedCitationText);
 
-          openToast({ toastId: props.citationButtonConfiguration.citationToastId })
-        }}
-      >
-        {props.citationButtonConfiguration.enabled ? props.citationButtonConfiguration.buttonContent : 'No text'}
-      </Button>
+            openToast({ toastId: citationButtonConfiguration.citationToastId })
+          }}
+        >
+          {citationButtonConfiguration.enabled ? citationButtonConfiguration.buttonContent : 'No text'}
+        </Button>
+        <div className={cn(
+          'w-auto ml-2 inline-flex absolute right-0 bottom-0',
+          citationButtonConfiguration.enabled === false && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
+        )}>
+          <p className='italic text-sm'>
+            {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : 'No text'}
+          </p>
+        </div>
+      </div>
+      <p className={cn(
+        'w-full italic text-sm mt-4',
+        citationButtonConfiguration.enabled === true && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
+      )}> {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : 'No text'} </p>
     </div>
   );
 } 
