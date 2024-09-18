@@ -156,7 +156,7 @@ export default async function Home() {
         </div>
         <h3 className="flex text-background bg-white rounded-md lg:px-16 justify-center p-8 w-full">
           {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED === 'true'
-            ? `We have data from ${formatNumber(4682)} seroprevalence studies in ${formatNumber(148)} countries and territories including ${formatNumber(38260890)} participants across our three dashboards`
+            ? `We have data from ${formatNumber(4682)} seroprevalence studies in ${formatNumber(148)} countries and territories including ${formatNumber(38389552)} participants across our three dashboards`
             : `We have data from ${formatNumber(4642)} seroprevalence studies in ${formatNumber(148)} countries and territories including ${formatNumber(38260890)} participants across both our dashboards`
           }
         </h3>
