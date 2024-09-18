@@ -76,5 +76,9 @@ export const MersBanner = () => {
     citationButtonConfiguration={{
       enabled: false
     }}
+    dataLastUpdatedNoteConfiguration={{
+      enabled: true,
+      dataLastUpdatedText: 'The last major update to the data happened on September 14th 2024'
+    }}
   />
 }

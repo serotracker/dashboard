@@ -35,5 +35,8 @@ export const ArboBanner = () => {
       citationToastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST,
       buttonContent: <ArboTrackerCitationButtonContent />
     }}
+    dataLastUpdatedNoteConfiguration={{
+      enabled: false
+    }}
   />
 }
