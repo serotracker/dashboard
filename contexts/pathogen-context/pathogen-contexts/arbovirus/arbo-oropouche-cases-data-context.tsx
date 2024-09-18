@@ -52,26 +52,10 @@ export const ArbovirusOropoucheCasesDataProvider = (props: ArbovirusOropoucheCas
     }
   }, [ oropoucheCasesGeoJSONData, setOropoucheCasesGeoJSONData, process ]);
 
-  useEffect(() => {
-    console.log('oropoucheCasesGeoJSONData', oropoucheCasesGeoJSONData)
-  }, [ oropoucheCasesGeoJSONData ]);
-
   const oropoucheCaseMapboxLayer = useMemo(() => {
     if(oropoucheCasesGeoJSONData === null) {
       return null;
     }
-
-    console.log('paint', {
-      "fill-color": oropoucheCasesGeoJSONData.features.length > 0 ? [
-        'match',
-        ['get', 'provinceISOId'],
-        ...oropoucheCasesGeoJSONData.features
-          .flatMap((feature): [string, string] => [feature.properties.provinceISOId, feature.properties.defaultColourHexCode]),
-        '#ffffff'
-      ] : '#ffffff',
-      "fill-opacity": 1,
-      "fill-outline-color": "#000000",
-    })
 
     return (
       <Source
