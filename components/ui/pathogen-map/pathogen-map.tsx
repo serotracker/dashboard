@@ -96,6 +96,7 @@ interface PathogenMapProps<
   dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
   clusteringSettings: ClusteringSettings<TClusterPropertyKey>;
   paint: PaintForCountries;
+  additionalLayers?: React.ReactNode | undefined;
   allowCountryPopUpsWithEmptyData: boolean;
   countryDataContext: CountryDataContextType;
   sourceId: string;
@@ -113,6 +114,7 @@ export function PathogenMap<
   dataPoints,
   clusteringSettings,
   paint,
+  additionalLayers,
   allowCountryPopUpsWithEmptyData,
   countryDataContext,
   sourceId,
@@ -234,6 +236,7 @@ export function PathogenMap<
       {Object.keys(markersOnScreen).map(
         (id) => markersOnScreen[id]?.element
       )}
+      {additionalLayers ?? null}
     </Map>
   );
 }

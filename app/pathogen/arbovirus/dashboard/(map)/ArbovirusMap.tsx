@@ -24,6 +24,8 @@ import { useEsmCountryHighlightLayer } from "./country-highlight-layers/esm-coun
 import { CountryPaintChangeSetting, useArbovirusMapCustomizationModal } from "./use-arbovirus-map-customization-modal";
 import { ArbovirusEnvironmentalSuitabilityCountryDataContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-environmental-suitability-country-data-context";
 import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
+import { ArbovirusOropoucheCasesDataContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-oropouche-cases-data-context";
+import { Layer, Source } from "react-map-gl";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -45,6 +47,7 @@ export function ArbovirusMap() {
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const countryDataContext = useContext(CountryDataContext);
   const { filteredData, selectedFilters } = useContext(ArboContext);
+  const { oropoucheCaseMapboxLayer } = useContext(ArbovirusOropoucheCasesDataContext);
   const { arbovirusEnvironmentalSuitabilityCountryData } = useContext(ArbovirusEnvironmentalSuitabilityCountryDataContext);
   const { data } = useArboData();
   const { getCountryHighlightingLayerInformation: getDataPointPresentCountryHighlightingLayerInformation } = useDataPointPresentLayer();
@@ -53,6 +56,7 @@ export function ArbovirusMap() {
     countryHighlightingSetting,
     countryOutlinesSetting,
     countryPopUpEnabled,
+    oropoucheCasesMapEnabled,
     ...arbovirusMapCustomizationModal
   } = useArbovirusMapCustomizationModal();
 
@@ -169,6 +173,7 @@ export function ArbovirusMap() {
             clusterPropertyKeysIncludedInSum: Object.values(Arbovirus),
             clusterPropertyToColourMap: pathogenColors
           }}
+          additionalLayers={oropoucheCasesMapEnabled ? oropoucheCaseMapboxLayer : null}
           paint={paint}
         />
       </div>
