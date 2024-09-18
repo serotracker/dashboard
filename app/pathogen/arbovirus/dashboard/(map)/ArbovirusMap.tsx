@@ -173,7 +173,7 @@ export function ArbovirusMap() {
             clusterPropertyKeysIncludedInSum: Object.values(Arbovirus),
             clusterPropertyToColourMap: pathogenColors
           }}
-          additionalLayers={oropoucheCaseMapboxLayer}
+          additionalLayers={oropoucheCasesMapEnabled ? oropoucheCaseMapboxLayer : null}
           paint={paint}
         />
       </div>
