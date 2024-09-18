@@ -23,6 +23,7 @@ import { GenericMapPopUpWidth } from "./map-pop-up/generic-map-pop-up";
 import { CountryHighlightLayerLegendEntry, FreeTextEntry } from "./country-highlight-layers/country-highlight-layer-legend";
 import { CountryDataContextType } from "@/contexts/pathogen-context/country-information-context";
 import { MapStyleContext } from "@/contexts/map-style-provider";
+import { propagateServerField } from "next/dist/server/lib/render-server";
 
 export interface MarkerCollection<TClusterPropertyKey extends string> {
   [key: string]: {
@@ -96,6 +97,7 @@ interface PathogenMapProps<
   dataPoints: (TPathogenDataPointProperties & { country: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string })[];
   clusteringSettings: ClusteringSettings<TClusterPropertyKey>;
   paint: PaintForCountries;
+  additionalLayers?: React.ReactNode | undefined;
   allowCountryPopUpsWithEmptyData: boolean;
   countryDataContext: CountryDataContextType;
   sourceId: string;
@@ -113,6 +115,7 @@ export function PathogenMap<
   dataPoints,
   clusteringSettings,
   paint,
+  additionalLayers,
   allowCountryPopUpsWithEmptyData,
   countryDataContext,
   sourceId,
@@ -234,6 +237,7 @@ export function PathogenMap<
       {Object.keys(markersOnScreen).map(
         (id) => markersOnScreen[id]?.element
       )}
+      {additionalLayers ?? null}
     </Map>
   );
 }
