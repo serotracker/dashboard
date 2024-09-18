@@ -155,7 +155,10 @@ export default async function Home() {
           </div>
         </div>
         <h3 className="flex text-background bg-white rounded-md lg:px-16 justify-center p-8 w-full">
-          {`We have data from ${formatNumber(4642)} seroprevalence studies in ${formatNumber(148)} countries and territories including ${formatNumber(38260890)} participants across both our dashboards`}
+          {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED === 'true'
+            ? `We have data from ${formatNumber(4682)} seroprevalence studies in ${formatNumber(148)} countries and territories including ${formatNumber(38260890)} participants across our three dashboards`
+            : `We have data from ${formatNumber(4642)} seroprevalence studies in ${formatNumber(148)} countries and territories including ${formatNumber(38260890)} participants across both our dashboards`
+          }
         </h3>
         <div className="p-8 w-full bg-background">
           <div className="bg-white rounded-md w-full flex justify-center lg:justify-between px-8 lg:px-16 py-4 lg:py-6 items-center flex-wrap lg:flex-nowrap">

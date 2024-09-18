@@ -13,7 +13,7 @@ export const ArboBanner = () => {
 
   return <DashboardTopBanner
     headerContent={
-      <div>
+      <div className="mb-2">
         <p className="inline"> ArboTracker is a dashboard and platform for Arbovirus serosurveys. We conduct an </p>
         <Link href="/about/about-our-data" className="underline text-link inline">ongoing systematic review</Link>
         <p className="inline"> to track serosurveys (antibody testing-based surveillance efforts) around the world and visualize findings on this dashboard.</p>

@@ -15,15 +15,20 @@ export const SeroTrackerIntroduction = () => {
     <>
       <h1 className=" w-fit p-2 rounded-md">SeroTracker</h1>
         <h3 className="rounded-md p-2">
-          Your Go to Source for COVID-19 and Arbovirus Seroprevalence Data
+          {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED === 'true'
+            ? 'Your Go to Source for COVID-19, MERS, and Arbovirus Seroprevalence Data'
+            : 'Your Go to Source for COVID-19 and Arbovirus Seroprevalence Data'
+          }
         </h3>
       <div className="p-2 rounded-md">
         <p className=" w-fit mb-2">
-          We synthesize findings from thousands of COVID-19 and
-          Arbovirus seroprevalence studies worldwide, collect and
+          {`We synthesize findings from thousands of ${process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED === 'true'
+            ? 'COVID-19, MERS, and Arbovirus'
+            : 'COVID-19 and Arbovirus'
+          } seroprevalence studies worldwide, collect and
           standardize the data we extract from them, provide useful
           analytics on the data and extract monthly insights relating to
-          trends and patterns we find in the data
+          trends and patterns we find in the data`}
         </p>
         <p className=" w-fit mb-2">
           We conduct an ongoing systematic review to track serosurveys
