@@ -194,53 +194,6 @@ export function PathogenMap<
     }
   }
 
-  const onLoad = (event: mapboxgl.Event) => {
-    const map = event.target as mapboxgl.Map;
-
-    if(map) {
-      map.loadImage('/map-landmark-icon.png', (error, image) => {
-        if(error) {
-          throw error;
-        }
-
-        if(image) {
-          map.addImage('landmark-icon', image)
-        }
-      });
-
-      //map.addSource('places', {
-      //  'type': 'geojson',
-      //  'data': {
-      //    type: 'FeatureCollection',
-      //    features: [{
-      //      type: 'Feature',
-      //      properties: {
-      //        description: '123 Cases',
-      //        icon: 'landmark-icon'
-      //      },
-      //      geometry: {
-      //        type: 'Point',
-      //        coordinates: [20, 20]
-      //      }
-      //    }]
-      //  }
-      //});
-
-      //map.addLayer({
-      //  'id': 'poi-labels',
-      //  'type': 'symbol',
-      //  'source': 'places',
-      //  'layout': {
-      //    'text-field': ['get', 'description'],
-      //    'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-      //    'text-radial-offset': 0.5,
-      //    'text-justify': 'auto',
-      //    'icon-image': ['get', 'icon']
-      //  }
-      //})
-    }
-  }
-
   return (
     <Map
       id={id}
@@ -259,7 +212,6 @@ export function PathogenMap<
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string}
       onMouseEnter={onMouseEnter}
       onMouseDown={onMouseDown}
-      onLoad={onLoad}
       onMouseLeave={onMouseLeave}
       onRender={onRender}
     >
