@@ -140,7 +140,7 @@ export const MersMap = () => {
               },
             },
           ]}
-          clusteringSettings={clusteringSettings}
+          clusteringSettings={{clusteringEnabled: false}}
           generatePopupContent={(input) => {
             if(isPopupCountryHighlightLayerContentGeneratorInput(input)) {
               return <MersCountryPopupContent
