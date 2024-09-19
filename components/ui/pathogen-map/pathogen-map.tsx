@@ -127,9 +127,7 @@ export function PathogenMap<
   const [popUpInfo, _setPopUpInfo] = useState<
     PopupInfo<TPathogenDataPointProperties>
   >({ visible: false, properties: null, layerId: null });
-  const { setPopUpInfoForCountryHighlightLayer } = useCountryHighlightLayer({
-    mapId: id
-  });
+  const { setPopUpInfoForCountryHighlightLayer } = useCountryHighlightLayer();
   const { mapStyle } = useContext(MapStyleContext);
 
   // TODO: might be possible to get rid of this
