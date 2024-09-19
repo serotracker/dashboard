@@ -90,6 +90,7 @@ interface PathogenMapProps<
 > {
   id: string;
   countryPopUpEnabled: boolean;
+  countryPopUpOnHoverEnabled: boolean;
   baseCursor: PathogenMapCursor;
   layers: PathogenMapLayerInfo[];
   generatePopupContent: PopupContentGenerator<TPathogenDataPointProperties>;
@@ -109,6 +110,7 @@ export function PathogenMap<
   id,
   baseCursor,
   countryPopUpEnabled,
+  countryPopUpOnHoverEnabled,
   generatePopupContent,
   layers,
   dataPoints,
@@ -153,8 +155,9 @@ export function PathogenMap<
 
   const [markersOnScreen, setMarkersOnScreen] = useState<MarkerCollection<TClusterPropertyKey>>({});
 
-  const { cursor, onMouseLeave, onMouseEnter, onMouseDown } =
+  const { cursor, onMouseLeave, onMouseEnter, onMouseDown, onMouseMove } =
     usePathogenMapMouse({
+      countryPopUpOnHoverEnabled,
       baseCursor,
       layers,
       setPopUpInfo,
@@ -210,6 +213,7 @@ export function PathogenMap<
       interactiveLayerIds={[...layers.map((layer) => layer.id), 'country-highlight-layer']}
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string}
       onMouseEnter={onMouseEnter}
+      onMouseMove={onMouseMove}
       onMouseDown={onMouseDown}
       onMouseLeave={onMouseLeave}
       onRender={onRender}

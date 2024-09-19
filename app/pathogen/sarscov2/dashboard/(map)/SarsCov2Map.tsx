@@ -36,6 +36,7 @@ export function SarsCov2Map() {
         <PathogenMap
           id="sarsCov2Map"
           countryPopUpEnabled={countryPopUpEnabled}
+          countryPopUpOnHoverEnabled={false}
           allowCountryPopUpsWithEmptyData={false}
           countryDataContext={countryDataContext}
           baseCursor=""
