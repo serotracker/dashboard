@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Map, NavigationControl } from "react-map-gl";
+import { Map, MapProps, NavigationControl } from "react-map-gl";
 import {
   PathogenMapCursor,
   usePathogenMapMouse,
@@ -43,6 +43,7 @@ export interface PathogenDataPointPropertiesBase {
 interface ClusteringEnabledSettings<TClusterPropertyKey extends string> {
   clusteringEnabled: true;
   headerText: string;
+  clusteringRadius: number;
   popUpWidth: GenericMapPopUpWidth;
   validClusterPropertyKeys: TClusterPropertyKey[];
   clusterPropertyKeysIncludedInSum: TClusterPropertyKey[];
@@ -89,6 +90,7 @@ interface PathogenMapProps<
   TClusterPropertyKey extends string
 > {
   id: string;
+  initialViewStateOverride?: MapProps['initialViewState'] | undefined;
   countryPopUpEnabled: boolean;
   countryPopUpOnHoverEnabled: boolean;
   baseCursor: PathogenMapCursor;
@@ -108,6 +110,7 @@ export function PathogenMap<
   TClusterPropertyKey extends string
 >({
   id,
+  initialViewStateOverride,
   baseCursor,
   countryPopUpEnabled,
   countryPopUpOnHoverEnabled,
@@ -155,7 +158,7 @@ export function PathogenMap<
 
   const [markersOnScreen, setMarkersOnScreen] = useState<MarkerCollection<TClusterPropertyKey>>({});
 
-  const { cursor, onMouseLeave, onMouseEnter, onMouseDown, onMouseMove } =
+  const { cursor, onMouseLeave, onMouseEnter, onMouseDown } =
     usePathogenMapMouse({
       countryPopUpOnHoverEnabled,
       baseCursor,
@@ -201,7 +204,7 @@ export function PathogenMap<
       id={id}
       cursor={cursor}
       mapStyle={mapStyle}
-      initialViewState={{
+      initialViewState={initialViewStateOverride ?? {
         latitude: 10,
         longitude: 30,
         zoom: 2,
@@ -213,7 +216,6 @@ export function PathogenMap<
       interactiveLayerIds={[...layers.map((layer) => layer.id), 'country-highlight-layer']}
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string}
       onMouseEnter={onMouseEnter}
-      onMouseMove={onMouseMove}
       onMouseDown={onMouseDown}
       onMouseLeave={onMouseLeave}
       onRender={onRender}

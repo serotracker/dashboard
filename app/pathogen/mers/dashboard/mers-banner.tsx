@@ -78,7 +78,7 @@ export const MersBanner = () => {
     }}
     dataLastUpdatedNoteConfiguration={{
       enabled: true,
-      dataLastUpdatedText: 'The last major update to our data was on September 14th 2024'
+      dataLastUpdatedText: 'The last major update to our data was on September 19th 2024'
     }}
   />
 }

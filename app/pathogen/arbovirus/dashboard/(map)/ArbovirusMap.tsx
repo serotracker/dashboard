@@ -160,6 +160,7 @@ export function ArbovirusMap() {
           dataPoints={filteredData}
           clusteringSettings={{
             clusteringEnabled: true,
+            clusteringRadius: 100,
             headerText: "Estimate Count",
             popUpWidth: GenericMapPopUpWidth.AUTO,
             clusterProperties: {

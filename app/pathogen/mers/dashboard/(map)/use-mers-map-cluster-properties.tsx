@@ -50,6 +50,7 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
 
   const clusteringSettings: ClusteringSettings<MersMapClusteringPropertyKey> = useMemo(() => ({
     clusteringEnabled: true,
+    clusteringRadius: 30,
     headerText: "MERS Data",
     popUpWidth: GenericMapPopUpWidth.MEDIUM,
     clusterProperties: {
