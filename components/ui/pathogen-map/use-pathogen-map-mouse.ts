@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { PopupInfo } from "./pathogen-map-popup";
+import { PopupInfo, PopUpOnOpenMapEffectType } from "./pathogen-map-popup";
 import { PathogenMapLayerInfo } from "./pathogen-map-layer";
 import { eventHasValidPoint } from "./event-point";
 
@@ -63,6 +63,17 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
       visible: true,
       layerId: clickedLayerId,
       properties: event.features[0].properties as TPathogenDataPointProperties,
+      onOpenEffect: {
+        type: PopUpOnOpenMapEffectType.BOUNDING_BOX_ZOOM,
+        // This bounding box will get filled in during setPopUpInfoForCountryHighlightLayer.
+        // TODO maybe look into a way of doing this such that you don't have to set this dummy value.
+        boundingBox: {
+          longitudeMinimum: 0,
+          latitudeMinimum: 0,
+          longitudeMaximum: 0,
+          latitudeMaximum: 0
+        }
+      }
     });
   };
 
@@ -86,7 +97,9 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
         visible: true,
         layerId: 'country-highlight-layer',
         properties: features[0].properties as TPathogenDataPointProperties,
-        disableMapPanEffect: true
+        onOpenEffect: {
+          type: PopUpOnOpenMapEffectType.NONE
+        }
       });
     } else {
       setPopUpInfo({ visible: false, properties: null, layerId: null });

@@ -2,7 +2,7 @@ import validator from "validator";
 import { MapRef, Popup, useMap } from "react-map-gl";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
 type PopupEstimateLayerContentGeneratorInput<
@@ -46,13 +46,42 @@ export type PopupContentGenerator<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > = (input: PopupContentGeneratorInput<TPathogenDataPointProperties>) => React.ReactNode;
 
+export enum PopUpOnOpenMapEffectType {
+  NONE = 'NONE',
+  PAN = 'PAN',
+  BOUNDING_BOX_ZOOM = 'BOUNDING_BOX_ZOOM'
+}
+
+interface PopUpOnOpenMapNoneEffect {
+  type: PopUpOnOpenMapEffectType.NONE;
+}
+
+interface PopUpOnOpenMapPanEffect {
+  type: PopUpOnOpenMapEffectType.PAN;
+}
+
+interface PopUpOnOpenMapBoundingBoxZoomEffect {
+  type: PopUpOnOpenMapEffectType.BOUNDING_BOX_ZOOM;
+  boundingBox: {
+    longitudeMinimum: number;
+    latitudeMinimum: number;
+    longitudeMaximum: number;
+    latitudeMaximum: number;
+  }
+}
+
+type PopUpOnOpenMapEffect = 
+  | PopUpOnOpenMapNoneEffect
+  | PopUpOnOpenMapPanEffect
+  | PopUpOnOpenMapBoundingBoxZoomEffect;
+
 export type VisiblePopupInfo<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > = {
   visible: true;
   properties: TPathogenDataPointProperties;
   layerId: string;
-  disableMapPanEffect?: boolean | undefined;
+  onOpenEffect: PopUpOnOpenMapEffect;
 };
 type HiddenPopupInfo = { visible: false; properties: null, layerId: null };
 
@@ -62,6 +91,49 @@ export type PopupInfo<
   | VisiblePopupInfo<TPathogenDataPointProperties>
   | HiddenPopupInfo;
 
+const getMapboxLatitudeOffset = (map: MapRef) => {
+  // Map seems to zoom in in powers of 2, so reducing offset by powers of 2 keeps the modal apprximately
+  // in the same center everytime
+  // offset needs to reduce exponentially with zoom -- higher zoom x smaller offset
+  let mapZoom = map.getZoom();
+
+  return 120 / Math.pow(2, mapZoom);
+};
+
+interface TriggerPathogenMapPopupOnOpenInput <
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+> {
+  map: MapRef | undefined;
+  latitude: number;
+  longitude: number;
+  popUpInfo: VisiblePopupInfo<TPathogenDataPointProperties>;
+}
+
+export const triggerPathogenMapPopupOnOpen = <
+  TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
+>(input: TriggerPathogenMapPopupOnOpenInput<TPathogenDataPointProperties>) => {
+  const { map, popUpInfo, latitude, longitude } = input;
+
+  if(popUpInfo.onOpenEffect.type === PopUpOnOpenMapEffectType.PAN) {
+    map?.flyTo({
+      center: {
+        lat: latitude - getMapboxLatitudeOffset(map),
+        lon: longitude,
+      },
+      speed: 0.5,
+      curve: 0.5,
+    });
+  }
+  if(popUpInfo.onOpenEffect.type === PopUpOnOpenMapEffectType.BOUNDING_BOX_ZOOM) {
+    map?.fitBounds([
+      popUpInfo.onOpenEffect.boundingBox.longitudeMinimum,
+      popUpInfo.onOpenEffect.boundingBox.latitudeMinimum,
+      popUpInfo.onOpenEffect.boundingBox.longitudeMaximum,
+      popUpInfo.onOpenEffect.boundingBox.latitudeMaximum
+    ]);
+  }
+}
+
 interface PathogenMapPopupProps<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 > {
@@ -70,24 +142,15 @@ interface PathogenMapPopupProps<
   generatePopupContent: PopupContentGenerator<TPathogenDataPointProperties>;
 }
 
-export function PathogenMapPopup<
+export const PathogenMapPopup = <
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
 >({
   mapId,
   popUpInfo,
   generatePopupContent,
-}: PathogenMapPopupProps<TPathogenDataPointProperties>) {
+}: PathogenMapPopupProps<TPathogenDataPointProperties>) => {
   const allMaps = useMap();
   const map = allMaps[mapId];
-
-  const getMapboxLatitudeOffset = (map: MapRef) => {
-    // Map seems to zoom in in powers of 2, so reducing offset by powers of 2 keeps the modal apprximately
-    // in the same center everytime
-    // offset needs to reduce exponentially with zoom -- higher zoom x smaller offset
-    let mapZoom = map.getZoom();
-
-    return 120 / Math.pow(2, mapZoom);
-  };
 
   const transformedProperties = useMemo(() => popUpInfo.visible === true ? Object.fromEntries(
     Object.entries(popUpInfo.properties).map(([key, value]) => {
@@ -141,18 +204,12 @@ export function PathogenMapPopup<
         'z-30',
         detectBrowser() === Browser.CHROME ? "[&>*]:!bg-transparent" : ""
       ])}
-      onOpen={() => {
-        if(popUpInfo.disableMapPanEffect === true) {
-          map?.flyTo({
-            center: {
-              lat: latitude - getMapboxLatitudeOffset(map),
-              lon: longitude,
-            },
-            speed: 0.5,
-            curve: 0.5,
-          });
-        }
-      }}
+      onOpen={() => triggerPathogenMapPopupOnOpen({
+        map,
+        popUpInfo,
+        latitude,
+        longitude
+      })}
     >
       {popupContent}
     </Popup>
