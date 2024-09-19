@@ -104,6 +104,7 @@ export function SarsCov2Map() {
           ]}
           clusteringSettings={{
             clusteringEnabled: true,
+            clusteringRadius: 100,
             headerText: "Estimate Count",
             popUpWidth: GenericMapPopUpWidth.AUTO,
             clusterProperties: {

@@ -49,7 +49,7 @@ export function PathogenMapSourceAndLayer<
     cluster: true,
     clusterMaxZoom: 6,
     clusterMinPoints: 2,
-    clusterRadius: 100,
+    clusterRadius: clusteringSettings.clusteringRadius,
     clusterProperties: clusteringSettings.clusterProperties
   } : {}
 
