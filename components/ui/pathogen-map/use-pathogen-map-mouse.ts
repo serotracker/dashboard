@@ -37,6 +37,14 @@ export const usePathogenMapMouse = <TPathogenDataPointProperties extends Pathoge
     }
 
     setCursor(enteredLayer?.cursor || baseCursor);
+
+    if(enteredLayerId ==='country-highlight-layer') {
+      setPopUpInfo({
+        visible: true,
+        layerId: enteredLayerId,
+        properties: event.features[0].properties as TPathogenDataPointProperties,
+      });
+    }
   };
 
   const onMouseDown = (event: mapboxgl.MapLayerMouseEvent) => {
