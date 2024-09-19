@@ -101,6 +101,7 @@ export const MersMap = () => {
         <PathogenMap
           id="mersMap"
           countryPopUpEnabled={countryPopUpEnabled}
+          countryPopUpOnHoverEnabled={countryPopUpEnabled}
           allowCountryPopUpsWithEmptyData={false}
           countryDataContext={countryDataContext}
           baseCursor=""

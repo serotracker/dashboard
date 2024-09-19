@@ -112,6 +112,7 @@ export function ArbovirusMap() {
           allowCountryPopUpsWithEmptyData={selectedEsm !== SelectedArbovirusEnvironmentalSuitabilityMap.NO_ESM_SELECTED}
           countryDataContext={countryDataContext}
           countryPopUpEnabled={countryPopUpEnabled}
+          countryPopUpOnHoverEnabled={false}
           baseCursor=""
           sourceId="arbo-[GENERATED-SOURCE-ID]"
           layers={[

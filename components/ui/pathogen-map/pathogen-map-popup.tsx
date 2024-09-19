@@ -48,7 +48,12 @@ export type PopupContentGenerator<
 
 export type VisiblePopupInfo<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase
-> = { visible: true; properties: TPathogenDataPointProperties, layerId: string };
+> = {
+  visible: true;
+  properties: TPathogenDataPointProperties;
+  layerId: string;
+  disableMapPanEffect?: boolean | undefined;
+};
 type HiddenPopupInfo = { visible: false; properties: null, layerId: null };
 
 export type PopupInfo<
@@ -137,14 +142,16 @@ export function PathogenMapPopup<
         detectBrowser() === Browser.CHROME ? "[&>*]:!bg-transparent" : ""
       ])}
       onOpen={() => {
-        map?.flyTo({
-          center: {
-            lat: latitude - getMapboxLatitudeOffset(map),
-            lon: longitude,
-          },
-          speed: 0.5,
-          curve: 0.5,
-        });
+        if(popUpInfo.disableMapPanEffect === true) {
+          map?.flyTo({
+            center: {
+              lat: latitude - getMapboxLatitudeOffset(map),
+              lon: longitude,
+            },
+            speed: 0.5,
+            curve: 0.5,
+          });
+        }
       }}
     >
       {popupContent}
