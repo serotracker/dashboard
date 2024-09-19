@@ -86,14 +86,14 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
       {props.headerContent}
       <div className="relative">
         <Button
-          className="w-[30%] bg-background hover:bg-backgroundHover"
+          className="w-[30%] bg-background hover:bg-backgroundHover h-full"
           onClick={() => downloadData(downloadCsvButtonOneConfiguration)}
         >
           {props.downloadCsvButtonOneConfiguration.buttonContent}
         </Button>
         <Button
           className={cn(
-            "w-[30%] bg-background hover:bg-backgroundHover ml-2",
+            "w-[30%] bg-background hover:bg-backgroundHover ml-2 h-full",
             props.downloadCsvButtonTwoConfiguration.enabled ? '' : 'hidden'
           )}
           onClick={() => {
@@ -107,7 +107,7 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
         </Button>
         <Button
           className={cn(
-            "w-[30%] bg-background hover:bg-backgroundHover ml-2",
+            "w-[30%] bg-background hover:bg-backgroundHover ml-2 h-full",
             citationButtonConfiguration.enabled ? '' : 'hidden'
           )}
           onClick={() => {
@@ -123,7 +123,7 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
           {citationButtonConfiguration.enabled ? citationButtonConfiguration.buttonContent : 'No text'}
         </Button>
         <div className={cn(
-          'w-auto ml-2 inline-flex absolute right-0 bottom-0',
+          'w-auto ml-2 inline-flex absolute right-0 bottom-0 max-w-[35%]',
           citationButtonConfiguration.enabled === false && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
         )}>
           <p className='italic text-sm'>
