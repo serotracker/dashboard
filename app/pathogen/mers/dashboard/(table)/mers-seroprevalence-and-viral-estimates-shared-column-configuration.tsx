@@ -487,7 +487,7 @@ export const useMersEstimateColumnConfiguration = () => {
     initiallyVisible: false
   }, {
     type: DataTableColumnConfigurationEntryType.STANDARD as const,
-    fieldName: 'primaryEstimatePostiveCutoff',
+    fieldName: 'primaryEstimatePositiveCutoff',
     label: 'Positive Cutoff',
     initiallyVisible: false
   }, {
