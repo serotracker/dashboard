@@ -1,5 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
-import defaultColours from 'tailwindcss/colors'
+import { useCallback, useContext, useMemo, useState } from "react";
 import { SummaryByRegion, SummaryByRegionRegionDropdownOption, SummaryByRegionVariableOfInterestDropdownOption } from "../../dashboard/(visualizations)/summary-by-region";
 import { UNRegionsTooltip, WHORegionsTooltip } from "@/components/customs/tooltip-content";
 import assertNever from "assert-never";
@@ -12,8 +11,11 @@ import { defaultColoursForWhoRegions } from "@/lib/who-regions";
 import { defaultColoursForUnRegions, unRegionEnumToLabelMap } from "@/lib/un-regions";
 import { ColourPickerCustomizationSettingProps } from "@/components/ui/modal/customization-modal/colour-picker-customization-setting";
 import { eventsProvidedCourtesyOfFaoTooltipContent } from "../../dashboard/(map)/use-mers-map-customization-modal";
+import { isAnimalMersEstimate, isHumanMersEstimate, MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import uniq from "lodash/uniq";
 
 export const useSummaryByRegionVisualizationPageConfig = () => {
+  const { filteredData } = useContext(MersContext);
   const [
     summaryByRegionVariableOfInterestSelectedDropdownOption,
     setSummaryByRegionVariableOfInterestSelectedDropdownOption,
@@ -23,6 +25,60 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     summaryByRegionSelectedDropdownOption,
     setSummaryByRegionSelectedDropdownOption,
   ] = useState<SummaryByRegionRegionDropdownOption>(SummaryByRegionRegionDropdownOption.WHO_REGION);
+
+  const [
+    _summaryByRegionSelectedSampleFrame,
+    setSummaryByRegionSelectedSampleFrame,
+  ] = useState<string>('UNKNOWN');
+
+  const availableSampleFrames: string[] = useMemo(() => {
+    if(
+      summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE ||
+      summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE
+    ) {
+      const allHumanSampleFrames = uniq(filteredData
+        .filter((estimate) => isHumanMersEstimate(estimate))
+        .flatMap((estimate) => [
+          ...(estimate.primaryEstimateInfo.sampleFrame ? [estimate.primaryEstimateInfo.sampleFrame] : []),
+          ...estimate.occupationSubestimates.flatMap((subestimate) => subestimate.sampleFrame ? [ subestimate.sampleFrame ] : [])
+        ])
+      );
+
+      return allHumanSampleFrames.length > 0 ? allHumanSampleFrames : [ 'The Entire Population' ];
+    }
+
+    if(
+      summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE ||
+      summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_VIRAL_PREVALENCE
+    ) {
+      const allAnimalSampleFrames = uniq(filteredData
+        .filter((estimate) => isAnimalMersEstimate(estimate))
+        .flatMap((estimate) => [
+          ...estimate.primaryEstimateInfo.animalDetectionSettings,
+          ...estimate.animalSamplingContextSubestimates.flatMap((subestimate) => subestimate.animalDetectionSettings)
+        ])
+      );
+
+      return allAnimalSampleFrames.length > 0 ? allAnimalSampleFrames : [ 'The Entire Population' ];
+    }
+    if(
+      summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES ||
+      summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES ||
+      summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS
+    ) {
+      return [ 'The Entire Population' ];
+    }
+
+    assertNever(summaryByRegionVariableOfInterestSelectedDropdownOption)
+  }, [ filteredData, summaryByRegionVariableOfInterestSelectedDropdownOption ]);
+  
+  const summaryByRegionSelectedSampleFrame = useMemo(() => {
+    if(availableSampleFrames.includes(_summaryByRegionSelectedSampleFrame)) {
+      return _summaryByRegionSelectedSampleFrame;
+    }
+
+    return availableSampleFrames.at(0) ?? 'The Entire Population';
+  }, [ _summaryByRegionSelectedSampleFrame, availableSampleFrames ])
 
   const [
     barColoursForWhoRegions,
@@ -66,8 +122,8 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     SummaryByRegionRegionDropdownOption,
     string
   >['getDisplayName'] = useCallback(() => ({
-    type: VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN,
-    beforeBothDropdownsHeaderText: "",
+    type: VisualizationDisplayNameType.WITH_TRIPLE_DROPDOWN,
+    beforeAllDropdownsHeaderText: "",
     firstDropdownProps: {
       dropdownName: 'Variable of Interest Selection',
       borderColourClassname: 'border-mers',
@@ -108,7 +164,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
         setCurrentPageIndex(0);
       }
     },
-    betweenDropdownsHeaderText: " By ",
+    betweenFirstAndSecondDropdownHeaderText: " By ",
     secondDropdownProps: {
       dropdownName: 'Region Selection',
       borderColourClassname: 'border-mers',
@@ -133,8 +189,33 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
         setCurrentPageIndex(0);
       }
     },
-    afterBothDropdownsHeaderText: " Over Time"
-  }), [ summaryByRegionVariableOfInterestSelectedDropdownOption, setSummaryByRegionVariableOfInterestSelectedDropdownOption, summaryByRegionSelectedDropdownOption, setSummaryByRegionSelectedDropdownOption ])
+    betweenSecondAndThirdDropdownHeaderText: " For ",
+    thirdDropdownProps: {
+      dropdownName: 'Sample Frame Selection',
+      borderColourClassname: 'border-mers',
+      hoverColourClassname: 'hover:bg-mersHover/50',
+      highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
+      dropdownOptionGroups: [{
+        groupHeader: 'Sample Frame',
+        options: availableSampleFrames
+      }],
+      chosenDropdownOption: summaryByRegionSelectedSampleFrame,
+      dropdownOptionToLabelMap: {},
+      onDropdownOptionChange: (option) => {
+        setSummaryByRegionSelectedSampleFrame(option);
+        setCurrentPageIndex(0);
+      }
+    },
+    afterAllDropdownsHeaderText: " Over Time"
+  }), [
+    summaryByRegionVariableOfInterestSelectedDropdownOption,
+    setSummaryByRegionVariableOfInterestSelectedDropdownOption,
+    summaryByRegionSelectedDropdownOption,
+    setSummaryByRegionSelectedDropdownOption,
+    availableSampleFrames,
+    summaryByRegionSelectedSampleFrame,
+    setSummaryByRegionSelectedSampleFrame
+  ])
 
   const customizationModalConfigurationForSummaryByRegion: MersVisualizationInformation<
     string,
@@ -186,6 +267,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     <SummaryByRegion
       data={data}
       selectedVariableOfInterest={summaryByRegionVariableOfInterestSelectedDropdownOption}
+      selectedSampleFrame={summaryByRegionSelectedSampleFrame !== 'The Entire Population' ? summaryByRegionSelectedSampleFrame : undefined}
       barColoursForWhoRegions={barColoursForWhoRegions}
       barColoursForUnRegions={barColoursForUnRegions}
       selectedRegion={summaryByRegionSelectedDropdownOption}

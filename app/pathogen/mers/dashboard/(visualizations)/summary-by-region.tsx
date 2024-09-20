@@ -38,6 +38,7 @@ interface SummaryByRegionProps {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
   selectedVariableOfInterest: SummaryByRegionVariableOfInterestDropdownOption;
   selectedRegion: SummaryByRegionRegionDropdownOption;
+  selectedSampleFrame: string | undefined;
   numberOfPagesAvailable: number;
   setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
   currentPageIndex: number;
@@ -70,6 +71,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     data,
     selectedVariableOfInterest,
     selectedRegion,
+    selectedSampleFrame,
     setNumberOfPagesAvailable,
     currentPageIndex,
     barColoursForWhoRegions,
