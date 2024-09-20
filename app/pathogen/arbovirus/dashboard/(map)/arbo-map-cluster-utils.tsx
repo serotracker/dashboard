@@ -1,6 +1,7 @@
 import { GenericMapPopUpWidth, genericMapPopUpWidthEnumToWidthPxMap } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { MarkerCollection } from "@/components/ui/pathogen-map/pathogen-map";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
+import { ScrollText } from "lucide-react";
 import mapboxgl from "mapbox-gl";
 import React from "react";
 import { Marker } from "react-map-gl";
@@ -44,8 +45,8 @@ export function createDonutChartAndHoverPopup<
 
   const fontSize =
     total >= 1000 ? 22 : total >= 100 ? 20 : total >= 10 ? 18 : 16;
-  const piChartOuterRadius = total >= 50 ? 50 : total >= 25 ? 32 : total >= 10 ? 24 : 18; // r
-  const piChartInnerRadius = Math.round(piChartOuterRadius * 0.6); // r0
+  const piChartOuterRadius = total >= 50 ? 52 : total >= 25 ? 34 : total >= 10 ? 26 : 20; // r
+  const piChartInnerRadius = Math.round(piChartOuterRadius * 0.7); // r0
   const piChartDiameter = piChartOuterRadius * 2; // w
 
   // for some reason tailwind is not being recognized here
@@ -125,6 +126,7 @@ export function createDonutChartAndHoverPopup<
       latitude: props.coords[1],
     },
     element: (
+      <>
       <svg
         width={piChartDiameter}
         height={piChartDiameter}
@@ -149,10 +151,18 @@ export function createDonutChartAndHoverPopup<
             : null
         )}
         <circle cx={piChartOuterRadius} cy={piChartOuterRadius} r={piChartInnerRadius} fill="white"/>
-        <text dominantBaseline="central" transform={`translate(${piChartOuterRadius}, ${piChartOuterRadius})`}>
+        <text dominantBaseline="central" fontSize='14px' transform={ total.toLocaleString().length > 1
+          ? `translate(${piChartOuterRadius - 4}, ${piChartOuterRadius})`
+          : `translate(${piChartOuterRadius - 4}, ${piChartOuterRadius})`
+        }>
           {total.toLocaleString()}
         </text>
       </svg>
+      <ScrollText width={14} height={14} className='absolute top-0 left-0' transform={total.toLocaleString().length > 1
+        ? `translate(${piChartOuterRadius + 4}, ${piChartOuterRadius - 7})`
+        : `translate(${piChartOuterRadius}, ${piChartOuterRadius - 7})`
+      }/>
+      </>
     )
   };
 }
