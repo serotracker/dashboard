@@ -275,7 +275,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       setNumberOfPagesAvailable={setNumberOfPagesAvailable}
       currentPageIndex={currentPageIndex}
     />
-  ), [ summaryByRegionVariableOfInterestSelectedDropdownOption, summaryByRegionSelectedDropdownOption, numberOfPagesAvailable, setNumberOfPagesAvailable, currentPageIndex, barColoursForUnRegions, barColoursForWhoRegions ]);
+  ), [ summaryByRegionVariableOfInterestSelectedDropdownOption, summaryByRegionSelectedDropdownOption, numberOfPagesAvailable, setNumberOfPagesAvailable, currentPageIndex, barColoursForUnRegions, barColoursForWhoRegions, summaryByRegionSelectedSampleFrame ]);
 
   const summaryByWhoRegionTitleTooltipContent: MersVisualizationInformation<
     string,

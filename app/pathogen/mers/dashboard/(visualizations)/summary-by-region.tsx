@@ -144,6 +144,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE) {
       return <HumanSeroprevalenceSummaryByRegion
         data={data}
+        selectedSampleFrame={selectedSampleFrame}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
@@ -154,6 +155,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE) {
       return <HumanViralPositivePrevalenceSummaryByRegion
         data={data}
+        selectedSampleFrame={selectedSampleFrame}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
@@ -164,6 +166,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE) {
       return <AnimalSeroprevalenceSummaryByRegion
         data={data}
+        selectedSampleFrame={selectedSampleFrame}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
@@ -174,6 +177,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_VIRAL_PREVALENCE) {
       return <AnimalViralPositivePrevalenceSummaryByRegion
         data={data}
+        selectedSampleFrame={selectedSampleFrame}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
@@ -213,7 +217,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     }
 
     assertNever(selectedVariableOfInterest);
-  }, [ data, selectedVariableOfInterest, regionGroupingFunction, setNumberOfPagesAvailable, currentPageIndex, regionToBarColour, regionToChartTitle ]);
+  }, [ data, selectedVariableOfInterest, regionGroupingFunction, setNumberOfPagesAvailable, currentPageIndex, regionToBarColour, regionToChartTitle, selectedSampleFrame ]);
 
   return graph;
 }

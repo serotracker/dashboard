@@ -9,6 +9,7 @@ import { useMemo, useEffect } from "react";
 
 interface AnimalSeroprevalenceSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  selectedSampleFrame: string | undefined;
   regionGroupingFunction: (dataPoint: MersEstimate) => TRegion | undefined;
   regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
@@ -17,10 +18,11 @@ interface AnimalSeroprevalenceSummaryByRegionProps<TRegion extends string> {
 }
 
 export const AnimalSeroprevalenceSummaryByRegion = <TRegion extends string>(props: AnimalSeroprevalenceSummaryByRegionProps<TRegion>) => {
-  const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
+  const { data, selectedSampleFrame, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
 
   const estimates = useMemo(() => data
     .filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimate => 'primaryEstimateInfo' in dataPoint && isAnimalMersSeroprevalenceEstimate(dataPoint))
+    .filter((dataPoint) => !selectedSampleFrame || dataPoint.primaryEstimateInfo.animalDetectionSettings.includes(selectedSampleFrame))
     .map((estimate) => ({
       ...estimate,
       region: regionGroupingFunction(estimate),
@@ -32,7 +34,7 @@ export const AnimalSeroprevalenceSummaryByRegion = <TRegion extends string>(prop
       samplingStartDate: NonNullable<typeof estimate['samplingStartDate']>;
       samplingEndDate: NonNullable<typeof estimate['samplingEndDate']>;
     } => !!estimate.region && !!estimate.samplingStartDate && !!estimate.samplingEndDate)
-  , [ data, regionGroupingFunction ]);
+  , [ data, regionGroupingFunction, selectedSampleFrame ]);
 
   const numberOfPagesAvailable = useMemo(() => {
     const numberOfGraphs = uniqBy(estimates, (estimate) => estimate.region).length;
