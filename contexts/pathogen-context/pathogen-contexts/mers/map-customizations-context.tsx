@@ -31,7 +31,7 @@ export const MersMapCustomizationsProvider = (props: MersMapCustomizationsProvid
   const [
     currentMapCountryHighlightingSettings,
     setCurrentMapCountryHighlightingSettings
-  ] = useState<MersMapCountryHighlightingSettings>(MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES);
+  ] = useState<MersMapCountryHighlightingSettings>(MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION);
 
   return (
     <MersMapCustomizationsContext.Provider
