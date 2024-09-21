@@ -34,6 +34,7 @@ import { useMersMapClusterProperties } from "./use-mers-map-cluster-properties";
 import { useMersMapDataPoints } from "./use-mers-map-data-points";
 import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
 import { MersMapStudySubmissionPrompt } from "./mers-map-study-submission-prompt";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const MapPinColours = {
   'HumanMersEvent': "#8abded",
@@ -194,6 +195,15 @@ export const MersMap = () => {
         freeTextEntries={freeTextEntries}
       />
       <MapEstimateSummary filteredData={filteredData.map((estimate) => ({ sourceSheetName: estimate.primaryEstimateInfo.sourceTitle }))}/>
+      <div className={"absolute top-12 left-1 p-2 "}>
+        <Card className={"mb-1 bg-white/60 backdrop-blur-md"}>
+          <CardContent className={"flex w-fit p-2"}>
+            <p className={"ml-1 font-medium"}>
+              The points on the map represent the number of studies identified in that region.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
       <mersMapCustomizationModal.mapCustomizeButton />
       <mersMapCustomizationModal.customizationModal />
     </>
