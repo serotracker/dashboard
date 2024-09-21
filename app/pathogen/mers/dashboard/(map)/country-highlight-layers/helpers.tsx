@@ -13,7 +13,7 @@ const formatNumberForLegend = (input: {
   }
 
   if(input.value / 1_000 >= 1) {
-    return `${((input.value / 1_000) - adjustmentAmount).toFixed(2)} thousand`
+    return `${Math.floor(input.value / 1_000)}'${input.value.toFixed(0).slice(-3)}`
   }
 
   return input.value.toFixed(0)
@@ -48,7 +48,7 @@ export const formatPerCapitaNumberForLegend = (input: {
   const adjustmentAmount = input.isExclusiveInRange ? 1 : 0;
 
   if(input.value * 1_000 >= 1) {
-    return `${((input.value * 1_000) - adjustmentAmount).toFixed(0)} per thousand people`
+    return `${((input.value * 1_000) - adjustmentAmount).toFixed(0)} per 1'000 people`
   }
 
   if(input.value * 1_000_000 >= 1) {
