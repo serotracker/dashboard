@@ -16,8 +16,8 @@ const typenameToLabel = {
 }
 
 const typenameToLineColour = {
-  ['PrimaryHumanMersViralEstimateInformation']: '#e37712',
-  ['PrimaryAnimalMersViralEstimateInformation']: '#de141b',
+  ['PrimaryHumanMersViralEstimateInformation']: '#3b82f6',
+  ['PrimaryAnimalMersViralEstimateInformation']: '#22c55e',
 }
 
 export const MedianViralPositivePrevalenceOverTime = (props: MedianViralPositivePrevalenceOverTimeProps) => {

@@ -16,8 +16,8 @@ const typenameToLabel = {
 }
 
 const typenameToLineColour = {
-  ['PrimaryHumanMersSeroprevalenceEstimateInformation']: '#e7ed8a',
-  ['PrimaryAnimalMersSeroprevalenceEstimateInformation']: '#13f244',
+  ['PrimaryHumanMersSeroprevalenceEstimateInformation']: '#93c5fd',
+  ['PrimaryAnimalMersSeroprevalenceEstimateInformation']: '#6ee7b7',
 }
 
 export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTimeProps) => {

@@ -164,8 +164,9 @@ export const useMersMapCustomizationModal = () => {
           groupHeader: 'Data Points Shown',
           options: [
             MapDataPointVisibilityOptions.ESTIMATES_ONLY,
-            MapDataPointVisibilityOptions.EVENTS_ONLY,
-            MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE,
+            // Potentially enable this at some future date, talking to the FAO and WHO folks they weren't a huge fan.
+            // MapDataPointVisibilityOptions.EVENTS_ONLY,
+            // MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE,
             MapDataPointVisibilityOptions.NOTHING_VISIBLE
           ]
         }],

@@ -22,7 +22,7 @@ export const useBarColourAndLegendProps = <TSecondaryGroupingKey extends Exclude
     const newGetBarColour : typeof getColourForSecondaryKey = (secondaryKey) => {
       const secondaryKeyLabel = secondaryGroupingKeyToLabel ? secondaryGroupingKeyToLabel(secondaryKey) : secondaryKey;
       return secondaryKeyLabel === legendLabelHoveredOver
-        ? "#0ee32a"
+        ? "#0b41e0"
         : "#f0131e";
     }
 

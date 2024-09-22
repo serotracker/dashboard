@@ -11,6 +11,7 @@ export interface FreeTextEntry {
 export interface CountryHighlightLayerLegendEntry {
   description: string;
   colour: string;
+  icon?: (() => React.ReactNode) | undefined;
 }
 
 interface CountryHighlightLayerLegendProps {
@@ -36,6 +37,7 @@ export const CountryHighlightLayerLegend = (input: CountryHighlightLayerLegendPr
               className={`w-[1em] ${entry.colour} h-[1em] border-2 border-gray-500`}
               style={{ backgroundColor: entry.colour}}
             ></div>
+            {entry.icon ? <entry.icon /> : null}
             <p>{entry.description}</p>
           </div>
         ))}
