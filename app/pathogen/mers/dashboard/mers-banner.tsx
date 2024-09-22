@@ -54,9 +54,9 @@ export const MersBanner = () => {
   return <DashboardTopBanner
     headerContent={
       <div className="mb-2">
-        <p className="inline"> MERSTracker is a dashboard and platform for MERS serosurveys. We conduct an </p>
+        <p className="inline"> MERSTracker is a dashboard and platform for MERS serosurveys, viral testing, and genomic sequencing studies. We conduct an </p>
         <Link href="/about/about-our-data" className="underline text-link inline">ongoing systematic review</Link>
-        <p className="inline"> to track serosurveys (antibody testing-based surveillance efforts) around the world and visualize findings on this dashboard.</p>
+        <p className="inline"> to track surveillance efforts around the world and visualize findings on this dashboard.</p>
       </div>
     }
     downloadCsvButtonOneConfiguration={{
