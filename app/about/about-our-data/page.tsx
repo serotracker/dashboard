@@ -82,7 +82,7 @@ export default function DataExtractionPage() {
           <Link className="inline text-link" href="https://www.who.int/" target="__blank" rel="noopener noreferrer">World Health Organization</Link>
           <p className='inline'> and the </p>
           <Link className="inline text-link" href="https://www.fao.org/" target="__blank" rel="noopener noreferrer">Food and Agriculture Organization of the United Nations</Link>
-          <p className='inline'>. We don't assess assay or study quality, please use your judgement when drawing conclusions.</p>
+          <p className='inline'>. We don&apos;t assess assay or study quality, please use your judgement when drawing conclusions.</p>
         </div>
         <div>
         <p className='inline'> Event data and camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation&apos;s </p>
