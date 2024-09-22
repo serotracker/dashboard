@@ -170,6 +170,11 @@ export const MersFilters = (props: MersFiltersProps) => {
   return (
     <Filters
       className={props.className}
+      elementBeforeFilterSections={() => (
+        <p className="text-xs mb-2">
+          Filters applied below affect all components of the dashboard including the map, the data table, and any visualizations.
+        </p>
+      )}
       filterSections={filterSections}
       state={state}
       filterData={{

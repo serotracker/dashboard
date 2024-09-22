@@ -50,6 +50,7 @@ interface FiltersProps<
   TEstimate extends Record<string, unknown>,
   TPathogenContextState extends PathogenContextState<TEstimate>
 > {
+  elementBeforeFilterSections?: (() => React.ReactNode) | undefined;
   filterSections: FilterSectionConfiguration[]
   state: PathogenContextType<TEstimate, TPathogenContextState>;
   filterData: Record<string, string[] | undefined>;
@@ -66,6 +67,7 @@ export const Filters = <
 
   return (
     <div className={props.className}>
+      {props.elementBeforeFilterSections ? <props.elementBeforeFilterSections /> : null}
       {props.filterSections.map((filterSection) => {
         return (
           <FilterSection
