@@ -11,6 +11,7 @@ import {
   animalTypeToStringMap,
   antigenToColourClassnameMap,
   assayToColourClassnameMap,
+  cladeToColourClassnameMap,
   exposureToCamelLevelToColourClassnameMap,
   geographicScopeToColourClassnameMap,
   humanAgeGroupToColourClassnameMap,
@@ -246,6 +247,22 @@ const getPrevalenceColumns = (
   ]
 }
 
+const getConciseGeneticColumns = (
+  input: GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput
+) => {
+  if(input.dataTableType === MersEstimateDataTableType.SEROPREVALENCE_ESTIMATES) {
+    return [];
+  }
+
+  return [{
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'primaryEstimateClade',
+    valueToColourSchemeClassnameMap: cladeToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Clade'
+  }];
+}
+
 export enum MersEstimateDataTableType {
   SEROPREVALENCE_ESTIMATES = 'SEROPREVALENCE_ESTIMATES',
   VIRAL_ESTIMATES = 'VIRAL_ESTIMATES'
@@ -370,7 +387,9 @@ export const useMersEstimateColumnConfiguration = () => {
     type: DataTableColumnConfigurationEntryType.BOOLEAN as const,
     fieldName: 'primaryEstimateSequencingDone',
     label: 'Genomic Sequencing Done?'
-  }, {
+  },
+  ...getConciseGeneticColumns(input),
+  {
     type: DataTableColumnConfigurationEntryType.STANDARD as const,
     fieldName: 'primaryEstimateFirstAuthorFullName',
     label: 'First Author Full Name'
@@ -541,7 +560,7 @@ export const useMersEstimateColumnConfiguration = () => {
   }), [ getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration ]);
 
   const mersViralEstimateColumnConfiguration = useMemo(() => getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration({
-    dataTableType: MersEstimateDataTableType.SEROPREVALENCE_ESTIMATES
+    dataTableType: MersEstimateDataTableType.VIRAL_ESTIMATES
   }), [ getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration ]);
 
   return {
