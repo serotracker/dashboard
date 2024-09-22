@@ -77,18 +77,18 @@ export default function DataExtractionPage() {
       </div>
       {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && <>
         <h2 className={headerClassname}>New dashboard: MERSTracker </h2>
-        <p className='inline'> MERSTracker data was collected from peer reviewed journal articles in collaboration with the </p>
-        <Link className="inline text-link" href="https://www.who.int/" target="__blank" rel="noopener noreferrer">World Health Organization</Link>
-        <p className='inline'> and the </p>
-        <Link className="inline text-link" href="https://www.fao.org/" target="__blank" rel="noopener noreferrer">Food and Agriculture Organization of the United Nations</Link>
-        <p className='inline'>. </p>
-        <SponsorBanner
-          className="mb-4"
-          sponsors={[ Sponsor.WORLD_HEALTH_ORGANIZATION ]}
-        />
+        <div className="mb-4">
+          <p className='inline'> MERSTracker data was collected from peer reviewed journal articles in collaboration with the </p>
+          <Link className="inline text-link" href="https://www.who.int/" target="__blank" rel="noopener noreferrer">World Health Organization</Link>
+          <p className='inline'> and the </p>
+          <Link className="inline text-link" href="https://www.fao.org/" target="__blank" rel="noopener noreferrer">Food and Agriculture Organization of the United Nations</Link>
+          <p className='inline'>. We don't assess assay or study quality, please use your judgement when drawing conclusions.</p>
+        </div>
+        <div>
         <p className='inline'> Event data and camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation&apos;s </p>
         <Link className="inline text-link" href="https://empres-i.apps.fao.org/" target="__blank" rel="noopener noreferrer">EMPRES-i dashboard</Link>
         <p className='inline'> which collects MERS events as they are reported by national authorities and population data for various different species of livestock.</p>
+        </div>
       </>}
       <h2 className={headerClassname}>Contact Us</h2>
       <div className="mb-4">
