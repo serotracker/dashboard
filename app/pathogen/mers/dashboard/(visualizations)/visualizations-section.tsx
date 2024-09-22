@@ -22,17 +22,17 @@ export const MersVisualizationsSection = () => {
     ...mersVisualizationInformation[MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME],
      className: "h-full-screen"
   }, {
-    ...mersVisualizationInformation[MersVisualizationId.SUMMARY_BY_REGION],
+    ...mersVisualizationInformation[MersVisualizationId.ESTIMATES_BY_REGION],
      className: "h-full-screen"
   }, {
-    ...mersVisualizationInformation[MersVisualizationId.ESTIMATES_BY_REGION],
+    ...mersVisualizationInformation[MersVisualizationId.SUMMARY_BY_REGION],
      className: "h-full-screen"
   }];
 
   const visualizations = allVisualizationInformationWithClassnames.filter((visualizationInfo) => [
-    MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE,
-    MersVisualizationId.SUMMARY_BY_REGION,
     MersVisualizationId.ESTIMATES_BY_REGION,
+    // MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE,
+    MersVisualizationId.SUMMARY_BY_REGION,
   ].includes(visualizationInfo.id));
 
   const { filteredData, faoMersEventData } = useContext(MersContext);
