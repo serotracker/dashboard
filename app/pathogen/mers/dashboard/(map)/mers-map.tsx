@@ -35,16 +35,17 @@ import { useMersMapDataPoints } from "./use-mers-map-data-points";
 import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
 import { MersMapStudySubmissionPrompt } from "./mers-map-study-submission-prompt";
 import { Card, CardContent } from "@/components/ui/card";
+import { useMersMapDataTypeLegendEntries } from "./use-mers-map-data-type-legend-entries";
 
 export const MapPinColours = {
-  'HumanMersEvent': "#8abded",
-  'human-mers-event-alt': "#2a8deb",
-  'AnimalMersEvent': "#ed8ac7",
-  'animal-mers-event-alt': "#eb2aa1",
-  'PrimaryHumanMersSeroprevalenceEstimateInformation': "#e7ed8a",
-  'PrimaryAnimalMersSeroprevalenceEstimateInformation': "#13f244",
-  'PrimaryHumanMersViralEstimateInformation': "#e37712",
-  'PrimaryAnimalMersViralEstimateInformation': "#de141b",
+  'HumanMersEvent': "#1d4ed8",
+  'human-mers-event-alt': "#1e40af",
+  'AnimalMersEvent': "#15803d",
+  'animal-mers-event-alt': "#166534",
+  'PrimaryHumanMersSeroprevalenceEstimateInformation': "#93c5fd",
+  'PrimaryAnimalMersSeroprevalenceEstimateInformation': "#6ee7b7",
+  'PrimaryHumanMersViralEstimateInformation': "#3b82f6",
+  'PrimaryAnimalMersViralEstimateInformation': "#22c55e",
   'mers-animal-viral-estimate-alt': "#910c10",
 } as const;
 
@@ -85,6 +86,10 @@ export const MersMap = () => {
     countryOutlinesSetting,
     estimateDataShown,
     eventDataShown
+  });
+
+  const { dataTypeLayerLegendEntries } = useMersMapDataTypeLegendEntries({
+    mapDataPointVisibilitySetting
   });
 
   const { clusteringSettings } = useMersMapClusterProperties({
@@ -191,7 +196,10 @@ export const MersMap = () => {
       />
       <CountryHighlightLayerLegend
         className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"}
-        legendEntries={countryHighlightLayerLegendEntries}
+        legendEntries={[
+          ...countryHighlightLayerLegendEntries,
+          ...dataTypeLayerLegendEntries
+        ]}
         freeTextEntries={freeTextEntries}
       />
       <MapEstimateSummary filteredData={filteredData.map((estimate) => ({ sourceSheetName: estimate.primaryEstimateInfo.sourceTitle }))}/>

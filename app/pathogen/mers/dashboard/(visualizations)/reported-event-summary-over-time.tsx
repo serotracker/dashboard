@@ -16,8 +16,8 @@ const typenameToLabel = {
 }
 
 const typenameToLineColour = {
-  ['AnimalMersEvent']: '#ed8ac7',
-  ['HumanMersEvent']: '#8abded'
+  ['AnimalMersEvent']: '#15803d',
+  ['HumanMersEvent']: '#1d4ed8'
 }
 
 export const ReportedEventSummaryOverTime = (props: ReportedEventSummaryOverTimeProps) => {

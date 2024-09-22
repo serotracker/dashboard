@@ -56,13 +56,13 @@ export const chartTitlesForWhoRegions: Record<WhoRegion, string> = {
 export const chartTitlesForUnRegions = unRegionEnumToLabelMap;
 
 const variableOfInterestToBarColourMap = {
-  [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE]: "#e7ed8a",
-  [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE]: "#13f244",
-  [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE]: "#e37712",
-  [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_VIRAL_PREVALENCE]: "#de141b",
-  [SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES]: "#ed8ac7",
-  [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES]: "#8abded",
-  [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS]: "#2a8deb",
+  [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE]: "#93c5fd",
+  [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE]: "#6ee7b7",
+  [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE]: "#3b82f6",
+  [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_VIRAL_PREVALENCE]: "#22c55e",
+  [SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES]: "#15803d",
+  [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES]: "#1d4ed8",
+  [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS]: "#1e40af",
 }
 
 export const SummaryByRegion = (props: SummaryByRegionProps) => {
