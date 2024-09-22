@@ -541,7 +541,7 @@ export const useMersEstimateColumnConfiguration = () => {
   }), [ getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration ]);
 
   const mersViralEstimateColumnConfiguration = useMemo(() => getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration({
-    dataTableType: MersEstimateDataTableType.SEROPREVALENCE_ESTIMATES
+    dataTableType: MersEstimateDataTableType.VIRAL_ESTIMATES
   }), [ getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration ]);
 
   return {
