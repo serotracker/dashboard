@@ -45,7 +45,8 @@ const humanEstimatesFilters = [
 
 const animalEstimatesFilters = [
   FilterableField.animalDetectionSettings,
-  FilterableField.animalImportedOrLocal
+  FilterableField.animalImportedOrLocal,
+  FilterableField.clade
 ]
 
 const humanAndAnimalCaseFilters = [
@@ -208,6 +209,7 @@ export const MersFilters = (props: MersFiltersProps) => {
           animalImportedOrLocal: estimateFilterData.mersEstimatesFilterOptions.animalImportedOrLocal,
           antigen: estimateFilterData.mersEstimatesFilterOptions.antigen,
           exposureToCamels: estimateFilterData.mersEstimatesFilterOptions.exposureToCamels,
+          clade: estimateFilterData.mersEstimatesFilterOptions.clade,
         } : {}),
         ...(eventFilterData?.faoMersEventFilterOptions ? {
           diagnosisSource: eventFilterData.faoMersEventFilterOptions.diagnosisSource,

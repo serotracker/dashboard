@@ -108,6 +108,7 @@ export enum FilterableField {
   diagnosisSource = "diagnosisSource",
   animalType = "animalType",
   animalSpecies = "animalSpecies",
+  clade = "clade"
 }
 
 const RiskOfBiasTooltip: TooltipContentRenderingFunction = (input) => (
@@ -290,6 +291,12 @@ export const useAvailableFilters = () => {
     [FilterableField.ageGroup]: {
       field: FilterableField.ageGroup,
       label: "Age Group",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.clade]: {
+      field: FilterableField.clade,
+      label: "Clade",
       valueToLabelMap: {},
       filterRenderingFunction: MultiSelectFilter
     },
