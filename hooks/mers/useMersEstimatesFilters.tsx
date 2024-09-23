@@ -22,6 +22,7 @@ export const mersEstimatesFilterOptions = gql`
       testValidation
       antigen
       exposureToCamels
+      clade
     }
   }
 `

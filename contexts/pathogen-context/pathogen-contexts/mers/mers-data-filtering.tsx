@@ -25,7 +25,8 @@ export enum MersFilterableField {
   animalType = "animalType",
   animalSpecies = "animalSpecies",
   antigen = "antigen",
-  exposureToCamels = "exposureToCamels"
+  exposureToCamels = "exposureToCamels",
+  clade = "clade"
 }
 
 interface FilterMersEstimatesInput {
@@ -283,6 +284,19 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       selectedFilters: {
         ...input.selectedFilters,
         [MersFilterableField.samplingMethod]: input.selectedFilters[MersFilterableField.samplingMethod] ?? []
+      }
+    })
+  }),
+  [MersFilterableField.clade]: (input) => ({
+    included: mersEstimateArrayFieldHandler({
+      filterKey: MersFilterableField.clade,
+      estimate: {
+        ...input.estimate,
+        clade: input.estimate.primaryEstimateInfo.clade
+      },
+      selectedFilters: {
+        ...input.selectedFilters,
+        [MersFilterableField.clade]: input.selectedFilters[MersFilterableField.clade] ?? []
       }
     })
   }),
