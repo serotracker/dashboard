@@ -139,13 +139,23 @@ export const RechartsVisualization = <
         <div
           className={cn(
             "relative w-full",
-            !props.visualizationInformation.visualizationDownloadFootnote ? 'hidden' : ''
+            (!props.visualizationInformation.visualizationDownloadFootnote ? 'hidden' : '')
           )}
         >
           <p className={cn("h-full text-xs italic")}>
             {props.visualizationInformation.visualizationDownloadFootnote}
           </p>
           <div className="w-full h-full absolute top-0 left-0 bg-white z-30 ignore-for-visualization-download"/>
+        </div>
+        <div
+          className={cn(
+            "relative w-full ignore-for-visualization-download",
+            (!props.visualizationInformation.visualizationNonDownloadFootnote ? 'hidden' : '')
+          )}
+        >
+          <p className={cn("h-full text-xs italic")}>
+            {props.visualizationInformation.visualizationNonDownloadFootnote}
+          </p>
         </div>
       </div>
       <ModalWrapper

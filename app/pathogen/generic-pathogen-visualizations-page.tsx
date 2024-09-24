@@ -123,6 +123,7 @@ export interface VisualizationInformation<
   customizationModalConfiguration?: UseModalInput<TCustomizationModalDropdownOption>;
   paginationConfiguration?: PaginationConfiguration;
   visualizationDownloadFootnote: string | undefined;
+  visualizationNonDownloadFootnote: string | undefined;
 }
 
 interface FiltersComponentProps {
