@@ -130,18 +130,8 @@ export const Header = (props: HeaderProps) => {
   const [headerBgColor, setHeaderBgColor] = useState("bg-background delay-150");
 
   const titleSuffix = useMemo(() => {
-    if(dashboardType === DashboardType.ARBOVIRUS) {
-      return "Arbo";
-    }
-    if(dashboardType === DashboardType.SARS_COV_2) {
-      return "SC2";
-    }
-    if(dashboardType === DashboardType.MERS) {
-      return "MERS";
-    }
-
     return "Sero";
-  }, [ dashboardType ]);
+  }, []);
 
   const helpButtonHoverColour = useMemo(() => {
     if(dashboardType === DashboardType.ARBOVIRUS) {

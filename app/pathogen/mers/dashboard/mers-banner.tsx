@@ -80,5 +80,17 @@ export const MersBanner = () => {
       enabled: true,
       dataLastUpdatedText: 'The last major update to our data was on September 19th 2024'
     }}
+    mapButtonConfiguration={{
+      header: 'Map',
+      text: 'A map displaying MERS serosurveys, viral testing, and genomic sequencing data across the globe.'
+    }}
+    dataButtonConfiguration={{
+      header: 'Data',
+      text: 'View or download our entire MERS dataset.'
+    }}
+    visualizationsButtonConfiguration={{
+      header: 'Visualizations',
+      text: 'A collection of visualizations for our MERS dataset.'
+    }}
   />
 }

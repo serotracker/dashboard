@@ -38,5 +38,17 @@ export const ArboBanner = () => {
     dataLastUpdatedNoteConfiguration={{
       enabled: false
     }}
+    mapButtonConfiguration={{
+      header: 'Map',
+      text: 'A map displaying our arbovirus seroprevalence dataset.'
+    }}
+    dataButtonConfiguration={{
+      header: 'Data',
+      text: 'View or download our entire arbovirus dataset.'
+    }}
+    visualizationsButtonConfiguration={{
+      header: 'Visualizations',
+      text: 'A collection of visualizations for our arbovirus dataset.'
+    }}
   />
 }
