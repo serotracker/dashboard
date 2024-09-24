@@ -125,6 +125,9 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
       csvCitationConfiguration={{
         enabled: false
       }}
+      additionalButtonConfiguration={{
+        enabled: false
+      }}
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={props.tableData}
     />

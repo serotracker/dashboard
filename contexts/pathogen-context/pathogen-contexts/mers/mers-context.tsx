@@ -15,6 +15,7 @@ import { MersPrimaryEstimatesQuery, PartitionedFaoMersEventsQuery } from "@/gql/
 import { filterMersEstimates } from "./mers-data-filtering";
 import { MersMapCustomizationsProvider } from "./map-customizations-context";
 import { MersMacroSampleFramesProvider } from "./mers-macro-sample-frames-context";
+import { MersFilterMetadataProvider } from "./mers-filter-metadata-context";
 
 const initialMersContextState = {
   filteredData: [],
@@ -365,7 +366,9 @@ export const MersProviders = (props: MersProvidersProps) => {
       <CamelPopulationDataProvider>
         <MersMapCustomizationsProvider>
           <MersMacroSampleFramesProvider>
-            {props.children}
+            <MersFilterMetadataProvider>
+              {props.children}
+            </MersFilterMetadataProvider>
           </MersMacroSampleFramesProvider>
         </MersMapCustomizationsProvider>
       </CamelPopulationDataProvider>

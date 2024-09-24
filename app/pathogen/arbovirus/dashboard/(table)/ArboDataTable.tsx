@@ -225,6 +225,9 @@ export const ArboDataTable = () => {
           csvDownloadCitationText: shortenedArboTrackerCitationText,
           toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST
         }}
+        additionalButtonConfiguration={{
+          enabled: false
+        }}
         rowExpansionConfiguration={rowExpansionConfiguration}
         data={state.filteredData}
       />

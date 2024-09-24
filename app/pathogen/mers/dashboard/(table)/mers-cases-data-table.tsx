@@ -1,6 +1,5 @@
 import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
-import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { MersDiagnosisStatus, MersEventAnimalSpecies, MersEventAnimalType, MersEventType, WhoRegion } from "@/gql/graphql";
 import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
@@ -27,6 +26,7 @@ import { RechartsVisualization } from "@/components/customs/visualizations/recha
 import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { FaoMersEventForTable, unformatMersEventDataFromTable } from "./use-mers-data-table-data";
+import { MersFilterMetadataContext, MersFilterMetadataProvider } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 const mersCasesColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.DATE as const,
@@ -131,6 +131,7 @@ interface MersCasesDataTableProps {
 export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
+  const { dataTableAdditionalButtonConfig } = useContext(MersFilterMetadataContext);
 
   const rowExpansionConfiguration: RowExpansionConfiguration<FaoMersEventForTable> = useMemo(() => ({
     enabled: true,
@@ -194,6 +195,7 @@ export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
       csvCitationConfiguration={{
         enabled: false
       }}
+      additionalButtonConfiguration={dataTableAdditionalButtonConfig}
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={props.tableData}
     />
