@@ -9,6 +9,7 @@ import { useMemo, useEffect } from "react";
 
 interface HumanViralPositivePrevalenceSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  selectedSampleFrames: string[];
   regionGroupingFunction: (dataPoint: MersEstimate) => TRegion | undefined;
   regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
@@ -17,10 +18,11 @@ interface HumanViralPositivePrevalenceSummaryByRegionProps<TRegion extends strin
 }
 
 export const HumanViralPositivePrevalenceSummaryByRegion = <TRegion extends string>(props: HumanViralPositivePrevalenceSummaryByRegionProps<TRegion>) => {
-  const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
+  const { data, selectedSampleFrames, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
 
   const estimates = useMemo(() => data
     .filter((dataPoint): dataPoint is HumanMersViralEstimate => 'primaryEstimateInfo' in dataPoint && isHumanMersViralEstimate(dataPoint))
+    .filter((dataPoint) => !!dataPoint.primaryEstimateInfo.sampleFrame && selectedSampleFrames.includes(dataPoint.primaryEstimateInfo.sampleFrame))
     .map((estimate) => ({
       ...estimate,
       region: regionGroupingFunction(estimate),
@@ -32,7 +34,7 @@ export const HumanViralPositivePrevalenceSummaryByRegion = <TRegion extends stri
       samplingStartDate: NonNullable<typeof estimate['samplingStartDate']>;
       samplingEndDate: NonNullable<typeof estimate['samplingEndDate']>;
     } => !!estimate.region && !!estimate.samplingStartDate && !!estimate.samplingEndDate)
-  , [ data, regionGroupingFunction ]);
+  , [ data, regionGroupingFunction, selectedSampleFrames ]);
 
   const numberOfPagesAvailable = useMemo(() => {
     const numberOfGraphs = uniqBy(estimates, (estimate) => estimate.region).length;
