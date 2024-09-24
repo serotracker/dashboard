@@ -12,12 +12,12 @@ import { defaultColoursForUnRegions, unRegionEnumToLabelMap } from "@/lib/un-reg
 import { ColourPickerCustomizationSettingProps } from "@/components/ui/modal/customization-modal/colour-picker-customization-setting";
 import { eventsProvidedCourtesyOfFaoTooltipContent } from "../../dashboard/(map)/use-mers-map-customization-modal";
 import { MersContext, isHumanMersEstimate, isAnimalMersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
-import { MersMacroSampleFramesContext, MersMacroSampleFrameType } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-macro-sample-frames-context";
+import { MersMacroSampleFramesContext, MersMacroSampleFrameType, mersMacroSampleFrameTypeToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-macro-sample-frames-context";
 import uniq from "lodash/uniq";
 
 export const useSummaryByRegionVisualizationPageConfig = () => {
   const { filteredData } = useContext(MersContext);
-  const { macroSampleFrames } = useContext(MersMacroSampleFramesContext);
+  const { macroSampleFrames, allHumanSampleFrames, adjustMacroSampleFrame } = useContext(MersMacroSampleFramesContext);
   const [
     summaryByRegionVariableOfInterestSelectedDropdownOption,
     setSummaryByRegionVariableOfInterestSelectedDropdownOption,
@@ -28,12 +28,10 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     setSummaryByRegionSelectedDropdownOption,
   ] = useState<SummaryByRegionRegionDropdownOption>(SummaryByRegionRegionDropdownOption.WHO_REGION);
 
-
-
   const [
     _summaryByRegionSelectedAnimalSampleFrameOrMacroSampleFrame,
     setSummaryByRegionSelectedAnimalSampleFrameOrMacroSampleFrame,
-  ] = useState<string>('UNKNOWN');
+  ] = useState<string>(MersMacroSampleFrameType.GENERAL_POPULATION);
 
   const availableSampleFrames: string[] = useMemo(() => {
     if(
@@ -209,12 +207,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
         options: availableSampleFrames
       }],
       chosenDropdownOption: summaryByRegionSelectedAnimalSampleFrameOrMacroSampleFrame,
-      dropdownOptionToLabelMap: {
-        [MersMacroSampleFrameType.GENERAL_POPULATION]: 'The General Population',
-        [MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS]: 'High Risk Populations (Occupationally Exposed)',
-        [MersMacroSampleFrameType.HIGH_RISK_NOT_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS]: 'High Risk Populations (Non-Occupationally Exposed)',
-        [MersMacroSampleFrameType.HIGH_RISK_POPULATIONS]: 'High Risk Populations'
-      },
+      dropdownOptionToLabelMap: mersMacroSampleFrameTypeToTextMap,
       onDropdownOptionChange: (option) => {
         setSummaryByRegionSelectedAnimalSampleFrameOrMacroSampleFrame(option);
         setCurrentPageIndex(0);
@@ -249,6 +242,38 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
         paginationHoverClassname: "hover:bg-mersHover",
         paginationSelectedClassname: "bg-mers",
         customizationSettings: [
+          ...((
+            summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE ||
+            summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE
+          )
+            ? macroSampleFrames
+              .filter((macroSampleFrame): macroSampleFrame is Omit<
+                typeof macroSampleFrame, 'macroSampleFrame'
+              > & {
+                macroSampleFrame: (
+                  MersMacroSampleFrameType.GENERAL_POPULATION |
+                  MersMacroSampleFrameType.HIGH_RISK_NOT_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS |
+                  MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS
+                )
+              } => (
+                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.GENERAL_POPULATION ||
+                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_NOT_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS ||
+                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS
+              ))
+              .map((macroSampleFrame) => ({
+                type: CustomizationSettingType.MULTI_SELECT_DROPDOWN as const,
+                dropdownName: `Sample frames included in "${mersMacroSampleFrameTypeToTextMap[macroSampleFrame.macroSampleFrame]}"`,
+                heading: 'Selected Sample Frames',
+                options: allHumanSampleFrames,
+                optionToLabelMap: {},
+                selected: macroSampleFrame.sampleFrames,
+                handleOnChange: (newSampleFrames: string[]) => adjustMacroSampleFrame({
+                  macroSampleFrame: macroSampleFrame.macroSampleFrame,
+                  newSampleFrames
+                })
+              }))
+            : []
+          ),
           ...(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.WHO_REGION ? Object.values(WhoRegion).map((whoRegion): ColourPickerCustomizationSettingProps => ({
             type: CustomizationSettingType.COLOUR_PICKER,
             colourPickerName: `Colour for ${whoRegion}`,
@@ -270,7 +295,17 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
         ]
       }
     }
-  }, [ barColoursForWhoRegions, setBarColoursForWhoRegions, barColoursForUnRegions, setBarColoursForUnRegions, summaryByRegionSelectedDropdownOption ]);
+  }, [
+    barColoursForWhoRegions,
+    setBarColoursForWhoRegions,
+    barColoursForUnRegions,
+    setBarColoursForUnRegions,
+    summaryByRegionSelectedDropdownOption,
+    summaryByRegionVariableOfInterestSelectedDropdownOption,
+    allHumanSampleFrames,
+    macroSampleFrames,
+    adjustMacroSampleFrame
+  ]);
 
   const renderVisualizationForSummaryByWhoRegion: MersVisualizationInformation<
     string,
