@@ -38,6 +38,7 @@ interface SummaryByRegionProps {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
   selectedVariableOfInterest: SummaryByRegionVariableOfInterestDropdownOption;
   selectedRegion: SummaryByRegionRegionDropdownOption;
+  selectedAnimalSampleFrameOrMacroSampleFrame: string | undefined;
   numberOfPagesAvailable: number;
   setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
   currentPageIndex: number;
@@ -70,6 +71,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     data,
     selectedVariableOfInterest,
     selectedRegion,
+    selectedAnimalSampleFrameOrMacroSampleFrame,
     setNumberOfPagesAvailable,
     currentPageIndex,
     barColoursForWhoRegions,
@@ -143,6 +145,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <HumanSeroprevalenceSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
+        selectedMacroSampleFrame={selectedAnimalSampleFrameOrMacroSampleFrame}
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
@@ -153,6 +156,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <HumanViralPositivePrevalenceSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
+        selectedMacroSampleFrame={selectedAnimalSampleFrameOrMacroSampleFrame}
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
@@ -163,6 +167,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <AnimalSeroprevalenceSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
+        selectedAnimalSampleFrame={selectedAnimalSampleFrameOrMacroSampleFrame}
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
@@ -173,6 +178,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
       return <AnimalViralPositivePrevalenceSummaryByRegion
         data={data}
         regionGroupingFunction={(dataPoint) => regionGroupingFunction(dataPoint) ?? undefined}
+        selectedAnimalSampleFrame={selectedAnimalSampleFrameOrMacroSampleFrame}
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
@@ -211,7 +217,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     }
 
     assertNever(selectedVariableOfInterest);
-  }, [ data, selectedVariableOfInterest, regionGroupingFunction, setNumberOfPagesAvailable, currentPageIndex, regionToBarColour, regionToChartTitle ]);
+  }, [ data, selectedVariableOfInterest, regionGroupingFunction, setNumberOfPagesAvailable, currentPageIndex, regionToBarColour, regionToChartTitle, selectedAnimalSampleFrameOrMacroSampleFrame ]);
 
   return graph;
 }

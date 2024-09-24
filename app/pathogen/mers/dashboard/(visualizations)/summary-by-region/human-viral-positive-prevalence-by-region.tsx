@@ -9,6 +9,7 @@ import { useMemo, useEffect } from "react";
 
 interface HumanViralPositivePrevalenceSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  selectedMacroSampleFrame: string | undefined;
   regionGroupingFunction: (dataPoint: MersEstimate) => TRegion | undefined;
   regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;

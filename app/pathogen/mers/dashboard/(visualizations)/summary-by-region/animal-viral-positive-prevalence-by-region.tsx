@@ -9,6 +9,7 @@ import { useMemo, useEffect } from "react";
 
 interface AnimalViralPositivePrevalenceSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
+  selectedAnimalSampleFrame: string | undefined;
   regionGroupingFunction: (dataPoint: MersEstimate) => TRegion | undefined;
   regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
@@ -17,10 +18,11 @@ interface AnimalViralPositivePrevalenceSummaryByRegionProps<TRegion extends stri
 }
 
 export const AnimalViralPositivePrevalenceSummaryByRegion = <TRegion extends string>(props: AnimalViralPositivePrevalenceSummaryByRegionProps<TRegion>) => {
-  const { data, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
+  const { data, selectedAnimalSampleFrame, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
 
   const estimates = useMemo(() => data
     .filter((dataPoint): dataPoint is AnimalMersViralEstimate => 'primaryEstimateInfo' in dataPoint && isAnimalMersViralEstimate(dataPoint))
+    .filter((dataPoint) => !selectedAnimalSampleFrame || dataPoint.primaryEstimateInfo.animalDetectionSettings.includes(selectedAnimalSampleFrame))
     .map((estimate) => ({
       ...estimate,
       region: regionGroupingFunction(estimate),
@@ -32,7 +34,7 @@ export const AnimalViralPositivePrevalenceSummaryByRegion = <TRegion extends str
       samplingStartDate: NonNullable<typeof estimate['samplingStartDate']>;
       samplingEndDate: NonNullable<typeof estimate['samplingEndDate']>;
     } => !!estimate.region && !!estimate.samplingStartDate && !!estimate.samplingEndDate)
-  , [ data, regionGroupingFunction ]);
+  , [ data, regionGroupingFunction, selectedAnimalSampleFrame ]);
 
   const numberOfPagesAvailable = useMemo(() => {
     const numberOfGraphs = uniqBy(estimates, (estimate) => estimate.region).length;

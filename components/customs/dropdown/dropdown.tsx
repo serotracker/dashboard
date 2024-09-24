@@ -66,7 +66,7 @@ export const Dropdown = <TDropdownOption extends string>(props: DropdownProps<TD
                       value={option}
                       highlightedColourClassname={props.highlightedColourClassname}
                     >
-                      {props.dropdownOptionToLabelMap[option]}
+                      {props.dropdownOptionToLabelMap[option] ?? option}
                     </DropdownItem>
                   )}
                 </Select.Group>
