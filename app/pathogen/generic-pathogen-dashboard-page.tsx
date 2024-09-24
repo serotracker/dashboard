@@ -17,6 +17,7 @@ interface GenericPathogenDashboardPageProps {
   banners?: () => React.ReactNode;
   filtersComponent: (props: FiltersComponentProps) => React.ReactNode;
   mapSectionComponent: () => React.ReactNode;
+  betweenMapAndDataSectionElement?: (() => React.ReactNode) | null;
   dataSectionComponent: () => React.ReactNode;
   visualizationsSectionComponent: () => React.ReactNode;
 }
@@ -46,6 +47,7 @@ export const GenericPathogenDashboardPage = (props: GenericPathogenDashboardPage
         >
           <props.mapSectionComponent />
         </section>
+        {props.betweenMapAndDataSectionElement ? <props.betweenMapAndDataSectionElement /> : null}
         <section
           id={DashboardSectionId.TABLE}
           className="w-full h-fit scroll-smooth mt-4 border border-background rounded-md px-4"
