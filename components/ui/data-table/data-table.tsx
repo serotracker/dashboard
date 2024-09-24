@@ -96,6 +96,18 @@ export type RowExpansionConfiguration<
   TData extends Record<string, unknown>
 > = RowExpansionConfigurationDisabled | RowExpansionConfigurationEnabled<TData>;
 
+interface AdditionalButtonConfigurationEnabled {
+  enabled: true;
+  buttonText: string;
+  onClick: () => void;
+}
+
+interface AdditionalButtonConfigurationDisabled {
+  enabled: false;
+}
+
+export type AdditionalButtonConfiguration = AdditionalButtonConfigurationEnabled | AdditionalButtonConfigurationDisabled;
+
 interface DataTableProps<
   TData extends Record<string, unknown>,
   TValue,
@@ -105,6 +117,7 @@ interface DataTableProps<
   csvFilename: string;
   tableHeader: TableHeader<TDropdownOption>;
   csvCitationConfiguration: CsvCitationConfigurationDisabled | CsvCitationConfigurationEnabled;
+  additionalButtonConfiguration: AdditionalButtonConfiguration;
   rowExpansionConfiguration: RowExpansionConfiguration<TData>;
   data: TData[];
 }
@@ -114,7 +127,7 @@ export function DataTable<
   TValue,
   TDropdownOption extends string
 >(props: DataTableProps<TData, TValue, TDropdownOption>) {
-  const { csvCitationConfiguration, rowExpansionConfiguration, tableHeader } = props;
+  const { csvCitationConfiguration, rowExpansionConfiguration, tableHeader, additionalButtonConfiguration } = props;
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -235,7 +248,23 @@ export function DataTable<
         <ArboTrackerCitationButtonContent />
       </Button>
     )
-  }, [csvCitationConfiguration, openToast])
+  }, [ csvCitationConfiguration, openToast ])
+
+  const additionalButton = useMemo(() => {
+    if(additionalButtonConfiguration.enabled === false) {
+      return null;
+    }
+
+    return (
+      <Button
+        variant="outline"
+        className="mx-2 whitespace-nowrap"
+        onClick={() => additionalButtonConfiguration.onClick()}
+      >
+        <p>{additionalButtonConfiguration.buttonText}</p>
+      </Button>
+    )
+  }, [ additionalButtonConfiguration ])
 
   const header = useMemo(() => {
     if(tableHeader.type === TableHeaderType.STANDARD) {
@@ -269,6 +298,7 @@ export function DataTable<
             Download CSV
           </Button>
           {citationButton}
+          {additionalButton}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="mx-2 whitespace-nowrap">

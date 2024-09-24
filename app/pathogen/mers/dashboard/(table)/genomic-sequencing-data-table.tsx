@@ -4,6 +4,8 @@ import { Clade, GenomeSequenced, MersAnimalSpecies, WhoRegion } from "@/gql/grap
 import { columnConfigurationToColumnDefinitions, DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, cladeToColourClassnameMap, genomeSequenceToColourClassnameMap, genomeSequenceToStringMap, isGenomeSequenced, isMersAnimalSpecies, specimenTypeToColourClassnameMap } from "../(map)/shared-mers-map-pop-up-variables";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
+import { useContext } from "react";
+import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 const genomicSequencingDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -117,6 +119,7 @@ interface GenomicSequencingDataTableProps {
 
 export const GenomicSequencingDataTable = (props: GenomicSequencingDataTableProps) => {
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
+  const { dataTableAdditionalButtonConfig } = useContext(MersFilterMetadataContext);
 
   return (
     <DataTable
@@ -126,6 +129,7 @@ export const GenomicSequencingDataTable = (props: GenomicSequencingDataTableProp
       csvCitationConfiguration={{
         enabled: false
       }}
+      additionalButtonConfiguration={dataTableAdditionalButtonConfig}
       rowExpansionConfiguration={{
         enabled: true,
         generateExpandedRowStatement: () => "Clicking on this row in the table again will minimize it.",

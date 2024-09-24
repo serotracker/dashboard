@@ -1,6 +1,6 @@
 import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
@@ -8,6 +8,7 @@ import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizati
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { useMersEstimateColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { MersViralEstimateForDataTable } from "./use-mers-data-table-data";
+import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 interface MersViralEstimateDataTableProps {
   tableData: MersViralEstimateForDataTable[];
@@ -17,6 +18,7 @@ interface MersViralEstimateDataTableProps {
 export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProps) => {
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
+  const { dataTableAdditionalButtonConfig } = useContext(MersFilterMetadataContext);
 
   const { mersViralEstimateColumnConfiguration } = useMersEstimateColumnConfiguration();
 
@@ -87,6 +89,7 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
       csvCitationConfiguration={{
         enabled: false
       }}
+      additionalButtonConfiguration={dataTableAdditionalButtonConfig}
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={props.tableData}
     />

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { AvailableMersDataTables } from "./mers-data-table";
@@ -13,6 +13,7 @@ import {
 import { useMersEstimateColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { MersSeroprevalenceEstimateForDataTable } from "./use-mers-data-table-data";
 import { SubestimateTable } from "@/components/ui/pathogen-map/map-pop-up/subestimate-table";
+import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 interface MersSeroprevalenceEstimateDataTableProps {
   tableData: MersSeroprevalenceEstimateForDataTable[];
@@ -22,6 +23,7 @@ interface MersSeroprevalenceEstimateDataTableProps {
 export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEstimateDataTableProps) => {
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { mersVisualizationInformation } = useVisualizationPageConfiguration();
+  const { dataTableAdditionalButtonConfig } = useContext(MersFilterMetadataContext);
 
   const { mersSeroprevalenceEstimateColumnConfiguration } = useMersEstimateColumnConfiguration();
   
@@ -112,6 +114,7 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
       csvCitationConfiguration={{
         enabled: false
       }}
+      additionalButtonConfiguration={dataTableAdditionalButtonConfig}
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={props.tableData}
     />
