@@ -1,6 +1,7 @@
 import {
   GenericPopUpContentRow,
   PopUpContentRowBaseProps,
+  PopUpContentRowRibbonConfiguration,
   PopUpContentRowType,
   PopupContentTextAlignment
 } from "../pop-up-content-rows";
@@ -9,6 +10,7 @@ export type PopUpContentTextRowProps = PopUpContentRowBaseProps & {
   type: PopUpContentRowType.TEXT,
   text: string;
   contentTextAlignment?: PopupContentTextAlignment;
+  ribbonConfiguration?: PopUpContentRowRibbonConfiguration;
 }
 
 export const PopUpContentTextRow = (props: PopUpContentTextRowProps) => (
@@ -19,6 +21,6 @@ export const PopUpContentTextRow = (props: PopUpContentTextRowProps) => (
     bottomPaddingEnabled={props.bottomPaddingEnabled}
     rightPaddingEnabled={props.rightPaddingEnabled}
     contentBolded={props.contentBolded}
-    ribbonConfiguration={undefined}
+    ribbonConfiguration={props.ribbonConfiguration}
   />
 )

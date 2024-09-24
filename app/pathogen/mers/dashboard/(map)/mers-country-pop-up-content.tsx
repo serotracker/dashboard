@@ -41,25 +41,74 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
   const allHumanMersSeroprevalenceEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is HumanMersSeroprevalenceEstimateMapMarkerData =>
     isHumanMersSeroprevalenceEstimateMapMarkerData(dataPoint))
   , [ dataPoints ])
+
+  const humanMersSeroprevalenceRange = useMemo(() => allHumanMersSeroprevalenceEstimates.length > 0
+    ? `Human seroprevalence ranges from ${(Math.min(
+      ...allHumanMersSeroprevalenceEstimates.map((estimate) => estimate.primaryEstimateInfo.seroprevalence)
+    ) * 100).toFixed(1)}% - ${(Math.max(
+      ...allHumanMersSeroprevalenceEstimates.map((estimate) => estimate.primaryEstimateInfo.seroprevalence)
+    ) * 100).toFixed(1)}% across the ${
+      allHumanMersSeroprevalenceEstimates.length
+    } estimate(s) in our database`
+    : 'No estimates in our database'
+  , [ allHumanMersSeroprevalenceEstimates ]);
+
   const allAnimalMersSeroprevalenceEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimateMapMarkerData =>
     isAnimalMersSeroprevalenceEstimateMapMarkerData(dataPoint))
   , [ dataPoints ])
+
+  const animalMersSeroprevalenceRange = useMemo(() => allAnimalMersSeroprevalenceEstimates.length > 0
+    ? `Animal seroprevalence ranges from ${(Math.min(
+      ...allAnimalMersSeroprevalenceEstimates.map((estimate) => estimate.primaryEstimateInfo.seroprevalence)
+    ) * 100).toFixed(1)}% - ${(Math.max(
+      ...allAnimalMersSeroprevalenceEstimates.map((estimate) => estimate.primaryEstimateInfo.seroprevalence)
+    ) * 100).toFixed(1)}% across the ${
+      allAnimalMersSeroprevalenceEstimates.length
+    } estimate(s) in our database`
+    : 'No estimates in our database'
+  , [ allAnimalMersSeroprevalenceEstimates ]);
+
   const allHumanMersViralEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is HumanMersViralEstimateMapMarkerData =>
     isHumanMersViralEstimateMapMarkerData(dataPoint))
-  , [ dataPoints ])
+  , [ dataPoints ]);
+
+  const humanMersViralPrevalenceRange = useMemo(() => allHumanMersViralEstimates.length > 0
+    ? `Human viral prevalence ranges from ${(Math.min(
+      ...allHumanMersViralEstimates.map((estimate) => estimate.primaryEstimateInfo.positivePrevalence)
+    ) * 100).toFixed(1)}% - ${(Math.max(
+      ...allHumanMersViralEstimates.map((estimate) => estimate.primaryEstimateInfo.positivePrevalence)
+    ) * 100).toFixed(1)}% across the ${
+      allHumanMersViralEstimates.length
+    } estimate(s) in our database`
+    : 'No estimates in our database'
+  , [ allHumanMersViralEstimates ]);
+
   const allAnimalMersViralEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is AnimalMersViralEstimateMapMarkerData =>
     isAnimalMersViralEstimateMapMarkerData(dataPoint))
   , [ dataPoints ])
+
+  const animalMersViralPrevalenceRange = useMemo(() => allAnimalMersViralEstimates.length > 0
+    ? `Animal viral prevalence ranges from ${(Math.min(
+      ...allAnimalMersViralEstimates.map((estimate) => estimate.primaryEstimateInfo.positivePrevalence)
+    ) * 100).toFixed(1)}% - ${(Math.max(
+      ...allAnimalMersViralEstimates.map((estimate) => estimate.primaryEstimateInfo.positivePrevalence)
+    ) * 100).toFixed(1)}% across the ${
+      allAnimalMersViralEstimates.length
+    } estimate(s) in our database`
+    : 'No estimates in our database'
+  , [ allAnimalMersViralEstimates ]);
+
   const allHumanMersEvents = useMemo(() => dataPoints.filter((dataPoint): dataPoint is HumanMersEventMapMarkerData =>
     isMersFaoHumanEventMapMarkerData(dataPoint))
   , [ dataPoints ])
+
   const allAnimalMersEvents = useMemo(() => dataPoints.filter((dataPoint): dataPoint is AnimalMersEventMapMarkerData =>
     isMersFaoAnimalEventMapMarkerData(dataPoint))
   , [ dataPoints ])
 
   return (
     <GenericMapPopUp
-      width={GenericMapPopUpWidth.WIDE}
+      width={GenericMapPopUpWidth.EXTRA_WIDE}
       headerConfiguration={{
         text: props.record.countryName,
         textAlignment: HeaderConfigurationTextAlignment.CENTER
@@ -74,32 +123,32 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
       rows={[
         ...(estimateDataShown ? [{
           title: 'Human Seroprevalence Estimates'.replace(' ', '\u00A0'),
-          type: PopUpContentRowType.NUMBER as const,
-          value: allHumanMersSeroprevalenceEstimates.length,
+          type: PopUpContentRowType.TEXT as const,
+          text: humanMersSeroprevalenceRange,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-human-estimate' },
           rightPaddingEnabled: false
         }] : []),
         ...(estimateDataShown ? [{
           title: 'Animal Seroprevalence Estimates'.replace(' ', '\u00A0'),
-          type: PopUpContentRowType.NUMBER as const,
-          value: allAnimalMersSeroprevalenceEstimates.length,
+          type: PopUpContentRowType.TEXT as const,
+          text: animalMersSeroprevalenceRange,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-animal-estimate' },
           rightPaddingEnabled: false
         }] : []),
         ...(estimateDataShown ? [{
           title: 'Human Viral Estimates'.replace(' ', '\u00A0'),
-          type: PopUpContentRowType.NUMBER as const,
-          value: allHumanMersViralEstimates.length,
+          type: PopUpContentRowType.TEXT as const,
+          text: humanMersViralPrevalenceRange,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-human-viral-estimate' },
           rightPaddingEnabled: false
         }] : []),
         ...(estimateDataShown ? [{
           title: 'Animal Viral Estimates'.replace(' ', '\u00A0'),
-          type: PopUpContentRowType.NUMBER as const,
-          value: allAnimalMersViralEstimates.length,
+          type: PopUpContentRowType.TEXT as const,
+          text: animalMersViralPrevalenceRange,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-animal-viral-estimate' },
           rightPaddingEnabled: false
