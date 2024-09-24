@@ -9,7 +9,7 @@ import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
 interface MersFilterMetadataContextType {
   numberOfNonTypenameFiltersApplied: number;
   dataTableAdditionalButtonConfig: AdditionalButtonConfiguration;
-  visualizationFootnote: string | undefined;
+  visualizationFootnote: string;
 }
 
 const initialMersFilterMetadataContext: MersFilterMetadataContextType = {
@@ -17,7 +17,7 @@ const initialMersFilterMetadataContext: MersFilterMetadataContextType = {
   dataTableAdditionalButtonConfig: {
     enabled: false
   },
-  visualizationFootnote: undefined,
+  visualizationFootnote: '⠀',
 };
 
 export const MersFilterMetadataContext = createContext<
@@ -64,7 +64,7 @@ export const MersFilterMetadataProvider = (props: MersFilterMetadataProviderProp
   const visualizationFootnote = useMemo(() => {
     return numberOfNonTypenameFiltersApplied !== 0
       ? `${numberOfNonTypenameFiltersApplied} filters have been applied to this visualization using the filters to the left.`
-      : undefined;
+      : '⠀';
   }, [ numberOfNonTypenameFiltersApplied ])
 
   return (

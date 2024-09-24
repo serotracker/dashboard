@@ -139,7 +139,7 @@ export const RechartsVisualization = <
         <div
           className={cn(
             "relative w-full",
-            (!props.visualizationInformation.visualizationDownloadFootnote ? 'hidden' : '')
+            (!props.visualizationInformation.visualizationDownloadFootnote === undefined ? 'hidden' : '')
           )}
         >
           <p className={cn("h-full text-xs italic")}>
@@ -150,7 +150,7 @@ export const RechartsVisualization = <
         <div
           className={cn(
             "relative w-full ignore-for-visualization-download",
-            (!props.visualizationInformation.visualizationNonDownloadFootnote ? 'hidden' : '')
+            (!props.visualizationInformation.visualizationNonDownloadFootnote === undefined ? 'hidden' : '')
           )}
         >
           <p className={cn("h-full text-xs italic")}>
