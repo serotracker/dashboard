@@ -315,14 +315,49 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     }
 
     if(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.WHO_REGION) {
+      if(
+        summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE ||
+        summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE
+      ) {
+        return (
+          <WHORegionsTooltip>
+            <p>Please note that the high risk and general population categories are descriptive statistics and studies within those categories are very heterogeneous in terms of assay quality and study design.</p>
+            <p>The cogwheel to the left can be used to change which sample frames are considered general population or high risk.</p>
+          </WHORegionsTooltip>
+        );
+      }
       return <WHORegionsTooltip />
     }
 
     if(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.UN_REGION) {
+      if(
+        summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE ||
+        summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE
+      ) {
+        return (
+          <UNRegionsTooltip>
+            <p>Please note that the high risk and general population categories are descriptive statistics and studies within those categories are very heterogeneous in terms of assay quality and study design.</p>
+            <p>The cogwheel to the left can be used to change which sample frames are considered general population or high risk.</p>
+          </UNRegionsTooltip>
+        );
+      }
+
       return <UNRegionsTooltip />
     }
 
     if(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.COUNTRY) {
+      if(
+        summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE ||
+        summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE
+      ) {
+        return (
+          <div>
+            <p>Please note that the high risk and general population categories are descriptive statistics and studies within those categories are very heterogeneous in terms of assay quality and study design.</p>
+            <p>The cogwheel to the left can be used to change which sample frames are considered general population or high risk.</p>
+          </div>
+        );
+      }
+
       return undefined;
     }
 
