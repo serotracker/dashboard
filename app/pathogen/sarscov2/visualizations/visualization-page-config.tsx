@@ -64,7 +64,8 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Published Studies per GBD Region" }),
     renderVisualization: () => PublishedStudiesByGdbRegionGraph({legendConfiguration: LegendConfiguration.RIGHT_ALIGNED}),
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: undefined
   },
   [SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME]: {
     id: SarsCov2VisualizationId.CUMULATIVE_NUMBER_OF_SEROSURVEYS_PUBLISHED_OVER_TIME,
@@ -74,7 +75,8 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Cumulative Number Serosurveys Published Over Time" }),
     renderVisualization: () => CumulativeNumberOfSerosurveysPublishedOverTime(),
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: undefined
   },
   [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION]: {
     id: SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_WHO_REGION,
@@ -84,7 +86,8 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Modelled Seroprevalence Globally by WHO Region" }),
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>,
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: undefined
   },
   [SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_COUNTRY]: {
     id: SarsCov2VisualizationId.MODELLED_SEROPREVALENCE_BY_COUNTRY,
@@ -94,7 +97,8 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Modelled Seroprevalence Globally by Country" }),
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>,
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: undefined
   },
   [SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS]: {
     id: SarsCov2VisualizationId.COMPARING_SEROPREVALENCE_POSITIVE_CASES_AND_VACCINATIONS,
@@ -104,7 +108,8 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Comparing Median Seroprevalence to Confirmed Cases and Vaccine Coverage Over Time" }),
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>,
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: undefined
   },
   [SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION]: {
     id: SarsCov2VisualizationId.NUMBER_OF_INFECTIONS_AT_MIDPOINT_BY_GBD_REGION,
@@ -114,7 +119,8 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Number of Infections per Confirmed Case at the Study Midpoint by GBD Region" }),
     renderVisualization: () => NumberOfInfectionsPerConfirmedCaseAtTheStudyMidpointByGbdSuperRegion(),
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: undefined
   },
 }
 

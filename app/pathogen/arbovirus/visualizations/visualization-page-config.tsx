@@ -79,7 +79,8 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Cumulative estimate count over time by arbovirus" }),
     renderVisualization: StudyCountOverTime,
-    visualizationDownloadFootnote: shortenedArboTrackerCitationText
+    visualizationDownloadFootnote: shortenedArboTrackerCitationText,
+    visualizationNonDownloadFootnote: undefined
   },
   [ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME]: {
     id: ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME,
@@ -89,7 +90,8 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Cumulative estimate count over time by sample frame" }),
     renderVisualization: StudyCountOverTimeBySampleFrame,
-    visualizationDownloadFootnote: shortenedArboTrackerCitationText
+    visualizationDownloadFootnote: shortenedArboTrackerCitationText,
+    visualizationNonDownloadFootnote: undefined
   },
   [ArbovirusVisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE]: {
     id: ArbovirusVisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE,
@@ -99,7 +101,8 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Estimate count by arbovirus & antibody type" }),
     renderVisualization: () => EstimateCountByArbovirusAndAntibodyTypeGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED }),
-    visualizationDownloadFootnote: shortenedArboTrackerCitationText
+    visualizationDownloadFootnote: shortenedArboTrackerCitationText,
+    visualizationNonDownloadFootnote: undefined
   },
   [ArbovirusVisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS]: {
     id: ArbovirusVisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS,
@@ -108,7 +111,8 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Estimate count by WHO region and arbovirus" }),
     titleTooltipContent: <WHORegionsTooltip />,
     renderVisualization: () => EstimateCountByWHORegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED }),
-    visualizationDownloadFootnote: shortenedArboTrackerCitationText
+    visualizationDownloadFootnote: shortenedArboTrackerCitationText,
+    visualizationNonDownloadFootnote: undefined
   },
   [ArbovirusVisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS]: {
     id: ArbovirusVisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS,
@@ -117,7 +121,8 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Estimate count by UN region and arbovirus" }),
     titleTooltipContent: <UNRegionsTooltip />,
     renderVisualization: () => EstimateCountByUnRegionAndArbovirusGraph({ legendConfiguration: LegendConfiguration.RIGHT_ALIGNED }),
-    visualizationDownloadFootnote: shortenedArboTrackerCitationText
+    visualizationDownloadFootnote: shortenedArboTrackerCitationText,
+    visualizationNonDownloadFootnote: undefined
   },
   [ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: {
     id: ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION,
@@ -126,7 +131,8 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median seroprevalence of arboviruses by WHO Region" }),
     titleTooltipContent: <WHORegionsTooltip />,
     renderVisualization: MedianSeroprevalenceByWHORegionAndArbovirusGraph,
-    visualizationDownloadFootnote: shortenedArboTrackerCitationText
+    visualizationDownloadFootnote: shortenedArboTrackerCitationText,
+    visualizationNonDownloadFootnote: undefined
   },
   [ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_UN_REGION]: {
     id: ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_UN_REGION,
@@ -135,7 +141,8 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median seroprevalence of arboviruses by UN Region" }),
     titleTooltipContent: <UNRegionsTooltip />,
     renderVisualization: MedianSeroprevalenceByUnRegionAndArbovirusGraph,
-    visualizationDownloadFootnote: shortenedArboTrackerCitationText
+    visualizationDownloadFootnote: shortenedArboTrackerCitationText,
+    visualizationNonDownloadFootnote: undefined
   },
   [ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP]: {
     id: ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP,
@@ -146,7 +153,8 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median seroprevalence by WHO region and age group" }),
     titleTooltipContent: <WHORegionsTooltip />,
     renderVisualization: MedianSeroprevalenceByWhoRegionAndAgeGroupTable,
-    visualizationDownloadFootnote: shortenedArboTrackerCitationText
+    visualizationDownloadFootnote: shortenedArboTrackerCitationText,
+    visualizationNonDownloadFootnote: undefined
   },
   [ArbovirusVisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS]: {
     id: ArbovirusVisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS,
@@ -156,7 +164,8 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Top ten countries reporting estimates by arbovirus" }),
     renderVisualization: Top10CountriesByPathogenStudyCount,
-    visualizationDownloadFootnote: shortenedArboTrackerCitationText
+    visualizationDownloadFootnote: shortenedArboTrackerCitationText,
+    visualizationNonDownloadFootnote: undefined
   },
   [ArbovirusVisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME]: {
     id: ArbovirusVisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME,
@@ -169,7 +178,8 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
       <p> Hovering over any one of the bars will show the median seroprevalence for that time period. Time periods with no data are not shown so intervals on the x-axis may or may not be consecutive time periods.</p>
     ),
     renderVisualization: ChangeInMedianSeroprevalenceOverTimeGraph,
-    visualizationDownloadFootnote: shortenedArboTrackerCitationText
+    visualizationDownloadFootnote: shortenedArboTrackerCitationText,
+    visualizationNonDownloadFootnote: undefined
   },
   [ArbovirusVisualizationId.COUNTRY_SEROPREVALENCE_COMPARISON_SCATTER_PLOT]: {
     id: ArbovirusVisualizationId.COUNTRY_SEROPREVALENCE_COMPARISON_SCATTER_PLOT,
@@ -194,7 +204,8 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
     },
     titleTooltipContent: <ClopperPearsonConfidenceIntervalCalculationTooltip />,
     renderVisualization: ({ data, highlightedDataPoint, hideArbovirusDropdown }) => CountrySeroprevalenceComparisonScatterPlot({ data, highlightedDataPoint, hideArbovirusDropdown }),
-    visualizationDownloadFootnote: shortenedArboTrackerCitationText
+    visualizationDownloadFootnote: shortenedArboTrackerCitationText,
+    visualizationNonDownloadFootnote: undefined
   },
 }
 

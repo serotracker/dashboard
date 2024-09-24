@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { VisualizationDisplayNameType, VisualizationInformation } from "../../generic-pathogen-visualizations-page";
 import { typedObjectEntries } from "@/lib/utils";
 import { GetUrlParameterFromVisualizationIdFunction } from '@/components/customs/visualizations/visualization-header';
@@ -13,6 +13,7 @@ import { useSummaryByRegionVisualizationPageConfig } from "./visualization-page-
 import { MedianViralPositivePrevalenceOverTime } from "../dashboard/(visualizations)/median-viral-positive-prevalence-over-time";
 import { useEstimatesByRegionVisualizationPageConfig } from "./visualization-page-config/use-estimates-by-region-visualization-page-config";
 import { useEstimateBreakdownTableAndFieldPageConfig } from "./visualization-page-config/use-estimate-summary-by-who-region-and-field-page-config";
+import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 export enum MersVisualizationId {
   REPORTED_EVENT_SUMMARY_OVER_TIME = "REPORTED_EVENT_SUMMARY_OVER_TIME",
@@ -68,7 +69,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Reported MERS Cases Over Time" }),
     renderVisualization: ({ data }) => <ReportedEventSummaryOverTime data={data} />,
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: undefined
   },
   [MersVisualizationId.CAMEL_POPULATION_OVER_TIME]: {
     id: MersVisualizationId.CAMEL_POPULATION_OVER_TIME,
@@ -78,7 +80,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Camel Population Over Time" }),
     renderVisualization: ({ data }) => <CamelPopulationOverTime data={data} />,
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: undefined
   },
   [MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME]: {
     id: MersVisualizationId.MEDIAN_SEROPREVALENCE_OVER_TIME,
@@ -88,7 +91,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median Seroprevalence Over Time" }),
     renderVisualization: ({ data }) => <MedianSeroprevalenceOverTime data={data} />,
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: undefined
   },
   [MersVisualizationId.MEDIAN_VIRAL_PREVALENCE_OVER_TIME]: {
     id: MersVisualizationId.MEDIAN_VIRAL_PREVALENCE_OVER_TIME,
@@ -98,7 +102,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median Viral Prevalenc eOver Time" }),
     renderVisualization: ({ data }) => <MedianViralPositivePrevalenceOverTime data={data} />,
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: undefined
   },
   [MersVisualizationId.SUMMARY_BY_REGION]: {
     id: MersVisualizationId.SUMMARY_BY_REGION,
@@ -112,7 +117,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
     }),
     titleTooltipContent: <p> Requires state. Initialized in following step. </p>,
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>,
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: 'Requires state. Initialized in following step.'
   },
   [MersVisualizationId.ESTIMATES_BY_REGION]: {
     id: MersVisualizationId.ESTIMATES_BY_REGION,
@@ -126,7 +132,8 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
     }),
     titleTooltipContent: <p> Requires state. Initialized in following step. </p>,
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>,
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: 'Requires state. Initialized in following step.'
   },
   [MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE]: {
     id: MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE,
@@ -140,11 +147,13 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
     }),
     titleTooltipContent: <p> Requires state. Initialized in following step. </p>,
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>,
-    visualizationDownloadFootnote: undefined
+    visualizationDownloadFootnote: undefined,
+    visualizationNonDownloadFootnote: undefined
   }
 }
 
 export const useVisualizationPageConfiguration = () => {
+  const { visualizationFootnote } = useContext(MersFilterMetadataContext)
   const {
     getDisplayNameForSummaryByWhoRegion,
     renderVisualizationForSummaryByWhoRegion,
@@ -187,7 +196,8 @@ export const useVisualizationPageConfiguration = () => {
         numberOfPagesAvailable,
         currentPageIndex,
         setCurrentPageIndex
-      }
+      },
+      visualizationNonDownloadFootnote: visualizationFootnote
     },
     [MersVisualizationId.ESTIMATES_BY_REGION]: {
       ...mersVisualizationInformation[MersVisualizationId.ESTIMATES_BY_REGION],
@@ -195,6 +205,7 @@ export const useVisualizationPageConfiguration = () => {
       renderVisualization: renderVisualizationForEstimatesByRegion,
       customizationModalConfiguration: customizationModalConfigurationForEstimatesByRegion,
       titleTooltipContent: estimatesByRegionTitleTooltipContent,
+      visualizationNonDownloadFootnote: visualizationFootnote
     },
     [MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE]: {
       ...mersVisualizationInformation[MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE],
@@ -216,7 +227,8 @@ export const useVisualizationPageConfiguration = () => {
     setCurrentPageIndex,
     getDisplayNameForEstimateBreakdownTableAndField,
     renderVisualizationForEstimateBreakdownTableAndField,
-    estimateBreakdownTableAndFieldTooltipContent
+    estimateBreakdownTableAndFieldTooltipContent,
+    visualizationFootnote
   ])
 
   return {

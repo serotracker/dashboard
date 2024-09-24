@@ -9,13 +9,19 @@ import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
 interface MersFilterMetadataContextType {
   numberOfNonTypenameFiltersApplied: number;
   dataTableAdditionalButtonConfig: AdditionalButtonConfiguration;
+  visualizationFootnote: string;
 }
 
 const initialMersFilterMetadataContext: MersFilterMetadataContextType = {
   numberOfNonTypenameFiltersApplied: 0,
   dataTableAdditionalButtonConfig: {
     enabled: false
-  }
+  },
+  // A little hack here. The visualizations have problems if you don't have placeholder text when you try to turn a filter on.
+  // Basically, if you don't get why this is here, replace this with an empty string and go to the ESTIMATES_BY_REGION visualization
+  // in MERSTracker and apply a filter. The footnote doesn't show up until you switch to a different variant of the visualization.
+  // If you tried that with the empty string or undefined and it worked just fine feel free to get rid of this hack though.
+  visualizationFootnote: '⠀',
 };
 
 export const MersFilterMetadataContext = createContext<
@@ -58,12 +64,23 @@ export const MersFilterMetadataProvider = (props: MersFilterMetadataProviderProp
       })
     }
   }, [ numberOfNonTypenameFiltersApplied ])
+  
+  const visualizationFootnote = useMemo(() => {
+    return numberOfNonTypenameFiltersApplied !== 0
+      ? `${numberOfNonTypenameFiltersApplied} filters have been applied to this visualization using the filters to the left.`
+      // A little hack here. The visualizations have problems if you don't have placeholder text when you try to turn a filter on.
+      // Basically, if you don't get why this is here, replace this with an empty string and go to the ESTIMATES_BY_REGION visualization
+      // in MERSTracker and apply a filter. The footnote doesn't show up until you switch to a different variant of the visualization.
+      // If you tried that with the empty string or undefined and it worked just fine feel free to get rid of this hack though.
+      : '⠀';
+  }, [ numberOfNonTypenameFiltersApplied ])
 
   return (
     <MersFilterMetadataContext.Provider
       value={{
         numberOfNonTypenameFiltersApplied,
-        dataTableAdditionalButtonConfig
+        dataTableAdditionalButtonConfig,
+        visualizationFootnote
       }}
     >
       {props.children}
