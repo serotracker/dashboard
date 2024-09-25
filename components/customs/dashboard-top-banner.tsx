@@ -1,9 +1,13 @@
-import { useContext, useCallback } from "react";
+import { useContext, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { download, generateCsv, mkConfig } from "export-to-csv";
+import { assertNever } from "assert-never";
 
 import { ToastContext, ToastId } from "@/contexts/toast-provider";
 import { cn, typedObjectFromEntries } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { DashboardType, dashboardTypeToRouteName } from "@/app/app-header-and-main";
+import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 
 interface DownloadCsvButtonConfiguration {
   enabled: true;
@@ -42,19 +46,73 @@ interface DisabledDataLastUpdatedNoteConfiguration {
 
 type DataLastUpdatedNoteConfiguration = EnabledDataLastUpdatedNoteConfiguration | DisabledDataLastUpdatedNoteConfiguration;
 
+interface DashboardSectionButtonConfiguration {
+  header: string;
+  text: string;
+}
+
 interface DashboardTopBannerProps {
   headerContent: React.ReactNode;
+  dashboardType: (
+    DashboardType.ARBOVIRUS |
+    DashboardType.SARS_COV_2 |
+    DashboardType.MERS
+  ),
   downloadCsvButtonOneConfiguration: DownloadCsvButtonConfiguration;
   downloadCsvButtonTwoConfiguration: DownloadCsvButtonConfiguration | {
     enabled: false;
   };
   citationButtonConfiguration: CitationButtonConfiguration;
   dataLastUpdatedNoteConfiguration: DataLastUpdatedNoteConfiguration;
+  mapButtonConfiguration: DashboardSectionButtonConfiguration;
+  dataButtonConfiguration: DashboardSectionButtonConfiguration;
+  visualizationsButtonConfiguration: DashboardSectionButtonConfiguration;
 }
 
 export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
   const { openToast } = useContext(ToastContext);
-  const { downloadCsvButtonOneConfiguration, downloadCsvButtonTwoConfiguration, citationButtonConfiguration, dataLastUpdatedNoteConfiguration } = props;
+  const router = useRouter();
+  const {
+    dashboardType,
+    downloadCsvButtonOneConfiguration,
+    downloadCsvButtonTwoConfiguration,
+    citationButtonConfiguration,
+    dataLastUpdatedNoteConfiguration,
+    mapButtonConfiguration,
+    dataButtonConfiguration,
+    visualizationsButtonConfiguration
+  } = props;
+
+  const navigationButtonSectionData = useMemo(() => [{
+    sectionId: DashboardSectionId.MAP,
+    header: mapButtonConfiguration.header,
+    text: mapButtonConfiguration.text,
+    route: `/pathogen/${dashboardTypeToRouteName[dashboardType]}/dashboard#${DashboardSectionId.MAP}`
+  }, {
+    sectionId: DashboardSectionId.TABLE,
+    header: dataButtonConfiguration.header,
+    text: dataButtonConfiguration.text,
+    route: `/pathogen/${dashboardTypeToRouteName[dashboardType]}/dashboard#${DashboardSectionId.TABLE}`
+  }, {
+    sectionId: DashboardSectionId.VISUALIZATIONS,
+    header: visualizationsButtonConfiguration.header,
+    text: visualizationsButtonConfiguration.text,
+    route: `/pathogen/${dashboardTypeToRouteName[dashboardType]}/dashboard#${DashboardSectionId.VISUALIZATIONS}`
+  }], [ mapButtonConfiguration, dataButtonConfiguration, visualizationsButtonConfiguration ]);
+
+  const navigationButtonColourClassName = useMemo(() => {
+    if(dashboardType === DashboardType.ARBOVIRUS) {
+      return 'bg-arbovirus hover:bg-arbovirusHover';
+    }
+    if(dashboardType === DashboardType.SARS_COV_2) {
+      return 'bg-sc2virus hover:bg-sc2virusHover';
+    }
+    if(dashboardType === DashboardType.MERS) {
+      return 'bg-mers hover:bg-mersHover';
+    }
+
+    assertNever(dashboardType)
+  }, [ dashboardType ]);
 
   const downloadData = useCallback((downloadCsvButtonConfiguration: DownloadCsvButtonConfiguration) => {
     const csvConfig = mkConfig({
@@ -82,59 +140,76 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
   }, []);
 
   return (
-    <div className="w-full h-fit relative row-span-2 rounded-md mt-4 border border-background p-4">
-      {props.headerContent}
-      <div className="relative">
-        <Button
-          className="w-[30%] bg-background hover:bg-backgroundHover h-full"
-          onClick={() => downloadData(downloadCsvButtonOneConfiguration)}
-        >
-          {props.downloadCsvButtonOneConfiguration.buttonContent}
-        </Button>
-        <Button
-          className={cn(
-            "w-[30%] bg-background hover:bg-backgroundHover ml-2 h-full",
-            props.downloadCsvButtonTwoConfiguration.enabled ? '' : 'hidden'
-          )}
-          onClick={() => {
-            if(downloadCsvButtonTwoConfiguration.enabled === false) {
-              return;
-            }
-            downloadData(downloadCsvButtonTwoConfiguration)
-          }}
-        >
-          {props.downloadCsvButtonTwoConfiguration.enabled ? props.downloadCsvButtonTwoConfiguration.buttonContent : 'No text'}
-        </Button>
-        <Button
-          className={cn(
-            "w-[30%] bg-background hover:bg-backgroundHover ml-2 h-full",
-            citationButtonConfiguration.enabled ? '' : 'hidden'
-          )}
-          onClick={() => {
-            if(citationButtonConfiguration.enabled === false) {
-              return;
-            }
+    <>
+      <div className="w-full h-fit relative row-span-2 rounded-md mt-4 border border-background p-4">
+        {props.headerContent}
+        <div className="relative">
+          <Button
+            className="w-[30%] bg-background hover:bg-backgroundHover h-full"
+            onClick={() => downloadData(downloadCsvButtonOneConfiguration)}
+          >
+            {props.downloadCsvButtonOneConfiguration.buttonContent}
+          </Button>
+          <Button
+            className={cn(
+              "w-[30%] bg-background hover:bg-backgroundHover ml-2 h-full",
+              props.downloadCsvButtonTwoConfiguration.enabled ? '' : 'hidden'
+            )}
+            onClick={() => {
+              if(downloadCsvButtonTwoConfiguration.enabled === false) {
+                return;
+              }
+              downloadData(downloadCsvButtonTwoConfiguration)
+            }}
+          >
+            {props.downloadCsvButtonTwoConfiguration.enabled ? props.downloadCsvButtonTwoConfiguration.buttonContent : 'No text'}
+          </Button>
+          <Button
+            className={cn(
+              "w-[30%] bg-background hover:bg-backgroundHover ml-2 h-full",
+              citationButtonConfiguration.enabled ? '' : 'hidden'
+            )}
+            onClick={() => {
+              if(citationButtonConfiguration.enabled === false) {
+                return;
+              }
 
-            navigator.clipboard.writeText(citationButtonConfiguration.suggestedCitationText);
+              navigator.clipboard.writeText(citationButtonConfiguration.suggestedCitationText);
 
-            openToast({ toastId: citationButtonConfiguration.citationToastId })
-          }}
-        >
-          {citationButtonConfiguration.enabled ? citationButtonConfiguration.buttonContent : 'No text'}
-        </Button>
-        <div className={cn(
-          'w-auto ml-2 inline-flex absolute right-0 bottom-0 max-w-[35%]',
-          citationButtonConfiguration.enabled === false && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
-        )}>
-          <p className='italic text-sm'>
-            {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : 'No text'}
-          </p>
+              openToast({ toastId: citationButtonConfiguration.citationToastId })
+            }}
+          >
+            {citationButtonConfiguration.enabled ? citationButtonConfiguration.buttonContent : 'No text'}
+          </Button>
+          <div className={cn(
+            'w-auto ml-2 inline-flex absolute right-0 bottom-0 max-w-[35%]',
+            citationButtonConfiguration.enabled === false && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
+          )}>
+            <p className='italic text-sm'>
+              {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : 'No text'}
+            </p>
+          </div>
         </div>
+        <p className={cn(
+          'w-full italic text-sm mt-4',
+          citationButtonConfiguration.enabled === true && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
+        )}> {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : 'No text'} </p>
       </div>
-      <p className={cn(
-        'w-full italic text-sm mt-4',
-        citationButtonConfiguration.enabled === true && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
-      )}> {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : 'No text'} </p>
-    </div>
+      <div className="w-full flex mt-2">
+        {navigationButtonSectionData.map((sectionData) => (
+          <div className="w-[33%] h-fit" key={sectionData.sectionId}>
+            <div className={cn(
+              'rounded-md border border-background mx-4',
+              navigationButtonColourClassName
+            )}>
+              <button className="w-full h-full p-4" onClick={() => {router.push(sectionData.route)}}>
+                <b className="text-white">{sectionData.header}</b>
+                <p className="text-sm text-white">{sectionData.text}</p>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 } 

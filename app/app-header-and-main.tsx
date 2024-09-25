@@ -1,9 +1,8 @@
 "use client";
 import { Header } from "@/components/customs/header";
 import { ModalState, ModalType, useModal } from "@/components/ui/modal/modal";
-import { HelpModalContext } from "@/contexts/help-modal-provider";
 import { usePathname } from "next/navigation";
-import { useContext, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 interface AppHeaderAndMainProps {
   children: React.ReactNode;
@@ -21,6 +20,12 @@ const dashboardTypeToHelpModalType = {
   [DashboardType.SARS_COV_2]: undefined,
   [DashboardType.MERS]: undefined,
   [DashboardType.NONE]: undefined,
+} as const
+
+export const dashboardTypeToRouteName = {
+  [DashboardType.ARBOVIRUS]: 'arbovirus',
+  [DashboardType.SARS_COV_2]: 'sarscov2',
+  [DashboardType.MERS]: 'mers'
 } as const
 
 export const AppHeaderAndMain = (props: AppHeaderAndMainProps) => {

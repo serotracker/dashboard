@@ -6,6 +6,7 @@ import { DashboardTopBanner } from "@/components/customs/dashboard-top-banner";
 import { isMersSeroprevalenceEstimate, isMersViralEstimate, MersContext, MersSeroprevalenceEstimate, MersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { formatMersSeroprevalenceEstimateForTable, formatMersViralEstimateForTable } from "./(table)/use-mers-data-table-data";
 import { useMersEstimateColumnConfiguration } from "./(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
+import { DashboardType } from "@/app/app-header-and-main";
 
 export const cleanEstimateForMersBanner = (
   estimate: MersSeroprevalenceEstimate | MersViralEstimate
@@ -59,6 +60,7 @@ export const MersBanner = () => {
         <p className="inline"> to track surveillance efforts around the world and visualize findings on this dashboard. We don&apos;t assess assay or study quality, please use your judgement when drawing conclusions.</p>
       </div>
     }
+    dashboardType={DashboardType.MERS}
     downloadCsvButtonOneConfiguration={{
       enabled: true,
       csvDownloadFilename: "merstracker_seroprevalence_dataset",
@@ -79,6 +81,18 @@ export const MersBanner = () => {
     dataLastUpdatedNoteConfiguration={{
       enabled: true,
       dataLastUpdatedText: 'The last major update to our data was on September 19th 2024'
+    }}
+    mapButtonConfiguration={{
+      header: 'Map',
+      text: 'A map displaying MERS serosurveys, viral testing, and genomic sequencing data across the globe.'
+    }}
+    dataButtonConfiguration={{
+      header: 'Data',
+      text: 'View or download our entire MERS dataset.'
+    }}
+    visualizationsButtonConfiguration={{
+      header: 'Visualizations',
+      text: 'A collection of visualizations for our MERS dataset.'
     }}
   />
 }
