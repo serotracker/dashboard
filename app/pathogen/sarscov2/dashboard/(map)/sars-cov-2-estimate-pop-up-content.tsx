@@ -14,6 +14,12 @@ const riskOfBiasToColourClassnameMap: Record<string, string | undefined> = {
   High: "bg-[#FEDBD7]",
 };
 
+const scopeToColourClassnameMap: Record<string, string | undefined> = {
+  National: "bg-national-study",
+  Regional: "bg-regional-study",
+  Local: "bg-local-study",
+};
+
 export const SarsCov2EstimatePopupContent = (props: SarsCov2EstimatePopupContentProps) => {
   const {
     scope,
@@ -50,8 +56,8 @@ export const SarsCov2EstimatePopupContent = (props: SarsCov2EstimatePopupContent
       topBannerConfiguration={{
         enabled: true,
         bannerText: topBannerText,
-        bannerColourClassname: riskOfBias
-          ? riskOfBiasToColourClassnameMap[riskOfBias] ?? 'bg-gray-200'
+        bannerColourClassname: scope
+          ? scopeToColourClassnameMap[scope] ?? 'bg-gray-200'
           : 'bg-gray-200',
         isTextBolded: true,
         isTextCentered: false,
