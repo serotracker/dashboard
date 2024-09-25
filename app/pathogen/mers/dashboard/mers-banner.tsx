@@ -57,7 +57,9 @@ export const MersBanner = () => {
       <div className="mb-2">
         <p className="inline"> MERSTracker is a dashboard and platform for MERS serosurveys, viral testing, and genomic sequencing studies. We conduct an </p>
         <Link href="/about/about-our-data" className="underline text-link inline">ongoing systematic review</Link>
-        <p className="inline"> to track surveillance efforts around the world and visualize findings on this dashboard. We don&apos;t assess assay or study quality, please use your judgement when drawing conclusions.</p>
+        <p className="inline"> to track surveillance efforts around the world and visualize findings on this dashboard. We don&apos;t assess assay or study quality, please use your judgement when drawing conclusions. Our database is not comprehensive and we continue to add studies to our database. You can submit a MERS study that you believe belongs on the dashboard by using </p>
+        <Link className="inline text-link underline text-end" target="_blank" rel="noopener noreferrer" href="https://forms.gle/ifwicQVVjj9CeNoA9">this form</Link>
+        <p className='inline'> and it will be reviewed by a member of our team.</p>
       </div>
     }
     dashboardType={DashboardType.MERS}
