@@ -7,6 +7,7 @@ import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbov
 import { arboDataTableRows } from "./(table)/ArboDataTable";
 import { ArboTrackerCitationButtonContent, suggestedArboTrackerCitationText } from "../arbotracker-citations";
 import { DashboardTopBanner } from "@/components/customs/dashboard-top-banner";
+import { DashboardType } from "@/app/app-header-and-main";
 
 export const ArboBanner = () => {
   const state = useContext(ArboContext);
@@ -19,6 +20,7 @@ export const ArboBanner = () => {
         <p className="inline"> to track serosurveys (antibody testing-based surveillance efforts) around the world and visualize findings on this dashboard.</p>
       </div>
     }
+    dashboardType={DashboardType.ARBOVIRUS}
     downloadCsvButtonOneConfiguration={{
       enabled: true,
       csvDownloadFilename: "arbotracker_dataset",

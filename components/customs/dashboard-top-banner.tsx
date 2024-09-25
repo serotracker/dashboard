@@ -1,9 +1,13 @@
-import { useContext, useCallback } from "react";
+import { useContext, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { download, generateCsv, mkConfig } from "export-to-csv";
+import { assertNever } from "assert-never";
 
 import { ToastContext, ToastId } from "@/contexts/toast-provider";
 import { cn, typedObjectFromEntries } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { DashboardType, dashboardTypeToRouteName } from "@/app/app-header-and-main";
+import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 
 interface DownloadCsvButtonConfiguration {
   enabled: true;
@@ -49,6 +53,11 @@ interface DashboardSectionButtonConfiguration {
 
 interface DashboardTopBannerProps {
   headerContent: React.ReactNode;
+  dashboardType: (
+    DashboardType.ARBOVIRUS |
+    DashboardType.SARS_COV_2 |
+    DashboardType.MERS
+  ),
   downloadCsvButtonOneConfiguration: DownloadCsvButtonConfiguration;
   downloadCsvButtonTwoConfiguration: DownloadCsvButtonConfiguration | {
     enabled: false;
@@ -62,7 +71,48 @@ interface DashboardTopBannerProps {
 
 export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
   const { openToast } = useContext(ToastContext);
-  const { downloadCsvButtonOneConfiguration, downloadCsvButtonTwoConfiguration, citationButtonConfiguration, dataLastUpdatedNoteConfiguration } = props;
+  const router = useRouter();
+  const {
+    dashboardType,
+    downloadCsvButtonOneConfiguration,
+    downloadCsvButtonTwoConfiguration,
+    citationButtonConfiguration,
+    dataLastUpdatedNoteConfiguration,
+    mapButtonConfiguration,
+    dataButtonConfiguration,
+    visualizationsButtonConfiguration
+  } = props;
+
+  const navigationButtonSectionData = useMemo(() => [{
+    sectionId: DashboardSectionId.MAP,
+    header: mapButtonConfiguration.header,
+    text: mapButtonConfiguration.text,
+    route: `/pathogen/${dashboardTypeToRouteName[dashboardType]}/dashboard#${DashboardSectionId.MAP}`
+  }, {
+    sectionId: DashboardSectionId.TABLE,
+    header: dataButtonConfiguration.header,
+    text: dataButtonConfiguration.text,
+    route: `/pathogen/${dashboardTypeToRouteName[dashboardType]}/dashboard#${DashboardSectionId.TABLE}`
+  }, {
+    sectionId: DashboardSectionId.VISUALIZATIONS,
+    header: visualizationsButtonConfiguration.header,
+    text: visualizationsButtonConfiguration.text,
+    route: `/pathogen/${dashboardTypeToRouteName[dashboardType]}/dashboard#${DashboardSectionId.VISUALIZATIONS}`
+  }], [ mapButtonConfiguration, dataButtonConfiguration, visualizationsButtonConfiguration ]);
+
+  const navigationButtonColourClassName = useMemo(() => {
+    if(dashboardType === DashboardType.ARBOVIRUS) {
+      return 'bg-arbovirus hover:bg-arbovirusHover';
+    }
+    if(dashboardType === DashboardType.SARS_COV_2) {
+      return 'bg-sc2virus hover:bg-sc2virusHover';
+    }
+    if(dashboardType === DashboardType.MERS) {
+      return 'bg-mers hover:bg-mersHover';
+    }
+
+    assertNever(dashboardType)
+  }, [ dashboardType ]);
 
   const downloadData = useCallback((downloadCsvButtonConfiguration: DownloadCsvButtonConfiguration) => {
     const csvConfig = mkConfig({
@@ -146,30 +196,19 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
         )}> {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : 'No text'} </p>
       </div>
       <div className="w-full flex mt-2">
-        <div className="w-[33%] h-fit">
-          <div className="rounded-md border border-background mx-4 bg-mers hover:bg-mersHover">
-            <button className="w-full h-full p-4">
-              <b className="text-white">Map</b>
-              <p className="text-sm text-white">A map displaying MERS serosurveys, viral testing, and genomic sequencing data across the globe.</p>
-            </button>
+        {navigationButtonSectionData.map((sectionData) => (
+          <div className="w-[33%] h-fit" key={sectionData.sectionId}>
+            <div className={cn(
+              'rounded-md border border-background mx-4',
+              navigationButtonColourClassName
+            )}>
+              <button className="w-full h-full p-4" onClick={() => {router.push(sectionData.route)}}>
+                <b className="text-white">{sectionData.header}</b>
+                <p className="text-sm text-white">{sectionData.text}</p>
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="w-[33%] h-fit">
-          <div className="rounded-md border border-background mx-4 bg-mers hover:bg-mersHover">
-            <button className="w-full h-full p-4">
-              <b className="text-white">Data</b>
-              <p className="text-sm text-white">View or download our entire MERS dataset.</p>
-            </button>
-          </div>
-        </div>
-        <div className="w-[33%] h-fit">
-          <div className="rounded-md border border-background mx-4 bg-mers hover:bg-mersHover">
-            <button className="w-full h-full p-4">
-              <b className="text-white">Visualizations</b>
-              <p className="text-sm text-white">A collection of visualizations for our MERS dataset.</p>
-            </button>
-          </div>
-        </div>
+        ))}
       </div>
     </>
   );
