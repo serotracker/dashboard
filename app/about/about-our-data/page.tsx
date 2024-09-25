@@ -82,7 +82,9 @@ export default function DataExtractionPage() {
           <Link className="inline text-link" href="https://www.who.int/" target="__blank" rel="noopener noreferrer">World Health Organization</Link>
           <p className='inline'> and the </p>
           <Link className="inline text-link" href="https://www.fao.org/" target="__blank" rel="noopener noreferrer">Food and Agriculture Organization of the United Nations</Link>
-          <p className='inline'>. We don&apos;t assess assay or study quality, please use your judgement when drawing conclusions.</p>
+          <p className='inline'>. We don&apos;t assess assay or study quality, please use your judgement when drawing conclusions. Our database is not comprehensive and we continue to add studies to it. You can submit a MERS study that you believe belongs on the dashboard by using </p>
+          <Link className="inline text-link underline text-end" target="_blank" rel="noopener noreferrer" href="https://forms.gle/ifwicQVVjj9CeNoA9">this form</Link>
+          <p className='inline'> and it will be reviewed by a member of our team.</p>
         </div>
         <div>
         <p className='inline'> Event data and camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation&apos;s </p>
