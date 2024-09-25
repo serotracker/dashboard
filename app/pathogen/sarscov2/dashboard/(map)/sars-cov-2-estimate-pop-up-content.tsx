@@ -1,6 +1,8 @@
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import { SarsCov2Estimate } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context"
+import { parseISO } from "date-fns";
+import { useMemo } from "react";
 
 interface SarsCov2EstimatePopupContentProps {
   estimate: SarsCov2Estimate;
@@ -12,15 +14,32 @@ const riskOfBiasToColourClassnameMap: Record<string, string | undefined> = {
   High: "bg-[#FEDBD7]",
 };
 
+const scopeToColourClassnameMap: Record<string, string | undefined> = {
+  National: "bg-national-study",
+  Regional: "bg-regional-study",
+  Local: "bg-local-study",
+};
+
 export const SarsCov2EstimatePopupContent = (props: SarsCov2EstimatePopupContentProps) => {
   const {
     scope,
     riskOfBias,
+    seroprevalence,
     denominatorValue: sampleSize,
+    samplingStartDate,
+    samplingEndDate,
     countryPositiveCasesPerMillionPeople,
     countryPeopleVaccinatedPerHundred,
     countryPeopleFullyVaccinatedPerHundred,
   } = props.estimate;
+
+  const topBannerText = useMemo(() => {
+    const seroprevalencePercentageText = seroprevalence
+      ? `Seroprevalence: ${(seroprevalence * 100).toFixed(1)}%`
+      : 'Seroprevalence: Unknown'
+
+    return `${seroprevalencePercentageText}`
+  }, [ seroprevalence ]);
 
   return (
     <GenericMapPopUp
@@ -35,7 +54,14 @@ export const SarsCov2EstimatePopupContent = (props: SarsCov2EstimatePopupContent
         link: props.estimate.url ?? undefined
       }}
       topBannerConfiguration={{
-        enabled: false
+        enabled: true,
+        bannerText: topBannerText,
+        bannerColourClassname: scope
+          ? scopeToColourClassnameMap[scope] ?? 'bg-gray-200'
+          : 'bg-gray-200',
+        isTextBolded: true,
+        isTextCentered: false,
+        alternateViewButtonEnabled: false
       }}
       alternateViewConfiguration={{ enabled: false }}
       rows={[{
@@ -56,7 +82,12 @@ export const SarsCov2EstimatePopupContent = (props: SarsCov2EstimatePopupContent
         title: "Sample Size",
         type: PopUpContentRowType.TEXT,
         text: 'N/A'
-      }), (Array.isArray(props.estimate.antibodies) ? {
+      }), {
+        title: "Sampling Date Range",
+        type: PopUpContentRowType.DATE_RANGE,
+        dateRangeStart: samplingStartDate ? parseISO(samplingStartDate) : undefined,
+        dateRangeEnd: samplingEndDate ? parseISO(samplingEndDate) : undefined
+      }, (Array.isArray(props.estimate.antibodies) ? {
         title: "Antibody Target",
         type: PopUpContentRowType.COLOURED_PILL_LIST,
         values: props.estimate.antibodies,
