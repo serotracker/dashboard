@@ -1,6 +1,7 @@
 
 'use client';
 
+import { LinearLegendColourGradient } from "@/components/customs/linear-legend-colour-gradient";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 
@@ -44,6 +45,28 @@ export const CountryHighlightLayerLegend = (input: CountryHighlightLayerLegendPr
         {input.freeTextEntries.map((entry) => (
           <p key={`${entry.text}`}> {entry.text} </p>
         ))}
+        <LinearLegendColourGradient
+          ticks={[{
+            numericValue: 0,
+            colourCode: '#E28672'
+          }, {
+            numericValue: 20,
+            colourCode: '#EC93AB'
+          }, {
+            numericValue: 30,
+            colourCode: '#CEB1DE'
+          }, {
+            numericValue: 40,
+            colourCode: '#95D3F0'
+          }, {
+            numericValue: 50,
+            colourCode: '#77EDD9'
+          }, {
+            numericValue: 200,
+            colourCode: '#A9FCAA'
+          }]}
+          widthPx={300}
+        />
       </CardContent>
     </Card>
   )

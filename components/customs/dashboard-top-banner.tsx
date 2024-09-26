@@ -98,7 +98,7 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
     header: visualizationsButtonConfiguration.header,
     text: visualizationsButtonConfiguration.text,
     route: `/pathogen/${dashboardTypeToRouteName[dashboardType]}/dashboard#${DashboardSectionId.VISUALIZATIONS}`
-  }], [ mapButtonConfiguration, dataButtonConfiguration, visualizationsButtonConfiguration ]);
+  }], [ mapButtonConfiguration, dataButtonConfiguration, visualizationsButtonConfiguration, dashboardType ]);
 
   const navigationButtonColourClassName = useMemo(() => {
     if(dashboardType === DashboardType.ARBOVIRUS) {
