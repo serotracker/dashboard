@@ -10,6 +10,7 @@ import { MapSymbology } from '@/app/pathogen/sarscov2/dashboard/(map)/map-config
 import { MersMapCustomizationsContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context';
 import { MapDataPointVisibilityOptions } from '../use-mers-map-customization-modal';
 import { assertNever } from 'assert-never';
+import { mapColourBucketsToLinearGradientConfiguration } from '@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration';
 
 const formatNumberForLegend = (input: {
   value: number,
@@ -138,6 +139,11 @@ export const useTotalCamelPopulationLayer = () => {
     const countryAlphaThreeCodesWithCamelData = uniq(input.data.map(( { countryAlphaThreeCode }) => countryAlphaThreeCode))
     const outlinedCountryAlphaThreeCodesWithNoCamelData = outlinedCountryAlphaThreeCodes.filter((alphaThreeCode) => !countryAlphaThreeCodesWithCamelData.includes(alphaThreeCode));
 
+    const { linearLegendColourGradientConfiguration } = mapColourBucketsToLinearGradientConfiguration({
+      mapColourBuckets,
+      minimumPossibleValue: 0
+    });
+
     return {
       paint: {
         countryData: [
@@ -169,8 +175,15 @@ export const useTotalCamelPopulationLayer = () => {
           borderColour: MapSymbology.CountryFeature.Default.BorderColour
         }
       },
-      countryHighlightLayerLegendEntries,
-      freeTextEntries: getFreeTextEntries({ countryOutlinesEnabled: input.countryOutlinesEnabled })
+      countryHighlightLayerLegendEntries: [],
+      freeTextEntries: getFreeTextEntries({ countryOutlinesEnabled: input.countryOutlinesEnabled }),
+      linearLegendColourGradientConfiguration: {
+        enabled: linearLegendColourGradientConfiguration.enabled,
+        props: {
+          ticks: linearLegendColourGradientConfiguration.props.ticks,
+          title: 'Camel Population By Country'
+        }
+      }
     }
   }, [ getFreeTextEntries ]);
 

@@ -20,7 +20,7 @@ import isEqual from "lodash/isEqual";
 import { EsmMapSourceAndLayer } from "./esm-maps";
 import { computeClusterMarkers } from "@/app/pathogen/arbovirus/dashboard/(map)/arbo-map-cluster-utils";
 import { GenericMapPopUpWidth } from "./map-pop-up/generic-map-pop-up";
-import { CountryHighlightLayerLegendEntry, FreeTextEntry } from "./country-highlight-layers/country-highlight-layer-legend";
+import { CountryHighlightLayerLegendEntry, FreeTextEntry, LinearLegendColourGradientConfiguration } from "./country-highlight-layers/country-highlight-layer-legend";
 import { CountryDataContextType } from "@/contexts/pathogen-context/country-information-context";
 import { MapStyleContext } from "@/contexts/map-style-provider";
 
@@ -83,6 +83,7 @@ export type GetCountryHighlightingLayerInformationOutput = {
   paint: PaintForCountries;
   countryHighlightLayerLegendEntries: CountryHighlightLayerLegendEntry[];
   freeTextEntries: FreeTextEntry[];
+  linearLegendColourGradientConfiguration: LinearLegendColourGradientConfiguration;
 };
 
 interface PathogenMapProps<

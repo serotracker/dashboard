@@ -13,6 +13,7 @@ import { typedGroupBy, typedObjectEntries } from '@/lib/utils';
 import { MersMapCustomizationsContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context';
 import { MapDataPointVisibilityOptions } from '../use-mers-map-customization-modal';
 import { assertNever } from 'assert-never';
+import { mapColourBucketsToLinearGradientConfiguration } from '@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration';
 
 type GetCountryHighlightingLayerInformationInput<
   TData extends { countryAlphaThreeCode: string },
@@ -103,6 +104,11 @@ export const useMersReportedHumanCasesMapLayer = () => {
     const outlinedCountryAlphaThreeCodesWithNoPositiveCaseData =
       outlinedCountryAlphaThreeCodes.filter((alphaThreeCode) => !countryAlphaThreeCodesWithPositiveCaseData.includes(alphaThreeCode));
 
+    const { linearLegendColourGradientConfiguration } = mapColourBucketsToLinearGradientConfiguration({
+      mapColourBuckets,
+      minimumPossibleValue: 0
+    });
+
     return {
       paint: {
         countryData: [
@@ -134,8 +140,15 @@ export const useMersReportedHumanCasesMapLayer = () => {
           borderColour: MapSymbology.CountryFeature.Default.BorderColour
         }
       },
-      countryHighlightLayerLegendEntries,
-      freeTextEntries: getFreeTextEntries({ countryOutlinesEnabled: input.countryOutlinesEnabled })
+      countryHighlightLayerLegendEntries: [],
+      freeTextEntries: getFreeTextEntries({ countryOutlinesEnabled: input.countryOutlinesEnabled }),
+      linearLegendColourGradientConfiguration: {
+        enabled: linearLegendColourGradientConfiguration.enabled,
+        props: {
+          ticks: linearLegendColourGradientConfiguration.props.ticks,
+          title: 'Human Cases By Country'
+        }
+      }
     }
   }, [ getFreeTextEntries ]);
 

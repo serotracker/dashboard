@@ -1,6 +1,7 @@
 
 'use client';
 
+import { LinearLegendColourGradient, LinearLegendColourGradientProps } from "@/components/customs/linear-legend-colour-gradient";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 
@@ -14,9 +15,23 @@ export interface CountryHighlightLayerLegendEntry {
   icon?: (() => React.ReactNode) | undefined;
 }
 
+export interface EnabledLinearLegendColourGradientConfiguration {
+  enabled: true;
+  props: Omit<LinearLegendColourGradientProps, 'widthPx'>;
+}
+
+interface DisabledLinearLegendColourGradientConfiguration {
+  enabled: false;
+}
+
+export type LinearLegendColourGradientConfiguration = 
+  | EnabledLinearLegendColourGradientConfiguration
+  | DisabledLinearLegendColourGradientConfiguration;
+
 interface CountryHighlightLayerLegendProps {
   className?: string;
   legendEntries: CountryHighlightLayerLegendEntry[];
+  linearLegendColourGradientConfiguration: LinearLegendColourGradientConfiguration;
   freeTextEntries: FreeTextEntry[];
 }
 
@@ -31,6 +46,10 @@ export const CountryHighlightLayerLegend = (input: CountryHighlightLayerLegendPr
         <h2 className="text-lg">Legend</h2>
       </CardHeader>
       <CardContent>
+        {input.linearLegendColourGradientConfiguration.enabled === true
+          ? <LinearLegendColourGradient widthPx={500} {...input.linearLegendColourGradientConfiguration.props} />
+          : null
+        }
         {input.legendEntries.map((entry) => (
           <div className="items-center flex space-x-2 my-1" key={`${entry.description}-${entry.colour}`}>
             <div

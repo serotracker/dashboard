@@ -11,16 +11,17 @@ import { AnimalMersEvent, HumanMersEvent, isAnimalMersEvent, isHumanMersEvent, M
 import { MersDiagnosisStatus } from "@/gql/graphql";
 import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
 import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
+import { LinearLegendColourGradientConfiguration } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
 
 interface UseMersMapPaintInput<
   TData extends {}
 > {
   dataPoints: TData[];
   faoMersEventData: MersEvent[];
-  currentMapCountryHighlightingSettings: MersMapCountryHighlightingSettings,
-  countryOutlinesSetting: CountryPaintChangeSetting,
-  estimateDataShown: boolean,
-  eventDataShown: boolean
+  currentMapCountryHighlightingSettings: MersMapCountryHighlightingSettings;
+  countryOutlinesSetting: CountryPaintChangeSetting;
+  estimateDataShown: boolean;
+  eventDataShown: boolean;
 }
 
 export const useMersMapPaint = <
@@ -35,11 +36,11 @@ export const useMersMapPaint = <
   const reportedMersHumanCasesMapLayer = useMersReportedHumanCasesMapLayer();
   const reportedMersAnimalCasesMapLayer = useMersReportedAnimalCasesMapLayer();
 
-  const { paint, countryHighlightLayerLegendEntries, freeTextEntries } = useMemo((): GetCountryHighlightingLayerInformationOutput => {
+  const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration } = useMemo((): GetCountryHighlightingLayerInformationOutput => {
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES) {
       const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
 
-      const { paint, freeTextEntries } = dataPointPresentMapLayer.getCountryHighlightingLayerInformation({
+      const { paint, freeTextEntries, linearLegendColourGradientConfiguration } = dataPointPresentMapLayer.getCountryHighlightingLayerInformation({
         data: dataPoints,
         countryHighlightingEnabled: true,
         countryOutlinesEnabled
@@ -75,6 +76,7 @@ export const useMersMapPaint = <
 
       return {
         paint,
+        linearLegendColourGradientConfiguration,
         countryHighlightLayerLegendEntries,
         freeTextEntries
       }
@@ -127,6 +129,7 @@ export const useMersMapPaint = <
   return {
     paint,
     countryHighlightLayerLegendEntries,
-    freeTextEntries
+    freeTextEntries,
+    linearLegendColourGradientConfiguration
   }
 };
