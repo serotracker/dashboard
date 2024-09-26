@@ -29,7 +29,7 @@ export type FaoYearlyCamelPopulationDataEntryForTable = Omit<FaoYearlyCamelPopul
 const formatFaoCamelPopulationDataForTable = (dataPoint: FaoYearlyCamelPopulationDataEntry): FaoYearlyCamelPopulationDataEntryForTable => ({
   ...dataPoint,
   country: dataPoint.country.name,
-  camelCountPerCapita: dataPoint.camelCountPerCapita ? formatPerCapitaNumberForLegend({ value: dataPoint.camelCountPerCapita, isExclusiveInRange: false }) : undefined,
+  camelCountPerCapita: dataPoint.camelCountPerCapita ? formatPerCapitaNumberForLegend({ value: dataPoint.camelCountPerCapita, isExclusiveInRange: false, entity: 'camels' }) : undefined,
   countryAlphaThreeCode: dataPoint.country.alphaThreeCode,
   countryAlphaTwoCode: dataPoint.country.alphaTwoCode,
   rawCountry: dataPoint.country,
