@@ -87,7 +87,8 @@ export const useCamelsPerCapitaLayer = () => {
       ...mapColourBuckets.map((bucket) => ({
         description: formatPerCapitaNumberRangeForLegend({
           minimumInclusive: bucket.valueRange.minimumInclusive,
-          maximumExclusive: bucket.valueRange.maximumExclusive
+          maximumExclusive: bucket.valueRange.maximumExclusive,
+          entity: 'camels'
         }),
         colour: bucket.fill
       }))
