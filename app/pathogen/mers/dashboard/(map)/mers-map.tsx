@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useContext, useMemo, useState } from "react";
-import { GetCountryHighlightingLayerInformationOutput, PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
+import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapEstimateSummary } from "@/components/ui/pathogen-map/map-estimate-summary";
 import { isPopupCountryHighlightLayerContentGeneratorInput } from "@/components/ui/pathogen-map/pathogen-map-popup";
-import { AnimalMersEvent, HumanMersEvent, isAnimalMersEvent, isHumanMersEvent, MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { MersCountryPopupContent } from "./mers-country-pop-up-content";
 import { HumanMersSeroprevalenceEstimatePopupContent } from "./human-mers-seroprevalence-estimate-pop-up-content";
 import { AnimalMersSeroprevalenceEstimatePopupContent } from "./animal-mers-seroprevalence-estimate-pop-up-content";
@@ -12,7 +12,6 @@ import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
 import { MersFaoAnimalEventPopupContent } from "./mers-fao-animal-event-pop-up-content";
 import { MersFaoHumanEventPopupContent } from "./mers-fao-human-event-pop-up-content";
 import assertNever from "assert-never";
-import { MersAnimalSpecies, MersDiagnosisStatus, MersEventAnimalSpecies } from "@/gql/graphql";
 import {
   MersMapMarkerData,
   isHumanMersSeroprevalenceEstimateMapMarkerData,
@@ -22,9 +21,7 @@ import {
   isAnimalMersViralEstimateMapMarkerData,
   isHumanMersViralEstimateMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
-import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
-import { CountryPaintChangeSetting, MapDataPointVisibilityOptions, MersMapCountryHighlightingSettings, useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
-import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
+import { MapDataPointVisibilityOptions, useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
 import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
 import { AnimalMersViralEstimatePopupContent } from "./animal-mers-viral-estimate-pop-up-content";
 import { HumanMersViralEstimatePopupContent } from "./human-mers-viral-estimate-pop-up-content";
@@ -79,7 +76,7 @@ export const MersMap = () => {
     eventDataShown
   })
 
-  const { paint, countryHighlightLayerLegendEntries, freeTextEntries } = useMersMapPaint({
+  const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration } = useMersMapPaint({
     dataPoints,
     faoMersEventData,
     currentMapCountryHighlightingSettings,
@@ -200,6 +197,7 @@ export const MersMap = () => {
           ...countryHighlightLayerLegendEntries,
           ...dataTypeLayerLegendEntries
         ]}
+        linearLegendColourGradientConfiguration={linearLegendColourGradientConfiguration}
         freeTextEntries={freeTextEntries}
       />
       <MapEstimateSummary filteredData={filteredData.map((estimate) => ({ sourceSheetName: estimate.primaryEstimateInfo.sourceTitle }))}/>

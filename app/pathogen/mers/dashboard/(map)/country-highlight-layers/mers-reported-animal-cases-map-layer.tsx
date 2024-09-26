@@ -136,6 +136,9 @@ export const useMersReportedAnimalCasesMapLayer = () => {
       },
       countryHighlightLayerLegendEntries,
       freeTextEntries: getFreeTextEntries({ countryOutlinesEnabled: input.countryOutlinesEnabled }),
+      linearLegendColourGradientConfiguration: {
+        enabled: false
+      }
     }
   }, [ getFreeTextEntries ]);
 

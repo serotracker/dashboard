@@ -6,7 +6,8 @@ interface LinearLegendColourGradientTick {
   colourCode: string;
 }
 
-interface LinearLegendColourGradientProps {
+export interface LinearLegendColourGradientProps {
+  title: string;
   ticks: LinearLegendColourGradientTick[];
   widthPx: number;
 }
@@ -88,7 +89,8 @@ export const LinearLegendColourGradient = (
     var xTicksElement = d3.axisBottom(xTicks);
 
     svgLegend
-      .attr("class", "axis")
+      .attr("width", `${widthPx}px`)
+      .attr("height", "70px")
       .append("g")
       .attr("transform", "translate(0, 40)")
       .call(xTicksElement);

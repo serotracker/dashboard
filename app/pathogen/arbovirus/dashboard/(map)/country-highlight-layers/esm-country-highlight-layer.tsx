@@ -65,6 +65,9 @@ export const useEsmCountryHighlightLayer = () => {
       freeTextEntries: (!input.countryHighlightingEnabled && input.countryOutlinesEnabled) ? [{
         text: 'Countries with a black outline contain seroprevalence data.'
       }] : [],
+      linearLegendColourGradientConfiguration: {
+        enabled: false
+      }
     }
   }, []);
 
