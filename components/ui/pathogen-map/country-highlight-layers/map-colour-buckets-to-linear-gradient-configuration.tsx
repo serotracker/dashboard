@@ -28,11 +28,13 @@ export const mapColourBucketsToLinearGradientConfiguration = (
       props: {
         ticks: input.mapColourBuckets.flatMap((colourBucket) => ([{
           numericValue: colourBucket.valueRange.minimumInclusive ?? input.minimumPossibleValue,
-          colourCode: colourBucket.fill
+          colourCode: colourBucket.fill,
+          isTickValueDisplayed: true
         }, 
         ...(colourBucket.valueRange.maximumExclusive !== undefined ? [{
           numericValue: colourBucket.valueRange.maximumExclusive - 1,
-          colourCode: colourBucket.fill
+          colourCode: colourBucket.fill,
+          isTickValueDisplayed: false
         }] : [])])),
       }
     }

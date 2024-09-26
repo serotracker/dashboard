@@ -3,6 +3,7 @@ import { useEffect, useMemo, useId } from "react";
 
 interface LinearLegendColourGradientTick {
   numericValue: number;
+  isTickValueDisplayed: boolean;
   colourCode: string;
 }
 
@@ -15,7 +16,7 @@ export interface LinearLegendColourGradientProps {
 export const LinearLegendColourGradient = (
   props: LinearLegendColourGradientProps
 ) => {
-  const { ticks, widthPx } = props;
+  const { ticks, widthPx, title } = props;
 
   const rawElementId = useId();
 
@@ -33,7 +34,7 @@ export const LinearLegendColourGradient = (
 
   const linearGradientData = useMemo(() => {
     return ticks.map((tick) => ({
-      offset: `${Math.floor(((tick.numericValue - tickMinimum) * 100) / (tickMaximum - tickMinimum))}%`,
+      offset: `${Math.floor(((tick.numericValue - tickMinimum) * 90) / (tickMaximum - tickMinimum))}%`,
       color: tick.colourCode,
     }));
   }, [ ticks, tickMinimum, tickMaximum ]);
@@ -71,30 +72,35 @@ export const LinearLegendColourGradient = (
       .attr("x", 0)
       .attr("y", 20)
       .style("text-anchor", "left")
-      .text("Legend title");
+      .text(title);
 
     svgLegend
       .append("rect")
-      .attr("x", 0)
+      .attr("x", 10)
       .attr("y", 30)
-      .attr("width", widthPx)
+      .attr("width", widthPx - 10)
       .attr("height", 15)
       .style("fill", `url(#linear-gradient-${elementId})`);
 
     var xTicks = d3
       .scaleLinear()
-      .domain([tickMinimum, tickMaximum])
-      .range([0, widthPx]);
+      .domain([tickMinimum, tickMaximum + ((tickMaximum - tickMinimum) * 0.1)])
+      .range([0, widthPx - 10]);
 
-    var xTicksElement = d3.axisBottom(xTicks);
+    var xTicksElement = d3
+      .axisBottom(xTicks)
+      .tickValues(ticks
+        .filter((tick) => !!tick.isTickValueDisplayed)
+        .map((tick) => tick.numericValue)
+      );
 
     svgLegend
       .attr("width", `${widthPx}px`)
       .attr("height", "70px")
       .append("g")
-      .attr("transform", "translate(0, 40)")
+      .attr("transform", "translate(10, 40)")
       .call(xTicksElement);
-  }, [ticks, tickMinimum, tickMaximum, linearGradientData, widthPx, elementId]);
+  }, [ ticks, tickMinimum, tickMaximum, linearGradientData, widthPx, elementId, title ]);
 
   return <div id={elementId} />;
 };

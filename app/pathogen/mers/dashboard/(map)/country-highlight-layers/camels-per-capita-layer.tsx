@@ -11,6 +11,7 @@ import { formatPerCapitaNumberRangeForLegend } from './helpers';
 import { MersMapCustomizationsContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context';
 import { MapDataPointVisibilityOptions } from '../use-mers-map-customization-modal';
 import { assertNever } from 'assert-never';
+import { mapColourBucketsToLinearGradientConfiguration } from '@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration';
 
 type GetCountryHighlightingLayerInformationInput<
   TData extends { countryAlphaThreeCode: string },
