@@ -7,7 +7,7 @@ export const useIsLargeScreen = () => {
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsLargeScreen(window.innerWidth > 1024);
+      setIsLargeScreen(window.innerWidth > 24);
     };
 
     checkScreenSize(); // Check on initial render
