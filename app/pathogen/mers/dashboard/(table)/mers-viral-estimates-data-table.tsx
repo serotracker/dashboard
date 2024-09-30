@@ -32,52 +32,7 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
 
       return `${inclusionCriteriaStatement}. ${exclusionCriteriaStatement}. Clicking on this row in the table again will minimize it.`
     },
-    visualization: ({ data, row, className }) => {
-      const idOfEstimate = row.getValue('id');
-
-      if(!idOfEstimate) {
-        return null;
-      }
-
-      const estimate = data.find((dataPoint) => dataPoint.id === idOfEstimate);
-
-      if(!estimate) {
-        return null;
-      }
-
-      const countryName = estimate.primaryEstimateInfo.country;
-
-      const filteredData = data
-        .filter((dataPoint) => dataPoint.primaryEstimateInfo.country === countryName)
-
-      return (
-        <RechartsVisualization
-          className="h-full-screen"
-          data={filteredData}
-          highlightedDataPoint={estimate}
-          hideArbovirusDropdown={true}
-          visualizationInformation={{
-            ...mersVisualizationInformation[MersVisualizationId.MEDIAN_VIRAL_PREVALENCE_OVER_TIME],
-            getDisplayName: () => ({
-              type: VisualizationDisplayNameType.STANDARD,
-              displayName: `Median Viral Prevalence for ${countryName} over time`
-            })
-          }}
-          getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
-          buttonConfig={{
-            downloadButton: {
-              enabled: true,
-            },
-            zoomInButton: {
-              enabled: false,
-            },
-            closeButton: {
-              enabled: false,
-            }
-          }}
-        />
-      );
-    },
+    visualization: (({ data, row, className }) => null),
     viewOnMapHandler
   }), [ viewOnMapHandler, mersVisualizationInformation ]);
 
