@@ -431,9 +431,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
   },
   [MersFilterableField.animalPurpose]: (input) => {
     const { estimate } = input;
+    const selectedAnimalPurposeFilters = input.selectedFilters[MersFilterableField.animalPurpose] ?? [];
 
-    if(isHumanMersEstimate(estimate)) {
-      return { included: true};
+    if(selectedAnimalPurposeFilters.length === 0) {
+      return { included: true };
+    }
+
+    if(isHumanMersEstimate(estimate) ) {
+      return { included: false };
     }
 
     const included = mersEstimateStringFieldHandler({
@@ -444,7 +449,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       },
       selectedFilters: {
         ...input.selectedFilters,
-        [MersFilterableField.animalPurpose]: input.selectedFilters[MersFilterableField.animalPurpose] ?? []
+        [MersFilterableField.animalPurpose]: selectedAnimalPurposeFilters
       }
     })
 
@@ -454,9 +459,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
   },
   [MersFilterableField.animalSpecies]: (input) => {
     const { estimate } = input;
+    const selectedAnimalSpeciesFilters = input.selectedFilters[MersFilterableField.animalSpecies] ?? [];
 
-    if(isHumanMersEstimate(estimate)) {
+    if(selectedAnimalSpeciesFilters.length === 0) {
       return { included: true };
+    }
+
+    if(isHumanMersEstimate(estimate) ) {
+      return { included: false };
     }
 
     const included = mersEstimateArrayFieldHandler({
@@ -470,7 +480,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       },
       selectedFilters: {
         ...input.selectedFilters,
-        [MersFilterableField.animalSpecies]: input.selectedFilters[MersFilterableField.animalSpecies] ?? []
+        [MersFilterableField.animalSpecies]: selectedAnimalSpeciesFilters
       }
     })
 
@@ -486,9 +496,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
   },
   [MersFilterableField.animalImportedOrLocal]: (input) => {
     const { estimate } = input;
+    const selectedAnimalImportedOrLocalFilters = input.selectedFilters[MersFilterableField.animalImportedOrLocal] ?? [];
 
-    if(isHumanMersEstimate(estimate)) {
+    if(selectedAnimalImportedOrLocalFilters.length === 0) {
       return { included: true };
+    }
+
+    if(isHumanMersEstimate(estimate) ) {
+      return { included: false };
     }
 
     const included = mersEstimateStringFieldHandler({
@@ -499,7 +514,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       },
       selectedFilters: {
         ...input.selectedFilters,
-        [MersFilterableField.animalImportedOrLocal]: input.selectedFilters[MersFilterableField.animalImportedOrLocal] ?? []
+        [MersFilterableField.animalImportedOrLocal]: selectedAnimalImportedOrLocalFilters
       }
     })
 
@@ -515,9 +530,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
   },
   [MersFilterableField.animalType]: (input) => {
     const { estimate } = input;
+    const selectedAnimalTypeFilters = input.selectedFilters[MersFilterableField.animalType] ?? [];
 
-    if(isHumanMersEstimate(estimate)) {
+    if(selectedAnimalTypeFilters.length === 0) {
       return { included: true };
+    }
+
+    if(isHumanMersEstimate(estimate) ) {
+      return { included: false };
     }
 
     const included = mersEstimateArrayFieldHandler({
@@ -528,7 +548,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       },
       selectedFilters: {
         ...input.selectedFilters,
-        [MersFilterableField.animalType]: input.selectedFilters[MersFilterableField.animalType] ?? []
+        [MersFilterableField.animalType]: selectedAnimalTypeFilters
       }
     })
 
@@ -538,9 +558,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
   },
   [MersFilterableField.animalDetectionSettings]: (input) => {
     const { estimate } = input;
+    const selectedAnimalDetectionSettingsFilters = input.selectedFilters[MersFilterableField.animalDetectionSettings] ?? [];
+
+    if(selectedAnimalDetectionSettingsFilters.length === 0) {
+      return { included: true };
+    }
 
     if(isHumanMersEstimate(estimate)) {
-      return { included: true };
+      return { included: false };
     }
 
     const included = mersEstimateArrayFieldHandler({
@@ -572,9 +597,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
   },
   [MersFilterableField.ageGroup]: (input) => {
     const { estimate } = input;
+    const selectedAgeGroupFilters = input.selectedFilters[MersFilterableField.ageGroup] ?? [];
 
-    if(isAnimalMersEstimate(estimate)) {
+    if(selectedAgeGroupFilters.length === 0) {
       return { included: true };
+    }
+
+    if(isAnimalMersEstimate(estimate) ) {
+      return { included: false };
     }
 
     const included = mersEstimateArrayFieldHandler({
@@ -590,7 +620,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       },
       selectedFilters: {
         ...input.selectedFilters,
-        [MersFilterableField.ageGroup]: input.selectedFilters[MersFilterableField.ageGroup] ?? []
+        [MersFilterableField.ageGroup]: selectedAgeGroupFilters
       }
     })
 
@@ -607,9 +637,14 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
   },
   [MersFilterableField.sampleFrame]: (input) => {
     const { estimate } = input;
+    const selectedSampleFrameFilters = input.selectedFilters[MersFilterableField.sampleFrame] ?? [];
 
-    if(isAnimalMersEstimate(estimate)) {
+    if(selectedSampleFrameFilters.length === 0) {
       return { included: true };
+    }
+
+    if(isAnimalMersEstimate(estimate) ) {
+      return { included: false };
     }
 
     const included = mersEstimateArrayFieldHandler({
@@ -623,7 +658,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       },
       selectedFilters: {
         ...input.selectedFilters,
-        [MersFilterableField.sampleFrame]: input.selectedFilters[MersFilterableField.sampleFrame] ?? []
+        [MersFilterableField.sampleFrame]: selectedSampleFrameFilters
       }
     })
 
