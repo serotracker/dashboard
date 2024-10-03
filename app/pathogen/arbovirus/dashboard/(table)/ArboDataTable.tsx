@@ -2,6 +2,7 @@
 
 import { DataTable, RowExpansionConfigurationEnabled, TableHeaderType } from "@/components/ui/data-table/data-table";
 import React, { useContext } from "react";
+import { parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
 import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
@@ -11,14 +12,39 @@ import { ArbovirusVisualizationId, arbovirusVisualizationInformation, getUrlPara
 import { useMap } from "react-map-gl";
 import { shortenedArboTrackerCitationText, suggestedArboTrackerCitationText } from "../../arbotracker-citations";
 
+export const generateConciseEstimateId = (estimate: ArbovirusEstimate) => {
+  const country = estimate.country
+  const sampleFrame = estimate.sampleFrame ?? '';
+  const samplingStartYear = estimate.sampleStartDate
+    ? parseISO(estimate.sampleStartDate).getFullYear()
+    : undefined;
+  const samplingEndYear = estimate.sampleEndDate
+    ? parseISO(estimate.sampleEndDate).getFullYear()
+    : undefined;
+  const samplingYearString = samplingStartYear !== undefined && samplingEndYear !== undefined
+    ? (samplingStartYear !== samplingEndYear
+      ? `${samplingStartYear}_${samplingEndYear}`
+      : `${samplingStartYear}`
+    )
+    : undefined;
+
+
+  return `${country}_${sampleFrame}_${samplingYearString}`.replaceAll(/ /g, '_');
+}
+
 const arboColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
-  fieldName: 'estimateId',
+  fieldName: 'conciseEstimateId',
   label: 'Estimate ID',
   isHideable: false,
   isFixed: true,
   fieldNameForLink: 'url',
-  size: 700,
+  size: 400,
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'estimateId',
+  label: 'Full Estimate ID',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'pathogen',
@@ -229,7 +255,10 @@ export const ArboDataTable = () => {
           enabled: false
         }}
         rowExpansionConfiguration={rowExpansionConfiguration}
-        data={state.filteredData}
+        data={state.filteredData.map((estimate) => ({
+          ...estimate,
+          conciseEstimateId: generateConciseEstimateId(estimate)
+        }))}
       />
     );
   } else {

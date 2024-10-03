@@ -3,9 +3,7 @@ import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/com
 import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { AvailableMersDataTables } from "./mers-data-table";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
-import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
-import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
-import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import { useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import {
   generateMersEstimateTableConfigurations,
   GenerateMersEstimateTableConfigurationsType

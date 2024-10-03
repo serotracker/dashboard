@@ -1,5 +1,4 @@
 import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
-import { WhoRegion } from "@/gql/graphql";
 import {
   animalAgeGroupToColourClassnameMap,
   animalDetectionSettingsToColourClassnameMap,
@@ -33,9 +32,7 @@ import {
 import { isHumanMersEstimate, MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { parseISO } from "date-fns";
 import { useContext, useMemo, useCallback } from "react";
-import { CountryDataContext, CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
-import { pipe } from "fp-ts/lib/function";
-import { distinctBackgroundColoursMap, distinctColoursMap, typedObjectFromEntries } from "@/lib/utils";
+import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
 
 export type MersEstimateBaseForDataTable = ReturnType<typeof mapMersEstimateBaseForDataTable>;
 
