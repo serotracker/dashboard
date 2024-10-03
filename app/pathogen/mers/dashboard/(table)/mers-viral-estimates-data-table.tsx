@@ -3,9 +3,7 @@ import { columnConfigurationToColumnDefinitions } from "@/components/ui/data-tab
 import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
-import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
-import { MersVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
-import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
+import { useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { useMersEstimateColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { MersViralEstimateForDataTable } from "./use-mers-data-table-data";
 import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
