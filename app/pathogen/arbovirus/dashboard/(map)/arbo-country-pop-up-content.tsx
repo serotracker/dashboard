@@ -30,7 +30,7 @@ export const arbovirusToRibbonColourClassname: Record<Arbovirus, string> = {
   [Arbovirus.Zikv]: 'bg-zikv',
   [Arbovirus.Denv]: 'bg-denv',
   [Arbovirus.Chikv]: 'bg-chikv',
-  [Arbovirus.Yf]: 'bg-yf',
+  [Arbovirus.Yfv]: 'bg-yfv',
   [Arbovirus.Wnv]: 'bg-wnv',
   [Arbovirus.Mayv]: 'bg-mayv',
 }

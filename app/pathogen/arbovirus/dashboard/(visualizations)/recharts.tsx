@@ -41,7 +41,7 @@ export const arboShortformToFullNameMap: {[key in Arbovirus]: arboviruses} = {
   [Arbovirus.Denv]: "Dengue",
   [Arbovirus.Zikv]: "Zika",
   [Arbovirus.Chikv]: "Chikungunya",
-  [Arbovirus.Yf]: "Yellow Fever",
+  [Arbovirus.Yfv]: "Yellow Fever",
   [Arbovirus.Wnv]: "West Nile",
   [Arbovirus.Mayv]: "Mayaro"
 }
@@ -50,7 +50,7 @@ export const arboShortformToFullNamePlusVirusMap: {[key in Arbovirus]: string} =
   [Arbovirus.Denv]: "Dengue Virus",
   [Arbovirus.Zikv]: "Zika Virus",
   [Arbovirus.Chikv]: "Chikungunya Virus",
-  [Arbovirus.Yf]: "Yellow Fever",
+  [Arbovirus.Yfv]: "Yellow Fever Virus",
   [Arbovirus.Wnv]: "West Nile Virus",
   [Arbovirus.Mayv]: "Mayaro Virus"
 }
@@ -165,8 +165,8 @@ export function StudyCountOverTime() {
           type="monotone"
           dataKey="Yellow Fever"
           stackId="1"
-          stroke={pathogenColors.YF}
-          fill={pathogenColors.YF}
+          stroke={pathogenColors.YFV}
+          fill={pathogenColors.YFV}
         />
         <Area
           type="monotone"
@@ -537,7 +537,7 @@ export function Top10CountriesByPathogenStudyCount() {
           <YAxis hide={true} dataKey="country" type="category" />
           <Legend verticalAlign="top" />
           <Tooltip itemStyle={{"color": "black"}} />
-          <Bar dataKey="Yellow Fever" fill={pathogenColors.YF} />
+          <Bar dataKey="Yellow Fever" fill={pathogenColors.YFV} />
         </BarChart>
       </ResponsiveContainer>
       <ResponsiveContainer width="50%" height="33%">

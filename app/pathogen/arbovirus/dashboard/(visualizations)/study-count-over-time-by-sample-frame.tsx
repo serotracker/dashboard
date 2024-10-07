@@ -62,6 +62,8 @@ const barColoursForSampleFrames: { [key: string]: string } = {
   "Positive cases of a different arbovirus": "#C70039",
   "Pregnant or parturient women": "#900C3F",
   "Perinatal": "#581845",
+  "Non-arboviral patients": "#4ADE805",
+  "Positive (PCR) or suspected cases": "#22D3EE6",
   "Inpatients": "#1C2833",
   "Target group": "#B2BABB",
   "Students and Daycares": "#2E4053",
@@ -77,14 +79,16 @@ const sampleFrameToSortOrderMap: Record<string, number | undefined> = {
   "Positive cases of a different arbovirus": 2,
   "Pregnant or parturient women": 3,
   "Perinatal": 4,
-  "Inpatients": 5,
-  "Target group": 6,
-  "Students and Daycares": 7,
-  "Essential non-healthcare workers": 8,
-  "Positive or suspected cases": 9,
-  "Outpatients": 10,
-  "Blood donors": 11,
-  "Other": 12
+  "Non-arboviral patients": 5,
+  "Positive (PCR) or suspected cases": 6,
+  "Inpatients": 7,
+  "Target group": 8,
+  "Students and Daycares": 9,
+  "Essential non-healthcare workers": 10,
+  "Positive or suspected cases": 11,
+  "Outpatients": 12,
+  "Blood donors": 13,
+  "Other": 14
 }
 
 export const StudyCountOverTimeBySampleFrame = () => {
