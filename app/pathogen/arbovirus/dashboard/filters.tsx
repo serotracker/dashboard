@@ -123,7 +123,7 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
           Arbovirus.Zikv,
           Arbovirus.Denv,
           Arbovirus.Chikv,
-          Arbovirus.Yf,
+          Arbovirus.Yfv,
           Arbovirus.Wnv,
           Arbovirus.Mayv
         ],

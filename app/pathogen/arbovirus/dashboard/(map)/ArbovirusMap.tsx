@@ -33,7 +33,7 @@ export const pathogenColors: Record<Arbovirus, string> = {
   [Arbovirus.Chikv]: "#9bf6ff",
   [Arbovirus.Wnv]: "#caffbf",
   [Arbovirus.Denv]: "#ffadad",
-  [Arbovirus.Yf]: "#ffd6a5",
+  [Arbovirus.Yfv]: "#ffd6a5",
   [Arbovirus.Mayv]: "#c5a3ff",
 };
 
@@ -134,7 +134,7 @@ export function ArbovirusMap() {
                   "#CAFFBF",
                   "DENV",
                   "#FFADAD",
-                  "YF",
+                  "YFV",
                   "#FFD6A5",
                   "MAYV",
                   "#C5A3FF",
@@ -168,7 +168,7 @@ export function ArbovirusMap() {
               [Arbovirus.Chikv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Chikv], 1, 0]],
               [Arbovirus.Wnv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Wnv], 1, 0]],
               [Arbovirus.Denv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Denv], 1, 0]],
-              [Arbovirus.Yf]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Yf], 1, 0]],
+              [Arbovirus.Yfv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Yfv], 1, 0]],
               [Arbovirus.Mayv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Mayv], 1, 0]],
             },
             validClusterPropertyKeys: Object.values(Arbovirus),

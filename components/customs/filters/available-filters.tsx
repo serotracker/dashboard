@@ -166,7 +166,7 @@ export const filterArbovirusToSortOrderMap: Record<Arbovirus, number> & Record<s
   [Arbovirus.Zikv]: 1,
   [Arbovirus.Denv]: 2,
   [Arbovirus.Chikv]: 3,
-  [Arbovirus.Yf]: 4,
+  [Arbovirus.Yfv]: 4,
   [Arbovirus.Wnv]: 5,
   [Arbovirus.Mayv]: 6,
 }
@@ -176,7 +176,7 @@ const pathogenColorsTailwind: { [key in Arbovirus]: string } = {
   [Arbovirus.Chikv]: "data-[state=checked]:bg-chikv",
   [Arbovirus.Wnv]: "data-[state=checked]:bg-wnv",
   [Arbovirus.Denv]: "data-[state=checked]:bg-denv",
-  [Arbovirus.Yf]: "data-[state=checked]:bg-yf",
+  [Arbovirus.Yfv]: "data-[state=checked]:bg-yfv",
   [Arbovirus.Mayv]: "data-[state=checked]:bg-mayv",
 };
 

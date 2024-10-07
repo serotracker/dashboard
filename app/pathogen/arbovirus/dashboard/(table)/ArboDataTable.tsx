@@ -53,7 +53,7 @@ const arboColumnConfiguration = [{
     'DENV': 'bg-denv',
     'ZIKV': 'bg-zikv',
     'CHIKV': 'bg-chikv',
-    'YF': 'bg-yf',
+    'YFV': 'bg-yfv',
     'WNV': 'bg-wnv',
     'MAYV': 'bg-mayv',
   },

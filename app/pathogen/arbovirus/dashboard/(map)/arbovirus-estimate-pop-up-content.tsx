@@ -12,8 +12,8 @@ function pathogenFullString(pathogen: string) {
       return "Zika Virus";
     case "CHIKV":
       return "Chikungunya Virus";
-    case "YF":
-      return "Yellow Fever";
+    case "YFV":
+      return "Yellow Fever Virus";
     case "WNV":
       return "West Nile Virus";
     case "MAYV":

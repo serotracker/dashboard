@@ -46,7 +46,7 @@ module.exports = {
         zikv: "#A0C4FF",
         chikv: "#9BF6FF",
         wnv: "#CAFFBF",
-        yf: "#FFD6A5",
+        yfv: "#FFD6A5",
         mayv: "#c5a3ff",
         "who-region-afr": "#e15759",
         "who-region-amr": "#59a14f",

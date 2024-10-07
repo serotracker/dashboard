@@ -5,7 +5,7 @@ export const barColoursForArboviruses = {
   Zika: pathogenColors.ZIKV,
   Dengue: pathogenColors.DENV,
   Chikungunya: pathogenColors.CHIKV,
-  "Yellow Fever": pathogenColors.YF,
+  "Yellow Fever": pathogenColors.YFV,
   "West Nile": pathogenColors.WNV,
   Mayaro: pathogenColors.MAYV,
 };

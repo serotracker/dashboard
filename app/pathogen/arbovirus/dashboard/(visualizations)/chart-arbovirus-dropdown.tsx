@@ -57,7 +57,7 @@ export const useChartArbovirusDropdown = (input: UseChartArbovirusDropdownInput)
     Arbovirus.Zikv,
     Arbovirus.Denv,
     Arbovirus.Chikv,
-    Arbovirus.Yf,
+    Arbovirus.Yfv,
     Arbovirus.Wnv,
     Arbovirus.Mayv,
   ];
@@ -65,7 +65,7 @@ export const useChartArbovirusDropdown = (input: UseChartArbovirusDropdownInput)
     [Arbovirus.Zikv]: 1,
     [Arbovirus.Denv]: 2,
     [Arbovirus.Chikv]: 3,
-    [Arbovirus.Yf]: 4,
+    [Arbovirus.Yfv]: 4,
     [Arbovirus.Wnv]: 5,
     [Arbovirus.Mayv]: 6,
   }
