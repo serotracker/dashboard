@@ -1,5 +1,6 @@
 "use client";
 
+import uniq from "lodash/uniq";
 import React, { useContext, useMemo } from "react";
 import { Filters, FilterSectionConfiguration } from "@/components/customs/filters";
 import { MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
@@ -71,38 +72,45 @@ export const MersFilters = (props: MersFiltersProps) => {
     return state.selectedFilters['__typename'];
   }, [ state ]);
 
+  const areEstimatesVisibleOnMap = useMemo(() => (
+    mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.ESTIMATES_ONLY ||
+    mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE
+  ), [ mapDataPointVisibilitySetting ]);
+
+  const areHumanEstimatesVisibleOnMap = useMemo(() => (
+    areEstimatesVisibleOnMap && (
+      selectedDataTypes.includes('PrimaryHumanMersSeroprevalenceEstimateInformation') ||
+      selectedDataTypes.includes('PrimaryHumanMersViralEstimateInformation')
+    )
+  ), [ areEstimatesVisibleOnMap, selectedDataTypes ])
+
+  const areAnimalEstimatesVisibleOnMap = useMemo(() => (
+    areEstimatesVisibleOnMap && (
+      selectedDataTypes.includes('PrimaryAnimalMersSeroprevalenceEstimateInformation') ||
+      selectedDataTypes.includes('PrimaryAnimalMersSeroprevalenceEstimateInformation')
+    )
+  ), [ areEstimatesVisibleOnMap, selectedDataTypes ])
+
+  const areHumanEventsVisibleOnMap = useMemo(() => (
+    (
+      (
+        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY ||
+        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE
+      ) && selectedDataTypes.includes('HumanMersEvent')
+    ) || currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_HUMAN_CASES
+  ), [ currentMapCountryHighlightingSettings, selectedDataTypes, mapDataPointVisibilitySetting ]);
+
+  const areAnimalEventsVisibleOnMap = useMemo(() => (
+    (
+      (
+        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY ||
+        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE
+      ) && selectedDataTypes.includes('AnimalMersEvent')
+    ) || currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES
+  ), [ currentMapCountryHighlightingSettings, selectedDataTypes, mapDataPointVisibilitySetting ]);
+
   const filterSections = useMemo(() => {
     const filterSectionsArray: FilterSectionConfiguration[] = [];
-
-    const areEstimatesVisibleOnMap = 
-      mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.ESTIMATES_ONLY ||
-      mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE;
-
-    const areHumanEstimatesVisibleOnMap =
-      areEstimatesVisibleOnMap && (
-        selectedDataTypes.includes('PrimaryHumanMersSeroprevalenceEstimateInformation') ||
-        selectedDataTypes.includes('PrimaryHumanMersViralEstimateInformation')
-      );
-
-    const areAnimalEstimatesVisibleOnMap =
-      areEstimatesVisibleOnMap && (
-        selectedDataTypes.includes('PrimaryAnimalMersSeroprevalenceEstimateInformation') ||
-        selectedDataTypes.includes('PrimaryAnimalMersSeroprevalenceEstimateInformation')
-      );
-
-    const areHumanEventsVisibleOnMap = ((
-        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY ||
-        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE
-      ) &&
-      selectedDataTypes.includes('HumanMersEvent')
-    ) || currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_HUMAN_CASES;
-
-    const areAnimalEventsVisibleOnMap = ((
-        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY ||
-        mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE
-      ) &&
-      selectedDataTypes.includes('AnimalMersEvent')
-    ) || currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES;
 
     filterSectionsArray.push({
       headerText: 'Data Type',
@@ -210,12 +218,15 @@ export const MersFilters = (props: MersFiltersProps) => {
           antigen: estimateFilterData.mersEstimatesFilterOptions.antigen,
           exposureToCamels: estimateFilterData.mersEstimatesFilterOptions.exposureToCamels,
           clade: estimateFilterData.mersEstimatesFilterOptions.clade,
-          animalSpecies: estimateFilterData.mersEstimatesFilterOptions.animalSpecies
         } : {}),
         ...(eventFilterData?.faoMersEventFilterOptions ? {
           diagnosisSource: eventFilterData.faoMersEventFilterOptions.diagnosisSource,
           animalType: eventFilterData.faoMersEventFilterOptions.animalType,
-        } : {})
+        } : {}),
+        animalSpecies: uniq([
+          ...((estimateFilterData?.mersEstimatesFilterOptions && areAnimalEstimatesVisibleOnMap) ? estimateFilterData.mersEstimatesFilterOptions.animalSpecies : []),
+          ...((eventFilterData?.faoMersEventFilterOptions && areAnimalEventsVisibleOnMap) ? eventFilterData.faoMersEventFilterOptions.animalSpecies : []),
+        ])
       }}
       data={{
         mersEstimates: data?.mersPrimaryEstimates ?? [],
