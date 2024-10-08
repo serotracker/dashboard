@@ -87,13 +87,11 @@ export default function DataExtractionPage() {
           <p className='inline'> and it will be reviewed by a member of our team.</p>
         </div>
         <div>
-        {process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true' && (
-          <>
-            <p className='inline'> Event data and camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation&apos;s </p>
-            <Link className="inline text-link" href="https://empres-i.apps.fao.org/" target="__blank" rel="noopener noreferrer">EMPRES-i dashboard</Link>
-            <p className='inline'> which collects MERS events as they are reported by national authorities and population data for various different species of livestock.</p>
-          </>
-        )}
+          {process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true' && (<p className='inline'>Event data and camel population data</p>)}
+          {process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED !== 'true' && (<p className='inline'>Camel population data</p>)}
+          <p className='inline'> from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation&apos;s </p>
+          <Link className="inline text-link" href="https://empres-i.apps.fao.org/" target="__blank" rel="noopener noreferrer">EMPRES-i dashboard</Link>
+          <p className='inline'> which collects MERS events as they are reported by national authorities and population data for various different species of livestock.</p>
         </div>
       </>}
       <h2 className={headerClassname}>Contact Us</h2>

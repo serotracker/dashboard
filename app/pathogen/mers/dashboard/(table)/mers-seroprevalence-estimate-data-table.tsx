@@ -20,7 +20,6 @@ interface MersSeroprevalenceEstimateDataTableProps {
 
 export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEstimateDataTableProps) => {
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
-  const { mersVisualizationInformation } = useVisualizationPageConfiguration();
   const { dataTableAdditionalButtonConfig } = useContext(MersFilterMetadataContext);
 
   const { mersSeroprevalenceEstimateColumnConfiguration } = useMersEstimateColumnConfiguration();
@@ -57,7 +56,7 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
       return <SubestimateTable tableConfigurations={tableConfigurations} />
     },
     viewOnMapHandler
-  }), [ viewOnMapHandler, mersVisualizationInformation ]);
+  }), [ viewOnMapHandler ]);
 
   return (
     <DataTable
