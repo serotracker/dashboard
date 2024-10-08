@@ -709,6 +709,12 @@ export const useMersEstimateRows = () => {
     valueToLabelMap: {},
     defaultColourClassname: "bg-sky-100"
   }, {
+    title: 'Geographic Scope',
+    type: PopUpContentRowType.COLOURED_PILL_LIST,
+    values: estimate.primaryEstimateInfo.geographicScope ? [ estimate.primaryEstimateInfo.geographicScope ] : [ 'Not Specified' ],
+    valueToColourClassnameMap: geographicScopeToColourClassnameMap,
+    defaultColourClassname: "bg-sky-100"
+  }, {
     title: "Location",
     type: PopUpContentRowType.LOCATION,
     countryName: estimate.primaryEstimateInfo.country,
