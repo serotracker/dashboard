@@ -118,13 +118,15 @@ export const useMersMapCustomizationModal = () => {
             MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION,
             MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA,
           ]
-        }, {
+        },
+        ...(process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true' ? [{
           groupHeader: 'Reported Positive Cases',
           options: [
             MersMapCountryHighlightingSettings.MERS_HUMAN_CASES,
             MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES
           ]
-        }],
+        }] : [])
+        ],
         chosenDropdownOption: currentMapCountryHighlightingSettings,
         dropdownOptionToLabelMap,
         onDropdownOptionChange: (option) => {
@@ -154,8 +156,9 @@ export const useMersMapCustomizationModal = () => {
             setCountryOutlinesSetting(option)
           }
         }
-      }, {
-        type: CustomizationSettingType.DROPDOWN,
+      },
+      ...(process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED ? [{
+        type: CustomizationSettingType.DROPDOWN as const,
         dropdownName: 'Data point types shown on map',
         borderColourClassname: 'border-mers',
         hoverColourClassname: 'hover:bg-mersHover/50',
@@ -172,13 +175,14 @@ export const useMersMapCustomizationModal = () => {
         }],
         chosenDropdownOption: mapDataPointVisibilitySetting,
         dropdownOptionToLabelMap,
-        onDropdownOptionChange: (option) => {
+        onDropdownOptionChange: (option: string) => {
           if(isMapDataPointVisibilityOptions(option)) {
             setMapDataPointVisibilitySetting(option)
           }
         },
         tooltipContent: mapDataPointVisibilityOptionToTooltipContent[mapDataPointVisibilitySetting]
-      }, {
+      }]: []),
+      {
         type: CustomizationSettingType.SWITCH,
         switchName: `Country pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
         switchValue: countryPopUpEnabled,

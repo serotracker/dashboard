@@ -210,11 +210,11 @@ export const MersFilters = (props: MersFiltersProps) => {
           antigen: estimateFilterData.mersEstimatesFilterOptions.antigen,
           exposureToCamels: estimateFilterData.mersEstimatesFilterOptions.exposureToCamels,
           clade: estimateFilterData.mersEstimatesFilterOptions.clade,
+          animalSpecies: estimateFilterData.mersEstimatesFilterOptions.animalSpecies
         } : {}),
         ...(eventFilterData?.faoMersEventFilterOptions ? {
           diagnosisSource: eventFilterData.faoMersEventFilterOptions.diagnosisSource,
           animalType: eventFilterData.faoMersEventFilterOptions.animalType,
-          animalSpecies: eventFilterData.faoMersEventFilterOptions.animalSpecies,
         } : {})
       }}
       data={{
