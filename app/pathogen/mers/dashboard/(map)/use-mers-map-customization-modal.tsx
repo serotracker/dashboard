@@ -35,21 +35,6 @@ export enum MersMapCountryHighlightingSettings {
 const isMersMapCountryHighlightingSettings = (input: string): input is MersMapCountryHighlightingSettings =>
   Object.values(MersMapCountryHighlightingSettings).some((element) => element === input);
 
-const dropdownOptionToLabelMap = {
-  [MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES]: "Presence of MERS estimates or events",
-  [MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION]: "Total camel population",
-  [MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA]: "Camels per capita",
-  [MersMapCountryHighlightingSettings.MERS_HUMAN_CASES]: "MERS Human Cases",
-  [MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES]: "MERS Animal Cases",
-  [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
-  [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
-  [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
-  [MapDataPointVisibilityOptions.ESTIMATES_ONLY]: "Only Estimates Visible",
-  [MapDataPointVisibilityOptions.EVENTS_ONLY]: "Only Events Visible",
-  [MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE]: "Events And Estimates Visible",
-  [MapDataPointVisibilityOptions.NOTHING_VISIBLE]: "No Data Visible on Map",
-}
-
 export const eventsProvidedCourtesyOfFaoTooltipContent = (
   <>
     <p className="inline">MERS events are provided courtesy of the </p>
@@ -94,6 +79,24 @@ export const useMersMapCustomizationModal = () => {
   } = useContext(MersMapCustomizationsContext);
   const [countryPopUpEnabled, setCountryPopUpEnabled] = useState<boolean>(true);
 
+  const dropdownOptionToLabelMap = useMemo(() => ({
+    [MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES]: process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true'
+      ? 'Presence of MERS estimates or events'
+      : 'Presence of MERS estimates',
+    [MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION]: "Total camel population",
+    [MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA]: "Camels per capita",
+    [MersMapCountryHighlightingSettings.MERS_HUMAN_CASES]: "MERS Human Cases",
+    [MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES]: "MERS Animal Cases",
+    [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
+    [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
+    [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
+    [MapDataPointVisibilityOptions.ESTIMATES_ONLY]: "Only Estimates Visible",
+    [MapDataPointVisibilityOptions.EVENTS_ONLY]: "Only Events Visible",
+    [MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE]: "Events And Estimates Visible",
+    [MapDataPointVisibilityOptions.NOTHING_VISIBLE]: "No Data Visible on Map",
+  }), [])
+
+
   const useModalInput: UseModalInput<MersMapCountryHighlightingSettings | CountryPaintChangeSetting | MapDataPointVisibilityOptions> = useMemo(() => ({
     initialModalState: ModalState.CLOSED,
     disabled: false,
@@ -118,13 +121,15 @@ export const useMersMapCustomizationModal = () => {
             MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION,
             MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA,
           ]
-        }, {
+        },
+        ...(process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true' ? [{
           groupHeader: 'Reported Positive Cases',
           options: [
             MersMapCountryHighlightingSettings.MERS_HUMAN_CASES,
             MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES
           ]
-        }],
+        }] : [])
+        ],
         chosenDropdownOption: currentMapCountryHighlightingSettings,
         dropdownOptionToLabelMap,
         onDropdownOptionChange: (option) => {
@@ -154,8 +159,9 @@ export const useMersMapCustomizationModal = () => {
             setCountryOutlinesSetting(option)
           }
         }
-      }, {
-        type: CustomizationSettingType.DROPDOWN,
+      },
+      ...(process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED ? [{
+        type: CustomizationSettingType.DROPDOWN as const,
         dropdownName: 'Data point types shown on map',
         borderColourClassname: 'border-mers',
         hoverColourClassname: 'hover:bg-mersHover/50',
@@ -172,20 +178,21 @@ export const useMersMapCustomizationModal = () => {
         }],
         chosenDropdownOption: mapDataPointVisibilitySetting,
         dropdownOptionToLabelMap,
-        onDropdownOptionChange: (option) => {
+        onDropdownOptionChange: (option: string) => {
           if(isMapDataPointVisibilityOptions(option)) {
             setMapDataPointVisibilitySetting(option)
           }
         },
         tooltipContent: mapDataPointVisibilityOptionToTooltipContent[mapDataPointVisibilitySetting]
-      }, {
+      }]: []),
+      {
         type: CustomizationSettingType.SWITCH,
         switchName: `Country pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
         switchValue: countryPopUpEnabled,
         onSwitchValueChange: (newSwitchValue) => setCountryPopUpEnabled(newSwitchValue),
       }]
     }
-  }), [ countryOutlinesSetting, setCountryOutlinesSetting, currentMapCountryHighlightingSettings, setCurrentMapCountryHighlightingSettings, countryPopUpEnabled, setCountryPopUpEnabled, mapDataPointVisibilitySetting, setMapDataPointVisibilitySetting ])
+  }), [ countryOutlinesSetting, setCountryOutlinesSetting, currentMapCountryHighlightingSettings, setCurrentMapCountryHighlightingSettings, countryPopUpEnabled, setCountryPopUpEnabled, mapDataPointVisibilitySetting, setMapDataPointVisibilitySetting, dropdownOptionToLabelMap ]);
 
   const {
     modal: customizationModal,

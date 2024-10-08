@@ -15,7 +15,6 @@ interface MersViralEstimateDataTableProps {
 
 export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProps) => {
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
-  const { mersVisualizationInformation } = useVisualizationPageConfiguration();
   const { dataTableAdditionalButtonConfig } = useContext(MersFilterMetadataContext);
 
   const { mersViralEstimateColumnConfiguration } = useMersEstimateColumnConfiguration();
@@ -32,7 +31,7 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
     },
     visualization: (({ data, row, className }) => null),
     viewOnMapHandler
-  }), [ viewOnMapHandler, mersVisualizationInformation ]);
+  }), [ viewOnMapHandler ]);
 
   return (
     <DataTable

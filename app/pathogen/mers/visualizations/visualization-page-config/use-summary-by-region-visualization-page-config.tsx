@@ -148,14 +148,16 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
           SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE,
           SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_VIRAL_PREVALENCE
         ]
-      }, {
+      },
+      ...(process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true' ? [{
         groupHeader: 'Cases and Deaths',
         options: [
           SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES,
           SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES,
           SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS,
         ]
-      }],
+      }] : [])
+      ],
       chosenDropdownOption: summaryByRegionVariableOfInterestSelectedDropdownOption,
       dropdownOptionToLabelMap: {
         [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE]: "Median Human Seroprevalence",
