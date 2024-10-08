@@ -88,9 +88,13 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
         <p className='inline'> and the </p>
         <Link className="inline text-link" href="https://www.fao.org/" target="__blank" rel="noopener noreferrer">Food and Agriculture Organization of the United Nations</Link>
         <p className='inline'>. </p>
-        <p className='inline'> Event data and camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation&apos;s </p>
-        <Link className="inline text-link" href="https://empres-i.apps.fao.org/" target="__blank" rel="noopener noreferrer">EMPRES-i dashboard</Link>
-        <p className='inline'> which collects MERS events as they are reported by national authorities and population data for various different species of livestock.</p>
+        {process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true' && (
+          <>
+            <p className='inline'> Event data and camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation&apos;s </p>
+            <Link className="inline text-link" href="https://empres-i.apps.fao.org/" target="__blank" rel="noopener noreferrer">EMPRES-i dashboard</Link>
+            <p className='inline'> which collects MERS events as they are reported by national authorities and population data for various different species of livestock.</p>
+          </>
+        )}
       </>
     )
   },
