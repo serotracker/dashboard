@@ -7,11 +7,13 @@ import { MersViralEstimateDataTable } from "./mers-viral-estimates-data-table";
 import { useMersDataTableData } from "./use-mers-data-table-data";
 import { camelPopulationProvidedCourtesyOfFaoTooltipContent, eventsProvidedCourtesyOfFaoTooltipContent } from "../(map)/use-mers-map-customization-modal";
 import { GenomicSequencingDataEntryForTable, GenomicSequencingDataTable } from "./genomic-sequencing-data-table";
+import { MersWhoCasesDataTable } from "./mers-who-cases-data-table";
 
 export enum AvailableMersDataTables {
   MERS_SEROPREVALENCE_ESTIMATES = "MERS_SEROPREVALENCE_ESTIMATES",
   MERS_VIRAL_ESTIMATES = "MERS_VIRAL_ESTIMATES",
   MERS_CASES = "MERS_CASES",
+  WHO_MERS_CASES = "WHO_MERS_CASES",
   CAMEL_POPULATION_DATA = "CAMEL_POPULATION_DATA",
   GENOMIC_SEQUENCING_DATA = "GENOMIC_SEQUENCING_DATA",
   UNAVAILABLE = "UNAVAILABLE"
@@ -27,6 +29,7 @@ const availableMersDataTableToHeaderTooltipContent = {
   [AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES]: undefined,
   [AvailableMersDataTables.MERS_VIRAL_ESTIMATES]: undefined,
   [AvailableMersDataTables.MERS_CASES]: eventsProvidedCourtesyOfFaoTooltipContent,
+  [AvailableMersDataTables.WHO_MERS_CASES]: undefined,
   [AvailableMersDataTables.CAMEL_POPULATION_DATA]: camelPopulationProvidedCourtesyOfFaoTooltipContent,
   [AvailableMersDataTables.GENOMIC_SEQUENCING_DATA]: genomicSequencingDataTooltipContent,
   [AvailableMersDataTables.UNAVAILABLE]: undefined,
@@ -40,6 +43,7 @@ export const MersDataTable = () => {
 
   const {
     mersSeroprevalenceEstimateData,
+    mersWhoCaseData,
     mersViralEstimateData,
     mersEventData,
     camelPopulationData,
@@ -74,6 +78,7 @@ export const MersDataTable = () => {
       ...(((mersEventData.length > 0) && (process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true')) ? [ AvailableMersDataTables.MERS_CASES ] : []),
       ...(camelPopulationData.length > 0 ? [ AvailableMersDataTables.CAMEL_POPULATION_DATA ] : []),
       ...(estimatesWithGenomicSequencingData.length > 0 ? [ AvailableMersDataTables.GENOMIC_SEQUENCING_DATA ] : []),
+      AvailableMersDataTables.WHO_MERS_CASES
     ];
 
     if(returnValue.length === 0) {
@@ -110,6 +115,7 @@ export const MersDataTable = () => {
         [AvailableMersDataTables.MERS_SEROPREVALENCE_ESTIMATES]: "MERS seroprevalence estimates",
         [AvailableMersDataTables.MERS_VIRAL_ESTIMATES]: "MERS viral estimates",
         [AvailableMersDataTables.MERS_CASES]: "Confirmed MERS cases",
+        [AvailableMersDataTables.WHO_MERS_CASES]: "Confirmed MERS cases",
         [AvailableMersDataTables.CAMEL_POPULATION_DATA]: "Camel population data",
         [AvailableMersDataTables.GENOMIC_SEQUENCING_DATA]: "Genomic sequencing data",
         [AvailableMersDataTables.UNAVAILABLE]: "Unavailable",
@@ -135,6 +141,9 @@ export const MersDataTable = () => {
     ),
     [AvailableMersDataTables.GENOMIC_SEQUENCING_DATA]: () => (
       <GenomicSequencingDataTable tableHeader={tableHeaderForAllDataTables} tableData={estimatesWithGenomicSequencingData} />
+    ),
+    [AvailableMersDataTables.WHO_MERS_CASES]: () => (
+      <MersWhoCasesDataTable tableHeader={tableHeaderForAllDataTables} tableData={mersWhoCaseData} />
     ),
     [AvailableMersDataTables.UNAVAILABLE]: () => (
       <p> No data available for table. </p>

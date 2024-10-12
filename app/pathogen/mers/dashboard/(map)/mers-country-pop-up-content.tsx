@@ -20,6 +20,7 @@ import {
   isMersFaoHumanEventMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
 import { PopUpContentRowType, PopupContentTextAlignment } from '@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows';
+import { MersWhoCaseDataEntry } from '@/hooks/mers/use-mers-who-case-data-partitioned';
 
 interface MersCountryPopupContentProps {
   record: {
@@ -32,11 +33,12 @@ interface MersCountryPopupContentProps {
   }
   estimateDataShown: boolean;
   eventDataShown: boolean;
+  mersWhoCaseData: MersWhoCaseDataEntry[];
 }
 
 export const MersCountryPopupContent = (props: MersCountryPopupContentProps): React.ReactNode => {
-  const { dataPoints } = props.record;
-  const { estimateDataShown, eventDataShown } = props;
+  const { dataPoints, alpha3CountryCode } = props.record;
+  const { estimateDataShown, eventDataShown, mersWhoCaseData } = props;
 
   const allHumanMersSeroprevalenceEstimates = useMemo(() => dataPoints.filter((dataPoint): dataPoint is HumanMersSeroprevalenceEstimateMapMarkerData =>
     isHumanMersSeroprevalenceEstimateMapMarkerData(dataPoint))
@@ -105,6 +107,12 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
   const allAnimalMersEvents = useMemo(() => dataPoints.filter((dataPoint): dataPoint is AnimalMersEventMapMarkerData =>
     isMersFaoAnimalEventMapMarkerData(dataPoint))
   , [ dataPoints ])
+
+  const positiveCasesReported = useMemo(() => {
+    return mersWhoCaseData
+      .find((element) => element.country.alphaThreeCode === alpha3CountryCode)
+      ?.positiveCasesReported ?? 0
+  }, [ mersWhoCaseData, alpha3CountryCode ])
 
   return (
     <GenericMapPopUp
@@ -177,6 +185,14 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-animal-event' },
           rightPaddingEnabled: false
         }] : []),
+        {
+          title: 'Reported Human Cases'.replace(' ', '\u00A0'),
+          type: PopUpContentRowType.TEXT as const,
+          text: positiveCasesReported.toFixed(0),
+          contentTextAlignment: PopupContentTextAlignment.RIGHT,
+          ribbonConfiguration: { ribbonColourClassname: 'bg-cyan-700' },
+          rightPaddingEnabled: false
+        }
       ]}
       bottomBannerConfiguration={{
         enabled: false

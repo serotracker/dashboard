@@ -1,6 +1,10 @@
 import { useMemo } from "react";
-import { useMersWhoCaseDataPartitioned } from "./use-mers-who-case-data-partitioned";
+import { MersWhoCaseDataEntry, useMersWhoCaseDataPartitioned } from "./use-mers-who-case-data-partitioned";
 import { useMersWhoCaseDataPartitionKeys } from "./use-mers-who-case-data-partition-keys";
+
+interface UseMersWhoCaseDataOutput {
+  mersWhoCaseData: MersWhoCaseDataEntry[];
+}
 
 export const useMersWhoCaseData = () => {
   const { data: partitionKeyData } = useMersWhoCaseDataPartitionKeys();
