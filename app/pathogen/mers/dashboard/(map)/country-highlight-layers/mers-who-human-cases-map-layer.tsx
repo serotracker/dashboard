@@ -8,7 +8,7 @@ import {
 import { generateMapColourBuckets } from "@/components/ui/pathogen-map/country-highlight-layers/generate-map-colour-buckets";
 import { MapSymbology } from '@/app/pathogen/sarscov2/dashboard/(map)/map-config';
 import { pipe } from "fp-ts/lib/function";
-import { formatNumberRangeForLegend, standardGetFreeTextEntriesFunction } from "./helpers";
+import { formatNumberRangeForLegend, generateStandardMapPaint, standardGetFreeTextEntriesFunction } from "./helpers";
 import { typedGroupBy, typedObjectEntries } from '@/lib/utils';
 import { MersMapCustomizationsContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context';
 import { mapColourBucketsToLinearGradientConfiguration } from '@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration';
@@ -46,7 +46,7 @@ export const useMersWhoCasesMapLayer = () => {
       (groupedData) => typedObjectEntries(groupedData)
         .map(([countryAlphaThreeCode, dataForCountry]) => ({ countryAlphaThreeCode, dataForCountry })),
       (data) => data.map(({ countryAlphaThreeCode, dataForCountry }) => ({
-        countryAlphaThreeCode, positiveCases: dataForCountry.reduce((accumulator, value) => accumulator + value.positiveCasesReported , 0)
+        countryAlphaThreeCode, value: dataForCountry.reduce((accumulator, value) => accumulator + value.positiveCasesReported , 0)
       }))
     );
 
@@ -61,7 +61,7 @@ export const useMersWhoCasesMapLayer = () => {
         opacity: 0.8
       },
       data: postiveCasesByCountry,
-      dataPointToValue: (dataPoint) => dataPoint.positiveCases
+      dataPointToValue: (dataPoint) => dataPoint.value
     });
 
     const countryHighlightLayerLegendEntries = [
@@ -87,36 +87,11 @@ export const useMersWhoCasesMapLayer = () => {
     });
 
     return {
-      paint: {
-        countryData: [
-          ...mapColourBuckets.flatMap((colourBucket) => 
-            colourBucket.dataPoints.map((dataPoint) => ({
-              countryAlphaThreeCode: dataPoint.countryAlphaThreeCode,
-              fill: colourBucket.fill,
-              opacity: colourBucket.opacity,
-              borderWidthPx: outlinedCountryAlphaThreeCodes.includes(dataPoint.countryAlphaThreeCode)
-                ? MapSymbology.CountryFeature.HasData.BorderWidth
-                : MapSymbology.CountryFeature.Default.BorderWidth,
-              borderColour: outlinedCountryAlphaThreeCodes.includes(dataPoint.countryAlphaThreeCode)
-                ? MapSymbology.CountryFeature.HasData.BorderColour
-                : MapSymbology.CountryFeature.Default.BorderColour,
-            })
-          )),
-          ...outlinedCountryAlphaThreeCodesWithNoPositiveCaseData.map((countryAlphaThreeCode) => ({
-            countryAlphaThreeCode,
-            fill: MapSymbology.CountryFeature.Default.Color,
-            opacity: MapSymbology.CountryFeature.Default.Opacity,
-            borderWidthPx: MapSymbology.CountryFeature.HasData.BorderWidth,
-            borderColour: MapSymbology.CountryFeature.HasData.BorderColour
-          }))
-        ],
-        defaults: {
-          fill: MapSymbology.CountryFeature.Default.Color,
-          opacity: MapSymbology.CountryFeature.Default.Opacity,
-          borderWidthPx: MapSymbology.CountryFeature.Default.BorderWidth,
-          borderColour: MapSymbology.CountryFeature.Default.BorderColour
-        }
-      },
+      paint: generateStandardMapPaint({
+        mapColourBuckets,
+        outlinedCountryAlphaThreeCodes,
+        outlinedCountryAlphaThreeCodesWithNoData: outlinedCountryAlphaThreeCodesWithNoPositiveCaseData
+      }),
       countryHighlightLayerLegendEntries: [],
       freeTextEntries: getFreeTextEntries({ countryOutlinesEnabled: input.countryOutlinesEnabled }),
       linearLegendColourGradientConfiguration: {

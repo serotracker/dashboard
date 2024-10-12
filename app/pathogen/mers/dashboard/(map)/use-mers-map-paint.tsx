@@ -139,7 +139,7 @@ export const useMersMapPaint = <
       });
     }
     assertNever(currentMapCountryHighlightingSettings);
-  }, [dataPointPresentMapLayer, totalCamelPopulationMapLayer, camelsPerCapitaMapLayer, currentMapCountryHighlightingSettings, dataPoints, latestFaoCamelPopulationDataPointsByCountry, countryOutlinesSetting, faoMersEventData, reportedMersHumanCasesMapLayer, estimateDataShown, eventDataShown, reportedMersAnimalCasesMapLayer ]);
+  }, [ dataPointPresentMapLayer, totalCamelPopulationMapLayer, camelsPerCapitaMapLayer, currentMapCountryHighlightingSettings, dataPoints, latestFaoCamelPopulationDataPointsByCountry, countryOutlinesSetting, faoMersEventData, reportedMersHumanCasesMapLayer, estimateDataShown, eventDataShown, reportedMersAnimalCasesMapLayer, mersWhoCaseData, mersWhoHumanCasesMapLayer ]);
 
   return {
     paint,

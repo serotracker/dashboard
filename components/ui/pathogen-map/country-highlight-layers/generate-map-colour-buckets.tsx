@@ -14,7 +14,7 @@ interface GenerateMapColourBucketsInput<TData extends Record<string, unknown>> {
   dataPointToValue: (dataPoint: TData) => number;
 }
 
-interface ColourBucket<TData extends Record<string, unknown>> {
+export interface ColourBucket<TData extends Record<string, unknown>> {
   fill: string;
   opacity: number;
   valueRange: {

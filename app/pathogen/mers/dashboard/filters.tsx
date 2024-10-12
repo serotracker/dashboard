@@ -174,7 +174,7 @@ export const MersFilters = (props: MersFiltersProps) => {
     }
 
     return filterSectionsArray;
-  }, [ mapDataPointVisibilitySetting, currentMapCountryHighlightingSettings, selectedDataTypes ]);
+  }, [ selectedDataTypes, areAnimalEstimatesVisibleOnMap, areAnimalEventsVisibleOnMap, areHumanEstimatesVisibleOnMap, areHumanEventsVisibleOnMap ]);
 
   return (
     <Filters
