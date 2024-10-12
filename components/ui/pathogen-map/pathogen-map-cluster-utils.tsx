@@ -42,6 +42,8 @@ export function createDonutChartAndHoverPopup<
     }
   })
 
+  console.log('counts', counts)
+
   const fontSize =
     total >= 1000 ? 22 : total >= 100 ? 20 : total >= 10 ? 18 : 16;
   const piChartOuterRadius = total >= 50 ? 50 : total >= 25 ? 32 : total >= 10 ? 24 : 18; // r
