@@ -21,7 +21,7 @@ import {
   isAnimalMersViralEstimateMapMarkerData,
   isHumanMersViralEstimateMapMarkerData
 } from "./shared-mers-map-pop-up-variables";
-import { MapDataPointVisibilityOptions, useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
+import { MapDataPointVisibilityOptions, MersMapCountryHighlightingSettings, useMersMapCustomizationModal } from "./use-mers-map-customization-modal";
 import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
 import { AnimalMersViralEstimatePopupContent } from "./animal-mers-viral-estimate-pop-up-content";
 import { HumanMersViralEstimatePopupContent } from "./human-mers-viral-estimate-pop-up-content";
@@ -33,6 +33,7 @@ import { CountryDataContext } from "@/contexts/pathogen-context/country-informat
 import { MersMapStudySubmissionPrompt } from "./mers-map-study-submission-prompt";
 import { Card, CardContent } from "@/components/ui/card";
 import { useMersMapDataTypeLegendEntries } from "./use-mers-map-data-type-legend-entries";
+import { useMersWhoCaseData } from "@/hooks/mers/use-mers-who-case-data";
 
 export const MapPinColours = {
   'HumanMersEvent': "#1d4ed8",
@@ -59,6 +60,7 @@ export const MersMap = () => {
     mapDataPointVisibilitySetting,
     ...mersMapCustomizationModal
   } = useMersMapCustomizationModal();
+  const { mersWhoCaseData } = useMersWhoCaseData();
 
   const estimateDataShown = useMemo(() => (
     mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.ESTIMATES_ONLY ||
@@ -105,7 +107,7 @@ export const MersMap = () => {
           id="mersMap"
           countryPopUpEnabled={countryPopUpEnabled}
           countryPopUpOnHoverEnabled={countryPopUpEnabled}
-          allowCountryPopUpsWithEmptyData={false}
+          allowCountryPopUpsWithEmptyData={true}
           countryDataContext={countryDataContext}
           baseCursor=""
           sourceId="mers-[GENERATED-SOURCE-ID]"
@@ -151,6 +153,7 @@ export const MersMap = () => {
                 record={input.data}
                 estimateDataShown={estimateDataShown}
                 eventDataShown={eventDataShown}
+                mersWhoCaseData={mersWhoCaseData ?? []}
               />
             }
 

@@ -294,6 +294,31 @@ export const defaultColoursForUnRegions: Record<UnRegion, string> = {
   [UnRegion.WesternEurope]: defaultColours.indigo[400]
 }
 
+export const defaultBackgroundColourClassnamesForUnRegions: Record<UnRegion, string> = {
+  [UnRegion.AustraliaAndNewZealand]: 'bg-amber-200',
+  [UnRegion.Caribbean]: 'bg-fuchsia-200',
+  [UnRegion.CentralAmerica]: 'bg-blue-200',
+  [UnRegion.CentralAsia]: 'bg-purple-200',
+  [UnRegion.EasternAfrica]: 'bg-emerald-200',
+  [UnRegion.EasternAsia]: 'bg-rose-200',
+  [UnRegion.EasternEurope]: 'bg-orange-200',
+  [UnRegion.Melanesia]: 'bg-lime-200',
+  [UnRegion.Micronesia]: 'bg-red-200',
+  [UnRegion.MiddleAfrica]: 'bg-teal-200',
+  [UnRegion.NorthernAfrica]: 'bg-indigo-200',
+  [UnRegion.NorthernAmerica]: 'bg-amber-400',
+  [UnRegion.NorthernEurope]: 'bg-fuchsia-400',
+  [UnRegion.Polynesia]: 'bg-blue-400',
+  [UnRegion.SouthernAfrica]: 'bg-purple-400',
+  [UnRegion.SouthernAsia]: 'bg-emerald-400',
+  [UnRegion.SouthernEurope]: 'bg-rose-400',
+  [UnRegion.SouthAmerica]: 'bg-orange-400',
+  [UnRegion.SouthEasternAsia]: 'bg-lime-400',
+  [UnRegion.WesternAfrica]: 'bg-red-400',
+  [UnRegion.WesternAsia]: 'bg-teal-400',
+  [UnRegion.WesternEurope]: 'bg-indigo-400'
+}
+
 export const getLabelForUNRegion = (unRegion: UnRegion) => {
   return unRegionEnumToLabelMap[unRegion];
 }
