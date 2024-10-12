@@ -7,11 +7,8 @@ import {
 } from "@/components/ui/pathogen-map/pathogen-map";
 import { generateMapColourBuckets } from "@/components/ui/pathogen-map/country-highlight-layers/generate-map-colour-buckets";
 import { MapSymbology } from '@/app/pathogen/sarscov2/dashboard/(map)/map-config';
-import { formatPerCapitaNumberRangeForLegend } from './helpers';
+import { formatPerCapitaNumberRangeForLegend, generateStandardMapPaint, standardGetFreeTextEntriesFunction } from './helpers';
 import { MersMapCustomizationsContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context';
-import { MapDataPointVisibilityOptions } from '../use-mers-map-customization-modal';
-import { assertNever } from 'assert-never';
-import { mapColourBucketsToLinearGradientConfiguration } from '@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration';
 
 type GetCountryHighlightingLayerInformationInput<
   TData extends { countryAlphaThreeCode: string },
@@ -28,31 +25,10 @@ interface GetFreeTextEntriesInput {
 export const useCamelsPerCapitaLayer = () => {
   const { mapDataPointVisibilitySetting } = useContext(MersMapCustomizationsContext);
 
-  const getFreeTextEntries = useCallback((input: GetFreeTextEntriesInput) => {
-    if(!input.countryOutlinesEnabled || mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.NOTHING_VISIBLE) {
-      return [];
-    }
-
-    if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.ESTIMATES_ONLY) {
-      return [
-        { text: 'Countries with a black outline contain seroprevalence data.' }
-      ];
-    }
-
-    if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY) {
-      return [
-        { text: 'Countries with a black outline contain MERS events.' }
-      ];
-    }
-
-    if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE) {
-      return [
-        { text: 'Countries with a black outline contain seroprevalence data or MERS events.' }
-      ];
-    }
-
-    assertNever(mapDataPointVisibilitySetting)
-  }, [ mapDataPointVisibilitySetting ]);
+  const getFreeTextEntries = useCallback((input: GetFreeTextEntriesInput) => standardGetFreeTextEntriesFunction({
+    countryOutlinesEnabled: input.countryOutlinesEnabled,
+    mapDataPointVisibilitySetting
+  }), [ mapDataPointVisibilitySetting ]);
 
   const getCountryHighlightingLayerInformation = useCallback(<
     TData extends {
@@ -75,11 +51,11 @@ export const useCamelsPerCapitaLayer = () => {
         opacity: 0.8
       },
       data: input.data
-        .map((dataPoint) => ({ camelCountPerCapita: dataPoint.camelCountPerCapita, countryAlphaThreeCode: dataPoint.countryAlphaThreeCode }))
-        .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'camelCountPerCapita'> & {
-          camelCountPerCapita: NonNullable<typeof dataPoint['camelCountPerCapita']>
-        } => dataPoint.camelCountPerCapita !== undefined && dataPoint.camelCountPerCapita !== null),
-      dataPointToValue: (dataPoint) => dataPoint.camelCountPerCapita
+        .map((dataPoint) => ({ value: dataPoint.camelCountPerCapita, countryAlphaThreeCode: dataPoint.countryAlphaThreeCode }))
+        .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'value'> & {
+          value: NonNullable<typeof dataPoint['value']>
+        } => dataPoint.value !== undefined && dataPoint.value !== null),
+      dataPointToValue: (dataPoint) => dataPoint.value
     });
 
     const countryHighlightLayerLegendEntries = [
@@ -99,36 +75,11 @@ export const useCamelsPerCapitaLayer = () => {
     const outlinedCountryAlphaThreeCodesWithNoCamelData = outlinedCountryAlphaThreeCodes.filter((alphaThreeCode) => !countryAlphaThreeCodesWithCamelData.includes(alphaThreeCode));
 
     return {
-      paint: {
-        countryData: [
-          ...mapColourBuckets.flatMap((colourBucket) => 
-            colourBucket.dataPoints.map((dataPoint) => ({
-              countryAlphaThreeCode: dataPoint.countryAlphaThreeCode,
-              fill: colourBucket.fill,
-              opacity: colourBucket.opacity,
-              borderWidthPx: outlinedCountryAlphaThreeCodes.includes(dataPoint.countryAlphaThreeCode)
-                ? MapSymbology.CountryFeature.HasData.BorderWidth
-                : MapSymbology.CountryFeature.Default.BorderWidth,
-              borderColour: outlinedCountryAlphaThreeCodes.includes(dataPoint.countryAlphaThreeCode)
-                ? MapSymbology.CountryFeature.HasData.BorderColour
-                : MapSymbology.CountryFeature.Default.BorderColour,
-            })
-          )),
-          ...outlinedCountryAlphaThreeCodesWithNoCamelData.map((countryAlphaThreeCode) => ({
-            countryAlphaThreeCode,
-            fill: MapSymbology.CountryFeature.Default.Color,
-            opacity: MapSymbology.CountryFeature.Default.Opacity,
-            borderWidthPx: MapSymbology.CountryFeature.HasData.BorderWidth,
-            borderColour: MapSymbology.CountryFeature.HasData.BorderColour
-          }))
-        ],
-        defaults: {
-          fill: MapSymbology.CountryFeature.Default.Color,
-          opacity: MapSymbology.CountryFeature.Default.Opacity,
-          borderWidthPx: MapSymbology.CountryFeature.Default.BorderWidth,
-          borderColour: MapSymbology.CountryFeature.Default.BorderColour
-        }
-      },
+      paint: generateStandardMapPaint({
+        mapColourBuckets,
+        outlinedCountryAlphaThreeCodes,
+        outlinedCountryAlphaThreeCodesWithNoData: outlinedCountryAlphaThreeCodesWithNoCamelData
+      }),
       countryHighlightLayerLegendEntries,
       freeTextEntries: getFreeTextEntries({ countryOutlinesEnabled: input.countryOutlinesEnabled }),
       linearLegendColourGradientConfiguration: {

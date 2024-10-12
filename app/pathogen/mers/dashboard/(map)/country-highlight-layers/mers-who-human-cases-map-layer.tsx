@@ -25,7 +25,7 @@ interface GetFreeTextEntriesInput {
   countryOutlinesEnabled: boolean;
 }
 
-export const useMersReportedHumanCasesMapLayer = () => {
+export const useMersWhoCasesMapLayer = () => {
   const { mapDataPointVisibilitySetting } = useContext(MersMapCustomizationsContext);
 
   const getFreeTextEntries = useCallback((input: GetFreeTextEntriesInput) => standardGetFreeTextEntriesFunction({
@@ -34,7 +34,7 @@ export const useMersReportedHumanCasesMapLayer = () => {
   }), [ mapDataPointVisibilitySetting ]);
 
   const getCountryHighlightingLayerInformation = useCallback(<
-    TData extends { countryAlphaThreeCode: string, humansAffected: number },
+    TData extends { countryAlphaThreeCode: string, positiveCasesReported: number },
     TCountryOutlineData extends  { countryAlphaThreeCode: string }
   >(input: GetCountryHighlightingLayerInformationInput<
     TData,
@@ -46,7 +46,7 @@ export const useMersReportedHumanCasesMapLayer = () => {
       (groupedData) => typedObjectEntries(groupedData)
         .map(([countryAlphaThreeCode, dataForCountry]) => ({ countryAlphaThreeCode, dataForCountry })),
       (data) => data.map(({ countryAlphaThreeCode, dataForCountry }) => ({
-        countryAlphaThreeCode, value: dataForCountry.reduce((accumulator, value) => accumulator + value.humansAffected, 0)
+        countryAlphaThreeCode, value: dataForCountry.reduce((accumulator, value) => accumulator + value.positiveCasesReported , 0)
       }))
     );
 
@@ -98,7 +98,7 @@ export const useMersReportedHumanCasesMapLayer = () => {
         enabled: linearLegendColourGradientConfiguration.enabled,
         props: {
           ticks: linearLegendColourGradientConfiguration.props.ticks,
-          title: 'Human Cases By Country'
+          title: 'Total Reported Human Positive Cases By Country'
         }
       }
     }

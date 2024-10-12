@@ -1,3 +1,9 @@
+import { assertNever } from "assert-never";
+import { MapDataPointVisibilityOptions } from "../use-mers-map-customization-modal";
+import { PaintForCountries } from "@/components/ui/pathogen-map/pathogen-map";
+import { ColourBucket } from "@/components/ui/pathogen-map/country-highlight-layers/generate-map-colour-buckets";
+import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
+
 const formatNumberForLegend = (input: {
   value: number,
   isExclusiveInRange: boolean;
@@ -85,3 +91,76 @@ export const formatPerCapitaNumberRangeForLegend = (input: {
 
   return "-";
 }
+
+interface StandardGetFreeTextEntriesFunctionInput {
+  countryOutlinesEnabled: boolean;
+  mapDataPointVisibilitySetting: MapDataPointVisibilityOptions;
+}
+
+export const standardGetFreeTextEntriesFunction = (input: StandardGetFreeTextEntriesFunctionInput) => {
+  const { countryOutlinesEnabled, mapDataPointVisibilitySetting } = input;
+
+  if(!countryOutlinesEnabled || mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.NOTHING_VISIBLE) {
+    return [];
+  }
+
+  if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.ESTIMATES_ONLY) {
+    return [
+      { text: 'Countries with a black outline contain seroprevalence data.' }
+    ];
+  }
+
+  if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY) {
+    return [
+      { text: 'Countries with a black outline contain MERS events.' }
+    ];
+  }
+
+  if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE) {
+    return [
+      { text: 'Countries with a black outline contain seroprevalence data or MERS events.' }
+    ];
+  }
+
+  assertNever(mapDataPointVisibilitySetting)
+}
+
+interface GenerateStandardMapPaintInput {
+  outlinedCountryAlphaThreeCodes: string[];
+  outlinedCountryAlphaThreeCodesWithNoData: string[];
+  mapColourBuckets: Array<ColourBucket<{
+    countryAlphaThreeCode: string;
+    value: number;
+  }>>
+}
+
+export const generateStandardMapPaint = (input: GenerateStandardMapPaintInput): PaintForCountries => ({
+  countryData: [
+    ...input.mapColourBuckets.flatMap((colourBucket) => 
+      colourBucket.dataPoints.map((dataPoint) => ({
+        countryAlphaThreeCode: dataPoint.countryAlphaThreeCode,
+        fill: colourBucket.fill,
+        opacity: colourBucket.opacity,
+        borderWidthPx: input.outlinedCountryAlphaThreeCodes.includes(dataPoint.countryAlphaThreeCode)
+          ? MapSymbology.CountryFeature.HasData.BorderWidth
+          : MapSymbology.CountryFeature.Default.BorderWidth,
+        borderColour: input.outlinedCountryAlphaThreeCodes.includes(dataPoint.countryAlphaThreeCode)
+          ? MapSymbology.CountryFeature.HasData.BorderColour
+          : MapSymbology.CountryFeature.Default.BorderColour,
+      })
+    )),
+    ...input.outlinedCountryAlphaThreeCodesWithNoData.map((countryAlphaThreeCode) => ({
+      countryAlphaThreeCode,
+      fill: MapSymbology.CountryFeature.Default.Color,
+      opacity: MapSymbology.CountryFeature.Default.Opacity,
+      borderWidthPx: MapSymbology.CountryFeature.HasData.BorderWidth,
+      borderColour: MapSymbology.CountryFeature.HasData.BorderColour
+    }))
+  ],
+  defaults: {
+    fill: MapSymbology.CountryFeature.Default.Color,
+    opacity: MapSymbology.CountryFeature.Default.Opacity,
+    borderWidthPx: MapSymbology.CountryFeature.Default.BorderWidth,
+    borderColour: MapSymbology.CountryFeature.Default.BorderColour
+  }
+})
