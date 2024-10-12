@@ -90,7 +90,7 @@ export const LineChart = <
     secondaryGroupingKeyToLabel
   }), [rechartsData, primaryGroupingKeyToLabel, secondaryGroupingKeyToLabel]);
 
-  let xAxisProps: XAxisProps = {
+  let xAxisProps = {
     dataKey: "primaryKey",
     interval: props.xAxisTickSettings?.interval !== undefined ? props.xAxisTickSettings.interval : undefined,
     ...(props.allPrimaryGroups ? {

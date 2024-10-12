@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
-import { CustomXAxisTick } from './custom-x-axis-tick';
+import { CustomXAxisTick, CustomXAxisTickProps } from './custom-x-axis-tick';
 import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from './group-data-for-recharts/group-data-for-recharts-twice';
 import { applyLabelsToGroupedRechartsData } from './group-data-for-recharts/apply-labels-to-grouped-recharts-data';
 import { useBarColourAndLegendProps } from './use-bar-colour-and-legend-props';
@@ -75,22 +75,18 @@ export const StackedBarChart = <
     transformOutputValue: props.transformOutputValue,
   });
 
-  let xAxisProps: XAxisProps = {
+  let xAxisProps = {
     dataKey: "primaryKey",
     interval: 0,
-  };
-
-  if (xAxisTickSettings) {
-    xAxisProps = {
-      ...xAxisProps,
-      tick: (tickProps) =>
+    ...(xAxisTickSettings ? {
+      tick: (tickProps: CustomXAxisTickProps) =>
         CustomXAxisTick({
           ...tickProps,
           tickSlant: xAxisTickSettings.slantValue,
           idealMaximumCharactersPerLine: xAxisTickSettings.idealMaximumCharactersPerLine
         }),
-    };
-  }
+    } : {})
+  };
 
   const { rechartsDataUsingLabels } = useMemo(() => applyLabelsToGroupedRechartsData({
     rechartsData,

@@ -30,7 +30,7 @@ const getFormattedDisplayText = (input: GetFormattedDisplayTextInput): React.Rea
   )
 };
 
-interface CustomXAxisTickProps {
+export interface CustomXAxisTickProps {
   x: number,
   y: number,
   payload: {

@@ -71,7 +71,7 @@ export const AreaChart = <
     transformOutputValue: props.transformOutputValue,
   });
 
-  let xAxisProps: XAxisProps = {
+  let xAxisProps = {
     dataKey: "primaryKey",
     interval: props.xAxisTickSettings?.interval !== undefined ? props.xAxisTickSettings.interval : undefined,
     ...(props.allPrimaryGroups ? {
@@ -101,7 +101,7 @@ export const AreaChart = <
         data={rechartsDataUsingLabels}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis {...xAxisProps} />
+        <XAxis {...xAxisProps } />
         <YAxis />
         <Tooltip itemStyle={{"color": "black"}} />
         <Legend {...legendProps} />
