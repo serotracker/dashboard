@@ -1,3 +1,6 @@
+import { assertNever } from "assert-never";
+import { MapDataPointVisibilityOptions } from "../use-mers-map-customization-modal";
+
 const formatNumberForLegend = (input: {
   value: number,
   isExclusiveInRange: boolean;
@@ -84,4 +87,37 @@ export const formatPerCapitaNumberRangeForLegend = (input: {
   }
 
   return "-";
+}
+
+interface StandardGetFreeTextEntriesFunctionInput {
+  countryOutlinesEnabled: boolean;
+  mapDataPointVisibilitySetting: MapDataPointVisibilityOptions;
+}
+
+export const standardGetFreeTextEntriesFunction = (input: StandardGetFreeTextEntriesFunctionInput) => {
+  const { countryOutlinesEnabled, mapDataPointVisibilitySetting } = input;
+
+  if(!countryOutlinesEnabled || mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.NOTHING_VISIBLE) {
+    return [];
+  }
+
+  if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.ESTIMATES_ONLY) {
+    return [
+      { text: 'Countries with a black outline contain seroprevalence data.' }
+    ];
+  }
+
+  if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY) {
+    return [
+      { text: 'Countries with a black outline contain MERS events.' }
+    ];
+  }
+
+  if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE) {
+    return [
+      { text: 'Countries with a black outline contain seroprevalence data or MERS events.' }
+    ];
+  }
+
+  assertNever(mapDataPointVisibilitySetting)
 }

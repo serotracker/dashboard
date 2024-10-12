@@ -11,7 +11,8 @@ import { AnimalMersEvent, HumanMersEvent, isAnimalMersEvent, isHumanMersEvent, M
 import { MersDiagnosisStatus } from "@/gql/graphql";
 import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
 import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
-import { LinearLegendColourGradientConfiguration } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
+import { useMersWhoCaseData } from "@/hooks/mers/use-mers-who-case-data";
+import { useMersWhoCasesMapLayer } from "./country-highlight-layers/mers-who-human-cases-map-layer";
 
 interface UseMersMapPaintInput<
   TData extends {}
@@ -30,11 +31,13 @@ export const useMersMapPaint = <
   const { dataPoints, currentMapCountryHighlightingSettings, countryOutlinesSetting, faoMersEventData, estimateDataShown, eventDataShown } = input;
 
   const { latestFaoCamelPopulationDataPointsByCountry } = useContext(CamelPopulationDataContext);
+  const { mersWhoCaseData } = useMersWhoCaseData();
   const dataPointPresentMapLayer = useDataPointPresentLayer();
   const totalCamelPopulationMapLayer = useTotalCamelPopulationLayer();
   const camelsPerCapitaMapLayer = useCamelsPerCapitaLayer();
   const reportedMersHumanCasesMapLayer = useMersReportedHumanCasesMapLayer();
   const reportedMersAnimalCasesMapLayer = useMersReportedAnimalCasesMapLayer();
+  const mersWhoHumanCasesMapLayer = useMersWhoCasesMapLayer();
 
   const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration } = useMemo((): GetCountryHighlightingLayerInformationOutput => {
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES) {
@@ -119,6 +122,18 @@ export const useMersMapPaint = <
           .filter((dataPoint) => dataPoint.diagnosisStatus === MersDiagnosisStatus.Confirmed)
           .filter((dataPoint): dataPoint is AnimalMersEvent => isAnimalMersEvent(dataPoint))
           .map((dataPoint) => ({ animalsAffected: 1, countryAlphaThreeCode: dataPoint.country.alphaThreeCode })),
+        countryOutlineData: dataPoints,
+        countryOutlinesEnabled
+      });
+    }
+    if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_WHO_HUMAN_CASES) {
+      const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
+
+      return mersWhoHumanCasesMapLayer.getCountryHighlightingLayerInformation({
+        data: mersWhoCaseData?.map((dataPoint) => ({
+          positiveCasesReported: dataPoint.positiveCasesReported,
+          countryAlphaThreeCode: dataPoint.country.alphaThreeCode,
+        })) ?? [],
         countryOutlineData: dataPoints,
         countryOutlinesEnabled
       });

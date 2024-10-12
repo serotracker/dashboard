@@ -1,15 +1,17 @@
-import { rose } from 'tailwindcss/colors'
 import uniq from 'lodash/uniq';
 import { useCallback, useContext } from "react";
+import { cyan } from 'tailwindcss/colors'
 import {
   GetCountryHighlightingLayerInformationInput as GenericGetCountryHighlightingLayerInformationInput,
   GetCountryHighlightingLayerInformationOutput,
 } from "@/components/ui/pathogen-map/pathogen-map";
 import { generateMapColourBuckets } from "@/components/ui/pathogen-map/country-highlight-layers/generate-map-colour-buckets";
 import { MapSymbology } from '@/app/pathogen/sarscov2/dashboard/(map)/map-config';
+import { pipe } from "fp-ts/lib/function";
+import { formatNumberRangeForLegend, standardGetFreeTextEntriesFunction } from "./helpers";
+import { typedGroupBy, typedObjectEntries } from '@/lib/utils';
 import { MersMapCustomizationsContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context';
 import { mapColourBucketsToLinearGradientConfiguration } from '@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration';
-import { formatNumberRangeForLegend, standardGetFreeTextEntriesFunction } from './helpers';
 
 type GetCountryHighlightingLayerInformationInput<
   TData extends { countryAlphaThreeCode: string },
@@ -23,7 +25,7 @@ interface GetFreeTextEntriesInput {
   countryOutlinesEnabled: boolean;
 }
 
-export const useTotalCamelPopulationLayer = () => {
+export const useMersWhoCasesMapLayer = () => {
   const { mapDataPointVisibilitySetting } = useContext(MersMapCustomizationsContext);
 
   const getFreeTextEntries = useCallback((input: GetFreeTextEntriesInput) => standardGetFreeTextEntriesFunction({
@@ -32,31 +34,34 @@ export const useTotalCamelPopulationLayer = () => {
   }), [ mapDataPointVisibilitySetting ]);
 
   const getCountryHighlightingLayerInformation = useCallback(<
-    TData extends {
-      countryAlphaThreeCode: string;
-      camelCount?: number | undefined | null;
-    },
-    TCountryOutlineData extends  { countryAlphaThreeCode: string },
+    TData extends { countryAlphaThreeCode: string, positiveCasesReported: number },
+    TCountryOutlineData extends  { countryAlphaThreeCode: string }
   >(input: GetCountryHighlightingLayerInformationInput<
     TData,
     TCountryOutlineData
   >): GetCountryHighlightingLayerInformationOutput => {
+    const postiveCasesByCountry = pipe(
+      input.data,
+      (data) => typedGroupBy(data, (dataPoint) => dataPoint.countryAlphaThreeCode),
+      (groupedData) => typedObjectEntries(groupedData)
+        .map(([countryAlphaThreeCode, dataForCountry]) => ({ countryAlphaThreeCode, dataForCountry })),
+      (data) => data.map(({ countryAlphaThreeCode, dataForCountry }) => ({
+        countryAlphaThreeCode, positiveCases: dataForCountry.reduce((accumulator, value) => accumulator + value.positiveCasesReported , 0)
+      }))
+    );
+
     const { mapColourBuckets } = generateMapColourBuckets({
       idealBucketCount: 8,
       smallestValuePaint: {
-        fill: rose['100'],
+        fill: cyan['100'],
         opacity: 0.6
       },
       largestValuePaint: {
-        fill: rose['700'],
+        fill: cyan['700'],
         opacity: 0.8
       },
-      data: input.data
-        .map((dataPoint) => ({ camelCount: dataPoint.camelCount, countryAlphaThreeCode: dataPoint.countryAlphaThreeCode }))
-        .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'camelCount'> & {
-          camelCount: NonNullable<typeof dataPoint['camelCount']>
-        } => dataPoint.camelCount !== undefined && dataPoint.camelCount !== null),
-      dataPointToValue: (dataPoint) => dataPoint.camelCount
+      data: postiveCasesByCountry,
+      dataPointToValue: (dataPoint) => dataPoint.positiveCases
     });
 
     const countryHighlightLayerLegendEntries = [
@@ -69,10 +74,12 @@ export const useTotalCamelPopulationLayer = () => {
         colour: bucket.fill
       }))
     ];
-
+    
     const outlinedCountryAlphaThreeCodes = input.countryOutlinesEnabled ? uniq(input.countryOutlineData.map(({ countryAlphaThreeCode }) => countryAlphaThreeCode)) : [];
-    const countryAlphaThreeCodesWithCamelData = uniq(input.data.map(( { countryAlphaThreeCode }) => countryAlphaThreeCode))
-    const outlinedCountryAlphaThreeCodesWithNoCamelData = outlinedCountryAlphaThreeCodes.filter((alphaThreeCode) => !countryAlphaThreeCodesWithCamelData.includes(alphaThreeCode));
+    const countryAlphaThreeCodesWithPositiveCaseData =
+      uniq(input.data.map(( { countryAlphaThreeCode }) => countryAlphaThreeCode));
+    const outlinedCountryAlphaThreeCodesWithNoPositiveCaseData =
+      outlinedCountryAlphaThreeCodes.filter((alphaThreeCode) => !countryAlphaThreeCodesWithPositiveCaseData.includes(alphaThreeCode));
 
     const { linearLegendColourGradientConfiguration } = mapColourBucketsToLinearGradientConfiguration({
       mapColourBuckets,
@@ -95,7 +102,7 @@ export const useTotalCamelPopulationLayer = () => {
                 : MapSymbology.CountryFeature.Default.BorderColour,
             })
           )),
-          ...outlinedCountryAlphaThreeCodesWithNoCamelData.map((countryAlphaThreeCode) => ({
+          ...outlinedCountryAlphaThreeCodesWithNoPositiveCaseData.map((countryAlphaThreeCode) => ({
             countryAlphaThreeCode,
             fill: MapSymbology.CountryFeature.Default.Color,
             opacity: MapSymbology.CountryFeature.Default.Opacity,
@@ -116,7 +123,7 @@ export const useTotalCamelPopulationLayer = () => {
         enabled: linearLegendColourGradientConfiguration.enabled,
         props: {
           ticks: linearLegendColourGradientConfiguration.props.ticks,
-          title: 'Camel Population By Country'
+          title: 'Total Reported Human Positive Cases By Country'
         }
       }
     }
