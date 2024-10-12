@@ -148,7 +148,7 @@ export const MersDataTable = () => {
     [AvailableMersDataTables.UNAVAILABLE]: () => (
       <p> No data available for table. </p>
     )
-  }), [ tableHeaderForAllDataTables, mersSeroprevalenceEstimateData, mersViralEstimateData, mersEventData, camelPopulationData, estimatesWithGenomicSequencingData ]);
+  }), [ tableHeaderForAllDataTables, mersSeroprevalenceEstimateData, mersViralEstimateData, mersEventData, camelPopulationData, estimatesWithGenomicSequencingData, mersWhoCaseData ]);
 
   return dataTableComponentMap[cleanedSelectedDataTable]();
 }

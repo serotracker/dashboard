@@ -11,7 +11,7 @@ import { Props as XAxisProps } from "recharts/types/cartesian/XAxis";
 import clsx from "clsx";
 import { typedObjectKeys } from "@/lib/utils";
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
-import { CustomXAxisTick } from "./custom-x-axis-tick";
+import { CustomXAxisTick, CustomXAxisTickProps } from "./custom-x-axis-tick";
 import { DoubleGroupingTransformOutputValueInput, groupDataForRechartsTwice } from "./group-data-for-recharts/group-data-for-recharts-twice";
 
 interface SplitBarChartProps<
@@ -62,23 +62,20 @@ export const SplitBarChart = <
     transformOutputValue: props.transformOutputValue,
   });
 
-  let xAxisProps: XAxisProps = {
-    dataKey: "secondaryKey",
-    interval: 0,
-  };
   const { xAxisTickSettings } = props;
 
-  if (xAxisTickSettings) {
-    xAxisProps = {
-      ...xAxisProps,
-      tick: (tickProps) =>
+  const xAxisProps = {
+    dataKey: "secondaryKey",
+    interval: 0,
+    ...(xAxisTickSettings ? {
+      tick: (tickProps: CustomXAxisTickProps) =>
         CustomXAxisTick({
           ...tickProps,
           tickSlant: xAxisTickSettings.slantValue,
           idealMaximumCharactersPerLine: xAxisTickSettings.idealMaximumCharactersPerLine
         }),
-    };
-  }
+    } : {})
+  };
 
   const isLargeScreen = useIsLargeScreen();
 

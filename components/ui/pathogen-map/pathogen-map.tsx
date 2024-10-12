@@ -18,7 +18,7 @@ import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-laye
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
 import { EsmMapSourceAndLayer } from "./esm-maps";
-import { computeClusterMarkers } from "@/app/pathogen/arbovirus/dashboard/(map)/arbo-map-cluster-utils";
+import { computeClusterMarkers } from "@/components/ui/pathogen-map/pathogen-map-cluster-utils";
 import { GenericMapPopUpWidth } from "./map-pop-up/generic-map-pop-up";
 import { CountryHighlightLayerLegendEntry, FreeTextEntry, LinearLegendColourGradientConfiguration } from "./country-highlight-layers/country-highlight-layer-legend";
 import { CountryDataContextType } from "@/contexts/pathogen-context/country-information-context";

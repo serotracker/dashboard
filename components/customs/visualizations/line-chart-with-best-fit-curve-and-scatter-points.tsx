@@ -102,9 +102,9 @@ export const LineChartWithBestFitCurveAndScatterPoints = <
       .replace(/ \(Raw\)$/g, '')
   )
 
-  const xAxisProps: XAxisProps = {
+  const xAxisProps = {
     dataKey: "xAxisValue",
-    type: 'category'
+    type: 'category' as const
   }
 
   return (
