@@ -16,8 +16,8 @@ export const SeroTrackerIntroduction = () => {
       <h1 className=" w-fit p-2 rounded-md">SeroTracker</h1>
         <h3 className="rounded-md p-2">
           {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED === 'true'
-            ? 'Your Go to Source for COVID-19, MERS, and Arbovirus Seroprevalence Data'
-            : 'Your Go to Source for COVID-19 and Arbovirus Seroprevalence Data'
+            ? 'Your Go-To Source for COVID-19, MERS, and Arbovirus Seroprevalence Data'
+            : 'Your Go-To Source for COVID-19 and Arbovirus Seroprevalence Data'
           }
         </h3>
       <div className="p-2 rounded-md">
