@@ -33,7 +33,8 @@ export type arboviruses =
   | "Chikungunya"
   | "Yellow Fever"
   | "West Nile"
-  | "Mayaro";
+  | "Mayaro"
+  | "Oropouche";
 
 type antibodies = "IgG" | "IgM" | "NAb" | "NR" | "IgG, IgM";
 
@@ -43,7 +44,8 @@ export const arboShortformToFullNameMap: {[key in Arbovirus]: arboviruses} = {
   [Arbovirus.Chikv]: "Chikungunya",
   [Arbovirus.Yfv]: "Yellow Fever",
   [Arbovirus.Wnv]: "West Nile",
-  [Arbovirus.Mayv]: "Mayaro"
+  [Arbovirus.Mayv]: "Mayaro",
+  [Arbovirus.Orov]: "Oropouche",
 }
 
 export const arboShortformToFullNamePlusVirusMap: {[key in Arbovirus]: string} = {
@@ -52,7 +54,8 @@ export const arboShortformToFullNamePlusVirusMap: {[key in Arbovirus]: string} =
   [Arbovirus.Chikv]: "Chikungunya Virus",
   [Arbovirus.Yfv]: "Yellow Fever Virus",
   [Arbovirus.Wnv]: "West Nile Virus",
-  [Arbovirus.Mayv]: "Mayaro Virus"
+  [Arbovirus.Mayv]: "Mayaro Virus",
+  [Arbovirus.Orov]: "Oropouche Virus"
 }
 
 export const convertArboSFtoArbo = (arbo: Arbovirus): arboviruses => {
@@ -67,6 +70,7 @@ interface dataStratifiedByArbovirus {
   "Yellow Fever": number;
   "West Nile": number;
   Mayaro: number;
+  Oropouche: number;
 }
 
 //Seroprevalence per pathogen, WHO region and age group
@@ -100,6 +104,7 @@ export function StudyCountOverTime() {
         "Yellow Fever": arbovirus === "Yellow Fever" ? 1 : 0,
         "West Nile": arbovirus === "West Nile" ? 1 : 0,
         Mayaro: arbovirus === "Mayaro" ? 1 : 0,
+        Oropouche: arbovirus === "Oropouche" ? 1 : 0
       });
     }
   });
@@ -452,6 +457,7 @@ export function Top10CountriesByPathogenStudyCount() {
         "Yellow Fever": arbovirus === "Yellow Fever" ? 1 : 0,
         "West Nile": arbovirus === "West Nile" ? 1 : 0,
         Mayaro: arbovirus === "Mayaro" ? 1 : 0,
+        Oropouche: arbovirus === "Oropouche" ? 1 : 0,
       });
     }
   });

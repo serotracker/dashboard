@@ -60,6 +60,7 @@ export const useChartArbovirusDropdown = (input: UseChartArbovirusDropdownInput)
     Arbovirus.Yfv,
     Arbovirus.Wnv,
     Arbovirus.Mayv,
+    Arbovirus.Orov,
   ];
   const arbovirusToSortOrderMap: Record<Arbovirus, number> = {
     [Arbovirus.Zikv]: 1,
@@ -68,6 +69,7 @@ export const useChartArbovirusDropdown = (input: UseChartArbovirusDropdownInput)
     [Arbovirus.Yfv]: 4,
     [Arbovirus.Wnv]: 5,
     [Arbovirus.Mayv]: 6,
+    [Arbovirus.Orov]: 7,
   }
 
   const [userArbovirusSelection, setUserArbovirusSelection] = useState<Arbovirus>(pathogenOrder[0]);

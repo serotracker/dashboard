@@ -56,6 +56,7 @@ const arboColumnConfiguration = [{
     'YFV': 'bg-yfv',
     'WNV': 'bg-wnv',
     'MAYV': 'bg-mayv',
+    'OROV': 'bg-orov',
   },
   defaultColourSchemeClassname: 'bg-gray-100'
 }, {

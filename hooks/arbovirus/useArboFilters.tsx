@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
@@ -27,8 +28,21 @@ export const arbovirusFiltersQuery = gql`
 `
 
 export function useArboFilters() {
-  return useQuery<ArbovirusFilterOptionsQuery>({
+  const { data: rawData, ...result } = useQuery<ArbovirusFilterOptionsQuery>({
     queryKey: ["arbovirusFiltersQuery"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
   });
+
+  const data = useMemo(() => rawData ? {
+    ...rawData,
+    arbovirusFilterOptions: {
+      ...rawData.arbovirusFilterOptions,
+      pathogen: rawData.arbovirusFilterOptions.pathogen.filter((pathogen) => pathogen !== 'OROV')
+    }
+  } : rawData, [ rawData ]);
+
+  return {
+    result,
+    data
+  }
 }

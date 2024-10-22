@@ -33,6 +33,7 @@ export const arbovirusToRibbonColourClassname: Record<Arbovirus, string> = {
   [Arbovirus.Yfv]: 'bg-yfv',
   [Arbovirus.Wnv]: 'bg-wnv',
   [Arbovirus.Mayv]: 'bg-mayv',
+  [Arbovirus.Orov]: 'bg-orov',
 }
 
 export const ArboCountryPopupContent = (input: ArboCountryPopupContentProps): React.ReactNode => {

@@ -35,6 +35,7 @@ export const pathogenColors: Record<Arbovirus, string> = {
   [Arbovirus.Denv]: "#ffadad",
   [Arbovirus.Yfv]: "#ffd6a5",
   [Arbovirus.Mayv]: "#c5a3ff",
+  [Arbovirus.Orov]: "#ffc8dd"
 };
 
 const esmValueToSelectedEsm: Record<string, SelectedArbovirusEnvironmentalSuitabilityMap | undefined> = {
@@ -170,6 +171,7 @@ export function ArbovirusMap() {
               [Arbovirus.Denv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Denv], 1, 0]],
               [Arbovirus.Yfv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Yfv], 1, 0]],
               [Arbovirus.Mayv]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Mayv], 1, 0]],
+              [Arbovirus.Orov]: ["+", ["case", ["==", ["get", "pathogen"], Arbovirus.Orov], 1, 0]],
             },
             validClusterPropertyKeys: Object.values(Arbovirus),
             clusterPropertyKeysIncludedInSum: Object.values(Arbovirus),

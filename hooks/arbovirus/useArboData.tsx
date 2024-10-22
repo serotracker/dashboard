@@ -1,11 +1,13 @@
+import { useMemo } from 'react'
 import { useQuery } from "@tanstack/react-query";
 import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
-import { ArbovirusEstimatesQueryQuery } from "@/gql/graphql";
+import { Arbovirus, ArbovirusEstimatesQueryQuery } from "@/gql/graphql";
 
 export const arbovirusEstimatesQuery = gql`
   query arbovirusEstimatesQuery {
     arbovirusEstimates {
+      estimateType
       ageGroup
       ageMaximum
       ageMinimum
@@ -51,8 +53,19 @@ export const arbovirusEstimatesQuery = gql`
 `
 
 export function useArboData() {
-  return useQuery<ArbovirusEstimatesQueryQuery>({
+  const { data: rawData, ...result } = useQuery<ArbovirusEstimatesQueryQuery>({
     queryKey: ["arbovirusEstimatesQuery"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
   });
+
+  const data = useMemo(() => rawData ? {
+    ...rawData,
+    arbovirusEstimates: rawData.arbovirusEstimates
+      .filter((element) => element.pathogen !== Arbovirus.Orov)
+  } : rawData, [ rawData ]);
+
+  return {
+    result,
+    data
+  }
 }
