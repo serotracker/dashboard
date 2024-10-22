@@ -126,7 +126,6 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
           Arbovirus.Yfv,
           Arbovirus.Wnv,
           Arbovirus.Mayv,
-          Arbovirus.Orov
         ],
         ageGroup: filterData.arbovirusFilterOptions.ageGroup,
         sex: filterData.arbovirusFilterOptions.sex,
