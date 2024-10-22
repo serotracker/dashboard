@@ -18,6 +18,8 @@ function pathogenFullString(pathogen: string) {
       return "West Nile Virus";
     case "MAYV":
       return "Mayaro Virus";
+    case "OROV":
+      return "Oropouche Virus";
     default:
       return "Unknown";
   }

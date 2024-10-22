@@ -169,6 +169,7 @@ export const filterArbovirusToSortOrderMap: Record<Arbovirus, number> & Record<s
   [Arbovirus.Yfv]: 4,
   [Arbovirus.Wnv]: 5,
   [Arbovirus.Mayv]: 6,
+  [Arbovirus.Orov]: 7,
 }
 
 const pathogenColorsTailwind: { [key in Arbovirus]: string } = {
@@ -178,6 +179,7 @@ const pathogenColorsTailwind: { [key in Arbovirus]: string } = {
   [Arbovirus.Denv]: "data-[state=checked]:bg-denv",
   [Arbovirus.Yfv]: "data-[state=checked]:bg-yfv",
   [Arbovirus.Mayv]: "data-[state=checked]:bg-mayv",
+  [Arbovirus.Orov]: "data-[state=checked]:bg-orov",
 };
 
 export const scopeToSortOrderMap: Record<string, number | undefined> = {

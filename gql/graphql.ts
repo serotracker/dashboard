@@ -157,6 +157,7 @@ export enum Arbovirus {
   Chikv = 'CHIKV',
   Denv = 'DENV',
   Mayv = 'MAYV',
+  Orov = 'OROV',
   Wnv = 'WNV',
   Yfv = 'YFV',
   Zikv = 'ZIKV'
@@ -206,6 +207,7 @@ export type ArbovirusEstimate = {
   countryAlphaTwoCode: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
   estimateId?: Maybe<Scalars['String']['output']>;
+  estimateType: ArbovirusEstimateType;
   id: Scalars['String']['output'];
   inclusionCriteria?: Maybe<Scalars['String']['output']>;
   latitude: Scalars['Float']['output'];
@@ -234,6 +236,11 @@ export type ArbovirusEstimate = {
   url?: Maybe<Scalars['String']['output']>;
   whoRegion?: Maybe<Scalars['String']['output']>;
 };
+
+export enum ArbovirusEstimateType {
+  Seroprevalence = 'SEROPREVALENCE',
+  ViralPrevalence = 'VIRAL_PREVALENCE'
+}
 
 export type ArbovirusFilterOptions = {
   __typename?: 'ArbovirusFilterOptions';

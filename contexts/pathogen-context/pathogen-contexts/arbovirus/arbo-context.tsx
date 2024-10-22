@@ -15,7 +15,7 @@ export type ArbovirusEstimate = ArbovirusEstimatesQueryQuery['arbovirusEstimates
 const initialArboContextState = {
   filteredData: [],
   selectedFilters: {
-    ["pathogen"]: ["DENV", "ZIKV", "CHIKV", "YFV", "WNV", "MAYV"],
+    ["pathogen"]: ["DENV", "ZIKV", "CHIKV", "YFV", "WNV", "MAYV", "OROV"],
   },
   dataFiltered: false,
 }

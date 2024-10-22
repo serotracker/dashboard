@@ -48,6 +48,7 @@ module.exports = {
         wnv: "#CAFFBF",
         yfv: "#FFD6A5",
         mayv: "#c5a3ff",
+        orov: "#ffc8dd",
         "who-region-afr": "#e15759",
         "who-region-amr": "#59a14f",
         "who-region-emr": "#f1ce63",

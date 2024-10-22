@@ -8,6 +8,7 @@ export const barColoursForArboviruses = {
   "Yellow Fever": pathogenColors.YFV,
   "West Nile": pathogenColors.WNV,
   Mayaro: pathogenColors.MAYV,
+  Oropouche: pathogenColors.OROV,
 };
 
 const sortOrderForArboviruses = {
@@ -17,6 +18,7 @@ const sortOrderForArboviruses = {
   "Yellow Fever": 4,
   "West Nile": 5,
   Mayaro: 6,
+  Oropouche: 7
 };
 
 export const sortArboviruses = (a: arboviruses, b: arboviruses) => {
