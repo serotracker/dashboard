@@ -8,7 +8,7 @@ import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/path
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
 import { ToastId } from "@/contexts/toast-provider";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
-import { ArbovirusVisualizationId, arbovirusVisualizationInformation, getUrlParameterFromVisualizationId } from "../../visualizations/visualization-page-config";
+import { ArbovirusVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { useMap } from "react-map-gl";
 import { shortenedArboTrackerCitationText, suggestedArboTrackerCitationText } from "../../arbotracker-citations";
 
@@ -164,6 +164,7 @@ export const ArboDataTable = () => {
   const allMaps = useMap();
   const arboMap = allMaps['arboMap'];
   const router = useRouter();
+  const { arbovirusVisualizationInformation } = useVisualizationPageConfiguration();
 
   const rowExpansionConfiguration: RowExpansionConfigurationEnabled<ArbovirusEstimate> = {
     enabled: true,

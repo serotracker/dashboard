@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useQuery } from "@tanstack/react-query";
 import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
-import { Arbovirus, ArbovirusEstimatesQueryQuery } from "@/gql/graphql";
+import { Arbovirus, ArbovirusEstimatesQueryQuery, ArbovirusEstimateType } from "@/gql/graphql";
 
 export const arbovirusEstimatesQuery = gql`
   query arbovirusEstimatesQuery {
@@ -58,11 +58,28 @@ export function useArboData() {
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
   });
 
-  const data = useMemo(() => rawData ? {
-    ...rawData,
-    arbovirusEstimates: rawData.arbovirusEstimates
-      .filter((element) => element.pathogen !== Arbovirus.Orov)
-  } : rawData, [ rawData ]);
+  const oropoucheEnabled = process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true';
+
+  const data = useMemo(() => {
+    if(!rawData) {
+      return rawData
+    }
+
+    if(!oropoucheEnabled) {
+      return {
+        ...rawData,
+        arbovirusEstimates: rawData.arbovirusEstimates
+          .filter((element) => element.pathogen !== Arbovirus.Orov)
+          .filter((element) => element.estimateType === ArbovirusEstimateType.Seroprevalence)
+      }
+    }
+
+    return {
+      ...rawData,
+      arbovirusEstimates: rawData.arbovirusEstimates
+        .filter((element) => element.estimateType === ArbovirusEstimateType.Seroprevalence)
+    }
+  }, [ rawData, oropoucheEnabled ]);
 
   return {
     result,
