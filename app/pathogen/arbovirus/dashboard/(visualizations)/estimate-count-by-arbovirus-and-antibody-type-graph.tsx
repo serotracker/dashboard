@@ -34,10 +34,12 @@ export const EstimateCountByArbovirusAndAntibodyTypeGraph = (props: EstimateCoun
       transformOutputValue={({ data }) => data.length}
       legendConfiguration={props.legendConfiguration}
       getBarColour={(antibodyKey) => barColoursForAntibodies[antibodyKey] ?? generateRandomColour()}
-      xAxisTickSettings={{
+      xAxisTickSettings={process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true' ? {
         idealMaximumCharactersPerLine: 5,
         fontSize: "12px",
         lineHeight: 12
+      } : {
+        idealMaximumCharactersPerLine: 5
       }}
     />
   );
