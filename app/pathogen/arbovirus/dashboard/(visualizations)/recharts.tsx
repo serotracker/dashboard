@@ -36,8 +36,6 @@ export type arboviruses =
   | "Mayaro"
   | "Oropouche";
 
-type antibodies = "IgG" | "IgM" | "NAb" | "NR" | "IgG, IgM";
-
 export const arboShortformToFullNameMap: {[key in Arbovirus]: arboviruses} = {
   [Arbovirus.Denv]: "Dengue",
   [Arbovirus.Zikv]: "Zika",

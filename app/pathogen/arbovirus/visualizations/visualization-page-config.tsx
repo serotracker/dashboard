@@ -1,4 +1,5 @@
 import uniq from 'lodash/uniq';
+import { useContext, useMemo, useState } from 'react';
 import { VisualizationDisplayNameType, VisualizationInformation } from "../../generic-pathogen-visualizations-page";
 import { StudyCountOverTime, Top10CountriesByPathogenStudyCount, convertArboSFtoArbo } from "../dashboard/(visualizations)/recharts";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
@@ -16,6 +17,8 @@ import { StudyCountOverTimeBySampleFrame } from '../dashboard/(visualizations)/s
 import { EstimateCountByArbovirusAndAntibodyTypeGraph } from '../dashboard/(visualizations)/estimate-count-by-arbovirus-and-antibody-type-graph';
 import { ClopperPearsonConfidenceIntervalCalculationTooltip, UNRegionsTooltip, WHORegionsTooltip } from '@/components/customs/tooltip-content';
 import { shortenedArboTrackerCitationText } from '../arbotracker-citations';
+import { ArbovirusAvailablePathogensContext } from '@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-available-pathogens-context';
+import { useArbovirusBreakdownVisualizationPaginationConfiguration } from './use-arbovirus-breakdown-visualization-pagination-configuration';
 
 export enum ArbovirusVisualizationId {
   CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS = "CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS",
@@ -70,7 +73,7 @@ export const isArbovirusVisualizationUrlParameter = (
 ): visualizationUrlParameter is ArbovirusVisualizationUrlParameter =>
   Object.values(ArbovirusVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, ArbovirusVisualizationInformation<string, string, string, string>> = {
+const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, ArbovirusVisualizationInformation<string, string, string, string>> = {
   [ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS]: {
     id: ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS,
     urlParameter:
@@ -209,7 +212,63 @@ export const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId,
   },
 }
 
-export const arbovirusVisualizationInformationArray = typedObjectEntries(arbovirusVisualizationInformation).map(([_, value]) => value);
+export const useVisualizationPageConfiguration = () => {
+  const {
+    paginationConfiguration: paginationConfigurationForChangeInMedianSeroprevalenceOverTime,
+    renderVisualization: renderVisualizationForChangeInMedianSeroprevalenceOverTime
+  } = useArbovirusBreakdownVisualizationPaginationConfiguration({
+    renderVisualization: arbovirusVisualizationInformation[ArbovirusVisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME]['renderVisualization']
+  })
+
+  const {
+    paginationConfiguration: paginationConfigurationForMedianSeroprevalenceByWhoRegion,
+    renderVisualization: renderVisualizationForMedianSeroprevalenceByWhoRegion
+  } = useArbovirusBreakdownVisualizationPaginationConfiguration({
+    renderVisualization: arbovirusVisualizationInformation[ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]['renderVisualization']
+  })
+
+  const completedArbovirusVisualizationInformation = useMemo(() => ({
+    [ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS]:
+      arbovirusVisualizationInformation[ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_ARBOVIRUS],
+    [ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME]:
+      arbovirusVisualizationInformation[ArbovirusVisualizationId.CUMULATIVE_ESTIMATE_COUNT_OVER_TIME_BY_SAMPLE_FRAME],
+    [ArbovirusVisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE]:
+      arbovirusVisualizationInformation[ArbovirusVisualizationId.ESTIMATE_COUNT_BY_ARBOVIRUS_AND_ANTIBODY_TYPE],
+    [ArbovirusVisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS]:
+      arbovirusVisualizationInformation[ArbovirusVisualizationId.ESTIMATE_COUNT_BY_WHO_REGION_AND_ARBOVIRUS],
+    [ArbovirusVisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS]:
+      arbovirusVisualizationInformation[ArbovirusVisualizationId.ESTIMATE_COUNT_BY_UN_REGION_AND_ARBOVIRUS],
+    [ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION]: {
+      ...arbovirusVisualizationInformation[ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION],
+      paginationConfiguration: paginationConfigurationForMedianSeroprevalenceByWhoRegion,
+      renderVisualization: renderVisualizationForMedianSeroprevalenceByWhoRegion
+    },
+    [ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_UN_REGION]:
+      arbovirusVisualizationInformation[ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_UN_REGION],
+    [ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP]:
+      arbovirusVisualizationInformation[ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP],
+    [ArbovirusVisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS]:
+      arbovirusVisualizationInformation[ArbovirusVisualizationId.TOP_TEN_COUNTRIES_REPORTING_ESTIMATES_BY_ARBOVIRUS],
+    [ArbovirusVisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME]: {
+      ...arbovirusVisualizationInformation[ArbovirusVisualizationId.CHANGE_IN_MEDIAN_SEROPREVALENCE_OVER_TIME],
+      paginationConfiguration: paginationConfigurationForChangeInMedianSeroprevalenceOverTime,
+      renderVisualization: renderVisualizationForChangeInMedianSeroprevalenceOverTime
+    },
+    [ArbovirusVisualizationId.COUNTRY_SEROPREVALENCE_COMPARISON_SCATTER_PLOT]:
+      arbovirusVisualizationInformation[ArbovirusVisualizationId.COUNTRY_SEROPREVALENCE_COMPARISON_SCATTER_PLOT],
+  }), [
+    paginationConfigurationForChangeInMedianSeroprevalenceOverTime,
+    renderVisualizationForChangeInMedianSeroprevalenceOverTime,
+    paginationConfigurationForMedianSeroprevalenceByWhoRegion,
+    renderVisualizationForMedianSeroprevalenceByWhoRegion
+  ]);
+
+  return {
+    arbovirusVisualizationInformation: completedArbovirusVisualizationInformation,
+    arbovirusVisualizationInformationArray: typedObjectEntries(completedArbovirusVisualizationInformation).map(([_, value]) => value)
+  }
+}
+
 export const getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<
   ArbovirusVisualizationId,
   ArbovirusVisualizationUrlParameter

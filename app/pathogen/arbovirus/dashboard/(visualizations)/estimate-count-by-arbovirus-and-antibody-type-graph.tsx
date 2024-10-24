@@ -9,11 +9,13 @@ interface EstimateCountByArbovirusAndAntibodyTypeGraphProps {
   legendConfiguration: LegendConfiguration;
 }
 
-const barColoursForSampleFrames: Record<string, string | undefined> = {
+const barColoursForAntibodies: Record<string, string | undefined> = {
   "IgG": "#61f4de",
   "IgM": "#65cbe9",
   "IgG, IgM": "#6cb6ef",
   "NAb": "#6c8dfa",
+  "S segment (OROV only)": "#218dad",
+  "N Segment": "#09b1e3"
 };
 
 export const EstimateCountByArbovirusAndAntibodyTypeGraph = (props: EstimateCountByArbovirusAndAntibodyTypeGraphProps) => {
@@ -31,8 +33,12 @@ export const EstimateCountByArbovirusAndAntibodyTypeGraph = (props: EstimateCoun
       secondaryGroupingSortFunction={(antibodyKeyA, antibodyKeyB) => antibodyKeyA > antibodyKeyB ? 1 : -1}
       transformOutputValue={({ data }) => data.length}
       legendConfiguration={props.legendConfiguration}
-      getBarColour={(antibodyKey) => barColoursForSampleFrames[antibodyKey] ?? generateRandomColour()}
-      xAxisTickSettings={{
+      getBarColour={(antibodyKey) => barColoursForAntibodies[antibodyKey] ?? generateRandomColour()}
+      xAxisTickSettings={process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true' ? {
+        idealMaximumCharactersPerLine: 5,
+        fontSize: "12px",
+        lineHeight: 12
+      } : {
         idealMaximumCharactersPerLine: 5
       }}
     />

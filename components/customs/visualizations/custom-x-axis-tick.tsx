@@ -1,6 +1,8 @@
 interface GetFormattedDisplayTextInput {
   unformattedDisplayText: string;
   idealMaximumCharactersPerLine?: number;
+  lineHeight?: number;
+  fontSize?: string;
 }
 
 const getFormattedDisplayText = (input: GetFormattedDisplayTextInput): React.ReactNode | string => {
@@ -25,7 +27,20 @@ const getFormattedDisplayText = (input: GetFormattedDisplayTextInput): React.Rea
 
   return (
     <>
-      {linesInDisplayText.map((lineInDisplayText, index) => <tspan textAnchor="middle" x='0' dy={index === 0 ? 10 : 20} key={lineInDisplayText}>{lineInDisplayText}</tspan>)}
+      {linesInDisplayText.map((lineInDisplayText, index) => (
+        <tspan
+          textAnchor="middle"
+          x='0'
+          key={lineInDisplayText}
+          {...(input.fontSize ? { fontSize: input.fontSize } : {} )}
+          {...((!!input.lineHeight || input.lineHeight === 0)
+            ? { dy: index === 0 ? 10 : 10 + (input.lineHeight / 2) }
+            : { dy: index === 0 ? 10 : 20 }
+          )}
+        >
+          {lineInDisplayText}
+        </tspan>
+      ))}
     </>
   )
 };
@@ -37,6 +52,8 @@ export interface CustomXAxisTickProps {
     value: string
   },
   idealMaximumCharactersPerLine?: number,
+  fontSize?: string,
+  lineHeight?: number,
   tickSlant?: number
 }
 
@@ -55,7 +72,8 @@ export const CustomXAxisTick = (props: CustomXAxisTickProps) => {
       >
         {getFormattedDisplayText({
           unformattedDisplayText: payload.value,
-          idealMaximumCharactersPerLine: props.idealMaximumCharactersPerLine
+          idealMaximumCharactersPerLine: props.idealMaximumCharactersPerLine,
+          fontSize: props.fontSize
         })}
       </text>
     </g>

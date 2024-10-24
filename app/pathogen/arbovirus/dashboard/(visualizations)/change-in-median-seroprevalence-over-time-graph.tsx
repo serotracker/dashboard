@@ -1,18 +1,22 @@
 "use client";
-import React, { useContext, useMemo } from "react";
+import React, { useMemo } from "react";
 import { parseISO } from "date-fns";
 import { convertArboSFtoArbo, median } from "./recharts";
 import { pathogenColors } from "../(map)/ArbovirusMap";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
+import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
 
-export const ChangeInMedianSeroprevalenceOverTimeGraph = (): React.ReactNode => {
-  const { filteredData }= useContext(ArboContext);
+interface ChangeInMedianSeroprevalenceOverTimeGraphProps {
+  data: ArbovirusEstimate[];
+}
 
-  const consideredData = useMemo(() => filteredData.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'sampleStartDate'|'sampleEndDate'> & {
+export const ChangeInMedianSeroprevalenceOverTimeGraph = (props: ChangeInMedianSeroprevalenceOverTimeGraphProps): React.ReactNode => {
+  const { data } = props;
+
+  const consideredData = useMemo(() => data.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'sampleStartDate'|'sampleEndDate'> & {
     sampleStartDate: NonNullable<(typeof dataPoint)['sampleStartDate']>
     sampleEndDate: NonNullable<(typeof dataPoint)['sampleEndDate']>
-  } => !!dataPoint.sampleStartDate && !!dataPoint.sampleEndDate), [ filteredData ])
+  } => !!dataPoint.sampleStartDate && !!dataPoint.sampleEndDate), [ data ]);
 
   return (
     <SplitTimeBucketedBarChart

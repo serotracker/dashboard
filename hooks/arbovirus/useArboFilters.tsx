@@ -33,13 +33,15 @@ export function useArboFilters() {
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
   });
 
-  const data = useMemo(() => rawData ? {
+  const oropoucheEnabled = process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true';
+
+  const data = useMemo(() => (rawData && oropoucheEnabled === false) ? {
     ...rawData,
     arbovirusFilterOptions: {
       ...rawData.arbovirusFilterOptions,
       pathogen: rawData.arbovirusFilterOptions.pathogen.filter((pathogen) => pathogen !== 'OROV')
     }
-  } : rawData, [ rawData ]);
+  } : rawData, [ rawData, oropoucheEnabled ]);
 
   return {
     result,

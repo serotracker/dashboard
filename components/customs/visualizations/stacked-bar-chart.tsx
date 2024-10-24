@@ -47,6 +47,8 @@ interface StackedBarChartProps<
   xAxisTickSettings?: {
     slantValue?: number;
     idealMaximumCharactersPerLine?: number;
+    fontSize?: string;
+    lineHeight?: number;
   };
   legendConfiguration: LegendConfiguration;
 }
@@ -83,7 +85,9 @@ export const StackedBarChart = <
         CustomXAxisTick({
           ...tickProps,
           tickSlant: xAxisTickSettings.slantValue,
-          idealMaximumCharactersPerLine: xAxisTickSettings.idealMaximumCharactersPerLine
+          idealMaximumCharactersPerLine: xAxisTickSettings.idealMaximumCharactersPerLine,
+          fontSize: xAxisTickSettings.fontSize,
+          lineHeight: xAxisTickSettings.lineHeight,
         }),
     } : {})
   };

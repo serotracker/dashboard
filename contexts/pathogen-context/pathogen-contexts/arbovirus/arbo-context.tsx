@@ -9,6 +9,7 @@ import { ArbovirusEstimatesQueryQuery } from "@/gql/graphql";
 import { ArbovirusEnvironmentalSuitabilityCountryDataProvider } from "./arbo-environmental-suitability-country-data-context";
 import { useArboEnviromentalSuitabilityData } from "@/hooks/arbovirus/useArboEnviromentalSuitabilityData";
 import { ArbovirusOropoucheCasesDataProvider } from "./arbo-oropouche-cases-data-context";
+import { ArbovirusAvailablePathogensProvider } from "./arbo-available-pathogens-context";
 
 export type ArbovirusEstimate = ArbovirusEstimatesQueryQuery['arbovirusEstimates'][number];
 
@@ -110,7 +111,9 @@ export const ArboProviders = (props: ArboProvidersProps) => {
     >
       <ArbovirusEnvironmentalSuitabilityCountryDataProvider>
         <ArbovirusOropoucheCasesDataProvider>
-          {props.children}
+          <ArbovirusAvailablePathogensProvider>
+            {props.children}
+          </ArbovirusAvailablePathogensProvider>
         </ArbovirusOropoucheCasesDataProvider>
       </ArbovirusEnvironmentalSuitabilityCountryDataProvider>
     </PathogenProviders>
