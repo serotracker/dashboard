@@ -75,7 +75,7 @@ export const useArbovirusMapCustomizationModal = () => {
       }, 
       ...( process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true' ? [{
         type: CustomizationSettingType.SWITCH as const,
-        switchName: `Ororpouche Case Map ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
+        switchName: `Oropouche Case Map ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
         switchValue: oropoucheCasesMapEnabled,
         onSwitchValueChange: (newSwitchValue: boolean) => setOropoucheCasesMapEnabled(newSwitchValue),
       }] : [])]

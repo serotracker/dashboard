@@ -23,6 +23,7 @@ export const arbovirusFiltersQuery = gql`
         alphaTwoCode
         alphaThreeCode
       }
+      studyPopulation
     }
   }
 `

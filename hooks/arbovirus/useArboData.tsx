@@ -48,6 +48,8 @@ export const arbovirusEstimatesQuery = gql`
       unRegion
       url
       whoRegion
+      studyPopulation
+      studySpecies
     }
   }
 `
@@ -77,7 +79,6 @@ export function useArboData() {
     return {
       ...rawData,
       arbovirusEstimates: rawData.arbovirusEstimates
-        .filter((element) => element.estimateType === ArbovirusEstimateType.Seroprevalence)
     }
   }, [ rawData, oropoucheEnabled ]);
 

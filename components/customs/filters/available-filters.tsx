@@ -9,7 +9,7 @@ import { SendFilterChangeDispatch } from "../filters";
 import { BooleanSelectFilter } from "./boolean-select-filter";
 import { BooleanSelectOptionString } from "./select-filter";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
-import { Arbovirus } from "@/gql/graphql";
+import { Arbovirus, ArbovirusEstimateType, ArbovirusStudyPopulation } from "@/gql/graphql";
 import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
 import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, isMersDataType, isMersDataTypeSuperOption, mersDataTypeSuperOptionToLabelMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap, mersDataTypeToSuperOptionMap, mersMapPointVisibilitySettingToHiddenOptionsMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
@@ -73,6 +73,8 @@ export enum FilterableField {
   __typename = "__typename",
   pediatricAgeGroup = "pediatricAgeGroup",
   sex = "sex",
+  estimateType = "estimateType",
+  studyPopulation = "studyPopulation",
   samplingMethod = "samplingMethod",
   geographicScope = "geographicScope",
   testProducer = "testProducer",
@@ -217,6 +219,25 @@ export const useAvailableFilters = () => {
         (filterArbovirusToSortOrderMap[optionA] ?? 0) - (filterArbovirusToSortOrderMap[optionB] ?? 0),
       filterRenderingFunction: ColouredCheckboxFilter,
       clearAllButtonText: 'Clear all viruses'
+    },
+    [FilterableField.estimateType]: {
+      field: FilterableField.estimateType,
+      label: "Estimate Type",
+      valueToLabelMap: {
+        [ArbovirusEstimateType.Seroprevalence]: "Seroprevalence Estimates",
+        [ArbovirusEstimateType.ViralPrevalence]: "Viral Prevalence Estimates",
+      },
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.studyPopulation]: {
+      field: FilterableField.studyPopulation,
+      label: "Study Population",
+      valueToLabelMap: {
+        [ArbovirusStudyPopulation.Human]: "Human",
+        [ArbovirusStudyPopulation.Insect]: "Insect",
+        [ArbovirusStudyPopulation.NonHumanAnimal]: "Non-Human Animal",
+      },
+      filterRenderingFunction: MultiSelectFilter
     },
     [FilterableField.start_date]: {
       field: FilterableField.start_date,

@@ -35,8 +35,15 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   const selectedAgeGroups = state.selectedFilters['ageGroup'] ?? [];
   const selectedArboviruses = state.selectedFilters['pathogen'] ?? [];
 
+  const oropoucheEnabled = process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true';
+
   const arbovirusFilters = [
     FilterableField.pathogen
+  ]
+
+  const studyParameterFilters = [
+    FilterableField.estimateType,
+    FilterableField.studyPopulation
   ]
 
   const dateFilters = [
@@ -87,7 +94,13 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
     headerText: 'Arboviruses',
     headerTooltipText: 'Filter on arbovirus strain.',
     includedFilters: arbovirusFilters
-  }, {
+  }, 
+  ...(oropoucheEnabled ? [{
+    headerText: 'Study Parameters',
+    headerTooltipText: 'Very basic filters to allow you to choose what kind of studies you are interested in.',
+    includedFilters: studyParameterFilters
+  }] : []),
+  {
     headerText: 'Date',
     headerTooltipText: 'Filter on sample start and end date.',
     includedFilters: dateFilters
@@ -208,6 +221,18 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
     );
   }, [ data ]);
 
+  const estimateType = useMemo(() => {
+    return uniq((data?.arbovirusEstimates ?? [])
+      .flatMap((dataPoint) => dataPoint.estimateType)
+    );
+  }, [ data ]);
+
+  const studyPopulation = useMemo(() => {
+    return uniq((data?.arbovirusEstimates ?? [])
+      .flatMap((dataPoint) => dataPoint.studyPopulation)
+    );
+  }, [ data ]);
+
   return (
     <Filters
       className={props.className}
@@ -231,7 +256,9 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
         producer,
         antibody,
         serotype,
-        pediatricAgeGroup
+        pediatricAgeGroup,
+        estimateType,
+        studyPopulation
       }}
       data={data?.arbovirusEstimates ?? []}
       resetAllFiltersButtonEnabled={true}

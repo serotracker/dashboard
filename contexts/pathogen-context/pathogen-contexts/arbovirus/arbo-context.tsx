@@ -5,7 +5,7 @@ import { PathogenContextActionType, PathogenContextState, PathogenContextType, P
 import { useArboData } from "@/hooks/arbovirus/useArboData";
 import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
 import { CountryDataContext } from "../../country-information-context";
-import { ArbovirusEstimatesQueryQuery } from "@/gql/graphql";
+import { ArbovirusEstimatesQueryQuery, ArbovirusEstimateType, ArbovirusStudyPopulation } from "@/gql/graphql";
 import { ArbovirusEnvironmentalSuitabilityCountryDataProvider } from "./arbo-environmental-suitability-country-data-context";
 import { useArboEnviromentalSuitabilityData } from "@/hooks/arbovirus/useArboEnviromentalSuitabilityData";
 import { ArbovirusOropoucheCasesDataProvider } from "./arbo-oropouche-cases-data-context";
@@ -16,7 +16,9 @@ export type ArbovirusEstimate = ArbovirusEstimatesQueryQuery['arbovirusEstimates
 const initialArboContextState = {
   filteredData: [],
   selectedFilters: {
-    ["pathogen"]: ["DENV", "ZIKV", "CHIKV", "YFV", "WNV", "MAYV", "OROV"],
+    'pathogen': ["DENV", "ZIKV", "CHIKV", "YFV", "WNV", "MAYV", "OROV"],
+    'estimateType': [ ArbovirusEstimateType.Seroprevalence ],
+    'studyPopulation': [ ArbovirusStudyPopulation.Human ]
   },
   dataFiltered: false,
 }

@@ -139,6 +139,8 @@ export function ArbovirusMap() {
                   "#FFD6A5",
                   "MAYV",
                   "#C5A3FF",
+                  "OROV",
+                  "#FFC8DD",
                   "#FFFFFC",
                 ],
                 "circle-radius": 8,
