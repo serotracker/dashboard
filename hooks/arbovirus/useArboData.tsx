@@ -72,7 +72,6 @@ export function useArboData() {
         ...rawData,
         arbovirusEstimates: rawData.arbovirusEstimates
           .filter((element) => element.pathogen !== Arbovirus.Orov)
-          .filter((element) => element.estimateType === ArbovirusEstimateType.Seroprevalence)
       }
     }
 
