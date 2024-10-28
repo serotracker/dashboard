@@ -28,6 +28,7 @@ export const handleFilterUpdate = <
 >(
   input: HandleFilterUpdateInput<TData, TPathogenContextState>
 ): HandleFilterUpdateOutput<TData, TPathogenContextState> => {
+  console.log('input', input);
   return pipe(
     input,
     addActionToSelectedFilters,
