@@ -31,6 +31,6 @@ export const ArboSeroprevalenceDataTable = (
       />
     );
   } else {
-    return <> No Data Available </>;
+    return <> No Seroprevalence Data Available </>;
   }
 }

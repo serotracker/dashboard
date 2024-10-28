@@ -31,6 +31,6 @@ export const ArboViralPrevalenceDataTable = (
       />
     );
   } else {
-    return <> No Data Available </>;
+    return <> No Viral Prevalence Data Available </>;
   }
 }

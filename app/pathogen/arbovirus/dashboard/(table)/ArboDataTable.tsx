@@ -326,7 +326,7 @@ export const ArboDataTable = () => {
         estimate.latitude + (boxSize / 2),
       ])
     },
-    visualization: arboDataTableType === ArbovirusDataTableType.SEROPREVALENCE
+    visualization: cleanedSelectedDataTable === ArbovirusDataTableType.SEROPREVALENCE
       ? ((input) => {
         const estimateId = input.row.getValue('estimateId');
 
@@ -365,35 +365,35 @@ export const ArboDataTable = () => {
         );
       })
       : () => null
-  }), [ arboDataTableType, arboMap, arbovirusVisualizationInformation, router ])
+  }), [ cleanedSelectedDataTable, arboMap, arbovirusVisualizationInformation, router ])
 
-  if(arboDataTableType === ArbovirusDataTableType.UNAVAILABLE) {
+  if(cleanedSelectedDataTable === ArbovirusDataTableType.UNAVAILABLE) {
     return <> No Data Available </>;
   }
 
-  if(arboDataTableType === ArbovirusDataTableType.SEROPREVALENCE) {
+  if(cleanedSelectedDataTable === ArbovirusDataTableType.SEROPREVALENCE) {
     return (
       <ArboSeroprevalenceDataTable
         data={dataForSeroprevalenceTable}
         tableHeader={tableHeader}
-        columnConfiguration={getArboColumnConfiguration(arboDataTableType)}
+        columnConfiguration={getArboColumnConfiguration(cleanedSelectedDataTable)}
         rowExpansionConfiguration={rowExpansionConfiguration}
         csvCitationConfiguration={csvCitationConfiguration}
       />
     )
   }
 
-  if(arboDataTableType === ArbovirusDataTableType.VIRAL_PREVALENCE) {
+  if(cleanedSelectedDataTable === ArbovirusDataTableType.VIRAL_PREVALENCE) {
     return (
       <ArboViralPrevalenceDataTable
         data={dataForViralPrevalenceTable}
         tableHeader={tableHeader}
-        columnConfiguration={getArboColumnConfiguration(arboDataTableType)}
+        columnConfiguration={getArboColumnConfiguration(cleanedSelectedDataTable)}
         rowExpansionConfiguration={rowExpansionConfiguration}
         csvCitationConfiguration={csvCitationConfiguration}
       />
     )
   }
 
-  assertNever(arboDataTableType)
+  assertNever(cleanedSelectedDataTable)
 }
