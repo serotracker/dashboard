@@ -4,6 +4,7 @@ import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbov
 import { convertArboSFtoArbo } from "./recharts";
 import { sortArboviruses } from "./rechart-utils";
 import { generateRandomColour } from "@/lib/utils";
+import { ArbovirusAvailablePathogensContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-available-pathogens-context";
 
 interface EstimateCountByArbovirusAndAntibodyTypeGraphProps {
   legendConfiguration: LegendConfiguration;
@@ -20,6 +21,7 @@ const barColoursForAntibodies: Record<string, string | undefined> = {
 
 export const EstimateCountByArbovirusAndAntibodyTypeGraph = (props: EstimateCountByArbovirusAndAntibodyTypeGraphProps) => {
   const state = useContext(ArboContext);
+  const { availablePathogens } = useContext(ArbovirusAvailablePathogensContext);
 
   return (
     <StackedBarChart
@@ -34,7 +36,7 @@ export const EstimateCountByArbovirusAndAntibodyTypeGraph = (props: EstimateCoun
       transformOutputValue={({ data }) => data.length}
       legendConfiguration={props.legendConfiguration}
       getBarColour={(antibodyKey) => barColoursForAntibodies[antibodyKey] ?? generateRandomColour()}
-      xAxisTickSettings={process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true' ? {
+      xAxisTickSettings={(process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true' && availablePathogens.length > 3) ? {
         idealMaximumCharactersPerLine: 5,
         fontSize: "10px",
         lineHeight: 10

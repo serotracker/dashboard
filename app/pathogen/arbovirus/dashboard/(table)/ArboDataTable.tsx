@@ -1,17 +1,20 @@
 "use client";
 
-import { DataTable, RowExpansionConfigurationEnabled, TableHeaderType } from "@/components/ui/data-table/data-table";
-import React, { useContext, useMemo } from "react";
+import { RowExpansionConfigurationEnabled, TableHeader, TableHeaderType } from "@/components/ui/data-table/data-table";
+import React, { useContext, useMemo, useState } from "react";
 import { parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
 import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
-import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
+import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { ToastId } from "@/contexts/toast-provider";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { ArbovirusVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { useMap } from "react-map-gl";
 import { shortenedArboTrackerCitationText, suggestedArboTrackerCitationText } from "../../arbotracker-citations";
 import { ArbovirusEstimateType } from "@/gql/graphql";
+import { assertNever } from "assert-never";
+import { ArboSeroprevalenceDataTable } from "./arbo-seroprevalence-data-table";
+import { ArboViralPrevalenceDataTable } from "./arbo-viral-prevalence-data-table";
 
 export const generateConciseEstimateId = (estimate: ArbovirusEstimate) => {
   const country = estimate.country
@@ -33,7 +36,37 @@ export const generateConciseEstimateId = (estimate: ArbovirusEstimate) => {
   return `${country}_${sampleFrame}_${samplingYearString}`.replaceAll(/ /g, '_');
 }
 
-const arboColumnConfiguration = [{
+export enum ArbovirusDataTableType {
+  SEROPREVALENCE = 'SEROPREVALENCE',
+  VIRAL_PREVALENCE = 'VIRAL_PREVALENCE',
+  UNAVAILABLE = 'UNAVAILABLE'
+}
+
+const arbovirusEstimateTypeToPrevalenceColumnConfiguration = (
+  dataTableType: ArbovirusDataTableType.SEROPREVALENCE | ArbovirusDataTableType.VIRAL_PREVALENCE
+) => {
+  if(dataTableType === ArbovirusDataTableType.SEROPREVALENCE) {
+    return [{
+      type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+      fieldName: 'seroprevalence',
+      label: 'Seroprevalence',
+    }]
+  }
+
+  if(dataTableType === ArbovirusDataTableType.VIRAL_PREVALENCE) {
+    return [{
+      type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
+      fieldName: 'seroprevalence',
+      label: 'Viral Prevalence',
+    }]
+  }
+
+  assertNever(dataTableType)
+}
+
+const getArboColumnConfiguration = (
+  dataTableType: ArbovirusDataTableType.SEROPREVALENCE | ArbovirusDataTableType.VIRAL_PREVALENCE
+) => [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
   fieldName: 'conciseEstimateId',
   label: 'Estimate ID',
@@ -60,11 +93,9 @@ const arboColumnConfiguration = [{
     'OROV': 'bg-orov',
   },
   defaultColourSchemeClassname: 'bg-gray-100'
-}, {
-  type: DataTableColumnConfigurationEntryType.PERCENTAGE as const,
-  fieldName: 'seroprevalence',
-  label: 'Seroprevalence',
-}, {
+},
+...arbovirusEstimateTypeToPrevalenceColumnConfiguration(dataTableType),
+{
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'antibodies',
   label: 'Antibodies',
@@ -158,7 +189,14 @@ const arboColumnConfiguration = [{
   isSortable: false
 }] as const;
 
-export const arboDataTableRows = arboColumnConfiguration.map(({fieldName, label}) => ({fieldName, label}));
+export const getArboDataTableRows = (
+  dataTableType: ArbovirusDataTableType.SEROPREVALENCE | ArbovirusDataTableType.VIRAL_PREVALENCE
+) => {
+  const arboColumnConfiguration = getArboColumnConfiguration(dataTableType);
+
+  return arboColumnConfiguration
+    .map(({ fieldName, label }) => ({ fieldName, label }));
+}
 
 export const ArboDataTable = () => {
   const { filteredData } = useContext(ArboContext);
@@ -166,13 +204,96 @@ export const ArboDataTable = () => {
   const arboMap = allMaps['arboMap'];
   const router = useRouter();
   const { arbovirusVisualizationInformation } = useVisualizationPageConfiguration();
+  const [ arboDataTableType, setArboDataTableType ] = useState<ArbovirusDataTableType>(ArbovirusDataTableType.SEROPREVALENCE);
+
+  const tableDataWithConciseEstimateIds = useMemo(() => {
+    return filteredData
+      .map((estimate) => ({
+        ...estimate,
+        conciseEstimateId: generateConciseEstimateId(estimate)
+      }))
+  }, [ filteredData ]);
 
   const dataForSeroprevalenceTable = useMemo(() => {
-    return filteredData
+    return tableDataWithConciseEstimateIds
       .filter((estimate) => estimate.estimateType === ArbovirusEstimateType.Seroprevalence)
-  }, [ filteredData ])
+  }, [ tableDataWithConciseEstimateIds ]);
 
-  const rowExpansionConfiguration: RowExpansionConfigurationEnabled<ArbovirusEstimate> = {
+  const dataForViralPrevalenceTable = useMemo(() => {
+    return tableDataWithConciseEstimateIds
+      .filter((estimate) => estimate.estimateType === ArbovirusEstimateType.ViralPrevalence)
+  }, [ tableDataWithConciseEstimateIds ]);
+
+  const availableDropdownOptionGroups = useMemo(() => {
+    const returnValue = [
+      ...(dataForSeroprevalenceTable.length > 0 ? [ ArbovirusDataTableType.SEROPREVALENCE ] : []),
+      ...(dataForViralPrevalenceTable.length > 0 ? [ ArbovirusDataTableType.VIRAL_PREVALENCE ] : []),
+    ];
+
+    if(returnValue.length === 0) {
+      return [
+        ArbovirusDataTableType.UNAVAILABLE
+      ];
+    }
+
+    return returnValue;
+  }, [ dataForSeroprevalenceTable, dataForViralPrevalenceTable ]);
+
+  const cleanedSelectedDataTable = useMemo(() => {
+    if(availableDropdownOptionGroups.includes(arboDataTableType)) {
+      return arboDataTableType;
+    }
+
+    return availableDropdownOptionGroups.at(0) ?? ArbovirusDataTableType.UNAVAILABLE;
+  }, [ arboDataTableType, availableDropdownOptionGroups ])
+
+  const tableHeader: TableHeader<ArbovirusDataTableType> = useMemo(() => {
+    const dropdownOptionToTextFillerMap = {
+      [ArbovirusDataTableType.SEROPREVALENCE]: "seroprevalence",
+      [ArbovirusDataTableType.VIRAL_PREVALENCE]: "viral prevalence",
+      [ArbovirusDataTableType.UNAVAILABLE]: "Unavailable",
+    }
+
+    if(availableDropdownOptionGroups.length === 1) {
+      return {
+        type: TableHeaderType.STANDARD as const,
+        headerText: `Explore arbovirus ${dropdownOptionToTextFillerMap[availableDropdownOptionGroups[0]]} estimates in our database`
+      }
+    }
+
+    return {
+      type: TableHeaderType.DROPDOWN as const,
+      beforeDropdownHeaderText: "Explore arbovirus ",
+      dropdownProps: {
+        dropdownName: 'Data table selection',
+        borderColourClassname: 'border-arbovirus',
+        hoverColourClassname: 'hover:bg-arbovirus/50',
+        highlightedColourClassname: 'data-[highlighted]:bg-arbovirusHover/50',
+        dropdownOptionGroups: [{
+          groupHeader: 'Available data tables',
+          options: availableDropdownOptionGroups
+        }],
+        chosenDropdownOption: cleanedSelectedDataTable,
+        dropdownOptionToLabelMap: {
+          [ArbovirusDataTableType.SEROPREVALENCE]: "seroprevalence",
+          [ArbovirusDataTableType.VIRAL_PREVALENCE]: "viral prevalence",
+          [ArbovirusDataTableType.UNAVAILABLE]: "Unavailable",
+        },
+        onDropdownOptionChange: (option) => setArboDataTableType(option)
+      },
+      afterDropdownHeaderText: "estimates in our database",
+      headerTooltipContent: null
+    }
+  }, [ availableDropdownOptionGroups, cleanedSelectedDataTable, setArboDataTableType ]);
+
+  const csvCitationConfiguration = useMemo(() => ({
+    enabled: true,
+    citationText: suggestedArboTrackerCitationText,
+    csvDownloadCitationText: shortenedArboTrackerCitationText,
+    toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST
+  }), []);
+
+  const rowExpansionConfiguration: RowExpansionConfigurationEnabled<ArbovirusEstimate> = useMemo(() => ({
     enabled: true,
     generateExpandedRowStatement: (input) => {
       const estimateId = input.row.getValue('estimateId');
@@ -205,71 +326,74 @@ export const ArboDataTable = () => {
         estimate.latitude + (boxSize / 2),
       ])
     },
-    visualization: (input) => {
-      const estimateId = input.row.getValue('estimateId');
+    visualization: cleanedSelectedDataTable === ArbovirusDataTableType.SEROPREVALENCE
+      ? ((input) => {
+        const estimateId = input.row.getValue('estimateId');
 
-      if(!estimateId) {
-        return null;
-      }
+        if(!estimateId) {
+          return null;
+        }
 
-      const estimate = input.data.find((dataPoint) => dataPoint.estimateId === estimateId);
+        const estimate = input.data.find((dataPoint) => dataPoint.estimateId === estimateId);
 
-      if(!estimate) {
-        return null;
-      }
+        if(!estimate) {
+          return null;
+        }
 
-      return (
-        <RechartsVisualization
-          className="h-full-screen"
-          data={input.data.filter((dataPoint) => 
-            dataPoint.country === estimate.country && dataPoint.pathogen === estimate.pathogen && dataPoint.estimateType === ArbovirusEstimateType.Seroprevalence)
-          }
-          highlightedDataPoint={estimate}
-          hideArbovirusDropdown={true}
-          visualizationInformation={arbovirusVisualizationInformation[ArbovirusVisualizationId.COUNTRY_SEROPREVALENCE_COMPARISON_SCATTER_PLOT]}
-          getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
-          buttonConfig={{
-            downloadButton: {
-              enabled: true,
-            },
-            zoomInButton: {
-              enabled: false,
-            },
-            closeButton: {
-              enabled: false,
+        return (
+          <RechartsVisualization
+            className="h-full-screen"
+            data={input.data.filter((dataPoint) => 
+              dataPoint.country === estimate.country && dataPoint.pathogen === estimate.pathogen && dataPoint.estimateType === ArbovirusEstimateType.Seroprevalence)
             }
-          }}
-        />
-      );
-    }
+            highlightedDataPoint={estimate}
+            hideArbovirusDropdown={true}
+            visualizationInformation={arbovirusVisualizationInformation[ArbovirusVisualizationId.COUNTRY_SEROPREVALENCE_COMPARISON_SCATTER_PLOT]}
+            getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
+            buttonConfig={{
+              downloadButton: {
+                enabled: true,
+              },
+              zoomInButton: {
+                enabled: false,
+              },
+              closeButton: {
+                enabled: false,
+              }
+            }}
+          />
+        );
+      })
+      : () => null
+  }), [ cleanedSelectedDataTable, arboMap, arbovirusVisualizationInformation, router ])
+
+  if(cleanedSelectedDataTable === ArbovirusDataTableType.UNAVAILABLE) {
+    return <> No Data Available </>;
   }
 
-  if (dataForSeroprevalenceTable.length > 0) {
+  if(cleanedSelectedDataTable === ArbovirusDataTableType.SEROPREVALENCE) {
     return (
-      <DataTable
-        columns={columnConfigurationToColumnDefinitions({ columnConfiguration: arboColumnConfiguration })}
-        csvFilename="arbotracker_dataset"
-        tableHeader={{
-          type: TableHeaderType.STANDARD,
-          headerText: "Explore arbovirus seroprevalence estimates in our database"
-        }}
-        csvCitationConfiguration={{
-          enabled: true,
-          citationText: suggestedArboTrackerCitationText,
-          csvDownloadCitationText: shortenedArboTrackerCitationText,
-          toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST
-        }}
-        additionalButtonConfiguration={{
-          enabled: false
-        }}
+      <ArboSeroprevalenceDataTable
+        data={dataForSeroprevalenceTable}
+        tableHeader={tableHeader}
+        columnConfiguration={getArboColumnConfiguration(cleanedSelectedDataTable)}
         rowExpansionConfiguration={rowExpansionConfiguration}
-        data={dataForSeroprevalenceTable.map((estimate) => ({
-          ...estimate,
-          conciseEstimateId: generateConciseEstimateId(estimate)
-        }))}
+        csvCitationConfiguration={csvCitationConfiguration}
       />
-    );
-  } else {
-    return <>No Data Available</>;
+    )
   }
+
+  if(cleanedSelectedDataTable === ArbovirusDataTableType.VIRAL_PREVALENCE) {
+    return (
+      <ArboViralPrevalenceDataTable
+        data={dataForViralPrevalenceTable}
+        tableHeader={tableHeader}
+        columnConfiguration={getArboColumnConfiguration(cleanedSelectedDataTable)}
+        rowExpansionConfiguration={rowExpansionConfiguration}
+        csvCitationConfiguration={csvCitationConfiguration}
+      />
+    )
+  }
+
+  assertNever(cleanedSelectedDataTable)
 }
