@@ -36,7 +36,11 @@ interface CountryHighlightLayerLegendProps {
 }
 
 export const CountryHighlightLayerLegend = (input: CountryHighlightLayerLegendProps) => {
-  if(input.legendEntries.length === 0 && input.freeTextEntries.length === 0) {
+  if(
+    input.legendEntries.length === 0 &&
+    input.freeTextEntries.length === 0 &&
+    input.linearLegendColourGradientConfiguration.enabled === false
+  ) {
     return null;
   }
 

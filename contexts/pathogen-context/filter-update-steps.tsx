@@ -6,6 +6,7 @@ import { addActionToSelectedFilters } from "./filter-update-steps/add-action-to-
 import { applyNewSelectedFilters } from "./filter-update-steps/apply-new-selected-filters";
 import { updateSerotypeFilter } from "./filter-update-steps/update-serotype-filter";
 import { PathogenContextAction, PathogenContextState } from "./pathogen-context";
+import { updateMapLayerFilters } from "./filter-update-steps/update-map-layer-filters";
 
 export interface HandleFilterUpdateInput<
   TData extends Record<string, unknown>,
@@ -31,6 +32,7 @@ export const handleFilterUpdate = <
     input,
     addActionToSelectedFilters,
     adjustMapPosition,
+    updateMapLayerFilters,
     updatePediatricAgeGroupFilter,
     updateSerotypeFilter,
     applyNewSelectedFilters

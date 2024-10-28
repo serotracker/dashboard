@@ -13,7 +13,6 @@ export const useArbovirusMapCustomizationModal = () => {
   const [ countryHighlightingSetting, setCountryHighlightingSetting ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.WHEN_RECOMMENDED);
   const [ countryOutlinesSetting, setCountryOutlinesSetting ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.WHEN_RECOMMENDED);
   const [ countryPopUpEnabled, setCountryPopUpEnabled ] = useState<boolean>(true);
-  const [ oropoucheCasesMapEnabled, setOropoucheCasesMapEnabled ] = useState<boolean>(false);
 
   const {
     modal: customizationModal,
@@ -72,13 +71,7 @@ export const useArbovirusMapCustomizationModal = () => {
         switchName: `Country pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
         switchValue: countryPopUpEnabled,
         onSwitchValueChange: (newSwitchValue) => setCountryPopUpEnabled(newSwitchValue),
-      }, 
-      ...( process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true' ? [{
-        type: CustomizationSettingType.SWITCH as const,
-        switchName: `Oropouche Case Map ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
-        switchValue: oropoucheCasesMapEnabled,
-        onSwitchValueChange: (newSwitchValue: boolean) => setOropoucheCasesMapEnabled(newSwitchValue),
-      }] : [])]
+      }]
     }
   });
 
@@ -94,7 +87,6 @@ export const useArbovirusMapCustomizationModal = () => {
     countryPopUpEnabled,
     countryHighlightingSetting,
     countryOutlinesSetting,
-    oropoucheCasesMapEnabled,
     mapCustomizeButton: () => mapCustomizeButton
   }
 }

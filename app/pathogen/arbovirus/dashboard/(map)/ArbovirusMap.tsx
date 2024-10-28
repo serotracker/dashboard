@@ -26,6 +26,7 @@ import { ArbovirusEnvironmentalSuitabilityCountryDataContext } from "@/contexts/
 import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
 import { ArbovirusOropoucheCasesDataContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-oropouche-cases-data-context";
 import { Layer, Source } from "react-map-gl";
+import { mapColourBucketsToLinearGradientConfiguration } from "@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -48,7 +49,7 @@ export function ArbovirusMap() {
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const countryDataContext = useContext(CountryDataContext);
   const { filteredData, selectedFilters } = useContext(ArboContext);
-  const { oropoucheCaseMapboxLayer } = useContext(ArbovirusOropoucheCasesDataContext);
+  const { oropoucheCaseMapboxLayer, oropoucheCaseLayerColourBuckets } = useContext(ArbovirusOropoucheCasesDataContext);
   const { arbovirusEnvironmentalSuitabilityCountryData } = useContext(ArbovirusEnvironmentalSuitabilityCountryDataContext);
   const { data } = useArboData();
   const { getCountryHighlightingLayerInformation: getDataPointPresentCountryHighlightingLayerInformation } = useDataPointPresentLayer();
@@ -57,12 +58,51 @@ export function ArbovirusMap() {
     countryHighlightingSetting,
     countryOutlinesSetting,
     countryPopUpEnabled,
-    oropoucheCasesMapEnabled,
     ...arbovirusMapCustomizationModal
   } = useArbovirusMapCustomizationModal();
 
+  const oropoucheCasesMapEnabled = useMemo(() => {
+    if(selectedFilters.positiveCases?.length > 0) {
+      return true;
+    }
+
+    return false;
+  }, [ selectedFilters ]);
+
   const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration } = useMemo(() => {
-    if (selectedFilters.esm?.length > 0) {
+    if(selectedFilters.positiveCases?.length > 0) {
+      const countryHighlightingEnabled = (countryHighlightingSetting === CountryPaintChangeSetting.ALWAYS_ENABLED);
+      const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
+
+      const {
+        paint,
+        countryHighlightLayerLegendEntries,
+        freeTextEntries
+      } = getDataPointPresentCountryHighlightingLayerInformation({
+        data: filteredData,
+        countryHighlightingEnabled,
+        countryOutlinesEnabled
+      });
+
+      const { linearLegendColourGradientConfiguration } = mapColourBucketsToLinearGradientConfiguration({
+        mapColourBuckets: oropoucheCaseLayerColourBuckets,
+        minimumPossibleValue: 0
+      })
+
+      return {
+        paint,
+        countryHighlightLayerLegendEntries,
+        freeTextEntries,
+        linearLegendColourGradientConfiguration: {
+          enabled: linearLegendColourGradientConfiguration.enabled,
+          props: {
+            ticks: linearLegendColourGradientConfiguration.props.ticks,
+            title: 'Postive Cases Reported'
+          }
+        }
+      }
+    }
+    if(selectedFilters.esm?.length > 0) {
       const countryHighlightingEnabled = (countryHighlightingSetting === CountryPaintChangeSetting.ALWAYS_ENABLED);
       const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
 
@@ -81,7 +121,7 @@ export function ArbovirusMap() {
       countryHighlightingEnabled,
       countryOutlinesEnabled
     })
-  }, [ filteredData, getDataPointPresentCountryHighlightingLayerInformation, getESMCountryHighlightingLayerInformation, selectedFilters, countryHighlightingSetting, countryOutlinesSetting ]);
+  }, [ filteredData, getDataPointPresentCountryHighlightingLayerInformation, getESMCountryHighlightingLayerInformation, selectedFilters, countryHighlightingSetting, countryOutlinesSetting, oropoucheCaseLayerColourBuckets ]);
 
   const legendEntries = useMemo(() => [
     ...countryHighlightLayerLegendEntries,

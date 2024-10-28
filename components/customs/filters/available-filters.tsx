@@ -83,6 +83,7 @@ export enum FilterableField {
   animalPurpose = "animalPurpose",
   animalImportedOrLocal = "animalImportedOrLocal",
   esm = "esm",
+  positiveCases = "positiveCases",
   whoRegion = "whoRegion",
   unRegion = "unRegion",
   countryAlphaTwoCode = "countryAlphaTwoCode",
@@ -157,6 +158,43 @@ const EnvironmentalSuitabilityMapTooltip: TooltipContentRenderingFunction = (inp
           className="underline hover:text-gray-300 inline"
         >
           article
+        </Link>
+      </>
+     )}
+    </p>
+  )
+}
+
+const positiveCasesToLink: Record<string, string | undefined> = {
+  'orov_2024_Jan1ToJuly20': 'https://www.who.int/emergencies/disease-outbreak-news/item/2024-DON530'
+}
+
+const PositiveCasesMapTooltip: TooltipContentRenderingFunction = (input) => {
+  const isPositiveCasesMapSelected = input.state.selectedFilters.positiveCases?.length === 1;
+
+  const filterLink = useMemo(() => {
+    if(!isPositiveCasesMapSelected) {
+      return ''
+    }
+
+    const selectedEsmFilter = input.state.selectedFilters.positiveCases[0];
+
+    return positiveCasesToLink[selectedEsmFilter] ?? '';
+  }, [isPositiveCasesMapSelected, input.state.selectedFilters])
+
+  return (
+    <p>
+     This is a single-select dropdown for different options for viewing positive cases.
+     {isPositiveCasesMapSelected && (
+      <>
+        <p className="inline"> This map is sourced from this </p>
+        <Link
+          rel="noopener noreferrer"
+          target="_blank"
+          href={filterLink}
+          className="underline hover:text-gray-300 inline"
+        >
+          report
         </Link>
       </>
      )}
@@ -310,7 +348,16 @@ export const useAvailableFilters = () => {
       },
       renderTooltipContent: EnvironmentalSuitabilityMapTooltip,
       filterRenderingFunction: SingleSelectFilter
+    },
+    [FilterableField.positiveCases]: {
+      field: FilterableField.positiveCases,
+      label: "Positive Cases Map",
+      valueToLabelMap: {
+        "orov_2024_Jan1ToJuly20": "Oropouche Positive Cases Reported (Jan 1st 2024 - July 20th 2024)"
       },
+      renderTooltipContent: PositiveCasesMapTooltip,
+      filterRenderingFunction: SingleSelectFilter
+    },
     [FilterableField.ageGroup]: {
       field: FilterableField.ageGroup,
       label: "Age Group",

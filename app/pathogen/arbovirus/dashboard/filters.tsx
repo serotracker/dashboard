@@ -55,7 +55,12 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
     FilterableField.whoRegion,
     FilterableField.unRegion,
     FilterableField.countryAlphaTwoCode,
+    ...(oropoucheEnabled ? [] : [ FilterableField.esm ]),
+  ];
+
+  const mapLayerFilters = [
     FilterableField.esm,
+    FilterableField.positiveCases,
   ];
 
   const demographicFilters = [
@@ -108,7 +113,13 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
     headerText: 'Study Location',
     headerTooltipText: 'Filter on where the study was conducted.',
     includedFilters: studyLocationFilters
-  }, {
+  },
+  ...(oropoucheEnabled ? [{
+    headerText: 'Map Layer Filters',
+    headerTooltipText: 'Filters which come with their own special map layer.',
+    includedFilters: mapLayerFilters
+  }] : []),
+  {
     headerText: 'Demographic',
     headerTooltipText: 'Filter on demographic variables, including population group, sex, and age group.',
     includedFilters: demographicFilters
@@ -247,6 +258,9 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
           'dengue2015',
           'dengue2050',
           'zika'
+        ],
+        positiveCases: [
+          'orov_2024_Jan1ToJuly20'
         ],
         pathogen,
         ageGroup,
