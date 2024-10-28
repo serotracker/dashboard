@@ -36,7 +36,7 @@ export const EstimateCountByArbovirusAndAntibodyTypeGraph = (props: EstimateCoun
       transformOutputValue={({ data }) => data.length}
       legendConfiguration={props.legendConfiguration}
       getBarColour={(antibodyKey) => barColoursForAntibodies[antibodyKey] ?? generateRandomColour()}
-      xAxisTickSettings={(process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true' && availablePathogens.length > 6) ? {
+      xAxisTickSettings={(process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true' && availablePathogens.length > 3) ? {
         idealMaximumCharactersPerLine: 5,
         fontSize: "10px",
         lineHeight: 10
