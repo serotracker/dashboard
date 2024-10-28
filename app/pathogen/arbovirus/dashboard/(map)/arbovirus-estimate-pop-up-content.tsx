@@ -1,6 +1,7 @@
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
+import { ArbovirusEstimateType } from "@/gql/graphql";
 import { parseISO } from "date-fns";
 import React, { useMemo } from "react";
 
@@ -33,23 +34,26 @@ export const ArbovirusEstimatePopupContent = (props: ArbovirusEstimatePopupConte
   const {
     seroprevalence,
     pathogen,
+    estimateType,
     seroprevalenceStudy95CILower,
     seroprevalenceStudy95CIUpper,
     sampleSize
   } = props.estimate; 
 
   const topBannerText = useMemo(() => {
-    const seroprevalencePercentageText = `Seroprevalence: ${(seroprevalence * 100).toFixed(1)}%`;
+    const seroprevalenceText = estimateType === ArbovirusEstimateType.Seroprevalence
+      ? `Seroprevalence: ${(seroprevalence * 100).toFixed(1)}%`
+      : `Viral Prevalence: ${(seroprevalence * 100).toFixed(1)}%`
     const arbovirusText = `(Arbovirus: ${pathogenFullString(pathogen)})`;
 
     if(!seroprevalenceStudy95CILower || !seroprevalenceStudy95CIUpper) {
-      return `${seroprevalencePercentageText} ${arbovirusText}`
+      return `${seroprevalenceText} ${arbovirusText}`
     }
 
     const confidenceIntervalText = `[95% CI ${(seroprevalenceStudy95CILower * 100).toFixed(1)}%-${(seroprevalenceStudy95CIUpper * 100).toFixed(1)}%]`;
 
-    return `${seroprevalencePercentageText} ${confidenceIntervalText} ${arbovirusText}`
-  }, [seroprevalence, seroprevalenceStudy95CILower, seroprevalenceStudy95CIUpper, pathogen])
+    return `${seroprevalenceText} ${confidenceIntervalText} ${arbovirusText}`
+  }, [ seroprevalence, seroprevalenceStudy95CILower, seroprevalenceStudy95CIUpper, pathogen, estimateType ])
 
   return (
     <GenericMapPopUp
