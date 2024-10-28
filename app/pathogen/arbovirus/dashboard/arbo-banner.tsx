@@ -4,10 +4,11 @@ import React, { useContext } from "react";
 import Link from "next/link";
 import { ToastId } from "@/contexts/toast-provider";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
-import { arboDataTableRows } from "./(table)/ArboDataTable";
+import { ArbovirusDataTableType, getArboDataTableRows } from "./(table)/ArboDataTable";
 import { ArboTrackerCitationButtonContent, suggestedArboTrackerCitationText } from "../arbotracker-citations";
 import { DashboardTopBanner } from "@/components/customs/dashboard-top-banner";
 import { DashboardType } from "@/app/app-header-and-main";
+import { ArbovirusEstimateType } from "@/gql/graphql";
 
 export const ArboBanner = () => {
   const state = useContext(ArboContext);
@@ -25,8 +26,9 @@ export const ArboBanner = () => {
       enabled: true,
       csvDownloadFilename: "arbotracker_dataset",
       buttonContent: "Download CSV",
-      filteredData: state.filteredData,
-      dataTableRows: arboDataTableRows
+      filteredData: state.filteredData
+        .filter((estimate) => estimate.estimateType === ArbovirusEstimateType.Seroprevalence),
+      dataTableRows: getArboDataTableRows(ArbovirusDataTableType.SEROPREVALENCE)
     }}
     downloadCsvButtonTwoConfiguration={{
       enabled: false

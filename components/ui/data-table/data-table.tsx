@@ -57,6 +57,8 @@ interface CsvCitationConfigurationEnabled {
   toastId: ToastId;
 }
 
+export type DataTableCsvCitationConfiguration = CsvCitationConfigurationDisabled | CsvCitationConfigurationEnabled;
+
 interface RowExpansionConfigurationDisabled {
   enabled: false;
 }
@@ -88,7 +90,7 @@ export interface DropdownTableHeader<TDropdownOption extends string> {
   headerTooltipContent?: React.ReactNode | undefined;
 }
 
-type TableHeader<TDropdownOption extends string> = 
+export type TableHeader<TDropdownOption extends string> = 
   | StandardTableHeader
   | DropdownTableHeader<TDropdownOption>;
 
@@ -116,7 +118,7 @@ interface DataTableProps<
   columns: DataTableColumnDef<Record<string, unknown>, TValue>[];
   csvFilename: string;
   tableHeader: TableHeader<TDropdownOption>;
-  csvCitationConfiguration: CsvCitationConfigurationDisabled | CsvCitationConfigurationEnabled;
+  csvCitationConfiguration: DataTableCsvCitationConfiguration;
   additionalButtonConfiguration: AdditionalButtonConfiguration;
   rowExpansionConfiguration: RowExpansionConfiguration<TData>;
   data: TData[];
