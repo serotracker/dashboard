@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable, RowExpansionConfigurationEnabled, TableHeaderType } from "@/components/ui/data-table/data-table";
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
 import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
@@ -11,6 +11,7 @@ import { RechartsVisualization } from "@/components/customs/visualizations/recha
 import { ArbovirusVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { useMap } from "react-map-gl";
 import { shortenedArboTrackerCitationText, suggestedArboTrackerCitationText } from "../../arbotracker-citations";
+import { ArbovirusEstimateType } from "@/gql/graphql";
 
 export const generateConciseEstimateId = (estimate: ArbovirusEstimate) => {
   const country = estimate.country
@@ -160,11 +161,16 @@ const arboColumnConfiguration = [{
 export const arboDataTableRows = arboColumnConfiguration.map(({fieldName, label}) => ({fieldName, label}));
 
 export const ArboDataTable = () => {
-  const state = useContext(ArboContext);
+  const { filteredData } = useContext(ArboContext);
   const allMaps = useMap();
   const arboMap = allMaps['arboMap'];
   const router = useRouter();
   const { arbovirusVisualizationInformation } = useVisualizationPageConfiguration();
+
+  const dataForSeroprevalenceTable = useMemo(() => {
+    return filteredData
+      .filter((estimate) => estimate.estimateType === ArbovirusEstimateType.Seroprevalence)
+  }, [ filteredData ])
 
   const rowExpansionConfiguration: RowExpansionConfigurationEnabled<ArbovirusEstimate> = {
     enabled: true,
@@ -216,7 +222,7 @@ export const ArboDataTable = () => {
         <RechartsVisualization
           className="h-full-screen"
           data={input.data.filter((dataPoint) => 
-            dataPoint.country === estimate.country && dataPoint.pathogen === estimate.pathogen)
+            dataPoint.country === estimate.country && dataPoint.pathogen === estimate.pathogen && dataPoint.estimateType === ArbovirusEstimateType.Seroprevalence)
           }
           highlightedDataPoint={estimate}
           hideArbovirusDropdown={true}
@@ -238,7 +244,7 @@ export const ArboDataTable = () => {
     }
   }
 
-  if (state.filteredData?.length > 0) {
+  if (dataForSeroprevalenceTable.length > 0) {
     return (
       <DataTable
         columns={columnConfigurationToColumnDefinitions({ columnConfiguration: arboColumnConfiguration })}
@@ -257,13 +263,13 @@ export const ArboDataTable = () => {
           enabled: false
         }}
         rowExpansionConfiguration={rowExpansionConfiguration}
-        data={state.filteredData.map((estimate) => ({
+        data={dataForSeroprevalenceTable.map((estimate) => ({
           ...estimate,
           conciseEstimateId: generateConciseEstimateId(estimate)
         }))}
       />
     );
   } else {
-    return <>Loading Data ...</>;
+    return <>No Data Available</>;
   }
 }

@@ -5,18 +5,22 @@ import { PathogenContextActionType, PathogenContextState, PathogenContextType, P
 import { useArboData } from "@/hooks/arbovirus/useArboData";
 import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
 import { CountryDataContext } from "../../country-information-context";
-import { ArbovirusEstimatesQueryQuery } from "@/gql/graphql";
+import { ArbovirusEstimatesQueryQuery, ArbovirusEstimateType, ArbovirusStudyPopulation } from "@/gql/graphql";
 import { ArbovirusEnvironmentalSuitabilityCountryDataProvider } from "./arbo-environmental-suitability-country-data-context";
 import { useArboEnviromentalSuitabilityData } from "@/hooks/arbovirus/useArboEnviromentalSuitabilityData";
 import { ArbovirusOropoucheCasesDataProvider } from "./arbo-oropouche-cases-data-context";
 import { ArbovirusAvailablePathogensProvider } from "./arbo-available-pathogens-context";
+import { handleFilterUpdate } from "../../filter-update-steps";
+import { filterData } from "../../filter-update-steps/apply-new-selected-filters";
 
 export type ArbovirusEstimate = ArbovirusEstimatesQueryQuery['arbovirusEstimates'][number];
 
 const initialArboContextState = {
   filteredData: [],
   selectedFilters: {
-    ["pathogen"]: ["DENV", "ZIKV", "CHIKV", "YFV", "WNV", "MAYV", "OROV"],
+    'pathogen': ["DENV", "ZIKV", "CHIKV", "YFV", "WNV", "MAYV", "OROV"],
+    'estimateType': [ ArbovirusEstimateType.Seroprevalence ],
+    'studyPopulation': [ ArbovirusStudyPopulation.Human ]
   },
   dataFiltered: false,
 }
@@ -47,7 +51,11 @@ const ArboDataFetcher = (props: PathogenDataFetcherProps<ArbovirusEstimate, Arbo
     ) {
       props.dispatch({
         type: PathogenContextActionType.INITIAL_DATA_FETCH,
-        payload: { data: dataQuery.data.arbovirusEstimates },
+        payload: {
+          data: dataQuery.data.arbovirusEstimates,
+          selectedFilters: initialArboContextState.selectedFilters,
+          dataFiltered: true
+        },
       });
     }
   }, [dataQuery]);
@@ -108,6 +116,32 @@ export const ArboProviders = (props: ArboProvidersProps) => {
       context={ArboContext}
       mapId={'arboMap'}
       dataFetcher={ArboDataFetcher}
+      initialDataFetchHandlerOverride={({ state, action, map }) => {
+        const outputState = {
+          ...state,
+          filteredData: filterData(
+            action.payload.data,
+            initialArboContextState.selectedFilters
+          ),
+          selectedFilters: initialArboContextState.selectedFilters,
+          dataFiltered: true,
+        };
+
+        return outputState;
+      }}
+      filterResetHandlerOverride={({ state, action, map }) => {
+        const outputState = {
+          ...state,
+          filteredData: filterData(
+            action.payload.data,
+            initialArboContextState.selectedFilters
+          ),
+          selectedFilters: initialArboContextState.selectedFilters,
+          dataFiltered: true,
+        };
+
+        return outputState;
+      }}
     >
       <ArbovirusEnvironmentalSuitabilityCountryDataProvider>
         <ArbovirusOropoucheCasesDataProvider>

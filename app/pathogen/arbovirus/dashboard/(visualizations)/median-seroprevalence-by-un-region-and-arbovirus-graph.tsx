@@ -3,15 +3,17 @@ import { SplitBarChart } from "../../../../../components/customs/visualizations/
 import { convertArboSFtoArbo, median } from "./recharts";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
 import { getLabelForUNRegion } from "@/lib/un-regions";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
+import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 
-export const MedianSeroprevalenceByUnRegionAndArbovirusGraph = () => {
-  const state = useContext(ArboContext);
+interface MedianSeroprevalenceByUnRegionAndArbovirusGraphProps {
+  data: ArbovirusEstimate[];
+}
 
+export const MedianSeroprevalenceByUnRegionAndArbovirusGraph = (props: MedianSeroprevalenceByUnRegionAndArbovirusGraphProps) => {
   return (
     <SplitBarChart
       graphId="median-seroprevalence-by-un-region"
-      data={state.filteredData.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'unRegion'> & {unRegion: NonNullable<typeof dataPoint['unRegion']>} => !!dataPoint.unRegion)}
+      data={props.data.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'unRegion'> & {unRegion: NonNullable<typeof dataPoint['unRegion']>} => !!dataPoint.unRegion)}
       primaryGroupingFunction={(dataPoint) =>
         convertArboSFtoArbo(dataPoint.pathogen)
       }

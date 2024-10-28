@@ -133,7 +133,9 @@ const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, Arbovi
       ArbovirusVisualizationUrlParameter["median-seroprevalence-by-who-region"],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median seroprevalence of arboviruses by WHO Region" }),
     titleTooltipContent: <WHORegionsTooltip />,
-    renderVisualization: MedianSeroprevalenceByWHORegionAndArbovirusGraph,
+    renderVisualization: ({ data }) => MedianSeroprevalenceByWHORegionAndArbovirusGraph({
+      data
+    }),
     visualizationDownloadFootnote: shortenedArboTrackerCitationText,
     visualizationNonDownloadFootnote: undefined
   },
@@ -143,7 +145,9 @@ const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, Arbovi
       ArbovirusVisualizationUrlParameter["median-seroprevalence-by-un-region"],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median seroprevalence of arboviruses by UN Region" }),
     titleTooltipContent: <UNRegionsTooltip />,
-    renderVisualization: MedianSeroprevalenceByUnRegionAndArbovirusGraph,
+    renderVisualization: ({ data }) => MedianSeroprevalenceByUnRegionAndArbovirusGraph({
+      data
+    }),
     visualizationDownloadFootnote: shortenedArboTrackerCitationText,
     visualizationNonDownloadFootnote: undefined
   },
@@ -155,7 +159,9 @@ const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, Arbovi
       ],
     getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Median seroprevalence by WHO region and age group" }),
     titleTooltipContent: <WHORegionsTooltip />,
-    renderVisualization: MedianSeroprevalenceByWhoRegionAndAgeGroupTable,
+    renderVisualization: ({ data }) => MedianSeroprevalenceByWhoRegionAndAgeGroupTable({
+      data
+    }),
     visualizationDownloadFootnote: shortenedArboTrackerCitationText,
     visualizationNonDownloadFootnote: undefined
   },
@@ -180,7 +186,9 @@ const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, Arbovi
     titleTooltipContent: (
       <p> Hovering over any one of the bars will show the median seroprevalence for that time period. Time periods with no data are not shown so intervals on the x-axis may or may not be consecutive time periods.</p>
     ),
-    renderVisualization: ChangeInMedianSeroprevalenceOverTimeGraph,
+    renderVisualization: ({ data }) => ChangeInMedianSeroprevalenceOverTimeGraph({
+      data
+    }),
     visualizationDownloadFootnote: shortenedArboTrackerCitationText,
     visualizationNonDownloadFootnote: undefined
   },
@@ -206,7 +214,11 @@ const arbovirusVisualizationInformation: Record<ArbovirusVisualizationId, Arbovi
       }
     },
     titleTooltipContent: <ClopperPearsonConfidenceIntervalCalculationTooltip />,
-    renderVisualization: ({ data, highlightedDataPoint, hideArbovirusDropdown }) => CountrySeroprevalenceComparisonScatterPlot({ data, highlightedDataPoint, hideArbovirusDropdown }),
+    renderVisualization: ({ data, highlightedDataPoint, hideArbovirusDropdown }) => CountrySeroprevalenceComparisonScatterPlot({
+      data,
+      highlightedDataPoint,
+      hideArbovirusDropdown
+    }),
     visualizationDownloadFootnote: shortenedArboTrackerCitationText,
     visualizationNonDownloadFootnote: undefined
   },

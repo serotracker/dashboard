@@ -9,7 +9,7 @@ import { SendFilterChangeDispatch } from "../filters";
 import { BooleanSelectFilter } from "./boolean-select-filter";
 import { BooleanSelectOptionString } from "./select-filter";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
-import { Arbovirus } from "@/gql/graphql";
+import { Arbovirus, ArbovirusEstimateType, ArbovirusStudyPopulation } from "@/gql/graphql";
 import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
 import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, isMersDataType, isMersDataTypeSuperOption, mersDataTypeSuperOptionToLabelMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap, mersDataTypeToSuperOptionMap, mersMapPointVisibilitySettingToHiddenOptionsMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
@@ -73,6 +73,8 @@ export enum FilterableField {
   __typename = "__typename",
   pediatricAgeGroup = "pediatricAgeGroup",
   sex = "sex",
+  estimateType = "estimateType",
+  studyPopulation = "studyPopulation",
   samplingMethod = "samplingMethod",
   geographicScope = "geographicScope",
   testProducer = "testProducer",
@@ -81,6 +83,7 @@ export enum FilterableField {
   animalPurpose = "animalPurpose",
   animalImportedOrLocal = "animalImportedOrLocal",
   esm = "esm",
+  positiveCases = "positiveCases",
   whoRegion = "whoRegion",
   unRegion = "unRegion",
   countryAlphaTwoCode = "countryAlphaTwoCode",
@@ -162,6 +165,43 @@ const EnvironmentalSuitabilityMapTooltip: TooltipContentRenderingFunction = (inp
   )
 }
 
+const positiveCasesToLink: Record<string, string | undefined> = {
+  'orov_2024_Jan1ToJuly20': 'https://www.who.int/emergencies/disease-outbreak-news/item/2024-DON530'
+}
+
+const PositiveCasesMapTooltip: TooltipContentRenderingFunction = (input) => {
+  const isPositiveCasesMapSelected = input.state.selectedFilters.positiveCases?.length === 1;
+
+  const filterLink = useMemo(() => {
+    if(!isPositiveCasesMapSelected) {
+      return ''
+    }
+
+    const selectedEsmFilter = input.state.selectedFilters.positiveCases[0];
+
+    return positiveCasesToLink[selectedEsmFilter] ?? '';
+  }, [isPositiveCasesMapSelected, input.state.selectedFilters])
+
+  return (
+    <p>
+     This is a single-select dropdown for different options for viewing positive cases.
+     {isPositiveCasesMapSelected && (
+      <>
+        <p className="inline"> This map is sourced from this </p>
+        <Link
+          rel="noopener noreferrer"
+          target="_blank"
+          href={filterLink}
+          className="underline hover:text-gray-300 inline"
+        >
+          report
+        </Link>
+      </>
+     )}
+    </p>
+  )
+}
+
 export const filterArbovirusToSortOrderMap: Record<Arbovirus, number> & Record<string, number | undefined> = {
   [Arbovirus.Zikv]: 1,
   [Arbovirus.Denv]: 2,
@@ -217,6 +257,25 @@ export const useAvailableFilters = () => {
         (filterArbovirusToSortOrderMap[optionA] ?? 0) - (filterArbovirusToSortOrderMap[optionB] ?? 0),
       filterRenderingFunction: ColouredCheckboxFilter,
       clearAllButtonText: 'Clear all viruses'
+    },
+    [FilterableField.estimateType]: {
+      field: FilterableField.estimateType,
+      label: "Estimate Type",
+      valueToLabelMap: {
+        [ArbovirusEstimateType.Seroprevalence]: "Seroprevalence Estimates",
+        [ArbovirusEstimateType.ViralPrevalence]: "Viral Prevalence Estimates",
+      },
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.studyPopulation]: {
+      field: FilterableField.studyPopulation,
+      label: "Study Population",
+      valueToLabelMap: {
+        [ArbovirusStudyPopulation.Human]: "Human",
+        [ArbovirusStudyPopulation.Insect]: "Insect",
+        [ArbovirusStudyPopulation.NonHumanAnimal]: "Non-Human Animal",
+      },
+      filterRenderingFunction: MultiSelectFilter
     },
     [FilterableField.start_date]: {
       field: FilterableField.start_date,
@@ -289,7 +348,16 @@ export const useAvailableFilters = () => {
       },
       renderTooltipContent: EnvironmentalSuitabilityMapTooltip,
       filterRenderingFunction: SingleSelectFilter
+    },
+    [FilterableField.positiveCases]: {
+      field: FilterableField.positiveCases,
+      label: "Positive Cases Map",
+      valueToLabelMap: {
+        "orov_2024_Jan1ToJuly20": "Oropouche Positive Cases Reported (Jan 1st 2024 - July 20th 2024)"
       },
+      renderTooltipContent: PositiveCasesMapTooltip,
+      filterRenderingFunction: SingleSelectFilter
+    },
     [FilterableField.ageGroup]: {
       field: FilterableField.ageGroup,
       label: "Age Group",

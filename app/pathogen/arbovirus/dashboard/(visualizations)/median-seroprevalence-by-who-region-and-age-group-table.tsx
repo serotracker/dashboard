@@ -21,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import { useChartArbovirusDropdown } from "./chart-arbovirus-dropdown";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
+import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { WhoRegion } from "@/gql/graphql";
 
 enum AgeGroup {
@@ -32,7 +32,7 @@ enum AgeGroup {
 }
 
 interface GetMedianSeroprevalenceInformationFromDataInput {
-  data: any[];
+  data: ArbovirusEstimate[];
 }
 
 interface GetMedianSeroprevalenceInformationFromDataOutput {
@@ -84,12 +84,16 @@ const getMedianSeroprevalenceInformationFromData = (
   };
 };
 
-export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = () => {
-  const state = useContext(ArboContext);
+interface MedianSeroprevalenceByWhoRegionAndAgeGroupTableProps {
+  data: ArbovirusEstimate[];
+}
+
+export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = (props: MedianSeroprevalenceByWhoRegionAndAgeGroupTableProps) => {
+  const { data } = props;
 
   const datasetGroupedByArbovirus = useMemo(
-    () => typedGroupBy( state.filteredData, (dataPoint) => dataPoint.pathogen),
-    [state.filteredData]
+    () => typedGroupBy( data, (dataPoint) => dataPoint.pathogen),
+    [data]
   );
 
   const datasetGroupedByArbovirusAndWhoRegion = useMemo(

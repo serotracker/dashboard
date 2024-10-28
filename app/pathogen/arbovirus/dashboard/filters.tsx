@@ -35,8 +35,15 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   const selectedAgeGroups = state.selectedFilters['ageGroup'] ?? [];
   const selectedArboviruses = state.selectedFilters['pathogen'] ?? [];
 
+  const oropoucheEnabled = process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true';
+
   const arbovirusFilters = [
     FilterableField.pathogen
+  ]
+
+  const studyParameterFilters = [
+    FilterableField.estimateType,
+    FilterableField.studyPopulation
   ]
 
   const dateFilters = [
@@ -48,7 +55,12 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
     FilterableField.whoRegion,
     FilterableField.unRegion,
     FilterableField.countryAlphaTwoCode,
+    ...(oropoucheEnabled ? [] : [ FilterableField.esm ]),
+  ];
+
+  const mapLayerFilters = [
     FilterableField.esm,
+    FilterableField.positiveCases,
   ];
 
   const demographicFilters = [
@@ -87,7 +99,13 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
     headerText: 'Arboviruses',
     headerTooltipText: 'Filter on arbovirus strain.',
     includedFilters: arbovirusFilters
-  }, {
+  }, 
+  ...(oropoucheEnabled ? [{
+    headerText: 'Study Parameters',
+    headerTooltipText: 'Very basic filters to allow you to choose what kind of studies you are interested in.',
+    includedFilters: studyParameterFilters
+  }] : []),
+  {
     headerText: 'Date',
     headerTooltipText: 'Filter on sample start and end date.',
     includedFilters: dateFilters
@@ -95,7 +113,13 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
     headerText: 'Study Location',
     headerTooltipText: 'Filter on where the study was conducted.',
     includedFilters: studyLocationFilters
-  }, {
+  },
+  ...(oropoucheEnabled ? [{
+    headerText: 'Map Layer Filters',
+    headerTooltipText: 'Filters which come with their own special map layer.',
+    includedFilters: mapLayerFilters
+  }] : []),
+  {
     headerText: 'Demographic',
     headerTooltipText: 'Filter on demographic variables, including population group, sex, and age group.',
     includedFilters: demographicFilters
@@ -208,6 +232,18 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
     );
   }, [ data ]);
 
+  const estimateType = useMemo(() => {
+    return uniq((data?.arbovirusEstimates ?? [])
+      .flatMap((dataPoint) => dataPoint.estimateType)
+    );
+  }, [ data ]);
+
+  const studyPopulation = useMemo(() => {
+    return uniq((data?.arbovirusEstimates ?? [])
+      .flatMap((dataPoint) => dataPoint.studyPopulation)
+    );
+  }, [ data ]);
+
   return (
     <Filters
       className={props.className}
@@ -223,6 +259,9 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
           'dengue2050',
           'zika'
         ],
+        positiveCases: [
+          'orov_2024_Jan1ToJuly20'
+        ],
         pathogen,
         ageGroup,
         sex,
@@ -231,7 +270,9 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
         producer,
         antibody,
         serotype,
-        pediatricAgeGroup
+        pediatricAgeGroup,
+        estimateType,
+        studyPopulation
       }}
       data={data?.arbovirusEstimates ?? []}
       resetAllFiltersButtonEnabled={true}

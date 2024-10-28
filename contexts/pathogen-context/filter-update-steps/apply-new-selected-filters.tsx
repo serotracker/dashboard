@@ -224,6 +224,14 @@ export function filterData(
               return true;
           }
         }
+        case "positiveCases": {
+          switch(filters["positiveCases"][0]){
+            case "orov_2024_Jan1ToJuly20": 
+              return item["pathogen"] === "OROV";
+            default:
+              return true;
+          }
+        }
         default: {
           return defaultDataFilterHandler({
             item,
