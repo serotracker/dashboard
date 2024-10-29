@@ -34,9 +34,7 @@ export default function RootLayout({
       </head>
       <body className={clsx(inter.className, "text-black no-scrollbar overflow-y-hidden")}>
         <ThemeProvider>
-          <AppHeaderAndMain>
-            {children}
-          </AppHeaderAndMain>
+          {children}
         </ThemeProvider>
       </body>
     </html>
