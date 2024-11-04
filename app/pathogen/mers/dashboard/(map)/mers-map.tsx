@@ -34,6 +34,8 @@ import { MersMapStudySubmissionPrompt } from "./mers-map-study-submission-prompt
 import { Card, CardContent } from "@/components/ui/card";
 import { useMersMapDataTypeLegendEntries } from "./use-mers-map-data-type-legend-entries";
 import { useMersWhoCaseData } from "@/hooks/mers/use-mers-who-case-data";
+import { useMersMapLegend } from "./use-mers-map-legend";
+import { Breakpoint, useBreakpoint } from "@/hooks/useBreakpoint";
 
 export const MapPinColours = {
   'HumanMersEvent': "#1d4ed8",
@@ -51,6 +53,7 @@ export const MersMap = () => {
   const { filteredData, faoMersEventData } = useContext(MersContext);
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const { data } = useMersPrimaryEstimates(); 
+  const { isGreaterThanOrEqualToBreakpoint, currentBreakpoint } = useBreakpoint();
   const countryDataContext = useContext(CountryDataContext);
   const { faoMersEvents } = useFaoMersEventData();
   const {
@@ -95,6 +98,30 @@ export const MersMap = () => {
     estimateDataShown,
     eventDataShown
   })
+
+  const legendProps = useMemo(() => ({
+    className: "absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md",
+    legendEntries: [
+      ...countryHighlightLayerLegendEntries,
+      ...dataTypeLayerLegendEntries
+    ],
+    linearLegendColourGradientConfiguration,
+    freeTextEntries
+  }), [ countryHighlightLayerLegendEntries, dataTypeLayerLegendEntries, linearLegendColourGradientConfiguration, freeTextEntries ]);
+  
+  const { mersMapLegend } = useMersMapLegend({
+    legendProps
+  });
+
+  const isOnLgBreakpointOrBelow = useMemo(() => {
+    const oppositeOfResult = isGreaterThanOrEqualToBreakpoint(currentBreakpoint, Breakpoint.XL);
+
+    if(typeof oppositeOfResult === 'boolean') {
+      return !oppositeOfResult;
+    }
+
+    return true;
+  }, [ isGreaterThanOrEqualToBreakpoint, currentBreakpoint ])
 
   if (!data || !faoMersEvents) {
     return <span> Loading... </span>;
@@ -190,19 +217,11 @@ export const MersMap = () => {
           />
       </div>
       <MersMapStudySubmissionPrompt
-        hidden={!isStudySubmissionPromptVisible}
+        hidden={!isStudySubmissionPromptVisible || isOnLgBreakpointOrBelow}
         onClose={() => setStudySubmissionPromptVisibility(false)}
         className={"absolute bottom-1 left-1 mx-auto w-1/2 text-center bg-white/60 backdrop-blur-md"}
       />
-      <CountryHighlightLayerLegend
-        className={"absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md"}
-        legendEntries={[
-          ...countryHighlightLayerLegendEntries,
-          ...dataTypeLayerLegendEntries
-        ]}
-        linearLegendColourGradientConfiguration={linearLegendColourGradientConfiguration}
-        freeTextEntries={freeTextEntries}
-      />
+      {mersMapLegend}
       <MapEstimateSummary filteredData={filteredData.map((estimate) => ({ sourceSheetName: estimate.primaryEstimateInfo.sourceTitle }))}/>
       <div className={"absolute top-12 left-1 p-2 "}>
         <Card className={"mb-1 bg-white/60 backdrop-blur-md"}>
