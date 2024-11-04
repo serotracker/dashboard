@@ -59,6 +59,14 @@ const apiMersMacroSampleFrameTypeToDomainTypeMap = {
   [MersMacroSampleFrameTypeForApi.Uncategorized]: MersMacroSampleFrameType.UNCATEGORIZED,
 }
 
+const mersMacroSampleFrameToSortOrderMap = {
+  [MersMacroSampleFrameType.HIGH_RISK_POPULATIONS]: 1,
+  [MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS]: 2,
+  [MersMacroSampleFrameType.HIGH_RISK_NOT_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS]: 3,
+  [MersMacroSampleFrameType.GENERAL_POPULATION]: 4,
+  [MersMacroSampleFrameType.UNCATEGORIZED]: 5,
+}
+
 export const MersMacroSampleFramesProvider = (props: MersMacroSampleFramesProviderProps) => {
   const [ macroSampleFrames, _setMacroSampleFrames ] = useState<MersMacroSampleFramesContextType['macroSampleFrames']>([]);
   const [ allHumanSampleFrames, setAllHumanSampleFrames ] = useState<string[]>([]);
@@ -67,7 +75,11 @@ export const MersMacroSampleFramesProvider = (props: MersMacroSampleFramesProvid
 
   const setMacroSampleFrames = useCallback((newMacroSampleFrames: typeof macroSampleFrames) => {
     const sortedNewMacroSampleFrames = newMacroSampleFrames
-      .sort((macroSampleFrameA, macroSampleFrameB) => macroSampleFrameA.macroSampleFrame > macroSampleFrameB.macroSampleFrame ? 1 : -1);
+      .sort((macroSampleFrameA, macroSampleFrameB) => (
+        mersMacroSampleFrameToSortOrderMap[macroSampleFrameA.macroSampleFrame] > mersMacroSampleFrameToSortOrderMap[macroSampleFrameB.macroSampleFrame]
+          ? 1
+          : -1
+      ));
 
     _setMacroSampleFrames(sortedNewMacroSampleFrames);
   }, [ _setMacroSampleFrames ]);
