@@ -233,6 +233,7 @@ export function ArbovirusMap() {
         legendEntries={legendEntries}
         freeTextEntries={freeTextEntries}
         linearLegendColourGradientConfiguration={linearLegendColourGradientConfiguration}
+        closeButtonConfiguration={{ enabled: false }}
       />
       <MapEstimateSummary filteredData={filteredData}/>
       <arbovirusMapCustomizationModal.mapCustomizeButton />

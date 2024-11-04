@@ -75,7 +75,7 @@ export const SplitTimeBucketedBarChart = <
     formatter: (value: number) => `${value.toFixed(numberOfDigitsAfterDecimalPointForOutputValue)}%`
   } : {
     itemStyle: {color: "black"}
-  }, [ percentageFormattingEnabled ])
+  }, [ percentageFormattingEnabled, numberOfDigitsAfterDecimalPointForOutputValue ])
 
   const sortedPrimaryKeys = useMemo(() => {
     const unsortedPrimaryKeys = typedObjectKeys(eventsGroupedByPrimaryKeyAndThenTimeBucket);
