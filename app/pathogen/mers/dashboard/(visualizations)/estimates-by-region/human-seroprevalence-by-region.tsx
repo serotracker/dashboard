@@ -94,17 +94,17 @@ export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionPr
       .map(( dataPoint, index ) => ({
         ...dataPoint,
         seroprevalence: parseFloat(
-          (dataPoint.primaryEstimateInfo.seroprevalence * 100).toFixed(1)
+          (dataPoint.primaryEstimateInfo.seroprevalence * 100).toFixed(3)
         ),
         seroprevalenceError: [
           parseFloat((
             dataPoint.primaryEstimateInfo.seroprevalence * 100 -
             dataPoint.seroprevalence95CILower * 100
-          ).toFixed(1)),
+          ).toFixed(3)),
           parseFloat((
             dataPoint.seroprevalence95CIUpper * 100 - 
             dataPoint.primaryEstimateInfo.seroprevalence * 100
-          ).toFixed(1))
+          ).toFixed(3))
         ],
         estimateNumber: index + 1
       }))

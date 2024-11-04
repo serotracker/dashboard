@@ -94,17 +94,17 @@ export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePr
       .map(( dataPoint, index ) => ({
         ...dataPoint,
         positivePrevalence: parseFloat(
-          (dataPoint.primaryEstimateInfo.positivePrevalence * 100).toFixed(1)
+          (dataPoint.primaryEstimateInfo.positivePrevalence * 100).toFixed(3)
         ),
         positivePrevalenceError: [
           parseFloat((
             dataPoint.primaryEstimateInfo.positivePrevalence * 100 -
             dataPoint.positivePrevalence95CILower * 100
-          ).toFixed(1)),
+          ).toFixed(3)),
           parseFloat((
             dataPoint.positivePrevalence95CIUpper * 100 - 
             dataPoint.primaryEstimateInfo.positivePrevalence * 100
-          ).toFixed(1))
+          ).toFixed(3))
         ],
         estimateNumber: index + 1
       }))

@@ -495,9 +495,9 @@ const getPrevalenceConfidenceIntervalRows = ({ estimate }: GetPrevalenceConfiden
     : "Positive Prevalence 95% Confidence Interval (Calculated using the Clopper-Pearson method)",
   type: PopUpContentRowType.TEXT as const,
   text: `[
-    ${((estimate.primaryEstimateInfo.positivePrevalence95CILower ?? estimate.primaryEstimateInfo.positivePrevalenceCalculated95CILower) * 100).toFixed(1)}%
+    ${((estimate.primaryEstimateInfo.positivePrevalence95CILower ?? estimate.primaryEstimateInfo.positivePrevalenceCalculated95CILower) * 100).toFixed(3)}%
     -
-    ${((estimate.primaryEstimateInfo.positivePrevalence95CIUpper ?? estimate.primaryEstimateInfo.positivePrevalenceCalculated95CIUpper) * 100).toFixed(1)}%
+    ${((estimate.primaryEstimateInfo.positivePrevalence95CIUpper ?? estimate.primaryEstimateInfo.positivePrevalenceCalculated95CIUpper) * 100).toFixed(3)}%
   ]`
 }] : [{
   title: (
@@ -509,9 +509,9 @@ const getPrevalenceConfidenceIntervalRows = ({ estimate }: GetPrevalenceConfiden
     : "Seroprevalence 95% Confidence Interval (Calculated using the Clopper-Pearson method)",
   type: PopUpContentRowType.TEXT as const,
   text: `[
-    ${((estimate.primaryEstimateInfo.seroprevalence95CILower ?? estimate.primaryEstimateInfo.seroprevalenceCalculated95CILower) * 100).toFixed(1)}%
+    ${((estimate.primaryEstimateInfo.seroprevalence95CILower ?? estimate.primaryEstimateInfo.seroprevalenceCalculated95CILower) * 100).toFixed(3)}%
     -
-    ${((estimate.primaryEstimateInfo.seroprevalence95CIUpper ?? estimate.primaryEstimateInfo.seroprevalenceCalculated95CIUpper) * 100).toFixed(1)}%
+    ${((estimate.primaryEstimateInfo.seroprevalence95CIUpper ?? estimate.primaryEstimateInfo.seroprevalenceCalculated95CIUpper) * 100).toFixed(3)}%
   ]`
 }];
 
@@ -666,7 +666,7 @@ const getTestSensitivityFields = ({ estimate }: GetTestSensitivityFieldsInput) =
   title: "Test Sensitivity",
   type: PopUpContentRowType.TEXT as const,
   text:  estimate.primaryEstimateInfo.sensitivity !== null && estimate.primaryEstimateInfo.sensitivity !== undefined
-    ? `${(estimate.primaryEstimateInfo.sensitivity * 100).toFixed(1)}%`
+    ? `${(estimate.primaryEstimateInfo.sensitivity * 100).toFixed(3)}%`
     : 'Not reported'
 }, {
   title: "Test Sensitivity 95% Confidence Interval",
@@ -674,7 +674,7 @@ const getTestSensitivityFields = ({ estimate }: GetTestSensitivityFieldsInput) =
   text: (
     estimate.primaryEstimateInfo.sensitivity95CILower !== null && estimate.primaryEstimateInfo.sensitivity95CILower !== undefined &&
     estimate.primaryEstimateInfo.sensitivity95CIUpper !== null && estimate.primaryEstimateInfo.sensitivity95CIUpper !== undefined
-  ) ? `[${(estimate.primaryEstimateInfo.sensitivity95CILower * 100).toFixed(1)}% - ${(estimate.primaryEstimateInfo.sensitivity95CIUpper * 100).toFixed(1)}]`
+  ) ? `[${(estimate.primaryEstimateInfo.sensitivity95CILower * 100).toFixed(3)}% - ${(estimate.primaryEstimateInfo.sensitivity95CIUpper * 100).toFixed(3)}]`
     : 'Not reported'
 }];
 
@@ -686,7 +686,7 @@ const getTestSpecificityFields = ({ estimate }: GetTestSpecificityFieldsInput) =
   title: "Test Specificity",
   type: PopUpContentRowType.TEXT as const,
   text:  estimate.primaryEstimateInfo.specificity !== null && estimate.primaryEstimateInfo.specificity !== undefined
-    ? `${(estimate.primaryEstimateInfo.specificity * 100).toFixed(1)}%`
+    ? `${(estimate.primaryEstimateInfo.specificity * 100).toFixed(3)}%`
     : 'Not reported'
 }, {
   title: "Test Specificity 95% Confidence Interval",
@@ -694,7 +694,7 @@ const getTestSpecificityFields = ({ estimate }: GetTestSpecificityFieldsInput) =
   text: (
     estimate.primaryEstimateInfo.specificity95CILower !== null && estimate.primaryEstimateInfo.specificity95CILower !== undefined &&
     estimate.primaryEstimateInfo.specificity95CIUpper !== null && estimate.primaryEstimateInfo.specificity95CIUpper !== undefined
-  ) ? `[${(estimate.primaryEstimateInfo.specificity95CILower * 100).toFixed(1)}% - ${(estimate.primaryEstimateInfo.specificity95CIUpper * 100).toFixed(1)}]`
+  ) ? `[${(estimate.primaryEstimateInfo.specificity95CILower * 100).toFixed(3)}% - ${(estimate.primaryEstimateInfo.specificity95CIUpper * 100).toFixed(3)}]`
     : 'Not reported'
 }];
 
@@ -817,7 +817,7 @@ export const useMersEstimateRows = () => {
     title: "Symptom Prevalence in Postive Cases",
     type: PopUpContentRowType.TEXT,
     text: estimate.primaryEstimateInfo.symptomPrevalenceOfPositives
-      ? `${(estimate.primaryEstimateInfo.symptomPrevalenceOfPositives * 100).toFixed(1)}%`
+      ? `${(estimate.primaryEstimateInfo.symptomPrevalenceOfPositives * 100).toFixed(3)}%`
       : "Unknown"
   }, {
     title: "Symptom Definition",
@@ -941,14 +941,14 @@ const generateTableRowsForSubestimate = <
       rows: {
         'Sample Numerator': estimateInfo.sampleNumerator?.toFixed(0),
         'Sample Denominator': estimateInfo.sampleDenominator?.toFixed(0),
-        'Seroprevalence': `${(estimateInfo.seroprevalence * 100).toFixed(1)}%`,
+        'Seroprevalence': `${(estimateInfo.seroprevalence * 100).toFixed(3)}%`,
         'Seroprevalence (95% CI)': (estimateInfo.seroprevalence95CILower === undefined || estimateInfo.seroprevalence95CILower === null)
           ? (estimateInfo.seroprevalence95CIUpper === undefined || estimateInfo.seroprevalence95CIUpper === null)
             ? 'Not reported'
-            : `Unknown - ${(estimateInfo.seroprevalence95CIUpper * 100).toFixed(1)}%`
+            : `Unknown - ${(estimateInfo.seroprevalence95CIUpper * 100).toFixed(3)}%`
           : (estimateInfo.seroprevalence95CIUpper === undefined || estimateInfo.seroprevalence95CIUpper === null)
-            ? `${(estimateInfo.seroprevalence95CILower * 100).toFixed(1)}% - Unknown`
-            : `${(estimateInfo.seroprevalence95CILower * 100).toFixed(1)}% - ${(estimateInfo.seroprevalence95CIUpper * 100).toFixed(1)}%`
+            ? `${(estimateInfo.seroprevalence95CILower * 100).toFixed(3)}% - Unknown`
+            : `${(estimateInfo.seroprevalence95CILower * 100).toFixed(3)}% - ${(estimateInfo.seroprevalence95CIUpper * 100).toFixed(3)}%`
       }
     }
   }
@@ -963,14 +963,14 @@ const generateTableRowsForSubestimate = <
       rows: {
         'Sample Numerator': estimateInfo.sampleNumerator?.toFixed(0),
         'Sample Denominator': estimateInfo.sampleDenominator?.toFixed(0),
-        'Positive Prevalence': `${(estimateInfo.positivePrevalence * 100).toFixed(1)}%`,
+        'Positive Prevalence': `${(estimateInfo.positivePrevalence * 100).toFixed(3)}%`,
         'Positive Prevalence (95% CI)': (estimateInfo.positivePrevalence95CILower === undefined || estimateInfo.positivePrevalence95CILower === null)
           ? (estimateInfo.positivePrevalence95CIUpper === undefined || estimateInfo.positivePrevalence95CIUpper === null)
             ? 'Not reported'
-            : `Unknown - ${(estimateInfo.positivePrevalence95CIUpper * 100).toFixed(1)}%`
+            : `Unknown - ${(estimateInfo.positivePrevalence95CIUpper * 100).toFixed(3)}%`
           : (estimateInfo.positivePrevalence95CIUpper === undefined || estimateInfo.positivePrevalence95CIUpper === null)
-            ? `${(estimateInfo.positivePrevalence95CILower * 100).toFixed(1)}% - Unknown`
-            : `${(estimateInfo.positivePrevalence95CILower * 100).toFixed(1)}% - ${(estimateInfo.positivePrevalence95CIUpper * 100).toFixed(1)}%`
+            ? `${(estimateInfo.positivePrevalence95CILower * 100).toFixed(3)}% - Unknown`
+            : `${(estimateInfo.positivePrevalence95CILower * 100).toFixed(3)}% - ${(estimateInfo.positivePrevalence95CIUpper * 100).toFixed(3)}%`
       }
     }
   }

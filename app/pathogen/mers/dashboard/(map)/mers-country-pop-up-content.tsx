@@ -47,9 +47,9 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
   const humanMersSeroprevalenceRange = useMemo(() => allHumanMersSeroprevalenceEstimates.length > 0
     ? `Human seroprevalence ranges from ${(Math.min(
       ...allHumanMersSeroprevalenceEstimates.map((estimate) => estimate.primaryEstimateInfo.seroprevalence)
-    ) * 100).toFixed(1)}% - ${(Math.max(
+    ) * 100).toFixed(3)}% - ${(Math.max(
       ...allHumanMersSeroprevalenceEstimates.map((estimate) => estimate.primaryEstimateInfo.seroprevalence)
-    ) * 100).toFixed(1)}% across the ${
+    ) * 100).toFixed(3)}% across the ${
       allHumanMersSeroprevalenceEstimates.length
     } estimate(s) in our database`
     : 'No estimates in our database'
@@ -62,9 +62,9 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
   const animalMersSeroprevalenceRange = useMemo(() => allAnimalMersSeroprevalenceEstimates.length > 0
     ? `Animal seroprevalence ranges from ${(Math.min(
       ...allAnimalMersSeroprevalenceEstimates.map((estimate) => estimate.primaryEstimateInfo.seroprevalence)
-    ) * 100).toFixed(1)}% - ${(Math.max(
+    ) * 100).toFixed(3)}% - ${(Math.max(
       ...allAnimalMersSeroprevalenceEstimates.map((estimate) => estimate.primaryEstimateInfo.seroprevalence)
-    ) * 100).toFixed(1)}% across the ${
+    ) * 100).toFixed(3)}% across the ${
       allAnimalMersSeroprevalenceEstimates.length
     } estimate(s) in our database`
     : 'No estimates in our database'
@@ -77,9 +77,9 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
   const humanMersViralPrevalenceRange = useMemo(() => allHumanMersViralEstimates.length > 0
     ? `Human viral prevalence ranges from ${(Math.min(
       ...allHumanMersViralEstimates.map((estimate) => estimate.primaryEstimateInfo.positivePrevalence)
-    ) * 100).toFixed(1)}% - ${(Math.max(
+    ) * 100).toFixed(3)}% - ${(Math.max(
       ...allHumanMersViralEstimates.map((estimate) => estimate.primaryEstimateInfo.positivePrevalence)
-    ) * 100).toFixed(1)}% across the ${
+    ) * 100).toFixed(3)}% across the ${
       allHumanMersViralEstimates.length
     } estimate(s) in our database`
     : 'No estimates in our database'
@@ -92,9 +92,9 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
   const animalMersViralPrevalenceRange = useMemo(() => allAnimalMersViralEstimates.length > 0
     ? `Animal viral prevalence ranges from ${(Math.min(
       ...allAnimalMersViralEstimates.map((estimate) => estimate.primaryEstimateInfo.positivePrevalence)
-    ) * 100).toFixed(1)}% - ${(Math.max(
+    ) * 100).toFixed(3)}% - ${(Math.max(
       ...allAnimalMersViralEstimates.map((estimate) => estimate.primaryEstimateInfo.positivePrevalence)
-    ) * 100).toFixed(1)}% across the ${
+    ) * 100).toFixed(3)}% across the ${
       allAnimalMersViralEstimates.length
     } estimate(s) in our database`
     : 'No estimates in our database'
