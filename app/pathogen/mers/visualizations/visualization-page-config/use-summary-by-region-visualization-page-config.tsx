@@ -31,7 +31,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
   const [
     _summaryByRegionSelectedAnimalSampleFrameOrMacroSampleFrame,
     setSummaryByRegionSelectedAnimalSampleFrameOrMacroSampleFrame,
-  ] = useState<string>(MersMacroSampleFrameType.GENERAL_POPULATION);
+  ] = useState<string>(MersMacroSampleFrameType.HIGH_RISK_POPULATIONS);
 
   const availableSampleFrames: string[] = useMemo(() => {
     if(
