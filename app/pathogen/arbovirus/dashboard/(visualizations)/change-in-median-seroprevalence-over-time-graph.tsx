@@ -41,6 +41,7 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (props: ChangeInMedianS
       getBarName={(arbovirus) => 'Median Seroprevalence'}
       getChartTitle={(arbovirus) => convertArboSFtoArbo(arbovirus)}
       transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.seroprevalence * 100))}
+      numberOfDigitsAfterDecimalPointForOutputValue={2}
     />
   )
 };

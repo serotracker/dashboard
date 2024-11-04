@@ -85,6 +85,7 @@ export const HumanCasesSummaryByRegion = <TRegion extends string>(props: HumanCa
 
         return accumulator;
       }, 0)}
+      numberOfDigitsAfterDecimalPointForOutputValue={3}
     />
   )
 }

@@ -60,6 +60,7 @@ export const ReportedEventSummaryOverTime = (props: ReportedEventSummaryOverTime
         }
         assertNever(dataPoint);
       }, 0)}
+      numberOfDigitsAfterDecimalPointForOutputValue={3}
     />
   )
 };

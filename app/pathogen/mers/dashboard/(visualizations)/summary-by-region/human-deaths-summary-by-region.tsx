@@ -85,6 +85,7 @@ export const HumanDeathsSummaryByRegion = <TRegion extends string>(props: HumanD
 
         return accumulator;
       }, 0)}
+      numberOfDigitsAfterDecimalPointForOutputValue={3}
     />
   );
 }

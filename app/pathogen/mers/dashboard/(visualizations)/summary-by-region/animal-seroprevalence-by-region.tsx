@@ -79,6 +79,7 @@ export const AnimalSeroprevalenceSummaryByRegion = <TRegion extends string>(prop
       percentageFormattingEnabled={true}
       getBarName={() => 'Animal Median Seroprevalence'}
       transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.primaryEstimateInfo.seroprevalence * 100))}
+      numberOfDigitsAfterDecimalPointForOutputValue={3}
     />
   );
 }

@@ -64,6 +64,7 @@ export const MedianSeroprevalenceOverTime = (props: MedianSeroprevalenceOverTime
       getBarName={(__typename) => typenameToLabel[__typename]}
       getChartTitle={(__typename) => typenameToLabel[__typename]}
       transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.primaryEstimateInfo.seroprevalence * 100))}
+      numberOfDigitsAfterDecimalPointForOutputValue={3}
     />
   );
 };

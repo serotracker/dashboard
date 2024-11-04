@@ -64,6 +64,7 @@ export const MedianViralPositivePrevalenceOverTime = (props: MedianViralPositive
       getBarName={(__typename) => typenameToLabel[__typename]}
       getChartTitle={(__typename) => typenameToLabel[__typename]}
       transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.primaryEstimateInfo.positivePrevalence * 100))}
+      numberOfDigitsAfterDecimalPointForOutputValue={3}
     />
   );
 };
