@@ -70,7 +70,7 @@ export const mersPrimaryEstimates = gql`
           clade
           accessionNumbers
           genomeSequenced
-          sampleFrame
+          sampleFrames
           ageGroup
           humanCountriesOfTravel {
             name
@@ -138,7 +138,7 @@ export const mersPrimaryEstimates = gql`
           clade
           accessionNumbers
           genomeSequenced
-          sampleFrame
+          sampleFrames
           ageGroup
           humanCountriesOfTravel {
             name
@@ -557,7 +557,7 @@ export const mersPrimaryEstimates = gql`
           }
         }
         occupation
-        sampleFrame
+        sampleFrames
         exposureToCamels
       }
       animalSourceLocationSubestimates {
@@ -648,7 +648,7 @@ export const mersPrimaryEstimates = gql`
           }
         }
         details
-        sampleFrame
+        sampleFrames
         exposureToCamels
       }
       nomadismSubestimates {

@@ -41,8 +41,8 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       const allHumanSampleFrames = uniq(filteredData
         .filter((estimate) => isHumanMersEstimate(estimate))
         .flatMap((estimate) => [
-          ...(estimate.primaryEstimateInfo.sampleFrame ? [estimate.primaryEstimateInfo.sampleFrame] : []),
-          ...estimate.occupationSubestimates.flatMap((subestimate) => subestimate.sampleFrame ? [ subestimate.sampleFrame ] : [])
+          ...estimate.primaryEstimateInfo.sampleFrames,
+          ...estimate.occupationSubestimates.flatMap((subestimate) => subestimate.sampleFrames)
         ])
       );
 

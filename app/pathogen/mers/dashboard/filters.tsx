@@ -40,7 +40,7 @@ const seroprevalenceEstimateFilters = [
 
 const humanEstimatesFilters = [
   FilterableField.ageGroup,
-  FilterableField.sampleFrame,
+  FilterableField.sampleFrames,
   FilterableField.exposureToCamels
 ]
 
@@ -208,7 +208,7 @@ export const MersFilters = (props: MersFiltersProps) => {
           sex: estimateFilterData.mersEstimatesFilterOptions.sex,
           isotypes: estimateFilterData.mersEstimatesFilterOptions.isotypes,
           samplingMethod: estimateFilterData.mersEstimatesFilterOptions.samplingMethod,
-          sampleFrame: estimateFilterData.mersEstimatesFilterOptions.sampleFrame,
+          sampleFrames: estimateFilterData.mersEstimatesFilterOptions.sampleFrame,
           geographicScope: estimateFilterData.mersEstimatesFilterOptions.geographicScope,
           testProducer: estimateFilterData.mersEstimatesFilterOptions.testProducer,
           testValidation: estimateFilterData.mersEstimatesFilterOptions.testValidation,

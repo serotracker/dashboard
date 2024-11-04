@@ -251,7 +251,7 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
         }
       });
     }
-  }, [data, faoMersEvents]);
+  }, [ data, faoMersEvents ]);
 
   return (
     <>

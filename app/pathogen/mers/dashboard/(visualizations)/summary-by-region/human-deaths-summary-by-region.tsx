@@ -5,10 +5,15 @@ import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCame
 import uniqBy from "lodash/uniqBy";
 import { parseISO } from "date-fns";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
+import { UnRegion, WhoRegion } from "@/gql/graphql";
 
 interface HumanDeathsSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
-  regionGroupingFunction: (dataPoint: FaoMersEvent) => TRegion | undefined;
+  regionGroupingFunction: (dataPoint: {
+    whoRegion: WhoRegion | undefined | null;
+    unRegion: UnRegion | undefined | null;
+    countryAlphaTwoCode: string;
+  }) => TRegion | undefined;
   regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
   setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
@@ -22,7 +27,11 @@ export const HumanDeathsSummaryByRegion = <TRegion extends string>(props: HumanD
     .filter((dataPoint): dataPoint is FaoMersEvent => dataPoint.__typename === 'AnimalMersEvent' || dataPoint.__typename === 'HumanMersEvent')
     .filter((dataPoint) => dataPoint.__typename === 'HumanMersEvent' && dataPoint.humanDeaths > 0)
     .map((event) => {
-      const region = regionGroupingFunction(event);
+      const region = regionGroupingFunction({
+        whoRegion: event.whoRegion,
+        unRegion: event.unRegion,
+        countryAlphaTwoCode: event.country.alphaTwoCode
+      });
 
       if(!region) {
         return undefined;

@@ -82,27 +82,19 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
   const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
   const { macroSampleFrames } = useContext(MersMacroSampleFramesContext)
 
-  const regionGroupingFunction = useCallback((dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => {
+  const regionGroupingFunction = useCallback((dataPoint: {
+    whoRegion: WhoRegion | undefined | null;
+    unRegion: UnRegion | undefined | null;
+    countryAlphaTwoCode: string;
+  }) => {
     if(selectedRegion === SummaryByRegionRegionDropdownOption.WHO_REGION) {
-      if('primaryEstimateInfo' in dataPoint) {
-        return dataPoint.primaryEstimateInfo.whoRegion;
-      }
-
       return dataPoint.whoRegion;
     }
     if(selectedRegion === SummaryByRegionRegionDropdownOption.UN_REGION) {
-      if('primaryEstimateInfo' in dataPoint) {
-        return dataPoint.primaryEstimateInfo.unRegion;
-      }
-
       return dataPoint.unRegion;
     }
     if(selectedRegion === SummaryByRegionRegionDropdownOption.COUNTRY) {
-      if('primaryEstimateInfo' in dataPoint) {
-        return dataPoint.primaryEstimateInfo.countryAlphaTwoCode;
-      }
-
-      return dataPoint.country.alphaTwoCode;
+      return dataPoint.countryAlphaTwoCode;
     }
     assertNever(selectedRegion);
   }, [ selectedRegion ]);
