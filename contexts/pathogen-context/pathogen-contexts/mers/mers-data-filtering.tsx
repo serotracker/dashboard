@@ -17,7 +17,7 @@ export enum MersFilterableField {
   sex = "sex",
   isotypes = "isotypes",
   ageGroup = "ageGroup",
-  sampleFrame = "sampleFrame",
+  sampleFrames = "sampleFrames",
   animalDetectionSettings = "animalDetectionSettings",
   animalPurpose = "animalPurpose",
   animalImportedOrLocal = "animalImportedOrLocal",
@@ -635,9 +635,9 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
         .map((subestimate) => subestimate.id)
     }
   },
-  [MersFilterableField.sampleFrame]: (input) => {
+  [MersFilterableField.sampleFrames]: (input) => {
     const { estimate } = input;
-    const selectedSampleFrameFilters = input.selectedFilters[MersFilterableField.sampleFrame] ?? [];
+    const selectedSampleFrameFilters = input.selectedFilters[MersFilterableField.sampleFrames] ?? [];
 
     if(selectedSampleFrameFilters.length === 0) {
       return { included: true };
@@ -648,17 +648,20 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     }
 
     const included = mersEstimateArrayFieldHandler({
-      filterKey: MersFilterableField.sampleFrame,
+      filterKey: MersFilterableField.sampleFrames,
       estimate: {
         ...estimate,
-        sampleFrame: [
-          ...(estimate.primaryEstimateInfo.sampleFrame ? [estimate.primaryEstimateInfo.sampleFrame] : []),
-          ...estimate.camelExposureLevelSubestimates.map((subestimate) => subestimate.sampleFrame)
-        ]
+        sampleFrames: uniq([
+          ...estimate.primaryEstimateInfo.sampleFrames,
+          ...estimate.camelExposureLevelSubestimates
+            .flatMap((subestimate) => subestimate.sampleFrames),
+          ...estimate.occupationSubestimates
+            .flatMap((subestimate) => subestimate.sampleFrames)
+        ])
       },
       selectedFilters: {
         ...input.selectedFilters,
-        [MersFilterableField.sampleFrame]: selectedSampleFrameFilters
+        [MersFilterableField.sampleFrames]: selectedSampleFrameFilters
       }
     })
 
@@ -666,12 +669,16 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       included,
       camelExposureLevelSubestimateIdsToMarkAsFiltered: input.estimate.camelExposureLevelSubestimates
         .filter((subestimate) =>
-          ((input.selectedFilters[MersFilterableField.sampleFrame] ?? []).length > 0) && (
-            !subestimate.sampleFrame ||
-            !input.selectedFilters[MersFilterableField.sampleFrame]?.includes(subestimate.sampleFrame)
-          )
+          ((input.selectedFilters[MersFilterableField.sampleFrames] ?? []).length > 0) &&
+          !input.selectedFilters[MersFilterableField.sampleFrames]?.some((element) => subestimate.sampleFrames.includes(element))
         )
-        .map((subestimate) => subestimate.id)
+        .map((subestimate) => subestimate.id),
+      occupationSubestimateIdsToMarkAsFiltered: input.estimate.occupationSubestimates
+        .filter((subestimate) =>
+          ((input.selectedFilters[MersFilterableField.sampleFrames] ?? []).length > 0) &&
+          !input.selectedFilters[MersFilterableField.sampleFrames]?.some((element) => subestimate.sampleFrames.includes(element))
+        )
+        .map((subestimate) => subestimate.id),
     }
   },
   [MersFilterableField.diagnosisSource]: () => ({ included: true })

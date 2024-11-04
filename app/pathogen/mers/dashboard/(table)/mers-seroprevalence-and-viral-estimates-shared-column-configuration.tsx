@@ -40,7 +40,7 @@ export const generateConciseEstimateId = (estimate: MersEstimate) => {
   const humanOrAnimal = isHumanMersEstimate(estimate) ? 'Human' : 'Animal';
   const country = estimate.primaryEstimateInfo.country;
   const sampleFrame = isHumanMersEstimate(estimate)
-    ? estimate.primaryEstimateInfo.sampleFrame
+    ? estimate.primaryEstimateInfo.sampleFrames.at(0)
     : estimate.primaryEstimateInfo.animalDetectionSettings.at(0)
   const samplingStartYear = estimate.primaryEstimateInfo.samplingStartDate
     ? parseISO(estimate.primaryEstimateInfo.samplingStartDate).getFullYear()
@@ -106,7 +106,7 @@ export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   conciseEstimateId: generateConciseEstimateId(estimate),
   primaryEstimateSamplingYearRange: generatePrimaryEstimateSamplingYearRange(estimate),
   primaryEstimateHumanAndAnimalSampleFrame: isHumanMersEstimate(estimate)
-    ? (estimate.primaryEstimateInfo.sampleFrame ? [ estimate.primaryEstimateInfo.sampleFrame ] : [] )
+    ? (estimate.primaryEstimateInfo.sampleFrames ? estimate.primaryEstimateInfo.sampleFrames : [] )
     : estimate.primaryEstimateInfo.animalDetectionSettings,
   primaryEstimateCountryOfTravelOrImport: isHumanMersEstimate(estimate)
     ? estimate.primaryEstimateInfo.humanCountriesOfTravel.map(({ name }) => name)
@@ -146,8 +146,8 @@ export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   primaryEstimateAgeGroup: 'ageGroup' in estimate.primaryEstimateInfo
     ? estimate.primaryEstimateInfo.ageGroup
     : undefined,
-  primaryEstimateSampleFrame: 'sampleFrame' in estimate.primaryEstimateInfo
-    ? estimate.primaryEstimateInfo.sampleFrame
+  primaryEstimateSampleFrame: 'sampleFrames' in estimate.primaryEstimateInfo
+    ? estimate.primaryEstimateInfo.sampleFrames
     : undefined,
   primaryEstimateSampleDenominator: estimate.primaryEstimateInfo.sampleDenominator,
   primaryEstimateSampleNumerator: estimate.primaryEstimateInfo.sampleNumerator,

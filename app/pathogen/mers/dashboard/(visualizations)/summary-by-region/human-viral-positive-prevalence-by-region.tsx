@@ -1,6 +1,7 @@
 import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
-import { HumanMersViralEstimate, MersEstimate, isHumanMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { HumanMersViralEstimate, MersEstimate, MersViralSubEstimateInformation, isHumanMersViralEstimate, isMersViralSubEstimateInformation } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { parseISO } from "date-fns";
@@ -10,7 +11,11 @@ import { useMemo, useEffect } from "react";
 interface HumanViralPositivePrevalenceSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
   selectedSampleFrames: string[];
-  regionGroupingFunction: (dataPoint: MersEstimate) => TRegion | undefined;
+  regionGroupingFunction: (dataPoint: {
+    whoRegion: WhoRegion | undefined | null;
+    unRegion: UnRegion | undefined | null;
+    countryAlphaTwoCode: string;
+  }) => TRegion | undefined;
   regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
   setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
@@ -22,12 +27,49 @@ export const HumanViralPositivePrevalenceSummaryByRegion = <TRegion extends stri
 
   const estimates = useMemo(() => data
     .filter((dataPoint): dataPoint is HumanMersViralEstimate => 'primaryEstimateInfo' in dataPoint && isHumanMersViralEstimate(dataPoint))
-    .filter((dataPoint) => !!dataPoint.primaryEstimateInfo.sampleFrame && selectedSampleFrames.includes(dataPoint.primaryEstimateInfo.sampleFrame))
+    .flatMap((dataPoint) => ([
+      {
+        whoRegion: dataPoint.primaryEstimateInfo.whoRegion,
+        unRegion: dataPoint.primaryEstimateInfo.unRegion,
+        countryAlphaTwoCode: dataPoint.primaryEstimateInfo.countryAlphaTwoCode,
+        samplingStartDate: dataPoint.primaryEstimateInfo.samplingStartDate,
+        samplingEndDate: dataPoint.primaryEstimateInfo.samplingEndDate,
+        sampleFrames: dataPoint.primaryEstimateInfo.sampleFrames,
+        positivePrevalence: dataPoint.primaryEstimateInfo.positivePrevalence
+      },
+      ...dataPoint.camelExposureLevelSubestimates
+        .filter((subestimate): subestimate is Omit<typeof subestimate, 'estimateInfo'> & { estimateInfo: MersViralSubEstimateInformation } => isMersViralSubEstimateInformation(subestimate.estimateInfo))
+        .map((subestimate) => ({
+          whoRegion: dataPoint.primaryEstimateInfo.whoRegion,
+          unRegion: dataPoint.primaryEstimateInfo.unRegion,
+          countryAlphaTwoCode: dataPoint.primaryEstimateInfo.countryAlphaTwoCode,
+          samplingStartDate: dataPoint.primaryEstimateInfo.samplingStartDate,
+          samplingEndDate: dataPoint.primaryEstimateInfo.samplingEndDate,
+          sampleFrames: subestimate.sampleFrames,
+          positivePrevalence: subestimate.estimateInfo.positivePrevalence
+        })),
+      ...dataPoint.occupationSubestimates
+        .filter((subestimate): subestimate is Omit<typeof subestimate, 'estimateInfo'> & { estimateInfo: MersViralSubEstimateInformation } => isMersViralSubEstimateInformation(subestimate.estimateInfo))
+        .map((subestimate) => ({
+          whoRegion: dataPoint.primaryEstimateInfo.whoRegion,
+          unRegion: dataPoint.primaryEstimateInfo.unRegion,
+          countryAlphaTwoCode: dataPoint.primaryEstimateInfo.countryAlphaTwoCode,
+          samplingStartDate: dataPoint.primaryEstimateInfo.samplingStartDate,
+          samplingEndDate: dataPoint.primaryEstimateInfo.samplingEndDate,
+          sampleFrames: subestimate.sampleFrames,
+          positivePrevalence: subestimate.estimateInfo.positivePrevalence
+        }))
+    ]))
+    .filter((dataPoint) => dataPoint.sampleFrames.every((sampleFrame) => selectedSampleFrames.includes(sampleFrame)))
     .map((estimate) => ({
       ...estimate,
-      region: regionGroupingFunction(estimate),
-      samplingStartDate: estimate.primaryEstimateInfo.samplingStartDate,
-      samplingEndDate: estimate.primaryEstimateInfo.samplingEndDate
+      region: regionGroupingFunction({
+        whoRegion: estimate.whoRegion,
+        unRegion: estimate.unRegion,
+        countryAlphaTwoCode: estimate.countryAlphaTwoCode,
+      }),
+      samplingStartDate: estimate.samplingStartDate,
+      samplingEndDate: estimate.samplingEndDate
     }))
     .filter((estimate): estimate is Omit<typeof estimate, 'region'|'samplingStartDate'|'samplingEndDate'> & {
       region: NonNullable<typeof estimate['region']>;
@@ -69,7 +111,7 @@ export const HumanViralPositivePrevalenceSummaryByRegion = <TRegion extends stri
       getChartTitle={(region) => regionToChartTitle(region)}
       percentageFormattingEnabled={true}
       getBarName={() => 'Human Median Positive Prevalence By Region'}
-      transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.primaryEstimateInfo.positivePrevalence * 100))}
+      transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.positivePrevalence * 100))}
     />
   );
 }

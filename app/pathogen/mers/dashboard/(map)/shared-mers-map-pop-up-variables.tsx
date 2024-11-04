@@ -580,7 +580,7 @@ const getSampleFrameRows = ({ estimate }: GetSampleFrameRowsInput) => isAnimalMe
 }] : [{
   title: "Sample Frame",
   type: PopUpContentRowType.COLOURED_PILL_LIST as const,
-  values: estimate.primaryEstimateInfo.sampleFrame ? [ estimate.primaryEstimateInfo.sampleFrame ] : [],
+  values: estimate.primaryEstimateInfo.sampleFrames,
   valueToColourClassnameMap: sampleFrameToColourClassnameMap,
   valueToLabelMap: {},
   defaultColourClassname: "bg-sky-100"
@@ -1129,7 +1129,9 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         values: {
           ...element.rows,
           'Occupation': element.subestimate.occupation,
-          'Sample Frame': element.subestimate.sampleFrame ?? 'Unknown',
+          'Sample Frame': element.subestimate.sampleFrames.length > 0
+            ? element.subestimate.sampleFrames.join(',')
+            : 'Unknown',
           'Exposure To Camels': element.subestimate.exposureToCamels ?? 'Unknown',
         }
       }))
@@ -1186,7 +1188,9 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         values: {
           ...element.rows,
           'Details': element.subestimate.details,
-          'Sample Frame': element.subestimate.sampleFrame,
+          'Sample Frame': element.subestimate.sampleFrames.length > 0
+            ? element.subestimate.sampleFrames.join(',')
+            : 'Unknown',
           'Exposure Level To Camels': element.subestimate.exposureToCamels
         }
       }))

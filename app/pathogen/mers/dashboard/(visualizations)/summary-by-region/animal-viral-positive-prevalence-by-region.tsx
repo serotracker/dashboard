@@ -1,6 +1,7 @@
 import { median } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/split-time-bucketed-bar-chart";
 import { AnimalMersViralEstimate, HumanMersViralEstimate, MersEstimate, isAnimalMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { parseISO } from "date-fns";
@@ -10,7 +11,11 @@ import { useMemo, useEffect } from "react";
 interface AnimalViralPositivePrevalenceSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
   selectedAnimalSampleFrame: string | undefined;
-  regionGroupingFunction: (dataPoint: MersEstimate) => TRegion | undefined;
+  regionGroupingFunction: (dataPoint: {
+    whoRegion: WhoRegion | undefined | null;
+    unRegion: UnRegion | undefined | null;
+    countryAlphaTwoCode: string;
+  }) => TRegion | undefined;
   regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
   setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
@@ -25,7 +30,11 @@ export const AnimalViralPositivePrevalenceSummaryByRegion = <TRegion extends str
     .filter((dataPoint) => !selectedAnimalSampleFrame || dataPoint.primaryEstimateInfo.animalDetectionSettings.includes(selectedAnimalSampleFrame))
     .map((estimate) => ({
       ...estimate,
-      region: regionGroupingFunction(estimate),
+      region: regionGroupingFunction({
+        whoRegion: estimate.primaryEstimateInfo.whoRegion,
+        unRegion: estimate.primaryEstimateInfo.unRegion,
+        countryAlphaTwoCode: estimate.primaryEstimateInfo.countryAlphaTwoCode,
+      }),
       samplingStartDate: estimate.primaryEstimateInfo.samplingStartDate,
       samplingEndDate: estimate.primaryEstimateInfo.samplingEndDate
     }))

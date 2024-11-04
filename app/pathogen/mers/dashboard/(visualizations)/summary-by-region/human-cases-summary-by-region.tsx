@@ -5,10 +5,15 @@ import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import uniqBy from "lodash/uniqBy";
 import { parseISO } from "date-fns";
+import { UnRegion, WhoRegion } from "@/gql/graphql";
 
 interface HumanCasesSummaryByRegionProps<TRegion extends string> {
   data: Array<MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry>;
-  regionGroupingFunction: (dataPoint: FaoMersEvent) => TRegion | undefined;
+  regionGroupingFunction: (dataPoint: {
+    whoRegion: WhoRegion | undefined | null;
+    unRegion: UnRegion | undefined | null;
+    countryAlphaTwoCode: string;
+  }) => TRegion | undefined;
   regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
   setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
@@ -22,7 +27,11 @@ export const HumanCasesSummaryByRegion = <TRegion extends string>(props: HumanCa
     .filter((dataPoint): dataPoint is FaoMersEvent => dataPoint.__typename === 'AnimalMersEvent' || dataPoint.__typename === 'HumanMersEvent')
     .filter((dataPoint) => dataPoint.__typename === 'HumanMersEvent' && dataPoint.humansAffected > 0)
     .map((event) => {
-      const region = regionGroupingFunction(event);
+      const region = regionGroupingFunction({
+        whoRegion: event.whoRegion,
+        unRegion: event.unRegion,
+        countryAlphaTwoCode: event.country.alphaTwoCode
+      });
 
       if(!region) {
         return undefined;

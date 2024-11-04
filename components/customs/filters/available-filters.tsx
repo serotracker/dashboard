@@ -90,6 +90,7 @@ export enum FilterableField {
   assay = "assay",
   producer = "producer",
   sampleFrame = "sampleFrame",
+  sampleFrames = "sampleFrames",
   antibody = "antibody",
   antigen = "antigen",
   exposureToCamels = "exposureToCamels",
@@ -478,6 +479,12 @@ export const useAvailableFilters = () => {
     },
     [FilterableField.sampleFrame]: {
       field: FilterableField.sampleFrame,
+      label: "Sample Frame",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.sampleFrames]: {
+      field: FilterableField.sampleFrames,
       label: "Sample Frame",
       valueToLabelMap: {},
       filterRenderingFunction: MultiSelectFilter

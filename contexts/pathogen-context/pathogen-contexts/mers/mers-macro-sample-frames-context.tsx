@@ -109,10 +109,10 @@ export const MersMacroSampleFramesProvider = (props: MersMacroSampleFramesProvid
   useEffect(() => {
     if(!!primaryEstimates && primaryEstimates?.mersPrimaryEstimates.length > 0 && allHumanSampleFrames.length === 0) {
       const allHumanSampleFrames = uniq(primaryEstimates.mersPrimaryEstimates
-        .map((primaryEstimate) => (
+        .flatMap((primaryEstimate) => (
           primaryEstimate.primaryEstimateInfo.__typename === 'PrimaryHumanMersSeroprevalenceEstimateInformation' || 
           primaryEstimate.primaryEstimateInfo.__typename === 'PrimaryHumanMersViralEstimateInformation'
-        ) ? primaryEstimate.primaryEstimateInfo.sampleFrame : undefined)
+        ) ? primaryEstimate.primaryEstimateInfo.sampleFrames : [])
         .filter((sampleFrame): sampleFrame is NonNullable<typeof sampleFrame> => sampleFrame !== undefined && sampleFrame !== null)
       )
 
