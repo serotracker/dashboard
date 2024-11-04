@@ -46,6 +46,7 @@ export const CamelPopulationOverTime = (props: CamelPopulationOverTimeProps) => 
       transformOutputValue={(data) => data.reduce((accumulator, dataPoint) => {
         return accumulator + dataPoint.camelCount;
       }, 0)}
+      numberOfDigitsAfterDecimalPointForOutputValue={3}
     />
   )
 };

@@ -81,6 +81,7 @@ export const AnimalCasesSummaryByRegion = <TRegion extends string>(props: Animal
       transformOutputValue={(data) => data.reduce((accumulator, dataPoint) => {
         return accumulator + 1;
       }, 0)}
+      numberOfDigitsAfterDecimalPointForOutputValue={3}
     />
   )
 }

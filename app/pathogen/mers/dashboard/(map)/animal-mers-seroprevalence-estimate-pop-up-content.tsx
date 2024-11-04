@@ -23,7 +23,7 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
   const { getSharedMersEstimateRows } = useMersEstimateRows();
 
   const topBannerText = useMemo(() => {
-    const seroprevalencePercentageText = `Seroprevalence: ${(estimate.primaryEstimateInfo.seroprevalence * 100).toFixed(1)}%`;
+    const seroprevalencePercentageText = `Seroprevalence: ${(estimate.primaryEstimateInfo.seroprevalence * 100).toFixed(3)}%`;
 
     return `${seroprevalencePercentageText}`
   }, [ estimate ]);

@@ -21,7 +21,7 @@ export const HumanMersViralEstimatePopupContent = (props: HumanMersViralEstimate
   const { getSharedMersEstimateRows } = useMersEstimateRows();
 
   const topBannerText = useMemo(() => {
-    const positivePrevalencePercentageText = `Positive Prevalence: ${(estimate.primaryEstimateInfo.positivePrevalence * 100).toFixed(1)}%`;
+    const positivePrevalencePercentageText = `Positive Prevalence: ${(estimate.primaryEstimateInfo.positivePrevalence * 100).toFixed(3)}%`;
 
     return `${positivePrevalencePercentageText}`
   }, [ estimate ]);

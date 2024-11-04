@@ -31,13 +31,14 @@ export interface SplitTimeBucketedBarChartProps<
   getChartTitle: (primaryKey: TPrimaryGroupingKey) => string;
   percentageFormattingEnabled: boolean;
   transformOutputValue: (data: TData[]) => number;
+  numberOfDigitsAfterDecimalPointForOutputValue: number;
 }
 
 export const SplitTimeBucketedBarChart = <
   TData,
   TPrimaryGroupingKey extends string,
 >(props: SplitTimeBucketedBarChartProps<TData, TPrimaryGroupingKey>) => {
-  const { data, primaryGroupingFunction, primaryGroupingSortFunction, getIntervalStartDate, getIntervalEndDate, percentageFormattingEnabled, currentPageIndex } = props;
+  const { data, primaryGroupingFunction, primaryGroupingSortFunction, getIntervalStartDate, getIntervalEndDate, percentageFormattingEnabled, currentPageIndex, numberOfDigitsAfterDecimalPointForOutputValue } = props;
   const { desiredBucketCount, validBucketSizes } = props.bucketingConfiguration;
 
   const eventsGroupedByPrimaryKey = useMemo(() => {
@@ -71,7 +72,7 @@ export const SplitTimeBucketedBarChart = <
 
   const tooltipProps = useMemo(() => percentageFormattingEnabled ? {
     itemStyle: {color: "black"},
-    formatter: (value: number) => `${value.toFixed(2)}%`
+    formatter: (value: number) => `${value.toFixed(numberOfDigitsAfterDecimalPointForOutputValue)}%`
   } : {
     itemStyle: {color: "black"}
   }, [ percentageFormattingEnabled ])

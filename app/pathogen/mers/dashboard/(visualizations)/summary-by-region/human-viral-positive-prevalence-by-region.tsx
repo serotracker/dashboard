@@ -112,6 +112,7 @@ export const HumanViralPositivePrevalenceSummaryByRegion = <TRegion extends stri
       percentageFormattingEnabled={true}
       getBarName={() => 'Human Median Positive Prevalence By Region'}
       transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.positivePrevalence * 100))}
+      numberOfDigitsAfterDecimalPointForOutputValue={3}
     />
   );
 }

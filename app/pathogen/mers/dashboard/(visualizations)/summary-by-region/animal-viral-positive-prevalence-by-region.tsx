@@ -79,6 +79,7 @@ export const AnimalViralPositivePrevalenceSummaryByRegion = <TRegion extends str
       percentageFormattingEnabled={true}
       getBarName={() => 'Animal Median Positive Prevalence By Region'}
       transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.primaryEstimateInfo.positivePrevalence * 100))}
+      numberOfDigitsAfterDecimalPointForOutputValue={3}
     />
   );
 }

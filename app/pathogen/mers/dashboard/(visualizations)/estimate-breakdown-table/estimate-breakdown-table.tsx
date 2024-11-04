@@ -544,7 +544,7 @@ export const EstimateBreakdownTable = (props: EstimateBreakdownTableProps) => {
       const totalNumerator = sum(data.map((subestimate) => subestimate.sampleNumerator));
       const totalDenominator = sum(data.map((subestimate) => subestimate.sampleDenominator));
       const seroprevalencePercentageString = (totalDenominator !== 0)
-        ? `${((totalNumerator / totalDenominator) * 100).toFixed(1)}%`
+        ? `${((totalNumerator / totalDenominator) * 100).toFixed(3)}%`
         : 'N/A'
       const backgroundColourHexCode = (totalDenominator !== 0)
         ? mixColours({

@@ -112,6 +112,7 @@ export const HumanSeroprevalenceSummaryByRegion = <TRegion extends string>(props
       percentageFormattingEnabled={true}
       getBarName={() => 'Human Median Seroprevalence'}
       transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.seroprevalence * 100))}
+      numberOfDigitsAfterDecimalPointForOutputValue={3}
     />
   );
 }
