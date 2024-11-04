@@ -144,6 +144,7 @@ export function SarsCov2Map() {
         legendEntries={countryHighlightLayerLegendEntries}
         freeTextEntries={freeTextEntries}
         linearLegendColourGradientConfiguration={linearLegendColourGradientConfiguration}
+        closeButtonConfiguration={{ enabled: false }}
       />
       <MapEstimateSummary filteredData={filteredData.map(({studyName}) => ({sourceSheetName: studyName}))}/>
       <sarsCov2MapCustomizationModal.mapCustomizeButton />

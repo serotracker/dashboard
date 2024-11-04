@@ -11,6 +11,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * 3. It does not support dead code elimination, so it will add unused operations.
  *
  * Therefore it is highly recommended to use the babel or swc plugin for production.
+ * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
     "\n  query arbovirusEstimatesQuery {\n    arbovirusEstimates {\n      estimateType\n      ageGroup\n      ageMaximum\n      ageMinimum\n      antibodies\n      antigen\n      assay\n      assayOther\n      city\n      state\n      country\n      countryAlphaTwoCode\n      countryAlphaThreeCode\n      createdAt\n      estimateId\n      id\n      inclusionCriteria\n      latitude\n      longitude\n      pathogen\n      pediatricAgeGroup\n      producer\n      producerOther\n      sameFrameTargetGroup\n      sampleEndDate\n      sampleFrame\n      sampleNumerator\n      sampleSize\n      sampleStartDate\n      seroprevalence\n      seroprevalenceStudy95CILower\n      seroprevalenceStudy95CIUpper\n      seroprevalenceCalculated95CILower\n      seroprevalenceCalculated95CIUpper\n      serotype\n      sex\n      sourceSheetId\n      sourceSheetName\n      unRegion\n      url\n      whoRegion\n      studyPopulation\n      studySpecies\n    }\n  }\n": types.ArbovirusEstimatesQueryDocument,
