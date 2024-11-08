@@ -82,7 +82,7 @@ export const MersBanner = () => {
     }}
     dataLastUpdatedNoteConfiguration={{
       enabled: true,
-      dataLastUpdatedText: 'The last major update to our data was on November 3rd 2024'
+      dataLastUpdatedText: 'The last major update to our data was on November 8th 2024'
     }}
     mapButtonConfiguration={{
       header: 'Map',
