@@ -9,7 +9,7 @@ interface UseMersMapLegendInput {
 export const useMersMapLegend = (input: UseMersMapLegendInput) => {
   const { legendProps } = input;
   const { isGreaterThanOrEqualToBreakpoint, currentBreakpoint } = useBreakpoint();
-  const [ _mersMapClosed, setMersMapClosed ] = useState<boolean>(true);
+  const [ _mersMapClosed, setMersMapClosed ] = useState<boolean | null>(null);
 
   const isOnMdBreakpointOrBelow = useMemo(() => {
     const oppositeOfResult = isGreaterThanOrEqualToBreakpoint(currentBreakpoint, Breakpoint.LG);
@@ -22,11 +22,15 @@ export const useMersMapLegend = (input: UseMersMapLegendInput) => {
   }, [ isGreaterThanOrEqualToBreakpoint, currentBreakpoint ])
 
   const mersMapClosed = useMemo(() => {
+    if(_mersMapClosed !== null) {
+      return _mersMapClosed;
+    }
+
     if(!isOnMdBreakpointOrBelow) {
       return false;
     }
 
-    return _mersMapClosed
+    return true;
   }, [ _mersMapClosed, isOnMdBreakpointOrBelow ]);
 
   const mersMapLegend = useMemo(() => {
@@ -43,7 +47,7 @@ export const useMersMapLegend = (input: UseMersMapLegendInput) => {
     return (
       <CountryHighlightLayerLegend
         closeButtonConfiguration={{
-          enabled: isOnMdBreakpointOrBelow,
+          enabled: true,
           onClick: () => setMersMapClosed(true)
         }}
         {...legendProps}
