@@ -469,18 +469,13 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       return { included: false };
     }
 
-    console.log('estimate', estimate);
-    console.log('estimate.primaryEstimateInfo.animalSpecies', estimate.primaryEstimateInfo.animalSpecies);
-
     const included = mersEstimateArrayFieldHandler({
       filterKey: MersFilterableField.animalSpecies,
       estimate: {
         ...estimate,
         animalSpecies: [
-          //TODO: Sean Kenny clean this up when you rename the fields back
-          ...estimate.primaryEstimateInfo.animalSpecies ?? (estimate as any).primaryEstimateInfo.animalSpeciesV2,
-          //TODO: Sean Kenny clean this up when you rename the fields back
-          ...input.estimate.animalSpeciesSubestimates.flatMap((subestimate) => subestimate.animalSpecies ?? (subestimate as any).animalSpeciesV2)
+          ...estimate.primaryEstimateInfo.animalSpeciesV2,
+          ...input.estimate.animalSpeciesSubestimates.flatMap((subestimate) => subestimate.animalSpeciesV2)
         ].filter((element): element is NonNullable<typeof element> => !!element)
       },
       selectedFilters: {
@@ -495,8 +490,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
         .filter((subestimate) =>
           ((input.selectedFilters[MersFilterableField.animalSpecies] ?? []).length > 0) &&
           !input.selectedFilters[MersFilterableField.animalSpecies]?.some(
-            //TODO: Sean Kenny clean this up when you rename the fields back
-            (element) => (subestimate as any).animalSpeciesV2.some((animalSpecies: string) => animalSpecies === element)
+            (element) => subestimate.animalSpeciesV2.some((animalSpecies: string) => animalSpecies === element)
           )
         )
         .map((subestimate) => subestimate.id)

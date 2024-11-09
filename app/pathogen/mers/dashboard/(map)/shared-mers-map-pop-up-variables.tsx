@@ -1056,7 +1056,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
-          'Animal Species':  element.subestimate.animalSpecies
+          'Animal Species':  element.subestimate.animalSpeciesV2
             .map((animalSpecies) => animalSpeciesToStringMap[animalSpecies])
             .join(', ')
         }

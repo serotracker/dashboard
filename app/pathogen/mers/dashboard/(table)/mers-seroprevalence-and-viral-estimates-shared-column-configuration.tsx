@@ -131,8 +131,8 @@ export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   primaryEstimateAnimalType: 'animalType' in estimate.primaryEstimateInfo
     ? estimate.primaryEstimateInfo.animalType
     : undefined,
-  primaryEstimateAnimalSpecies: 'animalSpecies' in estimate.primaryEstimateInfo
-    ? estimate.primaryEstimateInfo.animalSpecies
+  primaryEstimateAnimalSpecies: 'animalSpeciesV2' in estimate.primaryEstimateInfo
+    ? estimate.primaryEstimateInfo.animalSpeciesV2
     : undefined,
   primaryEstimateAnimalDetectionSettings: 'animalDetectionSettings' in estimate.primaryEstimateInfo
     ? estimate.primaryEstimateInfo.animalDetectionSettings
