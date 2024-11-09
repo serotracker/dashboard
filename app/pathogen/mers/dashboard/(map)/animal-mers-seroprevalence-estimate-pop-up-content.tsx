@@ -64,7 +64,9 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
         enabled: true,
         bannerText: `Animal Species: ${props.estimate.primaryEstimateInfo.animalSpecies.length === 1
           ? animalSpeciesToStringMap[props.estimate.primaryEstimateInfo.animalSpecies[0]]
-          : props.estimate.primaryEstimateInfo.animalSpecies.join(', ')
+          : props.estimate.primaryEstimateInfo.animalSpecies
+            .map((animalSpecies) => animalSpeciesToStringMap[animalSpecies])
+            .join(', ')
         }`,
         bannerColourClassname: (props.estimate.primaryEstimateInfo.animalSpecies.length === 1
           ? animalSpeciesToColourClassnameMap[props.estimate.primaryEstimateInfo.animalSpecies[0]]
