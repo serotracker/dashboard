@@ -147,7 +147,9 @@ export const MersFilters = (props: MersFiltersProps) => {
       filterSectionsArray.push({
         headerText: 'Animal Estimates',
         headerTooltipText: 'Filters that only apply to animal seroprevalence and viral estimates.',
-        includedFilters: animalEstimatesFilters
+        includedFilters:  areAnimalEventsVisibleOnMap
+          ? animalEstimatesFilters
+          : [ ...animalCaseFilters, ...animalEstimatesFilters ]
       });
     }
 
@@ -163,7 +165,7 @@ export const MersFilters = (props: MersFiltersProps) => {
     }
 
     if(
-      areAnimalEstimatesVisibleOnMap ||
+      areAnimalEstimatesVisibleOnMap &&
       areAnimalEventsVisibleOnMap
     ) {
       filterSectionsArray.push({
