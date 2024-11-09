@@ -85,7 +85,6 @@ export type AnimalMersEstimate = MersEstimateInterface & {
 export type AnimalMersEvent = MersEventInterface & {
   __typename?: 'AnimalMersEvent';
   animalSpecies: MersAnimalSpecies;
-  animalSpeciesV2: MersAnimalSpecies;
   animalType: MersEventAnimalType;
   city: Scalars['String']['output'];
   country: CountryIdentifiers;
@@ -288,7 +287,6 @@ export type CountryIdentifiers = {
 export type FaoMersEventFilterOptions = {
   __typename?: 'FaoMersEventFilterOptions';
   animalSpecies: Array<MersAnimalSpecies>;
-  animalSpeciesV2: Array<MersAnimalSpecies>;
   animalType: Array<MersEventAnimalType>;
   diagnosisSource: Array<MersDiagnosisSource>;
 };
@@ -502,7 +500,6 @@ export enum MersAnimalSpecies {
 export type MersAnimalSpeciesSubEstimate = MersSubEstimateInterface & {
   __typename?: 'MersAnimalSpeciesSubEstimate';
   animalSpecies: Array<MersAnimalSpecies>;
-  animalSpeciesV2: Array<MersAnimalSpecies>;
   estimateId: Scalars['String']['output'];
   estimateInfo: MersSubEstimateInformation;
   id: Scalars['String']['output'];
@@ -566,7 +563,6 @@ export type MersEstimateFilterOptions = {
   animalImportedOrLocal: Array<Scalars['String']['output']>;
   animalPurpose: Array<Scalars['String']['output']>;
   animalSpecies: Array<MersAnimalSpecies>;
-  animalSpeciesV2: Array<MersAnimalSpecies>;
   antigen: Array<Scalars['String']['output']>;
   assay: Array<Scalars['String']['output']>;
   clade: Array<Clade>;
@@ -926,7 +922,6 @@ export type PrimaryAnimalMersSeroprevalenceEstimateInformation = PrimaryMersEsti
   animalImportedOrLocal?: Maybe<Scalars['String']['output']>;
   animalPurpose?: Maybe<Scalars['String']['output']>;
   animalSpecies: Array<MersAnimalSpecies>;
-  animalSpeciesV2: Array<MersAnimalSpecies>;
   animalType: Array<MersAnimalType>;
   antigen: Array<Scalars['String']['output']>;
   assay: Array<Scalars['String']['output']>;
@@ -997,7 +992,6 @@ export type PrimaryAnimalMersViralEstimateInformation = PrimaryMersEstimateInfor
   animalImportedOrLocal?: Maybe<Scalars['String']['output']>;
   animalPurpose?: Maybe<Scalars['String']['output']>;
   animalSpecies: Array<MersAnimalSpecies>;
-  animalSpeciesV2: Array<MersAnimalSpecies>;
   animalType: Array<MersAnimalType>;
   antigen: Array<Scalars['String']['output']>;
   assay: Array<Scalars['String']['output']>;
