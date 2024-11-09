@@ -8,7 +8,7 @@ export const faoMersEventFilterOptions = gql`
     faoMersEventFilterOptions {
       diagnosisSource
       animalType
-      animalSpeciesV2
+      animalSpecies
     }
   }
 `

@@ -20,7 +20,7 @@ import {
 import {
   MersDiagnosisSource,
   MersDiagnosisStatus,
-  MersAnimalSpeciesV2,
+  MersAnimalSpecies,
   MersEventAnimalType,
   MersAnimalType,
   Clade,
@@ -227,18 +227,18 @@ export const isMersEventAnimalType = (animalType: string): animalType is MersEve
 export const isMersAnimalType = (animalType: string): animalType is MersAnimalType => Object.values(MersAnimalType).some((element) => element === animalType);
 
 export const animalSpeciesToStringMap = {
-  [MersAnimalSpeciesV2.Bat]: "Bat",
-  [MersAnimalSpeciesV2.DromedaryCamel]: "Dromedary Camel",
-  [MersAnimalSpeciesV2.BactrianCamel]: "Bactrian Camel",
-  [MersAnimalSpeciesV2.Goat]: "Goat",
-  [MersAnimalSpeciesV2.Horse]: "Horse",
-  [MersAnimalSpeciesV2.Mule]: "Mule",
-  [MersAnimalSpeciesV2.Buffalo]: "Buffalo",
-  [MersAnimalSpeciesV2.Cattle]: "Cattle",
-  [MersAnimalSpeciesV2.Sheep]: "Sheep",
-  [MersAnimalSpeciesV2.Donkey]: "Donkey",
-  [MersAnimalSpeciesV2.WaterBuffalo]: "Water Buffalo",
-  [MersAnimalSpeciesV2.Baboon]: "Baboon",
+  [MersAnimalSpecies.Bat]: "Bat",
+  [MersAnimalSpecies.DromedaryCamel]: "Dromedary Camel",
+  [MersAnimalSpecies.BactrianCamel]: "Bactrian Camel",
+  [MersAnimalSpecies.Goat]: "Goat",
+  [MersAnimalSpecies.Horse]: "Horse",
+  [MersAnimalSpecies.Mule]: "Mule",
+  [MersAnimalSpecies.Buffalo]: "Buffalo",
+  [MersAnimalSpecies.Cattle]: "Cattle",
+  [MersAnimalSpecies.Sheep]: "Sheep",
+  [MersAnimalSpecies.Donkey]: "Donkey",
+  [MersAnimalSpecies.WaterBuffalo]: "Water Buffalo",
+  [MersAnimalSpecies.Baboon]: "Baboon",
 }
 
 export const cladeToColourClassnameMap = {
@@ -264,18 +264,18 @@ export const genomeSequenceToStringMap = {
 }
 
 export const animalSpeciesToColourClassnameMap = {
-  [MersAnimalSpeciesV2.Bat]: "bg-orange-700",
-  [MersAnimalSpeciesV2.DromedaryCamel]: "bg-yellow-300",
-  [MersAnimalSpeciesV2.BactrianCamel]: "bg-purple-200",
-  [MersAnimalSpeciesV2.Mule]: "bg-cyan-300",
-  [MersAnimalSpeciesV2.Horse]: "bg-lime-200",
-  [MersAnimalSpeciesV2.Buffalo]: "bg-amber-200",
-  [MersAnimalSpeciesV2.Goat]: "bg-sky-300",
-  [MersAnimalSpeciesV2.Cattle]: "bg-pink-300",
-  [MersAnimalSpeciesV2.Sheep]: "bg-red-200",
-  [MersAnimalSpeciesV2.Donkey]: "bg-green-200",
-  [MersAnimalSpeciesV2.WaterBuffalo]: "bg-teal-400",
-  [MersAnimalSpeciesV2.Baboon]: "bg-blue-400",
+  [MersAnimalSpecies.Bat]: "bg-orange-700",
+  [MersAnimalSpecies.DromedaryCamel]: "bg-yellow-300",
+  [MersAnimalSpecies.BactrianCamel]: "bg-purple-200",
+  [MersAnimalSpecies.Mule]: "bg-cyan-300",
+  [MersAnimalSpecies.Horse]: "bg-lime-200",
+  [MersAnimalSpecies.Buffalo]: "bg-amber-200",
+  [MersAnimalSpecies.Goat]: "bg-sky-300",
+  [MersAnimalSpecies.Cattle]: "bg-pink-300",
+  [MersAnimalSpecies.Sheep]: "bg-red-200",
+  [MersAnimalSpecies.Donkey]: "bg-green-200",
+  [MersAnimalSpecies.WaterBuffalo]: "bg-teal-400",
+  [MersAnimalSpecies.Baboon]: "bg-blue-400",
 }
 
 export const humanAgeGroupToColourClassnameMap = {
@@ -291,7 +291,7 @@ export const animalAgeGroupToColourClassnameMap = {
   'Neonatal (≤6 months)': 'bg-rose-300'
 }
 
-export const isMersAnimalSpecies = (animalSpecies: string): animalSpecies is MersAnimalSpeciesV2 => Object.values(MersAnimalSpeciesV2).some((element) => element === animalSpecies);
+export const isMersAnimalSpecies = (animalSpecies: string): animalSpecies is MersAnimalSpecies => Object.values(MersAnimalSpecies).some((element) => element === animalSpecies);
 
 export const diagnosisSourceToStringMap = {
   [MersDiagnosisSource.FaoFieldOfficer]: "FAO Field Officer",
@@ -1056,7 +1056,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
-          'Animal Species':  element.subestimate.animalSpeciesV2
+          'Animal Species':  element.subestimate.animalSpecies
             .map((animalSpecies) => animalSpeciesToStringMap[animalSpecies])
             .join(', ')
         }

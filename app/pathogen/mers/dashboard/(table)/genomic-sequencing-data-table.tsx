@@ -1,6 +1,6 @@
 import { DataTable, DropdownTableHeader } from "@/components/ui/data-table/data-table";
 import { AvailableMersDataTables } from "./mers-data-table";
-import { Clade, GenomeSequenced, MersAnimalSpecies, MersAnimalSpeciesV2, WhoRegion } from "@/gql/graphql";
+import { Clade, GenomeSequenced, MersAnimalSpecies, WhoRegion } from "@/gql/graphql";
 import { columnConfigurationToColumnDefinitions, DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, cladeToColourClassnameMap, genomeSequenceToColourClassnameMap, genomeSequenceToStringMap, isGenomeSequenced, isMersAnimalSpecies, specimenTypeToColourClassnameMap } from "../(map)/shared-mers-map-pop-up-variables";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
@@ -105,7 +105,7 @@ export type GenomicSequencingDataEntryForTable = {
   accessionNumbers: string | null | undefined;
   genomeSequenced: GenomeSequenced[];
   sourceUrl: string;
-  animalSpecies: MersAnimalSpeciesV2[] | undefined;
+  animalSpecies: MersAnimalSpecies[] | undefined;
   specimenType: string[];
   whoRegion: WhoRegion | null | undefined;
   samplingStartDate: string | null | undefined;

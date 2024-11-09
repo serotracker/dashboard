@@ -226,8 +226,8 @@ export const MersFilters = (props: MersFiltersProps) => {
           animalType: eventFilterData.faoMersEventFilterOptions.animalType,
         } : {}),
         animalSpecies: uniq([
-          ...((estimateFilterData?.mersEstimatesFilterOptions && areAnimalEstimatesVisibleOnMap) ? estimateFilterData.mersEstimatesFilterOptions.animalSpeciesV2 : []),
-          ...((eventFilterData?.faoMersEventFilterOptions && areAnimalEventsVisibleOnMap) ? eventFilterData.faoMersEventFilterOptions.animalSpeciesV2 : []),
+          ...((estimateFilterData?.mersEstimatesFilterOptions && areAnimalEstimatesVisibleOnMap) ? estimateFilterData.mersEstimatesFilterOptions.animalSpecies : []),
+          ...((eventFilterData?.faoMersEventFilterOptions && areAnimalEventsVisibleOnMap) ? eventFilterData.faoMersEventFilterOptions.animalSpecies : []),
         ])
       }}
       data={{

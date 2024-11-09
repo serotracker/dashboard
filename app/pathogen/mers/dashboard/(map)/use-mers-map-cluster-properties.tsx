@@ -1,4 +1,4 @@
-import { MersAnimalSpeciesV2 } from "@/gql/graphql";
+import { MersAnimalSpecies } from "@/gql/graphql";
 import { ClusteringSettings } from "@/components/ui/pathogen-map/pathogen-map"; 
 import { GenericMapPopUpWidth } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import { MapPinColours } from "./mers-map";
@@ -71,151 +71,151 @@ export const useMersMapClusterProperties = (input: UseMersMapClusterPropertiesIn
       "Reported Animal Events": ["+", ["case", ["==", ["get", "__typename"], "AnimalMersEvent"], 1, 0]],
       "Dromedary Camel Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.DromedaryCamel]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.DromedaryCamel]
       ], 1, 0]],
       "Bactrian Camel Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.BactrianCamel]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.BactrianCamel]
       ], 1, 0]],
       "Horse Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.Horse]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.Horse]
       ], 1, 0]],
       "Mule Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.Mule]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.Mule]
       ], 1, 0]],
       "Buffalo Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.Buffalo]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.Buffalo]
       ], 1, 0]],
       "Bat Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.Bat]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.Bat]
       ], 1, 0]],
       "Goat Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.Goat]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.Goat]
       ], 1, 0]],
       "Cattle Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.Cattle]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.Cattle]
       ], 1, 0]],
       "Sheep Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.Sheep]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.Sheep]
       ], 1, 0]],
       "Donkey Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.Donkey]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.Donkey]
       ], 1, 0]],
       "Water Buffalo Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.WaterBuffalo]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.WaterBuffalo]
       ], 1, 0]],
       "Baboon Events": ["+", ["case", [ "all",
         ["==", ["get", "__typename"], "AnimalMersEvent"],
-        ["==", ["get", "animalSpecies"], MersAnimalSpeciesV2.Baboon]
+        ["==", ["get", "animalSpecies"], MersAnimalSpecies.Baboon]
       ], 1, 0]],
       "Human Seroprevalence Estimates": ["+", ["case", ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryHumanMersSeroprevalenceEstimateInformation"], 1, 0]],
       "Human Viral Estimates": ["+", ["case", ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryHumanMersViralEstimateInformation"], 1, 0]],
       "Animal Seroprevalence Estimates": ["+", ["case", ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"], 1, 0]],
       "Dromedary Camel Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.DromedaryCamel, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.DromedaryCamel, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Bactrian Camel Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.BactrianCamel, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.BactrianCamel, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Buffalo Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Buffalo, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Buffalo, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Mule Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Mule, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Mule, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Horse Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Horse, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Horse, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Bat Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Bat, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Bat, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Goat Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Goat, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Goat, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Cattle Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Cattle, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Cattle, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Sheep Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Sheep, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Sheep, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Donkey Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Donkey, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Donkey, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Water Buffalo Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.WaterBuffalo, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.WaterBuffalo, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Baboon Seroprevalence Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersSeroprevalenceEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Baboon, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Baboon, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Animal Viral Estimates": ["+", ["case", ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"], 1, 0]],
       "Dromedary Camel Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.DromedaryCamel, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.DromedaryCamel, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Bactrian Camel Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.BactrianCamel, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.BactrianCamel, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Buffalo Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Buffalo, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Buffalo, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Mule Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Mule, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Mule, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Horse Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Horse, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Horse, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Bat Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Bat, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Bat, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Goat Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Goat, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Goat, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Cattle Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Cattle, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Cattle, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Sheep Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Sheep, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Sheep, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Donkey Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Donkey, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Donkey, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Water Buffalo Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.WaterBuffalo, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.WaterBuffalo, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
       "Baboon Viral Estimates": ["+", ["case", [ "all",
         ["==", ["get", "primaryEstimateInfoTypename"], "PrimaryAnimalMersViralEstimateInformation"],
-        ["in", MersAnimalSpeciesV2.Baboon, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
+        ["in", MersAnimalSpecies.Baboon, ["get", "animalSpecies", ["get", "primaryEstimateInfo"]]]
       ], 1, 0]],
     },
     validClusterPropertyKeys: [

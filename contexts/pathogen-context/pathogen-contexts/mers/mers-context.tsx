@@ -206,7 +206,6 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
               })),
               animalSpeciesSubestimates: primaryEstimate.animalSpeciesSubestimates.map((subestimate) => ({
                 ...subestimate,
-                animalSpecies: subestimate.animalSpeciesV2,
                 markedAsFiltered: false,
               })),
               testUsedSubestimates: primaryEstimate.testUsedSubestimates.map((subestimate) => ({

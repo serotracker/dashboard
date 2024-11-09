@@ -9,17 +9,7 @@ export const useFaoMersEventData = () => {
   const faoMersEvents = useMemo(() => {
     if(dataArray.length > 0 && dataArray.every((element) => !!element.data)) {
       return dataArray
-        .flatMap((element) => element.data?.partitionedFaoMersEvents.mersEvents ?? [])
-        .map((element) => {
-          if(element.__typename === 'AnimalMersEvent') {
-            return {
-              ...element,
-              animalSpecies: element.animalSpeciesV2
-            }
-          }
-
-          return element;
-        })
+        .flatMap((element) => element.data?.partitionedFaoMersEvents.mersEvents ?? []);
     }
   }, [ dataArray ])
 
