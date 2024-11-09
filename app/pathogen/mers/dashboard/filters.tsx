@@ -130,7 +130,7 @@ export const MersFilters = (props: MersFiltersProps) => {
     ) {
       filterSectionsArray.push({
         headerText: 'Seroprevalence and Viral Estimates',
-        headerTooltipText: 'Filters that only apply to seroprevalence and viral estimates.',
+        headerTooltipText: 'Filters that apply to both human and animal estimates.',
         includedFilters: seroprevalenceEstimateFilters
       });
     }
