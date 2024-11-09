@@ -157,12 +157,11 @@ export type MersEstimate =
   | MersSeroprevalenceEstimate
   | MersViralEstimate;
 
-export type MersEvent = PartitionedFaoMersEventsQuery['partitionedFaoMersEvents']['mersEvents'][number];
-export type HumanMersEvent = Extract<MersEvent, { __typename: 'HumanMersEvent'}>;
-export type AnimalMersEvent = Extract<MersEvent, { __typename: 'AnimalMersEvent'}>;
+export type HumanMersEvent = Extract<FaoMersEvent, { __typename: 'HumanMersEvent'}>;
+export type AnimalMersEvent = Extract<FaoMersEvent, { __typename: 'AnimalMersEvent'}>;
 
-export const isHumanMersEvent = (event: MersEvent): event is HumanMersEvent => event.__typename === 'HumanMersEvent';
-export const isAnimalMersEvent = (event: MersEvent): event is AnimalMersEvent => event.__typename === 'AnimalMersEvent';
+export const isHumanMersEvent = (event: FaoMersEvent): event is HumanMersEvent => event.__typename === 'HumanMersEvent';
+export const isAnimalMersEvent = (event: FaoMersEvent): event is AnimalMersEvent => event.__typename === 'AnimalMersEvent';
 
 type MersContextState = PathogenContextState<MersEstimate> & {
   faoMersEventData: FaoMersEvent[];
@@ -207,6 +206,7 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
               })),
               animalSpeciesSubestimates: primaryEstimate.animalSpeciesSubestimates.map((subestimate) => ({
                 ...subestimate,
+                animalSpecies: subestimate.animalSpeciesV2,
                 markedAsFiltered: false,
               })),
               testUsedSubestimates: primaryEstimate.testUsedSubestimates.map((subestimate) => ({

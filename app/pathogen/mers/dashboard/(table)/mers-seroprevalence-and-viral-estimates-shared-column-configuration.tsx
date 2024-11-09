@@ -131,8 +131,8 @@ export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   primaryEstimateAnimalType: 'animalType' in estimate.primaryEstimateInfo
     ? estimate.primaryEstimateInfo.animalType
     : undefined,
-  primaryEstimateAnimalSpecies: 'animalSpecies' in estimate.primaryEstimateInfo
-    ? estimate.primaryEstimateInfo.animalSpecies
+  primaryEstimateAnimalSpecies: 'animalSpeciesV2' in estimate.primaryEstimateInfo
+    ? estimate.primaryEstimateInfo.animalSpeciesV2
     : undefined,
   primaryEstimateAnimalDetectionSettings: 'animalDetectionSettings' in estimate.primaryEstimateInfo
     ? estimate.primaryEstimateInfo.animalDetectionSettings
@@ -402,7 +402,7 @@ export const useMersEstimateColumnConfiguration = () => {
     defaultColourSchemeClassname: "bg-sky-100",
     label: 'Animal Type'
   }, {
-    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
     fieldName: 'primaryEstimateAnimalSpecies',
     valueToDisplayLabel: (animalSpecies: string) => isMersAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
     valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,

@@ -62,8 +62,16 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
       rows={getSharedMersEstimateRows(props.estimate)}
       bottomBannerConfiguration={{
         enabled: true,
-        bannerText: `Animal Species: ${animalSpeciesToStringMap[props.estimate.primaryEstimateInfo.animalSpecies]}`,
-        bannerColourClassname: animalSpeciesToColourClassnameMap[props.estimate.primaryEstimateInfo.animalSpecies],
+        bannerText: `Animal Species: ${props.estimate.primaryEstimateInfo.animalSpeciesV2.length === 1
+          ? animalSpeciesToStringMap[props.estimate.primaryEstimateInfo.animalSpeciesV2[0]]
+          : props.estimate.primaryEstimateInfo.animalSpeciesV2
+            .map((animalSpecies) => animalSpeciesToStringMap[animalSpecies])
+            .join(', ')
+        }`,
+        bannerColourClassname: (props.estimate.primaryEstimateInfo.animalSpeciesV2.length === 1
+          ? animalSpeciesToColourClassnameMap[props.estimate.primaryEstimateInfo.animalSpeciesV2[0]]
+          : 'bg-sky-200'
+        ),
         isTextBolded: true,
         isTextCentered: true,
         alternateViewButtonEnabled: false

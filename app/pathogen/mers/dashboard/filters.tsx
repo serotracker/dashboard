@@ -130,7 +130,7 @@ export const MersFilters = (props: MersFiltersProps) => {
     ) {
       filterSectionsArray.push({
         headerText: 'Seroprevalence and Viral Estimates',
-        headerTooltipText: 'Filters that only apply to seroprevalence and viral estimates.',
+        headerTooltipText: 'Filters that apply to both human and animal estimates.',
         includedFilters: seroprevalenceEstimateFilters
       });
     }
@@ -147,7 +147,9 @@ export const MersFilters = (props: MersFiltersProps) => {
       filterSectionsArray.push({
         headerText: 'Animal Estimates',
         headerTooltipText: 'Filters that only apply to animal seroprevalence and viral estimates.',
-        includedFilters: animalEstimatesFilters
+        includedFilters:  areAnimalEventsVisibleOnMap
+          ? animalEstimatesFilters
+          : [ ...animalCaseFilters, ...animalEstimatesFilters ]
       });
     }
 
@@ -163,7 +165,7 @@ export const MersFilters = (props: MersFiltersProps) => {
     }
 
     if(
-      areAnimalEstimatesVisibleOnMap ||
+      areAnimalEstimatesVisibleOnMap &&
       areAnimalEventsVisibleOnMap
     ) {
       filterSectionsArray.push({
@@ -224,8 +226,8 @@ export const MersFilters = (props: MersFiltersProps) => {
           animalType: eventFilterData.faoMersEventFilterOptions.animalType,
         } : {}),
         animalSpecies: uniq([
-          ...((estimateFilterData?.mersEstimatesFilterOptions && areAnimalEstimatesVisibleOnMap) ? estimateFilterData.mersEstimatesFilterOptions.animalSpecies : []),
-          ...((eventFilterData?.faoMersEventFilterOptions && areAnimalEventsVisibleOnMap) ? eventFilterData.faoMersEventFilterOptions.animalSpecies : []),
+          ...((estimateFilterData?.mersEstimatesFilterOptions && areAnimalEstimatesVisibleOnMap) ? estimateFilterData.mersEstimatesFilterOptions.animalSpeciesV2 : []),
+          ...((eventFilterData?.faoMersEventFilterOptions && areAnimalEventsVisibleOnMap) ? eventFilterData.faoMersEventFilterOptions.animalSpeciesV2 : []),
         ])
       }}
       data={{

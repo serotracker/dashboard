@@ -207,7 +207,7 @@ export const mersPrimaryEstimates = gql`
           accessionNumbers
           genomeSequenced
           animalType
-          animalSpecies
+          animalSpeciesV2
           animalDetectionSettings
           animalPurpose
           animalImportedOrLocal
@@ -279,7 +279,7 @@ export const mersPrimaryEstimates = gql`
           accessionNumbers
           genomeSequenced
           animalType
-          animalSpecies
+          animalSpeciesV2
           animalDetectionSettings
           animalPurpose
           animalImportedOrLocal
@@ -443,7 +443,7 @@ export const mersPrimaryEstimates = gql`
             seroprevalenceCalculated95CIUpper
           }
         }
-        animalSpecies
+        animalSpeciesV2
       }
       sexSubestimates {
         __typename

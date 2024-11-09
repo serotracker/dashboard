@@ -3,7 +3,14 @@ import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
 import { PartitionedFaoMersEventsQuery, PartitionedFaoMersEventsQueryVariables } from "@/gql/graphql";
 
-export type FaoMersEvent = PartitionedFaoMersEventsQuery['partitionedFaoMersEvents']['mersEvents'][number];
+export type FaoMersEvent = 
+  | Omit<
+    Extract<PartitionedFaoMersEventsQuery['partitionedFaoMersEvents']['mersEvents'][number], { __typename: 'AnimalMersEvent'}>,
+    'animalSpeciesV2'
+  > & {
+    animalSpecies: Extract<PartitionedFaoMersEventsQuery['partitionedFaoMersEvents']['mersEvents'][number], { __typename: 'AnimalMersEvent'}>['animalSpeciesV2']
+  }
+  | Extract<PartitionedFaoMersEventsQuery['partitionedFaoMersEvents']['mersEvents'][number], { __typename: 'HumanMersEvent' }>;
 
 export const partitionedFaoMersEvents = gql`
   query partitionedFaoMersEvents($input: PartitionedFaoMersEventsInput!) {
@@ -30,7 +37,7 @@ export const partitionedFaoMersEvents = gql`
           observationDate
           reportDate
           animalType
-          animalSpecies
+          animalSpeciesV2
         }
         ... on HumanMersEvent {
           __typename

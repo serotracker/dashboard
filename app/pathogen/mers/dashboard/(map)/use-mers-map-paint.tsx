@@ -7,18 +7,19 @@ import { useMersReportedHumanCasesMapLayer } from "./country-highlight-layers/me
 import { useMersReportedAnimalCasesMapLayer } from "./country-highlight-layers/mers-reported-animal-cases-map-layer";
 import { GetCountryHighlightingLayerInformationOutput } from "@/components/ui/pathogen-map/pathogen-map";
 import { CountryPaintChangeSetting, MersMapCountryHighlightingSettings } from "./use-mers-map-customization-modal";
-import { AnimalMersEvent, HumanMersEvent, isAnimalMersEvent, isHumanMersEvent, MersEvent } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { AnimalMersEvent, HumanMersEvent, isAnimalMersEvent, isHumanMersEvent } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { MersDiagnosisStatus } from "@/gql/graphql";
 import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
 import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import { useMersWhoCaseData } from "@/hooks/mers/use-mers-who-case-data";
 import { useMersWhoCasesMapLayer } from "./country-highlight-layers/mers-who-human-cases-map-layer";
+import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 
 interface UseMersMapPaintInput<
   TData extends {}
 > {
   dataPoints: TData[];
-  faoMersEventData: MersEvent[];
+  faoMersEventData: FaoMersEvent[];
   currentMapCountryHighlightingSettings: MersMapCountryHighlightingSettings;
   countryOutlinesSetting: CountryPaintChangeSetting;
   estimateDataShown: boolean;

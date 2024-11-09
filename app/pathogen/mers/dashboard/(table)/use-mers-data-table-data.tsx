@@ -13,7 +13,7 @@ import { mapMersEstimateBaseForDataTable, MersEstimateBaseForDataTable } from ".
 import { CamelPopulationDataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/camel-population-data-context";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
-import { MersDiagnosisStatus, MersEventAnimalSpecies, MersEventAnimalType, MersEventType, UnRegion, WhoRegion } from "@/gql/graphql";
+import { MersAnimalSpeciesV2, MersDiagnosisStatus, MersEventAnimalType, MersEventType, UnRegion, WhoRegion } from "@/gql/graphql";
 import { formatPerCapitaNumberForLegend } from "../(map)/country-highlight-layers/helpers";
 import { useMersWhoCaseData } from "@/hooks/mers/use-mers-who-case-data";
 import { MersWhoCaseDataEntry } from "@/hooks/mers/use-mers-who-case-data-partitioned";
@@ -67,7 +67,7 @@ type AnimalFaoMersEventForTable = FaoMersEventForTableBase & {
   __typename: "AnimalMersEvent"
   type: MersEventType.Animal,
   animalType: MersEventAnimalType,
-  animalSpecies: MersEventAnimalSpecies
+  animalSpecies: MersAnimalSpeciesV2
 }
 
 type HumanFaoMersEventForTable = FaoMersEventForTableBase & {

@@ -309,7 +309,7 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
       return [];
     }
 
-    const { animalSpecies } = estimate.primaryEstimateInfo;
+    const { animalSpeciesV2 } = estimate.primaryEstimateInfo;
 
     if(estimate.animalSpeciesSubestimates.length === 0) {
       if(
@@ -321,13 +321,14 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         return [];
       }
 
-      return animalSpecies ? [{
+      return animalSpeciesV2 ? [{
         whoRegion,
         unRegion,
         countryAlphaTwoCode,
         sampleDenominator,
         sampleNumerator,
-        group: animalSpeciesToStringMap[animalSpecies]
+        //TODO: Sean Kenny fix this if you ever un-retire this visualization.
+        group: animalSpeciesToStringMap[animalSpeciesV2[0]]
       }] : []
     }
 
@@ -352,7 +353,8 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         whoRegion,
         unRegion,
         countryAlphaTwoCode,
-        group: animalSpeciesToStringMap[subestimate.animalSpecies],
+        //TODO: Sean Kenny fix this if you ever un-retire this visualization.
+        group: animalSpeciesToStringMap[subestimate.animalSpeciesV2[0]],
         sampleNumerator: subestimateSampleNumerator,
         sampleDenominator: subestimateSampleDenominator
       }
