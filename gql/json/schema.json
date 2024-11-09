@@ -877,7 +877,7 @@
               "name": null,
               "ofType": {
                 "kind": "ENUM",
-                "name": "MersEventAnimalSpecies",
+                "name": "MersAnimalSpecies",
                 "ofType": null
               }
             },
@@ -893,7 +893,7 @@
               "name": null,
               "ofType": {
                 "kind": "ENUM",
-                "name": "MersAnimalSpeciesV2",
+                "name": "MersAnimalSpecies",
                 "ofType": null
               }
             },
@@ -3372,7 +3372,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "ENUM",
-                    "name": "MersEventAnimalSpecies",
+                    "name": "MersAnimalSpecies",
                     "ofType": null
                   }
                 }
@@ -3396,7 +3396,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "ENUM",
-                    "name": "MersAnimalSpeciesV2",
+                    "name": "MersAnimalSpecies",
                     "ofType": null
                   }
                 }
@@ -5677,172 +5677,6 @@
             "deprecationReason": null
           },
           {
-            "name": "BAT",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "CAMEL",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "CATTLE",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "DONKEY",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "GOAT",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "SHEEP",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "WATER_BUFFALO",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "MersAnimalSpeciesSubEstimate",
-        "description": null,
-        "isOneOf": null,
-        "fields": [
-          {
-            "name": "animalSpecies",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "ENUM",
-                "name": "MersAnimalSpecies",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "animalSpeciesV2",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "ENUM",
-                    "name": "MersAnimalSpeciesV2",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "estimateId",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "estimateInfo",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "UNION",
-                "name": "MersSubEstimateInformation",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [
-          {
-            "kind": "INTERFACE",
-            "name": "MersSubEstimateInterface",
-            "ofType": null
-          }
-        ],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "ENUM",
-        "name": "MersAnimalSpeciesV2",
-        "description": null,
-        "isOneOf": null,
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": [
-          {
-            "name": "BABOON",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "BACTRIAN_CAMEL",
             "description": null,
             "isDeprecated": false,
@@ -5909,6 +5743,120 @@
             "deprecationReason": null
           }
         ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MersAnimalSpeciesSubEstimate",
+        "description": null,
+        "isOneOf": null,
+        "fields": [
+          {
+            "name": "animalSpecies",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "MersAnimalSpecies",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "animalSpeciesV2",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "MersAnimalSpecies",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "estimateId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "estimateInfo",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "UNION",
+                "name": "MersSubEstimateInformation",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "MersSubEstimateInterface",
+            "ofType": null
+          }
+        ],
+        "enumValues": null,
         "possibleTypes": null
       },
       {
@@ -6550,7 +6498,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "ENUM",
-                    "name": "MersAnimalSpeciesV2",
+                    "name": "MersAnimalSpecies",
                     "ofType": null
                   }
                 }
@@ -10633,9 +10581,17 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "ENUM",
-                "name": "MersAnimalSpecies",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "MersAnimalSpecies",
+                    "ofType": null
+                  }
+                }
               }
             },
             "isDeprecated": false,
@@ -10656,7 +10612,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "ENUM",
-                    "name": "MersAnimalSpeciesV2",
+                    "name": "MersAnimalSpecies",
                     "ofType": null
                   }
                 }
@@ -11683,9 +11639,17 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "ENUM",
-                "name": "MersAnimalSpecies",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "MersAnimalSpecies",
+                    "ofType": null
+                  }
+                }
               }
             },
             "isDeprecated": false,
@@ -11706,7 +11670,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "ENUM",
-                    "name": "MersAnimalSpeciesV2",
+                    "name": "MersAnimalSpecies",
                     "ofType": null
                   }
                 }

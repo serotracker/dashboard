@@ -16,7 +16,7 @@ export const mersEstimatesFilterOptions = gql`
       geographicScope
       animalDetectionSettings
       animalPurpose
-      animalSpeciesV2
+      animalSpecies
       animalImportedOrLocal
       sampleFrame
       testProducer
