@@ -1,6 +1,6 @@
 import { DataTable, DropdownTableHeader } from "@/components/ui/data-table/data-table";
 import { AvailableMersDataTables } from "./mers-data-table";
-import { Clade, GenomeSequenced, MersAnimalSpecies, WhoRegion } from "@/gql/graphql";
+import { Clade, GenomeSequenced, MersAnimalSpecies, MersAnimalSpeciesV2, WhoRegion } from "@/gql/graphql";
 import { columnConfigurationToColumnDefinitions, DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, cladeToColourClassnameMap, genomeSequenceToColourClassnameMap, genomeSequenceToStringMap, isGenomeSequenced, isMersAnimalSpecies, specimenTypeToColourClassnameMap } from "../(map)/shared-mers-map-pop-up-variables";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
@@ -55,7 +55,7 @@ const genomicSequencingDataTableColumnConfiguration = [{
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Specimen Type'
 }, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'animalSpecies',
   valueToDisplayLabel: (animalSpecies: string) => isMersAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
   valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,
@@ -105,7 +105,7 @@ export type GenomicSequencingDataEntryForTable = {
   accessionNumbers: string | null | undefined;
   genomeSequenced: GenomeSequenced[];
   sourceUrl: string;
-  animalSpecies: MersAnimalSpecies | null | undefined;
+  animalSpecies: MersAnimalSpeciesV2[] | undefined;
   specimenType: string[];
   whoRegion: WhoRegion | null | undefined;
   samplingStartDate: string | null | undefined;

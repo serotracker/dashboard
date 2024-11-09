@@ -1,6 +1,6 @@
 import { DataTable, DropdownTableHeader, RowExpansionConfiguration } from "@/components/ui/data-table/data-table";
 import { DataTableColumnConfigurationEntryType, columnConfigurationToColumnDefinitions } from "@/components/ui/data-table/data-table-column-config";
-import { MersDiagnosisStatus, MersEventAnimalSpecies, MersEventAnimalType, MersEventType, WhoRegion } from "@/gql/graphql";
+import { MersDiagnosisStatus, MersEventAnimalType, MersEventType, WhoRegion } from "@/gql/graphql";
 import { useContext, useMemo } from "react";
 import { AvailableMersDataTables } from "./mers-data-table";
 import {
@@ -14,11 +14,11 @@ import {
   diagnosisStatusToStringMap,
   isMersDiagnosisSource,
   isMersDiagnosisStatus,
-  isMersEventAnimalSpecies,
   isMersEventAnimalType,
   isMersEventTypename,
   mersDataTypeToLabelMap,
-  mersDataTypeToColourClassnameMap
+  mersDataTypeToColourClassnameMap,
+  isMersAnimalSpecies
 } from "../(map)/shared-mers-map-pop-up-variables";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
@@ -101,9 +101,9 @@ const mersCasesColumnConfiguration = [{
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Animal Type'
 }, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'animalSpecies',
-  valueToDisplayLabel: (animalSpecies: string) => isMersEventAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
+  valueToDisplayLabel: (animalSpecies: string) => isMersAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
   valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,
   defaultColourSchemeClassname: "bg-sky-100",
   label: 'Animal Species'

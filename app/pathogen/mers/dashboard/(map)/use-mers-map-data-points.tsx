@@ -1,10 +1,11 @@
 import { useMemo } from "react";
-import { MersEstimate, MersEvent } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { MersDiagnosisStatus } from "@/gql/graphql";
+import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 
 interface UseMersMapDataPointsInput {
   filteredData: MersEstimate[];
-  faoMersEventData: MersEvent[];
+  faoMersEventData: FaoMersEvent[];
   estimateDataShown: boolean;
   eventDataShown: boolean;
 }

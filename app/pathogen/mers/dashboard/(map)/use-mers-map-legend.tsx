@@ -53,7 +53,7 @@ export const useMersMapLegend = (input: UseMersMapLegendInput) => {
         {...legendProps}
       />
     );
-  }, [ mersMapClosed, legendProps, isOnMdBreakpointOrBelow ]);
+  }, [ mersMapClosed, legendProps ]);
 
   return {
     mersMapLegend

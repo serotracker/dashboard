@@ -402,7 +402,7 @@ export const useMersEstimateColumnConfiguration = () => {
     defaultColourSchemeClassname: "bg-sky-100",
     label: 'Animal Type'
   }, {
-    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
     fieldName: 'primaryEstimateAnimalSpecies',
     valueToDisplayLabel: (animalSpecies: string) => isMersAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
     valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,

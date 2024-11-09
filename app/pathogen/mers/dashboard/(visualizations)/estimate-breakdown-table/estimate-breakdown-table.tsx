@@ -327,7 +327,8 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         countryAlphaTwoCode,
         sampleDenominator,
         sampleNumerator,
-        group: animalSpeciesToStringMap[animalSpecies]
+        //TODO: Sean Kenny fix this if you ever un-retire this visualization.
+        group: animalSpeciesToStringMap[animalSpecies[0]]
       }] : []
     }
 
@@ -352,7 +353,8 @@ export const fieldOfInterestToFieldOfInterestExtractingFunction: Record<Estimate
         whoRegion,
         unRegion,
         countryAlphaTwoCode,
-        group: animalSpeciesToStringMap[subestimate.animalSpecies],
+        //TODO: Sean Kenny fix this if you ever un-retire this visualization.
+        group: animalSpeciesToStringMap[subestimate.animalSpecies[0]],
         sampleNumerator: subestimateSampleNumerator,
         sampleDenominator: subestimateSampleDenominator
       }

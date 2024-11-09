@@ -66,8 +66,23 @@ type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
   'timeFrameSubestimates'|'sampleTypeSubestimates'|
   'animalSourceLocationSubestimates'|'animalSamplingContextSubestimates'|
   'occupationSubestimates'|'camelExposureLevelSubestimates' |
-  'nomadismSubestimates'|'humanCountriesOfTravelSubestimates'
+  'nomadismSubestimates'|'humanCountriesOfTravelSubestimates'|'primaryEstimateInfo'
 > & {
+  primaryEstimateInfo:
+    | Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryHumanMersSeroprevalenceEstimateInformation'}>
+    | Omit<
+      Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryAnimalMersSeroprevalenceEstimateInformation'}>,
+      'animalSpeciesV2'
+    > & {
+      animalSpecies: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryAnimalMersSeroprevalenceEstimateInformation'}>['animalSpeciesV2']
+    }
+    | Omit<
+      Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryAnimalMersViralEstimateInformation'}>,
+      'animalSpeciesV2'
+    > & {
+      animalSpecies: Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryAnimalMersSeroprevalenceEstimateInformation'}>['animalSpeciesV2']
+    }
+    | Extract<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['primaryEstimateInfo'], { __typename: 'PrimaryHumanMersViralEstimateInformation'}>,
   geographicalAreaSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['geographicalAreaSubestimates'][number] & {
     markedAsFiltered: boolean;
   }>,
@@ -75,8 +90,12 @@ type MersSeroprevalenceEstimateWithAdditionalFields = Omit<
     markedAsFiltered: boolean;
   }>,
   ageGroupSubestimates: MersAgeGroupSubEstimate[];
-  animalSpeciesSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['animalSpeciesSubestimates'][number] & {
+  animalSpeciesSubestimates: Array<Omit<
+    MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['animalSpeciesSubestimates'][number],
+    'animalSpeciesV2'
+  > & {
     markedAsFiltered: boolean;
+    animalSpecies: MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['animalSpeciesSubestimates'][number]['animalSpeciesV2']
   }>,
   testUsedSubestimates: Array<MersPrimaryEstimatesQuery['mersPrimaryEstimates'][number]['testUsedSubestimates'][number] & {
     markedAsFiltered: boolean;
@@ -157,12 +176,11 @@ export type MersEstimate =
   | MersSeroprevalenceEstimate
   | MersViralEstimate;
 
-export type MersEvent = PartitionedFaoMersEventsQuery['partitionedFaoMersEvents']['mersEvents'][number];
-export type HumanMersEvent = Extract<MersEvent, { __typename: 'HumanMersEvent'}>;
-export type AnimalMersEvent = Extract<MersEvent, { __typename: 'AnimalMersEvent'}>;
+export type HumanMersEvent = Extract<FaoMersEvent, { __typename: 'HumanMersEvent'}>;
+export type AnimalMersEvent = Extract<FaoMersEvent, { __typename: 'AnimalMersEvent'}>;
 
-export const isHumanMersEvent = (event: MersEvent): event is HumanMersEvent => event.__typename === 'HumanMersEvent';
-export const isAnimalMersEvent = (event: MersEvent): event is AnimalMersEvent => event.__typename === 'AnimalMersEvent';
+export const isHumanMersEvent = (event: FaoMersEvent): event is HumanMersEvent => event.__typename === 'HumanMersEvent';
+export const isAnimalMersEvent = (event: FaoMersEvent): event is AnimalMersEvent => event.__typename === 'AnimalMersEvent';
 
 type MersContextState = PathogenContextState<MersEstimate> & {
   faoMersEventData: FaoMersEvent[];
@@ -193,6 +211,15 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
           data: {
             mersEstimates: data.mersPrimaryEstimates.map((primaryEstimate) => ({
               ...primaryEstimate,
+              primaryEstimateInfo: {
+                ...primaryEstimate.primaryEstimateInfo,
+                ...(
+                  (primaryEstimate.primaryEstimateInfo.__typename === 'PrimaryAnimalMersSeroprevalenceEstimateInformation'
+                  ||  primaryEstimate.primaryEstimateInfo.__typename === 'PrimaryAnimalMersViralEstimateInformation')
+                  ? { animalSpecies: primaryEstimate.primaryEstimateInfo.animalSpeciesV2 }
+                  : {}
+                )
+              },
               geographicalAreaSubestimates: primaryEstimate.geographicalAreaSubestimates.map((subestimate) => ({
                 ...subestimate,
                 markedAsFiltered: false,
@@ -207,6 +234,7 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
               })),
               animalSpeciesSubestimates: primaryEstimate.animalSpeciesSubestimates.map((subestimate) => ({
                 ...subestimate,
+                animalSpecies: subestimate.animalSpeciesV2,
                 markedAsFiltered: false,
               })),
               testUsedSubestimates: primaryEstimate.testUsedSubestimates.map((subestimate) => ({

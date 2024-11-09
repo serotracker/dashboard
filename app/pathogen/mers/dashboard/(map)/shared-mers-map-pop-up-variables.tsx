@@ -2,8 +2,10 @@ import { useCallback } from 'react';
 import { AlternateViewConfigurationTableConfiguration } from "@/components/ui/pathogen-map/map-pop-up/map-pop-up-alternate-configuration";
 import { PopUpContentRowProps, PopUpContentRowType } from "@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows";
 import {
+  AnimalMersEvent,
   AnimalMersSeroprevalenceEstimate,
   AnimalMersViralEstimate,
+  HumanMersEvent,
   HumanMersSeroprevalenceEstimate,
   HumanMersViralEstimate,
   MersEstimate,
@@ -16,14 +18,11 @@ import {
   isMersViralSubEstimateInformation
 } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import {
-  AnimalMersEvent,
-  HumanMersEvent,
   MersDiagnosisSource,
   MersDiagnosisStatus,
-  MersEventAnimalSpecies,
+  MersAnimalSpeciesV2,
   MersEventAnimalType,
   MersAnimalType,
-  MersAnimalSpecies,
   Clade,
   GenomeSequenced,
   WhoRegion
@@ -228,14 +227,18 @@ export const isMersEventAnimalType = (animalType: string): animalType is MersEve
 export const isMersAnimalType = (animalType: string): animalType is MersAnimalType => Object.values(MersAnimalType).some((element) => element === animalType);
 
 export const animalSpeciesToStringMap = {
-  [MersEventAnimalSpecies.Bat]: "Bat",
-  [MersEventAnimalSpecies.Camel]: "Camel",
-  [MersEventAnimalSpecies.Goat]: "Goat",
-  [MersEventAnimalSpecies.Cattle]: "Cattle",
-  [MersEventAnimalSpecies.Sheep]: "Sheep",
-  [MersEventAnimalSpecies.Donkey]: "Donkey",
-  [MersEventAnimalSpecies.WaterBuffalo]: "Water Buffalo",
-  [MersEventAnimalSpecies.Baboon]: "Baboon",
+  [MersAnimalSpeciesV2.Bat]: "Bat",
+  [MersAnimalSpeciesV2.DromedaryCamel]: "Dromedary Camel",
+  [MersAnimalSpeciesV2.BactrianCamel]: "Bactrian Camel",
+  [MersAnimalSpeciesV2.Goat]: "Goat",
+  [MersAnimalSpeciesV2.Horse]: "Horse",
+  [MersAnimalSpeciesV2.Mule]: "Mule",
+  [MersAnimalSpeciesV2.Buffalo]: "Buffalo",
+  [MersAnimalSpeciesV2.Cattle]: "Cattle",
+  [MersAnimalSpeciesV2.Sheep]: "Sheep",
+  [MersAnimalSpeciesV2.Donkey]: "Donkey",
+  [MersAnimalSpeciesV2.WaterBuffalo]: "Water Buffalo",
+  [MersAnimalSpeciesV2.Baboon]: "Baboon",
 }
 
 export const cladeToColourClassnameMap = {
@@ -261,14 +264,18 @@ export const genomeSequenceToStringMap = {
 }
 
 export const animalSpeciesToColourClassnameMap = {
-  [MersEventAnimalSpecies.Bat]: "bg-orange-700",
-  [MersEventAnimalSpecies.Camel]: "bg-yellow-300",
-  [MersEventAnimalSpecies.Goat]: "bg-sky-300",
-  [MersEventAnimalSpecies.Cattle]: "bg-pink-300",
-  [MersEventAnimalSpecies.Sheep]: "bg-red-200",
-  [MersEventAnimalSpecies.Donkey]: "bg-green-200",
-  [MersEventAnimalSpecies.WaterBuffalo]: "bg-teal-400",
-  [MersEventAnimalSpecies.Baboon]: "bg-blue-400",
+  [MersAnimalSpeciesV2.Bat]: "bg-orange-700",
+  [MersAnimalSpeciesV2.DromedaryCamel]: "bg-yellow-300",
+  [MersAnimalSpeciesV2.BactrianCamel]: "bg-purple-200",
+  [MersAnimalSpeciesV2.Mule]: "bg-cyan-300",
+  [MersAnimalSpeciesV2.Horse]: "bg-lime-200",
+  [MersAnimalSpeciesV2.Buffalo]: "bg-amber-200",
+  [MersAnimalSpeciesV2.Goat]: "bg-sky-300",
+  [MersAnimalSpeciesV2.Cattle]: "bg-pink-300",
+  [MersAnimalSpeciesV2.Sheep]: "bg-red-200",
+  [MersAnimalSpeciesV2.Donkey]: "bg-green-200",
+  [MersAnimalSpeciesV2.WaterBuffalo]: "bg-teal-400",
+  [MersAnimalSpeciesV2.Baboon]: "bg-blue-400",
 }
 
 export const humanAgeGroupToColourClassnameMap = {
@@ -284,8 +291,7 @@ export const animalAgeGroupToColourClassnameMap = {
   'Neonatal (≤6 months)': 'bg-rose-300'
 }
 
-export const isMersEventAnimalSpecies = (animalSpecies: string): animalSpecies is MersEventAnimalSpecies => Object.values(MersEventAnimalSpecies).some((element) => element === animalSpecies);
-export const isMersAnimalSpecies = (animalSpecies: string): animalSpecies is MersAnimalSpecies => Object.values(MersAnimalSpecies).some((element) => element === animalSpecies);
+export const isMersAnimalSpecies = (animalSpecies: string): animalSpecies is MersAnimalSpeciesV2 => Object.values(MersAnimalSpeciesV2).some((element) => element === animalSpecies);
 
 export const diagnosisSourceToStringMap = {
   [MersDiagnosisSource.FaoFieldOfficer]: "FAO Field Officer",
@@ -1050,7 +1056,9 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
-          'Animal Species': animalSpeciesToStringMap[element.subestimate.animalSpecies]
+          'Animal Species':  element.subestimate.animalSpecies
+            .map((animalSpecies) => animalSpeciesToStringMap[animalSpecies])
+            .join(', ')
         }
       }))
   }] : []),

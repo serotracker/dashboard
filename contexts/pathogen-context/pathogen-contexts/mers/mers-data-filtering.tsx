@@ -474,8 +474,8 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       estimate: {
         ...estimate,
         animalSpecies: [
-          estimate.primaryEstimateInfo.animalSpecies,
-          ...input.estimate.animalSpeciesSubestimates.map((subestimate) => subestimate.animalSpecies)
+          ...estimate.primaryEstimateInfo.animalSpecies,
+          ...input.estimate.animalSpeciesSubestimates.flatMap((subestimate) => subestimate.animalSpecies)
         ].filter((element): element is NonNullable<typeof element> => !!element)
       },
       selectedFilters: {
@@ -489,7 +489,9 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       animalSpeciesSubestimateIdstoMarkAsFiltered: input.estimate.animalSpeciesSubestimates
         .filter((subestimate) =>
           ((input.selectedFilters[MersFilterableField.animalSpecies] ?? []).length > 0) &&
-          !input.selectedFilters[MersFilterableField.animalSpecies]?.includes(subestimate.animalSpecies)
+          !input.selectedFilters[MersFilterableField.animalSpecies]?.some(
+            (element) => subestimate.animalSpecies.some((animalSpecies) => animalSpecies === element)
+          )
         )
         .map((subestimate) => subestimate.id)
     }

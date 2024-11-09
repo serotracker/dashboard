@@ -62,8 +62,14 @@ export const AnimalMersViralEstimatePopupContent = (props: AnimalMersViralEstima
       rows={getSharedMersEstimateRows(props.estimate)}
       bottomBannerConfiguration={{
         enabled: true,
-        bannerText: `Animal Species: ${animalSpeciesToStringMap[props.estimate.primaryEstimateInfo.animalSpecies]}`,
-        bannerColourClassname: animalSpeciesToColourClassnameMap[props.estimate.primaryEstimateInfo.animalSpecies],
+        bannerText: `Animal Species: ${props.estimate.primaryEstimateInfo.animalSpecies.length === 1
+          ? animalSpeciesToStringMap[props.estimate.primaryEstimateInfo.animalSpecies[0]]
+          : props.estimate.primaryEstimateInfo.animalSpecies.join(', ')
+        }`,
+        bannerColourClassname: (props.estimate.primaryEstimateInfo.animalSpecies.length === 1
+          ? animalSpeciesToColourClassnameMap[props.estimate.primaryEstimateInfo.animalSpecies[0]]
+          : 'bg-sky-200'
+        ),
         isTextBolded: true,
         isTextCentered: true,
         alternateViewButtonEnabled: false
