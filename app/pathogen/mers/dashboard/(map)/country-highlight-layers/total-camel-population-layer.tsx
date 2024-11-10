@@ -91,7 +91,7 @@ export const useTotalCamelPopulationLayer = () => {
         enabled: linearLegendColourGradientConfiguration.enabled,
         props: {
           ticks: linearLegendColourGradientConfiguration.props.ticks,
-          title: 'Camel Population By Country'
+          title: 'Camel Population By Country or Area'
         }
       }
     }

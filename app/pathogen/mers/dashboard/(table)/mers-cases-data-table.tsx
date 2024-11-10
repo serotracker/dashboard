@@ -66,7 +66,7 @@ const mersCasesColumnConfiguration = [{
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'country',
-  label: 'Country'
+  label: 'Country or Area'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'latitude',

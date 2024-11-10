@@ -18,7 +18,7 @@ export const useSarsCov2MapCustomizationModal = () => {
       paginationSelectedClassname: "bg-sc2virus",
       customizationSettings: [{
         type: CustomizationSettingType.SWITCH,
-        switchName: `Country pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
+        switchName: `Country/Area pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
         switchValue: countryPopUpEnabled,
         onSwitchValueChange: (newSwitchValue) => setCountryPopUpEnabled(newSwitchValue),
       }]

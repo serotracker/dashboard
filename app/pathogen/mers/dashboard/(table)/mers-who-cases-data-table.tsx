@@ -10,7 +10,7 @@ import { defaultBackgroundColourClassnamesForUnRegions, isUNRegion, unRegionEnum
 const mersWhoCasesDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'countryName',
-  label: 'Country',
+  label: 'Country or Area',
   isFixed: true,
   size: 500,
   isHideable: false

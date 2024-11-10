@@ -109,7 +109,7 @@ export const useMersMapCustomizationModal = () => {
       paginationSelectedClassname: "bg-mers",
       customizationSettings: [{
         type: CustomizationSettingType.DROPDOWN,
-        dropdownName: 'Country Highlighting',
+        dropdownName: 'Country/Area Highlighting',
         borderColourClassname: 'border-mers',
         hoverColourClassname: 'hover:bg-mersHover/50',
         highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
@@ -149,7 +149,7 @@ export const useMersMapCustomizationModal = () => {
         tooltipContent: countryHighlightingSettingToTooltipContent[currentMapCountryHighlightingSettings]
       }, {
         type: CustomizationSettingType.DROPDOWN,
-        dropdownName: 'Country outlines for countries with data',
+        dropdownName: 'Country/Area outlines for countries with data',
         borderColourClassname: 'border-mers',
         hoverColourClassname: 'hover:bg-mersHover/50',
         highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
@@ -196,7 +196,7 @@ export const useMersMapCustomizationModal = () => {
       }]: []),
       {
         type: CustomizationSettingType.SWITCH,
-        switchName: `Country pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
+        switchName: `Country/Area pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
         switchValue: countryPopUpEnabled,
         onSwitchValueChange: (newSwitchValue) => setCountryPopUpEnabled(newSwitchValue),
       }]

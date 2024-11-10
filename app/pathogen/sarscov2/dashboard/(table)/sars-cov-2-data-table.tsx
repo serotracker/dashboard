@@ -126,7 +126,7 @@ const sarsCov2ColumnConfiguration = [{
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'country',
-  label: 'Country',
+  label: 'Country or Area',
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'isotypes',

@@ -335,7 +335,7 @@ export const useAvailableFilters = () => {
     },
     [FilterableField.countryAlphaTwoCode]: {
       field: FilterableField.countryAlphaTwoCode,
-      label: "Country",
+      label: "Countries and Areas",
       valueToLabelMap: countryAlphaTwoCodeToCountryNameMap,
       filterRenderingFunction: MultiSelectFilter
     },

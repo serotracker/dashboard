@@ -98,7 +98,7 @@ export const useMersReportedHumanCasesMapLayer = () => {
         enabled: linearLegendColourGradientConfiguration.enabled,
         props: {
           ticks: linearLegendColourGradientConfiguration.props.ticks,
-          title: 'Human Cases By Country'
+          title: 'Human Cases By Country or Area'
         }
       }
     }

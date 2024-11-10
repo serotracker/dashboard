@@ -13,7 +13,7 @@ import { FaoYearlyCamelPopulationDataEntryForTable, unformatFaoCamelPopulationDa
 const camelPopulationDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'country',
-  label: 'Country',
+  label: 'Country or Area',
   isFixed: true,
   size: 500,
   isHideable: false

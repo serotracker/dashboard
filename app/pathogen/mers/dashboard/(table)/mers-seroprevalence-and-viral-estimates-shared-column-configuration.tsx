@@ -296,7 +296,7 @@ export const useMersEstimateColumnConfiguration = () => {
   }, {
     type: DataTableColumnConfigurationEntryType.STANDARD as const,
     fieldName: 'primaryEstimateCountry',
-    label: 'Country'
+    label: 'Country or Area'
   }, {
     type: DataTableColumnConfigurationEntryType.STANDARD as const,
     fieldName: 'primaryEstimateSamplingYearRange',

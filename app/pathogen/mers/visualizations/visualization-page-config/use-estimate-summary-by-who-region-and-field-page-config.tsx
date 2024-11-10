@@ -144,7 +144,7 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
       dropdownOptionToLabelMap: {
         [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.WHO_REGION]: "WHO Region",
         [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.UN_REGION]: "UN Region",
-        [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.COUNTRY]: "Country",
+        [EstimateBreakdownTableRegionTypeOfInterestDropdownOption.COUNTRY]: "Country or Area",
       },
       onDropdownOptionChange: (option) => {
         setEstimateBreakdownTableRegionTypeOfInterest(option);
