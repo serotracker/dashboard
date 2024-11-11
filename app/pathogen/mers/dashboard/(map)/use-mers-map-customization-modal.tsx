@@ -109,7 +109,7 @@ export const useMersMapCustomizationModal = () => {
       paginationSelectedClassname: "bg-mers",
       customizationSettings: [{
         type: CustomizationSettingType.DROPDOWN,
-        dropdownName: 'Country/Area Highlighting',
+        dropdownName: 'Highlighting for countries and areas with data',
         borderColourClassname: 'border-mers',
         hoverColourClassname: 'hover:bg-mersHover/50',
         highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
@@ -149,7 +149,7 @@ export const useMersMapCustomizationModal = () => {
         tooltipContent: countryHighlightingSettingToTooltipContent[currentMapCountryHighlightingSettings]
       }, {
         type: CustomizationSettingType.DROPDOWN,
-        dropdownName: 'Country/Area outlines for countries with data',
+        dropdownName: 'Outlines for countries and areas with data',
         borderColourClassname: 'border-mers',
         hoverColourClassname: 'hover:bg-mersHover/50',
         highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',

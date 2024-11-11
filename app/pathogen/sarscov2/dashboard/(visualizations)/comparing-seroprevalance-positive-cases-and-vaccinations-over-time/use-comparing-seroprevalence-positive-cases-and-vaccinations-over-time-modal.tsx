@@ -63,8 +63,8 @@ export const useComparingSeroprevalenceToPositiveCasesAndVaccinationsOverTimeMod
           onSwitchValueChange: (newSwitchValue: boolean) => setGlobalLineVisible(newSwitchValue),
         }, {
           type: CustomizationSettingType.MULTI_SELECT_DROPDOWN,
-          dropdownName: 'Selected Countries',
-          heading: 'Selected Countries',
+          dropdownName: 'Selected Countries and Areas',
+          heading: 'Selected Countries and Areas',
           options: typedObjectKeys(countryAlphaTwoCodeToCountryNameMap),
           optionToLabelMap: countryAlphaTwoCodeToCountryNameMap,
           selected: selectedCountries,

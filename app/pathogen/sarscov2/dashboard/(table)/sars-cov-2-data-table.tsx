@@ -263,7 +263,7 @@ export const SarsCov2DataTable = () => {
         modelledYAxisValue: dataPoint.modelledYAxisValue
       })) ?? [];
 
-      const countryName = countryAlphaThreeCodeToCountryNameMap[countryAlphaThreeCode] ?? "Unknown Country";
+      const countryName = countryAlphaThreeCodeToCountryNameMap[countryAlphaThreeCode] ?? "Unknown Country or Area";
 
       return (
         <RechartsVisualization

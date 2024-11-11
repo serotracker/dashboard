@@ -26,7 +26,7 @@ export const useArbovirusMapCustomizationModal = () => {
       paginationSelectedClassname: "bg-arbovirus",
       customizationSettings: [{
         type: CustomizationSettingType.DROPDOWN,
-        dropdownName: 'Country highlighting for countries with data',
+        dropdownName: 'Highlighting for countries and areas with data',
         borderColourClassname: 'border-arbovirus',
         hoverColourClassname: 'hover:bg-arbovirusHover/50',
         highlightedColourClassname: 'data-[highlighted]:bg-arbovirusHover/50',
@@ -47,7 +47,7 @@ export const useArbovirusMapCustomizationModal = () => {
         onDropdownOptionChange: (option) => setCountryHighlightingSetting(option)
       }, {
         type: CustomizationSettingType.DROPDOWN,
-        dropdownName: 'Country outlines for countries with data',
+        dropdownName: 'Outlines for countries and areas with data',
         borderColourClassname: 'border-arbovirus',
         hoverColourClassname: 'hover:bg-arbovirusHover/50',
         highlightedColourClassname: 'data-[highlighted]:bg-arbovirusHover/50',
@@ -68,7 +68,7 @@ export const useArbovirusMapCustomizationModal = () => {
         onDropdownOptionChange: (option) => setCountryOutlinesSetting(option)
       }, {
         type: CustomizationSettingType.SWITCH,
-        switchName: `Country pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
+        switchName: `Country/Area pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
         switchValue: countryPopUpEnabled,
         onSwitchValueChange: (newSwitchValue) => setCountryPopUpEnabled(newSwitchValue),
       }]

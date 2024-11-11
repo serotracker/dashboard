@@ -327,7 +327,7 @@ export const useMersEstimateColumnConfiguration = () => {
     fieldName: 'primaryEstimateCountryOfTravelOrImport',
     valueToColourSchemeClassnameMap: countryNameToColourClassnameMap,
     defaultColourSchemeClassname: "bg-sky-100",
-    label: 'Country of Travel/Import'
+    label: 'Country/Area of Travel/Import'
   }, {
     type: DataTableColumnConfigurationEntryType.STANDARD as const,
     fieldName: 'primaryEstimateState',
