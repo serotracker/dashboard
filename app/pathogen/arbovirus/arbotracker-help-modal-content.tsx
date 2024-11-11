@@ -83,15 +83,15 @@ const ArboTrackerHelpModalMapInstructions = (props: ArboTrackerHelpModalMapInstr
       width={541}
       height={507}
     />
-    <p className="mb-2">Clicking on a country also provides some information about how much seroprevalence data our database contains for that country as seen in the image below.</p>
+    <p className="mb-2">Clicking on a country or area also provides some information about how much seroprevalence data our database contains for that country or area as seen in the image below.</p>
     <ArboTrackerHelpModalImage
       src={"/ArboTrackerHelpModalImage0005.png"}
       alt={""}
       width={541}
       height={507}
     />
-    <p className="mb-2">If the country pop-up is making it difficult for you navigate through the map, simply click on the &quot;Customize&quot; button in the top right corner of the map to see an option to turn it off.</p>
-    <p className="mb-2">Other options exist here such as the ability to turn off country highlighting when a country has seroprevalence estimates or turn off the outlines around a country when it has seroprevalence estimates.</p>
+    <p className="mb-2">If the country or area pop-up is making it difficult for you navigate through the map, simply click on the &quot;Customize&quot; button in the top right corner of the map to see an option to turn it off.</p>
+    <p className="mb-2">Other options exist here such as the ability to turn off country or area highlighting when a country or area has seroprevalence estimates or turn off the outlines around a country or area when it has seroprevalence estimates.</p>
   </div>
 )
 
@@ -142,7 +142,7 @@ const ArboTrackerHelpModalTableInstructions = (props: ArboTrackerHelpModalTableI
       height={907}
     />
     <p className="mb-2">The inclusion criteria for the study is given in the row that was clicked on.</p>
-    <p className="mb-2">A new visualization also appears which shows how this seroprevalence estimate compares to the other seroprevalence estimates for the country the study was conducted in. The data point highlighted in green is the data point this row corresponds to. Data points with zero percent seroprevalence are not included in this visualization.</p>
+    <p className="mb-2">A new visualization also appears which shows how this seroprevalence estimate compares to the other seroprevalence estimates for the country or area the study was conducted in. The data point highlighted in green is the data point this row corresponds to. Data points with zero percent seroprevalence are not included in this visualization.</p>
     <p className="mb-2">Applying filters using the filters to the left will change the data displayed in this visualization, just as all of the data in the other visualizations change as filters are applied.</p>
     <p className="mb-2">At the bottom of the data table that appears when you click on a row is a button which can be used to see this estimate on the map.</p>
     <p className="mb-2">Clicking on the row once more will collapse it.</p>

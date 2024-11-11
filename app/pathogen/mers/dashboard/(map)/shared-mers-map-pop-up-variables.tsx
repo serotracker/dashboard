@@ -527,14 +527,14 @@ interface GetCountryOfTravelOrImportRowsInput {
 }
 
 const getCountryOfTravelOrImportRows = ({ estimate, countryNameToColourClassnameMap }: GetCountryOfTravelOrImportRowsInput) => isAnimalMersEstimate(estimate) ? [{
-  title: 'Countries of Import',
+  title: 'Countries/Areas of Import',
   type: PopUpContentRowType.COLOURED_PILL_LIST as const,
   values: estimate.primaryEstimateInfo.animalCountriesOfImport
     .map(({ name }) => name),
   valueToColourClassnameMap: countryNameToColourClassnameMap,
   defaultColourClassname: "bg-sky-100",
 }] : [{
-  title: 'Countries of Travel',
+  title: 'Countries/Areas of Travel',
   type: PopUpContentRowType.COLOURED_PILL_LIST as const,
   values: estimate.primaryEstimateInfo.humanCountriesOfTravel
     .map(({ name }) => name),
@@ -1065,7 +1065,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
   ...(input.estimate.geographicalAreaSubestimates.length > 0 ? [{
     tableHeader: 'Geographical Area Subestimates',
     tableFields: [
-      ...(input.estimate.geographicalAreaSubestimates.some((element) => !!element.country) ? ['Country'] : []),
+      ...(input.estimate.geographicalAreaSubestimates.some((element) => !!element.country) ? ['Country/Area'] : []),
       ...(input.estimate.geographicalAreaSubestimates.some((element) => !!element.state) ? ['State'] : []),
       ...(input.estimate.geographicalAreaSubestimates.some((element) => !!element.district) ? ['District'] : []),
       ...(input.estimate.geographicalAreaSubestimates.some((element) => !!element.city) ? ['City'] : []),
@@ -1078,7 +1078,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
-          'Country': element.subestimate.country,
+          'Country/Area': element.subestimate.country,
           'State': element.subestimate.state ?? 'Unspecified',
           'District': element.subestimate.district ?? 'Unspecified',
           'City': element.subestimate.city ?? 'Unspecified',
@@ -1148,7 +1148,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
     tableHeader: 'Animal Source Location Subestimates',
     tableFields: [
       'Imported or Local',
-      'Source Country/Countries',
+      'Source Countries/Areas',
       ...generateTableFields({ type: input.type })
     ],
     tableRows: input.estimate.animalSourceLocationSubestimates
@@ -1159,7 +1159,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         values: {
           ...element.rows,
           'Imported or Local': element.subestimate.animalImportedOrLocal,
-          'Source Country/Countries': element.subestimate.animalCountriesOfImport.join(', ')
+          'Source Countries/Areas': element.subestimate.animalCountriesOfImport.join(', ')
         }
       }))
   }] : []),
@@ -1221,9 +1221,9 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
       }))
   }] : []),
   ...(input.estimate.humanCountriesOfTravelSubestimates.length > 0 ? [{
-    tableHeader: 'Country Of Travel Subestimates',
+    tableHeader: 'Country/Area Of Travel Subestimates',
     tableFields: [
-      'Country/Countries of Travel',
+      'Countries/Areas of Travel',
       ...generateTableFields({ type: input.type })
     ],
     tableRows: input.estimate.humanCountriesOfTravelSubestimates
@@ -1233,7 +1233,7 @@ export const generateMersEstimateTableConfigurations = (input: GenerateMersEstim
         rowColourClassname: element.subestimate.markedAsFiltered === true ? 'bg-slate-300' : '',
         values: {
           ...element.rows,
-          'Country/Countries of Travel': element.subestimate.humanCountriesOfTravel
+          'Countries/Areas of Travel': element.subestimate.humanCountriesOfTravel
             .map((countryOfTravel) => countryOfTravel.name)
             .join(', '),
         }

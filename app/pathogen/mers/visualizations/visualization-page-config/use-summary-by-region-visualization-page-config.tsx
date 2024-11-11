@@ -191,7 +191,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       dropdownOptionToLabelMap: {
         [SummaryByRegionRegionDropdownOption.WHO_REGION]: "WHO Region",
         [SummaryByRegionRegionDropdownOption.UN_REGION]: "UN Region",
-        [SummaryByRegionRegionDropdownOption.COUNTRY]: "Country"
+        [SummaryByRegionRegionDropdownOption.COUNTRY]: "Country or Area"
       },
       onDropdownOptionChange: (option) => {
         setSummaryByRegionSelectedDropdownOption(option);

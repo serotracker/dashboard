@@ -106,19 +106,19 @@ export const standardGetFreeTextEntriesFunction = (input: StandardGetFreeTextEnt
 
   if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.ESTIMATES_ONLY) {
     return [
-      { text: 'Countries with a black outline contain seroprevalence data.' }
+      { text: 'Countries and areas with a black outline contain seroprevalence data.' }
     ];
   }
 
   if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_ONLY) {
     return [
-      { text: 'Countries with a black outline contain MERS events.' }
+      { text: 'Countries and areas with a black outline contain MERS events.' }
     ];
   }
 
   if(mapDataPointVisibilitySetting === MapDataPointVisibilityOptions.EVENTS_AND_ESTIMATES_VISIBLE) {
     return [
-      { text: 'Countries with a black outline contain seroprevalence data or MERS events.' }
+      { text: 'Countries and areas with a black outline contain seroprevalence data or MERS events.' }
     ];
   }
 

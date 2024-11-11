@@ -130,7 +130,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       dropdownOptionToLabelMap: {
         [EstimatesByRegionRegionDropdownOption.WHO_REGION]: "WHO Region",
         [EstimatesByRegionRegionDropdownOption.UN_REGION]: "UN Region",
-        [EstimatesByRegionRegionDropdownOption.COUNTRY]: "Country",
+        [EstimatesByRegionRegionDropdownOption.COUNTRY]: "Country or Area",
       },
       onDropdownOptionChange: (option) => {
         setEstimatesByRegionSelectedRegion(option);

@@ -126,7 +126,7 @@ const sarsCov2ColumnConfiguration = [{
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'country',
-  label: 'Country',
+  label: 'Country or Area',
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'isotypes',
@@ -263,7 +263,7 @@ export const SarsCov2DataTable = () => {
         modelledYAxisValue: dataPoint.modelledYAxisValue
       })) ?? [];
 
-      const countryName = countryAlphaThreeCodeToCountryNameMap[countryAlphaThreeCode] ?? "Unknown Country";
+      const countryName = countryAlphaThreeCodeToCountryNameMap[countryAlphaThreeCode] ?? "Unknown Country or Area";
 
       return (
         <RechartsVisualization

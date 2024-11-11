@@ -62,7 +62,7 @@ export const useDataPointPresentLayer = () => {
       },
       countryHighlightLayerLegendEntries: (input.countryHighlightingEnabled === true) ? countryHighlightLayerLegendEntries : [],
       freeTextEntries: (!input.countryHighlightingEnabled && input.countryOutlinesEnabled) ? [{
-        text: 'Countries with a black outline contain seroprevalence data.'
+        text: 'Countries and areas with a black outline contain seroprevalence data.'
       }] : [],
       linearLegendColourGradientConfiguration: {
         enabled: false

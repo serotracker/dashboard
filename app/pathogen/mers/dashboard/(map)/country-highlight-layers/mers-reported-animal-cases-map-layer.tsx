@@ -98,7 +98,7 @@ export const useMersReportedAnimalCasesMapLayer = () => {
         enabled: linearLegendColourGradientConfiguration.enabled,
         props: {
           ticks: linearLegendColourGradientConfiguration.props.ticks,
-          title: 'Animal Cases By Country'
+          title: 'Animal Cases By Country or Area'
         }
       }
     }

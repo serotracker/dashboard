@@ -95,7 +95,7 @@ const sarsCov2VisualizationInformation: Record<SarsCov2VisualizationId, SarsCov2
       SarsCov2VisualizationUrlParameter[
         "modelled-seroprevalence-by-country"
       ],
-    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Modelled Seroprevalence Globally by Country" }),
+    getDisplayName: () => ({ type: VisualizationDisplayNameType.STANDARD, displayName: "Modelled Seroprevalence Globally by Country/Area" }),
     renderVisualization: () => <p> Requires state. Initialized in following step. </p>,
     visualizationDownloadFootnote: undefined,
     visualizationNonDownloadFootnote: undefined
