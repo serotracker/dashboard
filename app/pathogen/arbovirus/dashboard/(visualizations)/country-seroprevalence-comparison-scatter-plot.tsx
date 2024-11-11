@@ -131,7 +131,7 @@ export const CountrySeroprevalenceComparisonScatterPlot = (props: CountrySeropre
           <div className="h-full w-full p-4">
             <p>
               This graph cannot be shown when the data contains more than two
-              countries and areas. If you&apos;re interested in generating this graph, please either
+              countries or areas. If you&apos;re interested in generating this graph, please either
               try a different arbovirus or use the filter to the left to filter out data.
             </p>
           </div>
