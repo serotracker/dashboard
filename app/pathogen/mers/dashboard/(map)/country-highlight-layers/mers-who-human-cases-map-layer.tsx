@@ -98,7 +98,7 @@ export const useMersWhoCasesMapLayer = () => {
         enabled: linearLegendColourGradientConfiguration.enabled,
         props: {
           ticks: linearLegendColourGradientConfiguration.props.ticks,
-          title: 'Total Reported Human Positive Cases By Country or Area'
+          title: 'Total Human Cases Reported to the WHO By Country or Area'
         }
       }
     }
