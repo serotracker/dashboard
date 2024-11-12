@@ -78,7 +78,7 @@ export const MersFilterMetadataProvider = (props: MersFilterMetadataProviderProp
   }, [ numberOfNonTypenameFiltersApplied ])
 
   const visualizationDownloadFootnote = useMemo(() => {
-    const startOfFootnote = 'Downloaded the SeroTracker MERS dashboard at https://new.serotracker.com/pathogen/mers/dashboard.'
+    const startOfFootnote = 'Downloaded from the SeroTracker MERS dashboard which can be found at https://new.serotracker.com/pathogen/mers/dashboard.'
     return numberOfNonTypenameFiltersApplied !== 0
       ? `${startOfFootnote} ${numberOfNonTypenameFiltersApplied} filter(s) have been applied to this visualization.`
       // A little hack here. The visualizations have problems if you don't have placeholder text when you try to turn a filter on.
