@@ -153,7 +153,7 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
 }
 
 export const useVisualizationPageConfiguration = () => {
-  const { visualizationFootnote } = useContext(MersFilterMetadataContext)
+  const { visualizationFootnote, visualizationDownloadFootnote } = useContext(MersFilterMetadataContext)
   const {
     getDisplayNameForSummaryByWhoRegion,
     renderVisualizationForSummaryByWhoRegion,
@@ -197,7 +197,8 @@ export const useVisualizationPageConfiguration = () => {
         currentPageIndex,
         setCurrentPageIndex
       },
-      visualizationNonDownloadFootnote: visualizationFootnote
+      visualizationNonDownloadFootnote: visualizationFootnote,
+      visualizationDownloadFootnote: visualizationDownloadFootnote
     },
     [MersVisualizationId.ESTIMATES_BY_REGION]: {
       ...mersVisualizationInformation[MersVisualizationId.ESTIMATES_BY_REGION],
@@ -205,7 +206,8 @@ export const useVisualizationPageConfiguration = () => {
       renderVisualization: renderVisualizationForEstimatesByRegion,
       customizationModalConfiguration: customizationModalConfigurationForEstimatesByRegion,
       titleTooltipContent: estimatesByRegionTitleTooltipContent,
-      visualizationNonDownloadFootnote: visualizationFootnote
+      visualizationNonDownloadFootnote: visualizationFootnote,
+      visualizationDownloadFootnote: visualizationDownloadFootnote
     },
     [MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE]: {
       ...mersVisualizationInformation[MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE],
