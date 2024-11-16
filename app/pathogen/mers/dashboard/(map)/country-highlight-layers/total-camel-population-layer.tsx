@@ -60,7 +60,7 @@ export const useTotalCamelPopulationLayer = () => {
     });
 
     const countryHighlightLayerLegendEntries = [
-      { description: "Data unavailable", colour: MapSymbology.CountryFeature.Default.Color },
+      { description: "Camel population data unavailable", colour: MapSymbology.CountryFeature.Default.Color },
     ];
 
     const outlinedCountryAlphaThreeCodes = input.countryOutlinesEnabled ? uniq(input.countryOutlineData.map(({ countryAlphaThreeCode }) => countryAlphaThreeCode)) : [];
