@@ -230,7 +230,8 @@ export const useVisualizationPageConfiguration = () => {
     getDisplayNameForEstimateBreakdownTableAndField,
     renderVisualizationForEstimateBreakdownTableAndField,
     estimateBreakdownTableAndFieldTooltipContent,
-    visualizationFootnote
+    visualizationFootnote,
+    visualizationDownloadFootnote
   ])
 
   return {

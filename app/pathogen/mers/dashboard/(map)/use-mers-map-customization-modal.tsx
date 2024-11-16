@@ -99,14 +99,15 @@ export const useMersMapCustomizationModal = () => {
     [MapDataPointVisibilityOptions.NOTHING_VISIBLE]: "No Data Visible on Map",
   }), [])
 
-  const reportedPositiveCasesFaoDataDisabled = process.env.NEXT_PUBLIC_WHO_MERS_CASES_DATA_ENABLED === 'true'
+  const reportedPositiveCasesFaoDataDisabled = useMemo(() => process.env.NEXT_PUBLIC_WHO_MERS_CASES_DATA_ENABLED === 'true'
     ? [{
         groupHeader: 'Reported Positive Cases',                      
         options: [                                                   
           MersMapCountryHighlightingSettings.MERS_WHO_HUMAN_CASES,
         ]                                                            
       }]
-    : [];
+    : []
+  , []);
 
   const reportedPositiveCasesFaoDataEnabled = useMemo(() => ([{
     groupHeader: 'Reported Positive Cases',
@@ -115,7 +116,7 @@ export const useMersMapCustomizationModal = () => {
       MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES,
       MersMapCountryHighlightingSettings.MERS_WHO_HUMAN_CASES,
     ]
-  }]), [])
+  }]), []);
 
 
   const useModalInput: UseModalInput<MersMapCountryHighlightingSettings | CountryPaintChangeSetting | MapDataPointVisibilityOptions> = useMemo(() => ({
@@ -209,7 +210,7 @@ export const useMersMapCustomizationModal = () => {
         onSwitchValueChange: (newSwitchValue) => setCountryPopUpEnabled(newSwitchValue),
       }]
     }
-  }), [ countryOutlinesSetting, setCountryOutlinesSetting, currentMapCountryHighlightingSettings, setCurrentMapCountryHighlightingSettings, countryPopUpEnabled, setCountryPopUpEnabled, mapDataPointVisibilitySetting, setMapDataPointVisibilitySetting, dropdownOptionToLabelMap ]);
+  }), [ countryOutlinesSetting, setCountryOutlinesSetting, currentMapCountryHighlightingSettings, setCurrentMapCountryHighlightingSettings, countryPopUpEnabled, setCountryPopUpEnabled, mapDataPointVisibilitySetting, setMapDataPointVisibilitySetting, dropdownOptionToLabelMap, reportedPositiveCasesFaoDataDisabled, reportedPositiveCasesFaoDataEnabled ]);
 
   const {
     modal: customizationModal,
