@@ -78,7 +78,7 @@ export const MersDataTable = () => {
       ...(((mersEventData.length > 0) && (process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true')) ? [ AvailableMersDataTables.MERS_CASES ] : []),
       ...(camelPopulationData.length > 0 ? [ AvailableMersDataTables.CAMEL_POPULATION_DATA ] : []),
       ...(estimatesWithGenomicSequencingData.length > 0 ? [ AvailableMersDataTables.GENOMIC_SEQUENCING_DATA ] : []),
-      AvailableMersDataTables.WHO_MERS_CASES
+      ...(process.env.NEXT_PUBLIC_WHO_MERS_CASES_DATA_ENABLED ? [ AvailableMersDataTables.WHO_MERS_CASES ] : [])
     ];
 
     if(returnValue.length === 0) {
