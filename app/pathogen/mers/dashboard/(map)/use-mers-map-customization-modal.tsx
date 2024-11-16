@@ -99,6 +99,24 @@ export const useMersMapCustomizationModal = () => {
     [MapDataPointVisibilityOptions.NOTHING_VISIBLE]: "No Data Visible on Map",
   }), [])
 
+  const reportedPositiveCasesFaoDataDisabled = process.env.NEXT_PUBLIC_WHO_MERS_CASES_DATA_ENABLED === 'true'
+    ? [{
+        groupHeader: 'Reported Positive Cases',                      
+        options: [                                                   
+          MersMapCountryHighlightingSettings.MERS_WHO_HUMAN_CASES,
+        ]                                                            
+      }]
+    : [];
+
+  const reportedPositiveCasesFaoDataEnabled = useMemo(() => ([{
+    groupHeader: 'Reported Positive Cases',
+    options: [
+      MersMapCountryHighlightingSettings.MERS_HUMAN_CASES,
+      MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES,
+      MersMapCountryHighlightingSettings.MERS_WHO_HUMAN_CASES,
+    ]
+  }]), [])
+
 
   const useModalInput: UseModalInput<MersMapCountryHighlightingSettings | CountryPaintChangeSetting | MapDataPointVisibilityOptions> = useMemo(() => ({
     initialModalState: ModalState.CLOSED,
@@ -125,20 +143,10 @@ export const useMersMapCustomizationModal = () => {
             //MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA,
           ]
         },
-        ...(process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true' ? [{
-          groupHeader: 'Reported Positive Cases',
-          options: [
-            MersMapCountryHighlightingSettings.MERS_HUMAN_CASES,
-            MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES,
-            MersMapCountryHighlightingSettings.MERS_WHO_HUMAN_CASES,
-          ]
-        }] : [{
-          groupHeader: 'Reported Positive Cases',
-          options: [
-            MersMapCountryHighlightingSettings.MERS_WHO_HUMAN_CASES,
-          ]
-        }])
-        ],
+        ...(process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true'
+          ? reportedPositiveCasesFaoDataEnabled
+          : reportedPositiveCasesFaoDataDisabled
+        )],
         chosenDropdownOption: currentMapCountryHighlightingSettings,
         dropdownOptionToLabelMap,
         onDropdownOptionChange: (option) => {
