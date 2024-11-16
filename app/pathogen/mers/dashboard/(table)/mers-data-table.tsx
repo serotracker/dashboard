@@ -8,6 +8,7 @@ import { useMersDataTableData } from "./use-mers-data-table-data";
 import { camelPopulationProvidedCourtesyOfFaoTooltipContent, eventsProvidedCourtesyOfFaoTooltipContent } from "../(map)/use-mers-map-customization-modal";
 import { GenomicSequencingDataEntryForTable, GenomicSequencingDataTable } from "./genomic-sequencing-data-table";
 import { MersWhoCasesDataTable } from "./mers-who-cases-data-table";
+import { generateConciseEstimateId } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 
 export enum AvailableMersDataTables {
   MERS_SEROPREVALENCE_ESTIMATES = "MERS_SEROPREVALENCE_ESTIMATES",
@@ -56,6 +57,7 @@ export const MersDataTable = () => {
       latitude: estimate.latitude,
       longitude: estimate.longitude,
       estimateId: estimate.estimateId,
+      conciseEstimateId: generateConciseEstimateId(estimate),
       country: estimate.primaryEstimateCountry,
       state: estimate.primaryEstimateState,
       city: estimate.primaryEstimateCity,
