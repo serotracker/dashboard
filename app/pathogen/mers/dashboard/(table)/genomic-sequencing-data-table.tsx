@@ -9,12 +9,17 @@ import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-
 
 const genomicSequencingDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
-  fieldName: 'estimateId',
+  fieldName: 'conciseEstimateId',
   label: 'Estimate ID',
   isHideable: false,
   isFixed: true,
   fieldNameForLink: 'sourceUrl',
-  size: 700,
+  size: 400,
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'estimateId',
+  label: 'Full Estimate ID',
+  initiallyVisible: false
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'whoRegion',
