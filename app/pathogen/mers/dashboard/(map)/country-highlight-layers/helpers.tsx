@@ -132,6 +132,10 @@ interface GenerateStandardMapPaintInput {
     countryAlphaThreeCode: string;
     value: number;
   }>>
+  defaults?: {
+    defaultMapFillColourOverride?: string;
+    defaultMapFillOpacityOverride?: number;
+  }
 }
 
 export const generateStandardMapPaint = (input: GenerateStandardMapPaintInput): PaintForCountries => ({
@@ -151,15 +155,15 @@ export const generateStandardMapPaint = (input: GenerateStandardMapPaintInput): 
     )),
     ...input.outlinedCountryAlphaThreeCodesWithNoData.map((countryAlphaThreeCode) => ({
       countryAlphaThreeCode,
-      fill: MapSymbology.CountryFeature.Default.Color,
-      opacity: MapSymbology.CountryFeature.Default.Opacity,
+      fill: input.defaults?.defaultMapFillColourOverride ?? MapSymbology.CountryFeature.Default.Color,
+      opacity: input.defaults?.defaultMapFillOpacityOverride ?? MapSymbology.CountryFeature.Default.Opacity,
       borderWidthPx: MapSymbology.CountryFeature.HasData.BorderWidth,
       borderColour: MapSymbology.CountryFeature.HasData.BorderColour
     }))
   ],
   defaults: {
-    fill: MapSymbology.CountryFeature.Default.Color,
-    opacity: MapSymbology.CountryFeature.Default.Opacity,
+    fill: input.defaults?.defaultMapFillColourOverride ?? MapSymbology.CountryFeature.Default.Color,
+    opacity: input.defaults?.defaultMapFillOpacityOverride ?? MapSymbology.CountryFeature.Default.Opacity,
     borderWidthPx: MapSymbology.CountryFeature.Default.BorderWidth,
     borderColour: MapSymbology.CountryFeature.Default.BorderColour
   }

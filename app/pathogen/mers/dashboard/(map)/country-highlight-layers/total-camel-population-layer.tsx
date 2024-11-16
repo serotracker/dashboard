@@ -1,4 +1,4 @@
-import { rose } from 'tailwindcss/colors'
+import { rose, neutral } from 'tailwindcss/colors'
 import uniq from 'lodash/uniq';
 import { useCallback, useContext } from "react";
 import {
@@ -61,13 +61,6 @@ export const useTotalCamelPopulationLayer = () => {
 
     const countryHighlightLayerLegendEntries = [
       { description: "Data unavailable", colour: MapSymbology.CountryFeature.Default.Color },
-      ...mapColourBuckets.map((bucket) => ({
-        description: formatNumberRangeForLegend({
-          minimumInclusive: bucket.valueRange.minimumInclusive,
-          maximumExclusive: bucket.valueRange.maximumExclusive
-        }),
-        colour: bucket.fill
-      }))
     ];
 
     const outlinedCountryAlphaThreeCodes = input.countryOutlinesEnabled ? uniq(input.countryOutlineData.map(({ countryAlphaThreeCode }) => countryAlphaThreeCode)) : [];
@@ -83,9 +76,9 @@ export const useTotalCamelPopulationLayer = () => {
       paint: generateStandardMapPaint({
         mapColourBuckets,
         outlinedCountryAlphaThreeCodes,
-        outlinedCountryAlphaThreeCodesWithNoData: outlinedCountryAlphaThreeCodesWithNoCamelData
+        outlinedCountryAlphaThreeCodesWithNoData: outlinedCountryAlphaThreeCodesWithNoCamelData,
       }),
-      countryHighlightLayerLegendEntries: [],
+      countryHighlightLayerLegendEntries: countryHighlightLayerLegendEntries,
       freeTextEntries: getFreeTextEntries({ countryOutlinesEnabled: input.countryOutlinesEnabled }),
       linearLegendColourGradientConfiguration: {
         enabled: linearLegendColourGradientConfiguration.enabled,
