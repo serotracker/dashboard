@@ -60,14 +60,7 @@ export const useTotalCamelPopulationLayer = () => {
     });
 
     const countryHighlightLayerLegendEntries = [
-      { description: "Data unavailable", colour: MapSymbology.CountryFeature.Default.Color },
-      ...mapColourBuckets.map((bucket) => ({
-        description: formatNumberRangeForLegend({
-          minimumInclusive: bucket.valueRange.minimumInclusive,
-          maximumExclusive: bucket.valueRange.maximumExclusive
-        }),
-        colour: bucket.fill
-      }))
+      { description: "Camel population data unavailable", colour: MapSymbology.CountryFeature.Default.Color },
     ];
 
     const outlinedCountryAlphaThreeCodes = input.countryOutlinesEnabled ? uniq(input.countryOutlineData.map(({ countryAlphaThreeCode }) => countryAlphaThreeCode)) : [];
@@ -85,7 +78,7 @@ export const useTotalCamelPopulationLayer = () => {
         outlinedCountryAlphaThreeCodes,
         outlinedCountryAlphaThreeCodesWithNoData: outlinedCountryAlphaThreeCodesWithNoCamelData
       }),
-      countryHighlightLayerLegendEntries: [],
+      countryHighlightLayerLegendEntries,
       freeTextEntries: getFreeTextEntries({ countryOutlinesEnabled: input.countryOutlinesEnabled }),
       linearLegendColourGradientConfiguration: {
         enabled: linearLegendColourGradientConfiguration.enabled,
