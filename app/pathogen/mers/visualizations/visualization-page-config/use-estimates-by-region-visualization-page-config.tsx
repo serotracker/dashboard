@@ -1,5 +1,5 @@
 import { useCallback, useContext, useMemo, useState } from "react";
-import { ClopperPearsonConfidenceIntervalCalculationTooltip, UNRegionsTooltip, WHORegionsTooltip } from "@/components/customs/tooltip-content";
+import { ClopperPearsonConfidenceIntervalCalculationTooltip, SampleSizeRestrictionTooltip, UNRegionsTooltip, WHORegionsTooltip } from "@/components/customs/tooltip-content";
 import assertNever from "assert-never";
 import { MersVisualizationInformation } from "../visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
@@ -35,10 +35,22 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
 
   const { filteredData } = useContext(MersContext)
 
-  const humanMersSeroprevalenceEstimates = useMemo(() => filteredData.filter((dataPoint): dataPoint is HumanMersSeroprevalenceEstimate => isHumanMersSeroprevalenceEstimate(dataPoint)), [ filteredData ]);
-  const animalMersSeroprevalenceEstimates = useMemo(() => filteredData.filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimate => isAnimalMersSeroprevalenceEstimate(dataPoint)), [ filteredData ]);
-  const humanMersViralEstimates = useMemo(() => filteredData.filter((dataPoint): dataPoint is HumanMersViralEstimate => isHumanMersViralEstimate(dataPoint)), [ filteredData ]);
-  const animalMersViralEstimates = useMemo(() => filteredData.filter((dataPoint): dataPoint is AnimalMersViralEstimate => isAnimalMersViralEstimate(dataPoint)), [ filteredData ]);
+  const humanMersSeroprevalenceEstimates = useMemo(() => filteredData
+    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 5)
+    .filter((dataPoint): dataPoint is HumanMersSeroprevalenceEstimate => isHumanMersSeroprevalenceEstimate(dataPoint)
+  ), [ filteredData ]);
+  const animalMersSeroprevalenceEstimates = useMemo(() => filteredData
+    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 5)
+    .filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimate => isAnimalMersSeroprevalenceEstimate(dataPoint)
+  ), [ filteredData ]);
+  const humanMersViralEstimates = useMemo(() => filteredData
+    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 5)
+    .filter((dataPoint): dataPoint is HumanMersViralEstimate => isHumanMersViralEstimate(dataPoint)
+  ), [ filteredData ]);
+  const animalMersViralEstimates = useMemo(() => filteredData 
+    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 5)
+    .filter((dataPoint): dataPoint is AnimalMersViralEstimate => isAnimalMersViralEstimate(dataPoint)
+  ), [ filteredData ]);
 
   const availableDropdownOptionGroups = useMemo(() => {
     const returnValue = [
@@ -208,7 +220,9 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
     if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION) {
       return (
         <WHORegionsTooltip>
-          <ClopperPearsonConfidenceIntervalCalculationTooltip />
+          <ClopperPearsonConfidenceIntervalCalculationTooltip>
+            <SampleSizeRestrictionTooltip />
+          </ClopperPearsonConfidenceIntervalCalculationTooltip>
         </WHORegionsTooltip>
       );
     }
@@ -216,13 +230,19 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
     if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.UN_REGION) {
       return (
         <UNRegionsTooltip>
-          <ClopperPearsonConfidenceIntervalCalculationTooltip />
+          <ClopperPearsonConfidenceIntervalCalculationTooltip>
+            <SampleSizeRestrictionTooltip />
+          </ClopperPearsonConfidenceIntervalCalculationTooltip>
         </UNRegionsTooltip>
       );
     }
 
     if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.COUNTRY) {
-      return <ClopperPearsonConfidenceIntervalCalculationTooltip />;
+      return (
+        <ClopperPearsonConfidenceIntervalCalculationTooltip>
+          <SampleSizeRestrictionTooltip />
+        </ClopperPearsonConfidenceIntervalCalculationTooltip>
+      );
     }
 
     assertNever(estimatesByRegionSelectedRegion);
