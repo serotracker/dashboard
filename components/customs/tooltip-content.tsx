@@ -50,7 +50,7 @@ interface SampleSizeRestrictionTooltipProps {
 
 export const SampleSizeRestrictionTooltip = (props: SampleSizeRestrictionTooltipProps) => (
   <div className="inline">
-    <p>Studies with a sample size under five are excluded in this visualization.</p>
+    <p>Studies with a sample size under five are excluded from this visualization.</p>
     {props.children ?? null}
   </div>
 )
