@@ -16,6 +16,7 @@ import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStrin
 import { UNRegionsTooltip, WHORegionsTooltip } from "../tooltip-content";
 import { GroupedColouredCheckboxFilter } from "./grouped-coloured-checkbox-filter";
 import { MersMapCustomizationsContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context";
+import { isMersMacroSampleFrameType, MersMacroSampleFramesContext, MersMacroSampleFrameType, mersMacroSampleFrameTypeToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-macro-sample-frames-context";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -247,6 +248,8 @@ export const useAvailableFilters = () => {
     mapDataPointVisibilitySetting,
     setMapDataPointVisibilitySetting
   } = useContext(MersMapCustomizationsContext);
+
+  const { getMacroSampleFramesForSampleFrame } = useContext(MersMacroSampleFramesContext);
 
   const availableFilters: {[key in FilterableField]: FieldInformation } = {
     [FilterableField.pathogen]: {
@@ -487,6 +490,11 @@ export const useAvailableFilters = () => {
       field: FilterableField.sampleFrames,
       label: "Sample Frame",
       valueToLabelMap: {},
+      optionToSuperOptionFunction: (option: string) =>
+        getMacroSampleFramesForSampleFrame(option).at(0) ?? MersMacroSampleFrameType.UNCATEGORIZED,
+      superOptionToLabelMap: (superOption: string) => isMersMacroSampleFrameType(superOption)
+        ? mersMacroSampleFrameTypeToTextMap[superOption]
+        : 'Uncategorized',
       filterRenderingFunction: MultiSelectFilter
     },
     [FilterableField.assay]: {

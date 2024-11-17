@@ -22,12 +22,14 @@ interface MersMacroSampleFramesContextType {
   }>;
   allHumanSampleFrames: string[];
   adjustMacroSampleFrame: (input: AdjustMacroSampleFrameInput) => void;
+  getMacroSampleFramesForSampleFrame: (sampleFrame: string) => MersMacroSampleFrameType[];
 }
 
 const initialMersMacroSampleFramesContext: MersMacroSampleFramesContextType = {
   macroSampleFrames: [],
   allHumanSampleFrames: [],
-  adjustMacroSampleFrame: () => {}
+  adjustMacroSampleFrame: () => {},
+  getMacroSampleFramesForSampleFrame: () => []
 };
 
 export const MersMacroSampleFramesContext = createContext<
@@ -48,6 +50,8 @@ export enum MersMacroSampleFrameType {
   HIGH_RISK_POPULATIONS = 'HIGH_RISK_POPULATIONS',
   UNCATEGORIZED = 'UNCATEGORIZED'
 }
+
+export const isMersMacroSampleFrameType = (value: string): value is MersMacroSampleFrameType => Object.values(MersMacroSampleFrameType).some((element) => element === value);
 
 export const mersMacroSampleFrameTypeToTextMap = {
   [MersMacroSampleFrameType.GENERAL_POPULATION]: 'The General Population',
@@ -78,6 +82,17 @@ const mersMacroSampleFrameToSortOrderMap = {
   [MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING]: 5,
   [MersMacroSampleFrameType.HIGH_RISK_OTHER]: 6,
   [MersMacroSampleFrameType.GENERAL_POPULATION]: 7,
+  [MersMacroSampleFrameType.UNCATEGORIZED]: 8,
+}
+
+const mersMacroSampleFramePriorityMap = {
+  [MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS]: 1,
+  [MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS]: 2,
+  [MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING]: 3,
+  [MersMacroSampleFrameType.HIGH_RISK_OTHER]: 4,
+  [MersMacroSampleFrameType.GENERAL_POPULATION]: 5,
+  [MersMacroSampleFrameType.HIGH_RISK_POPULATIONS]: 6,
+  [MersMacroSampleFrameType.HIGH_RISK_NOT_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS]: 7,
   [MersMacroSampleFrameType.UNCATEGORIZED]: 8,
 }
 
@@ -191,13 +206,30 @@ export const MersMacroSampleFramesProvider = (props: MersMacroSampleFramesProvid
 
     return;
   }, [ setMacroSampleFrames, macroSampleFrames ])
+  
+  const getMacroSampleFramesForSampleFrame = useCallback((sampleFrame: string) => {
+    return macroSampleFrames
+      .map(({ macroSampleFrame, sampleFrames }) => ({
+        macroSampleFrame,
+        sampleFrames,
+        included: sampleFrames.includes(sampleFrame)
+      }))
+      .filter(({ included }) => included === true)
+      .sort((macroSampleFrameA, macroSampleFrameB) => (
+        mersMacroSampleFramePriorityMap[macroSampleFrameA.macroSampleFrame] > mersMacroSampleFramePriorityMap[macroSampleFrameB.macroSampleFrame]
+          ? 1
+          : -1
+      ))
+      .map(({ macroSampleFrame }) => macroSampleFrame)
+  }, [ macroSampleFrames ]);
 
   return (
     <MersMacroSampleFramesContext.Provider
       value={{
         macroSampleFrames,
         allHumanSampleFrames,
-        adjustMacroSampleFrame
+        adjustMacroSampleFrame,
+        getMacroSampleFramesForSampleFrame
       }}
     >
       {props.children}
