@@ -78,20 +78,35 @@ export default function DataExtractionPage() {
       {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && <>
         <h2 className={headerClassname}>New dashboard: MERSTracker </h2>
         <div className="mb-4">
-          <p className='inline'> MERSTracker data was collected from peer reviewed journal articles in collaboration with the </p>
+          <p className='inline'> MERSTracker is a dashboard displaying published MERS-CoV serosurveys, viral testing, and genomic sequencing studies in collaboration with the </p>
           <Link className="inline text-link" href="https://www.who.int/" target="__blank" rel="noopener noreferrer">World Health Organization</Link>
           <p className='inline'> and the </p>
           <Link className="inline text-link" href="https://www.fao.org/" target="__blank" rel="noopener noreferrer">Food and Agriculture Organization of the United Nations</Link>
-          <p className='inline'>. We don&apos;t assess assay or study quality, please use your judgement when drawing conclusions. Our database is not comprehensive and we continue to add studies to it. You can submit a MERS study that you believe belongs on the dashboard by using </p>
-          <Link className="inline text-link underline text-end" target="_blank" rel="noopener noreferrer" href="https://forms.gle/ifwicQVVjj9CeNoA9">this form</Link>
-          <p className='inline'> and it will be reviewed by a member of our team.</p>
+          <p className='inline'>. SeroTracker is also supported by the Canadian Institutes of Health Research (CIHR). We compile and centralize resources on MERS-CoV via a systematic review of available literature. New searches will adhere to </p>
+          <Link className="inline text-link" href="https://docs.google.com/document/d/1jGAUXMJdWOuSzmbfk2TsJFKcU-e_3Z6k-RnPaJvSNYc/edit?usp=sharing" target="__blank" rel="noopener noreferrer">this search strategy</Link>
+          <p className='inline'>. Our database is not comprehensive and we continue to add studies with new searches. </p>
         </div>
-        <div>
-          {process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true' && (<p className='inline'>Event data and camel population data</p>)}
-          {process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED !== 'true' && (<p className='inline'>Camel population data</p>)}
-          <p className='inline'> from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nation&apos;s </p>
-          <Link className="inline text-link" href="https://empres-i.apps.fao.org/" target="__blank" rel="noopener noreferrer">EMPRES-i dashboard</Link>
-          <p className='inline'> which collects MERS events as they are reported by national authorities and population data for various different species of livestock.</p>
+        <SponsorBanner
+          className="mb-4"
+          sponsors={[
+            Sponsor.WORLD_HEALTH_ORGANIZATION
+          ]}
+        />
+        <div className="mb-4">
+          <p className='inline'>The data on our dashboard are extracted from publicly available independent research and do not reflect validation of the findings on behalf of SeroTracker or any of our funding or collaborating partners. Research studies are heterogeneous and vary in their quality, design, methodology, assay performance, and reporting, and results should be interpreted and compared with caution.</p>
+        </div>
+        <div className="mb-4">
+          <p className='inline'>You can submit a MERS study that you believe belongs on the dashboard by using </p>
+          <Link className="inline text-link" href="https://forms.gle/ifwicQVVjj9CeNoA9" target="__blank" rel="noopener noreferrer">this form</Link>
+          <p className='inline'> and it will be reviewed by a member of our team according to these </p>
+          <Link className="inline text-link" href="https://docs.google.com/document/d/1AUSsiQKALn-1sDSvG1kcZbn4HMREyybfhbAFpRPpA7k/edit?usp=sharing" target="__blank" rel="noopener noreferrer">inclusion and exclusion criteria</Link>
+          <p className='inline'>. Our data dictionary for MERSTracker variables is </p>
+          <Link className="inline text-link" href="https://airtable.com/app3ebPi0gt39r3xI/shrWqXLuWPhnic2xw" target="__blank" rel="noopener noreferrer">here</Link>
+          <p className='inline'>.</p>
+        </div>
+        <div className="mb-4">
+          <p className='inline'>Camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nations, through the FAO STAT Statistical Database for Live Animals, last updated on 2 August 2022 and available at: </p>
+          <Link className="inline text-link" href="https://data.apps.fao.org/catalog/dataset/live-animals-national-global-annual" target="__blank" rel="noopener noreferrer">Live Animals (National - Global - Annual) - FAOSTAT - Datasets - FAO catalog</Link>
         </div>
       </>}
       <h2 className={headerClassname}>Contact Us</h2>
