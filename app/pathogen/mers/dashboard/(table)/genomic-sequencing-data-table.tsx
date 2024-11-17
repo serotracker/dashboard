@@ -135,6 +135,11 @@ export const GenomicSequencingDataTable = (props: GenomicSequencingDataTableProp
         enabled: false
       }}
       additionalButtonConfiguration={dataTableAdditionalButtonConfig}
+      secondAdditionalButtonConfiguration={{
+        enabled: true,
+        buttonText: "Data Dictionary",
+        link: "https://airtable.com/app3ebPi0gt39r3xI/shrWqXLuWPhnic2xw"
+      }}
       rowExpansionConfiguration={{
         enabled: true,
         generateExpandedRowStatement: () => "Clicking on this row in the table again will minimize it.",

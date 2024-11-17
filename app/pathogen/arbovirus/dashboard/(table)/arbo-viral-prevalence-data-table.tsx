@@ -26,6 +26,9 @@ export const ArboViralPrevalenceDataTable = (
         additionalButtonConfiguration={{
           enabled: false
         }}
+        secondAdditionalButtonConfiguration={{
+          enabled: false
+        }}
         rowExpansionConfiguration={rowExpansionConfiguration}
         data={data}
       />

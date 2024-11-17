@@ -327,6 +327,9 @@ export const SarsCov2DataTable = () => {
       additionalButtonConfiguration={{
         enabled: false
       }}
+      secondAdditionalButtonConfiguration={{
+        enabled: false
+      }}
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={state.filteredData}
     />

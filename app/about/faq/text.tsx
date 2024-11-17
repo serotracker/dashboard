@@ -107,6 +107,8 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
       <>
         <p className='inline'> Yes, our data is open-source and free for anyone to use. Every data table on the dashboard has a button next to it that allows you to download a csv of the data in the table. </p>
         <Link className="inline text-link underline" target="_blank" rel="noopener noreferrer" href="https://new.serotracker.com/pathogen/mers/dashboard#TABLE">This is a link to the MERSTracker data table where it is possible to download several csv files which contain all of our MERS seroprevalence estimates</Link>
+        <p className='inline'>. Our data dictionary, which describes the fields found in the csv file can be found </p>
+        <Link className="inline text-link" href="https://airtable.com/app3ebPi0gt39r3xI/shrWqXLuWPhnic2xw" target="__blank" rel="noopener noreferrer">here</Link>
         <p className='inline'>.</p>
       </>
     )

@@ -38,6 +38,7 @@ import { Dropdown, DropdownProps } from "@/components/customs/dropdown/dropdown"
 import { typedObjectFromEntries } from "@/lib/utils";
 import { GenericTooltip } from "@/components/customs/generic-tooltip";
 import { ArboTrackerCitationButtonContent } from "@/app/pathogen/arbovirus/arbotracker-citations";
+import Link from "next/link";
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   initiallyVisible: boolean;
@@ -98,17 +99,26 @@ export type RowExpansionConfiguration<
   TData extends Record<string, unknown>
 > = RowExpansionConfigurationDisabled | RowExpansionConfigurationEnabled<TData>;
 
-interface AdditionalButtonConfigurationEnabled {
+interface AdditionalOnClickButtonConfigurationEnabled {
   enabled: true;
   buttonText: string;
   onClick: () => void;
+}
+
+interface AdditionalLinkButtonConfigurationEnabled {
+  enabled: true;
+  buttonText: string;
+  link: string;
 }
 
 interface AdditionalButtonConfigurationDisabled {
   enabled: false;
 }
 
-export type AdditionalButtonConfiguration = AdditionalButtonConfigurationEnabled | AdditionalButtonConfigurationDisabled;
+export type AdditionalButtonConfiguration = 
+  | AdditionalOnClickButtonConfigurationEnabled
+  | AdditionalLinkButtonConfigurationEnabled
+  | AdditionalButtonConfigurationDisabled;
 
 interface DataTableProps<
   TData extends Record<string, unknown>,
@@ -120,6 +130,7 @@ interface DataTableProps<
   tableHeader: TableHeader<TDropdownOption>;
   csvCitationConfiguration: DataTableCsvCitationConfiguration;
   additionalButtonConfiguration: AdditionalButtonConfiguration;
+  secondAdditionalButtonConfiguration: AdditionalButtonConfiguration;
   rowExpansionConfiguration: RowExpansionConfiguration<TData>;
   data: TData[];
 }
@@ -129,7 +140,7 @@ export function DataTable<
   TValue,
   TDropdownOption extends string
 >(props: DataTableProps<TData, TValue, TDropdownOption>) {
-  const { csvCitationConfiguration, rowExpansionConfiguration, tableHeader, additionalButtonConfiguration } = props;
+  const { csvCitationConfiguration, rowExpansionConfiguration, tableHeader, additionalButtonConfiguration, secondAdditionalButtonConfiguration } = props;
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -257,16 +268,66 @@ export function DataTable<
       return null;
     }
 
+    if('onClick' in additionalButtonConfiguration) {
+      return (
+        <Button
+          variant="outline"
+          className="mx-2 whitespace-nowrap"
+          onClick={() => additionalButtonConfiguration.onClick()}
+        >
+          <p>{additionalButtonConfiguration.buttonText}</p>
+        </Button>
+      )
+    }
+
     return (
-      <Button
-        variant="outline"
+      <Link
+        href={additionalButtonConfiguration.link}
+        target="__blank"
+        rel="noopener noreferrer"
         className="mx-2 whitespace-nowrap"
-        onClick={() => additionalButtonConfiguration.onClick()}
       >
-        <p>{additionalButtonConfiguration.buttonText}</p>
-      </Button>
-    )
+        <Button
+          variant="outline"
+        >
+          {additionalButtonConfiguration.buttonText}
+        </Button>
+      </Link>
+    );
   }, [ additionalButtonConfiguration ])
+
+  const secondAdditionalButton = useMemo(() => {
+    if(secondAdditionalButtonConfiguration.enabled === false) {
+      return null;
+    }
+
+    if('onClick' in secondAdditionalButtonConfiguration) {
+      return (
+        <Button
+          variant="outline"
+          className="mx-2 whitespace-nowrap"
+          onClick={() => secondAdditionalButtonConfiguration.onClick()}
+        >
+          <p>{secondAdditionalButtonConfiguration.buttonText}</p>
+        </Button>
+      )
+    }
+
+    return (
+      <Link
+        href={secondAdditionalButtonConfiguration.link}
+        target="__blank"
+        rel="noopener noreferrer"
+        className="mx-2 whitespace-nowrap"
+      >
+        <Button
+          variant="outline"
+        >
+          {secondAdditionalButtonConfiguration.buttonText}
+        </Button>
+      </Link>
+    );
+  }, [ secondAdditionalButtonConfiguration ])
 
   const header = useMemo(() => {
     if(tableHeader.type === TableHeaderType.STANDARD) {
@@ -301,6 +362,7 @@ export function DataTable<
           </Button>
           {citationButton}
           {additionalButton}
+          {secondAdditionalButton}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="mx-2 whitespace-nowrap">

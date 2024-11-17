@@ -196,6 +196,9 @@ export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
         enabled: false
       }}
       additionalButtonConfiguration={dataTableAdditionalButtonConfig}
+      secondAdditionalButtonConfiguration={{
+        enabled: false
+      }}
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={props.tableData}
     />
