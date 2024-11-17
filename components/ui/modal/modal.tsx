@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { CustomizationModalContent, CustomizationModalContentProps } from "./customization-modal/customization-modal-content";
 import { cn } from "@/lib/utils";
 import { ArboTrackerHelpModalContent } from "../../../app/pathogen/arbovirus/arbotracker-help-modal-content";
+import { MERSTrackerWelcomeModalContent } from "@/app/pathogen/mers/merstracker-welcome-modal-content";
 
 export enum ModalState {
   OPENED = "OPENED",
@@ -10,7 +11,8 @@ export enum ModalState {
 
 export enum ModalType {
   CUSTOMIZATION_MODAL = "CUSTOMIZATION_MODAL",
-  ARBOTRACKER_HELP_MODAL = "ARBOTRACKER_HELP_MODAL"
+  ARBOTRACKER_HELP_MODAL = "ARBOTRACKER_HELP_MODAL",
+  MERSTRACKER_WELCOME_MODAL = "MERSTRACKER_WELCOME_MODAL"
 }
 
 export interface ModalPropsBase {
@@ -27,10 +29,14 @@ type CustomizationModalProps<TDropdownOption extends string> = {
 type ArboTrackerHelpModalProps = {
   modalType: ModalType.ARBOTRACKER_HELP_MODAL;
 };
+type MersTrackerWelcomeModalProps = {
+  modalType: ModalType.MERSTRACKER_WELCOME_MODAL;
+};
 
 type ModalPropsBasedOnType<TDropdownOption extends string> =
   | CustomizationModalProps<TDropdownOption>
-  | ArboTrackerHelpModalProps;
+  | ArboTrackerHelpModalProps
+  | MersTrackerWelcomeModalProps;
 
 const isCustomizationModalProps = <TDropdownOption extends string>(
   props: ModalPropsBasedOnType<TDropdownOption>
@@ -38,6 +44,9 @@ const isCustomizationModalProps = <TDropdownOption extends string>(
 const isArboTrackerHelpModalProps = <TDropdownOption extends string>(
   props: ModalPropsBasedOnType<TDropdownOption>
 ): props is ArboTrackerHelpModalProps => props.modalType === ModalType.ARBOTRACKER_HELP_MODAL;
+const isMersTrackerWelcomeModalProps = <TDropdownOption extends string>(
+  props: ModalPropsBasedOnType<TDropdownOption>
+): props is MersTrackerWelcomeModalProps => props.modalType === ModalType.MERSTRACKER_WELCOME_MODAL;
 
 type ModalProps<TDropdownOption extends string> = ModalPropsBase & ModalPropsBasedOnType<TDropdownOption>;
 
@@ -70,6 +79,10 @@ const Modal = <
         <ArboTrackerHelpModalContent
           closeModal={props.onClose}
           className={isArboTrackerHelpModalProps(props) ? '' : 'hidden'}
+        />
+        <MERSTrackerWelcomeModalContent
+          closeModal={props.onClose}
+          className={isMersTrackerWelcomeModalProps(props) ? '' : 'hidden'}
         />
       </div>
     </div>
@@ -124,7 +137,7 @@ export const useModal = <
           paginationHoverClassname: input.content.paginationHoverClassname,
           paginationSelectedClassname: input.content.paginationSelectedClassname
         } : {
-          modalType: ModalType.ARBOTRACKER_HELP_MODAL as const
+          modalType: input.modalType
         })}
         onClose={() => {
           setModalState(ModalState.CLOSED);
