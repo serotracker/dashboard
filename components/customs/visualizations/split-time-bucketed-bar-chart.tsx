@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { typedGroupBy, typedObjectEntries, typedObjectFromEntries, typedObjectKeys } from "@/lib/utils";
 import { groupDataPointsIntoTimeBuckets } from "@/lib/time-bucket-grouping";
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, DefaultTooltipContentProps, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from "recharts";
 import clsx from "clsx";
 import { CustomXAxisTick } from "./custom-x-axis-tick";
 
@@ -31,14 +31,27 @@ export interface SplitTimeBucketedBarChartProps<
   getChartTitle: (primaryKey: TPrimaryGroupingKey) => string;
   percentageFormattingEnabled: boolean;
   transformOutputValue: (data: TData[]) => number;
+  tooltipContentOverride?: TooltipProps<any, any>['content'];
   numberOfDigitsAfterDecimalPointForOutputValue: number;
 }
+
+const CustomTooltip: TooltipProps<any, any>['content'] = ({ active, payload, label }) => {
+  console.log(payload);
+
+  if (active && payload && payload.length) {
+    return (
+      <div> ABC </div>
+    );
+  }
+
+  return null;
+};
 
 export const SplitTimeBucketedBarChart = <
   TData,
   TPrimaryGroupingKey extends string,
 >(props: SplitTimeBucketedBarChartProps<TData, TPrimaryGroupingKey>) => {
-  const { data, primaryGroupingFunction, primaryGroupingSortFunction, getIntervalStartDate, getIntervalEndDate, percentageFormattingEnabled, currentPageIndex, numberOfDigitsAfterDecimalPointForOutputValue } = props;
+  const { data, primaryGroupingFunction, primaryGroupingSortFunction, getIntervalStartDate, getIntervalEndDate, percentageFormattingEnabled, currentPageIndex, numberOfDigitsAfterDecimalPointForOutputValue, tooltipContentOverride } = props;
   const { desiredBucketCount, validBucketSizes } = props.bucketingConfiguration;
 
   const eventsGroupedByPrimaryKey = useMemo(() => {
@@ -70,12 +83,24 @@ export const SplitTimeBucketedBarChart = <
     tickFormatter:(tick: string) => `${tick}%`
   } : {}, [ percentageFormattingEnabled ])
 
-  const tooltipProps = useMemo(() => percentageFormattingEnabled ? {
-    itemStyle: {color: "black"},
-    formatter: (value: number) => `${value.toFixed(numberOfDigitsAfterDecimalPointForOutputValue)}%`
-  } : {
-    itemStyle: {color: "black"}
-  }, [ percentageFormattingEnabled, numberOfDigitsAfterDecimalPointForOutputValue ])
+  const tooltipProps = useMemo(() => {
+    if(!!tooltipContentOverride) {
+      return {
+        content: tooltipContentOverride
+      }
+    }
+
+    if(percentageFormattingEnabled) {
+      return {
+        itemStyle: {color: "black"},
+        formatter: (value: number) => `${value.toFixed(numberOfDigitsAfterDecimalPointForOutputValue)}%`
+      }
+    }
+
+    return {
+      itemStyle: {color: "black"}
+    }
+  }, [ percentageFormattingEnabled, numberOfDigitsAfterDecimalPointForOutputValue, tooltipContentOverride ])
 
   const sortedPrimaryKeys = useMemo(() => {
     const unsortedPrimaryKeys = typedObjectKeys(eventsGroupedByPrimaryKeyAndThenTimeBucket);
@@ -105,7 +130,8 @@ export const SplitTimeBucketedBarChart = <
               `${interval.intervalStartDate.getFullYear()}-${interval.intervalEndDate.getFullYear()}` :
               `${interval.intervalStartDate.getFullYear()}`,
             dataPoints,
-            valueForBar: props.transformOutputValue(dataPoints)
+            valueForBar: props.transformOutputValue(dataPoints),
+            numberOfDataPointsInBar: dataPoints.length
           }));
 
           const numberOfSubgraphsDisplayed = Object.keys(eventsGroupedByPrimaryKeyAndThenTimeBucket).length;

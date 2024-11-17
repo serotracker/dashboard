@@ -56,7 +56,7 @@ const Modal = <
   return (
     <div
       className={cn(
-        "absolute w-full h-full top-0 left-0 p-4 flex items-center justify-center bg-modal-background z-10 cursor-pointer",
+        "absolute w-full h-full top-0 left-0 p-4 flex items-center justify-center bg-modal-background z-40 cursor-pointer",
         props.hidden ? 'hidden' : '',
         props.modalBackgroundClassname ?? ''
       )}
@@ -64,7 +64,7 @@ const Modal = <
     >
       <div
         className={cn(
-          "w-full lg:w-1/2 bg-white rounded z-20 cursor-default",
+          "w-full lg:w-1/2 bg-white rounded z-50 cursor-default",
           props.modalForegroundClassname ?? ''
         )}
         onClick={(e) => {e.stopPropagation();}}

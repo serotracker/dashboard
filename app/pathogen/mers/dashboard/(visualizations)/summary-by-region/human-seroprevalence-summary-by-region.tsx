@@ -113,6 +113,20 @@ export const HumanSeroprevalenceSummaryByRegion = <TRegion extends string>(props
       getBarName={() => 'Human Median Seroprevalence'}
       transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.seroprevalence * 100))}
       numberOfDigitsAfterDecimalPointForOutputValue={3}
+      tooltipContentOverride={({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+          const values = payload[0].payload;
+          return (
+            <div className="bg-white p-2 border border-background rounded-lg">
+              <p>{values.intervalAsString}</p>
+              <p>{`${payload[0].name} : ${values.valueForBar.toFixed(3)} %`}</p>
+              <p>{`Total Studies Included : ${values.numberOfDataPointsInBar.toFixed(0)}`}</p>
+            </div>
+          );
+        }
+
+        return null;
+      }}
     />
   );
 }
