@@ -31,7 +31,7 @@ const seroprevalenceEstimateFilters = [
   FilterableField.samplingStartDate,
   FilterableField.samplingEndDate,
   FilterableField.samplingMethod,
-  FilterableField.assay,
+  FilterableField.mersAssay,
   FilterableField.specimenType,
   FilterableField.sex,
   FilterableField.isotypes,
@@ -205,7 +205,7 @@ export const MersFilters = (props: MersFiltersProps) => {
         ...(estimateFilterData?.mersEstimatesFilterOptions ? {
           sourceType: estimateFilterData.mersEstimatesFilterOptions.sourceType,
           ageGroup: estimateFilterData.mersEstimatesFilterOptions.ageGroup,
-          assay: estimateFilterData.mersEstimatesFilterOptions.assay,
+          mersAssay: estimateFilterData.mersEstimatesFilterOptions.assay,
           specimenType: estimateFilterData.mersEstimatesFilterOptions.specimenType,
           sex: estimateFilterData.mersEstimatesFilterOptions.sex,
           isotypes: estimateFilterData.mersEstimatesFilterOptions.isotypes,

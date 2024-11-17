@@ -17,6 +17,7 @@ import { UNRegionsTooltip, WHORegionsTooltip } from "../tooltip-content";
 import { GroupedColouredCheckboxFilter } from "./grouped-coloured-checkbox-filter";
 import { MersMapCustomizationsContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context";
 import { isMersMacroSampleFrameType, MersMacroSampleFramesContext, MersMacroSampleFrameType, mersMacroSampleFrameTypeToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-macro-sample-frames-context";
+import { isMersAssayClassification, MersAssayClassification, MersAssayClassificationContext, mersAssayClassificationToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-assay-classification-content";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -89,6 +90,7 @@ export enum FilterableField {
   unRegion = "unRegion",
   countryAlphaTwoCode = "countryAlphaTwoCode",
   assay = "assay",
+  mersAssay = "mersAssay",
   producer = "producer",
   sampleFrame = "sampleFrame",
   sampleFrames = "sampleFrames",
@@ -250,6 +252,7 @@ export const useAvailableFilters = () => {
   } = useContext(MersMapCustomizationsContext);
 
   const { getMacroSampleFramesForSampleFrame } = useContext(MersMacroSampleFramesContext);
+  const { getAssayClassificationsForAssay } = useContext(MersAssayClassificationContext);
 
   const availableFilters: {[key in FilterableField]: FieldInformation } = {
     [FilterableField.pathogen]: {
@@ -502,6 +505,17 @@ export const useAvailableFilters = () => {
       label: "Assay",
       valueToLabelMap: {},
       filterRenderingFunction: MultiSelectFilter
+    },
+    [FilterableField.mersAssay]: {
+      field: FilterableField.mersAssay,
+      label: "Assay",
+      valueToLabelMap: {},
+      filterRenderingFunction: MultiSelectFilter,
+      optionToSuperOptionFunction: (option: string) =>
+        getAssayClassificationsForAssay(option).at(0) ?? MersAssayClassification.UNCATEGORIZED,
+      superOptionToLabelMap: (superOption: string) => isMersAssayClassification(superOption)
+        ? mersAssayClassificationToTextMap[superOption]
+        : 'Uncategorized',
     },
     [FilterableField.producer]: {
       field: FilterableField.producer,

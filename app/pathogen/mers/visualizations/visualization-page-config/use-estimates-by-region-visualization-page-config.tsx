@@ -3,7 +3,7 @@ import { ClopperPearsonConfidenceIntervalCalculationTooltip, SampleSizeRestricti
 import assertNever from "assert-never";
 import { MersVisualizationInformation } from "../visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { EstimatesByRegion, EstimatesByRegionRegionDropdownOption, EstimatesByRegionVariableOfInterestDropdownOption } from "../../dashboard/(visualizations)/estimates-by-region";
+import { EstimatesByRegion, EstimatesByRegionAssayClassificationDropdownOption, EstimatesByRegionRegionDropdownOption, EstimatesByRegionVariableOfInterestDropdownOption } from "../../dashboard/(visualizations)/estimates-by-region";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { defaultColoursForWhoRegions } from "@/lib/who-regions";
@@ -12,6 +12,7 @@ import { ModalState, ModalType } from "@/components/ui/modal/modal";
 import { ColourPickerCustomizationSettingProps } from "@/components/ui/modal/customization-modal/colour-picker-customization-setting";
 import { CustomizationSettingType } from "@/components/ui/modal/customization-modal/customization-settings";
 import { AnimalMersSeroprevalenceEstimate, AnimalMersViralEstimate, HumanMersSeroprevalenceEstimate, HumanMersViralEstimate, isAnimalMersSeroprevalenceEstimate, isAnimalMersViralEstimate, isHumanMersSeroprevalenceEstimate, isHumanMersViralEstimate, MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
+import { MersAssayClassification, MersAssayClassificationContext, mersAssayClassificationToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-assay-classification-content";
 
 export const useEstimatesByRegionVisualizationPageConfig = () => {
   const [
@@ -25,6 +26,11 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   ] = useState<EstimatesByRegionRegionDropdownOption>(EstimatesByRegionRegionDropdownOption.WHO_REGION);
 
   const [
+    estimatesByRegionSelectedAssayClassification,
+    setEstimatesByRegionSelectedAssayClassification,
+  ] = useState<EstimatesByRegionAssayClassificationDropdownOption>(EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY);
+
+  const [
     barColoursForWhoRegions,
     setBarColoursForWhoRegions,
   ] = useState<Record<WhoRegion, string>>(defaultColoursForWhoRegions);
@@ -34,6 +40,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   ] = useState<Record<UnRegion, string>>(defaultColoursForUnRegions);
 
   const { filteredData } = useContext(MersContext)
+  const { allAssays, assayClassifications, adjustAssayClassification } = useContext(MersAssayClassificationContext)
 
   const humanMersSeroprevalenceEstimates = useMemo(() => filteredData
     .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 5)
@@ -78,11 +85,11 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   const getDisplayNameForEstimatesByRegion: MersVisualizationInformation<
     string,
     EstimatesByRegionVariableOfInterestDropdownOption,
-    EstimatesByRegionRegionDropdownOption,
-    string
+    EstimatesByRegionAssayClassificationDropdownOption,
+    EstimatesByRegionRegionDropdownOption
   >['getDisplayName'] = useCallback(() => ({
-    type: VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN,
-    beforeBothDropdownsHeaderText: "",
+    type: VisualizationDisplayNameType.WITH_TRIPLE_DROPDOWN,
+    beforeAllDropdownsHeaderText: "",
     firstDropdownProps: {
       dropdownName: 'Variable of Interest Selection',
       borderColourClassname: 'border-mers',
@@ -124,8 +131,32 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
         setEstimatesByRegionVariableOfInterest(option);
       }
     },
-    betweenDropdownsHeaderText: " Grouped By ",
+    betweenFirstAndSecondDropdownHeaderText: " Tested Using ",
     secondDropdownProps: {
+      dropdownName: 'Assay Classification Selection',
+      borderColourClassname: 'border-mers',
+      hoverColourClassname: 'hover:bg-mersHover/50',
+      highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
+      dropdownOptionGroups: [{
+        groupHeader: 'Assay Classification',
+        options: [
+          EstimatesByRegionAssayClassificationDropdownOption.SCREENING,
+          EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY,
+          EstimatesByRegionAssayClassificationDropdownOption.ANY
+        ]
+      }],
+      chosenDropdownOption: estimatesByRegionSelectedAssayClassification,
+      dropdownOptionToLabelMap: {
+        [EstimatesByRegionAssayClassificationDropdownOption.SCREENING]: "Screening",
+        [EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY]: "Confirmatory",
+        [EstimatesByRegionAssayClassificationDropdownOption.ANY]: "Any",
+      },
+      onDropdownOptionChange: (option) => {
+        setEstimatesByRegionSelectedAssayClassification(option);
+      }
+    },
+    betweenSecondAndThirdDropdownHeaderText: " Assays And Grouped By ",
+    thirdDropdownProps: {
       dropdownName: 'Region Selection',
       borderColourClassname: 'border-mers',
       hoverColourClassname: 'hover:bg-mersHover/50',
@@ -148,8 +179,8 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
         setEstimatesByRegionSelectedRegion(option);
       }
     },
-    afterBothDropdownsHeaderText: " With 95% Confidence Intervals"
-  }), [ cleanedChosenDropdownOption, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion, availableDropdownOptionGroups ])
+    afterAllDropdownsHeaderText: " With 95% Confidence Intervals"
+  }), [ cleanedChosenDropdownOption, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion, availableDropdownOptionGroups, estimatesByRegionSelectedAssayClassification ])
 
   const renderVisualizationForEstimatesByRegion: MersVisualizationInformation<
     string,
@@ -166,9 +197,10 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       barColoursForUnRegions={barColoursForUnRegions}
       selectedVariableOfInterest={cleanedChosenDropdownOption}
       selectedRegion={estimatesByRegionSelectedRegion}
+      selectedAssayClassification={estimatesByRegionSelectedAssayClassification}
       legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
     />
-  ), [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, cleanedChosenDropdownOption, estimatesByRegionSelectedRegion, barColoursForWhoRegions, barColoursForUnRegions ]);
+  ), [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, cleanedChosenDropdownOption, estimatesByRegionSelectedRegion, barColoursForWhoRegions, barColoursForUnRegions, estimatesByRegionSelectedAssayClassification ]);
 
   const customizationModalConfigurationForEstimatesByRegion: MersVisualizationInformation<
     string,
@@ -188,8 +220,21 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
         paginationHoverClassname: "hover:bg-mersHover",
         paginationSelectedClassname: "bg-mers",
         customizationSettings: [
+          ...(([MersAssayClassification.CONFIRMATORY, MersAssayClassification.SCREENING] as const).map((assayClassification) => ({
+            type: CustomizationSettingType.MULTI_SELECT_DROPDOWN as const,
+            dropdownName: `Assays included in the "${mersAssayClassificationToTextMap[assayClassification]}" category`,
+            heading: 'Selected Assays',
+            options: allAssays,
+            optionToLabelMap: {},
+            selected: assayClassifications
+              .find(({ classification }) => classification === assayClassification)?.assays ?? [],
+            handleOnChange: (newAssays: string[]) => adjustAssayClassification({
+              classification: assayClassification,
+              assays: newAssays
+            })
+          }))),
           ...(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION ? Object.values(WhoRegion).map((whoRegion): ColourPickerCustomizationSettingProps => ({
-            type: CustomizationSettingType.COLOUR_PICKER,
+            type: CustomizationSettingType.COLOUR_PICKER as const,
             colourPickerName: `Colour for ${whoRegion}`,
             chosenColour: barColoursForWhoRegions[whoRegion],
             setChosenColour: (newChosenColour) => setBarColoursForWhoRegions({
@@ -198,7 +243,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
             })
           })) : []),
           ...(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.UN_REGION ? Object.values(UnRegion).map((unRegion): ColourPickerCustomizationSettingProps => ({
-            type: CustomizationSettingType.COLOUR_PICKER,
+            type: CustomizationSettingType.COLOUR_PICKER as const,
             colourPickerName: `Colour for ${unRegionEnumToLabelMap[unRegion]}`,
             chosenColour: barColoursForUnRegions[unRegion],
             setChosenColour: (newChosenColour) => setBarColoursForUnRegions({
@@ -209,7 +254,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
         ]
       }
     }
-  }, [ barColoursForWhoRegions, setBarColoursForWhoRegions, barColoursForUnRegions, setBarColoursForUnRegions, estimatesByRegionSelectedRegion ]);
+  }, [ barColoursForWhoRegions, setBarColoursForWhoRegions, barColoursForUnRegions, setBarColoursForUnRegions, estimatesByRegionSelectedRegion, adjustAssayClassification, allAssays, assayClassifications ]);
 
   const estimatesByRegionTitleTooltipContent: MersVisualizationInformation<
     string,
