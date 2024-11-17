@@ -4,10 +4,12 @@ import * as React from "react";
 import { X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
+import { Command } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
 import { cn } from "@/lib/utils";
 import { BooleanSelectOptionString } from "./filters/select-filter";
+import { SelectInnerSingleCommandGroup } from "./select-inner-single-command-group";
+import { SelectInnerMultipleCommandGroup } from "./select-inner-multiple-command-group";
 
 export type SelectOption = {
   label: string; // As we see
@@ -23,6 +25,8 @@ export interface SelectProps {
   singleSelect?: boolean; // Multi is the default
   className?: string;
   borderedAreaClassname?: string;
+  optionToSuperOptionFunction?: (option: string) => string;
+  superOptionToLabelMap?: (superOption: string) => string;
 }
 
 const createSelectOptionList = (options: (string)[], optionToLabelMap: Record<string, string | undefined>) => {
@@ -34,7 +38,7 @@ const createSelectOptionList = (options: (string)[], optionToLabelMap: Record<st
 
 export function Select(props: SelectProps) {
   // TODO: I wonder if there is a way to make the background color dynamic based on the page we are on so this does not need to prop drilled
-  const { heading, handleOnChange, optionToLabelMap, singleSelect} = props;
+  const { heading, handleOnChange, optionToLabelMap, singleSelect, optionToSuperOptionFunction, superOptionToLabelMap } = props;
   const options = createSelectOptionList(props.options, optionToLabelMap);
   const selected = props.selected
     .map((selectedOption) => selectedOption === true ? BooleanSelectOptionString.TRUE : selectedOption) 
@@ -124,34 +128,26 @@ export function Select(props: SelectProps) {
         <div className="relative mt-2">
           {open && selectables.length > 0 ? (
             <div className="absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in overflow-y-scroll max-h-96">
-              <CommandGroup className="h-full overflow-auto" heading={heading}>
-                {selectables.map((option) => {
-                  return (
-                    <CommandItem
-                      key={option.value}
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                      onSelect={(value) => {
-                        setInputValue("");
-                        const newValue = selectables.find(
-                          // CommandItem appears to strip starting and ending whitespace from the value given as a key
-                          // so the trim() fixes a situation where the value has some starting or trailing whitespace
-                          // and isn't recognized as a selectable option as a result. This is the same for the toLowerCase().
-                          (option) => option.label.trim().toLowerCase() === value.trim().toLowerCase(),
-                        );
-                        if (newValue) {
-                          singleSelect ? handleOnChange([newValue.value]) : handleOnChange([...selected, newValue.value]);
-                        }
-                      }}
-                      className={"cursor-pointer"}
-                    >
-                      {option.label}
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
+              <SelectInnerSingleCommandGroup
+                selectables={selectables}
+                heading={heading}
+                setInputValue={setInputValue}
+                handleOnChange={handleOnChange}
+                singleSelect={singleSelect}
+                selected={selected}
+                className={!!optionToSuperOptionFunction ? 'hidden' : ''}
+              />
+              <SelectInnerMultipleCommandGroup
+                selectables={selectables}
+                heading={heading}
+                setInputValue={setInputValue}
+                handleOnChange={handleOnChange}
+                singleSelect={singleSelect}
+                selected={selected}
+                className={!optionToSuperOptionFunction ? 'hidden' : ''}
+                optionToSuperOptionFunction={optionToSuperOptionFunction}
+                superOptionToLabelMap={superOptionToLabelMap}
+              />
             </div>
           ) : null}
         </div>

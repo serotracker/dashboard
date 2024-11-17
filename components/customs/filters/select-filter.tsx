@@ -28,6 +28,8 @@ export interface SelectFilterProps<
   selectFilterType: SelectFilterType;
   filterOptions: Array<string | undefined | null>;
   optionToLabelMap: Record<string, string | undefined>;
+  optionToSuperOptionFunction?: (option: string) => string;
+  superOptionToLabelMap?: (superOption: string) => string;
 }
 
 export const SelectFilter = <
@@ -77,6 +79,8 @@ export const SelectFilter = <
       }
       optionToLabelMap={props.optionToLabelMap}
       singleSelect={[SelectFilterType.SINGLE_SELECT, SelectFilterType.BOOLEAN_SELECT].includes(props.selectFilterType)}
+      optionToSuperOptionFunction={props.optionToSuperOptionFunction}
+      superOptionToLabelMap={props.superOptionToLabelMap}
     />
   </GenericFilter>
 )

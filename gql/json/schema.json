@@ -8239,6 +8239,18 @@
             "deprecationReason": null
           },
           {
+            "name": "HIGH_RISK_CLINICAL_MONITORING",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "HIGH_RISK_HEALTHCARE_WORKERS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "HIGH_RISK_NOT_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS",
             "description": null,
             "isDeprecated": false,
@@ -8246,6 +8258,12 @@
           },
           {
             "name": "HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "HIGH_RISK_OTHER",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
