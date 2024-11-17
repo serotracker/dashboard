@@ -78,15 +78,8 @@ export const MersFilterMetadataProvider = (props: MersFilterMetadataProviderProp
   }, [ numberOfNonTypenameFiltersApplied ])
 
   const visualizationDownloadFootnote = useMemo(() => {
-    const startOfFootnote = 'Downloaded from the SeroTracker MERS dashboard which can be found at https://new.serotracker.com/pathogen/mers/dashboard.'
-    return numberOfNonTypenameFiltersApplied !== 0
-      ? `${startOfFootnote} ${numberOfNonTypenameFiltersApplied} filter(s) have been applied to this visualization.`
-      // A little hack here. The visualizations have problems if you don't have placeholder text when you try to turn a filter on.
-      // Basically, if you don't get why this is here, replace this with an empty string and go to the ESTIMATES_BY_REGION visualization
-      // in MERSTracker and apply a filter. The footnote doesn't show up until you switch to a different variant of the visualization.
-      // If you tried that with the empty string or undefined and it worked just fine feel free to get rid of this hack though.
-      : startOfFootnote;
-  }, [ numberOfNonTypenameFiltersApplied ])
+    return 'SeroTracker Research Group (2024); MERSTracker Dashboard. Website, accessible via https://new.serotracker.com/'
+  }, [])
 
   return (
     <MersFilterMetadataContext.Provider

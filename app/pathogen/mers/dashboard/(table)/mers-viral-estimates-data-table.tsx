@@ -7,6 +7,8 @@ import { useVisualizationPageConfiguration } from "../../visualizations/visualiz
 import { useMersEstimateColumnConfiguration } from "./mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { MersViralEstimateForDataTable } from "./use-mers-data-table-data";
 import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
+import { ToastId } from "@/contexts/toast-provider";
+import { MERSTrackerCitationButtonContent, shortenedMERSTrackerCitationText, suggestedMERSTrackerCitationText } from "../../merstracker-citations";
 
 interface MersViralEstimateDataTableProps {
   tableData: MersViralEstimateForDataTable[];
@@ -33,14 +35,20 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
     viewOnMapHandler
   }), [ viewOnMapHandler ]);
 
+  const csvCitationConfiguration = useMemo(() => ({
+    enabled: true,
+    citationText: suggestedMERSTrackerCitationText,
+    csvDownloadCitationText: shortenedMERSTrackerCitationText,
+    toastId: ToastId.MERSTRACKER_DOWNLOAD_CSV_CITATION_TOAST,
+    buttonContent: <MERSTrackerCitationButtonContent />
+  }), []);
+
   return (
     <DataTable
       columns={columnConfigurationToColumnDefinitions({ columnConfiguration: mersViralEstimateColumnConfiguration })}
       csvFilename="merstracker_dataset"
       tableHeader={props.tableHeader}
-      csvCitationConfiguration={{
-        enabled: false
-      }}
+      csvCitationConfiguration={csvCitationConfiguration}
       additionalButtonConfiguration={dataTableAdditionalButtonConfig}
       secondAdditionalButtonConfiguration={{
         enabled: true,

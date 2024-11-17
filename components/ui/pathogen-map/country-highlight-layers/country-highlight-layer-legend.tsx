@@ -64,8 +64,6 @@ export const CountryHighlightLayerLegend = (input: CountryHighlightLayerLegendPr
     return null;
   }
 
-  console.log('input.legendTooltipContent', input.legendTooltipContent);
-
   return (
     <Card className={input.className}>
       <CardHeader className={"py-3 flex justify-between"}>

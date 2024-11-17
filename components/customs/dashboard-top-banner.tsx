@@ -20,6 +20,7 @@ interface DownloadCsvButtonConfiguration {
     label: string;
   }>;
   csvDownloadFilename: string;
+  citationText: string;
 }
 
 interface EnabledCitationButtonConfiguration {
@@ -133,7 +134,7 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
 
           return [label, value]
         }))
-      ))
+      )).map((element) => ({ ...element, 'Citation': downloadCsvButtonConfiguration.citationText}))
     );
 
     download(csvConfig)(csv);
@@ -183,7 +184,8 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
           </Button>
           <div className={cn(
             'w-auto ml-2 inline-flex absolute right-0 bottom-0 max-w-[35%]',
-            citationButtonConfiguration.enabled === false && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
+            //citationButtonConfiguration.enabled === false && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
+            ''
           )}>
             <p className='italic text-sm'>
               {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : 'No text'}
@@ -192,7 +194,8 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
         </div>
         <p className={cn(
           'w-full italic text-sm mt-4',
-          citationButtonConfiguration.enabled === true && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
+          //citationButtonConfiguration.enabled === true && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
+          'hidden'
         )}> {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : 'No text'} </p>
       </div>
       <div className="w-full flex mt-2">
