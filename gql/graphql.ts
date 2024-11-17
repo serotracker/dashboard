@@ -711,8 +711,11 @@ export type MersMacroSampleFrame = {
 
 export enum MersMacroSampleFrameType {
   GeneralPopulation = 'GENERAL_POPULATION',
+  HighRiskClinicalMonitoring = 'HIGH_RISK_CLINICAL_MONITORING',
+  HighRiskHealthcareWorkers = 'HIGH_RISK_HEALTHCARE_WORKERS',
   HighRiskNotOccupationallyExposedToDromedaryCamels = 'HIGH_RISK_NOT_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS',
   HighRiskOccupationallyExposedToDromedaryCamels = 'HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS',
+  HighRiskOther = 'HIGH_RISK_OTHER',
   Uncategorized = 'UNCATEGORIZED'
 }
 

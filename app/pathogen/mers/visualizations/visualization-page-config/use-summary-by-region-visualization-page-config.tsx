@@ -52,8 +52,16 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
         ])
       );
 
+      console.log('macroSampleFrames', macroSampleFrames);
+
       const allHumanMacroSampleFrames = macroSampleFrames
-        .filter((macroSampleFrame) => macroSampleFrame.macroSampleFrame !== MersMacroSampleFrameType.UNCATEGORIZED)
+        .filter((macroSampleFrame) => [
+          MersMacroSampleFrameType.GENERAL_POPULATION,
+          MersMacroSampleFrameType.HIGH_RISK_POPULATIONS,
+          MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING,
+          MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS,
+          MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS,
+        ].includes(macroSampleFrame.macroSampleFrame))
         .filter((macroSampleFrame) => macroSampleFrame.sampleFrames.some((sampleFrame) => allHumanSampleFrames.includes(sampleFrame)))
         .map((macroSampleFrames) => macroSampleFrames.macroSampleFrame);
 
@@ -260,12 +268,16 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
               > & {
                 macroSampleFrame: (
                   MersMacroSampleFrameType.GENERAL_POPULATION |
-                  MersMacroSampleFrameType.HIGH_RISK_NOT_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS |
+                  MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS |
+                  MersMacroSampleFrameType.HIGH_RISK_OTHER |
+                  MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING |
                   MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS
                 )
               } => (
                 macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.GENERAL_POPULATION ||
-                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_NOT_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS ||
+                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS ||
+                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_OTHER ||
+                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING ||
                 macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS
               ))
               .map((macroSampleFrame) => ({
