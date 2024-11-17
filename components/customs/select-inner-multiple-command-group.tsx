@@ -51,6 +51,7 @@ export const SelectInnerMultipleCommandGroup = (props: SelectInnerMultipleComman
         <CommandGroup
           heading={`${heading} - ${superOptionToLabelMap ? superOptionToLabelMap(superOption) : superOption}`}
           className="bg-neutral-200"
+          key={superOption}
         >
           {selectablesWithSuperOptions
             .filter((option) => option.superOption === superOption)
