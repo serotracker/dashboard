@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useContext } from "react";
-import assertNever from "assert-never";
+import { assertNever } from "assert-never";
 import { AnimalMersSeroprevalenceEstimate, AnimalMersViralEstimate, HumanMersSeroprevalenceEstimate, HumanMersViralEstimate, MersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
 import { FaoYearlyCamelPopulationDataEntry } from "@/hooks/mers/useFaoYearlyCamelPopulationDataPartitioned";
@@ -14,6 +14,7 @@ import { HumanViralPositivePrevalenceByRegion } from "./estimates-by-region/huma
 import { AnimalViralPositivePrevalenceByRegion } from "./estimates-by-region/animal-viral-positive-prevalence-by-region";
 import { distinctColoursMap, generateRandomColour } from "@/lib/utils";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
+import { MersAssayClassification, MersAssayClassificationContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-assay-classification-content";
 
 export enum EstimatesByRegionVariableOfInterestDropdownOption {
   HUMAN_SEROPREVALENCE = "HUMAN_SEROPREVALENCE",
@@ -76,6 +77,7 @@ interface EstimatesByRegionProps {
   selectedVariableOfInterest: EstimatesByRegionVariableOfInterestDropdownOption;
   selectedRegion: EstimatesByRegionRegionDropdownOption;
   legendConfiguration: LegendConfiguration;
+  selectedAssayClassification: EstimatesByRegionAssayClassificationDropdownOption;
 }
 
 export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
@@ -88,10 +90,41 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     selectedRegion,
     barColoursForWhoRegions,
     barColoursForUnRegions,
-    legendConfiguration
+    legendConfiguration,
+    selectedAssayClassification
   } = props;
 
   const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
+  const { assayClassifications } = useContext(MersAssayClassificationContext);
+
+  const isCorrectArrayClassification = useCallback((estimate:
+    | HumanMersSeroprevalenceEstimate
+    | AnimalMersSeroprevalenceEstimate
+    | HumanMersViralEstimate
+    | AnimalMersViralEstimate
+  ): boolean => {
+    if(selectedAssayClassification === EstimatesByRegionAssayClassificationDropdownOption.ANY) {
+      return true;
+    }
+
+    if(selectedAssayClassification === EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY) {
+      const confirmatoryAssays = assayClassifications
+        .find((element) => element.classification === MersAssayClassification.CONFIRMATORY)
+        ?.assays ?? [];
+
+      return estimate.primaryEstimateInfo.assay.some((element) => confirmatoryAssays.includes(element));
+    }
+
+    if(selectedAssayClassification === EstimatesByRegionAssayClassificationDropdownOption.SCREENING) {
+      const screeningAssays = assayClassifications
+        .find((element) => element.classification === MersAssayClassification.SCREENING)
+        ?.assays ?? [];
+
+      return estimate.primaryEstimateInfo.assay.every((element) => screeningAssays.includes(element));
+    }
+
+    assertNever(selectedAssayClassification);
+  }, [ selectedAssayClassification, assayClassifications ])
 
   const regionGroupingFunction = useCallback((dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => {
     if(selectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION) {
@@ -159,7 +192,9 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
   const graph = useMemo(() => {
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE) {
       return <HumanSeroprevalenceByRegion
-        humanMersSeroprevalenceEstimates={humanMersSeroprevalenceEstimates}
+        humanMersSeroprevalenceEstimates={humanMersSeroprevalenceEstimates
+          .filter((element) => isCorrectArrayClassification(element))
+        }
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
@@ -168,7 +203,9 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     }
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE) {
       return <HumanViralPositivePrevalenceByRegion
-        humanMersViralEstimates={humanMersViralEstimates}
+        humanMersViralEstimates={humanMersViralEstimates
+          .filter((element) => isCorrectArrayClassification(element))
+        }
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
@@ -177,7 +214,9 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     }
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE) {
       return <AnimalSeroprevalenceByRegion
-        animalMersSeroprevalenceEstimates={animalMersSeroprevalenceEstimates}
+        animalMersSeroprevalenceEstimates={animalMersSeroprevalenceEstimates
+          .filter((element) => isCorrectArrayClassification(element))
+        }
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
@@ -186,7 +225,9 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     }
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE) {
       return <AnimalViralPositivePrevalenceByRegion
-        animalMersViralEstimates={animalMersViralEstimates}
+        animalMersViralEstimates={animalMersViralEstimates
+          .filter((element) => isCorrectArrayClassification(element))
+        }
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
@@ -194,7 +235,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
       />
     }
     assertNever(selectedVariableOfInterest);
-  }, [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, selectedVariableOfInterest, regionGroupingFunction, regionToDotColour, regionToLegendLabel, legendConfiguration ]);
+  }, [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, selectedVariableOfInterest, regionGroupingFunction, regionToDotColour, regionToLegendLabel, legendConfiguration, isCorrectArrayClassification ]);
 
   return graph;
 }

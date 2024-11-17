@@ -1,5 +1,7 @@
 import { useMersEstimatesFilterOptions } from "@/hooks/mers/useMersEstimatesFilters";
-import { createContext, useCallback, useMemo, useState } from "react";
+import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
+import uniq from "lodash/uniq";
+import { createContext, useCallback, useEffect, useMemo, useState } from "react";
 
 export enum MersAssayClassification {
   SCREENING = 'SCREENING',
@@ -16,23 +18,38 @@ export const mersAssayClassificationToTextMap = {
   [MersAssayClassification.SCREENING]: 'Screening',
 }
 
+const mersAssaySortOrderMap = {
+  [MersAssayClassification.CONFIRMATORY]: 1,
+  [MersAssayClassification.SCREENING]: 2,
+  [MersAssayClassification.UNCATEGORIZED]: 3
+}
+
 const mersAssayClassificationPriorityMap = {
   [MersAssayClassification.SCREENING]: 1,
   [MersAssayClassification.CONFIRMATORY]: 2,
   [MersAssayClassification.UNCATEGORIZED]: 3
 }
 
+type AssayAdjustmentFunction = (input: {
+  classification: MersAssayClassification.SCREENING | MersAssayClassification.CONFIRMATORY,
+  assays: string[]
+}) => void;
+
 interface MersAssayClassificationContextType {
+  allAssays: string[];
   assayClassifications: Array<{
     classification: MersAssayClassification;
     assays: string[];
   }>
   getAssayClassificationsForAssay: (assay: string) => MersAssayClassification[];
+  adjustAssayClassification: AssayAdjustmentFunction;
 }
 
 const initialMersAssayClassificationContext: MersAssayClassificationContextType = {
+  allAssays: [],
   assayClassifications: [],
-  getAssayClassificationsForAssay: () => []
+  getAssayClassificationsForAssay: () => [],
+  adjustAssayClassification: () => {}
 };
 
 export const MersAssayClassificationContext = createContext<
@@ -44,13 +61,36 @@ interface MersAssayClassificationProviderProps {
 }
 
 export const MersAssayClassificationProvider = (props: MersAssayClassificationProviderProps) => {
-  const [ assayClassifications, setAssayClassifications ] = useState([{
-    classification: MersAssayClassification.SCREENING,
-    assays: ['ELISA', 'Immunofluorescence', 'Protein microarray']
-  }, {
+  const [ assayClassifications, _setAssayClassifications ] = useState([{
     classification: MersAssayClassification.CONFIRMATORY,
     assays: ['PRNT', 'Pseudoparticle Neutralization', 'Virus Neutralization', 'Microneutralization']
+  }, {
+    classification: MersAssayClassification.SCREENING,
+    assays: ['ELISA', 'Immunofluorescence', 'Protein microarray']
   }]);
+  const [ allAssays, setAllAssays ] = useState<string[]>([]);
+
+  const { data: primaryEstimates } = useMersPrimaryEstimates();
+
+  const setAssayClassifications = useCallback((newArrayClassifications: typeof assayClassifications) => {
+    _setAssayClassifications(newArrayClassifications
+      .sort((classificationA, classificationB) => (
+        mersAssaySortOrderMap[classificationA.classification] > mersAssaySortOrderMap[classificationB.classification]
+          ? 1
+          : -1
+      ))
+    )
+  }, [ _setAssayClassifications ])
+
+  useEffect(() => {
+    if(!!primaryEstimates && primaryEstimates?.mersPrimaryEstimates.length > 0 && allAssays.length === 0) {
+      const assayData = uniq(primaryEstimates.mersPrimaryEstimates
+        .flatMap((primaryEstimate) => primaryEstimate.primaryEstimateInfo.assay)
+      )
+
+      setAllAssays(assayData);
+    }
+  }, [ allAssays, setAllAssays, primaryEstimates ]);
 
   const getAssayClassificationsForAssay = useCallback((assay: string) => {
     return assayClassifications
@@ -68,11 +108,20 @@ export const MersAssayClassificationProvider = (props: MersAssayClassificationPr
       .map(({ classification }) => classification)
   }, [ assayClassifications ]);
 
+  const adjustAssayClassification: AssayAdjustmentFunction = useCallback(({ classification, assays }) => {
+    setAssayClassifications([
+      ...assayClassifications.filter((element) => element.classification !== classification),
+      { classification, assays }
+    ])
+  }, [ assayClassifications, setAssayClassifications ]);
+
   return (
     <MersAssayClassificationContext.Provider
       value={{
+        allAssays,
         assayClassifications,
-        getAssayClassificationsForAssay
+        getAssayClassificationsForAssay,
+        adjustAssayClassification
       }}
     >
       {props.children}
