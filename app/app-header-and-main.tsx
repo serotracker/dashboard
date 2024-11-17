@@ -45,7 +45,7 @@ export const AppHeaderAndMain = (props: AppHeaderAndMainProps) => {
     return DashboardType.NONE;
   }, [pathname])
 
-  const useModalInput = useMemo(() => {
+  const useHelpModalInput = useMemo(() => {
     const modalType = dashboardTypeToHelpModalType[dashboardType];
 
     return !!modalType
@@ -61,13 +61,30 @@ export const AppHeaderAndMain = (props: AppHeaderAndMainProps) => {
       }
   }, [ dashboardType ])
 
-  const helpModal = useModal(useModalInput);
+  const useWelcomeModalInput = useMemo(() => {
+    if(dashboardType === DashboardType.MERS) {
+      return {
+        initialModalState: ModalState.OPENED,
+        disabled: false as const,
+        modalType: ModalType.MERSTRACKER_WELCOME_MODAL as const
+      }
+    }
+
+    return {
+      initialModalState: ModalState.OPENED,
+      disabled: true as const,
+      modalType: undefined
+    }
+  }, [ dashboardType ]);
+
+  const helpModal = useModal(useHelpModalInput);
+  const welcomeModal = useModal(useWelcomeModalInput);
 
   return (
     <>
       <Header
         dashboardType={dashboardType}
-        helpButtonConfiguration={ !!useModalInput.modalType ? {
+        helpButtonConfiguration={ !!useHelpModalInput.modalType ? {
           enabled: true,
           onHelpButtonClick:() => helpModal.setModalState(ModalState.OPENED)
         } : {
@@ -77,6 +94,7 @@ export const AppHeaderAndMain = (props: AppHeaderAndMainProps) => {
       <main className={"h-full-screen w-screen bg-foreground top-14 fixed"}>
         {props.children}
         <helpModal.modal />
+        <welcomeModal.modal />
       </main>
     </>
   )

@@ -54,12 +54,15 @@ export const MersBanner = () => {
 
   return <DashboardTopBanner
     headerContent={
-      <div className="mb-2">
-        <p className="inline"> MERSTracker is a dashboard and platform for MERS serosurveys, viral testing, and genomic sequencing studies. We conduct an </p>
-        <Link href="/about/about-our-data" className="underline text-link inline">ongoing systematic review</Link>
-        <p className="inline"> to track surveillance efforts around the world and visualize findings on this dashboard. We don&apos;t assess assay or study quality, please use your judgement when drawing conclusions. Our database is not comprehensive and we continue to add studies to our database. You can submit a MERS study that you believe belongs on the dashboard by using </p>
-        <Link className="inline text-link underline text-end" target="_blank" rel="noopener noreferrer" href="https://forms.gle/ifwicQVVjj9CeNoA9">this form</Link>
-        <p className='inline'> and it will be reviewed by a member of our team.</p>
+      <div>
+        <div className="mb-4">
+          <p className="inline"> MERSTracker (by the SeroTracker group) is a dashboard displaying published MERS-CoV serosurveys, viral testing, and genomic sequencing studies. We compile and centralize resources on MERS-CoV via a systematic review of available literature. Our database is not comprehensive and we continue to add studies with new searches. You can see more information on our review methods </p>
+          <Link href="/about/about-our-data" className="underline text-link inline">here</Link>
+          <p className='inline'>.</p>
+        </div>
+        <div className="mb-2">
+          <p className="inline">The data on our dashboard are extracted from publicly available independent research and do not reflect validation of the findings on behalf of SeroTracker or any of our funding or collaborating partners. Research studies are heterogeneous and vary in their quality, design, methodology, assay performance, and reporting, and results should be interpreted and compared with caution.</p>
+        </div>
       </div>
     }
     dashboardType={DashboardType.MERS}
