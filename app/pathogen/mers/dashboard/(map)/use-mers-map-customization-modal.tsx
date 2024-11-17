@@ -46,9 +46,8 @@ export const eventsProvidedCourtesyOfFaoTooltipContent = (
 
 export const camelPopulationProvidedCourtesyOfFaoTooltipContent = (
   <>
-    <p className="inline">Camel population data is provided courtesy of the </p>
-    <Link className='inline text-link' href='https://empres-i.apps.fao.org/' target="__blank" rel="noopener noreferrer">FAO&apos;s Empres-i dashboard</Link>
-    <p> which collects data on the population of various different livestock.</p>
+    <p className='inline'>Camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nations, through the FAO STAT Statistical Database for Live Animals, last updated on 2 August 2022 and available at: </p>
+    <Link className="inline text-link" href="https://data.apps.fao.org/catalog/dataset/live-animals-national-global-annual" target="__blank" rel="noopener noreferrer">Live Animals (National - Global - Annual) - FAOSTAT - Datasets - FAO catalog</Link>
   </>
 )
 
