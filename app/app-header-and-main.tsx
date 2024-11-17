@@ -71,7 +71,7 @@ export const AppHeaderAndMain = (props: AppHeaderAndMainProps) => {
     }
 
     return {
-      initialModalState: ModalState.CLOSED,
+      initialModalState: ModalState.OPENED,
       disabled: true as const,
       modalType: undefined
     }
@@ -79,9 +79,6 @@ export const AppHeaderAndMain = (props: AppHeaderAndMainProps) => {
 
   const helpModal = useModal(useHelpModalInput);
   const welcomeModal = useModal(useWelcomeModalInput);
-
-  console.log('useWelcomeModalInput', useWelcomeModalInput);
-  console.log('welcomeModal', welcomeModal);
 
   return (
     <>
