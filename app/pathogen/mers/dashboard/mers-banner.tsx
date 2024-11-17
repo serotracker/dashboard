@@ -7,6 +7,8 @@ import { isMersSeroprevalenceEstimate, isMersViralEstimate, MersContext, MersSer
 import { formatMersSeroprevalenceEstimateForTable, formatMersViralEstimateForTable } from "./(table)/use-mers-data-table-data";
 import { useMersEstimateColumnConfiguration } from "./(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { DashboardType } from "@/app/app-header-and-main";
+import { MERSTrackerCitationButtonContent, suggestedMERSTrackerCitationText } from "../merstracker-citations";
+import { ToastId } from "@/contexts/toast-provider";
 
 export const cleanEstimateForMersBanner = (
   estimate: MersSeroprevalenceEstimate | MersViralEstimate
@@ -74,14 +76,14 @@ export const MersBanner = () => {
       dataTableRows: mersSeroprevalenceEstimateColumnConfiguration
     }}
     downloadCsvButtonTwoConfiguration={{
-      enabled: true,
-      csvDownloadFilename: "merstracker_viral_dataset",
-      buttonContent: "Download CSV with Viral Estimates",
-      filteredData: viralEstimateData,
-      dataTableRows: mersViralEstimateColumnConfiguration
+      enabled: false,
     }}
     citationButtonConfiguration={{
-      enabled: false
+      enabled: true,
+      suggestedCitationText: suggestedMERSTrackerCitationText,
+      citationToastId: ToastId.MERSTRACKER_DOWNLOAD_CSV_CITATION_TOAST,
+      //buttonContent: <MERSTrackerCitationButtonContent />
+      buttonContent: 'Cite our Data'
     }}
     dataLastUpdatedNoteConfiguration={{
       enabled: true,

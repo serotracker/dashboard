@@ -11,7 +11,7 @@ export const SuggestedMERSTrackerCitation = () => (
 )
 
 export const MERSTrackerCitationButtonContent = () => (
-  <p className="inline">Copy Citation</p>
+  <p className="inline">Cite Us</p>
 )
 
 export const MERSTrackerCitationToastMessage = () => (
