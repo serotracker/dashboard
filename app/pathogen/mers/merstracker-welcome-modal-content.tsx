@@ -10,7 +10,7 @@ interface MERSTrackerWelcomeModalContentProps {
 export const MERSTrackerWelcomeModalContent = (props: MERSTrackerWelcomeModalContentProps) => {
   return (
     <div className={props.className}>
-      <ModalHeader header={"Welcome to MERSTracker"} closeModal={props.closeModal} />
+      <ModalHeader header={"Welcome to MERSTracker!"} closeModal={props.closeModal} />
       <Separator.Root
         orientation="horizontal"
         className="bg-mers h-px"
