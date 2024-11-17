@@ -28,6 +28,12 @@ export enum EstimatesByRegionRegionDropdownOption {
   COUNTRY = "COUNTRY"
 }
 
+export enum EstimatesByRegionAssayClassificationDropdownOption {
+  SCREENING = 'SCREENING',
+  CONFIRMATORY = 'CONFIRMATORY',
+  ANY = 'ANY'
+}
+
 interface EstimatesByRegionYAxisTickProps {
   tickProps: {
     x: number;

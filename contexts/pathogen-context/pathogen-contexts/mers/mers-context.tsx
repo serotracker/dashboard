@@ -16,6 +16,7 @@ import { filterMersEstimates } from "./mers-data-filtering";
 import { MersMapCustomizationsProvider } from "./map-customizations-context";
 import { MersMacroSampleFramesProvider } from "./mers-macro-sample-frames-context";
 import { MersFilterMetadataProvider } from "./mers-filter-metadata-context";
+import { MersAssayClassificationProvider } from "./mers-assay-classification-content";
 
 const initialMersContextState = {
   filteredData: [],
@@ -365,9 +366,11 @@ export const MersProviders = (props: MersProvidersProps) => {
       <CamelPopulationDataProvider>
         <MersMapCustomizationsProvider>
           <MersMacroSampleFramesProvider>
-            <MersFilterMetadataProvider>
-              {props.children}
-            </MersFilterMetadataProvider>
+            <MersAssayClassificationProvider>
+              <MersFilterMetadataProvider>
+                {props.children}
+              </MersFilterMetadataProvider>
+            </MersAssayClassificationProvider>
           </MersMacroSampleFramesProvider>
         </MersMapCustomizationsProvider>
       </CamelPopulationDataProvider>

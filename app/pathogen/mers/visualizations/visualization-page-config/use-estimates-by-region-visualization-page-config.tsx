@@ -3,7 +3,7 @@ import { ClopperPearsonConfidenceIntervalCalculationTooltip, SampleSizeRestricti
 import assertNever from "assert-never";
 import { MersVisualizationInformation } from "../visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
-import { EstimatesByRegion, EstimatesByRegionRegionDropdownOption, EstimatesByRegionVariableOfInterestDropdownOption } from "../../dashboard/(visualizations)/estimates-by-region";
+import { EstimatesByRegion, EstimatesByRegionAssayClassificationDropdownOption, EstimatesByRegionRegionDropdownOption, EstimatesByRegionVariableOfInterestDropdownOption } from "../../dashboard/(visualizations)/estimates-by-region";
 import { LegendConfiguration } from "@/components/customs/visualizations/stacked-bar-chart";
 import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { defaultColoursForWhoRegions } from "@/lib/who-regions";
@@ -23,6 +23,11 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
     estimatesByRegionSelectedRegion,
     setEstimatesByRegionSelectedRegion,
   ] = useState<EstimatesByRegionRegionDropdownOption>(EstimatesByRegionRegionDropdownOption.WHO_REGION);
+
+  const [
+    estimatesByRegionSelectedAssayClassification,
+    setEstimatesByRegionSelectedAssayClassification,
+  ] = useState<EstimatesByRegionAssayClassificationDropdownOption>(EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY);
 
   const [
     barColoursForWhoRegions,
@@ -78,11 +83,11 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   const getDisplayNameForEstimatesByRegion: MersVisualizationInformation<
     string,
     EstimatesByRegionVariableOfInterestDropdownOption,
-    EstimatesByRegionRegionDropdownOption,
-    string
+    EstimatesByRegionAssayClassificationDropdownOption,
+    EstimatesByRegionRegionDropdownOption
   >['getDisplayName'] = useCallback(() => ({
-    type: VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN,
-    beforeBothDropdownsHeaderText: "",
+    type: VisualizationDisplayNameType.WITH_TRIPLE_DROPDOWN,
+    beforeAllDropdownsHeaderText: "",
     firstDropdownProps: {
       dropdownName: 'Variable of Interest Selection',
       borderColourClassname: 'border-mers',
@@ -124,8 +129,32 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
         setEstimatesByRegionVariableOfInterest(option);
       }
     },
-    betweenDropdownsHeaderText: " Grouped By ",
+    betweenFirstAndSecondDropdownHeaderText: " Tested Using ",
     secondDropdownProps: {
+      dropdownName: 'Assay Classification Selection',
+      borderColourClassname: 'border-mers',
+      hoverColourClassname: 'hover:bg-mersHover/50',
+      highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
+      dropdownOptionGroups: [{
+        groupHeader: 'Assay Classification',
+        options: [
+          EstimatesByRegionAssayClassificationDropdownOption.SCREENING,
+          EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY,
+          EstimatesByRegionAssayClassificationDropdownOption.ANY
+        ]
+      }],
+      chosenDropdownOption: estimatesByRegionSelectedAssayClassification,
+      dropdownOptionToLabelMap: {
+        [EstimatesByRegionAssayClassificationDropdownOption.SCREENING]: "Screening",
+        [EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY]: "Confirmatory",
+        [EstimatesByRegionAssayClassificationDropdownOption.ANY]: "Any",
+      },
+      onDropdownOptionChange: (option) => {
+        setEstimatesByRegionSelectedAssayClassification(option);
+      }
+    },
+    betweenSecondAndThirdDropdownHeaderText: " Assays And Grouped By ",
+    thirdDropdownProps: {
       dropdownName: 'Region Selection',
       borderColourClassname: 'border-mers',
       hoverColourClassname: 'hover:bg-mersHover/50',
@@ -148,8 +177,8 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
         setEstimatesByRegionSelectedRegion(option);
       }
     },
-    afterBothDropdownsHeaderText: " With 95% Confidence Intervals"
-  }), [ cleanedChosenDropdownOption, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion, availableDropdownOptionGroups ])
+    afterAllDropdownsHeaderText: " With 95% Confidence Intervals"
+  }), [ cleanedChosenDropdownOption, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion, availableDropdownOptionGroups, estimatesByRegionSelectedAssayClassification ])
 
   const renderVisualizationForEstimatesByRegion: MersVisualizationInformation<
     string,

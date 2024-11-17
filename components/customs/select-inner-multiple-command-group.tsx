@@ -41,8 +41,6 @@ export const SelectInnerMultipleCommandGroup = (props: SelectInnerMultipleComman
     return uniq(selectablesWithSuperOptions.map((selectable) => selectable.superOption));
   }, [ selectablesWithSuperOptions ]);
 
-  console.log('selectablesWithSuperOptions', selectablesWithSuperOptions);
-
   return (
     <div
       className={cn("h-full overflow-auto", className)}

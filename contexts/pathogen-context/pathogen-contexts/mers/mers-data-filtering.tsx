@@ -12,7 +12,7 @@ export enum MersFilterableField {
   samplingStartDate = "samplingStartDate",
   samplingEndDate = "samplingEndDate",
   samplingMethod = "samplingMethod",
-  assay = "assay",
+  mersAssay = "mersAssay",
   specimenType = "specimenType",
   sex = "sex",
   isotypes = "isotypes",
@@ -120,12 +120,12 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       })
     }
   },
-  [MersFilterableField.assay]: (input) => ({
+  [MersFilterableField.mersAssay]: (input) => ({
     included: mersEstimateArrayFieldHandler({
-      filterKey: MersFilterableField.assay,
+      filterKey: MersFilterableField.mersAssay,
       estimate: {
         ...input.estimate,
-        assay: [
+        mersAssay: [
           ...input.estimate.primaryEstimateInfo.assay,
           ...input.estimate.testUsedSubestimates
             .flatMap((subestimate) => subestimate.assay)
@@ -133,13 +133,13 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
       },
       selectedFilters: {
         ...input.selectedFilters,
-        [MersFilterableField.assay]: input.selectedFilters[MersFilterableField.assay] ?? []
+        [MersFilterableField.mersAssay]: input.selectedFilters[MersFilterableField.mersAssay] ?? []
       }
     }),
     testUsedSubestimateIdstoMarkAsFiltered: input.estimate.testUsedSubestimates
       .filter((subestimate) =>
-        ((input.selectedFilters[MersFilterableField.assay] ?? []).length > 0) &&
-        !input.selectedFilters[MersFilterableField.assay]?.some((element) => subestimate.assay.includes(element))
+        ((input.selectedFilters[MersFilterableField.mersAssay] ?? []).length > 0) &&
+        !input.selectedFilters[MersFilterableField.mersAssay]?.some((element) => subestimate.assay.includes(element))
       )
       .map((subestimate) => subestimate.id)
   }),
