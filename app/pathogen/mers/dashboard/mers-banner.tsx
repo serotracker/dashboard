@@ -7,7 +7,7 @@ import { isMersSeroprevalenceEstimate, isMersViralEstimate, MersContext, MersSer
 import { formatMersSeroprevalenceEstimateForTable, formatMersViralEstimateForTable } from "./(table)/use-mers-data-table-data";
 import { useMersEstimateColumnConfiguration } from "./(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { DashboardType } from "@/app/app-header-and-main";
-import { MERSTrackerCitationButtonContent, suggestedMERSTrackerCitationText } from "../merstracker-citations";
+import { MERSTrackerCitationButtonContent, shortenedMERSTrackerCitationText, suggestedMERSTrackerCitationText } from "../merstracker-citations";
 import { ToastId } from "@/contexts/toast-provider";
 
 export const cleanEstimateForMersBanner = (
@@ -73,7 +73,8 @@ export const MersBanner = () => {
       csvDownloadFilename: "merstracker_seroprevalence_dataset",
       buttonContent: "Download CSV with Seroprevalence Estimates",
       filteredData: seroprevalenceEstimateData,
-      dataTableRows: mersSeroprevalenceEstimateColumnConfiguration
+      dataTableRows: mersSeroprevalenceEstimateColumnConfiguration,
+      citationText: shortenedMERSTrackerCitationText
     }}
     downloadCsvButtonTwoConfiguration={{
       enabled: false,
@@ -82,7 +83,6 @@ export const MersBanner = () => {
       enabled: true,
       suggestedCitationText: suggestedMERSTrackerCitationText,
       citationToastId: ToastId.MERSTRACKER_DOWNLOAD_CSV_CITATION_TOAST,
-      //buttonContent: <MERSTrackerCitationButtonContent />
       buttonContent: 'Cite our Data'
     }}
     dataLastUpdatedNoteConfiguration={{

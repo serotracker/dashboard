@@ -20,6 +20,7 @@ interface DownloadCsvButtonConfiguration {
     label: string;
   }>;
   csvDownloadFilename: string;
+  citationText: string;
 }
 
 interface EnabledCitationButtonConfiguration {
@@ -133,7 +134,7 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
 
           return [label, value]
         }))
-      ))
+      )).map((element) => ({ ...element, 'Citation': downloadCsvButtonConfiguration.citationText}))
     );
 
     download(csvConfig)(csv);
