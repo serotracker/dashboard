@@ -100,7 +100,8 @@ export const useMersReportedHumanCasesMapLayer = () => {
           ticks: linearLegendColourGradientConfiguration.props.ticks,
           title: 'Human Cases By Country or Area'
         }
-      }
+      },
+      legendTooltipContent: undefined
     }
   }, [ getFreeTextEntries ]);
 

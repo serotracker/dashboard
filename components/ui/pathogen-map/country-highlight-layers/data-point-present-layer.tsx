@@ -66,7 +66,8 @@ export const useDataPointPresentLayer = () => {
       }] : [],
       linearLegendColourGradientConfiguration: {
         enabled: false
-      }
+      },
+      legendTooltipContent: undefined
     }
   }, []);
 

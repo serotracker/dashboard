@@ -84,6 +84,7 @@ export type GetCountryHighlightingLayerInformationOutput = {
   countryHighlightLayerLegendEntries: CountryHighlightLayerLegendEntry[];
   freeTextEntries: FreeTextEntry[];
   linearLegendColourGradientConfiguration: LinearLegendColourGradientConfiguration;
+  legendTooltipContent: React.ReactNode | undefined;
 };
 
 interface PathogenMapProps<

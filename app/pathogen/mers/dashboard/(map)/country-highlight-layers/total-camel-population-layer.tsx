@@ -1,4 +1,5 @@
 import { rose } from 'tailwindcss/colors'
+import Link from 'next/link';
 import uniq from 'lodash/uniq';
 import { useCallback, useContext } from "react";
 import {
@@ -9,7 +10,7 @@ import { generateMapColourBuckets } from "@/components/ui/pathogen-map/country-h
 import { MapSymbology } from '@/app/pathogen/sarscov2/dashboard/(map)/map-config';
 import { MersMapCustomizationsContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context';
 import { mapColourBucketsToLinearGradientConfiguration } from '@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration';
-import { formatNumberRangeForLegend, generateStandardMapPaint, standardGetFreeTextEntriesFunction } from './helpers';
+import { generateStandardMapPaint, standardGetFreeTextEntriesFunction } from './helpers';
 
 type GetCountryHighlightingLayerInformationInput<
   TData extends { countryAlphaThreeCode: string },
@@ -86,7 +87,13 @@ export const useTotalCamelPopulationLayer = () => {
           ticks: linearLegendColourGradientConfiguration.props.ticks,
           title: 'Camel Population By Country or Area'
         }
-      }
+      },
+      legendTooltipContent: (
+        <div>
+          <p className='inline text-sm'>Camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nations, through the FAO STAT Statistical Database for Live Animals, last updated on 2 August 2022 and available at: </p>
+          <Link className="inline text-link text-sm" href="https://data.apps.fao.org/catalog/dataset/live-animals-national-global-annual" target="__blank" rel="noopener noreferrer">Live Animals (National - Global - Annual) - FAOSTAT - Datasets - FAO catalog</Link>
+        </div>
+      )
     }
   }, [ getFreeTextEntries ]);
 

@@ -1,8 +1,10 @@
 
 'use client';
 
+import { GenericTooltip } from "@/components/customs/generic-tooltip";
 import { LinearLegendColourGradient, LinearLegendColourGradientProps } from "@/components/customs/linear-legend-colour-gradient";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 
 
@@ -48,6 +50,7 @@ export interface CountryHighlightLayerLegendProps {
   linearLegendColourGradientConfiguration: LinearLegendColourGradientConfiguration;
   freeTextEntries: FreeTextEntry[];
   closeButtonConfiguration: CloseButtonConfiguration;
+  legendTooltipContent: React.ReactNode | undefined;
 }
 
 export const CountryHighlightLayerLegend = (input: CountryHighlightLayerLegendProps) => {
@@ -61,11 +64,22 @@ export const CountryHighlightLayerLegend = (input: CountryHighlightLayerLegendPr
     return null;
   }
 
+  console.log('input.legendTooltipContent', input.legendTooltipContent);
+
   return (
     <Card className={input.className}>
       <CardHeader className={"py-3 flex justify-between"}>
         <div className="flex justify-between">
-          <h2 className="text-lg">Legend</h2>
+          <div className="flex items-center">
+            <h2 className="text-lg">Legend</h2>
+            <GenericTooltip 
+              className={cn(
+                'ml-2',
+                !input.legendTooltipContent ? 'hidden' : ''
+              )}
+              tooltipContent={input.legendTooltipContent}
+            />
+          </div>
           {closeButtonConfiguration.enabled === true ? (
             <button
               className='p-1 rounded-full hover:bg-gray-200 m-0'

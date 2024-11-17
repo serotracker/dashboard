@@ -81,7 +81,7 @@ export const MersMap = () => {
     eventDataShown
   })
 
-  const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration } = useMersMapPaint({
+  const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration, legendTooltipContent } = useMersMapPaint({
     dataPoints,
     faoMersEventData,
     currentMapCountryHighlightingSettings,
@@ -106,8 +106,9 @@ export const MersMap = () => {
       ...dataTypeLayerLegendEntries
     ],
     linearLegendColourGradientConfiguration,
-    freeTextEntries
-  }), [ countryHighlightLayerLegendEntries, dataTypeLayerLegendEntries, linearLegendColourGradientConfiguration, freeTextEntries ]);
+    freeTextEntries,
+    legendTooltipContent
+  }), [ countryHighlightLayerLegendEntries, dataTypeLayerLegendEntries, linearLegendColourGradientConfiguration, freeTextEntries, legendTooltipContent ]);
   
   const { mersMapLegend } = useMersMapLegend({
     legendProps

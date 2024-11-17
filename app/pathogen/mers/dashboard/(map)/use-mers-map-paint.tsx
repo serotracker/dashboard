@@ -40,11 +40,11 @@ export const useMersMapPaint = <
   const reportedMersAnimalCasesMapLayer = useMersReportedAnimalCasesMapLayer();
   const mersWhoHumanCasesMapLayer = useMersWhoCasesMapLayer();
 
-  const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration } = useMemo((): GetCountryHighlightingLayerInformationOutput => {
+  const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration, legendTooltipContent } = useMemo((): GetCountryHighlightingLayerInformationOutput => {
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES) {
       const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
 
-      const { paint, freeTextEntries, linearLegendColourGradientConfiguration } = dataPointPresentMapLayer.getCountryHighlightingLayerInformation({
+      const { paint, freeTextEntries, linearLegendColourGradientConfiguration, legendTooltipContent } = dataPointPresentMapLayer.getCountryHighlightingLayerInformation({
         data: dataPoints,
         countryHighlightingEnabled: true,
         countryOutlinesEnabled
@@ -82,7 +82,8 @@ export const useMersMapPaint = <
         paint,
         linearLegendColourGradientConfiguration,
         countryHighlightLayerLegendEntries,
-        freeTextEntries
+        freeTextEntries,
+        legendTooltipContent
       }
     }
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION) {
@@ -146,6 +147,7 @@ export const useMersMapPaint = <
     paint,
     countryHighlightLayerLegendEntries,
     freeTextEntries,
-    linearLegendColourGradientConfiguration
+    linearLegendColourGradientConfiguration,
+    legendTooltipContent
   }
 };

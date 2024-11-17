@@ -100,7 +100,8 @@ export const useMersWhoCasesMapLayer = () => {
           ticks: linearLegendColourGradientConfiguration.props.ticks,
           title: 'Total Human Cases Reported to the WHO By Country or Area'
         }
-      }
+      },
+      legendTooltipContent: undefined
     }
   }, [ getFreeTextEntries ]);
 
