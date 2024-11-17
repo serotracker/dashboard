@@ -52,8 +52,6 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
         ])
       );
 
-      console.log('macroSampleFrames', macroSampleFrames);
-
       const allHumanMacroSampleFrames = macroSampleFrames
         .filter((macroSampleFrame) => [
           MersMacroSampleFrameType.GENERAL_POPULATION,

@@ -35,18 +35,6 @@ export interface SplitTimeBucketedBarChartProps<
   numberOfDigitsAfterDecimalPointForOutputValue: number;
 }
 
-const CustomTooltip: TooltipProps<any, any>['content'] = ({ active, payload, label }) => {
-  console.log(payload);
-
-  if (active && payload && payload.length) {
-    return (
-      <div> ABC </div>
-    );
-  }
-
-  return null;
-};
-
 export const SplitTimeBucketedBarChart = <
   TData,
   TPrimaryGroupingKey extends string,
