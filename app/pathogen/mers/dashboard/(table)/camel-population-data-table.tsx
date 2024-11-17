@@ -128,6 +128,9 @@ export const CamelPopulationDataTable = (props: CamelPopulationDataTableProps) =
       additionalButtonConfiguration={{
         enabled: false
       }}
+      secondAdditionalButtonConfiguration={{
+        enabled: false
+      }}
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={props.tableData}
     />

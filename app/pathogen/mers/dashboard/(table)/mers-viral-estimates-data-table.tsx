@@ -42,6 +42,11 @@ export const MersViralEstimateDataTable = (props: MersViralEstimateDataTableProp
         enabled: false
       }}
       additionalButtonConfiguration={dataTableAdditionalButtonConfig}
+      secondAdditionalButtonConfiguration={{
+        enabled: true,
+        buttonText: "Data Dictionary",
+        link: "https://airtable.com/app3ebPi0gt39r3xI/shrWqXLuWPhnic2xw"
+      }}
       rowExpansionConfiguration={rowExpansionConfiguration}
       data={props.tableData}
     />
