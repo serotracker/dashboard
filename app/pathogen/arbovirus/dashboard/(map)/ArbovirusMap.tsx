@@ -99,7 +99,8 @@ export function ArbovirusMap() {
             ticks: linearLegendColourGradientConfiguration.props.ticks,
             title: 'Postive Cases Reported'
           }
-        }
+        },
+        legendTooltipContent: undefined
       }
     }
     if(selectedFilters.esm?.length > 0) {

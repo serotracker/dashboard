@@ -100,7 +100,8 @@ export const useMersReportedAnimalCasesMapLayer = () => {
           ticks: linearLegendColourGradientConfiguration.props.ticks,
           title: 'Animal Cases By Country or Area'
         }
-      }
+      },
+      legendTooltipContent: undefined
     }
   }, [ getFreeTextEntries ]);
 

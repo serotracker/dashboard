@@ -84,7 +84,8 @@ export const useCamelsPerCapitaLayer = () => {
       freeTextEntries: getFreeTextEntries({ countryOutlinesEnabled: input.countryOutlinesEnabled }),
       linearLegendColourGradientConfiguration: {
         enabled: false
-      }
+      },
+      legendTooltipContent: undefined
     }
   }, [ getFreeTextEntries ]);
 

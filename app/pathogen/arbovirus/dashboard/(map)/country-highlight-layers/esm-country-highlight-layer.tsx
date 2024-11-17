@@ -67,7 +67,8 @@ export const useEsmCountryHighlightLayer = () => {
       }] : [],
       linearLegendColourGradientConfiguration: {
         enabled: false
-      }
+      },
+      legendTooltipContent: undefined
     }
   }, []);
 
