@@ -55,6 +55,7 @@ interface CsvCitationConfigurationEnabled {
   enabled: true;
   citationText: string;
   csvDownloadCitationText: string;
+  buttonContent: React.ReactNode;
   toastId: ToastId;
 }
 
@@ -258,7 +259,7 @@ export function DataTable<
           openToast({ toastId: csvCitationConfiguration.toastId });
         }}
       >
-        <ArboTrackerCitationButtonContent />
+        {csvCitationConfiguration.buttonContent}
       </Button>
     )
   }, [ csvCitationConfiguration, openToast ])

@@ -12,6 +12,8 @@ import { useMersEstimateColumnConfiguration } from "./mers-seroprevalence-and-vi
 import { MersSeroprevalenceEstimateForDataTable } from "./use-mers-data-table-data";
 import { SubestimateTable } from "@/components/ui/pathogen-map/map-pop-up/subestimate-table";
 import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
+import { MERSTrackerCitationButtonContent, shortenedMERSTrackerCitationText, suggestedMERSTrackerCitationText } from "../../merstracker-citations";
+import { ToastId } from "@/contexts/toast-provider";
 
 interface MersSeroprevalenceEstimateDataTableProps {
   tableData: MersSeroprevalenceEstimateForDataTable[];
@@ -58,14 +60,20 @@ export const MersSeroprevalenceEstimateDataTable = (props: MersSeroprevalenceEst
     viewOnMapHandler
   }), [ viewOnMapHandler ]);
 
+  const csvCitationConfiguration = useMemo(() => ({
+    enabled: true,
+    citationText: suggestedMERSTrackerCitationText,
+    csvDownloadCitationText: shortenedMERSTrackerCitationText,
+    toastId: ToastId.MERSTRACKER_DOWNLOAD_CSV_CITATION_TOAST,
+    buttonContent: <MERSTrackerCitationButtonContent />
+  }), []);
+
   return (
     <DataTable
       columns={columnConfigurationToColumnDefinitions({ columnConfiguration: mersSeroprevalenceEstimateColumnConfiguration })}
       csvFilename="merstracker_dataset"
       tableHeader={props.tableHeader}
-      csvCitationConfiguration={{
-        enabled: false
-      }}
+      csvCitationConfiguration={csvCitationConfiguration}
       additionalButtonConfiguration={dataTableAdditionalButtonConfig}
       secondAdditionalButtonConfiguration={{
         enabled: true,

@@ -10,7 +10,7 @@ import { ToastId } from "@/contexts/toast-provider";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { ArbovirusVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { useMap } from "react-map-gl";
-import { shortenedArboTrackerCitationText, suggestedArboTrackerCitationText } from "../../arbotracker-citations";
+import { ArboTrackerCitationButtonContent, shortenedArboTrackerCitationText, suggestedArboTrackerCitationText } from "../../arbotracker-citations";
 import { ArbovirusEstimateType } from "@/gql/graphql";
 import { assertNever } from "assert-never";
 import { ArboSeroprevalenceDataTable } from "./arbo-seroprevalence-data-table";
@@ -290,7 +290,8 @@ export const ArboDataTable = () => {
     enabled: true,
     citationText: suggestedArboTrackerCitationText,
     csvDownloadCitationText: shortenedArboTrackerCitationText,
-    toastId: ToastId.DOWNLOAD_CSV_CITATION_TOAST
+    toastId: ToastId.ARBOTRACKER_DOWNLOAD_CSV_CITATION_TOAST,
+    buttonContent: <ArboTrackerCitationButtonContent />
   }), []);
 
   const rowExpansionConfiguration: RowExpansionConfigurationEnabled<ArbovirusEstimate> = useMemo(() => ({

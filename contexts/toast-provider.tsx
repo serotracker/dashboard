@@ -6,9 +6,11 @@ import { cn } from "@/lib/utils";
 import { Toast } from "@/components/customs/toast";
 import { Breakpoint, useBreakpoint } from "@/hooks/useBreakpoint";
 import { ArboTrackerCitationToastMessage } from "@/app/pathogen/arbovirus/arbotracker-citations";
+import { MERSTrackerCitationToastMessage } from "@/app/pathogen/mers/merstracker-citations";
 
 export enum ToastId {
-  DOWNLOAD_CSV_CITATION_TOAST = "DOWNLOAD_CSV_CITATION_TOAST",
+  ARBOTRACKER_DOWNLOAD_CSV_CITATION_TOAST = "ARBOTRACKER_DOWNLOAD_CSV_CITATION_TOAST",
+  MERSTRACKER_DOWNLOAD_CSV_CITATION_TOAST = "MERSTRACKER_DOWNLOAD_CSV_CITATION_TOAST"
 }
 
 interface ToastInformation {
@@ -18,10 +20,15 @@ interface ToastInformation {
 }
 
 const toastInformation: Record<ToastId, ToastInformation> = {
-  [ToastId.DOWNLOAD_CSV_CITATION_TOAST]: {
+  [ToastId.ARBOTRACKER_DOWNLOAD_CSV_CITATION_TOAST]: {
     openByDefault: false,
     title: <p className="font-bold mb-2"> Citation Copied!</p>,
     message: <ArboTrackerCitationToastMessage />
+  },
+  [ToastId.MERSTRACKER_DOWNLOAD_CSV_CITATION_TOAST]: {
+    openByDefault: false,
+    title: <p className="font-bold mb-2"> Citation Copied!</p>,
+    message: <MERSTrackerCitationToastMessage />
   },
 };
 

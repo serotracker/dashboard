@@ -4,8 +4,10 @@ import { Clade, GenomeSequenced, MersAnimalSpecies, WhoRegion } from "@/gql/grap
 import { columnConfigurationToColumnDefinitions, DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { animalSpeciesToColourClassnameMap, animalSpeciesToStringMap, cladeToColourClassnameMap, genomeSequenceToColourClassnameMap, genomeSequenceToStringMap, isGenomeSequenced, isMersAnimalSpecies, specimenTypeToColourClassnameMap } from "../(map)/shared-mers-map-pop-up-variables";
 import { useDataTableMapViewingHandler } from "./use-data-table-map-viewing-handler";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
+import { MERSTrackerCitationButtonContent, shortenedMERSTrackerCitationText, suggestedMERSTrackerCitationText } from "../../merstracker-citations";
+import { ToastId } from "@/contexts/toast-provider";
 
 const genomicSequencingDataTableColumnConfiguration = [{
   type: DataTableColumnConfigurationEntryType.LINK as const,
@@ -126,14 +128,20 @@ export const GenomicSequencingDataTable = (props: GenomicSequencingDataTableProp
   const { viewOnMapHandler } = useDataTableMapViewingHandler();
   const { dataTableAdditionalButtonConfig } = useContext(MersFilterMetadataContext);
 
+  const csvCitationConfiguration = useMemo(() => ({
+    enabled: true,
+    citationText: suggestedMERSTrackerCitationText,
+    csvDownloadCitationText: shortenedMERSTrackerCitationText,
+    toastId: ToastId.MERSTRACKER_DOWNLOAD_CSV_CITATION_TOAST,
+    buttonContent: <MERSTrackerCitationButtonContent />
+  }), []);
+
   return (
     <DataTable
       columns={columnConfigurationToColumnDefinitions({ columnConfiguration: genomicSequencingDataTableColumnConfiguration })}
       csvFilename="genomic_sequencing_dataset"
       tableHeader={props.tableHeader}
-      csvCitationConfiguration={{
-        enabled: false
-      }}
+      csvCitationConfiguration={csvCitationConfiguration}
       additionalButtonConfiguration={dataTableAdditionalButtonConfig}
       secondAdditionalButtonConfiguration={{
         enabled: true,
