@@ -69,7 +69,7 @@ export function ArbovirusMap() {
     return false;
   }, [ selectedFilters ]);
 
-  const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration } = useMemo(() => {
+  const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration, legendTooltipContent } = useMemo(() => {
     if(selectedFilters.positiveCases?.length > 0) {
       const countryHighlightingEnabled = (countryHighlightingSetting === CountryPaintChangeSetting.ALWAYS_ENABLED);
       const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
@@ -235,6 +235,7 @@ export function ArbovirusMap() {
         freeTextEntries={freeTextEntries}
         linearLegendColourGradientConfiguration={linearLegendColourGradientConfiguration}
         closeButtonConfiguration={{ enabled: false }}
+        legendTooltipContent={legendTooltipContent}
       />
       <MapEstimateSummary filteredData={filteredData}/>
       <arbovirusMapCustomizationModal.mapCustomizeButton />

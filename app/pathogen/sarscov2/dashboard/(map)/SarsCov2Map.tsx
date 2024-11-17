@@ -20,7 +20,7 @@ export function SarsCov2Map() {
   const { getCountryHighlightingLayerInformation } = useDataPointPresentLayer();
   const { countryPopUpEnabled, ...sarsCov2MapCustomizationModal } = useSarsCov2MapCustomizationModal();
 
-  const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration } = useMemo(() => getCountryHighlightingLayerInformation({
+  const { paint, countryHighlightLayerLegendEntries, freeTextEntries, linearLegendColourGradientConfiguration, legendTooltipContent } = useMemo(() => getCountryHighlightingLayerInformation({
     data: filteredData,
     countryHighlightingEnabled: true,
     countryOutlinesEnabled: false
@@ -145,6 +145,7 @@ export function SarsCov2Map() {
         freeTextEntries={freeTextEntries}
         linearLegendColourGradientConfiguration={linearLegendColourGradientConfiguration}
         closeButtonConfiguration={{ enabled: false }}
+        legendTooltipContent={legendTooltipContent}
       />
       <MapEstimateSummary filteredData={filteredData.map(({studyName}) => ({sourceSheetName: studyName}))}/>
       <sarsCov2MapCustomizationModal.mapCustomizeButton />
