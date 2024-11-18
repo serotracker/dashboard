@@ -71,7 +71,7 @@ export const useMersMapCustomizationModal = () => {
   const [
     countryOutlinesSetting,
     setCountryOutlinesSetting
-  ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.WHEN_RECOMMENDED);
+  ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.ALWAYS_DISABLED);
   const {
     mapDataPointVisibilitySetting,
     setMapDataPointVisibilitySetting,
@@ -155,27 +155,27 @@ export const useMersMapCustomizationModal = () => {
           }
         },
         tooltipContent: countryHighlightingSettingToTooltipContent[currentMapCountryHighlightingSettings]
-      }, {
-        type: CustomizationSettingType.DROPDOWN,
-        dropdownName: 'Outlines for countries and areas with data',
-        borderColourClassname: 'border-mers',
-        hoverColourClassname: 'hover:bg-mersHover/50',
-        highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
-        dropdownOptionGroups: [{
-          groupHeader: 'Preferences',
-          options: [
-            CountryPaintChangeSetting.WHEN_RECOMMENDED,
-            CountryPaintChangeSetting.ALWAYS_DISABLED,
-            CountryPaintChangeSetting.ALWAYS_ENABLED,
-          ]
-        }],
-        chosenDropdownOption: countryOutlinesSetting,
-        dropdownOptionToLabelMap,
-        onDropdownOptionChange: (option) => {
-          if(isCountryPaintChangeSetting(option)) {
-            setCountryOutlinesSetting(option)
-          }
-        }
+      //}, {
+      //  type: CustomizationSettingType.DROPDOWN,
+      //  dropdownName: 'Outlines for countries and areas with data',
+      //  borderColourClassname: 'border-mers',
+      //  hoverColourClassname: 'hover:bg-mersHover/50',
+      //  highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
+      //  dropdownOptionGroups: [{
+      //    groupHeader: 'Preferences',
+      //    options: [
+      //      CountryPaintChangeSetting.WHEN_RECOMMENDED,
+      //      CountryPaintChangeSetting.ALWAYS_DISABLED,
+      //      CountryPaintChangeSetting.ALWAYS_ENABLED,
+      //    ]
+      //  }],
+      //  chosenDropdownOption: countryOutlinesSetting,
+      //  dropdownOptionToLabelMap,
+      //  onDropdownOptionChange: (option) => {
+      //    if(isCountryPaintChangeSetting(option)) {
+      //      setCountryOutlinesSetting(option)
+      //    }
+      //  }
       },
       ...(process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED ? [{
         type: CustomizationSettingType.DROPDOWN as const,
