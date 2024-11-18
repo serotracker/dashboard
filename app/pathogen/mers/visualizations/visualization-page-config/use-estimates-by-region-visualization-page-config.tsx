@@ -141,8 +141,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
         groupHeader: 'Assay Classification',
         options: [
           EstimatesByRegionAssayClassificationDropdownOption.SCREENING,
-          EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY,
-          EstimatesByRegionAssayClassificationDropdownOption.ANY
+          EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY
         ]
       }],
       chosenDropdownOption: estimatesByRegionSelectedAssayClassification,
