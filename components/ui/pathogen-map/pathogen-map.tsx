@@ -105,6 +105,8 @@ interface PathogenMapProps<
   allowCountryPopUpsWithEmptyData: boolean;
   countryDataContext: CountryDataContextType;
   sourceId: string;
+  countryAlphaThreeCodesToNotHighlight?: string[];
+  children?: React.ReactNode;
 }
 
 export function PathogenMap<
@@ -125,6 +127,8 @@ export function PathogenMap<
   allowCountryPopUpsWithEmptyData,
   countryDataContext,
   sourceId,
+  countryAlphaThreeCodesToNotHighlight,
+  children
 }: PathogenMapProps<
   TPathogenDataPointProperties,
   TClusterPropertyKey
@@ -139,7 +143,7 @@ export function PathogenMap<
   const layerForCountryHighlighting = layers.find(layer => shouldLayerBeUsedForCountryHighlighting(layer));
 
   const setPopUpInfo = (newPopUpInfo: PopupInfo<TPathogenDataPointProperties>) => {
-    if(newPopUpInfo.layerId === 'country-highlight-layer') {
+    if(newPopUpInfo.layerId === 'country-highlight-layer' || newPopUpInfo.layerId === 'country-highlight-layer-non-disputed-areas') {
       if(!countryPopUpEnabled) {
         return;
       }
@@ -215,7 +219,7 @@ export function PathogenMap<
       scrollZoom={false}
       minZoom={2}
       maxZoom={14}
-      interactiveLayerIds={[...layers.map((layer) => layer.id), 'country-highlight-layer']}
+      interactiveLayerIds={[...layers.map((layer) => layer.id), 'country-highlight-layer', 'country-highlight-layer-non-disputed-areas']}
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string}
       onMouseEnter={onMouseEnter}
       onMouseDown={onMouseDown}
@@ -228,6 +232,7 @@ export function PathogenMap<
       />
       <PathogenCountryHighlightLayer
         paint={paint}
+        countryAlphaThreeCodesToNotHighlight={countryAlphaThreeCodesToNotHighlight ?? []}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
       />
       <PathogenMapSourceAndLayer
@@ -241,6 +246,7 @@ export function PathogenMap<
         popUpInfo={popUpInfo}
         generatePopupContent={generatePopupContent}
       />
+      {children}
       {Object.keys(markersOnScreen).map(
         (id) => markersOnScreen[id]?.element
       )}

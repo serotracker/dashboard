@@ -7,56 +7,66 @@ import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config
 interface PathogenCountryHighlightLayerProps {
   positionedUnderLayerWithId: string | undefined;
   paint: PaintForCountries;
+  countryAlphaThreeCodesToNotHighlight: string[];
 }
 
 interface GeneratePaintForLayerInput {
   paint: PaintForCountries;
+  countryAlphaThreeCodesToNotHighlight: string[];
 }
 
 const generatePaintForLayer = (
   input: GeneratePaintForLayerInput
 ) => {
-  const { paint } = input;
+  const { paint, countryAlphaThreeCodesToNotHighlight } = input;
 
   const { countryData, defaults } = paint;
 
   const fillColour = countryData.length > 0 ? [
     "match",
     ["get", "CODE"],
-    ...countryData.flatMap(({ countryAlphaThreeCode, fill }) => [
-      countryAlphaThreeCode,
-      fill,
-    ]),
+    ...countryData
+      .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
+      .flatMap(({ countryAlphaThreeCode, fill }) => [
+        countryAlphaThreeCode,
+        fill,
+      ]),
     defaults.fill
   ] : defaults.fill;
 
   const fillOpacity = countryData.length > 0 ? [
     "match",
     ["get", "CODE"],
-    ...countryData.flatMap(({ countryAlphaThreeCode, opacity }) => [
-      countryAlphaThreeCode,
-      opacity,
-    ]),
+    ...countryData
+      .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
+      .flatMap(({ countryAlphaThreeCode, opacity }) => [
+        countryAlphaThreeCode,
+        opacity,
+      ]),
     defaults.opacity
   ] : defaults.opacity;
 
   const lineWidth = countryData.length > 0 ? [
     "match",
     ["get", "CODE"],
-    ...countryData.flatMap(({ countryAlphaThreeCode, borderWidthPx }) => [
-      countryAlphaThreeCode,
-      borderWidthPx,
-    ]),
+    ...countryData
+      .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
+      .flatMap(({ countryAlphaThreeCode, borderWidthPx }) => [
+        countryAlphaThreeCode,
+        borderWidthPx,
+      ]),
     defaults.borderWidthPx
   ] : defaults.borderWidthPx;
 
   const lineColor = countryData.length > 0 ? [
     "match",
     ["get", "CODE"],
-    ...countryData.flatMap(({ countryAlphaThreeCode, borderColour }) => [
-      countryAlphaThreeCode,
-      borderColour
-    ]),
+    ...countryData
+      .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
+      .flatMap(({ countryAlphaThreeCode, borderColour }) => [
+        countryAlphaThreeCode,
+        borderColour,
+      ]),
     defaults.borderColour
   ] : defaults.borderColour;
 
@@ -71,9 +81,9 @@ const generatePaintForLayer = (
 export function PathogenCountryHighlightLayer(
   props: PathogenCountryHighlightLayerProps
 ) {
-  const { paint } = props;
+  const { paint, countryAlphaThreeCodesToNotHighlight } = props;
   const [mapCountryVectors, setMapCountryVectors] = useState<any>(null);
-  const layerPaint = useMemo(() => generatePaintForLayer({ paint }), [paint])
+  const layerPaint = useMemo(() => generatePaintForLayer({ paint, countryAlphaThreeCodesToNotHighlight }), [paint])
 
   useEffect(() => {
     getEsriVectorSourceStyle(MapResources.WHO_COUNTRY_VECTORTILES).then(

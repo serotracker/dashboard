@@ -17,9 +17,15 @@ export const useCountryHighlightLayer = () => {
   const setPopUpInfoForCountryHighlightLayer = <TPathogenDataPointProperties extends PathogenDataPointPropertiesBase>(
     input: SetPopUpInfoForCountryHighlightLayerInput<TPathogenDataPointProperties>,
   ) => {
+    let alpha3CountryCode = undefined;
 
     if('CODE' in input.newPopUpInfo.properties && !!input.newPopUpInfo.properties.CODE && typeof input.newPopUpInfo.properties.CODE === 'string') {
-      const alpha3CountryCode = input.newPopUpInfo.properties['CODE'];
+      alpha3CountryCode = input.newPopUpInfo.properties['CODE'];
+    }
+    if('iso_3166_1_alpha_3' in input.newPopUpInfo.properties && !!input.newPopUpInfo.properties.iso_3166_1_alpha_3 && typeof input.newPopUpInfo.properties.iso_3166_1_alpha_3 === 'string') {
+      alpha3CountryCode = input.newPopUpInfo.properties['iso_3166_1_alpha_3'];
+    }
+    if(!!alpha3CountryCode) {
       const dataForCountry = input.dataPoints
         .filter((dataPoint) => dataPoint.countryAlphaThreeCode === alpha3CountryCode);
 
