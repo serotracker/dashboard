@@ -17,7 +17,7 @@ import { UNRegionsTooltip, WHORegionsTooltip } from "../tooltip-content";
 import { GroupedColouredCheckboxFilter } from "./grouped-coloured-checkbox-filter";
 import { MersMapCustomizationsContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context";
 import { isMersMacroSampleFrameType, MersMacroSampleFramesContext, MersMacroSampleFrameType, mersMacroSampleFrameTypeToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-macro-sample-frames-context";
-import { isMersAssayClassification, MersAssayClassification, MersAssayClassificationContext, mersAssayClassificationToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-assay-classification-content";
+import { isMersAssayClassification, MersAssayClassification, MersAssayClassificationContext, mersAssayClassificationToTextMap, mersAssaySortOrderMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-assay-classification-content";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -27,6 +27,7 @@ export interface FieldInformation {
   optionSortingFunction?: (a: string, b:string) => number;
   optionToSuperOptionFunction?: (option: string) => string;
   superOptionToLabelMap?: (superOption: string) => string;
+  superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
   renderTooltipContent?: TooltipContentRenderingFunction
   filterRenderingFunction: FilterRenderingFunction;
   hiddenOptions?: string[];
@@ -57,6 +58,7 @@ interface FilterRenderingFunctionInput<
   optionToLabelMap: Record<string, string | undefined>;
   optionSortingFunction: ((a: string, b: string) => number) | undefined;
   optionToSuperOptionFunction: ((option: string) => string) | undefined;
+  superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
   superOptionToLabelMap?: ((superOption: string) => string) | undefined;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
@@ -513,6 +515,15 @@ export const useAvailableFilters = () => {
       filterRenderingFunction: MultiSelectFilter,
       optionToSuperOptionFunction: (option: string) =>
         getAssayClassificationsForAssay(option).at(0) ?? MersAssayClassification.UNCATEGORIZED,
+      superOptionSortingFunction: (superOptionA, superOptionB) => {
+        if(!isMersAssayClassification(superOptionA) || !isMersAssayClassification(superOptionB)) {
+          return 0;
+        }
+
+        return mersAssaySortOrderMap[superOptionA] > mersAssaySortOrderMap[superOptionB]
+          ? 1
+          : -1;
+      },
       superOptionToLabelMap: (superOption: string) => isMersAssayClassification(superOption)
         ? mersAssayClassificationToTextMap[superOption]
         : 'Uncategorized',

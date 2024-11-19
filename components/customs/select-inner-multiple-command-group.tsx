@@ -16,6 +16,7 @@ interface SelectInnerMultipleCommandGroupProps {
   className: string;
   optionToSuperOptionFunction?: (option: string) => string;
   superOptionToLabelMap?: (superOption: string) => string;
+  superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
 }
 
 export const SelectInnerMultipleCommandGroup = (props: SelectInnerMultipleCommandGroupProps) => {
@@ -38,7 +39,11 @@ export const SelectInnerMultipleCommandGroup = (props: SelectInnerMultipleComman
   }, [ selectables, optionToSuperOptionFunction ]);
 
   const allSuperOptions = useMemo(() => {
-    return uniq(selectablesWithSuperOptions.map((selectable) => selectable.superOption));
+    return uniq(
+      selectablesWithSuperOptions.map((selectable) => selectable.superOption)
+    ).sort((superOptionA, superOptionB) => {
+      return superOptionA > superOptionB ? 1 : -1
+    });
   }, [ selectablesWithSuperOptions ]);
 
   return (

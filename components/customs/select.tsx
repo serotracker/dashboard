@@ -27,6 +27,7 @@ export interface SelectProps {
   borderedAreaClassname?: string;
   optionToSuperOptionFunction?: (option: string) => string;
   superOptionToLabelMap?: (superOption: string) => string;
+  superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
 }
 
 const createSelectOptionList = (options: (string)[], optionToLabelMap: Record<string, string | undefined>) => {

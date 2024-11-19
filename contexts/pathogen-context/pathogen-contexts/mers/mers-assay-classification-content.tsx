@@ -20,7 +20,7 @@ export const mersAssayClassificationToTextMap = {
   [MersAssayClassification.SCREENING]: 'Immunoassay - Screening',
 }
 
-const mersAssaySortOrderMap = {
+export const mersAssaySortOrderMap = {
   [MersAssayClassification.CONFIRMATORY]: 1,
   [MersAssayClassification.SCREENING]: 2,
   [MersAssayClassification.NAAT_ASSAY]: 3,
