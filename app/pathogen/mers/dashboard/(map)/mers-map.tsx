@@ -250,7 +250,7 @@ export const MersMap = () => {
                   "match",
                   ["get", "iso_3166_1_alpha_3"],
                   "EGY",
-                  paint.countryData.find((data) => data.countryAlphaThreeCode === 'EGY')?.opacity ?? 0.8,
+                  paint.countryData.find((data) => data.countryAlphaThreeCode === 'EGY')?.opacity ?? 0,
                   "SDN",
                   paint.countryData.find((data) => data.countryAlphaThreeCode === 'SDN')?.opacity ?? 0,
                   0
