@@ -153,7 +153,7 @@ const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizatio
 }
 
 export const useVisualizationPageConfiguration = () => {
-  const { visualizationFootnote, visualizationDownloadFootnote } = useContext(MersFilterMetadataContext)
+  const { visualizationDownloadFootnote } = useContext(MersFilterMetadataContext)
   const {
     getDisplayNameForSummaryByWhoRegion,
     renderVisualizationForSummaryByWhoRegion,
@@ -169,6 +169,7 @@ export const useVisualizationPageConfiguration = () => {
     renderVisualizationForEstimatesByRegion,
     customizationModalConfigurationForEstimatesByRegion,
     estimatesByRegionTitleTooltipContent,
+    visualizationFootnote
   } = useEstimatesByRegionVisualizationPageConfig();
 
   const {

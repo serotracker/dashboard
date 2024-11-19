@@ -13,8 +13,10 @@ import { ColourPickerCustomizationSettingProps } from "@/components/ui/modal/cus
 import { CustomizationSettingType } from "@/components/ui/modal/customization-modal/customization-settings";
 import { AnimalMersSeroprevalenceEstimate, AnimalMersViralEstimate, HumanMersSeroprevalenceEstimate, HumanMersViralEstimate, isAnimalMersSeroprevalenceEstimate, isAnimalMersViralEstimate, isHumanMersSeroprevalenceEstimate, isHumanMersViralEstimate, MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { MersAssayClassification, MersAssayClassificationContext, mersAssayClassificationToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-assay-classification-content";
+import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 export const useEstimatesByRegionVisualizationPageConfig = () => {
+  const { numberOfNonTypenameFiltersApplied } = useContext(MersFilterMetadataContext)
   const [
     estimatesByRegionVariableOfInterest,
     setEstimatesByRegionVariableOfInterest,
@@ -26,7 +28,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   ] = useState<EstimatesByRegionRegionDropdownOption>(EstimatesByRegionRegionDropdownOption.WHO_REGION);
 
   const [
-    estimatesByRegionSelectedAssayClassification,
+    _estimatesByRegionSelectedAssayClassification,
     setEstimatesByRegionSelectedAssayClassification,
   ] = useState<EstimatesByRegionAssayClassificationDropdownOption>(EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY);
 
@@ -81,6 +83,47 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
 
     return availableDropdownOptionGroups.at(0) ?? EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE;
   }, [ estimatesByRegionVariableOfInterest, availableDropdownOptionGroups ])
+
+  const assayClassificationOptions = useMemo(() => {
+    if(
+      cleanedChosenDropdownOption === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE ||
+      cleanedChosenDropdownOption === EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE
+    ) {
+      return [ EstimatesByRegionAssayClassificationDropdownOption.SCREENING, EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY ]
+    }
+
+    return [ EstimatesByRegionAssayClassificationDropdownOption.NAAT_ASSAY ]
+  }, [ cleanedChosenDropdownOption ])
+
+  const estimatesByRegionSelectedAssayClassification = useMemo(() => {
+    return assayClassificationOptions.includes(_estimatesByRegionSelectedAssayClassification)
+      ? _estimatesByRegionSelectedAssayClassification
+      : assayClassificationOptions[0]
+  }, [ _estimatesByRegionSelectedAssayClassification, assayClassificationOptions ]);
+
+  const visualizationFootnote = useMemo(() => {
+    if(
+      cleanedChosenDropdownOption === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE ||
+      cleanedChosenDropdownOption === EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE
+    ) {
+      return numberOfNonTypenameFiltersApplied !== 0
+        ? `Screening assays detect antibodies to MERS-CoV typically using recombinant spike and nucleocapsid proteins. Confirmatory assays detect neutralizing antibodies to MERS-CoV using live virus or pseudotyped particles and are recommended to confirm positive screening results. ${numberOfNonTypenameFiltersApplied} filter(s) have been applied to this visualization using the filters to the left.`
+        // A little hack here. The visualizations have problems if you don't have placeholder text when you try to turn a filter on.
+        // Basically, if you don't get why this is here, replace this with an empty string and go to the ESTIMATES_BY_REGION visualization
+        // in MERSTracker and apply a filter. The footnote doesn't show up until you switch to a different variant of the visualization.
+        // If you tried that with the empty string or undefined and it worked just fine feel free to get rid of this hack though.
+        : 'Screening assays detect antibodies to MERS-CoV typically using recombinant spike and nucleocapsid proteins. Confirmatory assays detect neutralizing antibodies to MERS-CoV using live virus or pseudotyped particles and are recommended to confirm positive screening results.';
+    }
+
+    return numberOfNonTypenameFiltersApplied !== 0
+      ? `${numberOfNonTypenameFiltersApplied} filter(s) have been applied to this visualization using the filters to the left.`
+      // A little hack here. The visualizations have problems if you don't have placeholder text when you try to turn a filter on.
+      // Basically, if you don't get why this is here, replace this with an empty string and go to the ESTIMATES_BY_REGION visualization
+      // in MERSTracker and apply a filter. The footnote doesn't show up until you switch to a different variant of the visualization.
+      // If you tried that with the empty string or undefined and it worked just fine feel free to get rid of this hack though.
+      : ' ';
+  }, [ numberOfNonTypenameFiltersApplied, cleanedChosenDropdownOption ])
+
 
   const getDisplayNameForEstimatesByRegion: MersVisualizationInformation<
     string,
@@ -139,16 +182,13 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
       dropdownOptionGroups: [{
         groupHeader: 'Assay Classification',
-        options: [
-          EstimatesByRegionAssayClassificationDropdownOption.SCREENING,
-          EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY
-        ]
+        options: assayClassificationOptions
       }],
       chosenDropdownOption: estimatesByRegionSelectedAssayClassification,
       dropdownOptionToLabelMap: {
         [EstimatesByRegionAssayClassificationDropdownOption.SCREENING]: "Screening",
         [EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY]: "Confirmatory",
-        [EstimatesByRegionAssayClassificationDropdownOption.ANY]: "Any",
+        [EstimatesByRegionAssayClassificationDropdownOption.NAAT_ASSAY]: "NAAT",
       },
       onDropdownOptionChange: (option) => {
         setEstimatesByRegionSelectedAssayClassification(option);
@@ -297,5 +337,6 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
     customizationModalConfigurationForEstimatesByRegion,
     renderVisualizationForEstimatesByRegion,
     estimatesByRegionTitleTooltipContent,
+    visualizationFootnote
   }
 }

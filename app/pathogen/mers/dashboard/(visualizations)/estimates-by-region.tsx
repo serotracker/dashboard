@@ -32,7 +32,7 @@ export enum EstimatesByRegionRegionDropdownOption {
 export enum EstimatesByRegionAssayClassificationDropdownOption {
   SCREENING = 'SCREENING',
   CONFIRMATORY = 'CONFIRMATORY',
-  ANY = 'ANY'
+  NAAT_ASSAY = 'NAAT_ASSAY'
 }
 
 interface EstimatesByRegionYAxisTickProps {
@@ -103,8 +103,12 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     | HumanMersViralEstimate
     | AnimalMersViralEstimate
   ): boolean => {
-    if(selectedAssayClassification === EstimatesByRegionAssayClassificationDropdownOption.ANY) {
-      return true;
+    if(selectedAssayClassification === EstimatesByRegionAssayClassificationDropdownOption.NAAT_ASSAY) {
+      const naatAssays= assayClassifications
+        .find((element) => element.classification === MersAssayClassification.NAAT_ASSAY)
+        ?.assays ?? [];
+
+      return estimate.primaryEstimateInfo.assay.some((element) => naatAssays.includes(element));
     }
 
     if(selectedAssayClassification === EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY) {

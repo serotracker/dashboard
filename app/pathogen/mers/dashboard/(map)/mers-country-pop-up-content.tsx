@@ -185,14 +185,14 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
           ribbonConfiguration: { ribbonColourClassname: 'bg-mers-animal-event' },
           rightPaddingEnabled: false
         }] : []),
-        {
-          title: 'Reported Human Cases'.replace(' ', '\u00A0'),
-          type: PopUpContentRowType.TEXT as const,
-          text: positiveCasesReported.toFixed(0),
-          contentTextAlignment: PopupContentTextAlignment.RIGHT,
-          ribbonConfiguration: { ribbonColourClassname: 'bg-cyan-700' },
-          rightPaddingEnabled: false
-        }
+        //{
+        //  title: 'Reported Human Cases'.replace(' ', '\u00A0'),
+        //  type: PopUpContentRowType.TEXT as const,
+        //  text: positiveCasesReported.toFixed(0),
+        //  contentTextAlignment: PopupContentTextAlignment.RIGHT,
+        //  ribbonConfiguration: { ribbonColourClassname: 'bg-cyan-700' },
+        //  rightPaddingEnabled: false
+        //}
       ]}
       bottomBannerConfiguration={{
         enabled: false

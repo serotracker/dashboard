@@ -69,12 +69,12 @@ export const MersFilterMetadataProvider = (props: MersFilterMetadataProviderProp
   
   const visualizationFootnote = useMemo(() => {
     return numberOfNonTypenameFiltersApplied !== 0
-      ? `${numberOfNonTypenameFiltersApplied} filter(s) have been applied to this visualization using the filters to the left.`
+      ? `Screening assays detect antibodies to MERS-CoV typically using recombinant spike and nucleocapsid proteins. Confirmatory assays detect neutralizing antibodies to MERS-CoV using live virus or pseudotyped particles and are recommended to confirm positive screening results. ${numberOfNonTypenameFiltersApplied} filter(s) have been applied to this visualization using the filters to the left.`
       // A little hack here. The visualizations have problems if you don't have placeholder text when you try to turn a filter on.
       // Basically, if you don't get why this is here, replace this with an empty string and go to the ESTIMATES_BY_REGION visualization
       // in MERSTracker and apply a filter. The footnote doesn't show up until you switch to a different variant of the visualization.
       // If you tried that with the empty string or undefined and it worked just fine feel free to get rid of this hack though.
-      : '⠀';
+      : 'Screening assays detect antibodies to MERS-CoV typically using recombinant spike and nucleocapsid proteins. Confirmatory assays detect neutralizing antibodies to MERS-CoV using live virus or pseudotyped particles and are recommended to confirm positive screening results.';
   }, [ numberOfNonTypenameFiltersApplied ])
 
   const visualizationDownloadFootnote = useMemo(() => {
