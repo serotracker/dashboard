@@ -6,6 +6,7 @@ import { createContext, useCallback, useEffect, useMemo, useState } from "react"
 export enum MersAssayClassification {
   SCREENING = 'SCREENING',
   CONFIRMATORY = 'CONFIRMATORY',
+  NAAT_ASSAY = 'NAAT_ASSAY',
   UNCATEGORIZED = 'UNCATEGORIZED'
 }
 
@@ -13,25 +14,28 @@ export const isMersAssayClassification = (value: string): value is MersAssayClas
   Object.values(MersAssayClassification).some((element) => element === value);
 
 export const mersAssayClassificationToTextMap = {
-  [MersAssayClassification.UNCATEGORIZED]: 'Uncategorized',
-  [MersAssayClassification.CONFIRMATORY]: 'Confirmatory',
-  [MersAssayClassification.SCREENING]: 'Screening',
+  [MersAssayClassification.UNCATEGORIZED]: 'Assay - Uncategorized',
+  [MersAssayClassification.CONFIRMATORY]: 'Immunoassay - Confirmatory',
+  [MersAssayClassification.NAAT_ASSAY]: 'NAAT Assay',
+  [MersAssayClassification.SCREENING]: 'Immunoassay - Screening',
 }
 
 const mersAssaySortOrderMap = {
   [MersAssayClassification.CONFIRMATORY]: 1,
   [MersAssayClassification.SCREENING]: 2,
-  [MersAssayClassification.UNCATEGORIZED]: 3
+  [MersAssayClassification.NAAT_ASSAY]: 3,
+  [MersAssayClassification.UNCATEGORIZED]: 4
 }
 
 const mersAssayClassificationPriorityMap = {
   [MersAssayClassification.SCREENING]: 1,
   [MersAssayClassification.CONFIRMATORY]: 2,
-  [MersAssayClassification.UNCATEGORIZED]: 3
+  [MersAssayClassification.NAAT_ASSAY]: 3,
+  [MersAssayClassification.UNCATEGORIZED]: 4
 }
 
 type AssayAdjustmentFunction = (input: {
-  classification: MersAssayClassification.SCREENING | MersAssayClassification.CONFIRMATORY,
+  classification: MersAssayClassification.SCREENING | MersAssayClassification.CONFIRMATORY | MersAssayClassification.NAAT_ASSAY,
   assays: string[]
 }) => void;
 
@@ -67,6 +71,9 @@ export const MersAssayClassificationProvider = (props: MersAssayClassificationPr
   }, {
     classification: MersAssayClassification.SCREENING,
     assays: ['ELISA', 'Immunofluorescence', 'Protein microarray']
+  }, {
+    classification: MersAssayClassification.NAAT_ASSAY,
+    assays: ['RT-LAMP', 'RT-PCR']
   }]);
   const [ allAssays, setAllAssays ] = useState<string[]>([]);
 

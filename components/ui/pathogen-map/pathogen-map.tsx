@@ -219,7 +219,7 @@ export function PathogenMap<
       scrollZoom={false}
       minZoom={2}
       maxZoom={14}
-      interactiveLayerIds={[...layers.map((layer) => layer.id), 'country-highlight-layer', 'country-highlight-layer-non-disputed-areas']}
+      interactiveLayerIds={[...layers.map((layer) => layer.id), 'country-highlight-layer']}
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY as string}
       onMouseEnter={onMouseEnter}
       onMouseDown={onMouseDown}
