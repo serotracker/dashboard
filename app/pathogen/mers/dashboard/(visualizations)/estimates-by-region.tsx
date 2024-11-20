@@ -15,6 +15,7 @@ import { AnimalViralPositivePrevalenceByRegion } from "./estimates-by-region/ani
 import { distinctColoursMap, generateRandomColour } from "@/lib/utils";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
 import { MersAssayClassification, MersAssayClassificationContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-assay-classification-content";
+import { MersMacroSampleFramesContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-macro-sample-frames-context";
 
 export enum EstimatesByRegionVariableOfInterestDropdownOption {
   HUMAN_SEROPREVALENCE = "HUMAN_SEROPREVALENCE",
@@ -75,6 +76,7 @@ interface EstimatesByRegionProps {
   barColoursForWhoRegions: Record<WhoRegion, string>;
   barColoursForUnRegions: Record<UnRegion, string>;
   selectedVariableOfInterest: EstimatesByRegionVariableOfInterestDropdownOption;
+  selectedAnimalSampleFrameOrMacroSampleFrame: string;
   selectedRegion: EstimatesByRegionRegionDropdownOption;
   legendConfiguration: LegendConfiguration;
   selectedAssayClassification: EstimatesByRegionAssayClassificationDropdownOption;
@@ -88,6 +90,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     animalMersViralEstimates,
     selectedVariableOfInterest,
     selectedRegion,
+    selectedAnimalSampleFrameOrMacroSampleFrame,
     barColoursForWhoRegions,
     barColoursForUnRegions,
     legendConfiguration,
@@ -96,6 +99,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
 
   const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
   const { assayClassifications } = useContext(MersAssayClassificationContext);
+  const { macroSampleFrames } = useContext(MersMacroSampleFramesContext);
 
   const isCorrectArrayClassification = useCallback((estimate:
     | HumanMersSeroprevalenceEstimate
@@ -199,6 +203,12 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
         humanMersSeroprevalenceEstimates={humanMersSeroprevalenceEstimates
           .filter((element) => isCorrectArrayClassification(element))
         }
+        selectedSampleFrames={selectedAnimalSampleFrameOrMacroSampleFrame
+          ? macroSampleFrames
+            .filter((macroSampleFrame) => macroSampleFrame.macroSampleFrame === selectedAnimalSampleFrameOrMacroSampleFrame)
+            .flatMap((macroSampleFrame) => macroSampleFrame.sampleFrames)
+          : []
+        }
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
@@ -209,6 +219,12 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
       return <HumanViralPositivePrevalenceByRegion
         humanMersViralEstimates={humanMersViralEstimates
           .filter((element) => isCorrectArrayClassification(element))
+        }
+        selectedSampleFrames={selectedAnimalSampleFrameOrMacroSampleFrame
+          ? macroSampleFrames
+            .filter((macroSampleFrame) => macroSampleFrame.macroSampleFrame === selectedAnimalSampleFrameOrMacroSampleFrame)
+            .flatMap((macroSampleFrame) => macroSampleFrame.sampleFrames)
+          : []
         }
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
@@ -239,7 +255,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
       />
     }
     assertNever(selectedVariableOfInterest);
-  }, [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, selectedVariableOfInterest, regionGroupingFunction, regionToDotColour, regionToLegendLabel, legendConfiguration, isCorrectArrayClassification ]);
+  }, [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, selectedVariableOfInterest, regionGroupingFunction, regionToDotColour, regionToLegendLabel, legendConfiguration, isCorrectArrayClassification, macroSampleFrames, selectedAnimalSampleFrameOrMacroSampleFrame ]);
 
   return graph;
 }

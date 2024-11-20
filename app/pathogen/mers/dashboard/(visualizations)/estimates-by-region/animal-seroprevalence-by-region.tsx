@@ -126,11 +126,19 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
 
   const allRegions = useMemo(() => typedObjectKeys(consideredDataByRegion), [ consideredDataByRegion ]);
 
+  if(consideredData.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-full w-full">
+        <p> No data. </p>
+      </div>
+    );
+  }
+
   return (
     <ResponsiveContainer
       width={"100%"}
       key={`animal-seroprevalence-by-region`}
-      height={"100%"}
+      height={"90%"}
     >
       <ScatterChart
         width={730}

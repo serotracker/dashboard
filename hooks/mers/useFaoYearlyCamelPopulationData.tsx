@@ -8,7 +8,11 @@ export const useFaoYearlyCamelPopulationData = () => {
 
   const yearlyFaoCamelPopulationData = useMemo(() => {
     if(dataArray.length > 0 && dataArray.every((element) => !!element.data)) {
-      return dataArray.flatMap((element) => element.data?.partitionedYearlyFaoCamelPopulationData.yearlyFaoCamelPopulationData ?? [])
+      return dataArray
+        .flatMap((element) => element.data?.partitionedYearlyFaoCamelPopulationData.yearlyFaoCamelPopulationData ?? [])
+        // TODO: Sean Kenny - Remove this silly hack when we can re-introduce country highlighting for these two countries.
+        .filter((element) => element.countryAlphaThreeCode !== 'EGY' && element.countryAlphaThreeCode !== 'IND');
+
     }
   }, [ dataArray ])
 

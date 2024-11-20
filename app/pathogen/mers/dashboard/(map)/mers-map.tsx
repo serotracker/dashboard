@@ -216,49 +216,7 @@ export const MersMap = () => {
           }}
           dataPoints={dataPoints}
           paint={paint}
-          countryAlphaThreeCodesToNotHighlight={['EGY', 'SDN']}
-        >
-          <Source
-            id='country-boundaries'
-            type='vector'
-            url='mapbox://mapbox.country-boundaries-v1'
-          >
-            <Layer
-              id="country-highlight-layer-non-disputed-areas"
-              source="country-boundaries"
-              source-layer="country_boundaries"
-              type='fill'
-              filter={[
-                "==",
-                [
-                  "get",
-                  "disputed"
-                ],
-                "false"
-              ]}
-              paint={{
-                'fill-color': [
-                  "match",
-                  ["get", "iso_3166_1_alpha_3"],
-                  "EGY",
-                  paint.countryData.find((data) => data.countryAlphaThreeCode === 'EGY')?.fill ?? '#FFFFFF',
-                  "SDN",
-                  paint.countryData.find((data) => data.countryAlphaThreeCode === 'SDN')?.fill ?? '#FFFFFF',
-                  "#000000"
-                ],
-                'fill-opacity': [
-                  "match",
-                  ["get", "iso_3166_1_alpha_3"],
-                  "EGY",
-                  paint.countryData.find((data) => data.countryAlphaThreeCode === 'EGY')?.opacity ?? 0,
-                  "SDN",
-                  paint.countryData.find((data) => data.countryAlphaThreeCode === 'SDN')?.opacity ?? 0,
-                  0
-                ]
-              }}
-            />
-          </Source>
-        </PathogenMap>
+        />
       </div>
       <MersMapStudySubmissionPrompt
         hidden={!isStudySubmissionPromptVisible || isOnLgBreakpointOrBelow}

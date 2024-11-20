@@ -94,6 +94,7 @@ export const AnimalViralPositivePrevalenceSummaryByRegion = <TRegion extends str
 
         return null;
       }}
+      minimumNumberOfEstimatesForBarToBeIncluded={2}
     />
   );
 }

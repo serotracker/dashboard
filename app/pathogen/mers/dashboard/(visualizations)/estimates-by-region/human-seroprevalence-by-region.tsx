@@ -57,11 +57,12 @@ interface HumanSeroprevalenceByRegionProps {
   regionGroupingFunction: (dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => WhoRegion | UnRegion | string | null | undefined;
   regionToDotColour: (region:WhoRegion | UnRegion | string, regionIndex: number) => string;
   regionToLegendLabel: (region:WhoRegion | UnRegion | string) => string;
+  selectedSampleFrames: string[];
   legendConfiguration: LegendConfiguration;
 }
 
 export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionProps) => {
-  const { humanMersSeroprevalenceEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault } = props;
+  const { humanMersSeroprevalenceEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault, selectedSampleFrames } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const {
@@ -84,6 +85,7 @@ export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionPr
           dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CIUpper,
       }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
+      .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleFrames.every((sampleFrame) => selectedSampleFrames.includes(sampleFrame)))
       .sort((dataPointA, dataPointB) => {
         if(dataPointA.region !== dataPointB.region) {
           return dataPointA.region > dataPointB.region ? 1 : -1
@@ -108,7 +110,7 @@ export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionPr
         ],
         estimateNumber: index + 1
       }))
-  , [ humanMersSeroprevalenceEstimates, regionGroupingFunction ]);
+  , [ humanMersSeroprevalenceEstimates, regionGroupingFunction, selectedSampleFrames ]);
 
   const estimateNumberToEstimateNameMap = useMemo(() => {
     return typedGroupBy(
@@ -126,11 +128,19 @@ export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionPr
 
   const allRegions = useMemo(() => typedObjectKeys(consideredDataByRegion), [ consideredDataByRegion ]);
 
+  if(consideredData.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-full w-full">
+        <p> No data. </p>
+      </div>
+    );
+  }
+
   return (
     <ResponsiveContainer
       width={"100%"}
       key={`human-seroprevalence-by-region`}
-      height={"100%"}
+      height={"90%"}
     >
       <ScatterChart
         width={730}

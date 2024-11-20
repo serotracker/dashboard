@@ -94,6 +94,7 @@ export const AnimalSeroprevalenceSummaryByRegion = <TRegion extends string>(prop
 
         return null;
       }}
+      minimumNumberOfEstimatesForBarToBeIncluded={2}
     />
   );
 }

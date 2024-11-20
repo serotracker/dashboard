@@ -1,6 +1,6 @@
 import { useCallback, useContext, useMemo, useState } from "react";
 import { SummaryByRegion, SummaryByRegionRegionDropdownOption, SummaryByRegionVariableOfInterestDropdownOption } from "../../dashboard/(visualizations)/summary-by-region";
-import { SampleSizeRestrictionTooltip, UNRegionsTooltip, WHORegionsTooltip } from "@/components/customs/tooltip-content";
+import { BarSizeRestrictionTooltip, SampleSizeRestrictionTooltip, UNRegionsTooltip, WHORegionsTooltip } from "@/components/customs/tooltip-content";
 import assertNever from "assert-never";
 import { MersVisualizationInformation } from "../visualization-page-config";
 import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-visualizations-page";
@@ -14,9 +14,11 @@ import { eventsProvidedCourtesyOfFaoTooltipContent } from "../../dashboard/(map)
 import { MersContext, isHumanMersEstimate, isAnimalMersEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { MersMacroSampleFramesContext, MersMacroSampleFrameType, mersMacroSampleFrameTypeToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-macro-sample-frames-context";
 import uniq from "lodash/uniq";
+import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 export const useSummaryByRegionVisualizationPageConfig = () => {
   const { filteredData } = useContext(MersContext);
+  const { numberOfNonTypenameFiltersApplied } = useContext(MersFilterMetadataContext);
 
   const { macroSampleFrames, allHumanSampleFrames, adjustMacroSampleFrame } = useContext(MersMacroSampleFramesContext);
   const [
@@ -26,7 +28,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
 
   const appropriateFilteredData = useMemo(() => {
     return filteredData
-      .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 5)
+      .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 15)
   }, [ filteredData ])
 
   const [
@@ -63,7 +65,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
         .filter((macroSampleFrame) => macroSampleFrame.sampleFrames.some((sampleFrame) => allHumanSampleFrames.includes(sampleFrame)))
         .map((macroSampleFrames) => macroSampleFrames.macroSampleFrame);
 
-      return allHumanMacroSampleFrames.length > 0 ? allHumanMacroSampleFrames : [ 'The Entire Population' ];
+      return allHumanMacroSampleFrames.length > 0 ? allHumanMacroSampleFrames : [ 'Any Population' ];
     }
 
     if(
@@ -76,16 +78,17 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
           ...estimate.primaryEstimateInfo.animalDetectionSettings,
           ...estimate.animalSamplingContextSubestimates.flatMap((subestimate) => subestimate.animalDetectionSettings)
         ])
+        .sort((sampleFrameA, sampleFrameB) => sampleFrameA > sampleFrameB ? 1 : -1)
       );
 
-      return allAnimalSampleFrames.length > 0 ? allAnimalSampleFrames : [ 'The Entire Population' ];
+      return allAnimalSampleFrames.length > 0 ? allAnimalSampleFrames : [ 'Any Population' ];
     }
     if(
       summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES ||
       summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES ||
       summaryByRegionVariableOfInterestSelectedDropdownOption === SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS
     ) {
-      return [ 'The Entire Population' ];
+      return [ 'Any Population' ];
     }
 
     assertNever(summaryByRegionVariableOfInterestSelectedDropdownOption)
@@ -96,7 +99,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       return _summaryByRegionSelectedAnimalSampleFrameOrMacroSampleFrame;
     }
 
-    return availableSampleFrames.at(0) ?? 'The Entire Population';
+    return availableSampleFrames.at(0) ?? 'Any Population';
   }, [ _summaryByRegionSelectedAnimalSampleFrameOrMacroSampleFrame, availableSampleFrames ])
 
   const [
@@ -139,6 +142,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     string,
     SummaryByRegionVariableOfInterestDropdownOption,
     SummaryByRegionRegionDropdownOption,
+    string,
     string
   >['getDisplayName'] = useCallback(() => ({
     type: VisualizationDisplayNameType.WITH_TRIPLE_DROPDOWN,
@@ -242,6 +246,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     string,
     SummaryByRegionVariableOfInterestDropdownOption,
     SummaryByRegionRegionDropdownOption,
+    string,
     string
   >['customizationModalConfiguration'] = useMemo(() => {
     if(summaryByRegionSelectedDropdownOption === SummaryByRegionRegionDropdownOption.COUNTRY) {
@@ -267,14 +272,12 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
                 macroSampleFrame: (
                   MersMacroSampleFrameType.GENERAL_POPULATION |
                   MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS |
-                  MersMacroSampleFrameType.HIGH_RISK_OTHER |
                   MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING |
                   MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS
                 )
               } => (
                 macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.GENERAL_POPULATION ||
                 macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS ||
-                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_OTHER ||
                 macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING ||
                 macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS
               ))
@@ -329,6 +332,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     string,
     SummaryByRegionVariableOfInterestDropdownOption,
     SummaryByRegionRegionDropdownOption,
+    string,
     string
   >['renderVisualization'] = useCallback(({ data }) => (
     <SummaryByRegion
@@ -357,6 +361,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     string,
     SummaryByRegionVariableOfInterestDropdownOption,
     SummaryByRegionRegionDropdownOption,
+    string,
     string
   >['titleTooltipContent'] = useMemo(() => {
     if(
@@ -374,15 +379,19 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       ) {
         return (
           <WHORegionsTooltip>
-            <p>Please note that the high risk and general population categories are descriptive statistics and studies within those categories are very heterogeneous in terms of assay quality and study design.</p>
-            <p>The cogwheel to the left can be used to change which sample frames are considered general population or high risk.</p>
-            <SampleSizeRestrictionTooltip />
+            <p className="text-sm">Please note that the high risk and general population categories are descriptive statistics and studies within those categories are very heterogeneous in terms of assay quality and study design.</p>
+            <p className="text-sm">The cogwheel to the left can be used to change which sample frames are considered general population or high risk.</p>
+            <SampleSizeRestrictionTooltip>
+              <BarSizeRestrictionTooltip/>
+            </SampleSizeRestrictionTooltip>
           </WHORegionsTooltip>
         );
       }
       return (
         <WHORegionsTooltip>
-          <SampleSizeRestrictionTooltip />
+          <SampleSizeRestrictionTooltip>
+            <BarSizeRestrictionTooltip/>
+          </SampleSizeRestrictionTooltip>
         </WHORegionsTooltip>
       );
     }
@@ -394,16 +403,20 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       ) {
         return (
           <UNRegionsTooltip>
-            <p>Please note that the high risk and general population categories are descriptive statistics and studies within those categories are very heterogeneous in terms of assay quality and study design.</p>
-            <p>The cogwheel to the left can be used to change which sample frames are considered general population or high risk.</p>
-            <SampleSizeRestrictionTooltip />
+            <p className="text-sm">Please note that the high risk and general population categories are descriptive statistics and studies within those categories are very heterogeneous in terms of assay quality and study design.</p>
+            <p className="text-sm">The cogwheel to the left can be used to change which sample frames are considered general population or high risk.</p>
+            <SampleSizeRestrictionTooltip>
+              <BarSizeRestrictionTooltip/>
+            </SampleSizeRestrictionTooltip>
           </UNRegionsTooltip>
         );
       }
 
       return (
         <UNRegionsTooltip>
-          <SampleSizeRestrictionTooltip />
+          <SampleSizeRestrictionTooltip>
+            <BarSizeRestrictionTooltip/>
+          </SampleSizeRestrictionTooltip>
         </UNRegionsTooltip>
       )
     }
@@ -415,18 +428,34 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       ) {
         return (
           <div>
-            <p>Please note that the high risk and general population categories are descriptive statistics and studies within those categories are very heterogeneous in terms of assay quality and study design.</p>
-            <p>The cogwheel to the left can be used to change which sample frames are considered general population or high risk.</p>
-            <SampleSizeRestrictionTooltip />
+            <p className="text-sm">Please note that the high risk and general population categories are descriptive statistics and studies within those categories are very heterogeneous in terms of assay quality and study design.</p>
+            <p className="text-sm">The cogwheel to the left can be used to change which sample frames are considered general population or high risk.</p>
+            <SampleSizeRestrictionTooltip>
+              <BarSizeRestrictionTooltip/>
+            </SampleSizeRestrictionTooltip>
           </div>
         );
       }
 
-      return <SampleSizeRestrictionTooltip />;
+      return (
+        <SampleSizeRestrictionTooltip>
+          <BarSizeRestrictionTooltip/>
+        </SampleSizeRestrictionTooltip>
+      );
     }
 
     assertNever(summaryByRegionSelectedDropdownOption);
   }, [ summaryByRegionSelectedDropdownOption, summaryByRegionVariableOfInterestSelectedDropdownOption ]);
+
+  const visualizationFootnote = useMemo(() => {
+    return numberOfNonTypenameFiltersApplied !== 0
+      ? `${numberOfNonTypenameFiltersApplied} filter(s) have been applied to this visualization using the filters to the left.`
+      // A little hack here. The visualizations have problems if you don't have placeholder text when you try to turn a filter on.
+      // Basically, if you don't get why this is here, replace this with an empty string and go to the ESTIMATES_BY_REGION visualization
+      // in MERSTracker and apply a filter. The footnote doesn't show up until you switch to a different variant of the visualization.
+      // If you tried that with the empty string or undefined and it worked just fine feel free to get rid of this hack though.
+      : ' ';
+  }, [ numberOfNonTypenameFiltersApplied ])
 
   return {
     getDisplayNameForSummaryByWhoRegion,
@@ -436,6 +465,7 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     numberOfPagesAvailable,
     setNumberOfPagesAvailable,
     currentPageIndex,
+    visualizationFootnote,
     setCurrentPageIndex
   }
 }

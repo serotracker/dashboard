@@ -21,7 +21,7 @@ export const CustomizationModalContent = <
   TDropdownOption extends string
 >(props: CustomizationModalContentProps<TDropdownOption>): React.ReactNode => {
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0)
-  const totalPageCount = Math.floor((((props.customizationSettings.length - 1) / 6) + 1));
+  const totalPageCount = Math.floor((((props.customizationSettings.length - 1) / 4) + 1));
 
   const paginator = usePaginator({
     pages: Array.from({length: totalPageCount}, (_, index) => index).map((pageIndex) => ({
@@ -30,7 +30,7 @@ export const CustomizationModalContent = <
       pageHeader: 'Customize',
       pageRenderingFunction: () => (
         <div className="mx-4 mb-4">
-          {props.customizationSettings.slice(pageIndex * 6, (pageIndex + 1) * 6).map((customizationSetting, index, customizationSettingsSubset) => {
+          {props.customizationSettings.slice(pageIndex * 4, (pageIndex + 1) * 4).map((customizationSetting, index, customizationSettingsSubset) => {
             const isLastElement = index === customizationSettingsSubset.length - 1;
 
             if(customizationSetting.type === CustomizationSettingType.DROPDOWN) {

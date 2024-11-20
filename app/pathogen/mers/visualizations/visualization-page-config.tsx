@@ -44,7 +44,8 @@ export type MersVisualizationInformation<
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 > = VisualizationInformation<
   MersVisualizationId,
   MersVisualizationUrlParameter,
@@ -52,7 +53,8 @@ export type MersVisualizationInformation<
   TCustomizationModalDropdownOption,
   TVisualizationDisplayNameDropdownOption,
   TSecondVisualizationDisplayNameDropdownOption,
-  TThirdVisualizationDisplayNameDropdownOption
+  TThirdVisualizationDisplayNameDropdownOption,
+  TFourthVisualizationDisplayNameDropdownOption
 >
 
 export const isMersVisualizationUrlParameter = (
@@ -60,7 +62,7 @@ export const isMersVisualizationUrlParameter = (
 ): visualizationUrlParameter is MersVisualizationUrlParameter =>
   Object.values(MersVisualizationUrlParameter).some((element) => element === visualizationUrlParameter);
 
-const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string, string, string, string>> = {
+const mersVisualizationInformation: Record<MersVisualizationId, MersVisualizationInformation<string, string, string, string, string>> = {
   [MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME]: {
     id: MersVisualizationId.REPORTED_EVENT_SUMMARY_OVER_TIME,
     urlParameter:
@@ -161,7 +163,8 @@ export const useVisualizationPageConfiguration = () => {
     summaryByWhoRegionTitleTooltipContent,
     numberOfPagesAvailable,
     currentPageIndex,
-    setCurrentPageIndex
+    setCurrentPageIndex,
+    visualizationFootnote: summaryByRegionVisualizationFootnote
   } = useSummaryByRegionVisualizationPageConfig();
 
   const {
@@ -169,7 +172,7 @@ export const useVisualizationPageConfiguration = () => {
     renderVisualizationForEstimatesByRegion,
     customizationModalConfigurationForEstimatesByRegion,
     estimatesByRegionTitleTooltipContent,
-    visualizationFootnote
+    visualizationFootnote: estimatesByRegionVisualizationFootnote
   } = useEstimatesByRegionVisualizationPageConfig();
 
   const {
@@ -198,7 +201,7 @@ export const useVisualizationPageConfiguration = () => {
         currentPageIndex,
         setCurrentPageIndex
       },
-      visualizationNonDownloadFootnote: visualizationFootnote,
+      visualizationNonDownloadFootnote: summaryByRegionVisualizationFootnote,
       visualizationDownloadFootnote: visualizationDownloadFootnote
     },
     [MersVisualizationId.ESTIMATES_BY_REGION]: {
@@ -207,7 +210,7 @@ export const useVisualizationPageConfiguration = () => {
       renderVisualization: renderVisualizationForEstimatesByRegion,
       customizationModalConfiguration: customizationModalConfigurationForEstimatesByRegion,
       titleTooltipContent: estimatesByRegionTitleTooltipContent,
-      visualizationNonDownloadFootnote: visualizationFootnote,
+      visualizationNonDownloadFootnote: estimatesByRegionVisualizationFootnote,
       visualizationDownloadFootnote: visualizationDownloadFootnote
     },
     [MersVisualizationId.ESTIMATE_BREAKDOWN_TABLE]: {
@@ -231,7 +234,8 @@ export const useVisualizationPageConfiguration = () => {
     getDisplayNameForEstimateBreakdownTableAndField,
     renderVisualizationForEstimateBreakdownTableAndField,
     estimateBreakdownTableAndFieldTooltipContent,
-    visualizationFootnote,
+    summaryByRegionVisualizationFootnote,
+    estimatesByRegionVisualizationFootnote,
     visualizationDownloadFootnote
   ])
 

@@ -21,6 +21,7 @@ export enum VisualizationDisplayNameType {
   "WITH_DROPDOWN" = "WITH_DROPDOWN",
   "WITH_DOUBLE_DROPDOWN" = "WITH_DOUBLE_DROPDOWN",
   "WITH_TRIPLE_DROPDOWN" = "WITH_TRIPLE_DROPDOWN",
+  "WITH_QUADRUPLE_DROPDOWN" = "WITH_QUADRUPLE_DROPDOWN"
 }
 
 interface StandardVisualizationDisplayName {
@@ -62,38 +63,61 @@ interface VisualizationDisplayNameWithTripleDropdown<
   afterAllDropdownsHeaderText: string;
 }
 
+interface VisualizationDisplayNameWithQuadrupleDropdown<
+  TVisualizationDisplayNameDropdownOption extends string,
+  TSecondVisualizationDisplayNameDropdownOption extends string,
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
+> {
+  type: VisualizationDisplayNameType.WITH_QUADRUPLE_DROPDOWN;
+  beforeAllDropdownsHeaderText: string;
+  firstDropdownProps: DropdownProps<TVisualizationDisplayNameDropdownOption>
+  betweenFirstAndSecondDropdownHeaderText: string;
+  secondDropdownProps: DropdownProps<TSecondVisualizationDisplayNameDropdownOption>
+  betweenSecondAndThirdDropdownHeaderText: string;
+  thirdDropdownProps: DropdownProps<TThirdVisualizationDisplayNameDropdownOption>
+  betweenThirdAndFourthDropdownHeaderText: string;
+  fourthDropdownProps: DropdownProps<TFourthVisualizationDisplayNameDropdownOption>
+  afterAllDropdownsHeaderText: string;
+}
+
 type VisualizationDisplayName<
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 > = 
   | StandardVisualizationDisplayName
   | VisualizationDisplayNameWithDropdown<TVisualizationDisplayNameDropdownOption>
   | VisualizationDisplayNameWithDoubleDropdown<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption>
-  | VisualizationDisplayNameWithTripleDropdown<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption, TThirdVisualizationDisplayNameDropdownOption>;
+  | VisualizationDisplayNameWithTripleDropdown<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption, TThirdVisualizationDisplayNameDropdownOption>
+  | VisualizationDisplayNameWithQuadrupleDropdown<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption, TThirdVisualizationDisplayNameDropdownOption, TFourthVisualizationDisplayNameDropdownOption>;
 
 export const isStandardVisualizationDisplayName = <
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 >(
-  displayName: VisualizationDisplayName<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption, TThirdVisualizationDisplayNameDropdownOption> 
+  displayName: VisualizationDisplayName<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption, TThirdVisualizationDisplayNameDropdownOption, TFourthVisualizationDisplayNameDropdownOption> 
 ): displayName is StandardVisualizationDisplayName => displayName.type === VisualizationDisplayNameType.STANDARD;
 
 export const isVisualizationDisplayNameWithDropdown = <
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 >(
-  displayName: VisualizationDisplayName<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption, TThirdVisualizationDisplayNameDropdownOption> 
+  displayName: VisualizationDisplayName<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption, TThirdVisualizationDisplayNameDropdownOption, TFourthVisualizationDisplayNameDropdownOption> 
 ): displayName is VisualizationDisplayNameWithDropdown<TVisualizationDisplayNameDropdownOption> => displayName.type === VisualizationDisplayNameType.WITH_DROPDOWN;
 
 export const isVisualizationDisplayNameWithDoubleDropdown = <
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 >(
-  displayName: VisualizationDisplayName<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption, TThirdVisualizationDisplayNameDropdownOption> 
+  displayName: VisualizationDisplayName<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption, TThirdVisualizationDisplayNameDropdownOption, TFourthVisualizationDisplayNameDropdownOption> 
 ): displayName is VisualizationDisplayNameWithDoubleDropdown<TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption> => displayName.type === VisualizationDisplayNameType.WITH_DOUBLE_DROPDOWN;
 
 export interface PaginationConfiguration {
@@ -109,14 +133,16 @@ export interface VisualizationInformation<
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 > {
   id: TVisualizationId;
   urlParameter: TVisualizationUrlParameter;
   getDisplayName: (input: GetDisplayNameInput<TEstimate>) => VisualizationDisplayName<
     TVisualizationDisplayNameDropdownOption,
     TSecondVisualizationDisplayNameDropdownOption,
-    TThirdVisualizationDisplayNameDropdownOption
+    TThirdVisualizationDisplayNameDropdownOption,
+    TFourthVisualizationDisplayNameDropdownOption
   >;
   titleTooltipContent?: string | React.ReactNode;
   renderVisualization: (input: RenderVisualizationInput<TEstimate>) => React.ReactNode;
@@ -138,7 +164,8 @@ type AddVisualizationInformationInput<
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 > = {
   additionalInformation: Record<TVisualizationId, TNewInformation>;
   allVisualizationInformation: Record<TVisualizationId, VisualizationInformation<
@@ -148,7 +175,8 @@ type AddVisualizationInformationInput<
     TCustomizationModalDropdownOption,
     TVisualizationDisplayNameDropdownOption,
     TSecondVisualizationDisplayNameDropdownOption,
-    TThirdVisualizationDisplayNameDropdownOption
+    TThirdVisualizationDisplayNameDropdownOption,
+    TFourthVisualizationDisplayNameDropdownOption
   >>;
 }
 
@@ -160,7 +188,8 @@ type AddVisualizationInformationOutput<
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 > = (TNewInformation & VisualizationInformation<
   TVisualizationId,
   TVisualizationUrlParameter,
@@ -168,7 +197,8 @@ type AddVisualizationInformationOutput<
   TCustomizationModalDropdownOption,
   TVisualizationDisplayNameDropdownOption,
   TSecondVisualizationDisplayNameDropdownOption,
-  TThirdVisualizationDisplayNameDropdownOption
+  TThirdVisualizationDisplayNameDropdownOption,
+  TFourthVisualizationDisplayNameDropdownOption
 >)[];
 
 export const addToVisualizationInformation = <
@@ -179,7 +209,8 @@ export const addToVisualizationInformation = <
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 >(
   input: AddVisualizationInformationInput<
     TVisualizationId,
@@ -189,7 +220,8 @@ export const addToVisualizationInformation = <
     TCustomizationModalDropdownOption,
     TVisualizationDisplayNameDropdownOption,
     TSecondVisualizationDisplayNameDropdownOption,
-    TThirdVisualizationDisplayNameDropdownOption
+    TThirdVisualizationDisplayNameDropdownOption,
+    TFourthVisualizationDisplayNameDropdownOption
   >
 ): AddVisualizationInformationOutput<
   TVisualizationId,
@@ -199,7 +231,8 @@ export const addToVisualizationInformation = <
   TCustomizationModalDropdownOption,
   TVisualizationDisplayNameDropdownOption,
   TSecondVisualizationDisplayNameDropdownOption,
-  TThirdVisualizationDisplayNameDropdownOption
+  TThirdVisualizationDisplayNameDropdownOption,
+  TFourthVisualizationDisplayNameDropdownOption
 > => {
   return typedObjectEntries(input.additionalInformation).map(([key, value]) => ({
     ...input.allVisualizationInformation[key],
@@ -214,7 +247,8 @@ interface GenericPathogenVisualizationsPageProps<
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 > {
   data: TEstimate[];
   isValidVisualizationUrlParameter:
@@ -227,7 +261,8 @@ interface GenericPathogenVisualizationsPageProps<
       TCustomizationModalDropdownOption,
       TVisualizationDisplayNameDropdownOption,
       TSecondVisualizationDisplayNameDropdownOption,
-      TThirdVisualizationDisplayNameDropdownOption
+      TThirdVisualizationDisplayNameDropdownOption,
+      TFourthVisualizationDisplayNameDropdownOption
     > | undefined;
   filtersComponent: (props: FiltersComponentProps) => React.ReactNode;
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
@@ -243,6 +278,7 @@ export const GenericPathogenVisualizationsPage = <
   TVisualizationUrlParameter,
   TEstimate,
   TCustomizationModalDropdownOption,
+  any,
   any,
   any,
   any

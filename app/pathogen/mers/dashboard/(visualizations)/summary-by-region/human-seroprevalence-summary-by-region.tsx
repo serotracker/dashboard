@@ -127,6 +127,7 @@ export const HumanSeroprevalenceSummaryByRegion = <TRegion extends string>(props
 
         return null;
       }}
+      minimumNumberOfEstimatesForBarToBeIncluded={2}
     />
   );
 }
