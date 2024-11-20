@@ -14,6 +14,9 @@ import { CustomizationSettingType } from "@/components/ui/modal/customization-mo
 import { AnimalMersSeroprevalenceEstimate, AnimalMersViralEstimate, HumanMersSeroprevalenceEstimate, HumanMersViralEstimate, isAnimalMersSeroprevalenceEstimate, isAnimalMersViralEstimate, isHumanMersSeroprevalenceEstimate, isHumanMersViralEstimate, MersContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { MersAssayClassification, MersAssayClassificationContext, mersAssayClassificationToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-assay-classification-content";
 import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
+import { SummaryByRegionVariableOfInterestDropdownOption } from "../../dashboard/(visualizations)/summary-by-region";
+import uniq from "lodash/uniq";
+import { MersMacroSampleFramesContext, MersMacroSampleFrameType, mersMacroSampleFrameTypeToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-macro-sample-frames-context";
 
 export const useEstimatesByRegionVisualizationPageConfig = () => {
   const { numberOfNonTypenameFiltersApplied } = useContext(MersFilterMetadataContext)
@@ -21,6 +24,11 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
     estimatesByRegionVariableOfInterest,
     setEstimatesByRegionVariableOfInterest,
   ] = useState<EstimatesByRegionVariableOfInterestDropdownOption>(EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE);
+
+  const [
+    _estimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame,
+    setEstimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame,
+  ] = useState<string>(MersMacroSampleFrameType.HIGH_RISK_POPULATIONS);
 
   const [
     estimatesByRegionSelectedRegion,
@@ -31,6 +39,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
     _estimatesByRegionSelectedAssayClassification,
     setEstimatesByRegionSelectedAssayClassification,
   ] = useState<EstimatesByRegionAssayClassificationDropdownOption>(EstimatesByRegionAssayClassificationDropdownOption.CONFIRMATORY);
+  const { macroSampleFrames, allHumanSampleFrames, adjustMacroSampleFrame } = useContext(MersMacroSampleFramesContext);
 
   const [
     barColoursForWhoRegions,
@@ -45,19 +54,19 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   const { allAssays, assayClassifications, adjustAssayClassification } = useContext(MersAssayClassificationContext)
 
   const humanMersSeroprevalenceEstimates = useMemo(() => filteredData
-    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 5)
+    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 15)
     .filter((dataPoint): dataPoint is HumanMersSeroprevalenceEstimate => isHumanMersSeroprevalenceEstimate(dataPoint)
   ), [ filteredData ]);
   const animalMersSeroprevalenceEstimates = useMemo(() => filteredData
-    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 5)
+    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 15)
     .filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimate => isAnimalMersSeroprevalenceEstimate(dataPoint)
   ), [ filteredData ]);
   const humanMersViralEstimates = useMemo(() => filteredData
-    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 5)
+    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 15)
     .filter((dataPoint): dataPoint is HumanMersViralEstimate => isHumanMersViralEstimate(dataPoint)
   ), [ filteredData ]);
   const animalMersViralEstimates = useMemo(() => filteredData 
-    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 5)
+    .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleDenominator && dataPoint.primaryEstimateInfo.sampleDenominator >= 15)
     .filter((dataPoint): dataPoint is AnimalMersViralEstimate => isAnimalMersViralEstimate(dataPoint)
   ), [ filteredData ]);
 
@@ -75,6 +84,69 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
 
     return returnValue;
   }, [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates ])
+
+  const availableSampleFrames: string[] = useMemo(() => {
+    if( estimatesByRegionVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE ) {
+      const allHumanSampleFrames = uniq(humanMersSeroprevalenceEstimates
+        .flatMap((estimate) => [
+          ...estimate.primaryEstimateInfo.sampleFrames,
+          ...estimate.occupationSubestimates.flatMap((subestimate) => subestimate.sampleFrames)
+        ])
+      );
+
+      const allHumanMacroSampleFrames = macroSampleFrames
+        .filter((macroSampleFrame) => [
+          MersMacroSampleFrameType.GENERAL_POPULATION,
+          MersMacroSampleFrameType.HIGH_RISK_POPULATIONS,
+          MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING,
+          MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS,
+          MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS,
+        ].includes(macroSampleFrame.macroSampleFrame))
+        .filter((macroSampleFrame) => macroSampleFrame.sampleFrames.some((sampleFrame) => allHumanSampleFrames.includes(sampleFrame)))
+        .map((macroSampleFrames) => macroSampleFrames.macroSampleFrame);
+
+      return allHumanMacroSampleFrames.length > 0 ? allHumanMacroSampleFrames : [ 'Any Population' ];
+    }
+    if( estimatesByRegionVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE ) {
+      const allHumanSampleFrames = uniq(humanMersViralEstimates
+        .flatMap((estimate) => [
+          ...estimate.primaryEstimateInfo.sampleFrames,
+          ...estimate.occupationSubestimates.flatMap((subestimate) => subestimate.sampleFrames)
+        ])
+      );
+
+      const allHumanMacroSampleFrames = macroSampleFrames
+        .filter((macroSampleFrame) => [
+          MersMacroSampleFrameType.GENERAL_POPULATION,
+          MersMacroSampleFrameType.HIGH_RISK_POPULATIONS,
+          MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING,
+          MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS,
+          MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS,
+        ].includes(macroSampleFrame.macroSampleFrame))
+        .filter((macroSampleFrame) => macroSampleFrame.sampleFrames.some((sampleFrame) => allHumanSampleFrames.includes(sampleFrame)))
+        .map((macroSampleFrames) => macroSampleFrames.macroSampleFrame);
+
+      return allHumanMacroSampleFrames.length > 0 ? allHumanMacroSampleFrames : [ 'Any Population' ];
+    }
+
+    if( estimatesByRegionVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE ) {
+      return [ 'Any Population' ];
+    }
+
+    if( estimatesByRegionVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE ) {
+      return [ 'Any Population' ];
+    }
+
+    assertNever(estimatesByRegionVariableOfInterest)
+  }, [ estimatesByRegionVariableOfInterest, macroSampleFrames, humanMersViralEstimates, humanMersSeroprevalenceEstimates ]);
+
+  const estimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame = useMemo(() => {
+    if(availableSampleFrames.includes(_estimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame)) {
+      return _estimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame;
+    }
+
+    return availableSampleFrames.at(0) ?? 'Any Population';
+  }, [ _estimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame, availableSampleFrames ])
 
   const cleanedChosenDropdownOption = useMemo(() => {
     if(availableDropdownOptionGroups.includes(estimatesByRegionVariableOfInterest)) {
@@ -128,10 +200,11 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
   const getDisplayNameForEstimatesByRegion: MersVisualizationInformation<
     string,
     EstimatesByRegionVariableOfInterestDropdownOption,
+    string,
     EstimatesByRegionAssayClassificationDropdownOption,
     EstimatesByRegionRegionDropdownOption
   >['getDisplayName'] = useCallback(() => ({
-    type: VisualizationDisplayNameType.WITH_TRIPLE_DROPDOWN,
+    type: VisualizationDisplayNameType.WITH_QUADRUPLE_DROPDOWN,
     beforeAllDropdownsHeaderText: "",
     firstDropdownProps: {
       dropdownName: 'Variable of Interest Selection',
@@ -174,8 +247,24 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
         setEstimatesByRegionVariableOfInterest(option);
       }
     },
-    betweenFirstAndSecondDropdownHeaderText: " Tested Using ",
+    betweenFirstAndSecondDropdownHeaderText: " For ",
     secondDropdownProps: {
+      dropdownName: 'Sample Frame Selection',
+      borderColourClassname: 'border-mers',
+      hoverColourClassname: 'hover:bg-mersHover/50',
+      highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
+      dropdownOptionGroups: [{
+        groupHeader: 'Sample Frame',
+        options: availableSampleFrames
+      }],
+      chosenDropdownOption: estimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame,
+      dropdownOptionToLabelMap: mersMacroSampleFrameTypeToTextMap,
+      onDropdownOptionChange: (option) => {
+        setEstimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame(option);
+      }
+    },
+    betweenSecondAndThirdDropdownHeaderText: " Tested Using ",
+    thirdDropdownProps: {
       dropdownName: 'Assay Classification Selection',
       borderColourClassname: 'border-mers',
       hoverColourClassname: 'hover:bg-mersHover/50',
@@ -194,8 +283,8 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
         setEstimatesByRegionSelectedAssayClassification(option);
       }
     },
-    betweenSecondAndThirdDropdownHeaderText: " Assays And Grouped By ",
-    thirdDropdownProps: {
+    betweenThirdAndFourthDropdownHeaderText: " Assays And Grouped By ",
+    fourthDropdownProps: {
       dropdownName: 'Region Selection',
       borderColourClassname: 'border-mers',
       hoverColourClassname: 'hover:bg-mersHover/50',
@@ -219,12 +308,13 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       }
     },
     afterAllDropdownsHeaderText: " With 95% Confidence Intervals"
-  }), [ cleanedChosenDropdownOption, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion, availableDropdownOptionGroups, estimatesByRegionSelectedAssayClassification ])
+  }), [ cleanedChosenDropdownOption, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion, availableDropdownOptionGroups, estimatesByRegionSelectedAssayClassification, assayClassificationOptions, availableSampleFrames, estimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame ])
 
   const renderVisualizationForEstimatesByRegion: MersVisualizationInformation<
     string,
     EstimatesByRegionVariableOfInterestDropdownOption,
     EstimatesByRegionRegionDropdownOption,
+    string,
     string
   >['renderVisualization'] = useCallback(() => (
     <EstimatesByRegion
@@ -235,16 +325,18 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       barColoursForWhoRegions={barColoursForWhoRegions}
       barColoursForUnRegions={barColoursForUnRegions}
       selectedVariableOfInterest={cleanedChosenDropdownOption}
+      selectedAnimalSampleFrameOrMacroSampleFrame={estimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame}
       selectedRegion={estimatesByRegionSelectedRegion}
       selectedAssayClassification={estimatesByRegionSelectedAssayClassification}
       legendConfiguration={LegendConfiguration.RIGHT_ALIGNED}
     />
-  ), [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, cleanedChosenDropdownOption, estimatesByRegionSelectedRegion, barColoursForWhoRegions, barColoursForUnRegions, estimatesByRegionSelectedAssayClassification ]);
+  ), [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, cleanedChosenDropdownOption, estimatesByRegionSelectedRegion, barColoursForWhoRegions, barColoursForUnRegions, estimatesByRegionSelectedAssayClassification, estimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame ]);
 
   const customizationModalConfigurationForEstimatesByRegion: MersVisualizationInformation<
     string,
     EstimatesByRegionVariableOfInterestDropdownOption,
     EstimatesByRegionRegionDropdownOption,
+    string,
     string
   >['customizationModalConfiguration'] = useMemo(() => {
     if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.COUNTRY) {
@@ -272,6 +364,40 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
               assays: newAssays
             })
           }))),
+          ...((
+            cleanedChosenDropdownOption === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE ||
+            cleanedChosenDropdownOption === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE
+          )
+            ? macroSampleFrames
+              .filter((macroSampleFrame): macroSampleFrame is Omit<
+                typeof macroSampleFrame, 'macroSampleFrame'
+              > & {
+                macroSampleFrame: (
+                  MersMacroSampleFrameType.GENERAL_POPULATION |
+                  MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS |
+                  MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING |
+                  MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS
+                )
+              } => (
+                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.GENERAL_POPULATION ||
+                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS ||
+                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING ||
+                macroSampleFrame.macroSampleFrame === MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS
+              ))
+              .map((macroSampleFrame) => ({
+                type: CustomizationSettingType.MULTI_SELECT_DROPDOWN as const,
+                dropdownName: `Sample frames included in "${mersMacroSampleFrameTypeToTextMap[macroSampleFrame.macroSampleFrame]}"`,
+                heading: 'Selected Sample Frames',
+                options: allHumanSampleFrames,
+                optionToLabelMap: {},
+                selected: macroSampleFrame.sampleFrames,
+                handleOnChange: (newSampleFrames: string[]) => adjustMacroSampleFrame({
+                  macroSampleFrame: macroSampleFrame.macroSampleFrame,
+                  newSampleFrames
+                })
+              }))
+            : []
+          ),
           ...(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION ? Object.values(WhoRegion).map((whoRegion): ColourPickerCustomizationSettingProps => ({
             type: CustomizationSettingType.COLOUR_PICKER as const,
             colourPickerName: `Colour for ${whoRegion}`,
@@ -293,12 +419,13 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
         ]
       }
     }
-  }, [ barColoursForWhoRegions, setBarColoursForWhoRegions, barColoursForUnRegions, setBarColoursForUnRegions, estimatesByRegionSelectedRegion, adjustAssayClassification, allAssays, assayClassifications ]);
+  }, [ barColoursForWhoRegions, setBarColoursForWhoRegions, barColoursForUnRegions, setBarColoursForUnRegions, estimatesByRegionSelectedRegion, adjustAssayClassification, allAssays, assayClassifications, adjustMacroSampleFrame, allHumanSampleFrames, cleanedChosenDropdownOption, macroSampleFrames ]);
 
   const estimatesByRegionTitleTooltipContent: MersVisualizationInformation<
     string,
     EstimatesByRegionVariableOfInterestDropdownOption,
     EstimatesByRegionRegionDropdownOption,
+    string,
     string
   >['titleTooltipContent'] = useMemo(() => {
     if(estimatesByRegionSelectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION) {

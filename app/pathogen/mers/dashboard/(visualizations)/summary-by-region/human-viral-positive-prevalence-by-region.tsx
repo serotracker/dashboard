@@ -127,6 +127,7 @@ export const HumanViralPositivePrevalenceSummaryByRegion = <TRegion extends stri
 
         return null;
       }}
+      minimumNumberOfEstimatesForBarToBeIncluded={2}
     />
   );
 }

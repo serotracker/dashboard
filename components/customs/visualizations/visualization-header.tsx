@@ -181,7 +181,8 @@ interface VisualizationHeaderProps<
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 > {
   visualizationInformation: VisualizationInformation<
     TVisualizationId,
@@ -190,7 +191,8 @@ interface VisualizationHeaderProps<
     TCustomizationModalDropdownOption,
     TVisualizationDisplayNameDropdownOption,
     TSecondVisualizationDisplayNameDropdownOption,
-    TThirdVisualizationDisplayNameDropdownOption
+    TThirdVisualizationDisplayNameDropdownOption,
+    TFourthVisualizationDisplayNameDropdownOption
   >;
   data: TEstimate[];
   getUrlParameterFromVisualizationId: GetUrlParameterFromVisualizationIdFunction<TVisualizationId, TVisualizationUrlParameter>;
@@ -205,7 +207,8 @@ export const VisualizationHeader = <
   TCustomizationModalDropdownOption extends string,
   TVisualizationDisplayNameDropdownOption extends string,
   TSecondVisualizationDisplayNameDropdownOption extends string,
-  TThirdVisualizationDisplayNameDropdownOption extends string
+  TThirdVisualizationDisplayNameDropdownOption extends string,
+  TFourthVisualizationDisplayNameDropdownOption extends string
 >(
   props: VisualizationHeaderProps<
     TVisualizationId,
@@ -214,7 +217,8 @@ export const VisualizationHeader = <
     TCustomizationModalDropdownOption,
     TVisualizationDisplayNameDropdownOption,
     TSecondVisualizationDisplayNameDropdownOption,
-    TThirdVisualizationDisplayNameDropdownOption
+    TThirdVisualizationDisplayNameDropdownOption,
+    TFourthVisualizationDisplayNameDropdownOption
   >
 ) => {
   const router = useRouter();
@@ -266,11 +270,11 @@ export const VisualizationHeader = <
     if(displayName.type === VisualizationDisplayNameType.WITH_DROPDOWN) {
       return (
         <div className="w-full text-center text-lg inline">
-          <h3 className="inline">{displayName.beforeDropdownHeaderText} </h3>
-          <div className="inline">
+          <h3 className="inline leading-[45px]">{displayName.beforeDropdownHeaderText} </h3>
+          <div className="inline leading-[45px]">
             <Dropdown {...displayName.dropdownProps}/>
           </div>
-          <h3 className="inline">{displayName.afterDropdownHeaderText} </h3>
+          <h3 className="inline leading-[45px]">{displayName.afterDropdownHeaderText} </h3>
           {titleTooltip}
         </div>
       )
@@ -280,11 +284,11 @@ export const VisualizationHeader = <
       return (
         <div className="w-full text-center text-lg inline">
           <h3 className="inline">{displayName.beforeBothDropdownsHeaderText} </h3>
-          <div className="inline">
+          <div className="inline leading-[45px]">
             <Dropdown {...displayName.firstDropdownProps}/>
           </div>
           <h3 className="inline">{displayName.betweenDropdownsHeaderText} </h3>
-          <div className="inline">
+          <div className="inline leading-[45px]">
             <Dropdown {...displayName.secondDropdownProps}/>
           </div>
           <h3 className="inline">{displayName.afterBothDropdownsHeaderText} </h3>
@@ -296,19 +300,44 @@ export const VisualizationHeader = <
     if(displayName.type === VisualizationDisplayNameType.WITH_TRIPLE_DROPDOWN) {
       return (
         <div className="w-full text-center text-lg inline">
-          <h3 className="inline">{displayName.beforeAllDropdownsHeaderText} </h3>
-          <div className="inline">
+          <h3 className="inline leading-[45px]">{displayName.beforeAllDropdownsHeaderText} </h3>
+          <div className="inline leading-[45px]">
             <Dropdown {...displayName.firstDropdownProps}/>
           </div>
-          <h3 className="inline">{displayName.betweenFirstAndSecondDropdownHeaderText} </h3>
-          <div className="inline">
+          <h3 className="inline leading-[45px]">{displayName.betweenFirstAndSecondDropdownHeaderText} </h3>
+          <div className="inline leading-[45px]">
             <Dropdown {...displayName.secondDropdownProps}/>
           </div>
-          <h3 className="inline">{displayName.betweenSecondAndThirdDropdownHeaderText} </h3>
-          <div className="inline">
+          <h3 className="inline leading-[45px]">{displayName.betweenSecondAndThirdDropdownHeaderText} </h3>
+          <div className="inline leading-[45px]">
             <Dropdown {...displayName.thirdDropdownProps}/>
           </div>
-          <h3 className="inline">{displayName.afterAllDropdownsHeaderText} </h3>
+          <h3 className="inline leading-[45px]">{displayName.afterAllDropdownsHeaderText} </h3>
+          {titleTooltip}
+        </div>
+      )
+    }
+
+    if(displayName.type === VisualizationDisplayNameType.WITH_QUADRUPLE_DROPDOWN) {
+      return (
+        <div className="w-full text-center text-lg inline">
+          <h3 className="inline leading-[45px]">{displayName.beforeAllDropdownsHeaderText} </h3>
+          <div className="inline leading-[45px]">
+            <Dropdown {...displayName.firstDropdownProps}/>
+          </div>
+          <h3 className="inline leading-[45px]">{displayName.betweenFirstAndSecondDropdownHeaderText} </h3>
+          <div className="inline leading-[45px]">
+            <Dropdown {...displayName.secondDropdownProps}/>
+          </div>
+          <h3 className="inline leading-[45px]">{displayName.betweenSecondAndThirdDropdownHeaderText} </h3>
+          <div className="inline leading-[45px]">
+            <Dropdown {...displayName.thirdDropdownProps}/>
+          </div>
+          <h3 className="inline leading-[45px]">{displayName.betweenThirdAndFourthDropdownHeaderText} </h3>
+          <div className="inline leading-[45px]">
+            <Dropdown {...displayName.fourthDropdownProps}/>
+          </div>
+          <h3 className="inline leading-[45px]">{displayName.afterAllDropdownsHeaderText} </h3>
           {titleTooltip}
         </div>
       )

@@ -73,7 +73,8 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
     string,
     EstimateBreakdownTableVariableOfInterestDropdownOption,
     EstimateBreakdownTableFieldOfInterestDropdownOption,
-    EstimateBreakdownTableRegionTypeOfInterestDropdownOption
+    EstimateBreakdownTableRegionTypeOfInterestDropdownOption,
+    string
   >['getDisplayName'] = useCallback(() => ({
     type: VisualizationDisplayNameType.WITH_TRIPLE_DROPDOWN,
     beforeAllDropdownsHeaderText: "",
@@ -165,6 +166,7 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
     string,
     EstimateBreakdownTableVariableOfInterestDropdownOption,
     EstimateBreakdownTableFieldOfInterestDropdownOption,
+    string,
     string
   >['titleTooltipContent'] = useMemo(() => {
     return <WHORegionsTooltip />
@@ -174,6 +176,7 @@ export const useEstimateBreakdownTableAndFieldPageConfig = () => {
     string,
     EstimateBreakdownTableVariableOfInterestDropdownOption,
     EstimateBreakdownTableFieldOfInterestDropdownOption,
+    string,
     string
   >['renderVisualization'] = useCallback(({ data }) => (
     <EstimateBreakdownTable
