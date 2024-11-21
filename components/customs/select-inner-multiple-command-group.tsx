@@ -16,10 +16,11 @@ interface SelectInnerMultipleCommandGroupProps {
   className: string;
   optionToSuperOptionFunction?: (option: string) => string;
   superOptionToLabelMap?: (superOption: string) => string;
+  superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
 }
 
 export const SelectInnerMultipleCommandGroup = (props: SelectInnerMultipleCommandGroupProps) => {
-  const { selectables, heading, setInputValue, handleOnChange, singleSelect, selected, className, optionToSuperOptionFunction, superOptionToLabelMap } = props;
+  const { selectables, heading, setInputValue, handleOnChange, singleSelect, selected, className, optionToSuperOptionFunction, superOptionToLabelMap, superOptionSortingFunction } = props;
 
   const selectablesWithSuperOptions = useMemo(() => {
     if(!optionToSuperOptionFunction) {
@@ -38,8 +39,13 @@ export const SelectInnerMultipleCommandGroup = (props: SelectInnerMultipleComman
   }, [ selectables, optionToSuperOptionFunction ]);
 
   const allSuperOptions = useMemo(() => {
-    return uniq(selectablesWithSuperOptions.map((selectable) => selectable.superOption));
-  }, [ selectablesWithSuperOptions ]);
+    return uniq(
+      selectablesWithSuperOptions.map((selectable) => selectable.superOption)
+    ).sort((superOptionA, superOptionB) => superOptionSortingFunction
+      ? superOptionSortingFunction(superOptionA, superOptionA)
+      : 0
+    )
+  }, [ selectablesWithSuperOptions, superOptionSortingFunction ]);
 
   return (
     <div
@@ -48,7 +54,15 @@ export const SelectInnerMultipleCommandGroup = (props: SelectInnerMultipleComman
       {allSuperOptions.map((superOption) => (
         <CommandGroup
           heading={superOptionToLabelMap ? superOptionToLabelMap(superOption) : superOption}
-          className="bg-neutral-200"
+          className="bg-neutral-200 cursor-pointer"
+          onMouseDown={() => {
+            handleOnChange([
+              ...selected,
+              ...selectablesWithSuperOptions
+                .filter((option) => option.superOption === superOption)
+                .map((option) => option.value)
+            ])
+          }}
           key={superOption}
         >
           {selectablesWithSuperOptions

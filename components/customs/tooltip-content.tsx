@@ -7,15 +7,15 @@ interface WHORegionsTooltipProps {
 
 export const WHORegionsTooltip = (props: WHORegionsTooltipProps) => (
   <div className="inline">
-    <p>AFR: African Region</p>
-    <p>AMR: Region of the Americas</p>
-    <p>EMR: Eastern Mediterranean Region</p>
-    <p>EUR: European Region</p>
-    <p>SEAR: South-East Asia Region</p>
-    <p>WPR: Western Pacific Region</p>
-    <p className="inline">A webpage showing which country belongs to which WHO region can be found </p>
-    <Link className="inline text-link" href="https://www.who.int/countries" target="__blank" rel="noopener noreferrer">here</Link>
-    <p className="inline">.</p>
+    <p className="text-sm">AFR: African Region</p>
+    <p className="text-sm">AMR: Region of the Americas</p>
+    <p className="text-sm">EMR: Eastern Mediterranean Region</p>
+    <p className="text-sm">EUR: European Region</p>
+    <p className="text-sm">SEAR: South-East Asia Region</p>
+    <p className="text-sm">WPR: Western Pacific Region</p>
+    <p className="inline text-sm">A webpage showing which country belongs to which WHO region can be found </p>
+    <Link className="inline text-link text-sm" href="https://www.who.int/countries" target="__blank" rel="noopener noreferrer">here</Link>
+    <p className="inline text-sm">.</p>
     {props.children ?? null}
   </div>
 );
@@ -26,9 +26,9 @@ interface UNRegionsTooltipProps {
 
 export const UNRegionsTooltip = (props: UNRegionsTooltipProps) => (
   <div className="inline">
-    <p className="inline">A webpage showing which country belongs to which UN region can be found </p>
-    <Link className="inline text-link" href="https://unstats.un.org/unsd/methodology/m49/overview/" target="__blank" rel="noopener noreferrer">here</Link>
-    <p className="inline">.</p>
+    <p className="inline text-sm">A webpage showing which country belongs to which UN region can be found </p>
+    <Link className="inline text-link text-sm" href="https://unstats.un.org/unsd/methodology/m49/overview/" target="__blank" rel="noopener noreferrer">here</Link>
+    <p className="inline text-sm">.</p>
     {props.children ?? null}
   </div>
 );
@@ -39,7 +39,7 @@ interface ClopperPearsonConfidenceIntervalCalculationTooltipProps {
 
 export const ClopperPearsonConfidenceIntervalCalculationTooltip = (props: ClopperPearsonConfidenceIntervalCalculationTooltipProps) => (
   <div className="inline">
-    <p>95% confidence intervals were calculated using the Clopper-Pearson method if not reported in the source.</p>
+    <p className="text-sm">95% confidence intervals were calculated using the Clopper-Pearson method if not reported in the source.</p>
     {props.children ?? null}
   </div>
 )
@@ -50,7 +50,18 @@ interface SampleSizeRestrictionTooltipProps {
 
 export const SampleSizeRestrictionTooltip = (props: SampleSizeRestrictionTooltipProps) => (
   <div className="inline">
-    <p>Studies with a sample size under five are excluded from this visualization.</p>
+    <p className="text-sm">Studies with a sample size under fifteen are excluded from this visualization.</p>
+    {props.children ?? null}
+  </div>
+)
+
+interface BarSizeRestrictionTooltipProps {
+  children?: React.ReactNode;
+}
+
+export const BarSizeRestrictionTooltip = (props: BarSizeRestrictionTooltipProps) => (
+  <div className="inline">
+    <p className="text-sm">Bars which only include one study are excluded from this visualization. This may cause studies that appear in other parts of the dashboard to not appear in this visualization.</p>
     {props.children ?? null}
   </div>
 )

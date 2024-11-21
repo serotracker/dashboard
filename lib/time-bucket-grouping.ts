@@ -15,7 +15,7 @@ interface GroupDataPointsIntoTimeBucketsInput<
   validBucketSizes: ValidBucketSizes[];
 }
 
-interface GroupDataPointsIntoTimeBucketsOutput<
+export interface GroupDataPointsIntoTimeBucketsOutput<
   TDataPoint extends GroupableIntoTimeBuckets
 > {
   groupedDataPoints: {

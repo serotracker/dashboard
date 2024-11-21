@@ -83,7 +83,10 @@ export function PathogenCountryHighlightLayer(
 ) {
   const { paint, countryAlphaThreeCodesToNotHighlight } = props;
   const [mapCountryVectors, setMapCountryVectors] = useState<any>(null);
-  const layerPaint = useMemo(() => generatePaintForLayer({ paint, countryAlphaThreeCodesToNotHighlight }), [paint])
+  const layerPaint = useMemo(() => generatePaintForLayer({
+    paint,
+    countryAlphaThreeCodesToNotHighlight
+  }), [ paint, countryAlphaThreeCodesToNotHighlight ]);
 
   useEffect(() => {
     getEsriVectorSourceStyle(MapResources.WHO_COUNTRY_VECTORTILES).then(

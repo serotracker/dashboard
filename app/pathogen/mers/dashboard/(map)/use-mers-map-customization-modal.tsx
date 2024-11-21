@@ -125,36 +125,36 @@ export const useMersMapCustomizationModal = () => {
     content: {
       paginationHoverClassname: "hover:bg-mersHover",
       paginationSelectedClassname: "bg-mers",
-      customizationSettings: [{
-        type: CustomizationSettingType.DROPDOWN,
-        dropdownName: 'Highlighting for countries and areas with data',
-        borderColourClassname: 'border-mers',
-        hoverColourClassname: 'hover:bg-mersHover/50',
-        highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
-        dropdownOptionGroups: [{
-          groupHeader: 'Seroprevalence and Viral Prevalence Estimates',
-          options: [
-            MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES
-          ]
-        }, {
-          groupHeader: 'Camels',
-          options: [
-            MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION,
-            //MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA,
-          ]
-        },
-        ...(process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true'
-          ? reportedPositiveCasesFaoDataEnabled
-          : reportedPositiveCasesFaoDataDisabled
-        )],
-        chosenDropdownOption: currentMapCountryHighlightingSettings,
-        dropdownOptionToLabelMap,
-        onDropdownOptionChange: (option) => {
-          if(isMersMapCountryHighlightingSettings(option)) {
-            setCurrentMapCountryHighlightingSettings(option)
-          }
-        },
-        tooltipContent: countryHighlightingSettingToTooltipContent[currentMapCountryHighlightingSettings]
+      customizationSettings: [
+      //  type: CustomizationSettingType.DROPDOWN,
+      //  dropdownName: 'Highlighting for countries and areas with data',
+      //  borderColourClassname: 'border-mers',
+      //  hoverColourClassname: 'hover:bg-mersHover/50',
+      //  highlightedColourClassname: 'data-[highlighted]:bg-mersHover/50',
+      //  dropdownOptionGroups: [{
+      //    groupHeader: 'Seroprevalence and Viral Prevalence Estimates',
+      //    options: [
+      //      MersMapCountryHighlightingSettings.EVENTS_AND_ESTIMATES
+      //    ]
+      //  }, {
+      //    groupHeader: 'Camels',
+      //    options: [
+      //      MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION,
+      //      //MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA,
+      //    ]
+      //  },
+      //  ...(process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED === 'true'
+      //    ? reportedPositiveCasesFaoDataEnabled
+      //    : reportedPositiveCasesFaoDataDisabled
+      //  )],
+      //  chosenDropdownOption: currentMapCountryHighlightingSettings,
+      //  dropdownOptionToLabelMap,
+      //  onDropdownOptionChange: (option) => {
+      //    if(isMersMapCountryHighlightingSettings(option)) {
+      //      setCurrentMapCountryHighlightingSettings(option)
+      //    }
+      //  },
+      //  tooltipContent: countryHighlightingSettingToTooltipContent[currentMapCountryHighlightingSettings]
       //}, {
       //  type: CustomizationSettingType.DROPDOWN,
       //  dropdownName: 'Outlines for countries and areas with data',
@@ -176,7 +176,7 @@ export const useMersMapCustomizationModal = () => {
       //      setCountryOutlinesSetting(option)
       //    }
       //  }
-      },
+      // },
       ...(process.env.NEXT_PUBLIC_FAO_EVENT_DATA_ENABLED ? [{
         type: CustomizationSettingType.DROPDOWN as const,
         dropdownName: 'Data point types shown on map',
@@ -209,7 +209,7 @@ export const useMersMapCustomizationModal = () => {
         onSwitchValueChange: (newSwitchValue) => setCountryPopUpEnabled(newSwitchValue),
       }]
     }
-  }), [ countryOutlinesSetting, setCountryOutlinesSetting, currentMapCountryHighlightingSettings, setCurrentMapCountryHighlightingSettings, countryPopUpEnabled, setCountryPopUpEnabled, mapDataPointVisibilitySetting, setMapDataPointVisibilitySetting, dropdownOptionToLabelMap, reportedPositiveCasesFaoDataDisabled, reportedPositiveCasesFaoDataEnabled ]);
+  }), [ currentMapCountryHighlightingSettings, setCurrentMapCountryHighlightingSettings, countryPopUpEnabled, setCountryPopUpEnabled, mapDataPointVisibilitySetting, setMapDataPointVisibilitySetting, dropdownOptionToLabelMap, reportedPositiveCasesFaoDataDisabled, reportedPositiveCasesFaoDataEnabled ]);
 
   const {
     modal: customizationModal,

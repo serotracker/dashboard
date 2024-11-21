@@ -54,7 +54,7 @@ export const AnimalCasesSummaryByRegion = <TRegion extends string>(props: Animal
   useEffect(() => {
     setNumberOfPagesAvailable(numberOfPagesAvailable);
   }, [ numberOfPagesAvailable, setNumberOfPagesAvailable ])
-  
+
   return (
     <SplitTimeBucketedBarChart
       graphId='animal-cases-summary-by-region'

@@ -8,7 +8,6 @@ interface AdjustMacroSampleFrameInput {
   macroSampleFrame: (
     MersMacroSampleFrameType.GENERAL_POPULATION |
     MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS |
-    MersMacroSampleFrameType.HIGH_RISK_OTHER |
     MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING |
     MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS
   );
@@ -55,10 +54,10 @@ export const isMersMacroSampleFrameType = (value: string): value is MersMacroSam
 
 export const mersMacroSampleFrameTypeToTextMap = {
   [MersMacroSampleFrameType.GENERAL_POPULATION]: 'The General Population',
-  [MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS]: 'High Risk Populations (Occupationally Exposed)',
+  [MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS]: 'High Risk Populations (Occupationally Exposed to Camels)',
   [MersMacroSampleFrameType.HIGH_RISK_NOT_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS]: 'High Risk Populations (Non-Occupationally Exposed)',
   [MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS]: 'High Risk Populations (Healthcare Workers)',
-  [MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING]: 'High Risk Populations (Clinical Monitoring)',
+  [MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING]: 'High Risk Populations (Suspected Cases or Contacts)',
   [MersMacroSampleFrameType.HIGH_RISK_OTHER]: 'High Risk Populations (Other)',
   [MersMacroSampleFrameType.HIGH_RISK_POPULATIONS]: 'High Risk Populations',
   [MersMacroSampleFrameType.UNCATEGORIZED]: 'Uncategorized',
@@ -171,7 +170,6 @@ export const MersMacroSampleFramesProvider = (props: MersMacroSampleFramesProvid
 
     if(
       input.macroSampleFrame !== MersMacroSampleFrameType.HIGH_RISK_OCCUPATIONALLY_EXPOSED_TO_DROMEDARY_CAMELS &&
-      input.macroSampleFrame !== MersMacroSampleFrameType.HIGH_RISK_OTHER &&
       input.macroSampleFrame !== MersMacroSampleFrameType.HIGH_RISK_CLINICAL_MONITORING &&
       input.macroSampleFrame !== MersMacroSampleFrameType.HIGH_RISK_HEALTHCARE_WORKERS
     ) {

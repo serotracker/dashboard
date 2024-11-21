@@ -26,6 +26,7 @@ export interface FieldInformation {
   optionToColourClassnameMap?: Record<string, string | undefined>;
   optionSortingFunction?: (a: string, b:string) => number;
   optionToSuperOptionFunction?: (option: string) => string;
+  superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
   superOptionToLabelMap?: (superOption: string) => string;
   renderTooltipContent?: TooltipContentRenderingFunction
   filterRenderingFunction: FilterRenderingFunction;
@@ -57,6 +58,7 @@ interface FilterRenderingFunctionInput<
   optionToLabelMap: Record<string, string | undefined>;
   optionSortingFunction: ((a: string, b: string) => number) | undefined;
   optionToSuperOptionFunction: ((option: string) => string) | undefined;
+  superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
   superOptionToLabelMap?: ((superOption: string) => string) | undefined;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
@@ -495,6 +497,9 @@ export const useAvailableFilters = () => {
       valueToLabelMap: {},
       optionToSuperOptionFunction: (option: string) =>
         getMacroSampleFramesForSampleFrame(option).at(0) ?? MersMacroSampleFrameType.UNCATEGORIZED,
+      superOptionSortingFunction: (mersMacroSampleFrameA, mersMacroSampleFrameB) => mersMacroSampleFrameA > mersMacroSampleFrameB
+        ? 1
+        : -1,
       superOptionToLabelMap: (superOption: string) => isMersMacroSampleFrameType(superOption)
         ? mersMacroSampleFrameTypeToTextMap[superOption]
         : 'Uncategorized',
@@ -513,6 +518,9 @@ export const useAvailableFilters = () => {
       filterRenderingFunction: MultiSelectFilter,
       optionToSuperOptionFunction: (option: string) =>
         getAssayClassificationsForAssay(option).at(0) ?? MersAssayClassification.UNCATEGORIZED,
+      superOptionSortingFunction: (assayClassificationA, assayClassificationB) => assayClassificationA > assayClassificationB
+        ? -1
+        : 1,
       superOptionToLabelMap: (superOption: string) => isMersAssayClassification(superOption)
         ? mersAssayClassificationToTextMap[superOption]
         : 'Uncategorized',

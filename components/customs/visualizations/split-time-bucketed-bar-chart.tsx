@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import { typedGroupBy, typedObjectEntries, typedObjectFromEntries, typedObjectKeys } from "@/lib/utils";
-import { groupDataPointsIntoTimeBuckets } from "@/lib/time-bucket-grouping";
+import { groupDataPointsIntoTimeBuckets, GroupDataPointsIntoTimeBucketsOutput } from "@/lib/time-bucket-grouping";
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
 import { Bar, BarChart, CartesianGrid, DefaultTooltipContentProps, ResponsiveContainer, Tooltip, TooltipProps, XAxis, YAxis } from "recharts";
 import clsx from "clsx";
 import { CustomXAxisTick } from "./custom-x-axis-tick";
+import { FullyBoundedTimeInterval } from "@/lib/date-utils";
 
 export interface SplitTimeBucketedBarChartProps<
   TData,
@@ -33,13 +34,14 @@ export interface SplitTimeBucketedBarChartProps<
   transformOutputValue: (data: TData[]) => number;
   tooltipContentOverride?: TooltipProps<any, any>['content'];
   numberOfDigitsAfterDecimalPointForOutputValue: number;
+  minimumNumberOfEstimatesForBarToBeIncluded?: number;
 }
 
 export const SplitTimeBucketedBarChart = <
   TData,
   TPrimaryGroupingKey extends string,
 >(props: SplitTimeBucketedBarChartProps<TData, TPrimaryGroupingKey>) => {
-  const { data, primaryGroupingFunction, primaryGroupingSortFunction, getIntervalStartDate, getIntervalEndDate, percentageFormattingEnabled, currentPageIndex, numberOfDigitsAfterDecimalPointForOutputValue, tooltipContentOverride } = props;
+  const { data, primaryGroupingFunction, primaryGroupingSortFunction, getIntervalStartDate, getIntervalEndDate, percentageFormattingEnabled, currentPageIndex, numberOfDigitsAfterDecimalPointForOutputValue, tooltipContentOverride, minimumNumberOfEstimatesForBarToBeIncluded } = props;
   const { desiredBucketCount, validBucketSizes } = props.bucketingConfiguration;
 
   const eventsGroupedByPrimaryKey = useMemo(() => {
@@ -48,7 +50,12 @@ export const SplitTimeBucketedBarChart = <
 
   const eventsGroupedByPrimaryKeyAndThenTimeBucket = useMemo(() => typedObjectFromEntries(
     typedObjectEntries(eventsGroupedByPrimaryKey).map(
-      ([primaryKey, dataPointsForPrimaryKey]) => [
+      ([primaryKey, dataPointsForPrimaryKey]): [
+        TPrimaryGroupingKey,
+        GroupDataPointsIntoTimeBucketsOutput<TData & {
+          groupingTimeInterval: FullyBoundedTimeInterval
+        }>['groupedDataPoints']
+      ] => [
         primaryKey,
         groupDataPointsIntoTimeBuckets({
           dataPoints: dataPointsForPrimaryKey
@@ -64,7 +71,17 @@ export const SplitTimeBucketedBarChart = <
         }).groupedDataPoints,
       ]
     )
-  ), [ eventsGroupedByPrimaryKey, desiredBucketCount, validBucketSizes, getIntervalStartDate, getIntervalEndDate ])
+    .map(([key, value]): [
+      typeof key,
+      typeof value
+    ] => ([
+      key,
+      minimumNumberOfEstimatesForBarToBeIncluded !== undefined
+        ? value.filter((element) => element.dataPoints.length >= minimumNumberOfEstimatesForBarToBeIncluded)
+        : value
+    ]))
+    .filter(([key, value]) => value.length > 0)
+  ), [ eventsGroupedByPrimaryKey, desiredBucketCount, validBucketSizes, getIntervalStartDate, getIntervalEndDate, minimumNumberOfEstimatesForBarToBeIncluded ])
 
   const yAxisProps = useMemo(() => percentageFormattingEnabled ? {
     domain: [0, 100],
@@ -108,6 +125,14 @@ export const SplitTimeBucketedBarChart = <
   }, [ sortedPrimaryKeys, currentPageIndex ]);
 
   const isLargeScreen = useIsLargeScreen();
+
+  if(primaryKeysForPage.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-full w-full">
+        <p> No data. </p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col">

@@ -40,7 +40,7 @@ export const MersVisualizationsSection = () => {
 
   const renderVisualizationList = useCallback(<
     TCustomizationModalDropdownOption extends string,
-  >(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption, any, any, any> & {className: string}>) => {
+  >(visualizationList: Array<MersVisualizationInformation<TCustomizationModalDropdownOption, any, any, any, any> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

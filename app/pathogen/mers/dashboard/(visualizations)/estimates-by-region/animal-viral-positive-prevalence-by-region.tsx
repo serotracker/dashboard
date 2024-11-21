@@ -124,11 +124,19 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
 
   const allRegions = useMemo(() => typedObjectKeys(consideredDataByRegion), [ consideredDataByRegion ]);
 
+  if(consideredData.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-full w-full">
+        <p> No data. </p>
+      </div>
+    );
+  }
+
   return (
     <ResponsiveContainer
       width={"100%"}
       key={`animal-viral-positive-prevalence-by-region`}
-      height={"100%"}
+      height={"90%"}
     >
       <ScatterChart
         width={730}

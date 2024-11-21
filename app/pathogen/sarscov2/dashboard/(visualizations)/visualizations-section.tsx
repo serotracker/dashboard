@@ -35,8 +35,9 @@ export const SarsCov2VisualizationsSection = () => {
     TCustomizationModalDropdownOption extends string,
     TVisualizationDisplayNameDropdownOption extends string,
     TSecondVisualizationDisplayNameDropdownOption extends string,
-    TThirdVisualizationDisplayNameDropdownOption extends string
-  >(visualizationList: Array<SarsCov2VisualizationInformation<TCustomizationModalDropdownOption, TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption, TThirdVisualizationDisplayNameDropdownOption> & {className: string}>) => {
+    TThirdVisualizationDisplayNameDropdownOption extends string,
+    TFourthVisualizationDisplayNameDropdownOption extends string
+  >(visualizationList: Array<SarsCov2VisualizationInformation<TCustomizationModalDropdownOption, TVisualizationDisplayNameDropdownOption, TSecondVisualizationDisplayNameDropdownOption, TThirdVisualizationDisplayNameDropdownOption, TFourthVisualizationDisplayNameDropdownOption> & {className: string}>) => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}

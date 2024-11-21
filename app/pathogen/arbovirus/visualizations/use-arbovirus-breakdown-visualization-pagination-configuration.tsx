@@ -3,12 +3,12 @@ import { ArbovirusAvailablePathogensContext } from '@/contexts/pathogen-context/
 import { ArbovirusVisualizationInformation } from './visualization-page-config';
 
 interface UseArbovirusBreakdownVisualizationPaginationConfigurationInput {
-  renderVisualization: ArbovirusVisualizationInformation<string, string, string, string>['renderVisualization']
+  renderVisualization: ArbovirusVisualizationInformation<string, string, string, string, string>['renderVisualization']
 }
 
 interface UseArbovirusBreakdownVisualizationPaginationConfigurationOutput {
-  renderVisualization: ArbovirusVisualizationInformation<string, string, string, string>['renderVisualization'],
-  paginationConfiguration: ArbovirusVisualizationInformation<string, string, string, string>['paginationConfiguration']
+  renderVisualization: ArbovirusVisualizationInformation<string, string, string, string, string>['renderVisualization'],
+  paginationConfiguration: ArbovirusVisualizationInformation<string, string, string, string, string>['paginationConfiguration']
 }
 
 export const useArbovirusBreakdownVisualizationPaginationConfiguration = (
