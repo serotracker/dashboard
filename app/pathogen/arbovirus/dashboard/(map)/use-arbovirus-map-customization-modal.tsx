@@ -11,7 +11,7 @@ export enum CountryPaintChangeSetting {
 
 export const useArbovirusMapCustomizationModal = () => {
   const [ countryHighlightingSetting, setCountryHighlightingSetting ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.WHEN_RECOMMENDED);
-  const [ countryOutlinesSetting, setCountryOutlinesSetting ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.WHEN_RECOMMENDED);
+  const [ countryOutlinesSetting, setCountryOutlinesSetting ] = useState<CountryPaintChangeSetting>(CountryPaintChangeSetting.ALWAYS_DISABLED);
   const [ countryPopUpEnabled, setCountryPopUpEnabled ] = useState<boolean>(true);
 
   const {
@@ -25,27 +25,27 @@ export const useArbovirusMapCustomizationModal = () => {
       paginationHoverClassname: "hover:bg-arbovirusHover",
       paginationSelectedClassname: "bg-arbovirus",
       customizationSettings: [{
-        type: CustomizationSettingType.DROPDOWN,
-        dropdownName: 'Highlighting for countries and areas with data',
-        borderColourClassname: 'border-arbovirus',
-        hoverColourClassname: 'hover:bg-arbovirusHover/50',
-        highlightedColourClassname: 'data-[highlighted]:bg-arbovirusHover/50',
-        dropdownOptionGroups: [{
-          groupHeader: 'Preferences',
-          options: [
-            CountryPaintChangeSetting.WHEN_RECOMMENDED,
-            CountryPaintChangeSetting.ALWAYS_DISABLED,
-            CountryPaintChangeSetting.ALWAYS_ENABLED,
-          ]
-        }],
-        chosenDropdownOption: countryHighlightingSetting,
-        dropdownOptionToLabelMap: {
-          [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
-          [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
-          [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
-        },
-        onDropdownOptionChange: (option) => setCountryHighlightingSetting(option)
-      }, {
+      //  type: CustomizationSettingType.DROPDOWN,
+      //  dropdownName: 'Highlighting for countries and areas with data',
+      //  borderColourClassname: 'border-arbovirus',
+      //  hoverColourClassname: 'hover:bg-arbovirusHover/50',
+      //  highlightedColourClassname: 'data-[highlighted]:bg-arbovirusHover/50',
+      //  dropdownOptionGroups: [{
+      //    groupHeader: 'Preferences',
+      //    options: [
+      //      CountryPaintChangeSetting.WHEN_RECOMMENDED,
+      //      CountryPaintChangeSetting.ALWAYS_DISABLED,
+      //      CountryPaintChangeSetting.ALWAYS_ENABLED,
+      //    ]
+      //  }],
+      //  chosenDropdownOption: countryHighlightingSetting,
+      //  dropdownOptionToLabelMap: {
+      //    [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
+      //    [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
+      //    [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
+      //  },
+      //  onDropdownOptionChange: (option) => setCountryHighlightingSetting(option)
+      //}, {
         type: CustomizationSettingType.DROPDOWN,
         dropdownName: 'Outlines for countries and areas with data',
         borderColourClassname: 'border-arbovirus',
