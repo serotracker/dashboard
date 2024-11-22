@@ -27,6 +27,7 @@ export interface FieldInformation {
   optionSortingFunction?: (a: string, b:string) => number;
   optionToSuperOptionFunction?: (option: string) => string;
   superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
+  sorted?: boolean;
   superOptionToLabelMap?: (superOption: string) => string;
   renderTooltipContent?: TooltipContentRenderingFunction
   filterRenderingFunction: FilterRenderingFunction;
@@ -59,6 +60,7 @@ interface FilterRenderingFunctionInput<
   optionSortingFunction: ((a: string, b: string) => number) | undefined;
   optionToSuperOptionFunction: ((option: string) => string) | undefined;
   superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
+  sorted?: boolean;
   superOptionToLabelMap?: ((superOption: string) => string) | undefined;
   renderTooltipContent: TooltipContentRenderingFunction | undefined;
   sendFilterChangeDispatch: SendFilterChangeDispatch;
@@ -345,7 +347,8 @@ export const useAvailableFilters = () => {
       field: FilterableField.countryAlphaTwoCode,
       label: "Countries and Areas",
       valueToLabelMap: countryAlphaTwoCodeToCountryNameMap,
-      filterRenderingFunction: MultiSelectFilter
+      filterRenderingFunction: MultiSelectFilter,
+      sorted: false
     },
     [FilterableField.esm]: {
       field: FilterableField.esm,

@@ -59,10 +59,11 @@ interface HumanViralPositivePrevalenceByRegionProps {
   regionToLegendLabel: (region:WhoRegion | UnRegion | string) => string;
   selectedSampleFrames: string[];
   legendConfiguration: LegendConfiguration;
+  regionSortingFunction: (regionA: WhoRegion | UnRegion | string, regionB: WhoRegion | UnRegion | string) => number;
 }
 
 export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePrevalenceByRegionProps) => {
-  const { humanMersViralEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault, selectedSampleFrames } = props;
+  const { humanMersViralEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault, selectedSampleFrames, regionSortingFunction } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const {
@@ -88,7 +89,7 @@ export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePr
       .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleFrames.every((sampleFrame) => selectedSampleFrames.includes(sampleFrame)))
       .sort((dataPointA, dataPointB) => {
         if(dataPointA.region !== dataPointB.region) {
-          return dataPointA.region > dataPointB.region ? 1 : -1
+          return regionSortingFunction(dataPointA.region, dataPointB.region);
         }
 
         return dataPointA.primaryEstimateInfo.positivePrevalence - dataPointB.primaryEstimateInfo.positivePrevalence;
