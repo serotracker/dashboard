@@ -19,11 +19,12 @@ interface AnimalSeroprevalenceSummaryByRegionProps<TRegion extends string> {
   regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
   setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
+  regionSortingFunction: (regionA: WhoRegion | UnRegion | string, regionB: WhoRegion | UnRegion | string) => number;
   currentPageIndex: number;
 }
 
 export const AnimalSeroprevalenceSummaryByRegion = <TRegion extends string>(props: AnimalSeroprevalenceSummaryByRegionProps<TRegion>) => {
-  const { data, selectedAnimalSampleFrame, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
+  const { data, selectedAnimalSampleFrame, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex, regionSortingFunction } = props;
 
   const estimates = useMemo(() => data
     .filter((dataPoint): dataPoint is AnimalMersSeroprevalenceEstimate => 'primaryEstimateInfo' in dataPoint && isAnimalMersSeroprevalenceEstimate(dataPoint))
@@ -60,7 +61,7 @@ export const AnimalSeroprevalenceSummaryByRegion = <TRegion extends string>(prop
       graphId='seroprevalence-summary-by-region'
       data={estimates}
       primaryGroupingFunction={(estimate) => estimate.region}
-      primaryGroupingSortFunction={(regionA, regionB) => regionA > regionB ? 1 : -1}
+      primaryGroupingSortFunction={regionSortingFunction}
       currentPageIndex={currentPageIndex}
       bucketingConfiguration={{
         desiredBucketCount: 10,

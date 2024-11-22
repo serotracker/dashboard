@@ -134,6 +134,24 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     return region;
   }, [ countryAlphaTwoCodeToCountryNameMap ]);
 
+  const regionSortingFunction = useCallback((regionA: WhoRegion | UnRegion | string, regionB: WhoRegion | UnRegion | string): number => {
+    if(selectedRegion === SummaryByRegionRegionDropdownOption.WHO_REGION) {
+      return regionA > regionB ? 1 : -1;
+    }
+    if(selectedRegion === SummaryByRegionRegionDropdownOption.UN_REGION) {
+      return regionA > regionB ? 1 : -1;
+    }
+
+    if(selectedRegion === SummaryByRegionRegionDropdownOption.COUNTRY) {
+      const regionNameA = countryAlphaTwoCodeToCountryNameMap[regionA] ?? regionA;
+      const regionNameB = countryAlphaTwoCodeToCountryNameMap[regionB] ?? regionB;
+
+      return regionNameA > regionNameB ? 1 : -1;
+    }
+
+    assertNever(selectedRegion);
+  }, [ selectedRegion, countryAlphaTwoCodeToCountryNameMap ]);
+
   const graph = useMemo(() => {
     if(selectedVariableOfInterest === SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE) {
       return <HumanSeroprevalenceSummaryByRegion
@@ -147,6 +165,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
         }
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
+        regionSortingFunction={regionSortingFunction}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
       />
@@ -163,6 +182,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
         }
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
+        regionSortingFunction={regionSortingFunction}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
       />
@@ -174,6 +194,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
         selectedAnimalSampleFrame={selectedAnimalSampleFrameOrMacroSampleFrame}
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
+        regionSortingFunction={regionSortingFunction}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
       />
@@ -185,6 +206,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
         selectedAnimalSampleFrame={selectedAnimalSampleFrameOrMacroSampleFrame}
         regionToBarColour={(region, regionIndex) => regionToBarColour(region, regionIndex)}
         regionToChartTitle={(region) => regionToChartTitle(region)}
+        regionSortingFunction={regionSortingFunction}
         setNumberOfPagesAvailable={setNumberOfPagesAvailable}
         currentPageIndex={currentPageIndex}
       />
@@ -221,7 +243,7 @@ export const SummaryByRegion = (props: SummaryByRegionProps) => {
     }
 
     assertNever(selectedVariableOfInterest);
-  }, [ data, selectedVariableOfInterest, regionGroupingFunction, setNumberOfPagesAvailable, currentPageIndex, regionToBarColour, regionToChartTitle, selectedAnimalSampleFrameOrMacroSampleFrame, macroSampleFrames ]);
+  }, [ data, selectedVariableOfInterest, regionGroupingFunction, setNumberOfPagesAvailable, currentPageIndex, regionToBarColour, regionToChartTitle, selectedAnimalSampleFrameOrMacroSampleFrame, macroSampleFrames, regionSortingFunction ]);
 
   return graph;
 }

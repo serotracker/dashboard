@@ -19,11 +19,12 @@ interface HumanViralPositivePrevalenceSummaryByRegionProps<TRegion extends strin
   regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
   setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
+  regionSortingFunction: (regionA: WhoRegion | UnRegion | string, regionB: WhoRegion | UnRegion | string) => number;
   currentPageIndex: number;
 }
 
 export const HumanViralPositivePrevalenceSummaryByRegion = <TRegion extends string>(props: HumanViralPositivePrevalenceSummaryByRegionProps<TRegion>) => {
-  const { data, selectedSampleFrames, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
+  const { data, selectedSampleFrames, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex, regionSortingFunction } = props;
 
   const estimates = useMemo(() => data
     .filter((dataPoint): dataPoint is HumanMersViralEstimate => 'primaryEstimateInfo' in dataPoint && isHumanMersViralEstimate(dataPoint))
@@ -93,7 +94,7 @@ export const HumanViralPositivePrevalenceSummaryByRegion = <TRegion extends stri
       graphId='human-viral-positive-prevalence-summary-by-region'
       data={estimates}
       primaryGroupingFunction={(estimate) => estimate.region}
-      primaryGroupingSortFunction={(regionA, regionB) => regionA > regionB ? 1 : -1}
+      primaryGroupingSortFunction={regionSortingFunction}
       currentPageIndex={currentPageIndex}
       bucketingConfiguration={{
         desiredBucketCount: 10,

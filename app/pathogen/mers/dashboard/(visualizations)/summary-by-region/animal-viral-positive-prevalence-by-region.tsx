@@ -19,11 +19,12 @@ interface AnimalViralPositivePrevalenceSummaryByRegionProps<TRegion extends stri
   regionToBarColour: (region: TRegion, regionIndex: number) => string;
   regionToChartTitle: (region: TRegion) => string;
   setNumberOfPagesAvailable: (newNumberOfPagesAvailable: number) => void;
+  regionSortingFunction: (regionA: WhoRegion | UnRegion | string, regionB: WhoRegion | UnRegion | string) => number;
   currentPageIndex: number;
 }
 
 export const AnimalViralPositivePrevalenceSummaryByRegion = <TRegion extends string>(props: AnimalViralPositivePrevalenceSummaryByRegionProps<TRegion>) => {
-  const { data, selectedAnimalSampleFrame, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex } = props;
+  const { data, selectedAnimalSampleFrame, regionGroupingFunction, regionToBarColour, regionToChartTitle, setNumberOfPagesAvailable, currentPageIndex, regionSortingFunction } = props;
 
   const estimates = useMemo(() => data
     .filter((dataPoint): dataPoint is AnimalMersViralEstimate => 'primaryEstimateInfo' in dataPoint && isAnimalMersViralEstimate(dataPoint))
@@ -60,7 +61,7 @@ export const AnimalViralPositivePrevalenceSummaryByRegion = <TRegion extends str
       graphId='animal-viral-positive-prevalence-summary-by-region'
       data={estimates}
       primaryGroupingFunction={(estimate) => estimate.region}
-      primaryGroupingSortFunction={(regionA, regionB) => regionA > regionB ? 1 : -1}
+      primaryGroupingSortFunction={regionSortingFunction}
       currentPageIndex={currentPageIndex}
       bucketingConfiguration={{
         desiredBucketCount: 10,
