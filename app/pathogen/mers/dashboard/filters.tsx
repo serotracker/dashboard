@@ -200,7 +200,9 @@ export const MersFilters = (props: MersFiltersProps) => {
           ],
           whoRegion: sharedFilterData.mersFilterOptions.whoRegion,
           unRegion: sharedFilterData.mersFilterOptions.unRegion,
-          countryAlphaTwoCode: sharedFilterData.mersFilterOptions.countryIdentifiers.map(({ alphaTwoCode }) => alphaTwoCode)
+          countryAlphaTwoCode: sharedFilterData.mersFilterOptions.countryIdentifiers
+            .sort((countryIndentifierA, countryIdentifierB) => countryIndentifierA.name > countryIdentifierB.name ? 1 : -1)
+            .map(({ alphaTwoCode }) => alphaTwoCode)
         } : {}),
         ...(estimateFilterData?.mersEstimatesFilterOptions ? {
           sourceType: estimateFilterData.mersEstimatesFilterOptions.sourceType,

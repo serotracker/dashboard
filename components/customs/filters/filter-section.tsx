@@ -38,6 +38,7 @@ export const FilterSection = <
         optionToLabelMap={fieldInformation.valueToLabelMap}
         optionToSuperOptionFunction={fieldInformation.optionToSuperOptionFunction}
         superOptionSortingFunction={fieldInformation.superOptionSortingFunction}
+        sorted={fieldInformation.sorted}
         superOptionToLabelMap={fieldInformation.superOptionToLabelMap}
         renderTooltipContent={fieldInformation.renderTooltipContent}
         sendFilterChangeDispatch={props.sendFilterChangeDispatch}

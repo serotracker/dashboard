@@ -58,10 +58,11 @@ interface AnimalSeroprevalenceByRegionProps {
   regionToDotColour: (region:WhoRegion | UnRegion | string, regionIndex: number) => string;
   regionToLegendLabel: (region:WhoRegion | UnRegion | string) => string;
   legendConfiguration: LegendConfiguration;
+  regionSortingFunction: (regionA: WhoRegion | UnRegion | string, regionB: WhoRegion | UnRegion | string) => number;
 }
 
 export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegionProps) => {
-  const { animalMersSeroprevalenceEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault } = props;
+  const { animalMersSeroprevalenceEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault, regionSortingFunction } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const {
@@ -86,7 +87,7 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .sort((dataPointA, dataPointB) => {
         if(dataPointA.region !== dataPointB.region) {
-          return dataPointA.region > dataPointB.region ? 1 : -1
+          return regionSortingFunction(dataPointA.region, dataPointB.region);
         }
         
         return dataPointA.primaryEstimateInfo.seroprevalence - dataPointB.primaryEstimateInfo.seroprevalence;

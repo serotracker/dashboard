@@ -197,6 +197,24 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
     return region;
   }, [ countryAlphaTwoCodeToCountryNameMap ]);
 
+  const regionSortingFunction = useCallback((regionA: WhoRegion | UnRegion | string, regionB: WhoRegion | UnRegion | string): number => {
+    if(selectedRegion === EstimatesByRegionRegionDropdownOption.WHO_REGION) {
+      return regionA > regionB ? 1 : -1;
+    }
+    if(selectedRegion === EstimatesByRegionRegionDropdownOption.UN_REGION) {
+      return regionA > regionB ? 1 : -1;
+    }
+
+    if(selectedRegion === EstimatesByRegionRegionDropdownOption.COUNTRY) {
+      const regionNameA = countryAlphaTwoCodeToCountryNameMap[regionA] ?? regionA;
+      const regionNameB = countryAlphaTwoCodeToCountryNameMap[regionB] ?? regionB;
+
+      return regionNameA > regionNameB ? 1 : -1;
+    }
+
+    assertNever(selectedRegion);
+  }, [ selectedRegion, countryAlphaTwoCodeToCountryNameMap ]);
+
   const graph = useMemo(() => {
     if(selectedVariableOfInterest === EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE) {
       return <HumanSeroprevalenceByRegion
@@ -212,6 +230,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
+        regionSortingFunction={regionSortingFunction}
         legendConfiguration={legendConfiguration}
       />
     }
@@ -229,6 +248,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
+        regionSortingFunction={regionSortingFunction}
         legendConfiguration={legendConfiguration}
       />
     }
@@ -240,6 +260,7 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
+        regionSortingFunction={regionSortingFunction}
         legendConfiguration={legendConfiguration}
       />
     }
@@ -251,11 +272,12 @@ export const EstimatesByRegion = (props: EstimatesByRegionProps) => {
         regionGroupingFunction={regionGroupingFunction}
         regionToDotColour={regionToDotColour}
         regionToLegendLabel={regionToLegendLabel}
+        regionSortingFunction={regionSortingFunction}
         legendConfiguration={legendConfiguration}
       />
     }
     assertNever(selectedVariableOfInterest);
-  }, [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, selectedVariableOfInterest, regionGroupingFunction, regionToDotColour, regionToLegendLabel, legendConfiguration, isCorrectArrayClassification, macroSampleFrames, selectedAnimalSampleFrameOrMacroSampleFrame ]);
+  }, [ humanMersSeroprevalenceEstimates, animalMersSeroprevalenceEstimates, humanMersViralEstimates, animalMersViralEstimates, selectedVariableOfInterest, regionGroupingFunction, regionToDotColour, regionToLegendLabel, legendConfiguration, isCorrectArrayClassification, macroSampleFrames, selectedAnimalSampleFrameOrMacroSampleFrame, regionSortingFunction ]);
 
   return graph;
 }

@@ -56,10 +56,11 @@ interface AnimalViralPositivePrevalenceByRegionProps {
   regionToDotColour: (region:WhoRegion | UnRegion | string, regionIndex: number) => string;
   regionToLegendLabel: (region:WhoRegion | UnRegion | string) => string;
   legendConfiguration: LegendConfiguration;
+  regionSortingFunction: (regionA: WhoRegion | UnRegion | string, regionB: WhoRegion | UnRegion | string) => number;
 }
 
 export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositivePrevalenceByRegionProps) => {
-  const { animalMersViralEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault } = props;
+  const { animalMersViralEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault, regionSortingFunction } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
 
   const {
@@ -84,7 +85,7 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .sort((dataPointA, dataPointB) => {
         if(dataPointA.region !== dataPointB.region) {
-          return dataPointA.region > dataPointB.region ? 1 : -1
+          return regionSortingFunction(dataPointA.region, dataPointB.region);
         }
 
         return dataPointA.primaryEstimateInfo.positivePrevalence - dataPointB.primaryEstimateInfo.positivePrevalence;

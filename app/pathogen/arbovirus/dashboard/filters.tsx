@@ -169,7 +169,10 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   }, [ data ]);
 
   const countryAlphaTwoCode = useMemo(() => {
-    return uniq((data?.arbovirusEstimates ?? []).map((dataPoint) => dataPoint.countryAlphaTwoCode));
+    return uniq((data?.arbovirusEstimates ?? [])
+      .sort((dataPointA, dataPointB) => dataPointA.country > dataPointB.country ? 1 : -1)
+      .map((dataPoint) => dataPoint.countryAlphaTwoCode)
+    );
   }, [ data ]);
 
   const pathogen = useMemo(() => {
