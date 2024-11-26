@@ -102,13 +102,48 @@ export const MersMap = () => {
 
   const legendProps = useMemo(() => ({
     className: "absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md",
-    legendEntries: [
-      ...countryHighlightLayerLegendEntries,
-      ...dataTypeLayerLegendEntries
-    ],
-    linearLegendColourGradientConfiguration,
+    legendEntries: dataTypeLayerLegendEntries,
+    linearLegendColourGradientConfiguration: {
+      enabled: true,
+      props: {
+        title: 'Camel population (head per sqkm, 2020)',
+        ticks: [{
+          numericValue: 0,
+          isTickValueDisplayed: true,
+          colourCode: "#FFFF80"
+        }, {
+          numericValue: 1,
+          isTickValueDisplayed: true,
+          colourCode: "#FCE468"
+        }, {
+          numericValue: 5,
+          isTickValueDisplayed: true,
+          colourCode: "#FACD50"
+        }, {
+          numericValue: 10,
+          isTickValueDisplayed: true,
+          colourCode: "#F5B338"
+        }, {
+          numericValue: 20,
+          isTickValueDisplayed: true,
+          colourCode: "#E09026"
+        }, {
+          numericValue: 40,
+          isTickValueDisplayed: true,
+          colourCode: "#B55E18"
+        }, {
+          numericValue: 60,
+          isTickValueDisplayed: true,
+          colourCode: "#91330A"
+        }, {
+          numericValue: 80,
+          isTickValueDisplayed: true,
+          colourCode: "#6B0000"
+        }]
+      }
+    },
     freeTextEntries,
-    legendTooltipContent
+    legendTooltipContent: <p className="text-sm"> The source of the camel population data is currently unpublished.</p>
   }), [ countryHighlightLayerLegendEntries, dataTypeLayerLegendEntries, linearLegendColourGradientConfiguration, freeTextEntries, legendTooltipContent ]);
   
   const { mersMapLegend } = useMersMapLegend({
@@ -134,6 +169,7 @@ export const MersMap = () => {
       <div className={"w-full h-full p-0"}>
         <PathogenMap
           id="mersMap"
+          countryHighlightingEnabled={false}
           countryPopUpEnabled={countryPopUpEnabled}
           countryPopUpOnHoverEnabled={countryPopUpEnabled}
           allowCountryPopUpsWithEmptyData={true}
@@ -216,7 +252,25 @@ export const MersMap = () => {
           }}
           dataPoints={dataPoints}
           paint={paint}
-        />
+        >
+          <Source
+            id={"camel_population_map_source"}
+            type="raster"
+            url="mapbox://serotracker.8wlzrlqf"
+          >
+            <Layer
+              id={"camel_population_map_layer"}
+              type="raster"
+              source="camel_population_map_source"
+              source-layer="camel_population_map_source"
+              paint={{
+                'raster-opacity': 0.7
+              }}
+              minzoom={0}
+              maxzoom={22}
+            />
+          </Source>
+        </PathogenMap>
       </div>
       <MersMapStudySubmissionPrompt
         hidden={!isStudySubmissionPromptVisible || isOnLgBreakpointOrBelow}

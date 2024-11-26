@@ -90,8 +90,7 @@ export const useTotalCamelPopulationLayer = () => {
       },
       legendTooltipContent: (
         <div>
-          <p className='inline text-sm'>Camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nations, through the FAO STAT Statistical Database for Live Animals, last updated on 2 August 2022 and available at: </p>
-          <Link className="inline text-link text-sm" href="https://data.apps.fao.org/catalog/dataset/live-animals-national-global-annual" target="__blank" rel="noopener noreferrer">Live Animals (National - Global - Annual) - FAOSTAT - Datasets - FAO catalog</Link>
+          <p className='inline text-sm'>Camel population data from the dashboard is supplied from a currently unpublished source.</p>
         </div>
       )
     }
