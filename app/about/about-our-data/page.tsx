@@ -107,7 +107,9 @@ export default function DataExtractionPage() {
         <div className="mb-4">
           <p className='inline'>Unpublished camel population map based on a FAO elaboration from the Global Livestock Impact Mapping System (GLIMS) database and adjusted to FAOSTAT 2020. Country boundaries based on </p>
           <p className="inline font-bold">UN Geospatial</p>
-          <p className='inline'>. 2023. Map of the World. In: United Nations. [Cited: November 2024].</p>
+          <p className='inline'>. 2023. Map of the World. In: </p>
+          <p className='inline italics'>United Nations</p>
+          <p className='inline'>. [Cited: November 2024].</p>
           <Link className="inline text-link" href="www.un.org/geospatial/content/map-world-1" target="__blank" rel="noopener noreferrer">www.un.org/geospatial/content/map-world-1</Link>
         </div>
       </>}
