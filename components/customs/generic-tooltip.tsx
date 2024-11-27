@@ -26,7 +26,7 @@ export const GenericTooltip = (props: GenericTooltipProps): React.ReactNode => (
             position: "absolute",
             top: "50px", // position below the trigger
             left:"-120px",
-            minWidth: "230px",
+            minWidth: "330px",
             paddingTop: 0,
             paddingBottom: 0,
           }}

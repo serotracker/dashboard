@@ -88,7 +88,10 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
         <p className='inline'> and the </p>
         <Link className="inline text-link" href="https://www.fao.org/" target="__blank" rel="noopener noreferrer">Food and Agriculture Organization of the United Nations</Link>
         <p className='inline'>. </p>
-        <p className='inline'>Camel population data from the dashboard is supplied from a currently unpublished source.</p>
+        <p className='inline'>Unpublished camel population map based on a FAO elaboration from the Global Livestock Impact Mapping System (GLIMS) database and adjusted to FAOSTAT 2020. Country boundaries based on </p>
+        <p className="inline font-bold">UN Geospatial</p>
+        <p className='inline'>. 2023. Map of the World. In: United Nations. [Cited: November 2024].</p>
+        <Link className="inline text-link" href="www.un.org/geospatial/content/map-world-1" target="__blank" rel="noopener noreferrer">www.un.org/geospatial/content/map-world-1</Link>
       </>
     )
   },

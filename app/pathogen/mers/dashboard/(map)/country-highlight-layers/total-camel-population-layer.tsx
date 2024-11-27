@@ -90,7 +90,10 @@ export const useTotalCamelPopulationLayer = () => {
       },
       legendTooltipContent: (
         <div>
-          <p className='inline text-sm'>Camel population data from the dashboard is supplied from a currently unpublished source.</p>
+          <p className='inline text-sm'>Unpublished camel population map based on a FAO elaboration from the Global Livestock Impact Mapping System (GLIMS) database and adjusted to FAOSTAT 2020. Country boundaries based on </p>
+          <p className="inline font-bold text-sm">UN Geospatial</p>
+          <p className='inline text-sm'>. 2023. Map of the World. In: United Nations. [Cited: November 2024].</p>
+          <Link className="inline text-link text-sm" href="www.un.org/geospatial/content/map-world-1" target="__blank" rel="noopener noreferrer">www.un.org/geospatial/content/map-world-1</Link>
         </div>
       )
     }

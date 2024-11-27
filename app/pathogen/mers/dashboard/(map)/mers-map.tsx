@@ -37,6 +37,7 @@ import { useMersWhoCaseData } from "@/hooks/mers/use-mers-who-case-data";
 import { useMersMapLegend } from "./use-mers-map-legend";
 import { Breakpoint, useBreakpoint } from "@/hooks/useBreakpoint";
 import { Layer, Source } from "react-map-gl";
+import Link from "next/link";
 
 export const MapPinColours = {
   'HumanMersEvent': "#1d4ed8",
@@ -143,7 +144,14 @@ export const MersMap = () => {
       }
     },
     freeTextEntries,
-    legendTooltipContent: <p className="text-sm"> The source of the camel population data is currently unpublished.</p>
+    legendTooltipContent: (
+      <>
+        <p className='inline text-sm'>Unpublished camel population map based on a FAO elaboration from the Global Livestock Impact Mapping System (GLIMS) database and adjusted to FAOSTAT 2020. Country boundaries based on </p>
+        <p className="inline font-bold text-sm">UN Geospatial</p>
+        <p className='inline text-sm'>. 2023. Map of the World. In: United Nations. [Cited: November 2024].</p>
+        <Link className="inline text-link text-sm" href="www.un.org/geospatial/content/map-world-1" target="__blank" rel="noopener noreferrer">www.un.org/geospatial/content/map-world-1</Link>
+      </>
+    )
   }), [ countryHighlightLayerLegendEntries, dataTypeLayerLegendEntries, linearLegendColourGradientConfiguration, freeTextEntries, legendTooltipContent ]);
   
   const { mersMapLegend } = useMersMapLegend({
@@ -263,6 +271,74 @@ export const MersMap = () => {
               type="raster"
               source="camel_population_map_source"
               source-layer="camel_population_map_source"
+              paint={{
+                'raster-opacity': 0.7
+              }}
+              minzoom={0}
+              maxzoom={22}
+            />
+          </Source>
+          <Source
+            id={"camel_population_map_asia_1_source"}
+            type="raster"
+            url="mapbox://serotracker.3ga9gz3i"
+          >
+            <Layer
+              id={"camel_population_map_asia_1_layer"}
+              type="raster"
+              source="camel_population_map_asia_1_source"
+              source-layer="camel_population_map_asia_1_source"
+              paint={{
+                'raster-opacity': 0.7
+              }}
+              minzoom={0}
+              maxzoom={22}
+            />
+          </Source>
+          <Source
+            id={"camel_population_map_asia_2_source"}
+            type="raster"
+            url="mapbox://serotracker.43bw4d8u"
+          >
+            <Layer
+              id={"camel_population_map_asia_2_layer"}
+              type="raster"
+              source="camel_population_map_asia_2_source"
+              source-layer="camel_population_map_asia_2_source"
+              paint={{
+                'raster-opacity': 0.7
+              }}
+              minzoom={0}
+              maxzoom={22}
+            />
+          </Source>
+          <Source
+            id={"camel_population_map_asia_3_source"}
+            type="raster"
+            url="mapbox://serotracker.24ccrmc3"
+          >
+            <Layer
+              id={"camel_population_map_asia_3_layer"}
+              type="raster"
+              source="camel_population_map_asia_3_source"
+              source-layer="camel_population_map_asia_3_source"
+              paint={{
+                'raster-opacity': 0.7
+              }}
+              minzoom={0}
+              maxzoom={22}
+            />
+          </Source>
+          <Source
+            id={"camel_population_map_asia_4_source"}
+            type="raster"
+            url="mapbox://serotracker.6gbl8jse"
+          >
+            <Layer
+              id={"camel_population_map_asia_4_layer"}
+              type="raster"
+              source="camel_population_map_asia_4_source"
+              source-layer="camel_population_map_asia_4_source"
               paint={{
                 'raster-opacity': 0.7
               }}
