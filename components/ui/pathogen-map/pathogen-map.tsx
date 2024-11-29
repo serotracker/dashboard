@@ -106,6 +106,7 @@ interface PathogenMapProps<
   countryDataContext: CountryDataContextType;
   sourceId: string;
   countryAlphaThreeCodesToNotHighlight?: string[];
+  countryHighlightingEnabled: boolean;
   children?: React.ReactNode;
 }
 
@@ -128,6 +129,7 @@ export function PathogenMap<
   countryDataContext,
   sourceId,
   countryAlphaThreeCodesToNotHighlight,
+  countryHighlightingEnabled,
   children
 }: PathogenMapProps<
   TPathogenDataPointProperties,
@@ -232,9 +234,11 @@ export function PathogenMap<
       />
       <PathogenCountryHighlightLayer
         paint={paint}
+        countryHighlightingEnabled={countryHighlightingEnabled}
         countryAlphaThreeCodesToNotHighlight={countryAlphaThreeCodesToNotHighlight ?? []}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
       />
+      {children}
       <PathogenMapSourceAndLayer
         layers={layers}
         dataPoints={dataPoints}
@@ -246,7 +250,6 @@ export function PathogenMap<
         popUpInfo={popUpInfo}
         generatePopupContent={generatePopupContent}
       />
-      {children}
       {Object.keys(markersOnScreen).map(
         (id) => markersOnScreen[id]?.element
       )}

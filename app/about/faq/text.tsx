@@ -88,8 +88,12 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
         <p className='inline'> and the </p>
         <Link className="inline text-link" href="https://www.fao.org/" target="__blank" rel="noopener noreferrer">Food and Agriculture Organization of the United Nations</Link>
         <p className='inline'>. </p>
-        <p className='inline'>Camel population data from the dashboard is supplied entirely by the Food and Agriculture Organization of the United Nations, through the FAO STAT Statistical Database for Live Animals, last updated on 2 August 2022 and available at: </p>
-        <Link className="inline text-link" href="https://data.apps.fao.org/catalog/dataset/live-animals-national-global-annual" target="__blank" rel="noopener noreferrer">Live Animals (National - Global - Annual) - FAOSTAT - Datasets - FAO catalog</Link>
+        <p className='inline'>Unpublished camel population map based on a FAO elaboration from the Global Livestock Impact Mapping System (GLIMS) database and adjusted to FAOSTAT 2020. Country boundaries based on </p>
+        <p className="inline font-bold">UN Geospatial</p>
+        <p className='inline'>. 2023. Map of the World. In: </p>
+        <p className='inline italic'>United Nations</p>
+        <p className='inline'>. [Cited: November 2024].</p>
+        <Link className="inline text-link" href="www.un.org/geospatial/content/map-world-1" target="__blank" rel="noopener noreferrer">www.un.org/geospatial/content/map-world-1</Link>
       </>
     )
   },

@@ -151,6 +151,7 @@ export function ArbovirusMap() {
       <div className={"w-full h-full p-0"}>
         <PathogenMap
           id="arboMap"
+          countryHighlightingEnabled={true}
           allowCountryPopUpsWithEmptyData={selectedEsm !== SelectedArbovirusEnvironmentalSuitabilityMap.NO_ESM_SELECTED}
           countryDataContext={countryDataContext}
           countryPopUpEnabled={countryPopUpEnabled}

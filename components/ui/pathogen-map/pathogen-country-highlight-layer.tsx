@@ -8,19 +8,30 @@ interface PathogenCountryHighlightLayerProps {
   positionedUnderLayerWithId: string | undefined;
   paint: PaintForCountries;
   countryAlphaThreeCodesToNotHighlight: string[];
+  countryHighlightingEnabled: boolean;
 }
 
 interface GeneratePaintForLayerInput {
   paint: PaintForCountries;
   countryAlphaThreeCodesToNotHighlight: string[];
+  countryHighlightingEnabled: boolean;
 }
 
 const generatePaintForLayer = (
   input: GeneratePaintForLayerInput
 ) => {
-  const { paint, countryAlphaThreeCodesToNotHighlight } = input;
+  const { paint, countryAlphaThreeCodesToNotHighlight, countryHighlightingEnabled } = input;
 
   const { countryData, defaults } = paint;
+
+  if(!countryHighlightingEnabled) {
+    return {
+      "fill-color": defaults.fill,
+      "line-width": defaults.borderWidthPx,
+      "line-color": defaults.borderColour,
+      "fill-opacity": defaults.opacity
+    };
+  }
 
   const fillColour = countryData.length > 0 ? [
     "match",
@@ -81,11 +92,12 @@ const generatePaintForLayer = (
 export function PathogenCountryHighlightLayer(
   props: PathogenCountryHighlightLayerProps
 ) {
-  const { paint, countryAlphaThreeCodesToNotHighlight } = props;
+  const { paint, countryAlphaThreeCodesToNotHighlight, countryHighlightingEnabled } = props;
   const [mapCountryVectors, setMapCountryVectors] = useState<any>(null);
   const layerPaint = useMemo(() => generatePaintForLayer({
     paint,
-    countryAlphaThreeCodesToNotHighlight
+    countryAlphaThreeCodesToNotHighlight,
+    countryHighlightingEnabled
   }), [ paint, countryAlphaThreeCodesToNotHighlight ]);
 
   useEffect(() => {

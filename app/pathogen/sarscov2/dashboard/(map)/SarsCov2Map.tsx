@@ -35,6 +35,7 @@ export function SarsCov2Map() {
       <div className={"w-full h-full p-0"}>
         <PathogenMap
           id="sarsCov2Map"
+          countryHighlightingEnabled={true}
           countryPopUpEnabled={countryPopUpEnabled}
           countryPopUpOnHoverEnabled={false}
           allowCountryPopUpsWithEmptyData={false}
