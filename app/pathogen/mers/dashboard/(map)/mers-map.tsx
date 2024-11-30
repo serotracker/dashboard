@@ -38,6 +38,7 @@ import { useMersMapLegend } from "./use-mers-map-legend";
 import { Breakpoint, useBreakpoint } from "@/hooks/useBreakpoint";
 import { Layer, Source } from "react-map-gl";
 import Link from "next/link";
+import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 
 export const MapPinColours = {
   'HumanMersEvent': "#1d4ed8",
@@ -103,7 +104,10 @@ export const MersMap = () => {
 
   const legendProps = useMemo(() => ({
     className: "absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md",
-    legendEntries: dataTypeLayerLegendEntries,
+    legendEntries: [
+      { description: "Camel population data unavailable", colour: MapSymbology.CountryFeature.Default.Color },
+      ...dataTypeLayerLegendEntries,
+    ],
     linearLegendColourGradientConfiguration: {
       enabled: true,
       props: {
