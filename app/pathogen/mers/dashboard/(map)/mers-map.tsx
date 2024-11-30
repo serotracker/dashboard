@@ -105,7 +105,7 @@ export const MersMap = () => {
   const legendProps = useMemo(() => ({
     className: "absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md",
     legendEntries: [
-      { description: "Camel population data unavailable", colour: MapSymbology.CountryFeature.Default.Color },
+      { description: "Camel Population Data Unavailable", colour: MapSymbology.CountryFeature.Default.Color },
       ...dataTypeLayerLegendEntries,
     ],
     linearLegendColourGradientConfiguration: {
