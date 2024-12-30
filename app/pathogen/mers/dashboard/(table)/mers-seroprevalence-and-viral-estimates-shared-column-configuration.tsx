@@ -126,6 +126,7 @@ export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   primaryEstimateIsotypes: estimate.primaryEstimateInfo.isotypes,
   primaryEstimateSpecimenType: estimate.primaryEstimateInfo.specimenType,
   primaryEstimateFirstAuthorFullName: estimate.primaryEstimateInfo.firstAuthorFullName,
+  primaryEstimateFirstAuthorLastName: estimate.primaryEstimateInfo.firstAuthorFullName.split(' ').at(-1),
   primaryEstimateSourceTitle: estimate.primaryEstimateInfo.sourceTitle,
   primaryEstimateInsitutution: estimate.primaryEstimateInfo.insitutution,
   primaryEstimateAnimalType: 'animalType' in estimate.primaryEstimateInfo
@@ -390,6 +391,11 @@ export const useMersEstimateColumnConfiguration = () => {
     type: DataTableColumnConfigurationEntryType.STANDARD as const,
     fieldName: 'primaryEstimateFirstAuthorFullName',
     label: 'First Author Full Name'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateFirstAuthorLastName',
+    label: 'First Author Last Name',
+    initiallyVisible: false
   }, {
     type: DataTableColumnConfigurationEntryType.STANDARD as const,
     fieldName: 'primaryEstimateInsitutution',
