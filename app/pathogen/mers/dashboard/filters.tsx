@@ -12,6 +12,7 @@ import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
 import { FilterableField } from "@/components/customs/filters/available-filters";
 import { MersMapCustomizationsContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context";
 import { MapDataPointVisibilityOptions, MersMapCountryHighlightingSettings } from "./(map)/use-mers-map-customization-modal";
+import { PositivePrevalenceFilterOptions } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-data-filtering";
 
 interface MersFiltersProps {
   className?: string;
@@ -30,6 +31,7 @@ const studyLocationFilters = [
 const seroprevalenceEstimateFilters = [
   FilterableField.samplingStartDate,
   FilterableField.samplingEndDate,
+  FilterableField.positivePrevalence,
   FilterableField.samplingMethod,
   FilterableField.mersAssay,
   FilterableField.specimenType,
@@ -230,7 +232,11 @@ export const MersFilters = (props: MersFiltersProps) => {
         animalSpecies: uniq([
           ...((estimateFilterData?.mersEstimatesFilterOptions && areAnimalEstimatesVisibleOnMap) ? estimateFilterData.mersEstimatesFilterOptions.animalSpecies : []),
           ...((eventFilterData?.faoMersEventFilterOptions && areAnimalEventsVisibleOnMap) ? eventFilterData.faoMersEventFilterOptions.animalSpecies : []),
-        ])
+        ]),
+        positivePrevalence: [
+          PositivePrevalenceFilterOptions.SOME_POSITIVE_PREVALANCE_ONLY,
+          PositivePrevalenceFilterOptions.NO_POSITIVE_PREVALANCE_ONLY
+        ]
       }}
       data={{
         mersEstimates: data?.mersPrimaryEstimates ?? [],

@@ -18,6 +18,7 @@ import { GroupedColouredCheckboxFilter } from "./grouped-coloured-checkbox-filte
 import { MersMapCustomizationsContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context";
 import { isMersMacroSampleFrameType, MersMacroSampleFramesContext, MersMacroSampleFrameType, mersMacroSampleFrameTypeToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-macro-sample-frames-context";
 import { isMersAssayClassification, MersAssayClassification, MersAssayClassificationContext, mersAssayClassificationToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-assay-classification-content";
+import { PositivePrevalenceFilterOptions } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-data-filtering";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -119,7 +120,8 @@ export enum FilterableField {
   diagnosisSource = "diagnosisSource",
   animalType = "animalType",
   animalSpecies = "animalSpecies",
-  clade = "clade"
+  clade = "clade",
+  positivePrevalence = "positivePrevalence"
 }
 
 const RiskOfBiasTooltip: TooltipContentRenderingFunction = (input) => (
@@ -583,6 +585,15 @@ export const useAvailableFilters = () => {
       valueToLabelMap: animalSpeciesToStringMap,
       filterRenderingFunction: MultiSelectFilter
     },
+    positivePrevalence: {
+      field: FilterableField.positivePrevalence,
+      label: "Positive Prevalence",
+      valueToLabelMap: {
+        [PositivePrevalenceFilterOptions.SOME_POSITIVE_PREVALANCE_ONLY]: 'Estimates with some positive prevalence only',
+        [PositivePrevalenceFilterOptions.NO_POSITIVE_PREVALANCE_ONLY]: 'Estimates with no positive prevalence only'
+      },
+      filterRenderingFunction: SingleSelectFilter
+    }
   }
 
   return {

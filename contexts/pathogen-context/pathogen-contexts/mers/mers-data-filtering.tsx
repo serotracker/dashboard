@@ -1,5 +1,6 @@
-import { HumanMersAgeGroupSubEstimate, MersEstimate, isAnimalMersEstimate, isHumanMersAgeGroupSubEstimate, isHumanMersEstimate } from "./mers-context"
+import { HumanMersAgeGroupSubEstimate, MersEstimate, isAnimalMersEstimate, isHumanMersAgeGroupSubEstimate, isHumanMersEstimate, isMersSeroprevalenceEstimate, isMersViralEstimate } from "./mers-context"
 import { doTimeIntervalsOverlap } from "@/lib/date-utils";
+import { assertNever } from "assert-never";
 import { parseISO } from "date-fns";
 import uniq from "lodash/uniq";
 
@@ -26,7 +27,13 @@ export enum MersFilterableField {
   animalSpecies = "animalSpecies",
   antigen = "antigen",
   exposureToCamels = "exposureToCamels",
-  clade = "clade"
+  clade = "clade",
+  positivePrevalence = "positivePrevalence"
+}
+
+export enum PositivePrevalenceFilterOptions {
+  SOME_POSITIVE_PREVALANCE_ONLY = 'SOME_POSITIVE_PREVALANCE_ONLY',
+  NO_POSITIVE_PREVALANCE_ONLY = 'NO_POSITIVE_PREVALANCE_ONLY',
 }
 
 interface FilterMersEstimatesInput {
@@ -682,6 +689,36 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
         )
         .map((subestimate) => subestimate.id),
     }
+  },
+  [MersFilterableField.positivePrevalence]: (input) => {
+    const { estimate } = input;
+    const positivePrevalenceFilterOptions = input.selectedFilters[MersFilterableField.positivePrevalence] ?? [];
+
+    if(positivePrevalenceFilterOptions.length === 0) {
+      return { included: true };
+    }
+    
+    const positivePrevalenceOption = positivePrevalenceFilterOptions[0];
+
+    if(isMersSeroprevalenceEstimate(estimate)) {
+      if(positivePrevalenceOption === PositivePrevalenceFilterOptions.SOME_POSITIVE_PREVALANCE_ONLY) {
+        return { included: estimate.primaryEstimateInfo.seroprevalence > 0 };
+      }
+      if(positivePrevalenceOption === PositivePrevalenceFilterOptions.NO_POSITIVE_PREVALANCE_ONLY) {
+        return { included: estimate.primaryEstimateInfo.seroprevalence === 0 };
+      }
+    }
+
+    if(isMersViralEstimate(estimate)) {
+      if(positivePrevalenceOption === PositivePrevalenceFilterOptions.SOME_POSITIVE_PREVALANCE_ONLY) {
+        return { included: estimate.primaryEstimateInfo.positivePrevalence > 0 };
+      }
+      if(positivePrevalenceOption === PositivePrevalenceFilterOptions.NO_POSITIVE_PREVALANCE_ONLY) {
+        return { included: estimate.primaryEstimateInfo.positivePrevalence === 0 };
+      }
+    }
+
+    return { included: true };
   },
   [MersFilterableField.diagnosisSource]: () => ({ included: true })
 }
