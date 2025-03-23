@@ -5,7 +5,7 @@ import { PathogenContextActionType, PathogenContextState, PathogenContextType, P
 import { useGroupedArboData } from "@/hooks/arbovirus/useGroupedArboData";
 import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
 import { CountryDataContext } from "../../country-information-context";
-import { ArbovirusEstimatesQueryQuery, ArbovirusEstimateType, ArbovirusStudyPopulation } from "@/gql/graphql";
+import { ArbovirusEstimateType, ArbovirusStudyPopulation, GroupedArbovirusEstimatesQueryQuery } from "@/gql/graphql";
 import { ArbovirusEnvironmentalSuitabilityCountryDataProvider } from "./arbo-environmental-suitability-country-data-context";
 import { useArboEnviromentalSuitabilityData } from "@/hooks/arbovirus/useArboEnviromentalSuitabilityData";
 import { ArbovirusOropoucheCasesDataProvider } from "./arbo-oropouche-cases-data-context";
@@ -13,7 +13,9 @@ import { ArbovirusAvailablePathogensProvider } from "./arbo-available-pathogens-
 import { handleFilterUpdate } from "../../filter-update-steps";
 import { filterData } from "../../filter-update-steps/apply-new-selected-filters";
 
-export type ArbovirusEstimate = ArbovirusEstimatesQueryQuery['arbovirusEstimates'][number];
+export type ArbovirusEstimate = GroupedArbovirusEstimatesQueryQuery['groupedArbovirusEstimates'][number]['shownEstimates'][number] & {
+  includedInMap: boolean;
+};
 
 const initialArboContextState = {
   filteredData: [],

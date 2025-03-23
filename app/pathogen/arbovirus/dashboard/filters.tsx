@@ -181,14 +181,14 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
 
   const ageGroup = useMemo(() => {
     return uniq((data?.arbovirusEstimates ?? [])
-      .map((dataPoint) => dataPoint.ageGroup)
+      .flatMap((dataPoint) => dataPoint.ageGroup)
       .filter((ageGroup): ageGroup is NonNullable<typeof ageGroup> => !!ageGroup)
     );
   }, [ data ]);
 
   const sex = useMemo(() => {
     return uniq((data?.arbovirusEstimates ?? [])
-      .map((dataPoint) => dataPoint.sex)
+      .flatMap((dataPoint) => dataPoint.sex)
       .filter((sex): sex is NonNullable<typeof sex> => !!sex)
     );
   }, [ data ]);
@@ -202,7 +202,7 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
 
   const assay = useMemo(() => {
     return uniq((data?.arbovirusEstimates ?? [])
-      .map((dataPoint) => dataPoint.assay)
+      .flatMap((dataPoint) => dataPoint.assay)
       .filter((assay): assay is NonNullable<typeof assay> => !!assay)
     );
   }, [ data ]);
