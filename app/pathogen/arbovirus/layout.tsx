@@ -3,6 +3,7 @@ import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
 import { request } from 'graphql-request';
 import { arbovirusEstimatesQuery } from "@/hooks/arbovirus/useArboData";
+import { groupedArbovirusEstimatesQuery } from "@/hooks/arbovirus/useGroupedArboData";
 import { arbovirusFiltersQuery } from "@/hooks/arbovirus/useArboFilters";
 import { ArboProviders } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
@@ -18,6 +19,10 @@ export default async function ArboLayout({
   await queryClient.prefetchQuery({
     queryKey: ["arbovirusEstimatesQuery"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ["groupedArbovirusEstimatesQuery"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedArbovirusEstimatesQuery)
   });
   await queryClient.prefetchQuery({
     queryKey: ["arbovirusFiltersQuery"],

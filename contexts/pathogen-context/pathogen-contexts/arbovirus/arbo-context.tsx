@@ -2,7 +2,7 @@
 import { createContext, useEffect, useMemo } from "react";
 import uniqBy from "lodash/uniqBy";
 import { PathogenContextActionType, PathogenContextState, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../../pathogen-context";
-import { useArboData } from "@/hooks/arbovirus/useArboData";
+import { useGroupedArboData } from "@/hooks/arbovirus/useGroupedArboData";
 import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
 import { CountryDataContext } from "../../country-information-context";
 import { ArbovirusEstimatesQueryQuery, ArbovirusEstimateType, ArbovirusStudyPopulation } from "@/gql/graphql";
@@ -36,7 +36,7 @@ export const ArboContext = createContext<ArbovirusContextType>({
 });
 
 const ArboDataFetcher = (props: PathogenDataFetcherProps<ArbovirusEstimate, ArbovirusContextState>): React.ReactNode => {
-  const dataQuery = useArboData();
+  const dataQuery = useGroupedArboData();
 
   useEffect(() => {
     if (

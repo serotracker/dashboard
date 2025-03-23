@@ -8,7 +8,7 @@
 "use client";
 
 import React, { useContext, useMemo, useState } from "react";
-import { useArboData } from "@/hooks/arbovirus/useArboData";
+import { useGroupedArboData } from "@/hooks/arbovirus/useGroupedArboData";
 import { ArbovirusEstimatePopupContent } from "./arbovirus-estimate-pop-up-content";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
@@ -51,7 +51,7 @@ export function ArbovirusMap() {
   const { filteredData, selectedFilters } = useContext(ArboContext);
   const { oropoucheCaseMapboxLayer, oropoucheCaseLayerColourBuckets } = useContext(ArbovirusOropoucheCasesDataContext);
   const { arbovirusEnvironmentalSuitabilityCountryData } = useContext(ArbovirusEnvironmentalSuitabilityCountryDataContext);
-  const { data } = useArboData();
+  const { data: groupedArboData } = useGroupedArboData();
   const { getCountryHighlightingLayerInformation: getDataPointPresentCountryHighlightingLayerInformation } = useDataPointPresentLayer();
   const { getCountryHighlightingLayerInformation: getESMCountryHighlightingLayerInformation } = useEsmCountryHighlightLayer();
   const {
@@ -60,6 +60,10 @@ export function ArbovirusMap() {
     countryPopUpEnabled,
     ...arbovirusMapCustomizationModal
   } = useArbovirusMapCustomizationModal();
+
+  const data = useMemo(() => {
+    return groupedArboData?.arbovirusEstimates?.filter((dataPoint) => !!dataPoint.includedInMap) ?? undefined;
+  }, [ groupedArboData ]);
 
   const oropoucheCasesMapEnabled = useMemo(() => {
     if(selectedFilters.positiveCases?.length > 0) {

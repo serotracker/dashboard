@@ -8,7 +8,7 @@
  *
  *
  * @see contexts/arbo-context.tsx
- * @see hooks/useArboData.tsx
+ * @see hooks/useGroupedArboData.tsx
  * @see components/customs/multi-select.tsx
  */
 
@@ -16,7 +16,7 @@
 
 import React, { useContext, useMemo } from "react";
 import uniq from "lodash/uniq";
-import { useArboData } from "@/hooks/arbovirus/useArboData";
+import { useGroupedArboData } from "@/hooks/arbovirus/useGroupedArboData";
 import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { Filters } from "@/components/customs/filters";
@@ -29,7 +29,7 @@ interface ArbovirusFiltersProps {
 export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
   const state = useContext(ArboContext);
 
-  const { data } = useArboData();
+  const { data } = useGroupedArboData();
   const { data: filterData } = useArboFilters();
 
   const selectedAgeGroups = state.selectedFilters['ageGroup'] ?? [];
