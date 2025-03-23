@@ -48,7 +48,7 @@ const esmValueToSelectedEsm: Record<string, SelectedArbovirusEnvironmentalSuitab
 export function ArbovirusMap() {
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const countryDataContext = useContext(CountryDataContext);
-  const { filteredData, selectedFilters } = useContext(ArboContext);
+  const { filteredData: filteredDataRaw, selectedFilters } = useContext(ArboContext);
   const { oropoucheCaseMapboxLayer, oropoucheCaseLayerColourBuckets } = useContext(ArbovirusOropoucheCasesDataContext);
   const { arbovirusEnvironmentalSuitabilityCountryData } = useContext(ArbovirusEnvironmentalSuitabilityCountryDataContext);
   const { data: groupedArboData } = useGroupedArboData();
@@ -64,6 +64,10 @@ export function ArbovirusMap() {
   const data = useMemo(() => {
     return groupedArboData?.arbovirusEstimates?.filter((dataPoint) => !!dataPoint.includedInMap) ?? undefined;
   }, [ groupedArboData ]);
+
+  const filteredData = useMemo(() => {
+    return filteredDataRaw.filter((estimate) => !!estimate.includedInMap) ?? undefined;
+  }, [ filteredDataRaw ]);
 
   const oropoucheCasesMapEnabled = useMemo(() => {
     if(selectedFilters.positiveCases?.length > 0) {
