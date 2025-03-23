@@ -32,7 +32,7 @@ enum AgeGroup {
 }
 
 interface GetMedianSeroprevalenceInformationFromDataInput {
-  data: ArbovirusEstimate[];
+  data: Array<Pick<ArbovirusEstimate,'seroprevalence'>>;
 }
 
 interface GetMedianSeroprevalenceInformationFromDataOutput {
@@ -120,16 +120,19 @@ export const MedianSeroprevalenceByWhoRegionAndAgeGroupTable = (props: MedianSer
             arbovirus,
             typedObjectFromEntries(
               typedObjectEntries(dataGroupedByWHORegion)
-                .filter(([whoRegion, dataPoints]) =>
+                .filter(([whoRegion]) =>
                   Object.values(WhoRegion).includes(whoRegion)
                 )
                 .map(([whoRegion, dataPoints]) => [
                   whoRegion,
                   typedGroupBy(
-                    dataPoints.filter((dataPoint) =>
-                      Object.values(AgeGroup).some((element) => dataPoint.ageGroup === element)
+                    dataPoints
+                      .flatMap((dataPoint) => dataPoint.ageGroup.map((ageGroup) => ({ ...dataPoint, ageGroup })))
+                      .filter((dataPoint): dataPoint is Omit<typeof dataPoint,'ageGroup'> & {
+                        ageGroup: AgeGroup;
+                      } => Object.values(AgeGroup).some((element) => dataPoint.ageGroup === element)
                     ),
-                    (dataPoint) => dataPoint.ageGroup as AgeGroup
+                    (dataPoint) => dataPoint.ageGroup
                   ),
                 ])
             ),

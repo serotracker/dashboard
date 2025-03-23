@@ -122,8 +122,26 @@ export const ArbovirusEstimatePopupContent = (props: ArbovirusEstimatePopupConte
         text: props.estimate.antigen ?? 'Not specified'
       }, {
         title: "Assay",
-        type: PopUpContentRowType.TEXT,
-        text: props.estimate.assay ?? 'Not specified'
+        type: PopUpContentRowType.COLOURED_PILL_LIST,
+        values: props.estimate.assay,
+        valueToColourClassnameMap: {
+          'ELISA': 'bg-amber-200',
+          'LFIA': 'bg-teal-200',
+          'VNT': 'bg-blue-200',
+          'PRNT': 'bg-violet-200',
+          'FRNT': 'bg-orange-200',
+          'MIA': 'bg-lime-200',
+          'Other': 'bg-blue-700 text-white',
+          'HAI': 'bg-fuchsia-200',
+          'MNT': 'bg-green-200',
+          'CF': 'bg-rose-200',
+          'RDT': 'bg-purple-200',
+          'RT-PCR': 'bg-black text-white',
+          'Viral isolation': 'bg-yellow-400',
+          'Not Reported': 'bg-zinc-200',
+          'No': 'bg-stone-200',
+        },
+        defaultColourClassname: 'bg-sky-100'
       }]}
       bottomBannerConfiguration={{
         enabled: false
