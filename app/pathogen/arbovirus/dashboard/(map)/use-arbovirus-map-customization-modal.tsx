@@ -46,27 +46,27 @@ export const useArbovirusMapCustomizationModal = () => {
       //  },
       //  onDropdownOptionChange: (option) => setCountryHighlightingSetting(option)
       //}, {
-        type: CustomizationSettingType.DROPDOWN,
-        dropdownName: 'Outlines for countries and areas with data',
-        borderColourClassname: 'border-arbovirus',
-        hoverColourClassname: 'hover:bg-arbovirusHover/50',
-        highlightedColourClassname: 'data-[highlighted]:bg-arbovirusHover/50',
-        dropdownOptionGroups: [{
-          groupHeader: 'Preferences',
-          options: [
-            CountryPaintChangeSetting.WHEN_RECOMMENDED,
-            CountryPaintChangeSetting.ALWAYS_DISABLED,
-            CountryPaintChangeSetting.ALWAYS_ENABLED,
-          ]
-        }],
-        chosenDropdownOption: countryOutlinesSetting,
-        dropdownOptionToLabelMap: {
-          [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
-          [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
-          [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
-        },
-        onDropdownOptionChange: (option) => setCountryOutlinesSetting(option)
-      }, {
+      //   type: CustomizationSettingType.DROPDOWN,
+      //   dropdownName: 'Outlines for countries and areas with data',
+      //   borderColourClassname: 'border-arbovirus',
+      //   hoverColourClassname: 'hover:bg-arbovirusHover/50',
+      //   highlightedColourClassname: 'data-[highlighted]:bg-arbovirusHover/50',
+      //   dropdownOptionGroups: [{
+      //     groupHeader: 'Preferences',
+      //     options: [
+      //       CountryPaintChangeSetting.WHEN_RECOMMENDED,
+      //       CountryPaintChangeSetting.ALWAYS_DISABLED,
+      //       CountryPaintChangeSetting.ALWAYS_ENABLED,
+      //     ]
+      //   }],
+      //   chosenDropdownOption: countryOutlinesSetting,
+      //   dropdownOptionToLabelMap: {
+      //     [CountryPaintChangeSetting.WHEN_RECOMMENDED]: "When Recommended",
+      //     [CountryPaintChangeSetting.ALWAYS_ENABLED]: "Always Enabled",
+      //     [CountryPaintChangeSetting.ALWAYS_DISABLED]: "Always Disabled",
+      //   },
+      //   onDropdownOptionChange: (option) => setCountryOutlinesSetting(option)
+      // }, {
         type: CustomizationSettingType.SWITCH,
         switchName: `Country/Area pop-up ${countryPopUpEnabled ? 'enabled' : 'disabled'}.`,
         switchValue: countryPopUpEnabled,
