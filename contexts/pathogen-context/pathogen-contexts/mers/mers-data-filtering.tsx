@@ -473,7 +473,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     }
 
     if(isHumanMersEstimate(estimate) ) {
-      return { included: false };
+      return { included: true };
     }
 
     const included = mersEstimateArrayFieldHandler({
@@ -653,7 +653,7 @@ const allMersEstimateHandlers: Record<MersFilterableField, (input: {
     }
 
     if(isAnimalMersEstimate(estimate) ) {
-      return { included: false };
+      return { included: true };
     }
 
     const included = mersEstimateArrayFieldHandler({

@@ -11,7 +11,7 @@ import {
 import { MapDataPointVisibilityOptions } from "./use-mers-map-customization-modal";
 import { MapPinColours } from "./mers-map";
 
-const CamelIcon = () => (
+export const CamelIcon = () => (
   <svg
     width={18}
     height={18}
@@ -172,7 +172,7 @@ const CamelIcon = () => (
   </svg>
 )
 
-const HumanIcon = () => (
+export const HumanIcon = () => (
   <svg
     version="1.0"
     xmlns="http://www.w3.org/2000/svg"

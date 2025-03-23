@@ -32,7 +32,7 @@ import { useMersMapDataPoints } from "./use-mers-map-data-points";
 import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
 import { MersMapStudySubmissionPrompt } from "./mers-map-study-submission-prompt";
 import { Card, CardContent } from "@/components/ui/card";
-import { useMersMapDataTypeLegendEntries } from "./use-mers-map-data-type-legend-entries";
+import { CamelIcon, HumanIcon, useMersMapDataTypeLegendEntries } from "./use-mers-map-data-type-legend-entries";
 import { useMersWhoCaseData } from "@/hooks/mers/use-mers-who-case-data";
 import { useMersMapLegend } from "./use-mers-map-legend";
 import { Breakpoint, useBreakpoint } from "@/hooks/useBreakpoint";
@@ -354,23 +354,53 @@ export const MersMap = () => {
           </Source>
         </PathogenMap>
       </div>
-      <MersMapStudySubmissionPrompt
-        hidden={!isStudySubmissionPromptVisible || isOnLgBreakpointOrBelow}
-        onClose={() => setStudySubmissionPromptVisibility(false)}
-        className={"absolute bottom-1 left-1 mx-auto w-1/2 text-center bg-white/60 backdrop-blur-md"}
-      />
       {mersMapLegend}
-      <MapEstimateSummary filteredData={filteredData.map((estimate) => ({ sourceSheetName: estimate.primaryEstimateInfo.sourceTitle }))}/>
-      <div className={"absolute top-12 left-1 p-2 "}>
+      {/*<div className={"absolute top-1 left-1 p-2 "}>
         <Card className={"mb-1 bg-white/60 backdrop-blur-md"}>
-          <CardContent className={"flex w-fit p-2"}>
-            <p className={"ml-1 font-medium"}>
-              The points on the map represent the number of studies identified in that region.
-            </p>
+          <CardContent className={"w-fit p-2"}>
+            <div className="items-center flex space-x-2 my-1">
+              <HumanIcon />
+              <p>{`${dataPoints.filter((element) => element.primaryEstimateInfoTypename === 'PrimaryHumanMersSeroprevalenceEstimateInformation').length} Human Seroprevalence Estimates`}</p>
+            </div>
+            <div className="items-center flex space-x-2 my-1">
+              <HumanIcon />
+              <p>{`${dataPoints.filter((element) => element.primaryEstimateInfoTypename === 'PrimaryHumanMersViralEstimateInformation').length} Human Viral Estimates`}</p>
+            </div>
+            <div className="items-center flex space-x-2 my-1">
+              <CamelIcon />
+              <p>{`${dataPoints.filter((element) => element.primaryEstimateInfoTypename === 'PrimaryAnimalMersSeroprevalenceEstimateInformation').length} Animal Seroprevalence Estimates`}</p>
+            </div>
+            <div className="items-center flex space-x-2 my-1">
+              <CamelIcon />
+              <p>{`${dataPoints.filter((element) => element.primaryEstimateInfoTypename === 'PrimaryAnimalMersViralEstimateInformation').length} Animal Viral Estimates`}</p>
+            </div>
+            <p className='text-xs'>Not depicted: Three studies done in animals in Australia, one study done in animals in Japan.</p>
           </CardContent>
         </Card>
-      </div>
-      <mersMapCustomizationModal.mapCustomizeButton />
+      </div>*/}
+      {<div className={"absolute top-1 left-1 p-2 "}>
+        <Card className={"mb-1 bg-white/60 backdrop-blur-md"}>
+          <CardContent className={"w-fit p-2"}>
+            <div className="items-center flex space-x-2 my-1">
+              <HumanIcon />
+              <p>{`${dataPoints.filter((element) => element.primaryEstimateInfoTypename === 'PrimaryHumanMersSeroprevalenceEstimateInformation').length} Occupationally Exposed Human Seroprevalence Estimates`}</p>
+            </div>
+            <div className="items-center flex space-x-2 my-1">
+              <HumanIcon />
+              <p>{`${dataPoints.filter((element) => element.primaryEstimateInfoTypename === 'PrimaryHumanMersViralEstimateInformation').length} Occupationally Exposed Human Viral Estimate`}</p>
+            </div>
+            <div className="items-center flex space-x-2 my-1">
+              <CamelIcon />
+              <p>{`${dataPoints.filter((element) => element.primaryEstimateInfoTypename === 'PrimaryAnimalMersSeroprevalenceEstimateInformation').length} Camel Seroprevalence Estimates`}</p>
+            </div>
+            <div className="items-center flex space-x-2 my-1">
+              <CamelIcon />
+              <p>{`${dataPoints.filter((element) => element.primaryEstimateInfoTypename === 'PrimaryAnimalMersViralEstimateInformation').length} Camel Viral Estimates`}</p>
+            </div>
+            <p className='text-xs'>Not depicted: Three studies done in animals in Australia, one study done in animals in Japan.</p>
+          </CardContent>
+        </Card>
+      </div>}
       <mersMapCustomizationModal.customizationModal />
     </>
   );

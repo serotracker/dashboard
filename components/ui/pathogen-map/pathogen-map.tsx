@@ -228,7 +228,6 @@ export function PathogenMap<
       onMouseLeave={onMouseLeave}
       onRender={onRender}
     >
-      <NavigationControl showCompass={false} />
       <EsmMapSourceAndLayer
         popupLayerId={layerForCountryHighlighting?.id}
       />

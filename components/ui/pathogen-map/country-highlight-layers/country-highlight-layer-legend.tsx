@@ -6,6 +6,7 @@ import { LinearLegendColourGradient, LinearLegendColourGradientProps } from "@/c
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
+import Link from "next/link";
 
 
 export interface FreeTextEntry {
@@ -107,6 +108,14 @@ export const CountryHighlightLayerLegend = (input: CountryHighlightLayerLegendPr
         {input.freeTextEntries.map((entry) => (
           <p key={`${entry.text}`}> {entry.text} </p>
         ))}
+        <div style={{ width: '500px' }}>
+          <p className='inline text-xs'>Unpublished camel population map based on a FAO elaboration from the Global Livestock Impact Mapping System (GLIMS) database and adjusted to FAOSTAT 2020. Country boundaries based on </p>
+          <p className="inline text-xs font-bold">UN Geospatial</p>
+          <p className='inline text-xs'>. 2023. Map of the World. In: </p>
+          <p className='inline text-xs italic'>United Nations</p>
+          <p className='inline text-xs'>. [Cited: November 2024].</p>
+          <Link className="inline text-link text-xs" href="www.un.org/geospatial/content/map-world-1" target="__blank" rel="noopener noreferrer">www.un.org/geospatial/content/map-world-1</Link>
+        </div>
       </CardContent>
     </Card>
   )

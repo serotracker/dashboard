@@ -37,7 +37,7 @@ export const useMersMapLegend = (input: UseMersMapLegendInput) => {
     if(mersMapClosed) {
       return (
         <button
-          className='absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md py-1 px-2 rounded-md'
+          className='absolute top-1 right-1 mb-1 bg-white/60 backdrop-blur-md py-1 px-2 rounded-md'
           onClick={() => setMersMapClosed(false)}
         >
           <p>Show Legend</p>
