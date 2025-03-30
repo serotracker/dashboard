@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
 import { Arbovirus, ArbovirusEstimateType, GroupedArbovirusEstimatesQueryQuery } from "@/gql/graphql";
+import { useAllGroupedArbovirusEstimatePartitionKeys } from './useAllGroupedArbovirusEstimatePartitionKeys';
+import { usePartitionedGroupedArbovirusEstimates } from './usePartitionedGroupedArbovirusEstimates';
 
 export const groupedArbovirusEstimatesQuery = gql`
   query groupedArbovirusEstimatesQuery {
@@ -104,15 +106,19 @@ export const groupedArbovirusEstimatesQuery = gql`
 `
 
 export function useGroupedArboData() {
-  const { data: rawData, ...result } = useQuery<GroupedArbovirusEstimatesQueryQuery>({
-    queryKey: ["groupedArbovirusEstimatesQuery"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedArbovirusEstimatesQuery)
-  });
+  const { data: partitionKeyData } = useAllGroupedArbovirusEstimatePartitionKeys();
+  const dataArray = usePartitionedGroupedArbovirusEstimates({ partitionKeys: partitionKeyData?.allGroupedArbovirusEstimatePartitionKeys ?? [] })
+
+  const groupedArbovirusEstimates = useMemo(() => {
+    if(dataArray.length > 0 && dataArray.every((element) => !!element.data)) {
+      return dataArray.flatMap((element) => element.data?.partitionedGroupedArbovirusEstimates.arboEstimates ?? [])
+    }
+  }, [ dataArray ])
 
   const oropoucheEnabled = process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true';
 
   const data = useMemo(() => {
-    const flattenedData = rawData?.groupedArbovirusEstimates.flatMap((groupedArbovirusEstimate) => [
+    const flattenedData = groupedArbovirusEstimates?.flatMap((groupedArbovirusEstimate) => [
       ...groupedArbovirusEstimate.shownEstimates.map((estimate) => ({
         ...estimate,
         includedInMap: true,
@@ -132,10 +138,9 @@ export function useGroupedArboData() {
     }
 
     return { arbovirusEstimates: flattenedData };
-  }, [ rawData, oropoucheEnabled ]);
+  }, [ groupedArbovirusEstimates, oropoucheEnabled ]);
 
   return {
-    result,
     data
   }
 }
