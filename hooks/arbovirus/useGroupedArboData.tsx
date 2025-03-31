@@ -54,6 +54,7 @@ export const groupedArbovirusEstimatesQuery = gql`
         whoRegion
         studyPopulation
         studySpecies
+        groupingVariable
       }
       hiddenEstimates {
         estimateType
@@ -121,11 +122,11 @@ export function useGroupedArboData() {
     const flattenedData = groupedArbovirusEstimates?.flatMap((groupedArbovirusEstimate) => [
       ...groupedArbovirusEstimate.shownEstimates.map((estimate) => ({
         ...estimate,
-        includedInMap: true,
+        isPrimaryEstimate: true,
       })),
       ...groupedArbovirusEstimate.hiddenEstimates.map((estimate) => ({
         ...estimate,
-        includedInMap: false,
+        isPrimaryEstimate: false,
       })),
     ]);
 
@@ -141,6 +142,6 @@ export function useGroupedArboData() {
   }, [ groupedArbovirusEstimates, oropoucheEnabled ]);
 
   return {
-    data
+    data,
   }
 }

@@ -14,7 +14,7 @@ import { handleFilterUpdate } from "../../filter-update-steps";
 import { filterData } from "../../filter-update-steps/apply-new-selected-filters";
 
 export type ArbovirusEstimate = GroupedArbovirusEstimatesQueryQuery['groupedArbovirusEstimates'][number]['shownEstimates'][number] & {
-  includedInMap: boolean;
+  isPrimaryEstimate: boolean;
 };
 
 const initialArboContextState = {

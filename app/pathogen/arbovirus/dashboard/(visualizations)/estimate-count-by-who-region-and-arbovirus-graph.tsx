@@ -1,8 +1,7 @@
-import { useContext } from "react";
 import { convertArboSFtoArbo } from "./recharts";
 import { LegendConfiguration, StackedBarChart } from "../../../../../components/customs/visualizations/stacked-bar-chart";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
+import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 
 interface EstimateCountByWHORegionAndArbovirusGraphProps {
   legendConfiguration: LegendConfiguration;
@@ -11,12 +10,15 @@ interface EstimateCountByWHORegionAndArbovirusGraphProps {
 export const EstimateCountByWHORegionAndArbovirusGraph = (
   props: EstimateCountByWHORegionAndArbovirusGraphProps
 ) => {
-  const state = useContext(ArboContext);
+  const { primaryEstimateData: state } = useGroupedArbovirusEstimateData();
 
   return (
     <StackedBarChart
       graphId='estimate-count-by-who-region-and-arbovirus-graph'
-      data={state.filteredData.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'whoRegion'> & {whoRegion: NonNullable<typeof dataPoint['whoRegion']>} => !!dataPoint.whoRegion)}
+      data={state.filteredData
+        .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'whoRegion'> & {whoRegion: NonNullable<typeof dataPoint['whoRegion']>} => !!dataPoint.whoRegion)
+        .filter((dataPoint) => dataPoint.isPrimaryEstimate)
+      }
       primaryGroupingFunction={(dataPoint) => dataPoint.whoRegion}
       secondaryGroupingFunction={(dataPoint) => convertArboSFtoArbo(dataPoint.pathogen)}
       secondaryGroupingSortFunction={sortArboviruses}

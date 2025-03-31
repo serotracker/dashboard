@@ -1,8 +1,9 @@
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { parseISO, isAfter } from "date-fns";
-import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
+import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { AreaChart } from "@/components/customs/visualizations/area-chart";
 import { generateRandomColour, generateRange, typedGroupBy, typedObjectEntries, typedObjectFromEntries } from "@/lib/utils";
+import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 
 interface GenerateTimeBucketForEstimateInput {
   estimate: Omit<ArbovirusEstimate, 'sampleEndDate'> & { sampleEndDate: Date };
@@ -92,7 +93,7 @@ const sampleFrameToSortOrderMap: Record<string, number | undefined> = {
 }
 
 export const StudyCountOverTimeBySampleFrame = () => {
-  const state = useContext(ArboContext);
+  const { primaryEstimateData: state } = useGroupedArbovirusEstimateData();
 
   const consideredData = useMemo(() => state.filteredData
     .filter((dataPoint: ArbovirusEstimate): dataPoint is Omit<ArbovirusEstimate, "sampleEndDate" | "sampleFrame">

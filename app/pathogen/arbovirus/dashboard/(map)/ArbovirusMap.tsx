@@ -27,6 +27,7 @@ import { CountryDataContext } from "@/contexts/pathogen-context/country-informat
 import { ArbovirusOropoucheCasesDataContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-oropouche-cases-data-context";
 import { Layer, Source } from "react-map-gl";
 import { mapColourBucketsToLinearGradientConfiguration } from "@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration";
+import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -48,7 +49,8 @@ const esmValueToSelectedEsm: Record<string, SelectedArbovirusEnvironmentalSuitab
 export function ArbovirusMap() {
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const countryDataContext = useContext(CountryDataContext);
-  const { filteredData: filteredDataRaw, selectedFilters } = useContext(ArboContext);
+  const { selectedFilters } = useContext(ArboContext);
+  const { filteredData: filteredDataRaw } = useGroupedArbovirusEstimateData().primaryEstimateData;
   const { oropoucheCaseMapboxLayer, oropoucheCaseLayerColourBuckets } = useContext(ArbovirusOropoucheCasesDataContext);
   const { arbovirusEnvironmentalSuitabilityCountryData } = useContext(ArbovirusEnvironmentalSuitabilityCountryDataContext);
   const { data: groupedArboData } = useGroupedArboData();
@@ -62,11 +64,11 @@ export function ArbovirusMap() {
   } = useArbovirusMapCustomizationModal();
 
   const data = useMemo(() => {
-    return groupedArboData?.arbovirusEstimates?.filter((dataPoint) => !!dataPoint.includedInMap) ?? undefined;
+    return groupedArboData?.arbovirusEstimates?.filter((dataPoint) => !!dataPoint.isPrimaryEstimate) ?? undefined;
   }, [ groupedArboData ]);
 
   const filteredData = useMemo(() => {
-    return filteredDataRaw.filter((estimate) => !!estimate.includedInMap) ?? undefined;
+    return filteredDataRaw.filter((estimate) => !!estimate.isPrimaryEstimate) ?? undefined;
   }, [ filteredDataRaw ]);
 
   const oropoucheCasesMapEnabled = useMemo(() => {

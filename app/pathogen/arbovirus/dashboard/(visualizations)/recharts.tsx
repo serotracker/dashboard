@@ -1,6 +1,5 @@
 "use client";
 
-import { useContext } from "react";
 import {
   BarChart,
   Bar,
@@ -12,14 +11,13 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
-  Label,
 } from "recharts";
 import _ from "lodash";
 import { pathogenColors } from "../(map)/ArbovirusMap";
 import clsx from "clsx";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { CustomXAxisTick } from "@/components/customs/visualizations/custom-x-axis-tick";
 import { Arbovirus } from "@/gql/graphql";
+import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 
 //Study by who region and pathogen
 
@@ -81,7 +79,7 @@ interface StudyCountOverTime extends dataStratifiedByArbovirus {
 }
 
 export function StudyCountOverTime() {
-  const state = useContext(ArboContext);
+  const { primaryEstimateData: state } = useGroupedArbovirusEstimateData();
 
   const data: StudyCountOverTime[] = [];
 
@@ -222,7 +220,7 @@ const ageGroupColorMappings: Record<AgeGroup, string> = {
 };
 
 export function MedianSeroPrevByWHOregionAndAgeGroup() {
-  const state = useContext(ArboContext);
+  const { primaryEstimateData: state } = useGroupedArbovirusEstimateData();
 
   const seroprevalenceData: {
     arbovirus: Arbovirus;
@@ -434,7 +432,7 @@ interface Top10CountriesByPathogenStudyCount extends dataStratifiedByArbovirus {
 }
 
 export function Top10CountriesByPathogenStudyCount() {
-  const state = useContext(ArboContext);
+  const { primaryEstimateData: state } = useGroupedArbovirusEstimateData();
 
   const data: Top10CountriesByPathogenStudyCount[] = [];
 

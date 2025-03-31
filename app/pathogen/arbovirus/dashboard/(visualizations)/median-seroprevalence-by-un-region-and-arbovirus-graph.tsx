@@ -1,9 +1,8 @@
-import { useContext } from "react";
 import { SplitBarChart } from "../../../../../components/customs/visualizations/split-bar-chart";
 import { convertArboSFtoArbo, median } from "./recharts";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
 import { getLabelForUNRegion } from "@/lib/un-regions";
-import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
+import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 
 interface MedianSeroprevalenceByUnRegionAndArbovirusGraphProps {
   data: ArbovirusEstimate[];

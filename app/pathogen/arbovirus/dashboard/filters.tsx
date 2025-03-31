@@ -14,22 +14,23 @@
 
 "use client";
 
-import React, { useContext, useMemo } from "react";
+import React, { useMemo } from "react";
 import uniq from "lodash/uniq";
 import { useGroupedArboData } from "@/hooks/arbovirus/useGroupedArboData";
 import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { Filters } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
+import { useGroupedArbovirusEstimateData } from "../use-arbo-primary-estimate-data";
 
 interface ArbovirusFiltersProps {
   className?: string;
 }
 
 export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
-  const state = useContext(ArboContext);
+  const { primaryEstimateData: state } = useGroupedArbovirusEstimateData();
 
   const { data } = useGroupedArboData();
+
   const { data: filterData } = useArboFilters();
 
   const selectedAgeGroups = state.selectedFilters['ageGroup'] ?? [];

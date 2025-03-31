@@ -1,10 +1,10 @@
 "use client";
 
 import { RowExpansionConfigurationEnabled, TableHeader, TableHeaderType } from "@/components/ui/data-table/data-table";
-import React, { useContext, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
-import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
+import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { ToastId } from "@/contexts/toast-provider";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
@@ -15,6 +15,7 @@ import { ArbovirusEstimateType } from "@/gql/graphql";
 import { assertNever } from "assert-never";
 import { ArboSeroprevalenceDataTable } from "./arbo-seroprevalence-data-table";
 import { ArboViralPrevalenceDataTable } from "./arbo-viral-prevalence-data-table";
+import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 
 export const generateConciseEstimateId = (estimate: ArbovirusEstimate) => {
   const country = estimate.country
@@ -199,7 +200,7 @@ export const getArboDataTableRows = (
 }
 
 export const ArboDataTable = () => {
-  const { filteredData } = useContext(ArboContext);
+  const { filteredData } = useGroupedArbovirusEstimateData().primaryEstimateData;
   const allMaps = useMap();
   const arboMap = allMaps['arboMap'];
   const router = useRouter();
@@ -212,6 +213,7 @@ export const ArboDataTable = () => {
         ...estimate,
         conciseEstimateId: generateConciseEstimateId(estimate)
       }))
+      .filter((estimate) => estimate.isPrimaryEstimate)
   }, [ filteredData ]);
 
   const dataForSeroprevalenceTable = useMemo(() => {
