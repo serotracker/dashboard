@@ -4,7 +4,7 @@ import getQueryClient from "@/components/customs/getQueryClient";
 import { request } from 'graphql-request';
 import { arbovirusEstimatesQuery } from "@/hooks/arbovirus/useArboData";
 import { groupedArbovirusEstimatesQuery } from "@/hooks/arbovirus/useGroupedArboData";
-import { arbovirusFiltersQuery } from "@/hooks/arbovirus/useArboFilters";
+import { groupedArbovirusEstimateFilterOptionsQuery } from "@/hooks/arbovirus/useArboFilters";
 import { ArboProviders } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
 import { arbovirusEnviromentalSuitabilityDataQuery } from "@/hooks/arbovirus/useArboEnviromentalSuitabilityData";
@@ -24,8 +24,8 @@ export default async function ArboLayout({
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
   });
   await queryClient.prefetchQuery({
-    queryKey: ["arbovirusFiltersQuery"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
+    queryKey: ["groupedArbovirusEstimateFilterOptionsQuery"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedArbovirusEstimateFilterOptionsQuery)
   });
 
   await queryClient.prefetchQuery({
