@@ -1,10 +1,10 @@
 "use client";
 
 import { RowExpansionConfigurationEnabled, TableHeader, TableHeaderType } from "@/components/ui/data-table/data-table";
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
-import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
+import { ArboContext, ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-table/data-table-column-config";
 import { ToastId } from "@/contexts/toast-provider";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
@@ -200,7 +200,8 @@ export const getArboDataTableRows = (
 }
 
 export const ArboDataTable = () => {
-  const { filteredData } = useGroupedArbovirusEstimateData().primaryEstimateData;
+  const { filteredData } = useContext(ArboContext);
+  const [ areSubEstimatesVisible, setAreSubEstimatesVisible] = useState<boolean>(false);
   const allMaps = useMap();
   const arboMap = allMaps['arboMap'];
   const router = useRouter();
@@ -213,8 +214,8 @@ export const ArboDataTable = () => {
         ...estimate,
         conciseEstimateId: generateConciseEstimateId(estimate)
       }))
-      .filter((estimate) => estimate.isPrimaryEstimate)
-  }, [ filteredData ]);
+      .filter((estimate) => areSubEstimatesVisible ? true : estimate.isPrimaryEstimate)
+  }, [ filteredData, areSubEstimatesVisible ]);
 
   const dataForSeroprevalenceTable = useMemo(() => {
     return tableDataWithConciseEstimateIds
@@ -382,6 +383,8 @@ export const ArboDataTable = () => {
         columnConfiguration={getArboColumnConfiguration(cleanedSelectedDataTable)}
         rowExpansionConfiguration={rowExpansionConfiguration}
         csvCitationConfiguration={csvCitationConfiguration}
+        areSubEstimatesVisible={areSubEstimatesVisible}
+        setAreSubEstimatesVisible={setAreSubEstimatesVisible}
       />
     )
   }
@@ -394,6 +397,8 @@ export const ArboDataTable = () => {
         columnConfiguration={getArboColumnConfiguration(cleanedSelectedDataTable)}
         rowExpansionConfiguration={rowExpansionConfiguration}
         csvCitationConfiguration={csvCitationConfiguration}
+        areSubEstimatesVisible={areSubEstimatesVisible}
+        setAreSubEstimatesVisible={setAreSubEstimatesVisible}
       />
     )
   }

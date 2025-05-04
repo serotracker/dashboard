@@ -9,6 +9,8 @@ interface ArboViralPrevalenceDataTableProps {
   tableHeader: TableHeader<ArbovirusDataTableType>
   rowExpansionConfiguration: RowExpansionConfiguration<ArbovirusEstimate>;
   csvCitationConfiguration: DataTableCsvCitationConfiguration;
+  areSubEstimatesVisible: boolean;
+  setAreSubEstimatesVisible: (newAreSubEstimatesVisible: boolean) => void;
 }
 
 export const ArboViralPrevalenceDataTable = (
