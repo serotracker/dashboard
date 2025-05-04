@@ -1,10 +1,12 @@
 import { SuggestedArboTrackerCitation } from "@/app/pathogen/arbovirus/arbotracker-citations";
+import { SuggestedMERSTrackerCitation } from "@/app/pathogen/mers/merstracker-citations";
 import Link from "next/link";
 
 export enum FAQPageOptionId {
   HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA = 'HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA',
   HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED = 'HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED',
   CAN_I_PARTNER_WITH_SEROTRACKER = 'CAN_I_PARTNER_WITH_SEROTRACKER',
+  HOW_CAN_I_CITE_SEROTRACKER_DASHBOARD_OR_DATASETS = 'HOW_CAN_I_CITE_SEROTRACKER_DASHBOARD_OR_DATASETS',
   WHERE_DOES_ARBOTRACKER_DATA_COME_FROM = 'WHERE_DOES_ARBOTRACKER_DATA_COME_FROM',
   HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES = 'HOW_IS_THE_DATA_EXTRACTED_FROM_THE_SOURCES',
   HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED = 'HOW_OFTEN_IS_ARBOTRACKER_DATA_UPDATED',
@@ -34,6 +36,43 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
         <p className='inline'> and Harriet Ware at </p>
         <Link className="inline text-link" href="mailto:ware.harriet@gmail.com">ware.harriet@gmail.com</Link>
         <p className='inline'> to learn more about partnership options.</p>
+      </>
+    )
+  },
+  [FAQPageOptionId.HOW_CAN_I_CITE_SEROTRACKER_DASHBOARD_OR_DATASETS]: {
+    label: 'How can I cite your dashboards and/or datasets?',
+    content: (
+      <>
+        <h3 className="mb-4">Please cite SeroTracker (SARS-CoV-2) as follows:</h3>
+        <div className="ml-4">
+          <div className="mb-4">
+            <p className='inline'>Cite the SARS-CoV-2 SeroTracker dashboard per this article: </p>
+            <Link className='inline text-link' href='https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(20)30631-9/fulltext' target="__blank" rel="noopener noreferrer">https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(20)30631-9/fulltext</Link>
+            <p className='inline'>.</p>
+          </div>
+          <div className="mb-4">
+            <p className='inline'>Suggested citation: </p>
+            <p className="inline italic">Arora, R. K., Joseph, A., Van Wyk, J., Rocco, S., Atmaja, A., May, E., ... & Buckeridge, D. L. (2021). SeroTracker: a global SARS-CoV-2 seroprevalence dashboard. The Lancet Infectious Diseases, 21(4), e75-e76</p>
+            <p className='inline'>.</p>
+          </div>
+        </div>
+        <h3 className="mt-4 mb-4">For ArboTracker:</h3>
+        <div className="ml-4">
+          <div className="mb-4">
+            <p className='inline'>Cite the ArboTracker dashboard as this article: </p>
+            <Link className='inline text-link' href='https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(24)00585-1/fulltext' target="__blank" rel="noopener noreferrer">https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(24)00585-1/fulltext</Link>
+          </div>
+          <div className="mb-4">
+            <p className='inline'>Suggested citation: </p>
+            <p className="inline italic">Whelan, M. G., Ware, H., Ranka, H., Kenny, S., Shaikh, S., Roell, Y., ... & Jaenisch, T. (2024). ArboTracker: a multipathogen dashboard and data platform for arbovirus seroprevalence studies. The Lancet Infectious Diseases, 24(11), e670-e671</p>
+            <p className='inline'>.</p>
+          </div>
+        </div>
+        <h3 className="mt-4 mb-4">For MERSTracker:</h3>
+        <div className="ml-4">
+          <p className='inline'>Please hold tight for a citation with an official DOI for MERSTracker. In the meantime, please cite us as follows: </p>
+          <SuggestedMERSTrackerCitation />
+        </div>
       </>
     )
   },

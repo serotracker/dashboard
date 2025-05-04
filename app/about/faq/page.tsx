@@ -12,7 +12,8 @@ export default function FAQPage() {
         optionIds={[
           FAQPageOptionId.HOW_DOES_SEROTRACKER_COLLECT_THEIR_DATA,
           FAQPageOptionId.HOW_OFTEN_IS_SEROTRACKER_DATA_UPDATED,
-          FAQPageOptionId.CAN_I_PARTNER_WITH_SEROTRACKER
+          FAQPageOptionId.CAN_I_PARTNER_WITH_SEROTRACKER,
+          FAQPageOptionId.HOW_CAN_I_CITE_SEROTRACKER_DASHBOARD_OR_DATASETS,
         ]}
       />
       <FaqAccordion
