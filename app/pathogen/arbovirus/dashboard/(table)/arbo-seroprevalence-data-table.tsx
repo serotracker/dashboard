@@ -35,7 +35,7 @@ export const ArboSeroprevalenceDataTable = (
         csvCitationConfiguration={csvCitationConfiguration}
         additionalButtonConfiguration={{
           enabled: true,
-          buttonText: `Subestimates ${areSubEstimatesVisible ? 'Visible' : 'Not Visible'}`,
+          buttonText: `${areSubEstimatesVisible ? 'Hide': 'Show'} Subestimates`,
           onClick: () => setAreSubEstimatesVisible(!areSubEstimatesVisible)
         }}
         secondAdditionalButtonConfiguration={{

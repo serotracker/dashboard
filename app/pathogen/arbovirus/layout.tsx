@@ -3,14 +3,14 @@ import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/components/customs/getQueryClient";
 import { request } from 'graphql-request';
 import { arbovirusEstimatesQuery } from "@/hooks/arbovirus/useArboData";
-import { groupedArbovirusEstimatesQuery } from "@/hooks/arbovirus/useGroupedArboData";
 import { groupedArbovirusEstimateFilterOptionsQuery } from "@/hooks/arbovirus/useArboFilters";
 import { ArboProviders } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { GenericPathogenPageLayout } from "../generic-pathogen-page-layout";
 import { arbovirusEnviromentalSuitabilityDataQuery } from "@/hooks/arbovirus/useArboEnviromentalSuitabilityData";
-import { allGroupedArbovirusEstimatePartitionKeysQuery } from "@/hooks/arbovirus/useAllGroupedArbovirusEstimatePartitionKeys";
-import { AllGroupedArbovirusEstimatePartitionKeysQueryQuery } from "@/gql/graphql";
+import { AllUnravelledGroupedArbovirusEstimatePartitionKeysQuery } from "@/gql/graphql";
 import { partitionedGroupedArbovirusEstimatesQuery } from "@/hooks/arbovirus/usePartitionedGroupedArbovirusEstimates";
+import { allUnravelledGroupedArbovirusEstimatePartitionKeys } from "@/hooks/arbovirus/useAllUnravelledGroupedArbovirusEstimatePartitionKeys";
+import { partitionedUnravelledGroupedArbovirusEstimates } from "@/hooks/arbovirus/usePartitionedUnravelledArbovirusEstimates";
 
 export default async function ArboLayout({
   children,
@@ -29,18 +29,16 @@ export default async function ArboLayout({
   });
 
   await queryClient.prefetchQuery({
-    queryKey: ["groupedArbovirusEstimatePartitionKeys"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', allGroupedArbovirusEstimatePartitionKeysQuery)
+    queryKey: ["allUnravelledGroupedArbovirusEstimatePartitionKeys"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', allUnravelledGroupedArbovirusEstimatePartitionKeys)
   });
-
-  const groupedArbovirusEstimatePartitionKeys = queryClient.getQueryData<AllGroupedArbovirusEstimatePartitionKeysQueryQuery>(['groupedArbovirusEstimatePartitionKeys'])?.allGroupedArbovirusEstimatePartitionKeys ?? [];
-
-  await Promise.all(groupedArbovirusEstimatePartitionKeys.map((partitionKey) => 
+  const unravelledGroupedArbovirusEstimatePartitionKeys = queryClient.getQueryData<AllUnravelledGroupedArbovirusEstimatePartitionKeysQuery>(['allUnravelledGroupedArbovirusEstimatePartitionKeys'])?.allUnravelledGroupedArbovirusEstimatePartitionKeys ?? [];
+  await Promise.all(unravelledGroupedArbovirusEstimatePartitionKeys.map((partitionKey) => 
     queryClient.prefetchQuery({
-      queryKey: ["partitionedGroupedArbovirusEstimates", partitionKey.toString()],
+      queryKey: ["partitionedUnravelledGroupedArbovirusEstimates", partitionKey.toString()],
       queryFn: () => request(
         process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '',
-        partitionedGroupedArbovirusEstimatesQuery,
+        partitionedUnravelledGroupedArbovirusEstimates,
         { input: { partitionKey } }
       ),
     })

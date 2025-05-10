@@ -1,6 +1,7 @@
 "use client";
 
 import { Breakpoint, useBreakpoint } from "@/hooks/useBreakpoint";
+import Link from "next/link";
 
 export const SeroTrackerIntroduction = () => {
   const { 
@@ -30,7 +31,13 @@ export const SeroTrackerIntroduction = () => {
         <p className=" w-fit mb-2">
           We conduct regularly updated systematic reviews to comprehensively track existing research results around the world. We collect and standardize the data we extract from these studies, provide useful analytics on the data, and share insights relating to trends and patterns on our interactive, centralized, and open-access dashboards. 
         </p>
-        <p>Check our dashboards using the buttons {(isEqualToOrLargerThanMdBreakpoint === true || isBreakpointFunctionError(isEqualToOrLargerThanMdBreakpoint)) ? 'to the right' : 'below'} or view our short tutorial on how to use our ArboTracker dashboard! See our About tab for more information our data, protocols, team, and how to cite us. </p>
+        <p className="mb-2">Check our dashboards using the buttons {(isEqualToOrLargerThanMdBreakpoint === true || isBreakpointFunctionError(isEqualToOrLargerThanMdBreakpoint)) ? 'to the right' : 'below'} or view our short tutorial on how to use our ArboTracker dashboard! See our About tab for more information our data, protocols, team, and how to cite us. </p>
+        <div>
+          <p className="inline">
+            You can find our original SARS-CoV-2 tracker at{' '}
+          </p>
+          <Link className='inline text-link' href='https://serotracker.com' target="__blank" rel="noopener noreferrer">https://serotracker.com</Link>
+        </div>
       </div>
     </>
   )

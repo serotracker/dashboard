@@ -157,9 +157,16 @@ const getArboColumnConfiguration = (
   fieldName: 'country',
   label: 'Country or Area',
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'sex',
   label: 'Sex',
+  valueToColourSchemeClassnameMap: {
+    'Male': 'bg-lime-300',
+    'Female': 'bg-yellow-300',
+    'All': 'bg-sky-300',
+  },
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'ageMinimum',
@@ -171,9 +178,17 @@ const getArboColumnConfiguration = (
   label: 'Maximum Age',
   initiallyVisible: false
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'ageGroup',
   label: 'Age Group',
+  valueToColourSchemeClassnameMap: {
+    'Adults (18-64 years)': 'bg-orange-200',
+    'Children and Youth (0-17 years)': 'bg-pink-200',
+    'Multiple groups': 'bg-cyan-200',
+    'Seniors (65+ years)': 'bg-purple-200',
+  },
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'pediatricAgeGroup',

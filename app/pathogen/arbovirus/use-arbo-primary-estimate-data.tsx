@@ -19,11 +19,6 @@ export const useGroupedArbovirusEstimateData = () => {
     }
   }, [ state ]);
 
-  console.log('state.filteredData', state.filteredData);
-  console.log('state.selectedFilters', state.selectedFilters);
-  console.log('ageGroupEstimateData', ageGroupEstimateData);
-  console.log('primaryEstimateData', primaryEstimateData);
-
   return {
     ageGroupEstimateData,
     primaryEstimateData,

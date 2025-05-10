@@ -1,134 +1,26 @@
 import { useMemo } from 'react'
-import { useQuery } from "@tanstack/react-query";
-import { gql } from "@apollo/client";
-import { request } from 'graphql-request';
-import { Arbovirus, ArbovirusEstimateType, GroupedArbovirusEstimatesQueryQuery } from "@/gql/graphql";
-import { useAllGroupedArbovirusEstimatePartitionKeys } from './useAllGroupedArbovirusEstimatePartitionKeys';
-import { usePartitionedGroupedArbovirusEstimates } from './usePartitionedGroupedArbovirusEstimates';
-
-export const groupedArbovirusEstimatesQuery = gql`
-  query groupedArbovirusEstimatesQuery {
-    groupedArbovirusEstimates {
-      id
-      shownEstimates {
-        estimateType
-        ageGroup
-        ageMaximum
-        ageMinimum
-        antibodies
-        antigen
-        assay
-        assayOther
-        city
-        state
-        country
-        countryAlphaTwoCode
-        countryAlphaThreeCode
-        createdAt
-        estimateId
-        id
-        inclusionCriteria
-        latitude
-        longitude
-        pathogen
-        pediatricAgeGroup
-        producer
-        producerOther
-        sameFrameTargetGroup
-        sampleEndDate
-        sampleFrame
-        sampleNumerator
-        sampleSize
-        sampleStartDate
-        seroprevalence
-        seroprevalenceStudy95CILower
-        seroprevalenceStudy95CIUpper
-        seroprevalenceCalculated95CILower
-        seroprevalenceCalculated95CIUpper
-        serotype
-        sex
-        sourceSheetId
-        sourceSheetName
-        unRegion
-        url
-        whoRegion
-        studyPopulation
-        studySpecies
-        groupingVariable
-      }
-      hiddenEstimates {
-        estimateType
-        ageGroup
-        ageMaximum
-        ageMinimum
-        antibodies
-        antigen
-        assay
-        assayOther
-        city
-        state
-        country
-        countryAlphaTwoCode
-        countryAlphaThreeCode
-        createdAt
-        estimateId
-        id
-        inclusionCriteria
-        latitude
-        longitude
-        pathogen
-        pediatricAgeGroup
-        producer
-        producerOther
-        sameFrameTargetGroup
-        sampleEndDate
-        sampleFrame
-        sampleNumerator
-        sampleSize
-        sampleStartDate
-        seroprevalence
-        seroprevalenceStudy95CILower
-        seroprevalenceStudy95CIUpper
-        seroprevalenceCalculated95CILower
-        seroprevalenceCalculated95CIUpper
-        serotype
-        sex
-        sourceSheetId
-        sourceSheetName
-        unRegion
-        url
-        whoRegion
-        studyPopulation
-        studySpecies
-        groupingVariable
-      }
-    }
-  }
-`
+import { Arbovirus } from "@/gql/graphql";
+import { useAllUnravelledGroupedArbovirusEstimatePartitionKeys } from './useAllUnravelledGroupedArbovirusEstimatePartitionKeys';
+import { usePartitionedUnravelledGroupedArbovirusEstimates } from './usePartitionedUnravelledArbovirusEstimates';
+import { ArbovirusEstimate } from '@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context';
 
 export function useGroupedArboData() {
-  const { data: partitionKeyData } = useAllGroupedArbovirusEstimatePartitionKeys();
-  const dataArray = usePartitionedGroupedArbovirusEstimates({ partitionKeys: partitionKeyData?.allGroupedArbovirusEstimatePartitionKeys ?? [] })
+  const { data: partitionKeyData } = useAllUnravelledGroupedArbovirusEstimatePartitionKeys();
+  const dataArray = usePartitionedUnravelledGroupedArbovirusEstimates({ partitionKeys: partitionKeyData?.allUnravelledGroupedArbovirusEstimatePartitionKeys ?? [] })
 
   const groupedArbovirusEstimates = useMemo(() => {
     if(dataArray.length > 0 && dataArray.every((element) => !!element.data)) {
-      return dataArray.flatMap((element) => element.data?.partitionedGroupedArbovirusEstimates.arboEstimates ?? [])
+      return dataArray.flatMap((element) => element.data.partitionedUnravelledGroupedArbovirusEstimates.arboEstimates ?? [])
     }
   }, [ dataArray ])
 
   const oropoucheEnabled = process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true';
 
   const data = useMemo(() => {
-    const flattenedData = groupedArbovirusEstimates?.flatMap((groupedArbovirusEstimate) => [
-      ...groupedArbovirusEstimate.shownEstimates.map((estimate) => ({
-        ...estimate,
-        isPrimaryEstimate: true,
-      })),
-      ...groupedArbovirusEstimate.hiddenEstimates.map((estimate) => ({
-        ...estimate,
-        isPrimaryEstimate: false,
-      })),
-    ]);
+    const flattenedData = groupedArbovirusEstimates?.map((groupedArbovirusEstimate) => ({
+      ...groupedArbovirusEstimate,
+      isPrimaryEstimate: groupedArbovirusEstimate.shown,
+    }));
 
     if(!flattenedData) {
       return flattenedData
