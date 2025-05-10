@@ -20,10 +20,6 @@ export default async function ArboLayout({
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["arbovirusEstimatesQuery"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusEstimatesQuery)
-  });
-  await queryClient.prefetchQuery({
     queryKey: ["groupedArbovirusEstimateFilterOptionsQuery"],
     queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedArbovirusEstimateFilterOptionsQuery)
   });
