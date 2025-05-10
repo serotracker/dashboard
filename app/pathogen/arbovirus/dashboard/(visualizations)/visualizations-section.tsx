@@ -2,13 +2,14 @@ import { useCallback, useContext } from "react";
 import { cn } from '@/lib/utils';
 import { useArboDataInsights } from "@/hooks/arbovirus/useArboDataInsights";
 import { RechartsVisualization } from "../../../../../components/customs/visualizations/recharts-visualization";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { ArbovirusVisualizationId, ArbovirusVisualizationInformation, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
+import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 
 export const ArbovirusVisualizationsSection = () => {
-  const { filteredData } = useContext(ArboContext);
+  const { filteredData } = useGroupedArbovirusEstimateData().primaryEstimateData;
+  const { filteredData: filteredAgeGroupEstimateData } = useGroupedArbovirusEstimateData().ageGroupEstimateData;
   const { getNumberOfUniqueValuesForField } = useArboDataInsights();
   const { arbovirusVisualizationInformation } = useVisualizationPageConfiguration();
 
@@ -58,7 +59,7 @@ export const ArbovirusVisualizationsSection = () => {
     return visualizationList.map((visualizationInformation) => (
       <RechartsVisualization
         key={visualizationInformation.id}
-        data={filteredData}
+        data={ visualizationInformation.id !== ArbovirusVisualizationId.MEDIAN_SEROPREVALENCE_BY_WHO_REGION_AND_AGE_GROUP ? filteredData : filteredAgeGroupEstimateData}
         highlightedDataPoint={undefined}
         hideArbovirusDropdown={undefined}
         visualizationInformation={visualizationInformation}
@@ -78,7 +79,7 @@ export const ArbovirusVisualizationsSection = () => {
         getUrlParameterFromVisualizationId={getUrlParameterFromVisualizationId}
       />
     ));
-  }, [filteredData]);
+  }, [filteredData, filteredAgeGroupEstimateData ]);
 
   return (
     <>

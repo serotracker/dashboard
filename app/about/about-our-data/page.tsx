@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Sponsor, SponsorBanner } from "./sponsor-banner";
+import { SuggestedMERSTrackerCitation } from "@/app/pathogen/mers/merstracker-citations";
 
 export default function DataExtractionPage() {
   const headerClassname = 'my-8';
@@ -42,6 +43,16 @@ export default function DataExtractionPage() {
         <Link className="inline text-link" href="https://www.mapbox.com/" target="__blank" rel="noopener noreferrer">Mapbox </Link>
         <p className='mb-4 inline'>supports SeroTracker&apos;s mapping infrastructure.</p>
       </div>
+      <div className="mb-4">
+        <p className='inline'>Cite the SARS-CoV-2 SeroTracker dashboard per this article: </p>
+        <Link className='inline text-link' href='https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(20)30631-9/fulltext' target="__blank" rel="noopener noreferrer">https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(20)30631-9/fulltext</Link>
+        <p className='inline'>.</p>
+      </div>
+      <div className="mb-4">
+        <p className='inline'>Suggested citation: </p>
+        <p className="inline italic">Arora, R. K., Joseph, A., Van Wyk, J., Rocco, S., Atmaja, A., May, E., ... & Buckeridge, D. L. (2021). SeroTracker: a global SARS-CoV-2 seroprevalence dashboard. The Lancet Infectious Diseases, 21(4), e75-e76</p>
+        <p className='inline'>.</p>
+      </div>
       {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && <h2 className={headerClassname}>ArboTracker </h2> }
       {!process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && <h2 className={headerClassname}>New dashboard: ArboTracker </h2> }
       <div className="mb-4">
@@ -74,6 +85,15 @@ export default function DataExtractionPage() {
         <p className='inline'> (Reconciliation of Cohort Data for Infectious Diseases). The ReCoDID project has received funding from the European Union&apos;s Horizon 2020 Research and Innovation Programme under Grant Agreement No. 825746 and was supported by the </p>
         <Link className='inline text-link' href='https://cihr-irsc.gc.ca/e/13147.html' target="__blank" rel="noopener noreferrer">Canadian Institutes of Health Research Institute of Genetics</Link>
         <p className='inline'> (CIHR-IG) under Grant Agreement No 01886-000.</p>
+      </div>
+      <div className="mb-4">
+        <p className='inline'>Cite the ArboTracker dashboard as this article: </p>
+        <Link className='inline text-link' href='https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(24)00585-1/fulltext' target="__blank" rel="noopener noreferrer">https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(24)00585-1/fulltext</Link>
+      </div>
+      <div className="mb-4">
+        <p className='inline'>Suggested citation: </p>
+        <p className="inline italic">Whelan, M. G., Ware, H., Ranka, H., Kenny, S., Shaikh, S., Roell, Y., ... & Jaenisch, T. (2024). ArboTracker: a multipathogen dashboard and data platform for arbovirus seroprevalence studies. The Lancet Infectious Diseases, 24(11), e670-e671</p>
+        <p className='inline'>.</p>
       </div>
       {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && <>
         <h2 className={headerClassname}>New dashboard: MERSTracker </h2>
@@ -112,6 +132,10 @@ export default function DataExtractionPage() {
           <p className='inline'>. [Cited: November 2024].</p>
           <Link className="inline text-link" href="www.un.org/geospatial/content/map-world-1" target="__blank" rel="noopener noreferrer">www.un.org/geospatial/content/map-world-1</Link>
         </div>
+        <div className="mb-4">
+          <p className='inline'>Please hold tight for a citation with an official DOI for MERSTracker. In the meantime, please cite us as follows: </p>
+          <SuggestedMERSTrackerCitation />
+        </div>
       </>}
       <h2 className={headerClassname}>Contact Us</h2>
       <div className="mb-4">
@@ -124,11 +148,11 @@ export default function DataExtractionPage() {
         <p className='inline'>.</p>
       </div>
       <div className="mb-4">
-        <p className='inline'>To make us aware of new arbovirus seroprevalence studies or arbovirus studies that we have not yet captured, please fill out </p>
+        <p className='inline'>To make us aware of new arbovirus seroprevalence studies that we have not yet captured, please fill out </p>
         <Link className='inline text-link' href='https://forms.gle/pKNiMiMYr6hiKnXx8' target="__blank" rel="noopener noreferrer">this form.</Link>
         <p className='inline'> For SARS-CoV-2 submissions, please use </p>
         <Link className='inline text-link' href='https://docs.google.com/forms/d/e/1FAIpQLSdvNJReektutfMT-5bOTjfnvaY_pMAy8mImpQBAW-3v7_B2Bg/viewform' target="__blank" rel="noopener noreferrer">this form</Link>
-        <p className='inline'> - however please see our FAQ for our frequency of data updates for this dataset.</p>
+        <p className='inline'> - however please see our FAQ for our frequency of data updates for this dataset. For studies on MERS, you are welcome to email them to Mairead or Harriet directly per the emails provided. All submitted sources will be reviewed by our teams against our inclusion criteria similarly to our screening protocols. </p>
       </div>
     </>
   );

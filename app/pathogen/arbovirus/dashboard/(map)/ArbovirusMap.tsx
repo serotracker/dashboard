@@ -8,7 +8,7 @@
 "use client";
 
 import React, { useContext, useMemo, useState } from "react";
-import { useArboData } from "@/hooks/arbovirus/useArboData";
+import { useGroupedArboData } from "@/hooks/arbovirus/useGroupedArboData";
 import { ArbovirusEstimatePopupContent } from "./arbovirus-estimate-pop-up-content";
 import { PathogenMap } from "@/components/ui/pathogen-map/pathogen-map";
 import { MapArbovirusStudySubmissionPrompt } from "./MapArbovirusStudySubmissionPrompt";
@@ -27,6 +27,7 @@ import { CountryDataContext } from "@/contexts/pathogen-context/country-informat
 import { ArbovirusOropoucheCasesDataContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-oropouche-cases-data-context";
 import { Layer, Source } from "react-map-gl";
 import { mapColourBucketsToLinearGradientConfiguration } from "@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration";
+import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -48,10 +49,11 @@ const esmValueToSelectedEsm: Record<string, SelectedArbovirusEnvironmentalSuitab
 export function ArbovirusMap() {
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const countryDataContext = useContext(CountryDataContext);
-  const { filteredData, selectedFilters } = useContext(ArboContext);
+  const { selectedFilters } = useContext(ArboContext);
+  const { filteredData: filteredDataRaw } = useGroupedArbovirusEstimateData().primaryEstimateData;
   const { oropoucheCaseMapboxLayer, oropoucheCaseLayerColourBuckets } = useContext(ArbovirusOropoucheCasesDataContext);
   const { arbovirusEnvironmentalSuitabilityCountryData } = useContext(ArbovirusEnvironmentalSuitabilityCountryDataContext);
-  const { data } = useArboData();
+  const { data: groupedArboData } = useGroupedArboData();
   const { getCountryHighlightingLayerInformation: getDataPointPresentCountryHighlightingLayerInformation } = useDataPointPresentLayer();
   const { getCountryHighlightingLayerInformation: getESMCountryHighlightingLayerInformation } = useEsmCountryHighlightLayer();
   const {
@@ -60,6 +62,14 @@ export function ArbovirusMap() {
     countryPopUpEnabled,
     ...arbovirusMapCustomizationModal
   } = useArbovirusMapCustomizationModal();
+
+  const data = useMemo(() => {
+    return groupedArboData?.arbovirusEstimates?.filter((dataPoint) => !!dataPoint.isPrimaryEstimate) ?? undefined;
+  }, [ groupedArboData ]);
+
+  const filteredData = useMemo(() => {
+    return filteredDataRaw.filter((estimate) => !!estimate.isPrimaryEstimate) ?? undefined;
+  }, [ filteredDataRaw ]);
 
   const oropoucheCasesMapEnabled = useMemo(() => {
     if(selectedFilters.positiveCases?.length > 0) {
@@ -205,7 +215,7 @@ export function ArbovirusMap() {
           dataPoints={filteredData}
           clusteringSettings={{
             clusteringEnabled: true,
-            clusteringRadius: 100,
+            clusteringRadius: 80,
             headerText: "Estimate Count",
             popUpWidth: GenericMapPopUpWidth.AUTO,
             clusterProperties: {

@@ -263,11 +263,72 @@ export type ArbovirusFilterOptions = {
   whoRegion: Array<Scalars['String']['output']>;
 };
 
+export enum ArbovirusGroupingVariable {
+  Age = 'AGE',
+  DenvSerotype = 'DENV_SEROTYPE',
+  Education = 'EDUCATION',
+  Gender = 'GENDER',
+  Geography = 'GEOGRAPHY',
+  Overall = 'OVERALL',
+  Race = 'RACE',
+  Species = 'SPECIES',
+  TestType = 'TEST_TYPE',
+  Timeframe = 'TIMEFRAME'
+}
+
 export enum ArbovirusStudyPopulation {
   Human = 'HUMAN',
   Insect = 'INSECT',
   NonHumanAnimal = 'NON_HUMAN_ANIMAL'
 }
+
+export type ArbovirusSubEstimate = {
+  __typename?: 'ArbovirusSubEstimate';
+  ageGroup: Array<Scalars['String']['output']>;
+  ageMaximum?: Maybe<Scalars['Int']['output']>;
+  ageMinimum?: Maybe<Scalars['Int']['output']>;
+  antibodies: Array<Scalars['String']['output']>;
+  antigen?: Maybe<Scalars['String']['output']>;
+  assay: Array<Scalars['String']['output']>;
+  assayOther?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country: Scalars['String']['output'];
+  countryAlphaThreeCode: Scalars['String']['output'];
+  countryAlphaTwoCode: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  estimateId?: Maybe<Scalars['String']['output']>;
+  estimateType: ArbovirusEstimateType;
+  groupingVariable?: Maybe<ArbovirusGroupingVariable>;
+  id: Scalars['String']['output'];
+  inclusionCriteria?: Maybe<Scalars['String']['output']>;
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  pathogen: Arbovirus;
+  pediatricAgeGroup?: Maybe<Scalars['String']['output']>;
+  producer?: Maybe<Scalars['String']['output']>;
+  producerOther?: Maybe<Scalars['String']['output']>;
+  sameFrameTargetGroup?: Maybe<Scalars['String']['output']>;
+  sampleEndDate?: Maybe<Scalars['String']['output']>;
+  sampleFrame?: Maybe<Scalars['String']['output']>;
+  sampleNumerator?: Maybe<Scalars['Int']['output']>;
+  sampleSize: Scalars['Int']['output'];
+  sampleStartDate?: Maybe<Scalars['String']['output']>;
+  seroprevalence: Scalars['Float']['output'];
+  seroprevalenceCalculated95CILower?: Maybe<Scalars['Float']['output']>;
+  seroprevalenceCalculated95CIUpper?: Maybe<Scalars['Float']['output']>;
+  seroprevalenceStudy95CILower?: Maybe<Scalars['Float']['output']>;
+  seroprevalenceStudy95CIUpper?: Maybe<Scalars['Float']['output']>;
+  serotype: Array<Scalars['String']['output']>;
+  sex: Array<Scalars['String']['output']>;
+  sourceSheetId?: Maybe<Scalars['String']['output']>;
+  sourceSheetName?: Maybe<Scalars['String']['output']>;
+  state?: Maybe<Scalars['String']['output']>;
+  studyPopulation: ArbovirusStudyPopulation;
+  studySpecies: Scalars['String']['output'];
+  unRegion?: Maybe<UnRegion>;
+  url?: Maybe<Scalars['String']['output']>;
+  whoRegion?: Maybe<Scalars['String']['output']>;
+};
 
 export enum Clade {
   A = 'A',
@@ -330,6 +391,13 @@ export enum GenomeSequenced {
   PartialNGene = 'PARTIAL_N_GENE',
   PartialSGene = 'PARTIAL_S_GENE'
 }
+
+export type GroupedArbovirusEstimate = {
+  __typename?: 'GroupedArbovirusEstimate';
+  hiddenEstimates: Array<ArbovirusSubEstimate>;
+  id: Scalars['String']['output'];
+  shownEstimates: Array<ArbovirusSubEstimate>;
+};
 
 export type HumanMersAgeGroupSubEstimate = MersSubEstimateInterface & {
   __typename?: 'HumanMersAgeGroupSubEstimate';
@@ -886,6 +954,16 @@ export type PartitionedFeoMersEventsOutput = {
   partitionKey: Scalars['Int']['output'];
 };
 
+export type PartitionedGroupedArbovirusEstimatesInput = {
+  partitionKey: Scalars['Int']['input'];
+};
+
+export type PartitionedGroupedArbovirusEstimatesOutput = {
+  __typename?: 'PartitionedGroupedArbovirusEstimatesOutput';
+  arboEstimates: Array<GroupedArbovirusEstimate>;
+  partitionKey: Scalars['Int']['output'];
+};
+
 export type PartitionedMonthlySarsCov2CountryInformationInput = {
   partitionKey: Scalars['Int']['input'];
 };
@@ -904,6 +982,16 @@ export type PartitionedSarsCov2EstimatesOutput = {
   __typename?: 'PartitionedSarsCov2EstimatesOutput';
   partitionKey: Scalars['Int']['output'];
   sarsCov2Estimates: Array<SarsCov2Estimate>;
+};
+
+export type PartitionedUnravelledGroupedArbovirusEstimatesInput = {
+  partitionKey: Scalars['Int']['input'];
+};
+
+export type PartitionedUnravelledGroupedArbovirusEstimatesOutput = {
+  __typename?: 'PartitionedUnravelledGroupedArbovirusEstimatesOutput';
+  arboEstimates: Array<UnravelledGroupedArbovirusEstimate>;
+  partitionKey: Scalars['Int']['output'];
 };
 
 export type PartitionedYearlyFaoCamelPopulationDataInput = {
@@ -1252,13 +1340,17 @@ export type PrimaryMersEstimateInformationInterface = {
 export type Query = {
   __typename?: 'Query';
   allFaoMersEventPartitionKeys: Array<Scalars['Int']['output']>;
+  allGroupedArbovirusEstimatePartitionKeys: Array<Scalars['Int']['output']>;
   allMonthlySarsCov2CountryInformationPartitionKeys: Array<Scalars['Int']['output']>;
   allSarsCov2EstimatePartitionKeys: Array<Scalars['Int']['output']>;
+  allUnravelledGroupedArbovirusEstimatePartitionKeys: Array<Scalars['Int']['output']>;
   arbovirusDataStatistics: ArbovirusDataStatistics;
   arbovirusEnviromentalSuitabilityData: Array<ArbovirusEnvironmentalSuitabilityDataEntry>;
   arbovirusEstimates: Array<ArbovirusEstimate>;
   arbovirusFilterOptions: ArbovirusFilterOptions;
   faoMersEventFilterOptions: FaoMersEventFilterOptions;
+  groupedArbovirusEstimateFilterOptions: ArbovirusFilterOptions;
+  groupedArbovirusEstimates: Array<GroupedArbovirusEstimate>;
   groupedTeamMembers: Array<TeamMemberGroup>;
   mersEstimates: Array<MersEstimate>;
   mersEstimatesFilterOptions: MersEstimateFilterOptions;
@@ -1270,8 +1362,10 @@ export type Query = {
   mersWhoCaseDataPartitionKeys: Array<Scalars['Int']['output']>;
   monthlySarsCov2CountryInformation: Array<MonthlySarsCov2CountryInformationEntry>;
   partitionedFaoMersEvents: PartitionedFeoMersEventsOutput;
+  partitionedGroupedArbovirusEstimates: PartitionedGroupedArbovirusEstimatesOutput;
   partitionedMonthlySarsCov2CountryInformation: PartitionedMonthlySarsCov2CountryInformationOutput;
   partitionedSarsCov2Estimates: PartitionedSarsCov2EstimatesOutput;
+  partitionedUnravelledGroupedArbovirusEstimates: PartitionedUnravelledGroupedArbovirusEstimatesOutput;
   partitionedYearlyFaoCamelPopulationData: PartitionedYearlyFaoCamelPopulationDataOutput;
   sarsCov2Estimates: Array<SarsCov2Estimate>;
   sarsCov2FilterOptions: SarsCov2FilterOptions;
@@ -1289,6 +1383,11 @@ export type QueryPartitionedFaoMersEventsArgs = {
 };
 
 
+export type QueryPartitionedGroupedArbovirusEstimatesArgs = {
+  input: PartitionedGroupedArbovirusEstimatesInput;
+};
+
+
 export type QueryPartitionedMonthlySarsCov2CountryInformationArgs = {
   input: PartitionedMonthlySarsCov2CountryInformationInput;
 };
@@ -1296,6 +1395,11 @@ export type QueryPartitionedMonthlySarsCov2CountryInformationArgs = {
 
 export type QueryPartitionedSarsCov2EstimatesArgs = {
   input: PartitionedSarsCov2EstimatesInput;
+};
+
+
+export type QueryPartitionedUnravelledGroupedArbovirusEstimatesArgs = {
+  input: PartitionedUnravelledGroupedArbovirusEstimatesInput;
 };
 
 
@@ -1405,6 +1509,56 @@ export enum UnRegion {
   WesternEurope = 'WESTERN_EUROPE'
 }
 
+export type UnravelledGroupedArbovirusEstimate = {
+  __typename?: 'UnravelledGroupedArbovirusEstimate';
+  ageGroup: Array<Scalars['String']['output']>;
+  ageMaximum?: Maybe<Scalars['Int']['output']>;
+  ageMinimum?: Maybe<Scalars['Int']['output']>;
+  antibodies: Array<Scalars['String']['output']>;
+  antigen?: Maybe<Scalars['String']['output']>;
+  assay: Array<Scalars['String']['output']>;
+  assayOther?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country: Scalars['String']['output'];
+  countryAlphaThreeCode: Scalars['String']['output'];
+  countryAlphaTwoCode: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  estimateId?: Maybe<Scalars['String']['output']>;
+  estimateType: ArbovirusEstimateType;
+  groupId: Scalars['String']['output'];
+  groupingVariable?: Maybe<ArbovirusGroupingVariable>;
+  id: Scalars['String']['output'];
+  inclusionCriteria?: Maybe<Scalars['String']['output']>;
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  pathogen: Arbovirus;
+  pediatricAgeGroup?: Maybe<Scalars['String']['output']>;
+  producer?: Maybe<Scalars['String']['output']>;
+  producerOther?: Maybe<Scalars['String']['output']>;
+  sameFrameTargetGroup?: Maybe<Scalars['String']['output']>;
+  sampleEndDate?: Maybe<Scalars['String']['output']>;
+  sampleFrame?: Maybe<Scalars['String']['output']>;
+  sampleNumerator?: Maybe<Scalars['Int']['output']>;
+  sampleSize: Scalars['Int']['output'];
+  sampleStartDate?: Maybe<Scalars['String']['output']>;
+  seroprevalence: Scalars['Float']['output'];
+  seroprevalenceCalculated95CILower?: Maybe<Scalars['Float']['output']>;
+  seroprevalenceCalculated95CIUpper?: Maybe<Scalars['Float']['output']>;
+  seroprevalenceStudy95CILower?: Maybe<Scalars['Float']['output']>;
+  seroprevalenceStudy95CIUpper?: Maybe<Scalars['Float']['output']>;
+  serotype: Array<Scalars['String']['output']>;
+  sex: Array<Scalars['String']['output']>;
+  shown: Scalars['Boolean']['output'];
+  sourceSheetId?: Maybe<Scalars['String']['output']>;
+  sourceSheetName?: Maybe<Scalars['String']['output']>;
+  state?: Maybe<Scalars['String']['output']>;
+  studyPopulation: ArbovirusStudyPopulation;
+  studySpecies: Scalars['String']['output'];
+  unRegion?: Maybe<UnRegion>;
+  url?: Maybe<Scalars['String']['output']>;
+  whoRegion?: Maybe<Scalars['String']['output']>;
+};
+
 export enum WhoRegion {
   Afr = 'AFR',
   Amr = 'AMR',
@@ -1427,6 +1581,11 @@ export type YearlyFaoCamelPopulationDataEntry = {
   year: Scalars['Int']['output'];
 };
 
+export type AllUnravelledGroupedArbovirusEstimatePartitionKeysQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllUnravelledGroupedArbovirusEstimatePartitionKeysQuery = { __typename?: 'Query', allUnravelledGroupedArbovirusEstimatePartitionKeys: Array<number> };
+
 export type ArbovirusEstimatesQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1437,15 +1596,29 @@ export type ArbovirusEnviromentalSuitabilityDataQueryQueryVariables = Exact<{ [k
 
 export type ArbovirusEnviromentalSuitabilityDataQueryQuery = { __typename?: 'Query', arbovirusEnviromentalSuitabilityData: Array<{ __typename: 'ArbovirusEnvironmentalSuitabilityDataEntry', id: string, countryAlphaThreeCode: string, countryAlphaTwoCode: string, countryName: string, zikaData: { __typename: 'ArbovirusEnvironmentalSuitabilityDataSubEntry', minimumValue: number, maximumValue: number, valueRange: number, meanValue: number, medianValue: number, ninetyPercentOfValuesAreBelowThisValue: number }, dengue2015Data: { __typename: 'ArbovirusEnvironmentalSuitabilityDataSubEntry', minimumValue: number, maximumValue: number, valueRange: number, meanValue: number, medianValue: number, ninetyPercentOfValuesAreBelowThisValue: number }, dengue2050Data: { __typename: 'ArbovirusEnvironmentalSuitabilityDataSubEntry', minimumValue: number, maximumValue: number, valueRange: number, meanValue: number, medianValue: number, ninetyPercentOfValuesAreBelowThisValue: number } }> };
 
-export type ArbovirusFilterOptionsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GroupedArbovirusEstimateFilterOptionsQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ArbovirusFilterOptionsQuery = { __typename?: 'Query', arbovirusFilterOptions: { __typename?: 'ArbovirusFilterOptions', ageGroup: Array<string>, antibody: Array<string>, assay: Array<string>, pathogen: Array<string>, pediatricAgeGroup: Array<string>, producer: Array<string>, sampleFrame: Array<string>, serotype: Array<string>, sex: Array<string>, unRegion: Array<string>, whoRegion: Array<string>, studyPopulation: Array<ArbovirusStudyPopulation>, countryIdentifiers: Array<{ __typename?: 'CountryIdentifiers', name: string, alphaTwoCode: string, alphaThreeCode: string }> } };
+export type GroupedArbovirusEstimateFilterOptionsQueryQuery = { __typename?: 'Query', groupedArbovirusEstimateFilterOptions: { __typename?: 'ArbovirusFilterOptions', ageGroup: Array<string>, antibody: Array<string>, assay: Array<string>, pathogen: Array<string>, pediatricAgeGroup: Array<string>, producer: Array<string>, sampleFrame: Array<string>, serotype: Array<string>, sex: Array<string>, unRegion: Array<string>, whoRegion: Array<string>, studyPopulation: Array<ArbovirusStudyPopulation>, countryIdentifiers: Array<{ __typename?: 'CountryIdentifiers', name: string, alphaTwoCode: string, alphaThreeCode: string }> } };
 
 export type ArbovirusDataStatisticsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ArbovirusDataStatisticsQuery = { __typename?: 'Query', arbovirusDataStatistics: { __typename?: 'ArbovirusDataStatistics', patricipantCount: number, sourceCount: number, estimateCount: number, countryCount: number } };
+
+export type PartitionedGroupedArbovirusEstimatesQueryQueryVariables = Exact<{
+  input: PartitionedGroupedArbovirusEstimatesInput;
+}>;
+
+
+export type PartitionedGroupedArbovirusEstimatesQueryQuery = { __typename?: 'Query', partitionedGroupedArbovirusEstimates: { __typename?: 'PartitionedGroupedArbovirusEstimatesOutput', partitionKey: number, arboEstimates: Array<{ __typename?: 'GroupedArbovirusEstimate', id: string, shownEstimates: Array<{ __typename?: 'ArbovirusSubEstimate', estimateType: ArbovirusEstimateType, ageGroup: Array<string>, ageMaximum?: number | null, ageMinimum?: number | null, antibodies: Array<string>, antigen?: string | null, assay: Array<string>, assayOther?: string | null, city?: string | null, state?: string | null, country: string, countryAlphaTwoCode: string, countryAlphaThreeCode: string, createdAt: string, estimateId?: string | null, id: string, inclusionCriteria?: string | null, latitude: number, longitude: number, pathogen: Arbovirus, pediatricAgeGroup?: string | null, producer?: string | null, producerOther?: string | null, sameFrameTargetGroup?: string | null, sampleEndDate?: string | null, sampleFrame?: string | null, sampleNumerator?: number | null, sampleSize: number, sampleStartDate?: string | null, seroprevalence: number, seroprevalenceStudy95CILower?: number | null, seroprevalenceStudy95CIUpper?: number | null, seroprevalenceCalculated95CILower?: number | null, seroprevalenceCalculated95CIUpper?: number | null, serotype: Array<string>, sex: Array<string>, sourceSheetId?: string | null, sourceSheetName?: string | null, unRegion?: UnRegion | null, url?: string | null, whoRegion?: string | null, studyPopulation: ArbovirusStudyPopulation, studySpecies: string }>, hiddenEstimates: Array<{ __typename?: 'ArbovirusSubEstimate', estimateType: ArbovirusEstimateType, ageGroup: Array<string>, ageMaximum?: number | null, ageMinimum?: number | null, antibodies: Array<string>, antigen?: string | null, assay: Array<string>, assayOther?: string | null, city?: string | null, state?: string | null, country: string, countryAlphaTwoCode: string, countryAlphaThreeCode: string, createdAt: string, estimateId?: string | null, id: string, inclusionCriteria?: string | null, latitude: number, longitude: number, pathogen: Arbovirus, pediatricAgeGroup?: string | null, producer?: string | null, producerOther?: string | null, sameFrameTargetGroup?: string | null, sampleEndDate?: string | null, sampleFrame?: string | null, sampleNumerator?: number | null, sampleSize: number, sampleStartDate?: string | null, seroprevalence: number, seroprevalenceStudy95CILower?: number | null, seroprevalenceStudy95CIUpper?: number | null, seroprevalenceCalculated95CILower?: number | null, seroprevalenceCalculated95CIUpper?: number | null, serotype: Array<string>, sex: Array<string>, sourceSheetId?: string | null, sourceSheetName?: string | null, unRegion?: UnRegion | null, url?: string | null, whoRegion?: string | null, studyPopulation: ArbovirusStudyPopulation, studySpecies: string, groupingVariable?: ArbovirusGroupingVariable | null }> }> } };
+
+export type PartitionedUnravelledGroupedArbovirusEstimatesQueryVariables = Exact<{
+  input: PartitionedUnravelledGroupedArbovirusEstimatesInput;
+}>;
+
+
+export type PartitionedUnravelledGroupedArbovirusEstimatesQuery = { __typename?: 'Query', partitionedUnravelledGroupedArbovirusEstimates: { __typename?: 'PartitionedUnravelledGroupedArbovirusEstimatesOutput', partitionKey: number, arboEstimates: Array<{ __typename?: 'UnravelledGroupedArbovirusEstimate', id: string, shown: boolean, groupId: string, estimateType: ArbovirusEstimateType, ageGroup: Array<string>, ageMaximum?: number | null, ageMinimum?: number | null, antibodies: Array<string>, antigen?: string | null, assay: Array<string>, assayOther?: string | null, city?: string | null, state?: string | null, country: string, countryAlphaTwoCode: string, countryAlphaThreeCode: string, createdAt: string, estimateId?: string | null, inclusionCriteria?: string | null, latitude: number, longitude: number, pathogen: Arbovirus, pediatricAgeGroup?: string | null, producer?: string | null, producerOther?: string | null, sameFrameTargetGroup?: string | null, sampleEndDate?: string | null, sampleFrame?: string | null, sampleNumerator?: number | null, sampleSize: number, sampleStartDate?: string | null, seroprevalence: number, seroprevalenceStudy95CILower?: number | null, seroprevalenceStudy95CIUpper?: number | null, seroprevalenceCalculated95CILower?: number | null, seroprevalenceCalculated95CIUpper?: number | null, serotype: Array<string>, groupingVariable?: ArbovirusGroupingVariable | null, sex: Array<string>, sourceSheetId?: string | null, sourceSheetName?: string | null, unRegion?: UnRegion | null, url?: string | null, whoRegion?: string | null, studyPopulation: ArbovirusStudyPopulation, studySpecies: string }> } };
 
 export type MersWhoCaseDataPartitionKeysQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1543,10 +1716,13 @@ export type GroupedTeamMembersQueryVariables = Exact<{ [key: string]: never; }>;
 export type GroupedTeamMembersQuery = { __typename?: 'Query', groupedTeamMembers: Array<{ __typename?: 'TeamMemberGroup', label: string, teamMembers: Array<{ __typename?: 'TeamMember', firstName: string, lastName: string, email?: string | null, linkedinUrl?: string | null, twitterUrl?: string | null, additionalSymbols: Array<TeamMemberSymbol>, affiliations: Array<{ __typename?: 'Affiliation', label: string }> }> }> };
 
 
+export const AllUnravelledGroupedArbovirusEstimatePartitionKeysDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allUnravelledGroupedArbovirusEstimatePartitionKeys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allUnravelledGroupedArbovirusEstimatePartitionKeys"}}]}}]} as unknown as DocumentNode<AllUnravelledGroupedArbovirusEstimatePartitionKeysQuery, AllUnravelledGroupedArbovirusEstimatePartitionKeysQueryVariables>;
 export const ArbovirusEstimatesQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"arbovirusEstimatesQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"arbovirusEstimates"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"estimateType"}},{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"ageMaximum"}},{"kind":"Field","name":{"kind":"Name","value":"ageMinimum"}},{"kind":"Field","name":{"kind":"Name","value":"antibodies"}},{"kind":"Field","name":{"kind":"Name","value":"antigen"}},{"kind":"Field","name":{"kind":"Name","value":"assay"}},{"kind":"Field","name":{"kind":"Name","value":"assayOther"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"estimateId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"inclusionCriteria"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"pathogen"}},{"kind":"Field","name":{"kind":"Name","value":"pediatricAgeGroup"}},{"kind":"Field","name":{"kind":"Name","value":"producer"}},{"kind":"Field","name":{"kind":"Name","value":"producerOther"}},{"kind":"Field","name":{"kind":"Name","value":"sameFrameTargetGroup"}},{"kind":"Field","name":{"kind":"Name","value":"sampleEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"sampleFrame"}},{"kind":"Field","name":{"kind":"Name","value":"sampleNumerator"}},{"kind":"Field","name":{"kind":"Name","value":"sampleSize"}},{"kind":"Field","name":{"kind":"Name","value":"sampleStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalence"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceStudy95CILower"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceStudy95CIUpper"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceCalculated95CILower"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceCalculated95CIUpper"}},{"kind":"Field","name":{"kind":"Name","value":"serotype"}},{"kind":"Field","name":{"kind":"Name","value":"sex"}},{"kind":"Field","name":{"kind":"Name","value":"sourceSheetId"}},{"kind":"Field","name":{"kind":"Name","value":"sourceSheetName"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"studyPopulation"}},{"kind":"Field","name":{"kind":"Name","value":"studySpecies"}}]}}]}}]} as unknown as DocumentNode<ArbovirusEstimatesQueryQuery, ArbovirusEstimatesQueryQueryVariables>;
 export const ArbovirusEnviromentalSuitabilityDataQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"arbovirusEnviromentalSuitabilityDataQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"arbovirusEnviromentalSuitabilityData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"countryName"}},{"kind":"Field","name":{"kind":"Name","value":"zikaData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"minimumValue"}},{"kind":"Field","name":{"kind":"Name","value":"maximumValue"}},{"kind":"Field","name":{"kind":"Name","value":"valueRange"}},{"kind":"Field","name":{"kind":"Name","value":"meanValue"}},{"kind":"Field","name":{"kind":"Name","value":"medianValue"}},{"kind":"Field","name":{"kind":"Name","value":"ninetyPercentOfValuesAreBelowThisValue"}}]}},{"kind":"Field","name":{"kind":"Name","value":"dengue2015Data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"minimumValue"}},{"kind":"Field","name":{"kind":"Name","value":"maximumValue"}},{"kind":"Field","name":{"kind":"Name","value":"valueRange"}},{"kind":"Field","name":{"kind":"Name","value":"meanValue"}},{"kind":"Field","name":{"kind":"Name","value":"medianValue"}},{"kind":"Field","name":{"kind":"Name","value":"ninetyPercentOfValuesAreBelowThisValue"}}]}},{"kind":"Field","name":{"kind":"Name","value":"dengue2050Data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"minimumValue"}},{"kind":"Field","name":{"kind":"Name","value":"maximumValue"}},{"kind":"Field","name":{"kind":"Name","value":"valueRange"}},{"kind":"Field","name":{"kind":"Name","value":"meanValue"}},{"kind":"Field","name":{"kind":"Name","value":"medianValue"}},{"kind":"Field","name":{"kind":"Name","value":"ninetyPercentOfValuesAreBelowThisValue"}}]}}]}}]}}]} as unknown as DocumentNode<ArbovirusEnviromentalSuitabilityDataQueryQuery, ArbovirusEnviromentalSuitabilityDataQueryQueryVariables>;
-export const ArbovirusFilterOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"arbovirusFilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"arbovirusFilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"antibody"}},{"kind":"Field","name":{"kind":"Name","value":"assay"}},{"kind":"Field","name":{"kind":"Name","value":"pathogen"}},{"kind":"Field","name":{"kind":"Name","value":"pediatricAgeGroup"}},{"kind":"Field","name":{"kind":"Name","value":"producer"}},{"kind":"Field","name":{"kind":"Name","value":"sampleFrame"}},{"kind":"Field","name":{"kind":"Name","value":"serotype"}},{"kind":"Field","name":{"kind":"Name","value":"sex"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"countryIdentifiers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"studyPopulation"}}]}}]}}]} as unknown as DocumentNode<ArbovirusFilterOptionsQuery, ArbovirusFilterOptionsQueryVariables>;
+export const GroupedArbovirusEstimateFilterOptionsQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"groupedArbovirusEstimateFilterOptionsQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"groupedArbovirusEstimateFilterOptions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"antibody"}},{"kind":"Field","name":{"kind":"Name","value":"assay"}},{"kind":"Field","name":{"kind":"Name","value":"pathogen"}},{"kind":"Field","name":{"kind":"Name","value":"pediatricAgeGroup"}},{"kind":"Field","name":{"kind":"Name","value":"producer"}},{"kind":"Field","name":{"kind":"Name","value":"sampleFrame"}},{"kind":"Field","name":{"kind":"Name","value":"serotype"}},{"kind":"Field","name":{"kind":"Name","value":"sex"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"countryIdentifiers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"studyPopulation"}}]}}]}}]} as unknown as DocumentNode<GroupedArbovirusEstimateFilterOptionsQueryQuery, GroupedArbovirusEstimateFilterOptionsQueryQueryVariables>;
 export const ArbovirusDataStatisticsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"arbovirusDataStatistics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"arbovirusDataStatistics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"patricipantCount"}},{"kind":"Field","name":{"kind":"Name","value":"sourceCount"}},{"kind":"Field","name":{"kind":"Name","value":"estimateCount"}},{"kind":"Field","name":{"kind":"Name","value":"countryCount"}}]}}]}}]} as unknown as DocumentNode<ArbovirusDataStatisticsQuery, ArbovirusDataStatisticsQueryVariables>;
+export const PartitionedGroupedArbovirusEstimatesQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"partitionedGroupedArbovirusEstimatesQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PartitionedGroupedArbovirusEstimatesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionedGroupedArbovirusEstimates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionKey"}},{"kind":"Field","name":{"kind":"Name","value":"arboEstimates"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"shownEstimates"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"estimateType"}},{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"ageMaximum"}},{"kind":"Field","name":{"kind":"Name","value":"ageMinimum"}},{"kind":"Field","name":{"kind":"Name","value":"antibodies"}},{"kind":"Field","name":{"kind":"Name","value":"antigen"}},{"kind":"Field","name":{"kind":"Name","value":"assay"}},{"kind":"Field","name":{"kind":"Name","value":"assayOther"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"estimateId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"inclusionCriteria"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"pathogen"}},{"kind":"Field","name":{"kind":"Name","value":"pediatricAgeGroup"}},{"kind":"Field","name":{"kind":"Name","value":"producer"}},{"kind":"Field","name":{"kind":"Name","value":"producerOther"}},{"kind":"Field","name":{"kind":"Name","value":"sameFrameTargetGroup"}},{"kind":"Field","name":{"kind":"Name","value":"sampleEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"sampleFrame"}},{"kind":"Field","name":{"kind":"Name","value":"sampleNumerator"}},{"kind":"Field","name":{"kind":"Name","value":"sampleSize"}},{"kind":"Field","name":{"kind":"Name","value":"sampleStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalence"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceStudy95CILower"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceStudy95CIUpper"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceCalculated95CILower"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceCalculated95CIUpper"}},{"kind":"Field","name":{"kind":"Name","value":"serotype"}},{"kind":"Field","name":{"kind":"Name","value":"sex"}},{"kind":"Field","name":{"kind":"Name","value":"sourceSheetId"}},{"kind":"Field","name":{"kind":"Name","value":"sourceSheetName"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"studyPopulation"}},{"kind":"Field","name":{"kind":"Name","value":"studySpecies"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hiddenEstimates"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"estimateType"}},{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"ageMaximum"}},{"kind":"Field","name":{"kind":"Name","value":"ageMinimum"}},{"kind":"Field","name":{"kind":"Name","value":"antibodies"}},{"kind":"Field","name":{"kind":"Name","value":"antigen"}},{"kind":"Field","name":{"kind":"Name","value":"assay"}},{"kind":"Field","name":{"kind":"Name","value":"assayOther"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"estimateId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"inclusionCriteria"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"pathogen"}},{"kind":"Field","name":{"kind":"Name","value":"pediatricAgeGroup"}},{"kind":"Field","name":{"kind":"Name","value":"producer"}},{"kind":"Field","name":{"kind":"Name","value":"producerOther"}},{"kind":"Field","name":{"kind":"Name","value":"sameFrameTargetGroup"}},{"kind":"Field","name":{"kind":"Name","value":"sampleEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"sampleFrame"}},{"kind":"Field","name":{"kind":"Name","value":"sampleNumerator"}},{"kind":"Field","name":{"kind":"Name","value":"sampleSize"}},{"kind":"Field","name":{"kind":"Name","value":"sampleStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalence"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceStudy95CILower"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceStudy95CIUpper"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceCalculated95CILower"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceCalculated95CIUpper"}},{"kind":"Field","name":{"kind":"Name","value":"serotype"}},{"kind":"Field","name":{"kind":"Name","value":"sex"}},{"kind":"Field","name":{"kind":"Name","value":"sourceSheetId"}},{"kind":"Field","name":{"kind":"Name","value":"sourceSheetName"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"studyPopulation"}},{"kind":"Field","name":{"kind":"Name","value":"studySpecies"}},{"kind":"Field","name":{"kind":"Name","value":"groupingVariable"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PartitionedGroupedArbovirusEstimatesQueryQuery, PartitionedGroupedArbovirusEstimatesQueryQueryVariables>;
+export const PartitionedUnravelledGroupedArbovirusEstimatesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"partitionedUnravelledGroupedArbovirusEstimates"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PartitionedUnravelledGroupedArbovirusEstimatesInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionedUnravelledGroupedArbovirusEstimates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionKey"}},{"kind":"Field","name":{"kind":"Name","value":"arboEstimates"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"shown"}},{"kind":"Field","name":{"kind":"Name","value":"groupId"}},{"kind":"Field","name":{"kind":"Name","value":"estimateType"}},{"kind":"Field","name":{"kind":"Name","value":"ageGroup"}},{"kind":"Field","name":{"kind":"Name","value":"ageMaximum"}},{"kind":"Field","name":{"kind":"Name","value":"ageMinimum"}},{"kind":"Field","name":{"kind":"Name","value":"antibodies"}},{"kind":"Field","name":{"kind":"Name","value":"antigen"}},{"kind":"Field","name":{"kind":"Name","value":"assay"}},{"kind":"Field","name":{"kind":"Name","value":"assayOther"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"countryAlphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"estimateId"}},{"kind":"Field","name":{"kind":"Name","value":"inclusionCriteria"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"pathogen"}},{"kind":"Field","name":{"kind":"Name","value":"pediatricAgeGroup"}},{"kind":"Field","name":{"kind":"Name","value":"producer"}},{"kind":"Field","name":{"kind":"Name","value":"producerOther"}},{"kind":"Field","name":{"kind":"Name","value":"sameFrameTargetGroup"}},{"kind":"Field","name":{"kind":"Name","value":"sampleEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"sampleFrame"}},{"kind":"Field","name":{"kind":"Name","value":"sampleNumerator"}},{"kind":"Field","name":{"kind":"Name","value":"sampleSize"}},{"kind":"Field","name":{"kind":"Name","value":"sampleStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalence"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceStudy95CILower"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceStudy95CIUpper"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceCalculated95CILower"}},{"kind":"Field","name":{"kind":"Name","value":"seroprevalenceCalculated95CIUpper"}},{"kind":"Field","name":{"kind":"Name","value":"serotype"}},{"kind":"Field","name":{"kind":"Name","value":"groupingVariable"}},{"kind":"Field","name":{"kind":"Name","value":"sex"}},{"kind":"Field","name":{"kind":"Name","value":"sourceSheetId"}},{"kind":"Field","name":{"kind":"Name","value":"sourceSheetName"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"studyPopulation"}},{"kind":"Field","name":{"kind":"Name","value":"studySpecies"}}]}}]}}]}}]} as unknown as DocumentNode<PartitionedUnravelledGroupedArbovirusEstimatesQuery, PartitionedUnravelledGroupedArbovirusEstimatesQueryVariables>;
 export const MersWhoCaseDataPartitionKeysDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"mersWhoCaseDataPartitionKeys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mersWhoCaseDataPartitionKeys"}}]}}]} as unknown as DocumentNode<MersWhoCaseDataPartitionKeysQuery, MersWhoCaseDataPartitionKeysQueryVariables>;
 export const MersWhoCaseDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"mersWhoCaseData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MersWhoCaseDataInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mersWhoCaseData"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"partitionKey"}},{"kind":"Field","name":{"kind":"Name","value":"mersWhoCaseData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"country"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alphaThreeCode"}},{"kind":"Field","name":{"kind":"Name","value":"alphaTwoCode"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"positiveCasesReported"}},{"kind":"Field","name":{"kind":"Name","value":"whoRegion"}},{"kind":"Field","name":{"kind":"Name","value":"unRegion"}}]}}]}}]}}]} as unknown as DocumentNode<MersWhoCaseDataQuery, MersWhoCaseDataQueryVariables>;
 export const AllFaoMersEventPartitionKeysDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allFaoMersEventPartitionKeys"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allFaoMersEventPartitionKeys"}}]}}]} as unknown as DocumentNode<AllFaoMersEventPartitionKeysQuery, AllFaoMersEventPartitionKeysQueryVariables>;

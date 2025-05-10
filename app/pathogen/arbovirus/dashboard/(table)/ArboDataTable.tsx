@@ -15,6 +15,7 @@ import { ArbovirusEstimateType } from "@/gql/graphql";
 import { assertNever } from "assert-never";
 import { ArboSeroprevalenceDataTable } from "./arbo-seroprevalence-data-table";
 import { ArboViralPrevalenceDataTable } from "./arbo-viral-prevalence-data-table";
+import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 
 export const generateConciseEstimateId = (estimate: ArbovirusEstimate) => {
   const country = estimate.country
@@ -156,9 +157,16 @@ const getArboColumnConfiguration = (
   fieldName: 'country',
   label: 'Country or Area',
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'sex',
   label: 'Sex',
+  valueToColourSchemeClassnameMap: {
+    'Male': 'bg-lime-300',
+    'Female': 'bg-yellow-300',
+    'All': 'bg-sky-300',
+  },
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'ageMinimum',
@@ -170,9 +178,17 @@ const getArboColumnConfiguration = (
   label: 'Maximum Age',
   initiallyVisible: false
 }, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'ageGroup',
   label: 'Age Group',
+  valueToColourSchemeClassnameMap: {
+    'Adults (18-64 years)': 'bg-orange-200',
+    'Children and Youth (0-17 years)': 'bg-pink-200',
+    'Multiple groups': 'bg-cyan-200',
+    'Seniors (65+ years)': 'bg-purple-200',
+  },
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'pediatricAgeGroup',
@@ -200,6 +216,7 @@ export const getArboDataTableRows = (
 
 export const ArboDataTable = () => {
   const { filteredData } = useContext(ArboContext);
+  const [ areSubEstimatesVisible, setAreSubEstimatesVisible] = useState<boolean>(false);
   const allMaps = useMap();
   const arboMap = allMaps['arboMap'];
   const router = useRouter();
@@ -212,7 +229,8 @@ export const ArboDataTable = () => {
         ...estimate,
         conciseEstimateId: generateConciseEstimateId(estimate)
       }))
-  }, [ filteredData ]);
+      .filter((estimate) => areSubEstimatesVisible ? true : estimate.isPrimaryEstimate)
+  }, [ filteredData, areSubEstimatesVisible ]);
 
   const dataForSeroprevalenceTable = useMemo(() => {
     return tableDataWithConciseEstimateIds
@@ -380,6 +398,8 @@ export const ArboDataTable = () => {
         columnConfiguration={getArboColumnConfiguration(cleanedSelectedDataTable)}
         rowExpansionConfiguration={rowExpansionConfiguration}
         csvCitationConfiguration={csvCitationConfiguration}
+        areSubEstimatesVisible={areSubEstimatesVisible}
+        setAreSubEstimatesVisible={setAreSubEstimatesVisible}
       />
     )
   }
@@ -392,6 +412,8 @@ export const ArboDataTable = () => {
         columnConfiguration={getArboColumnConfiguration(cleanedSelectedDataTable)}
         rowExpansionConfiguration={rowExpansionConfiguration}
         csvCitationConfiguration={csvCitationConfiguration}
+        areSubEstimatesVisible={areSubEstimatesVisible}
+        setAreSubEstimatesVisible={setAreSubEstimatesVisible}
       />
     )
   }

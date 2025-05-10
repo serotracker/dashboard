@@ -1,9 +1,8 @@
-import { useContext } from "react";
 import { convertArboSFtoArbo } from "./recharts";
 import { getLabelForUNRegion } from "@/lib/un-regions";
 import { LegendConfiguration, StackedBarChart } from "../../../../../components/customs/visualizations/stacked-bar-chart";
 import { barColoursForArboviruses, sortArboviruses } from "./rechart-utils";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
+import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 
 interface EstimateCountByUnRegionAndArbovirusGraphProps {
   legendConfiguration: LegendConfiguration;
@@ -12,12 +11,14 @@ interface EstimateCountByUnRegionAndArbovirusGraphProps {
 export const EstimateCountByUnRegionAndArbovirusGraph = (
   props: EstimateCountByUnRegionAndArbovirusGraphProps
 ) => {
-  const state = useContext(ArboContext);
+  const { primaryEstimateData: state } = useGroupedArbovirusEstimateData();
 
   return (
     <StackedBarChart
       graphId='estimate-count-by-un-region-and-arbovirus-graph'
-      data={state.filteredData.filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'unRegion'> & {unRegion: NonNullable<typeof dataPoint['unRegion']>} => !!dataPoint.unRegion)}
+      data={state.filteredData
+        .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'unRegion'> & {unRegion: NonNullable<typeof dataPoint['unRegion']>} => !!dataPoint.unRegion)
+      }
       primaryGroupingFunction={(dataPoint) =>
         getLabelForUNRegion(dataPoint.unRegion)
       }

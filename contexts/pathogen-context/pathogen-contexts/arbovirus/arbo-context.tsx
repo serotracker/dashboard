@@ -2,18 +2,19 @@
 import { createContext, useEffect, useMemo } from "react";
 import uniqBy from "lodash/uniqBy";
 import { PathogenContextActionType, PathogenContextState, PathogenContextType, PathogenDataFetcherProps, PathogenProviders } from "../../pathogen-context";
-import { useArboData } from "@/hooks/arbovirus/useArboData";
+import { useGroupedArboData } from "@/hooks/arbovirus/useGroupedArboData";
 import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
 import { CountryDataContext } from "../../country-information-context";
-import { ArbovirusEstimatesQueryQuery, ArbovirusEstimateType, ArbovirusStudyPopulation } from "@/gql/graphql";
+import { ArbovirusEstimateType, ArbovirusStudyPopulation, PartitionedUnravelledGroupedArbovirusEstimatesQuery } from "@/gql/graphql";
 import { ArbovirusEnvironmentalSuitabilityCountryDataProvider } from "./arbo-environmental-suitability-country-data-context";
 import { useArboEnviromentalSuitabilityData } from "@/hooks/arbovirus/useArboEnviromentalSuitabilityData";
 import { ArbovirusOropoucheCasesDataProvider } from "./arbo-oropouche-cases-data-context";
 import { ArbovirusAvailablePathogensProvider } from "./arbo-available-pathogens-context";
-import { handleFilterUpdate } from "../../filter-update-steps";
 import { filterData } from "../../filter-update-steps/apply-new-selected-filters";
 
-export type ArbovirusEstimate = ArbovirusEstimatesQueryQuery['arbovirusEstimates'][number];
+export type ArbovirusEstimate = PartitionedUnravelledGroupedArbovirusEstimatesQuery['partitionedUnravelledGroupedArbovirusEstimates']['arboEstimates'][number] & {
+  isPrimaryEstimate: boolean;
+};
 
 const initialArboContextState = {
   filteredData: [],
@@ -36,7 +37,7 @@ export const ArboContext = createContext<ArbovirusContextType>({
 });
 
 const ArboDataFetcher = (props: PathogenDataFetcherProps<ArbovirusEstimate, ArbovirusContextState>): React.ReactNode => {
-  const dataQuery = useArboData();
+  const dataQuery = useGroupedArboData();
 
   useEffect(() => {
     if (
@@ -58,7 +59,7 @@ const ArboDataFetcher = (props: PathogenDataFetcherProps<ArbovirusEstimate, Arbo
         },
       });
     }
-  }, [dataQuery]);
+  }, [ dataQuery, props ]);
 
   return (
     <>
@@ -95,7 +96,7 @@ const CountryDataProvider = (props: {children: React.ReactNode}) => {
       ...countriesFromFilters,
       ...countriesFromEsmData
     ], (country) => country.countryAlphaThreeCode)
-  }, [filterData])
+  }, [ filterData, esmData?.arbovirusEnviromentalSuitabilityData ])
 
   return (
     <CountryDataContext.Provider value={value}>

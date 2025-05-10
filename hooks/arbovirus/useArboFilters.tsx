@@ -2,11 +2,11 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { gql } from "@apollo/client";
 import { request } from 'graphql-request';
-import { ArbovirusFilterOptionsQuery } from "@/gql/graphql";
+import { GroupedArbovirusEstimateFilterOptionsQueryQuery } from "@/gql/graphql";
 
-export const arbovirusFiltersQuery = gql`
-  query arbovirusFilterOptions {
-    arbovirusFilterOptions {
+export const groupedArbovirusEstimateFilterOptionsQuery = gql`
+  query groupedArbovirusEstimateFilterOptionsQuery {
+    groupedArbovirusEstimateFilterOptions {
       ageGroup
       antibody
       assay
@@ -29,20 +29,33 @@ export const arbovirusFiltersQuery = gql`
 `
 
 export function useArboFilters() {
-  const { data: rawData, ...result } = useQuery<ArbovirusFilterOptionsQuery>({
-    queryKey: ["arbovirusFiltersQuery"],
-    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', arbovirusFiltersQuery)
+  const { data: rawData, ...result } = useQuery<GroupedArbovirusEstimateFilterOptionsQueryQuery>({
+    queryKey: ["groupedArbovirusEstimateFilterOptionsQuery"],
+    queryFn: () => request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL ?? '', groupedArbovirusEstimateFilterOptionsQuery)
   });
 
   const oropoucheEnabled = process.env.NEXT_PUBLIC_OROPOUCHE_ENABLED === 'true';
 
-  const data = useMemo(() => (rawData && oropoucheEnabled === false) ? {
-    ...rawData,
-    arbovirusFilterOptions: {
-      ...rawData.arbovirusFilterOptions,
-      pathogen: rawData.arbovirusFilterOptions.pathogen.filter((pathogen) => pathogen !== 'OROV')
+  const data = useMemo(() => {
+    if(!rawData) {
+      return rawData
     }
-  } : rawData, [ rawData, oropoucheEnabled ]);
+
+    if(oropoucheEnabled === false ) {
+      return {
+        ...rawData,
+        arbovirusFilterOptions: {
+          ...rawData.groupedArbovirusEstimateFilterOptions,
+          pathogen: rawData.groupedArbovirusEstimateFilterOptions.pathogen.filter((pathogen) => pathogen !== 'OROV')
+        }
+      }
+    }
+
+    return {
+      ...rawData,
+      arbovirusFilterOptions: rawData.groupedArbovirusEstimateFilterOptions
+    }
+  }, [ rawData, oropoucheEnabled ]);
 
   return {
     result,

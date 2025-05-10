@@ -8,28 +8,29 @@
  *
  *
  * @see contexts/arbo-context.tsx
- * @see hooks/useArboData.tsx
+ * @see hooks/useGroupedArboData.tsx
  * @see components/customs/multi-select.tsx
  */
 
 "use client";
 
-import React, { useContext, useMemo } from "react";
+import React, { useMemo } from "react";
 import uniq from "lodash/uniq";
-import { useArboData } from "@/hooks/arbovirus/useArboData";
+import { useGroupedArboData } from "@/hooks/arbovirus/useGroupedArboData";
 import { useArboFilters } from "@/hooks/arbovirus/useArboFilters";
-import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { Filters } from "@/components/customs/filters";
 import { FilterableField } from "@/components/customs/filters/available-filters";
+import { useGroupedArbovirusEstimateData } from "../use-arbo-primary-estimate-data";
 
 interface ArbovirusFiltersProps {
   className?: string;
 }
 
 export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
-  const state = useContext(ArboContext);
+  const { primaryEstimateData: state } = useGroupedArbovirusEstimateData();
 
-  const { data } = useArboData();
+  const { data } = useGroupedArboData();
+
   const { data: filterData } = useArboFilters();
 
   const selectedAgeGroups = state.selectedFilters['ageGroup'] ?? [];
@@ -181,14 +182,14 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
 
   const ageGroup = useMemo(() => {
     return uniq((data?.arbovirusEstimates ?? [])
-      .map((dataPoint) => dataPoint.ageGroup)
+      .flatMap((dataPoint) => dataPoint.ageGroup)
       .filter((ageGroup): ageGroup is NonNullable<typeof ageGroup> => !!ageGroup)
     );
   }, [ data ]);
 
   const sex = useMemo(() => {
     return uniq((data?.arbovirusEstimates ?? [])
-      .map((dataPoint) => dataPoint.sex)
+      .flatMap((dataPoint) => dataPoint.sex)
       .filter((sex): sex is NonNullable<typeof sex> => !!sex)
     );
   }, [ data ]);
@@ -202,7 +203,7 @@ export const ArbovirusFilters = (props: ArbovirusFiltersProps) => {
 
   const assay = useMemo(() => {
     return uniq((data?.arbovirusEstimates ?? [])
-      .map((dataPoint) => dataPoint.assay)
+      .flatMap((dataPoint) => dataPoint.assay)
       .filter((assay): assay is NonNullable<typeof assay> => !!assay)
     );
   }, [ data ]);

@@ -9,12 +9,22 @@ interface ArboSeroprevalenceDataTableProps {
   tableHeader: TableHeader<ArbovirusDataTableType>
   rowExpansionConfiguration: RowExpansionConfiguration<ArbovirusEstimate>;
   csvCitationConfiguration: DataTableCsvCitationConfiguration;
+  areSubEstimatesVisible: boolean;
+  setAreSubEstimatesVisible: (newAreSubEstimatesVisible: boolean) => void;
 }
 
 export const ArboSeroprevalenceDataTable = (
   props: ArboSeroprevalenceDataTableProps
 ) => {
-  const { data, columnConfiguration, tableHeader, rowExpansionConfiguration, csvCitationConfiguration } = props;
+  const {
+    data,
+    columnConfiguration,
+    tableHeader,
+    rowExpansionConfiguration,
+    csvCitationConfiguration,
+    areSubEstimatesVisible,
+    setAreSubEstimatesVisible,
+  } = props;
 
   if (data.length > 0) {
     return (
@@ -24,7 +34,9 @@ export const ArboSeroprevalenceDataTable = (
         tableHeader={tableHeader}
         csvCitationConfiguration={csvCitationConfiguration}
         additionalButtonConfiguration={{
-          enabled: false
+          enabled: true,
+          buttonText: `${areSubEstimatesVisible ? 'Hide': 'Show'} Subestimates`,
+          onClick: () => setAreSubEstimatesVisible(!areSubEstimatesVisible)
         }}
         secondAdditionalButtonConfiguration={{
           enabled: false

@@ -1,9 +1,8 @@
 import { Arbovirus } from "@/gql/graphql";
-import { pipe } from "fp-ts/lib/function";
 import { createContext, useContext, useMemo } from "react";
-import { ArboContext } from "./arbo-context";
 import uniq from "lodash/uniq";
 import { filterArbovirusToSortOrderMap } from "@/components/customs/filters/available-filters";
+import { useGroupedArbovirusEstimateData } from "@/app/pathogen/arbovirus/use-arbo-primary-estimate-data";
 
 export interface ArbovirusAvailablePathogensContextType {
   availablePathogens: Arbovirus[];
@@ -22,7 +21,7 @@ interface ArbovirusAvailablePathogensProviderProps {
 }
 
 export const ArbovirusAvailablePathogensProvider = (props: ArbovirusAvailablePathogensProviderProps) => {
-  const { filteredData } = useContext(ArboContext);
+  const { filteredData } = useGroupedArbovirusEstimateData().primaryEstimateData;
 
   const availablePathogens = useMemo(() => {
     return uniq(filteredData.map((dataPoint) => dataPoint.pathogen))
