@@ -37,6 +37,12 @@ export const generateConciseEstimateId = (estimate: ArbovirusEstimate) => {
   return `${country}_${sampleFrame}_${samplingYearString}`.replaceAll(/ /g, '_');
 }
 
+const generateLocationForDataTable = (estimate: ArbovirusEstimate) => {
+  const { country, district, city, state } = estimate;
+
+  return city ?? district ?? state ?? '';
+}
+
 export enum ArbovirusDataTableType {
   SEROPREVALENCE = 'SEROPREVALENCE',
   VIRAL_PREVALENCE = 'VIRAL_PREVALENCE',
@@ -157,6 +163,15 @@ const getArboColumnConfiguration = (
   fieldName: 'country',
   label: 'Country or Area',
 }, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'district',
+  label: 'District',
+  initiallyVisible: false
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'location',
+  label: 'Location'
+}, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'sex',
   label: 'Sex',
@@ -227,7 +242,8 @@ export const ArboDataTable = () => {
     return filteredData
       .map((estimate) => ({
         ...estimate,
-        conciseEstimateId: generateConciseEstimateId(estimate)
+        conciseEstimateId: generateConciseEstimateId(estimate),
+        location: generateLocationForDataTable(estimate)
       }))
       .filter((estimate) => areSubEstimatesVisible ? true : estimate.isPrimaryEstimate)
   }, [ filteredData, areSubEstimatesVisible ]);

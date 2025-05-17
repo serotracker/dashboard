@@ -41,6 +41,10 @@ const genomicSequencingDataTableColumnConfiguration = [{
   label: 'Country or Area'
 }, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'location',
+  label: 'Location'
+}, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'state',
   label: 'State'
 }, {

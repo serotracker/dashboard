@@ -21,6 +21,7 @@ export const partitionedUnravelledGroupedArbovirusEstimates = gql`
         assayOther
         city
         state
+        district
         country
         countryAlphaTwoCode
         countryAlphaThreeCode

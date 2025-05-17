@@ -28,6 +28,7 @@ export const partitionedSarsCov2Estimates = gql`
         gbdSuperRegion
         gbdSubRegion
         state
+        county
         studyName
         scope
         city

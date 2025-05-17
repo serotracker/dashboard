@@ -21,6 +21,7 @@ export const partitionedGroupedArbovirusEstimatesQuery = gql`
           city
           state
           country
+          district
           countryAlphaTwoCode
           countryAlphaThreeCode
           createdAt
@@ -66,6 +67,7 @@ export const partitionedGroupedArbovirusEstimatesQuery = gql`
           city
           state
           country
+          district
           countryAlphaTwoCode
           countryAlphaThreeCode
           createdAt
