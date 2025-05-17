@@ -3,6 +3,7 @@ import { CustomizationModalContent, CustomizationModalContentProps } from "./cus
 import { cn } from "@/lib/utils";
 import { ArboTrackerHelpModalContent } from "../../../app/pathogen/arbovirus/arbotracker-help-modal-content";
 import { MERSTrackerWelcomeModalContent } from "@/app/pathogen/mers/merstracker-welcome-modal-content";
+import { Sc2TrackerWelcomeModalContent } from "@/app/pathogen/sarscov2/sc2-tracker-welcome-modal-content";
 
 export enum ModalState {
   OPENED = "OPENED",
@@ -12,7 +13,8 @@ export enum ModalState {
 export enum ModalType {
   CUSTOMIZATION_MODAL = "CUSTOMIZATION_MODAL",
   ARBOTRACKER_HELP_MODAL = "ARBOTRACKER_HELP_MODAL",
-  MERSTRACKER_WELCOME_MODAL = "MERSTRACKER_WELCOME_MODAL"
+  MERSTRACKER_WELCOME_MODAL = "MERSTRACKER_WELCOME_MODAL",
+  SC2TRACKER_WELCOME_MODAL = "SC2TRACKER_WELCOME_MODAL"
 }
 
 export interface ModalPropsBase {
@@ -32,11 +34,15 @@ type ArboTrackerHelpModalProps = {
 type MersTrackerWelcomeModalProps = {
   modalType: ModalType.MERSTRACKER_WELCOME_MODAL;
 };
+type Sc2TrackerWelcomeModalProps = {
+  modalType: ModalType.SC2TRACKER_WELCOME_MODAL;
+};
 
 type ModalPropsBasedOnType<TDropdownOption extends string> =
   | CustomizationModalProps<TDropdownOption>
   | ArboTrackerHelpModalProps
-  | MersTrackerWelcomeModalProps;
+  | MersTrackerWelcomeModalProps
+  | Sc2TrackerWelcomeModalProps;
 
 const isCustomizationModalProps = <TDropdownOption extends string>(
   props: ModalPropsBasedOnType<TDropdownOption>
@@ -47,6 +53,9 @@ const isArboTrackerHelpModalProps = <TDropdownOption extends string>(
 const isMersTrackerWelcomeModalProps = <TDropdownOption extends string>(
   props: ModalPropsBasedOnType<TDropdownOption>
 ): props is MersTrackerWelcomeModalProps => props.modalType === ModalType.MERSTRACKER_WELCOME_MODAL;
+const isSc2TrackerWelcomeModalProps = <TDropdownOption extends string>(
+  props: ModalPropsBasedOnType<TDropdownOption>
+): props is Sc2TrackerWelcomeModalProps => props.modalType === ModalType.SC2TRACKER_WELCOME_MODAL;
 
 type ModalProps<TDropdownOption extends string> = ModalPropsBase & ModalPropsBasedOnType<TDropdownOption>;
 
@@ -83,6 +92,10 @@ const Modal = <
         <MERSTrackerWelcomeModalContent
           closeModal={props.onClose}
           className={isMersTrackerWelcomeModalProps(props) ? '' : 'hidden'}
+        />
+        <Sc2TrackerWelcomeModalContent
+          closeModal={props.onClose}
+          className={isSc2TrackerWelcomeModalProps(props) ? '' : 'hidden'}
         />
       </div>
     </div>
