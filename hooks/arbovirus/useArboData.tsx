@@ -17,6 +17,7 @@ export const arbovirusEstimatesQuery = gql`
       assayOther
       city
       state
+      district
       country
       countryAlphaTwoCode
       countryAlphaThreeCode

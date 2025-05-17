@@ -59,6 +59,12 @@ export const generateConciseEstimateId = (estimate: MersEstimate) => {
   return `${humanOrAnimal}_${country}_${sampleFrame}_${samplingYearString}`.replaceAll(/ /g, '');
 }
 
+export const generateLocationForDataTable = (estimate: MersEstimate) => {
+  const { country, district, city, state } = estimate.primaryEstimateInfo;
+
+  return city ?? district ?? state ?? '';
+}
+
 export const mersEstimateTypeToTypeMap = {
   "PrimaryHumanMersSeroprevalenceEstimateInformation": "Human",
   "PrimaryAnimalMersSeroprevalenceEstimateInformation": "Animal",
@@ -116,6 +122,7 @@ export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
     : estimate.primaryEstimateInfo.animalAgeGroup,
   primaryEstimateWhoRegion: estimate.primaryEstimateInfo.whoRegion,
   primaryEstimateCity: estimate.primaryEstimateInfo.city,
+  primaryEstimateLocation: generateLocationForDataTable(estimate),
   primaryEstimateState: estimate.primaryEstimateInfo.state,
   primaryEstimateCountry: estimate.primaryEstimateInfo.country,
   primaryEstimateSamplingStartDate: estimate.primaryEstimateInfo.samplingStartDate,
@@ -298,6 +305,10 @@ export const useMersEstimateColumnConfiguration = () => {
     type: DataTableColumnConfigurationEntryType.STANDARD as const,
     fieldName: 'primaryEstimateCountry',
     label: 'Country or Area'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'primaryEstimateLocation',
+    label: 'Location'
   }, {
     type: DataTableColumnConfigurationEntryType.STANDARD as const,
     fieldName: 'primaryEstimateSamplingYearRange',

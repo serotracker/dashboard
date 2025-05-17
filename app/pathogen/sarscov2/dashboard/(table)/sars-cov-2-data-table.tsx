@@ -128,6 +128,10 @@ const sarsCov2ColumnConfiguration = [{
   fieldName: 'country',
   label: 'Country or Area',
 }, {
+  type: DataTableColumnConfigurationEntryType.STANDARD as const,
+  fieldName: 'location',
+  label: 'Location',
+}, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'isotypes',
   label: 'Isotype',
@@ -224,6 +228,12 @@ const sarsCov2ColumnConfiguration = [{
   isHideable: false,
   initiallyVisible: false
 }];
+
+const generateLocationForDataTable = (estimate: SarsCov2Estimate) => {
+  const { country, county, city, state } = estimate;
+
+  return city ?? county ?? state ?? '';
+}
 
 export const SarsCov2DataTable = () => {
   const state = useContext(SarsCov2Context);
@@ -331,7 +341,10 @@ export const SarsCov2DataTable = () => {
         enabled: false
       }}
       rowExpansionConfiguration={rowExpansionConfiguration}
-      data={state.filteredData}
+      data={state.filteredData.map((element) => ({
+        ...element,
+        location: generateLocationForDataTable(element),
+      }))}
     />
   )
 }
