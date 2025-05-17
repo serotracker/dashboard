@@ -213,15 +213,15 @@ export const Header = (props: HeaderProps) => {
                     title={"Original SARS-CoV-2 Tracker"}
                     navItems={[{
                       title: "Dashboard",
-                      href: "https://serotracker.com",
+                      href: "https://sc2.serotracker.com",
                       description: "Visit our original dashboard for tracking SARS-CoV-2 Seroprevalence",
                     }, {
                       title: "Data",
-                      href: "https://serotracker.com/en/Data",
+                      href: "https://sc2.serotracker.com/en/Data",
                       description: "View or download our dataset for SARS-CoV-2",
                     }, {
                       title: "Visualizations",
-                      href: "https://serotracker.com/en/Analyze",
+                      href: "https://sc2.serotracker.com/en/Analyze",
                       description: "A collection of visualizations for our SARS-CoV-2 dataset",
                     }]}
                   />
