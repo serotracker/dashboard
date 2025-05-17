@@ -17,7 +17,7 @@ export const Sc2TrackerWelcomeModalContent = (props: Sc2TrackerWelcomeModalConte
       />
       <div className="px-4 overflow-y-scroll flex flex-col mt-2">
         <div className="mb-2">
-          <p className="inline">You&apos;re seeing our new version of our SARS-CoV-2 dashboard. Click </p>
+          <p className="inline">You&apos;re seeing the new version of our SARS-CoV-2 dashboard. Click </p>
           <Link className="inline text-link" href="https://sc2.serotracker.com" target="__blank" rel="noopener noreferrer">here</Link>
           <p className="inline"> for the original SeroTracker SARS-CoV-2 dashboard configuration.</p>
         </div>
