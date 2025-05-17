@@ -36,7 +36,7 @@ export const SeroTrackerIntroduction = () => {
           <p className="inline">
             You can find our original SARS-CoV-2 tracker at{' '}
           </p>
-          <Link className='inline text-link' href='https://serotracker.com' target="__blank" rel="noopener noreferrer">https://serotracker.com</Link>
+          <Link className='inline text-link' href='https://sc2.serotracker.com' target="__blank" rel="noopener noreferrer">https://sc2.serotracker.com</Link>
         </div>
       </div>
     </>

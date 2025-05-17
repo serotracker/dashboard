@@ -131,7 +131,7 @@ export default async function Home() {
                     icon={faVirus}
                     bgColor="bg-sc2virus"
                     textColor="text-sc2virus"
-                    href={"https://serotracker.com/en/Explore"}
+                    href={"https://sc2.serotracker.com/en/Explore"}
                     className="mt-4"
                   />
                 )}
