@@ -70,6 +70,14 @@ export const AppHeaderAndMain = (props: AppHeaderAndMainProps) => {
       }
     }
 
+    if(dashboardType === DashboardType.SARS_COV_2) {
+      return {
+        initialModalState: ModalState.OPENED,
+        disabled: false as const,
+        modalType: ModalType.SC2TRACKER_WELCOME_MODAL as const
+      }
+    }
+
     return {
       initialModalState: ModalState.OPENED,
       disabled: true as const,
