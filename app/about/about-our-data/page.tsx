@@ -87,6 +87,10 @@ export default function DataExtractionPage() {
         <p className='inline'> (CIHR-IG) under Grant Agreement No 01886-000.</p>
       </div>
       <div className="mb-4">
+        <p className='inline'>Our public data dictionary can be found here: </p>
+        <Link className='inline text-link' href='https://airtable.com/appeuLEYGpJjE6PHF/shrGFsdPSVQgMTt1S' target="__blank" rel="noopener noreferrer">https://airtable.com/appeuLEYGpJjE6PHF/shrGFsdPSVQgMTt1S</Link>
+      </div>
+      <div className="mb-4">
         <p className='inline'>Cite the ArboTracker dashboard as this article: </p>
         <Link className='inline text-link' href='https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(24)00585-1/fulltext' target="__blank" rel="noopener noreferrer">https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(24)00585-1/fulltext</Link>
       </div>

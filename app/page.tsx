@@ -21,6 +21,7 @@ import {
 import request from "graphql-request";
 import { SeroTrackerIntroduction } from "./serotracker-introduction";
 import { ArboTrackerTutorialVideoFrame } from "@/components/customs/arbotracker-tutorial-video-frame";
+import { MediaMarquee } from "./media-marquee";
 
 interface TrackerButtonProps {
   titleSuffix: string;
@@ -90,66 +91,75 @@ export default async function Home() {
             backgroundImage: `url(${SeroMap.src})`,
           }}
         >
-          <div className="md:grid grid-cols-4 w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
-            <div className="col-span-2 col-start-1 col-end-3 row-span-1 h-full">
-              <SeroTrackerIntroduction />
+          <div>
+            <div className="md:grid grid-cols-4 w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
+              <div className="col-span-2 col-start-1 col-end-3 row-span-1 h-full">
+                <SeroTrackerIntroduction />
+              </div>
+              <div className="col-span-2 col-start-3 col-end-5 row-span-1">
+                <ArboTrackerTutorialVideoFrame />
+                <div className="flex">
+                  {/*
+                  These comments are for tailwindcss to pickup these classes so we do not need to add too many props
+                  hover:bg-arbovirus
+                  hover:text-arbovirus
+                  group-hover:text-arbovirus
+                  */}
+                  <TrackerButton
+                    titleSuffix="Arbo"
+                    icon={faMosquito}
+                    bgColor="bg-arbovirus"
+                    textColor="text-arbovirus"
+                    href={"/pathogen/arbovirus/dashboard"}
+                    className="mt-4"
+                  />
+                  {/*
+                  hover:bg-sc2virus
+                  hover:text-sc2virus
+                  group-hover:text-sc2virus
+                  */}
+                  {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED ? (
+                    <TrackerButton
+                      titleSuffix="SC2"
+                      icon={faVirus}
+                      bgColor="bg-sc2virus"
+                      textColor="text-sc2virus"
+                      href={"/pathogen/sarscov2/dashboard"}
+                      className="mt-4"
+                    />
+                  ) : (
+                    <TrackerButton
+                      titleSuffix="Original SARS-CoV-2"
+                      icon={faVirus}
+                      bgColor="bg-sc2virus"
+                      textColor="text-sc2virus"
+                      href={"https://sc2.serotracker.com/en/Explore"}
+                      className="mt-4"
+                    />
+                  )}
+                  {/*
+                  hover:bg-mers
+                  hover:text-mers
+                  group-hover:text-mers
+                  */}
+                  {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && (
+                    <TrackerButton
+                      titleSuffix="MERS"
+                      icon={faLungs}
+                      bgColor="bg-mers"
+                      textColor="text-mers"
+                      href={"/pathogen/mers/dashboard"}
+                      className="mt-4"
+                    />
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="col-span-2 col-start-3 col-end-5 row-span-1">
-              <ArboTrackerTutorialVideoFrame />
-              <div className="flex">
-                {/*
-                These comments are for tailwindcss to pickup these classes so we do not need to add too many props
-                hover:bg-arbovirus
-                hover:text-arbovirus
-                group-hover:text-arbovirus
-                */}
-                <TrackerButton
-                  titleSuffix="Arbo"
-                  icon={faMosquito}
-                  bgColor="bg-arbovirus"
-                  textColor="text-arbovirus"
-                  href={"/pathogen/arbovirus/dashboard"}
-                  className="mt-4"
-                />
-                {/*
-                hover:bg-sc2virus
-                hover:text-sc2virus
-                group-hover:text-sc2virus
-                */}
-                {process.env.NEXT_PUBLIC_SARS_COV_2_TRACKER_ENABLED ? (
-                  <TrackerButton
-                    titleSuffix="SC2"
-                    icon={faVirus}
-                    bgColor="bg-sc2virus"
-                    textColor="text-sc2virus"
-                    href={"/pathogen/sarscov2/dashboard"}
-                    className="mt-4"
-                  />
-                ) : (
-                  <TrackerButton
-                    titleSuffix="Original SARS-CoV-2"
-                    icon={faVirus}
-                    bgColor="bg-sc2virus"
-                    textColor="text-sc2virus"
-                    href={"https://sc2.serotracker.com/en/Explore"}
-                    className="mt-4"
-                  />
-                )}
-                {/*
-                hover:bg-mers
-                hover:text-mers
-                group-hover:text-mers
-                */}
-                {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED && (
-                  <TrackerButton
-                    titleSuffix="MERS"
-                    icon={faLungs}
-                    bgColor="bg-mers"
-                    textColor="text-mers"
-                    href={"/pathogen/mers/dashboard"}
-                    className="mt-4"
-                  />
-                )}
+            <div className="bg-white/90 rounded-md pb-2 pt-2" style={{width: "calc(100vw - 2rem)"}}>
+              <p className='ml-2 mr-2 mb-1'> In the Media</p>
+              <MediaMarquee />
+              <div className="mt-1">
+                <Link className="ml-2 mr-2 text-link" href="/publications"> See the full list worldwide publications featuring SeroTracker&apos;s as well as academic publications from the SeroTracker team</Link>
               </div>
             </div>
           </div>
