@@ -14,13 +14,35 @@ const initialMapStyleContext = {
 
 export const MapStyleContext = createContext<MapStyleContextType>(initialMapStyleContext);
 
+const adjustMapStyle = (mapStyle: StyleSpecification): StyleSpecification => {
+  return {
+    ...mapStyle,
+    layers: mapStyle.layers.map((layer) => {
+      if(layer.id === 'GLOBAL/1') {
+        return {
+          ...layer,
+          paint: (layer.paint ? {
+            ...layer.paint,
+            "fill-color": "#FFFFFF"
+          } : layer.paint) as any
+        }
+      }
+
+      return layer
+    })
+  }
+}
+
 export const MapStyleProvider = (props: { children: React.ReactNode }) => {
   const [mapStyle, setMapStyle] = useState<StyleSpecification | null>(null);
 
   useEffect(() => {
-    getEsriVectorSourceStyle(MapResources.WHO_BASEMAP).then((mapStyle) =>
-      setMapStyle(mapStyle)
-    );
+    getEsriVectorSourceStyle(MapResources.WHO_BASEMAP_BB).then((mapStyle) => {
+      console.log('mapStyle', mapStyle);
+      console.log('adjustedMapStyle', adjustMapStyle(mapStyle));
+      setMapStyle(adjustMapStyle(mapStyle))
+      //setMapStyle(mapStyle)
+    });
   }, []);
 
   return (
