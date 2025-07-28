@@ -93,16 +93,6 @@ export default async function PublicationsPage() {
     <div className="h-full-screen overflow-auto pl-10 pr-10 pt-4 pb-4">
       <div>
         <h2 className="mb-2">Worldwide Media Publications Featuring SeroTracker</h2>
-        {/*<div className="grid grid-cols-4 place-items-center">
-          {mediaMarqueeEntryProps.map((props) => (
-            <MediaMarqueeEntry className='bg-red-200 mb-2' key={props.link} {...props} />
-          ))}
-        </div>*/}
-        {/*<Slider>
-          {mediaMarqueeEntryProps.map((props) => (
-            <MediaMarqueeEntry className='bg-red-200 mb-2' key={props.link} {...props} />
-          ))}
-        </Slider>*/}
         <Carousel>
           {mediaMarqueeEntryProps.map((props) => (
             <div key={props.link} className="!flex justify-center">

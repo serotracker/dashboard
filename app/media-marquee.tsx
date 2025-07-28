@@ -106,6 +106,20 @@ export const mediaMarqueeEntryProps: MediaMarqueeEntryProps[] = [{
   logo: NewYorkTimesLogo,
   link: 'https://www.nytimes.com/interactive/2021/05/25/world/asia/india-covid-death-estimates.html'
 }, {
+  headline: "Using AI to make writing systematic reviews easier and faster",
+  year: 2025,
+  month: Month.MARCH,
+  day: 4,
+  logo: UniversityOfTorontoLogo,
+  link: 'https://temertymedicine.utoronto.ca/news/using-ai-make-writing-systematic-reviews-easier-and-faster'
+}, {
+  headline: "WHO EPI-WIN Webinar: launch of MERS-tracker: an interactive dashboard to support evidence based decision making",
+  year: 2024,
+  month: Month.NOVEMBER,
+  day: 21,
+  logo: WHOLogo,
+  link: 'https://www.who.int/news-room/events/detail/2024/11/21/default-calendar/who-epi-win-webinar-launch-of-mers-tracker-an-interactive-dashboard-to-support-evidence-based-decision-making'
+}, {
   headline: 'Over two thirds of Africans infected by COVID virus since pandemic began - WHO',
   year: 2022,
   month: Month.APRIL,
@@ -301,20 +315,6 @@ export const mediaMarqueeEntryProps: MediaMarqueeEntryProps[] = [{
   day: 20,
   logo: UniversityOfCalgaryLogo,
   link: 'https://ucalgary.ca/news/ucalgary-and-who-researchers-find-hybrid-immunity-best-protection-against-covid-19'
-}, {
-  headline: "Using AI to make writing systematic reviews easier and faster",
-  year: 2025,
-  month: Month.MARCH,
-  day: 4,
-  logo: UniversityOfTorontoLogo,
-  link: 'https://temertymedicine.utoronto.ca/news/using-ai-make-writing-systematic-reviews-easier-and-faster'
-}, {
-  headline: "WHO EPI-WIN Webinar: launch of MERS-tracker: an interactive dashboard to support evidence based decision making",
-  year: 2024,
-  month: Month.NOVEMBER,
-  day: 21,
-  logo: WHOLogo,
-  link: 'https://www.who.int/news-room/events/detail/2024/11/21/default-calendar/who-epi-win-webinar-launch-of-mers-tracker-an-interactive-dashboard-to-support-evidence-based-decision-making'
 }];
 
 export const MediaMarquee = () => {
