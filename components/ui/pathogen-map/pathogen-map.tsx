@@ -232,12 +232,12 @@ export function PathogenMap<
       <EsmMapSourceAndLayer
         popupLayerId={layerForCountryHighlighting?.id}
       />
-      {/*<PathogenCountryHighlightLayer
+      <PathogenCountryHighlightLayer
         paint={paint}
         countryHighlightingEnabled={countryHighlightingEnabled}
         countryAlphaThreeCodesToNotHighlight={countryAlphaThreeCodesToNotHighlight ?? []}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
-      />*/}
+      />
       {children}
       <PathogenMapSourceAndLayer
         layers={layers}

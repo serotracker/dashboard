@@ -35,11 +35,15 @@ const generatePaintForLayer = (
 
   const fillColour = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["concat",
+      ["get", "iso_3166_1_alpha_3"],
+      ["get", "disputed"],
+      ["get", "worldview"],
+    ],
     ...countryData
-      .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
+      //.filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, fill }) => [
-        countryAlphaThreeCode,
+        `${countryAlphaThreeCode}falseall`,
         fill,
       ]),
     defaults.fill
@@ -47,11 +51,15 @@ const generatePaintForLayer = (
 
   const fillOpacity = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["concat",
+      ["get", "iso_3166_1_alpha_3"],
+      ["get", "disputed"],
+      ["get", "worldview"],
+    ],
     ...countryData
-      .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
+      //.filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, opacity }) => [
-        countryAlphaThreeCode,
+        `${countryAlphaThreeCode}falseall`,
         opacity,
       ]),
     defaults.opacity
@@ -59,7 +67,7 @@ const generatePaintForLayer = (
 
   const lineWidth = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["get", "iso_3166_1_alpha_3"],
     ...countryData
       .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, borderWidthPx }) => [
@@ -71,7 +79,7 @@ const generatePaintForLayer = (
 
   const lineColor = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["get", "iso_3166_1_alpha_3"],
     ...countryData
       .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, borderColour }) => [
@@ -80,6 +88,9 @@ const generatePaintForLayer = (
       ]),
     defaults.borderColour
   ] : defaults.borderColour;
+
+  console.log('fillColour', fillColour);
+  console.log('fillOpacity', fillOpacity);
 
   return {
     "fill-color": fillColour,
@@ -115,8 +126,23 @@ export function PathogenCountryHighlightLayer(
   const countryLayer = mapCountryVectors.layers[0];
 
   return (
-    <Source {...mapCountryVectors.sources[countryLayer.source]}>
+    <Source
+      id='Countries'
+      type='vector'
+      url='mapbox://mapbox.country-boundaries-v1'
+    >
       <Layer
+        id='country-highlight-layer'
+        source-layer='country_boundaries'
+        source='Countries'
+        type='fill'
+        paint={{
+          'fill-color': layerPaint['fill-color'],
+          'fill-opacity': layerPaint['fill-opacity']
+        }}
+        beforeId={props.positionedUnderLayerWithId}
+      />
+      {/*<Layer
         {...countryLayer}
         id='country-highlight-layer'
         paint={{
@@ -134,7 +160,7 @@ export function PathogenCountryHighlightLayer(
           'line-width': layerPaint['line-width']
         }}
         beforeId={props.positionedUnderLayerWithId}
-      />
+      />*/}
     </Source>
   );
 }
