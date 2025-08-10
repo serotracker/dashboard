@@ -7,7 +7,6 @@ import {
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
 import CustomQueryClientProvider from "@/contexts/custom-query-client-provider";
 import getQueryClient from "@/components/customs/getQueryClient";
@@ -21,7 +20,8 @@ import {
 import request from "graphql-request";
 import { SeroTrackerIntroduction } from "./serotracker-introduction";
 import { ArboTrackerTutorialVideoFrame } from "@/components/customs/arbotracker-tutorial-video-frame";
-import { MediaMarquee } from "./media-marquee";
+import { MediaMarquee, PublicationMarquee } from "./marquees";
+import { MainPageFooter } from "./main-page-footer";
 
 interface TrackerButtonProps {
   titleSuffix: string;
@@ -30,10 +30,6 @@ interface TrackerButtonProps {
   bgColor: string;
   href: string;
   className?: string
-}
-
-const formatNumber = (numericValue?: number) => {
-  return (numericValue?.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') ?? 0);
 }
 
 function TrackerButton(props: TrackerButtonProps) {
@@ -86,13 +82,13 @@ export default async function Home() {
     <CustomQueryClientProvider>
       <div className="h-full overflow-auto">
         <div
-          className="flex w-full h-full-screen bg-no-repeat bg-cover bg-center p-4 overflow-auto"
+          className="flex w-full h-full-screen bg-no-repeat bg-cover bg-center py-4 overflow-auto"
           style={{
             backgroundImage: `url(${SeroMap.src})`,
           }}
         >
           <div>
-            <div className="md:grid grid-cols-4 w-full rounded-md p-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
+            <div className="md:grid grid-cols-4 rounded-md p-4 mx-4 mb-4 min-h-1/2 h-fit text-background bg-white/90">
               <div className="col-span-2 col-start-1 col-end-3 row-span-1 h-full">
                 <SeroTrackerIntroduction />
               </div>
@@ -155,59 +151,21 @@ export default async function Home() {
                 </div>
               </div>
             </div>
-            <div className="bg-white/90 rounded-md pb-2 pt-2" style={{width: "calc(100vw - 2rem)"}}>
+            <div className="bg-white/90 rounded-md pb-2 pt-2 mx-4" style={{width: "calc(100vw - 2rem)"}}>
               <p className='ml-2 mr-2 mb-1'> In the Media</p>
               <MediaMarquee />
               <div className="mt-1">
-                <Link className="ml-2 mr-2 text-link" href="/publications"> See the full list worldwide publications featuring SeroTracker&apos;s as well as academic publications from the SeroTracker team</Link>
+                <Link className="ml-2 mr-2 text-link" href="/publications"> See the full list of our global media features and list of academic publications from the SeroTracker team</Link>
               </div>
             </div>
-          </div>
-        </div>
-        <h3 className="flex text-background bg-white rounded-md lg:px-16 justify-center p-8 w-full">
-          {process.env.NEXT_PUBLIC_MERS_TRACKER_ENABLED === 'true'
-            ? `We have data from ${formatNumber(4682)} seroprevalence studies in ${formatNumber(148)} countries and territories including ${formatNumber(38389552)} participants across our three dashboards`
-            : `We have data from ${formatNumber(4642)} seroprevalence studies in ${formatNumber(148)} countries and territories including ${formatNumber(38260890)} participants across both our dashboards`
-          }
-        </h3>
-        <div className="p-8 w-full bg-background">
-          <div className="bg-white rounded-md w-full flex justify-center lg:justify-between px-8 lg:px-16 py-4 lg:py-6 items-center flex-wrap lg:flex-nowrap">
-            <Image className={"p-2 lg:p-0"} src={"/WHO-EN-C-H.png"} alt={""} width={200} height={100} />
-            <Image
-              className={"p-2 lg:p-0"}
-              src={"/University-Of-Calgary-Logo.png"}
-              alt={""}
-              width={200}
-              height={100}
-            />
-            <Image
-            className={"p-2 lg:p-0"}
-              src={"/public-health-agency.svg"}
-              alt={""}
-              width={200}
-              height={100}
-            />
-            <Image className={"p-2 lg:p-0"} src={"/amc-joule.png"} alt={""} width={200} height={100} />
-            <Image
-            className={"p-2 lg:p-0"}
-              src={"/CITF_logo_ENG.svg"}
-              alt={""}
-              width={200}
-              height={100}
-            />
-          </div>
-          <div className="text-white mt-8 text-justify">
-            <p className="mb-3 font-bold">MAP DISCLAIMER</p>
-            <p>
-              The designations employed and the presentation of the material
-              available on this platform does not imply the expression of any
-              opinion whatsoever on the part of WHO, SeroTracker, or
-              SeroTracker&apos;s partners concerning the legal status of any
-              country, territory, city or area or of its authorities, or
-              concerning the delimitation of its frontiers or boundaries. Dotted
-              and dashed lines on maps represent approximate border lines for
-              which there may not yet be full agreement.
-            </p>
+            <div className="bg-white/90 rounded-md pb-2 pt-2 mt-2 mb-2 mx-4" style={{width: "calc(100vw - 2rem)"}}>
+              <div className='ml-2 mr-2 mb-1'>
+                <p className="inline"> A selection of our most cited work in infectious disease seroepidemiology and evidence synthesis - See our full academic publications list </p>
+                <Link className='inline text-link' href='/publications' target="__blank" rel="noopener noreferrer">here</Link>
+              </div>
+              <PublicationMarquee />
+            </div>
+            <MainPageFooter />
           </div>
         </div>
       </div>

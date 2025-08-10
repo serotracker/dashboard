@@ -22,6 +22,10 @@ import CovidEndLogo from "../public/covid-end-logo.png";
 import RadioCanadaLogo from "../public/ICIRadio-Canada_Télé(logo).png";
 import UniversityOfTorontoLogo from "../public/university-of-toronto-logo.jpg";
 import WHOLogo from "../public/WHO-EN-C-H.png";
+import AnnalsOfInternalMedicineLogo from '../public/annals-of-internal-medicine-logo.png';
+import BMJGlobalHealthLogo from "../public/bmj-global-health-logo.png";
+import PLOSLogo from "../public/PLOS_Logo_2020.png";
+import TheLancetLogo from "../public/the-lancet-logo.png";
 import Image from "next/image";
 import { StaticImageData } from "next/image";
 import Link from "next/link";
@@ -317,12 +321,57 @@ export const mediaMarqueeEntryProps: MediaMarqueeEntryProps[] = [{
   link: 'https://ucalgary.ca/news/ucalgary-and-who-researchers-find-hybrid-immunity-best-protection-against-covid-19'
 }];
 
+export const publicationMarqueeEntryProps: MediaMarqueeEntryProps[] = [{
+  headline: 'Development of Prompt Templates for Large Language Model–Driven Screening in Systematic Reviews',
+  year: 2025,
+  month: Month.FEBRUARY,
+  day: 25,
+  logo: AnnalsOfInternalMedicineLogo,
+  link: 'https://doi.org/10.7326/ANNALS-24-02189'
+}, {
+  headline: 'ArboTracker: a multipathogen dashboard and data platform for arbovirus seroprevalence studies',
+  year: 2024,
+  month: Month.SEPTEMBER,
+  day: 10,
+  logo: TheLancetLogo,
+  link: 'https://doi.org/10.1016/S1473-3099(24)00585-1'
+}, {
+  headline: "Protective effectiveness of previous SARS-CoV-2 infection and hybrid immunity against the omicron variant and severe disease: a systematic review and meta-regression",
+  year: 2023,
+  month: Month.JANUARY,
+  day: 18,
+  logo: TheLancetLogo,
+  link: 'https://doi.org/10.1016/S1473-3099(22)00801-5'
+}, {
+  headline: "SARS-CoV-2 infection in Africa: a systematic review and meta-analysis of standardised seroprevalence studies, from January 2020 to December 2021",
+  year: 2022,
+  month: Month.AUGUST,
+  day: 23,
+  logo: BMJGlobalHealthLogo,
+  link: 'https://doi.org/10.1136/bmjgh-2022-008793'
+}, {
+  headline: 'Global SARS-CoV-2 seroprevalence from January 2020 to April 2022: A systematic review and meta-analysis of standardized population-based studies.',
+  year: 2022,
+  month: Month.NOVEMBER,
+  day: 10,
+  logo: PLOSLogo,
+  link: 'https://doi.org/10.1371/journal.pmed.1004107'
+}];
+
 export const MediaMarquee = () => {
   return (
     <div className="bg-background pt-2 pb-2 w-full">
       <Marquee>
         {mediaMarqueeEntryProps.map((props) => <MediaMarqueeEntry key={props.link} {...props} />)}
       </Marquee>
+    </div>
+  );
+}
+
+export const PublicationMarquee = () => {
+  return (
+    <div className="bg-background pt-2 pb-2 w-full flex">
+      {publicationMarqueeEntryProps.map((props) => <MediaMarqueeEntry key={props.link} {...props} />)}
     </div>
   );
 }
