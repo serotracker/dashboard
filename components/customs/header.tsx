@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   NavigationMenu,
@@ -11,7 +12,6 @@ import {
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import ListItem from "@/components/customs/list-item";
-import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
@@ -126,6 +126,7 @@ interface HeaderProps {
 
 export const Header = (props: HeaderProps) => {
   const { dashboardType, helpButtonConfiguration } = props;
+  const router = useRouter();
   const [titleSuffixColor, setTitleSuffixColor] = useState("text-background");
   const [headerBgColor, setHeaderBgColor] = useState("bg-background delay-150");
 
@@ -248,6 +249,15 @@ export const Header = (props: HeaderProps) => {
                 <TabGroup title={"About"} navItems={aboutNavItems} />
               </div>
             </NavigationMenuContent>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger
+              className="bg-transparent"
+              includeChevron={false}
+              onClick={() => router.push('/publications')}
+            >
+              Publications
+            </NavigationMenuTrigger>
           </NavigationMenuItem>
           {helpButton}
         </NavigationMenuList>
