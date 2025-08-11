@@ -135,28 +135,4 @@ export function PathogenCountryHighlightLayer(
       />
     </>
   )
-
-  // return (
-  //   <Source {...mapCountryVectors.sources[countryLayer.source]}>
-  //     <Layer
-  //       {...countryLayer}
-  //       id='country-highlight-layer'
-  //       paint={{
-  //         'fill-color': layerPaint['fill-color'],
-  //         'fill-opacity': layerPaint['fill-opacity']
-  //       }}
-  //       beforeId={props.positionedUnderLayerWithId}
-  //     />
-  //     <Layer
-  //       {...countryLayer}
-  //       type="line"
-  //       id='country-highlight-layer-line'
-  //       paint={{
-  //         'line-color': layerPaint['line-color'],
-  //         'line-width': layerPaint['line-width']
-  //       }}
-  //       beforeId={props.positionedUnderLayerWithId}
-  //     />
-  //   </Source>
-  // );
 }
