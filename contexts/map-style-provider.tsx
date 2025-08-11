@@ -38,8 +38,6 @@ export const MapStyleProvider = (props: { children: React.ReactNode }) => {
 
   useEffect(() => {
     getEsriVectorSourceStyle(MapResources.WHO_BASEMAP_BB).then((mapStyle) => {
-      console.log('mapStyle', mapStyle);
-      console.log('adjustedMapStyle', adjustMapStyle(mapStyle));
       setMapStyle(adjustMapStyle(mapStyle))
     });
   }, []);
