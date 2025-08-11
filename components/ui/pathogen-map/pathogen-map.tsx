@@ -24,6 +24,7 @@ import { GenericMapPopUpWidth } from "./map-pop-up/generic-map-pop-up";
 import { CountryHighlightLayerLegendEntry, FreeTextEntry, LinearLegendColourGradientConfiguration } from "./country-highlight-layers/country-highlight-layer-legend";
 import { CountryDataContextType } from "@/contexts/pathogen-context/country-information-context";
 import { MapStyleContext } from "@/contexts/map-style-provider";
+import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 
 export interface MarkerCollection<TClusterPropertyKey extends string> {
   [key: string]: {
@@ -233,7 +234,7 @@ export function PathogenMap<
           'WHO_ADMIN_0_SOURCE',
           target,
           {
-            url: 'https://services.arcgis.com/5T5nSi527N4F7luB/ArcGIS/rest/services/POLIO_ADMINISTRATIVE_BOUNDARIES/FeatureServer/6',
+            url: MapResources.WHO_COUNTRY_VECTORTILES,
           }
         )
       }}

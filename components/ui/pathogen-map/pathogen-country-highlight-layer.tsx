@@ -113,14 +113,6 @@ export function PathogenCountryHighlightLayer(
 
   console.log('layerPaint', layerPaint);
 
-  //useEffect(() => {
-  //  getEsriVectorSourceStyle(MapResources.WHO_COUNTRY_VECTORTILES).then(
-  //    (mapCountryVectors) => {
-  //      setMapCountryVectors(mapCountryVectors);
-  //    }
-  //  );
-  //}, []);
-
   return (
     <>
       <Layer 
