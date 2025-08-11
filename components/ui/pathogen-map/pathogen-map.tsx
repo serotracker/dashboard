@@ -112,6 +112,8 @@ interface PathogenMapProps<
   children?: React.ReactNode;
 }
 
+export const PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID = 'WHO_ADMIN_0_SOURCE'
+
 export function PathogenMap<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
   TClusterPropertyKey extends string
@@ -231,7 +233,7 @@ export function PathogenMap<
       onRender={onRender}
       onLoad={({ type, target }) => {
         const featureService = new FeatureService(
-          'WHO_ADMIN_0_SOURCE',
+          PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID,
           target,
           {
             url: MapResources.WHO_COUNTRY_VECTORTILES,

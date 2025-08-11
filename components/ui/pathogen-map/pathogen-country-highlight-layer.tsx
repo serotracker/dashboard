@@ -1,5 +1,5 @@
 import { Layer, Source } from "react-map-gl";
-import { PaintForCountries, PathogenDataPointPropertiesBase } from "./pathogen-map";
+import { PaintForCountries, PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID, PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { useEffect, useState, useMemo } from "react";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
@@ -116,7 +116,7 @@ export function PathogenCountryHighlightLayer(
       <Layer 
         id='country-highlight-layer'
         type='fill'
-        source='WHO_ADMIN_0_SOURCE'
+        source={PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID}
         paint={{
           'fill-color': layerPaint['fill-color'],
           'fill-opacity': layerPaint['fill-opacity']
@@ -126,7 +126,7 @@ export function PathogenCountryHighlightLayer(
       <Layer
         type="line"
         id='country-highlight-layer-line'
-        source='WHO_ADMIN_0_SOURCE'
+        source={PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID}
         paint={{
           'line-color': layerPaint['line-color'],
           'line-width': layerPaint['line-width']
