@@ -19,8 +19,8 @@ export const useCountryHighlightLayer = () => {
   ) => {
     let alpha3CountryCode = undefined;
 
-    if('CODE' in input.newPopUpInfo.properties && !!input.newPopUpInfo.properties.CODE && typeof input.newPopUpInfo.properties.CODE === 'string') {
-      alpha3CountryCode = input.newPopUpInfo.properties['CODE'];
+    if('ISO_3_CODE' in input.newPopUpInfo.properties && !!input.newPopUpInfo.properties.ISO_3_CODE && typeof input.newPopUpInfo.properties.ISO_3_CODE === 'string') {
+      alpha3CountryCode = input.newPopUpInfo.properties['ISO_3_CODE'];
     }
     if('iso_3166_1_alpha_3' in input.newPopUpInfo.properties && !!input.newPopUpInfo.properties.iso_3166_1_alpha_3 && typeof input.newPopUpInfo.properties.iso_3166_1_alpha_3 === 'string') {
       alpha3CountryCode = input.newPopUpInfo.properties['iso_3166_1_alpha_3'];

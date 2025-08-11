@@ -14,6 +14,7 @@ import {
   PathogenMapLayerInfo,
   shouldLayerBeUsedForCountryHighlighting,
 } from "./pathogen-map-layer";
+import FeatureService from 'mapbox-gl-arcgis-featureserver'
 import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-layer";
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
@@ -227,17 +228,26 @@ export function PathogenMap<
       onMouseDown={onMouseDown}
       onMouseLeave={onMouseLeave}
       onRender={onRender}
+      onLoad={({ type, target }) => {
+        const featureService = new FeatureService(
+          'WHO_ADMIN_0_SOURCE',
+          target,
+          {
+            url: 'https://services.arcgis.com/5T5nSi527N4F7luB/ArcGIS/rest/services/POLIO_ADMINISTRATIVE_BOUNDARIES/FeatureServer/6',
+          }
+        )
+      }}
     >
       <NavigationControl showCompass={false} />
       <EsmMapSourceAndLayer
         popupLayerId={layerForCountryHighlighting?.id}
       />
-      {/*<PathogenCountryHighlightLayer
+      <PathogenCountryHighlightLayer
         paint={paint}
         countryHighlightingEnabled={countryHighlightingEnabled}
         countryAlphaThreeCodesToNotHighlight={countryAlphaThreeCodesToNotHighlight ?? []}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
-      />*/}
+      />
       {children}
       <PathogenMapSourceAndLayer
         layers={layers}

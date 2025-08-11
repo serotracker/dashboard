@@ -35,7 +35,7 @@ const generatePaintForLayer = (
 
   const fillColour = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["get", "ISO_3_CODE"],
     ...countryData
       .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, fill }) => [
@@ -47,31 +47,43 @@ const generatePaintForLayer = (
 
   const fillOpacity = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["get", "ISO_3_CODE"],
     ...countryData
       .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, opacity }) => [
         countryAlphaThreeCode,
-        opacity,
+        countryAlphaThreeCode !== 'SDN' ? opacity : [
+          "match",
+          ["get", "OBJECTID"],
+          695,
+          opacity,
+          0
+        ],
       ]),
     defaults.opacity
   ] : defaults.opacity;
 
   const lineWidth = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["get", "ISO_3_CODE"],
     ...countryData
       .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, borderWidthPx }) => [
         countryAlphaThreeCode,
-        borderWidthPx,
+        countryAlphaThreeCode !== 'SDN' ? borderWidthPx : [
+          "match",
+          ["get", "UNIQUE CODE LEVEL 0"],
+          "SD001000000000000000",
+          0,
+          borderWidthPx
+        ],
       ]),
     defaults.borderWidthPx
   ] : defaults.borderWidthPx;
 
   const lineColor = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["get", "ISO_3_CODE"],
     ...countryData
       .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, borderColour }) => [
@@ -93,48 +105,68 @@ export function PathogenCountryHighlightLayer(
   props: PathogenCountryHighlightLayerProps
 ) {
   const { paint, countryAlphaThreeCodesToNotHighlight, countryHighlightingEnabled } = props;
-  const [mapCountryVectors, setMapCountryVectors] = useState<any>(null);
   const layerPaint = useMemo(() => generatePaintForLayer({
     paint,
     countryAlphaThreeCodesToNotHighlight,
     countryHighlightingEnabled
   }), [ paint, countryAlphaThreeCodesToNotHighlight ]);
 
-  useEffect(() => {
-    getEsriVectorSourceStyle(MapResources.WHO_COUNTRY_VECTORTILES).then(
-      (mapCountryVectors) => {
-        setMapCountryVectors(mapCountryVectors);
-      }
-    );
-  }, []);
+  console.log('layerPaint', layerPaint);
 
-  if (!mapCountryVectors) {
-    return;
-  }
-
-  const countryLayer = mapCountryVectors.layers[0];
+  //useEffect(() => {
+  //  getEsriVectorSourceStyle(MapResources.WHO_COUNTRY_VECTORTILES).then(
+  //    (mapCountryVectors) => {
+  //      setMapCountryVectors(mapCountryVectors);
+  //    }
+  //  );
+  //}, []);
 
   return (
-    <Source {...mapCountryVectors.sources[countryLayer.source]}>
-      <Layer
-        {...countryLayer}
+    <>
+      <Layer 
         id='country-highlight-layer'
+        type='fill'
+        source='WHO_ADMIN_0_SOURCE'
         paint={{
           'fill-color': layerPaint['fill-color'],
           'fill-opacity': layerPaint['fill-opacity']
-        }}
+        } as any}
         beforeId={props.positionedUnderLayerWithId}
       />
       <Layer
-        {...countryLayer}
         type="line"
         id='country-highlight-layer-line'
+        source='WHO_ADMIN_0_SOURCE'
         paint={{
           'line-color': layerPaint['line-color'],
           'line-width': layerPaint['line-width']
-        }}
+        } as any}
         beforeId={props.positionedUnderLayerWithId}
       />
-    </Source>
-  );
+    </>
+  )
+
+  // return (
+  //   <Source {...mapCountryVectors.sources[countryLayer.source]}>
+  //     <Layer
+  //       {...countryLayer}
+  //       id='country-highlight-layer'
+  //       paint={{
+  //         'fill-color': layerPaint['fill-color'],
+  //         'fill-opacity': layerPaint['fill-opacity']
+  //       }}
+  //       beforeId={props.positionedUnderLayerWithId}
+  //     />
+  //     <Layer
+  //       {...countryLayer}
+  //       type="line"
+  //       id='country-highlight-layer-line'
+  //       paint={{
+  //         'line-color': layerPaint['line-color'],
+  //         'line-width': layerPaint['line-width']
+  //       }}
+  //       beforeId={props.positionedUnderLayerWithId}
+  //     />
+  //   </Source>
+  // );
 }

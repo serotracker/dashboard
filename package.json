@@ -49,6 +49,7 @@
     "js-file-download": "^0.4.12",
     "lucide-react": "^0.469.0",
     "mapbox-gl": "^3.9.1",
+    "mapbox-gl-arcgis-featureserver": "0.0.8",
     "next": "^14.2.26",
     "postcss": "^8.4.47",
     "react": "18.3.1",
