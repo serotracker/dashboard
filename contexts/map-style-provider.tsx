@@ -41,7 +41,6 @@ export const MapStyleProvider = (props: { children: React.ReactNode }) => {
       console.log('mapStyle', mapStyle);
       console.log('adjustedMapStyle', adjustMapStyle(mapStyle));
       setMapStyle(adjustMapStyle(mapStyle))
-      //setMapStyle(mapStyle)
     });
   }, []);
 

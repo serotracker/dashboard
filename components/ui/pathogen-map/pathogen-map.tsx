@@ -14,6 +14,7 @@ import {
   PathogenMapLayerInfo,
   shouldLayerBeUsedForCountryHighlighting,
 } from "./pathogen-map-layer";
+import FeatureService from 'mapbox-gl-arcgis-featureserver'
 import { PathogenCountryHighlightLayer } from "./pathogen-country-highlight-layer";
 import { useCountryHighlightLayer } from "./use-country-highlight-layer";
 import isEqual from "lodash/isEqual";
@@ -23,6 +24,7 @@ import { GenericMapPopUpWidth } from "./map-pop-up/generic-map-pop-up";
 import { CountryHighlightLayerLegendEntry, FreeTextEntry, LinearLegendColourGradientConfiguration } from "./country-highlight-layers/country-highlight-layer-legend";
 import { CountryDataContextType } from "@/contexts/pathogen-context/country-information-context";
 import { MapStyleContext } from "@/contexts/map-style-provider";
+import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 
 export interface MarkerCollection<TClusterPropertyKey extends string> {
   [key: string]: {
@@ -109,6 +111,8 @@ interface PathogenMapProps<
   countryHighlightingEnabled: boolean;
   children?: React.ReactNode;
 }
+
+export const PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID = 'WHO_ADMIN_0_SOURCE'
 
 export function PathogenMap<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
@@ -227,17 +231,26 @@ export function PathogenMap<
       onMouseDown={onMouseDown}
       onMouseLeave={onMouseLeave}
       onRender={onRender}
+      onLoad={({ type, target }) => {
+        const featureService = new FeatureService(
+          PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID,
+          target,
+          {
+            url: MapResources.WHO_COUNTRY_VECTORTILES,
+          }
+        )
+      }}
     >
       <NavigationControl showCompass={false} />
       <EsmMapSourceAndLayer
         popupLayerId={layerForCountryHighlighting?.id}
       />
-      {/*<PathogenCountryHighlightLayer
+      <PathogenCountryHighlightLayer
         paint={paint}
         countryHighlightingEnabled={countryHighlightingEnabled}
         countryAlphaThreeCodesToNotHighlight={countryAlphaThreeCodesToNotHighlight ?? []}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
-      />*/}
+      />
       {children}
       <PathogenMapSourceAndLayer
         layers={layers}

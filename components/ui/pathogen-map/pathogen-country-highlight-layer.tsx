@@ -1,5 +1,5 @@
 import { Layer, Source } from "react-map-gl";
-import { PaintForCountries, PathogenDataPointPropertiesBase } from "./pathogen-map";
+import { PaintForCountries, PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID, PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { useEffect, useState, useMemo } from "react";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
@@ -35,7 +35,7 @@ const generatePaintForLayer = (
 
   const fillColour = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["get", "ISO_3_CODE"],
     ...countryData
       .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, fill }) => [
@@ -47,31 +47,43 @@ const generatePaintForLayer = (
 
   const fillOpacity = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["get", "ISO_3_CODE"],
     ...countryData
       .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, opacity }) => [
         countryAlphaThreeCode,
-        opacity,
+        countryAlphaThreeCode !== 'SDN' ? opacity : [
+          "match",
+          ["get", "OBJECTID"],
+          695,
+          opacity,
+          0
+        ],
       ]),
     defaults.opacity
   ] : defaults.opacity;
 
   const lineWidth = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["get", "ISO_3_CODE"],
     ...countryData
       .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, borderWidthPx }) => [
         countryAlphaThreeCode,
-        borderWidthPx,
+        countryAlphaThreeCode !== 'SDN' ? borderWidthPx : [
+          "match",
+          ["get", "OBJECTID"],
+          695,
+          borderWidthPx,
+          0
+        ],
       ]),
     defaults.borderWidthPx
   ] : defaults.borderWidthPx;
 
   const lineColor = countryData.length > 0 ? [
     "match",
-    ["get", "CODE"],
+    ["get", "ISO_3_CODE"],
     ...countryData
       .filter(({ countryAlphaThreeCode }) => !countryAlphaThreeCodesToNotHighlight.includes(countryAlphaThreeCode))
       .flatMap(({ countryAlphaThreeCode, borderColour }) => [
@@ -93,48 +105,34 @@ export function PathogenCountryHighlightLayer(
   props: PathogenCountryHighlightLayerProps
 ) {
   const { paint, countryAlphaThreeCodesToNotHighlight, countryHighlightingEnabled } = props;
-  const [mapCountryVectors, setMapCountryVectors] = useState<any>(null);
   const layerPaint = useMemo(() => generatePaintForLayer({
     paint,
     countryAlphaThreeCodesToNotHighlight,
     countryHighlightingEnabled
   }), [ paint, countryAlphaThreeCodesToNotHighlight ]);
 
-  useEffect(() => {
-    getEsriVectorSourceStyle(MapResources.WHO_COUNTRY_VECTORTILES).then(
-      (mapCountryVectors) => {
-        setMapCountryVectors(mapCountryVectors);
-      }
-    );
-  }, []);
-
-  if (!mapCountryVectors) {
-    return;
-  }
-
-  const countryLayer = mapCountryVectors.layers[0];
-
   return (
-    <Source {...mapCountryVectors.sources[countryLayer.source]}>
-      <Layer
-        {...countryLayer}
+    <>
+      <Layer 
         id='country-highlight-layer'
+        type='fill'
+        source={PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID}
         paint={{
           'fill-color': layerPaint['fill-color'],
           'fill-opacity': layerPaint['fill-opacity']
-        }}
+        } as any}
         beforeId={props.positionedUnderLayerWithId}
       />
       <Layer
-        {...countryLayer}
         type="line"
         id='country-highlight-layer-line'
+        source={PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID}
         paint={{
           'line-color': layerPaint['line-color'],
           'line-width': layerPaint['line-width']
-        }}
+        } as any}
         beforeId={props.positionedUnderLayerWithId}
       />
-    </Source>
-  );
+    </>
+  )
 }
