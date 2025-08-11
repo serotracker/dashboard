@@ -29,7 +29,7 @@ export default function RootLayout({
       <head>
         <title>SeroTracker</title>
         <link rel="icon" type="image/svg+xml" href="/SerotrackerLogo.svg" />
-        <link rel="alternate icon" href="/SerotrackerLogo.png" />{" "}
+        <link rel="alternate icon" href="/SerotrackerLogo.png" />
         {/* Fallback for older browsers */}
       </head>
       <body className={clsx(inter.className, "text-black no-scrollbar overflow-y-hidden")}>
