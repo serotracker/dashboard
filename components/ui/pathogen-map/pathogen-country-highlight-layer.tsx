@@ -111,8 +111,6 @@ export function PathogenCountryHighlightLayer(
     countryHighlightingEnabled
   }), [ paint, countryAlphaThreeCodesToNotHighlight ]);
 
-  console.log('layerPaint', layerPaint);
-
   return (
     <>
       <Layer 
