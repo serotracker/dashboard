@@ -72,10 +72,10 @@ const generatePaintForLayer = (
         countryAlphaThreeCode,
         countryAlphaThreeCode !== 'SDN' ? borderWidthPx : [
           "match",
-          ["get", "UNIQUE CODE LEVEL 0"],
-          "SD001000000000000000",
-          0,
-          borderWidthPx
+          ["get", "OBJECTID"],
+          695,
+          borderWidthPx,
+          0
         ],
       ]),
     defaults.borderWidthPx
