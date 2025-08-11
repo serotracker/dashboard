@@ -1,8 +1,3 @@
-import * as Countries from "i18n-iso-countries";
-import EnglishCountries from "i18n-iso-countries/langs/en.json";
-import FrenchCountries from "i18n-iso-countries/langs/fr.json";
-import GermanCountries from 'i18n-iso-countries/langs/de.json'
-
 import English from "./en.json";
 import French from "./fr.json";
 import German from './de.json'
@@ -24,28 +19,11 @@ interface TranslateStringProps {
 type JsonRecord<T> = Record<string, T | string>;
 interface Json extends JsonRecord<Json> {}
 
-Countries.registerLocale(EnglishCountries);
-Countries.registerLocale(FrenchCountries);
-Countries.registerLocale(GermanCountries);
-
 const translations = {
   "en": English,
   "fr": French,
   "de": German
 }
-
-export const getCountryName = (
-  country: string,
-  language: LanguageType,
-  optionString: string
-) => {
-  const code = Countries.getAlpha2Code(country, "en"); // TODO: Review our strategy for country name language localization
-  const translatedCountryName = code ? Countries.getName(code, language) : '';
-  const displayText = translatedCountryName
-    ? translatedCountryName
-    : Translate(optionString, [toPascalCase(country)]) || country;
-  return displayText;
-};
 
 const recursiveFind = (object: any, keys: string[], index: number): string => {
   const key = keys[index];
