@@ -60,9 +60,7 @@ export const useDataPointPresentLayer = () => {
           borderColour: MapSymbology.CountryFeature.Default.BorderColour,
         }
       },
-      //countryHighlightLayerLegendEntries: (input.countryHighlightingEnabled === true) ? countryHighlightLayerLegendEntries : [],
-      // @TODO: Sean Kenny - Switch back to above once you've got proper country tiles working again.
-      countryHighlightLayerLegendEntries: [],
+      countryHighlightLayerLegendEntries: (input.countryHighlightingEnabled === true) ? countryHighlightLayerLegendEntries : [],
       freeTextEntries: (!input.countryHighlightingEnabled && input.countryOutlinesEnabled) ? [{
         text: 'Countries and areas with a black outline contain seroprevalence data.'
       }] : [],
