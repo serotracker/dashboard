@@ -116,6 +116,7 @@ export function PathogenCountryHighlightLayer(
       <Layer 
         id='country-highlight-layer'
         type='fill'
+        filter={['!=', 'OBJECTID', 694]}
         source={PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID}
         paint={{
           'fill-color': layerPaint['fill-color'],
@@ -126,6 +127,7 @@ export function PathogenCountryHighlightLayer(
       <Layer
         type="line"
         id='country-highlight-layer-line'
+        filter={['!=', 'OBJECTID', 694]}
         source={PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID}
         paint={{
           'line-color': layerPaint['line-color'],
