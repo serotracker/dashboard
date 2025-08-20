@@ -6,8 +6,8 @@ import { assertNever } from "assert-never";
 import { ToastContext, ToastId } from "@/contexts/toast-provider";
 import { cn, typedObjectFromEntries } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { DashboardType, dashboardTypeToRouteName } from "@/app/app-header-and-main";
-import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
+import { dashboardTypeToRouteName } from "@/app/app-header-and-main";
+import { DashboardSectionId, DashboardType } from "@/app/pathogen/dashboard-enums";
 
 interface DownloadCsvButtonConfiguration {
   enabled: true;

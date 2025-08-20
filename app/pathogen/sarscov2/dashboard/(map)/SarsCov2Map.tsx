@@ -13,8 +13,9 @@ import { useDataPointPresentLayer } from "@/components/ui/pathogen-map/country-h
 import { CountryHighlightLayerLegend } from "@/components/ui/pathogen-map/country-highlight-layers/country-highlight-layer-legend";
 import { useSarsCov2MapCustomizationModal } from "./use-sars-cov-2-map-customization-modal";
 import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
+import { MapSectionComponentProps } from "@/app/pathogen/generic-pathogen-dashboard-page";
 
-export function SarsCov2Map() {
+export const SarsCov2Map = (props: MapSectionComponentProps) => {
   const { filteredData } = useContext(SarsCov2Context);
   const countryDataContext = useContext(CountryDataContext);
   const { getCountryHighlightingLayerInformation } = useDataPointPresentLayer();

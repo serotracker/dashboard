@@ -6,9 +6,9 @@ import { ToastId } from "@/contexts/toast-provider";
 import { ArbovirusDataTableType, getArboDataTableRows } from "./(table)/ArboDataTable";
 import { ArboTrackerCitationButtonContent, shortenedArboTrackerCitationText, suggestedArboTrackerCitationText } from "../arbotracker-citations";
 import { DashboardTopBanner } from "@/components/customs/dashboard-top-banner";
-import { DashboardType } from "@/app/app-header-and-main";
 import { ArbovirusEstimateType } from "@/gql/graphql";
 import { useGroupedArbovirusEstimateData } from "../use-arbo-primary-estimate-data";
+import { DashboardType } from "../../dashboard-enums";
 
 export const ArboBanner = () => {
   const { primaryEstimateData: state } = useGroupedArbovirusEstimateData();

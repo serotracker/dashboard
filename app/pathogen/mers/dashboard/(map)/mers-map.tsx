@@ -39,6 +39,7 @@ import { Breakpoint, useBreakpoint } from "@/hooks/useBreakpoint";
 import { Layer, Source } from "react-map-gl";
 import Link from "next/link";
 import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
+import { MapSectionComponentProps } from "@/app/pathogen/generic-pathogen-dashboard-page";
 
 export const MapPinColours = {
   'HumanMersEvent': "#1d4ed8",
@@ -52,7 +53,7 @@ export const MapPinColours = {
   'mers-animal-viral-estimate-alt': "#910c10",
 } as const;
 
-export const MersMap = () => {
+export const MersMap = (props: MapSectionComponentProps) => {
   const { filteredData, faoMersEventData } = useContext(MersContext);
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const { data } = useMersPrimaryEstimates(); 

@@ -1,10 +1,10 @@
 import { useCallback, useContext } from "react";
 import { cn } from '@/lib/utils';
 import { RechartsVisualization } from "../../../../../components/customs/visualizations/recharts-visualization";
-import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { SarsCov2VisualizationId, SarsCov2VisualizationInformation, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { SarsCov2Context } from "@/contexts/pathogen-context/pathogen-contexts/sarscov2/sc2-context";
+import { DashboardSectionId } from "@/app/pathogen/dashboard-enums";
 
 export const SarsCov2VisualizationsSection = () => {
   const { sarsCov2VisualizationInformation } = useVisualizationPageConfiguration();

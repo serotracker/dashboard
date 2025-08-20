@@ -14,9 +14,8 @@ import {
 import ListItem from "@/components/customs/list-item";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { CircleHelp } from "lucide-react";
-import { DashboardType } from "@/app/app-header-and-main";
+import { DashboardSectionId, DashboardType } from "@/app/pathogen/dashboard-enums";
 
 type NavMenuItem = {
   title: string;

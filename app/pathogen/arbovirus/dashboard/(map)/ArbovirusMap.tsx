@@ -28,6 +28,7 @@ import { ArbovirusOropoucheCasesDataContext } from "@/contexts/pathogen-context/
 import { Layer, Source } from "react-map-gl";
 import { mapColourBucketsToLinearGradientConfiguration } from "@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration";
 import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
+import { MapSectionComponentProps } from "@/app/pathogen/generic-pathogen-dashboard-page";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -46,7 +47,7 @@ const esmValueToSelectedEsm: Record<string, SelectedArbovirusEnvironmentalSuitab
   'zika': SelectedArbovirusEnvironmentalSuitabilityMap.ZIKA
 }
 
-export function ArbovirusMap() {
+export const ArbovirusMap = (props: MapSectionComponentProps) => {
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const countryDataContext = useContext(CountryDataContext);
   const { selectedFilters } = useContext(ArboContext);
