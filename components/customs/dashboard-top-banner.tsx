@@ -163,7 +163,7 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
               downloadData(downloadCsvButtonTwoConfiguration)
             }}
           >
-            {props.downloadCsvButtonTwoConfiguration.enabled ? props.downloadCsvButtonTwoConfiguration.buttonContent : 'No text'}
+            {props.downloadCsvButtonTwoConfiguration.enabled ? props.downloadCsvButtonTwoConfiguration.buttonContent : ''}
           </Button>
           <Button
             className={cn(
@@ -180,7 +180,7 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
               openToast({ toastId: citationButtonConfiguration.citationToastId })
             }}
           >
-            {citationButtonConfiguration.enabled ? citationButtonConfiguration.buttonContent : 'No text'}
+            {citationButtonConfiguration.enabled ? citationButtonConfiguration.buttonContent : ''}
           </Button>
           <div className={cn(
             'w-auto ml-2 inline-flex absolute right-0 bottom-0 max-w-[35%]',
@@ -188,7 +188,7 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
             ''
           )}>
             <p className='italic text-sm'>
-              {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : 'No text'}
+              {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : ''}
             </p>
           </div>
         </div>
@@ -196,7 +196,7 @@ export const DashboardTopBanner = (props: DashboardTopBannerProps) => {
           'w-full italic text-sm mt-4',
           //citationButtonConfiguration.enabled === true && dataLastUpdatedNoteConfiguration.enabled === true ? '' : 'hidden'
           'hidden'
-        )}> {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : 'No text'} </p>
+        )}> {dataLastUpdatedNoteConfiguration.enabled ? dataLastUpdatedNoteConfiguration.dataLastUpdatedText : ''} </p>
       </div>
       <div className="w-full flex mt-2">
         {navigationButtonSectionData.map((sectionData) => (

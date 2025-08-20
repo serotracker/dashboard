@@ -73,10 +73,12 @@ export const GenericPathogenDashboardPage = (props: GenericPathogenDashboardPage
             soon!
           </section>
         )}
-        {props.banners && <props.banners />}
+        <div className="lg:mt-[-48px]">
+          {props.banners && <props.banners />}
+        </div>
         <section
           id={DashboardSectionId.MAP}
-          className="w-full h-[95%] scroll-smooth overflow-hidden relative row-span-2 mt-4 lg:mt-[-32px] rounded-md border border-background"
+          className="w-full h-[95%] scroll-smooth overflow-hidden relative row-span-2 mt-4 rounded-md border border-background"
         >
           <props.mapSectionComponent 
             areFiltersMinimized={areFiltersMinimized && (isLargeScreen ?? false)}
