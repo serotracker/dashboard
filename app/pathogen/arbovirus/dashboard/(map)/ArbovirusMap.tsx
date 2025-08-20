@@ -28,6 +28,9 @@ import { ArbovirusOropoucheCasesDataContext } from "@/contexts/pathogen-context/
 import { Layer, Source } from "react-map-gl";
 import { mapColourBucketsToLinearGradientConfiguration } from "@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration";
 import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
+import { MapSectionComponentProps } from "@/app/pathogen/generic-pathogen-dashboard-page";
+import { DashboardType, dashboardTypeToMapIdMap } from "@/app/pathogen/dashboard-enums";
+import { MapDownloadButton } from "@/components/ui/pathogen-map/map-download-button";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -46,7 +49,7 @@ const esmValueToSelectedEsm: Record<string, SelectedArbovirusEnvironmentalSuitab
   'zika': SelectedArbovirusEnvironmentalSuitabilityMap.ZIKA
 }
 
-export function ArbovirusMap() {
+export const ArbovirusMap = (props: MapSectionComponentProps) => {
   const [ isStudySubmissionPromptVisible, setStudySubmissionPromptVisibility ] = useState(true);
   const countryDataContext = useContext(CountryDataContext);
   const { selectedFilters } = useContext(ArboContext);
@@ -160,7 +163,7 @@ export function ArbovirusMap() {
     <>
       <div className={"w-full h-full p-0"}>
         <PathogenMap
-          id="arboMap"
+          id={dashboardTypeToMapIdMap[DashboardType.ARBOVIRUS]}
           countryHighlightingEnabled={true}
           allowCountryPopUpsWithEmptyData={selectedEsm !== SelectedArbovirusEnvironmentalSuitabilityMap.NO_ESM_SELECTED}
           countryDataContext={countryDataContext}
@@ -251,6 +254,9 @@ export function ArbovirusMap() {
       <MapEstimateSummary filteredData={filteredData}/>
       <arbovirusMapCustomizationModal.mapCustomizeButton />
       <arbovirusMapCustomizationModal.customizationModal />
+      <MapDownloadButton
+        dashboardType={DashboardType.ARBOVIRUS}
+      />
     </>
   );
 }

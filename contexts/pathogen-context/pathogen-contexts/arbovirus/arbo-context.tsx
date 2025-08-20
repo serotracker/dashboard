@@ -11,6 +11,7 @@ import { useArboEnviromentalSuitabilityData } from "@/hooks/arbovirus/useArboEnv
 import { ArbovirusOropoucheCasesDataProvider } from "./arbo-oropouche-cases-data-context";
 import { ArbovirusAvailablePathogensProvider } from "./arbo-available-pathogens-context";
 import { filterData } from "../../filter-update-steps/apply-new-selected-filters";
+import { DashboardType, dashboardTypeToMapIdMap } from "@/app/pathogen/dashboard-enums";
 
 export type ArbovirusEstimate = PartitionedUnravelledGroupedArbovirusEstimatesQuery['partitionedUnravelledGroupedArbovirusEstimates']['arboEstimates'][number] & {
   isPrimaryEstimate: boolean;
@@ -115,7 +116,7 @@ export const ArboProviders = (props: ArboProvidersProps) => {
       initialState={initialArboContextState}
       countryDataProvider={CountryDataProvider}
       context={ArboContext}
-      mapId={'arboMap'}
+      mapId={dashboardTypeToMapIdMap[DashboardType.ARBOVIRUS]}
       dataFetcher={ArboDataFetcher}
       initialDataFetchHandlerOverride={({ state, action, map }) => {
         const outputState = {

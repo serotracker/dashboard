@@ -16,6 +16,7 @@ import { assertNever } from "assert-never";
 import { ArboSeroprevalenceDataTable } from "./arbo-seroprevalence-data-table";
 import { ArboViralPrevalenceDataTable } from "./arbo-viral-prevalence-data-table";
 import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
+import { DashboardType, dashboardTypeToMapIdMap } from "@/app/pathogen/dashboard-enums";
 
 export const generateConciseEstimateId = (estimate: ArbovirusEstimate) => {
   const country = estimate.country
@@ -233,7 +234,7 @@ export const ArboDataTable = () => {
   const { filteredData } = useContext(ArboContext);
   const [ areSubEstimatesVisible, setAreSubEstimatesVisible] = useState<boolean>(false);
   const allMaps = useMap();
-  const arboMap = allMaps['arboMap'];
+  const arboMap = allMaps[dashboardTypeToMapIdMap[DashboardType.ARBOVIRUS]];
   const router = useRouter();
   const { arbovirusVisualizationInformation } = useVisualizationPageConfiguration();
   const [ arboDataTableType, setArboDataTableType ] = useState<ArbovirusDataTableType>(ArbovirusDataTableType.SEROPREVALENCE);

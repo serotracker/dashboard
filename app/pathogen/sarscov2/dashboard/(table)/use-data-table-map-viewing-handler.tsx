@@ -3,10 +3,11 @@ import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { Row } from "@tanstack/react-table";
 import { getBoundingBoxFromCountryAlphaTwoCode } from "@/lib/bounding-boxes";
+import { DashboardType, dashboardTypeToMapIdMap } from "@/app/pathogen/dashboard-enums";
 
 export const useDataTableMapViewingHandler = () => {
   const allMaps = useMap();
-  const sarsCov2Map = allMaps['sarsCov2Map'];
+  const sarsCov2Map = allMaps[dashboardTypeToMapIdMap[DashboardType.SARS_COV_2]];
   const router = useRouter();
 
   const viewOnMapHandler = useCallback(<

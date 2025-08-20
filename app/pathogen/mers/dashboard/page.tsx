@@ -8,10 +8,12 @@ import { MersVisualizationsSection } from "./(visualizations)/visualizations-sec
 import { MersDataTable } from "./(table)/mers-data-table";
 import { MersBanner } from "./mers-banner";
 import { MersTrackerBetweenMapandDataSectionComponent } from "./merstracker-between-map-and-data-section-component";
+import { DashboardType } from "../../dashboard-enums";
 
 export default function SarsCov2Dashboard() {
   return (
     <GenericPathogenDashboardPage
+      dashboardType={DashboardType.MERS}
       filtersComponent={MersFilters}
       mapSectionComponent={MersMap}
       betweenMapAndDataSectionElement={MersTrackerBetweenMapandDataSectionComponent}

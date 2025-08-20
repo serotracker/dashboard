@@ -3,10 +3,11 @@ import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { Row } from "@tanstack/react-table";
 import { getBoundingBoxFromCountryAlphaTwoCode } from "@/lib/bounding-boxes";
+import { DashboardType, dashboardTypeToMapIdMap } from "@/app/pathogen/dashboard-enums";
 
 export const useDataTableMapViewingHandler = () => {
   const allMaps = useMap();
-  const mersMap = allMaps['mersMap'];
+  const mersMap = allMaps[dashboardTypeToMapIdMap[DashboardType.MERS]];
   const router = useRouter();
 
   const viewOnMapHandler = useCallback(<

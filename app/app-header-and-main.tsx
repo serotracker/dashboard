@@ -3,16 +3,10 @@ import { Header } from "@/components/customs/header";
 import { ModalState, ModalType, useModal } from "@/components/ui/modal/modal";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
+import { DashboardType } from "./pathogen/dashboard-enums";
 
 interface AppHeaderAndMainProps {
   children: React.ReactNode;
-}
-
-export enum DashboardType {
-  ARBOVIRUS = 'ARBOVIRUS',
-  SARS_COV_2 = 'SARS_COV_2',
-  MERS = 'MERS',
-  NONE = 'NONE'
 }
 
 const dashboardTypeToHelpModalType = {

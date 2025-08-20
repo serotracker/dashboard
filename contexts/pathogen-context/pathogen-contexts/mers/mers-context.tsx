@@ -17,6 +17,7 @@ import { MersMapCustomizationsProvider } from "./map-customizations-context";
 import { MersMacroSampleFramesProvider } from "./mers-macro-sample-frames-context";
 import { MersFilterMetadataProvider } from "./mers-filter-metadata-context";
 import { MersAssayClassificationProvider } from "./mers-assay-classification-content";
+import { DashboardType, dashboardTypeToMapIdMap } from "@/app/pathogen/dashboard-enums";
 
 const initialMersContextState = {
   filteredData: [],
@@ -316,7 +317,7 @@ export const MersProviders = (props: MersProvidersProps) => {
       initialState={initialMersContextState}
       countryDataProvider={CountryDataProvider}
       context={MersContext}
-      mapId={"mersMap"}
+      mapId={dashboardTypeToMapIdMap[DashboardType.MERS]}
       filterUpdateHandlerOverride={(filterUpdateData) => pipe(
         filterUpdateData,
         addActionToSelectedFilters,

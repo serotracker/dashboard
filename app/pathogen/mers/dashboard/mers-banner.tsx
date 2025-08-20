@@ -6,9 +6,9 @@ import { DashboardTopBanner } from "@/components/customs/dashboard-top-banner";
 import { isMersSeroprevalenceEstimate, isMersViralEstimate, MersContext, MersSeroprevalenceEstimate, MersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { formatMersSeroprevalenceEstimateForTable, formatMersViralEstimateForTable } from "./(table)/use-mers-data-table-data";
 import { useMersEstimateColumnConfiguration } from "./(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
-import { DashboardType } from "@/app/app-header-and-main";
-import { MERSTrackerCitationButtonContent, shortenedMERSTrackerCitationText, suggestedMERSTrackerCitationText } from "../merstracker-citations";
+import { shortenedMERSTrackerCitationText, suggestedMERSTrackerCitationText } from "../merstracker-citations";
 import { ToastId } from "@/contexts/toast-provider";
+import { DashboardType } from "../../dashboard-enums";
 
 export const cleanEstimateForMersBanner = (
   estimate: MersSeroprevalenceEstimate | MersViralEstimate

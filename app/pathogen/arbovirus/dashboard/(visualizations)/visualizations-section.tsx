@@ -1,11 +1,11 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { cn } from '@/lib/utils';
 import { useArboDataInsights } from "@/hooks/arbovirus/useArboDataInsights";
 import { RechartsVisualization } from "../../../../../components/customs/visualizations/recharts-visualization";
-import { DashboardSectionId } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { addToVisualizationInformation } from "@/app/pathogen/generic-pathogen-visualizations-page";
 import { ArbovirusVisualizationId, ArbovirusVisualizationInformation, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
+import { DashboardSectionId } from "@/app/pathogen/dashboard-enums";
 
 export const ArbovirusVisualizationsSection = () => {
   const { filteredData } = useGroupedArbovirusEstimateData().primaryEstimateData;
