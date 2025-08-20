@@ -28,6 +28,7 @@ export const FiltersButton = (props: FiltersButtonProps) => {
         dashboardTypeToColourClassnameMap[dashboardType]
       )}
       onClick={() => setAreFiltersMinimized(!areFiltersMinimized)}
+      aria-label={areFiltersMinimized ? "Expand filters" : "Minimize filters"}
     >
       <ChevronsLeft size={24} className={cn(
         'ml-[22px] text-white',
