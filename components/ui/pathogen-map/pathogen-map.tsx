@@ -221,6 +221,7 @@ export function PathogenMap<
         longitude: 30,
         zoom: 2,
       }}
+      preserveDrawingBuffer={true}
       attributionControl={false}
       scrollZoom={false}
       minZoom={2}

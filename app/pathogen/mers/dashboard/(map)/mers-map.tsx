@@ -40,6 +40,8 @@ import { Layer, Source } from "react-map-gl";
 import Link from "next/link";
 import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import { MapSectionComponentProps } from "@/app/pathogen/generic-pathogen-dashboard-page";
+import { DashboardType, dashboardTypeToMapIdMap } from "@/app/pathogen/dashboard-enums";
+import { MapDownloadButton } from "@/components/ui/pathogen-map/map-download-button";
 
 export const MapPinColours = {
   'HumanMersEvent': "#1d4ed8",
@@ -183,7 +185,7 @@ export const MersMap = (props: MapSectionComponentProps) => {
     <>
       <div className={"w-full h-full p-0"}>
         <PathogenMap
-          id="mersMap"
+          id={dashboardTypeToMapIdMap[DashboardType.MERS]}
           countryHighlightingEnabled={false}
           countryPopUpEnabled={countryPopUpEnabled}
           countryPopUpOnHoverEnabled={countryPopUpEnabled}
@@ -373,6 +375,9 @@ export const MersMap = (props: MapSectionComponentProps) => {
       </div>
       <mersMapCustomizationModal.mapCustomizeButton />
       <mersMapCustomizationModal.customizationModal />
+      <MapDownloadButton
+        dashboardType={DashboardType.MERS}
+      />
     </>
   );
 }

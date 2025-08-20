@@ -7,6 +7,7 @@ import { CountryDataContext } from "../../country-information-context";
 import { MonthlySarsCov2CountryInformationProvider } from "./monthly-sarscov2-country-information-context";
 import { useSarsCov2Data } from "@/hooks/sarscov2/use-sars-cov2-data";
 import { ModelledSarsCov2SeroprevalenceProvider } from "./modelled-sarscov2-seroprevalence-context";
+import { DashboardType, dashboardTypeToMapIdMap } from "@/app/pathogen/dashboard-enums";
 
 const initialSarsCov2ContextState = {
   filteredData: [],
@@ -81,7 +82,7 @@ export const SarsCov2Providers = (props: SarsCov2ProvidersProps) => {
       initialState={initialSarsCov2ContextState}
       countryDataProvider={CountryDataProvider}
       context={SarsCov2Context}
-      mapId={"sarsCov2Map"}
+      mapId={dashboardTypeToMapIdMap[DashboardType.SARS_COV_2]}
       dataFetcher={SarsCov2DataFetcher}
     >
       <MonthlySarsCov2CountryInformationProvider>

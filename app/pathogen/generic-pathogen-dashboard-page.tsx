@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
 import { FiltersButton } from "./filters-button";
-import { DashboardSectionId, DashboardType } from "./dashboard-enums";
+import { DashboardSectionId, DashboardType, dashboardTypeToMapIdMap } from "./dashboard-enums";
 import { useMap } from "react-map-gl";
 
 interface FiltersComponentProps {
@@ -24,13 +24,6 @@ interface GenericPathogenDashboardPageProps {
   betweenMapAndDataSectionElement?: (() => React.ReactNode) | null;
   dataSectionComponent: () => React.ReactNode;
   visualizationsSectionComponent: () => React.ReactNode;
-}
-
-const dashboardTypeToMapIdMap = {
-  [DashboardType.ARBOVIRUS]: 'arboMap',
-  [DashboardType.SARS_COV_2]: 'sarsCov2Map',
-  [DashboardType.MERS]: 'mersMap',
-  [DashboardType.NONE]: 'NONE',
 }
 
 export const GenericPathogenDashboardPage = (props: GenericPathogenDashboardPageProps) => {
