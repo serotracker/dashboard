@@ -25,6 +25,7 @@ import { CountryHighlightLayerLegendEntry, FreeTextEntry, LinearLegendColourGrad
 import { CountryDataContextType } from "@/contexts/pathogen-context/country-information-context";
 import { MapStyleContext } from "@/contexts/map-style-provider";
 import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
+import { MapJammuKashmirAreaLayer } from "./map-jammu-kashmir-area-layer";
 
 export interface MarkerCollection<TClusterPropertyKey extends string> {
   [key: string]: {
@@ -259,6 +260,7 @@ export function PathogenMap<
         clusteringSettings={clusteringSettings}
         sourceId={sourceId}
       />
+      <MapJammuKashmirAreaLayer />
       <PathogenMapPopup
         mapId={id}
         popUpInfo={popUpInfo}
