@@ -26,6 +26,7 @@ import { CountryDataContextType } from "@/contexts/pathogen-context/country-info
 import { MapStyleContext } from "@/contexts/map-style-provider";
 import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import { MapJammuKashmirAreaLayer } from "./map-jammu-kashmir-area-layer";
+import { MapAksaiChinAreaLayer } from "./map-aksai-chin-area-layer";
 
 export interface MarkerCollection<TClusterPropertyKey extends string> {
   [key: string]: {
@@ -262,6 +263,10 @@ export function PathogenMap<
       />
       <MapJammuKashmirAreaLayer
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
+      />
+      <MapAksaiChinAreaLayer
+        paint={paint}
+        positionedUnderLayerWithId={undefined}
       />
       <PathogenMapPopup
         mapId={id}
