@@ -277,6 +277,7 @@ export const MersMap = (props: MapSectionComponentProps) => {
           >
             <Layer
               id={"camel_population_map_layer"}
+              beforeId='jammu-kashmir-layer'
               type="raster"
               source="camel_population_map_source"
               source-layer="camel_population_map_source"
@@ -294,6 +295,7 @@ export const MersMap = (props: MapSectionComponentProps) => {
           >
             <Layer
               id={"camel_population_map_asia_1_layer"}
+              beforeId='camel_population_map_layer'
               type="raster"
               source="camel_population_map_asia_1_source"
               source-layer="camel_population_map_asia_1_source"
@@ -311,6 +313,7 @@ export const MersMap = (props: MapSectionComponentProps) => {
           >
             <Layer
               id={"camel_population_map_asia_2_layer"}
+              beforeId='camel_population_map_asia_1_layer'
               type="raster"
               source="camel_population_map_asia_2_source"
               source-layer="camel_population_map_asia_2_source"
@@ -328,6 +331,7 @@ export const MersMap = (props: MapSectionComponentProps) => {
           >
             <Layer
               id={"camel_population_map_asia_3_layer"}
+              beforeId='camel_population_map_asia_2_layer'
               type="raster"
               source="camel_population_map_asia_3_source"
               source-layer="camel_population_map_asia_3_source"
@@ -345,6 +349,7 @@ export const MersMap = (props: MapSectionComponentProps) => {
           >
             <Layer
               id={"camel_population_map_asia_4_layer"}
+              beforeId='camel_population_map_asia_3_layer'
               type="raster"
               source="camel_population_map_asia_4_source"
               source-layer="camel_population_map_asia_4_source"
