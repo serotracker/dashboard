@@ -251,7 +251,7 @@ export function PathogenMap<
         paint={paint}
         countryHighlightingEnabled={countryHighlightingEnabled}
         countryAlphaThreeCodesToNotHighlight={countryAlphaThreeCodesToNotHighlight ?? []}
-        positionedUnderLayerWithId={layerForCountryHighlighting?.id}
+        positionedUnderLayerWithId='jammu-kashmir-layer'
       />
       {children}
       <PathogenMapSourceAndLayer
@@ -260,7 +260,9 @@ export function PathogenMap<
         clusteringSettings={clusteringSettings}
         sourceId={sourceId}
       />
-      <MapJammuKashmirAreaLayer />
+      <MapJammuKashmirAreaLayer
+        positionedUnderLayerWithId={layerForCountryHighlighting?.id}
+      />
       <PathogenMapPopup
         mapId={id}
         popUpInfo={popUpInfo}

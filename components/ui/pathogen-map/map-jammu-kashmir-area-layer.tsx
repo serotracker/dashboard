@@ -3,7 +3,15 @@ import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
 import { Source, Layer, LayerProps } from "react-map-gl";
 
-export const MapJammuKashmirAreaLayer = () => {
+export interface MapJammuKashmirAreaLayerProps {
+  positionedUnderLayerWithId: string | undefined;
+}
+
+export const MapJammuKashmirAreaLayer = (
+  props: MapJammuKashmirAreaLayerProps
+) => {
+  const { positionedUnderLayerWithId } = props;
+
   const [whoBasemapVectors, setWhoBasemapVectors] = useState<{
     sources: {
       esri: any
@@ -42,8 +50,14 @@ export const MapJammuKashmirAreaLayer = () => {
 
   return (
     <Source {...whoBasemapVectors.sources[jammuKashmirLayer.source]}>
-      <Layer {...jammuKashmirLayer} />
-      {lineLayers.map((layer) => <Layer key={layer.id} {...layer} />)}
+      <Layer {...jammuKashmirLayer} id='jammu-kashmir-layer' beforeId={lineLayers.at(0)?.id} />
+      {lineLayers.map((layer, index, layers) => (
+        <Layer
+          key={layer.id}
+          {...layer}
+          beforeId={index !== layers.length - 1 ? layers.at(index + 1)?.id : props.positionedUnderLayerWithId}
+        />
+      ))}
     </Source>
   );
 }
