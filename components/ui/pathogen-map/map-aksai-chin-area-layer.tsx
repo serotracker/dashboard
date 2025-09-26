@@ -50,8 +50,6 @@ export const MapAksaiChinAreaLayer = (props: MapAksaiChinAreaLayerProps) => {
 
   const fillForChina = paint.countryData.find((dataPoint) => dataPoint.countryAlphaThreeCode === 'CHN')?.fill;
 
-  console.log('fillForChina', fillForChina);
-
   return (
     <>
       <Source {...whoBasemapVectors.sources[aksaiChinLayer.source]}>
