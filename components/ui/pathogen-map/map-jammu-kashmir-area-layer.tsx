@@ -10,8 +10,6 @@ export interface MapJammuKashmirAreaLayerProps {
 export const MapJammuKashmirAreaLayer = (
   props: MapJammuKashmirAreaLayerProps
 ) => {
-  const { positionedUnderLayerWithId } = props;
-
   const [whoBasemapVectors, setWhoBasemapVectors] = useState<{
     sources: {
       esri: any
@@ -34,15 +32,6 @@ export const MapJammuKashmirAreaLayer = (
   }
 
   const jammuKashmirLayer = whoBasemapVectors.layers.find((layer) => layer.id === 'DISPUTED BORDERS AND AREAS/DISPUTED_AREAS_BB/Not applicable/1');
-  const lineLayers = whoBasemapVectors.layers
-    .filter((layer) => layer.type === 'line')
-    .map((layer) => ({
-      ...layer,
-      paint: {
-        ...layer.paint,
-        "line-color": "#A9A9A9"
-      }
-    }));
 
   if (!jammuKashmirLayer) {
     return;
@@ -50,14 +39,7 @@ export const MapJammuKashmirAreaLayer = (
 
   return (
     <Source {...whoBasemapVectors.sources[jammuKashmirLayer.source]}>
-      <Layer {...jammuKashmirLayer} id='jammu-kashmir-layer' beforeId={lineLayers.at(0)?.id} />
-      {lineLayers.map((layer, index, layers) => (
-        <Layer
-          key={layer.id}
-          {...layer}
-          beforeId={index !== layers.length - 1 ? layers.at(index + 1)?.id : props.positionedUnderLayerWithId}
-        />
-      ))}
+      <Layer {...jammuKashmirLayer} id='jammu-kashmir-layer' beforeId={props.positionedUnderLayerWithId} />
     </Source>
   );
 }
