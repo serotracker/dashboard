@@ -1,0 +1,113 @@
+import { Source, Layer, LayerProps } from "react-map-gl";
+import { PaintForCountries } from "./pathogen-map";
+import { useEffect, useState } from "react";
+import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
+import { MapResources, MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
+
+export interface MapAksaiChinAreaLayerProps {
+  paint: PaintForCountries;
+  positionedUnderLayerWithId: string | undefined;
+}
+
+export const MapAksaiChinAreaLayer = (props: MapAksaiChinAreaLayerProps) => {
+  const { paint } = props;
+
+  const [whoBasemapVectors, setWhoBasemapVectors] = useState<{
+    sources: {
+      esri: any
+    }
+    layers: Array<LayerProps & {
+      source: 'esri';
+    }>;
+  } | null>(null);
+
+  useEffect(() => {
+    getEsriVectorSourceStyle(MapResources.WHO_BASEMAP_BB).then(
+      (mapCountryVectors) => {
+        setWhoBasemapVectors(mapCountryVectors);
+      }
+    );
+  }, []);
+  
+  if (!whoBasemapVectors) {
+    return;
+  }
+
+  const aksaiChinLayer = whoBasemapVectors.layers.find((layer) => layer.id === 'DISPUTED BORDERS AND AREAS/DISPUTED_AREAS_BB/Aksai Chin/1');
+  const lineLayers = whoBasemapVectors.layers
+    .filter((layer) => layer.type === 'line')
+    .map((layer) => ({
+      ...layer,
+      paint: {
+        ...layer.paint,
+        "line-color": "#A9A9A9"
+      }
+    }));
+
+  if (!aksaiChinLayer) {
+    return;
+  }
+
+  const fillForChina = paint.countryData.find((dataPoint) => dataPoint.countryAlphaThreeCode === 'CHN')?.fill;
+
+  console.log('fillForChina', fillForChina);
+
+  return (
+    <>
+      <Source {...whoBasemapVectors.sources[aksaiChinLayer.source]}>
+        <Layer {...aksaiChinLayer} id='aksai-chin-layer' beforeId={lineLayers.at(0)?.id} />
+        {lineLayers.map((layer, index, layers) => (
+          <Layer
+            key={layer.id}
+            {...layer}
+            beforeId={index !== layers.length - 1 ? layers.at(index + 1)?.id : 'aksai-chin-china-shaded'}
+          />
+        ))}
+      </Source>
+      <Source
+        id='aksai-chin-china-shaded-source'
+        type='image'
+        url='https://raw.githubusercontent.com/serotracker/iit-backend-v2/refs/heads/main/images/aksai-chin-china-shaded.png'
+        coordinates={[
+          [77.84, 36.00],
+          [80.44, 36.00],
+          [80.44, 33.37],
+          [77.84, 33.37]
+        ]}
+      />
+      <Source
+        id='aksai-chin-china-not-shaded-source'
+        type='image'
+        url='https://raw.githubusercontent.com/serotracker/iit-backend-v2/refs/heads/main/images/aksai-chin-china-not-shaded.png'
+        coordinates={[
+          [77.84, 36.00],
+          [80.44, 36.00],
+          [80.44, 33.37],
+          [77.84, 33.37]
+        ]}
+      />
+      <Layer
+        id='aksai-chin-china-not-shaded'
+        type='raster'
+        source='aksai-chin-china-not-shaded-source'
+        beforeId='aksai-chin-china-shaded'
+        paint={{
+          'raster-fade-duration': 0,
+          'raster-emissive-strength': 1,
+          'raster-opacity': fillForChina == '#97b1bd' ? 0 : 1
+        }}
+      />
+      <Layer
+        id='aksai-chin-china-shaded'
+        type='raster'
+        source='aksai-chin-china-shaded-source'
+        beforeId={props.positionedUnderLayerWithId}
+        paint={{
+          'raster-fade-duration': 0,
+          'raster-emissive-strength': 1,
+          'raster-opacity': fillForChina == '#97b1bd' ? 1 : 0
+        }}
+      />
+    </>
+  );
+};
