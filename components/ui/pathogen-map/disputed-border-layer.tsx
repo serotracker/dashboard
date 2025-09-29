@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Layer, Source, useMap } from "react-map-gl";
+import { Layer, Source } from "react-map-gl";
 import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 
 export interface DisputedBorderLayerProps {
@@ -21,8 +21,8 @@ const zoomLevelToLineWidthArray: Record<number, number | undefined> = {
   3: 1,
   4: 2,
   5: 2,
-  6: 3,
-  7: 3,
+  6: 2,
+  7: 2,
 }
 
 export const DisputedBorderLayer = (props: DisputedBorderLayerProps) => {
@@ -67,8 +67,7 @@ export const DisputedBorderLayer = (props: DisputedBorderLayerProps) => {
           source='abyei-line-source'
           type='line'
           paint={{
-            //'line-color': '#CECECE',
-            'line-color': '#FF6347',
+            'line-color': '#AEAEAE',
             'line-dasharray': lineDashArray,
             'line-width': lineWidth
           }}
