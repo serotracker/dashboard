@@ -51,7 +51,7 @@ export const useEsmCountryHighlightLayer = () => {
       colour: MapSymbology.CountryFeature.Default.Color
     }, {
       description: 'Not applicable',
-      colour: MapSymbology.CountryFeature.Default.Color
+      colour: MapSymbology.CountryFeature.Disputed.Color
     }];
 
     return {
