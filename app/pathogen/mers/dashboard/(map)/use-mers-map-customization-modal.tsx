@@ -213,7 +213,8 @@ export const useMersMapCustomizationModal = () => {
         onSwitchValueChange: (newSwitchValue) => setCountryPopUpEnabled(newSwitchValue),
       }]
     }
-  }), [ currentMapCountryHighlightingSettings, setCurrentMapCountryHighlightingSettings, countryPopUpEnabled, setCountryPopUpEnabled, mapDataPointVisibilitySetting, setMapDataPointVisibilitySetting, dropdownOptionToLabelMap, reportedPositiveCasesFaoDataDisabled, reportedPositiveCasesFaoDataEnabled ]);
+  }), [ countryPopUpEnabled, setCountryPopUpEnabled, mapDataPointVisibilitySetting, setMapDataPointVisibilitySetting, dropdownOptionToLabelMap ]);
+  //}), [ currentMapCountryHighlightingSettings, setCurrentMapCountryHighlightingSettings, countryPopUpEnabled, setCountryPopUpEnabled, mapDataPointVisibilitySetting, setMapDataPointVisibilitySetting, dropdownOptionToLabelMap, reportedPositiveCasesFaoDataDisabled, reportedPositiveCasesFaoDataEnabled ]);
 
   const {
     modal: customizationModal,

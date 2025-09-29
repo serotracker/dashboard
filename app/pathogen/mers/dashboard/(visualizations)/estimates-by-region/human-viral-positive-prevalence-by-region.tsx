@@ -111,7 +111,7 @@ export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePr
         ],
         estimateNumber: index + 1
       }))
-  , [ humanMersViralEstimates, regionGroupingFunction, selectedSampleFrames ]);
+  , [ humanMersViralEstimates, regionGroupingFunction, selectedSampleFrames, regionSortingFunction ]);
 
   const estimateNumberToEstimateNameMap = useMemo(() => {
     return typedGroupBy(

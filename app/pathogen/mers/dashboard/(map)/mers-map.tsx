@@ -109,6 +109,7 @@ export const MersMap = (props: MapSectionComponentProps) => {
     className: "absolute bottom-1 right-1 mb-1 bg-white/60 backdrop-blur-md",
     legendEntries: [
       { description: "Camel Population Data Unavailable", colour: MapSymbology.CountryFeature.Default.Color },
+      { description: 'Not applicable', colour: MapSymbology.CountryFeature.Disputed.Color },
       ...dataTypeLayerLegendEntries,
     ],
     linearLegendColourGradientConfiguration: {
@@ -161,7 +162,8 @@ export const MersMap = (props: MapSectionComponentProps) => {
         <Link className="inline text-link text-sm" href="www.un.org/geospatial/content/map-world-1" target="__blank" rel="noopener noreferrer">www.un.org/geospatial/content/map-world-1</Link>
       </>
     )
-  }), [ countryHighlightLayerLegendEntries, dataTypeLayerLegendEntries, linearLegendColourGradientConfiguration, freeTextEntries, legendTooltipContent ]);
+  //}), [ countryHighlightLayerLegendEntries, dataTypeLayerLegendEntries, linearLegendColourGradientConfiguration, freeTextEntries, legendTooltipContent ]);
+  }), [ dataTypeLayerLegendEntries, freeTextEntries ]);
   
   const { mersMapLegend } = useMersMapLegend({
     legendProps

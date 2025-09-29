@@ -107,7 +107,7 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
         ],
         estimateNumber: index + 1
       }))
-  , [ animalMersViralEstimates, regionGroupingFunction ]);
+  , [ animalMersViralEstimates, regionGroupingFunction, regionSortingFunction ]);
 
   const estimateNumberToEstimateNameMap = useMemo(() => {
     return typedGroupBy(

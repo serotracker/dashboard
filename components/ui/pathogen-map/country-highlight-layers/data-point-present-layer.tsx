@@ -48,6 +48,9 @@ export const useDataPointPresentLayer = () => {
     }, {
       description: 'No seroprevalence estimates',
       colour: MapSymbology.CountryFeature.Default.Color
+    }, {
+      description: 'Not applicable',
+      colour: MapSymbology.CountryFeature.Disputed.Color
     }];
 
     return {

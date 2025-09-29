@@ -109,7 +109,7 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
         ],
         estimateNumber: index + 1
       }))
-  , [ animalMersSeroprevalenceEstimates, regionGroupingFunction ]);
+  , [ animalMersSeroprevalenceEstimates, regionGroupingFunction, regionSortingFunction ]);
 
   const estimateNumberToEstimateNameMap = useMemo(() => {
     return typedGroupBy(

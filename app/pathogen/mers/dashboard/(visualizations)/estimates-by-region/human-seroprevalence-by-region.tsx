@@ -111,7 +111,7 @@ export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionPr
         ],
         estimateNumber: index + 1
       }))
-  , [ humanMersSeroprevalenceEstimates, regionGroupingFunction, selectedSampleFrames ]);
+  , [ humanMersSeroprevalenceEstimates, regionGroupingFunction, selectedSampleFrames, regionSortingFunction ]);
 
   const estimateNumberToEstimateNameMap = useMemo(() => {
     return typedGroupBy(

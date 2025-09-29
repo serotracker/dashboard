@@ -31,6 +31,7 @@ import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate
 import { MapSectionComponentProps } from "@/app/pathogen/generic-pathogen-dashboard-page";
 import { DashboardType, dashboardTypeToMapIdMap } from "@/app/pathogen/dashboard-enums";
 import { MapDownloadButton } from "@/components/ui/pathogen-map/map-download-button";
+import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 
 // TODO: Needs to be synced with tailwind pathogen colors. How?
 export const pathogenColors: Record<Arbovirus, string> = {
@@ -141,6 +142,7 @@ export const ArbovirusMap = (props: MapSectionComponentProps) => {
     ...countryHighlightLayerLegendEntries,
     ...((selectedFilters.esm?.length > 0 && countryHighlightLayerLegendEntries.length === 0) ? [{ colour: "#FFFFFF", description: "Unsuitable Environment"}] : []),
     ...(selectedFilters.esm?.length > 0 ? [{ colour: "rgba(54,2,4,0.5)", description: "Suitable Environment"}] : []),
+    ...(selectedFilters.esm?.length > 0 ? [{ colour: MapSymbology.CountryFeature.Disputed.Color, description: "Not applicable"}] : []),
   ], [countryHighlightLayerLegendEntries, selectedFilters]);
 
   const selectedEsm = useMemo(() => {
