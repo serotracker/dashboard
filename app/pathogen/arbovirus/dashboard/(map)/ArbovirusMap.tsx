@@ -142,7 +142,7 @@ export const ArbovirusMap = (props: MapSectionComponentProps) => {
     ...countryHighlightLayerLegendEntries,
     ...((selectedFilters.esm?.length > 0 && countryHighlightLayerLegendEntries.length === 0) ? [{ colour: "#FFFFFF", description: "Unsuitable Environment"}] : []),
     ...(selectedFilters.esm?.length > 0 ? [{ colour: "rgba(54,2,4,0.5)", description: "Suitable Environment"}] : []),
-    ...(selectedFilters.esm?.length > 0 ? [{ colour: MapSymbology.CountryFeature.Default.Color, description: "Not applicable"}] : []),
+    ...(selectedFilters.esm?.length > 0 ? [{ colour: MapSymbology.CountryFeature.Disputed.Color, description: "Not applicable"}] : []),
   ], [countryHighlightLayerLegendEntries, selectedFilters]);
 
   const selectedEsm = useMemo(() => {
