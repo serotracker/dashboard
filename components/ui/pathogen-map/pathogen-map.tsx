@@ -1,5 +1,5 @@
-import { useState, useContext } from "react";
-import { Map, MapProps, NavigationControl } from "react-map-gl";
+import { useState, useContext, useCallback } from "react";
+import { Map, MapProps, NavigationControl, ViewStateChangeEvent } from "react-map-gl";
 import {
   PathogenMapCursor,
   usePathogenMapMouse,
@@ -27,6 +27,7 @@ import { MapStyleContext } from "@/contexts/map-style-provider";
 import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import { MapJammuKashmirAreaLayer } from "./map-jammu-kashmir-area-layer";
 import { MapAksaiChinAreaLayer } from "./map-aksai-chin-area-layer";
+import { DisputedBorderLayer } from "./disputed-border-layer";
 
 export interface MarkerCollection<TClusterPropertyKey extends string> {
   [key: string]: {
@@ -115,6 +116,7 @@ interface PathogenMapProps<
 }
 
 export const PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID = 'WHO_ADMIN_0_SOURCE'
+const INTIIAL_MAP_ZOOM_LEVEL = 2;
 
 export function PathogenMap<
   TPathogenDataPointProperties extends PathogenDataPointPropertiesBase,
@@ -146,6 +148,15 @@ export function PathogenMap<
   >({ visible: false, properties: null, layerId: null });
   const { setPopUpInfoForCountryHighlightLayer } = useCountryHighlightLayer();
   const { mapStyle } = useContext(MapStyleContext);
+
+  const [zoomLevel, setZoomLevel] = useState<number>(INTIIAL_MAP_ZOOM_LEVEL);
+
+  const onZoom = useCallback((zoomEvent: ViewStateChangeEvent) => {
+    const { viewState } = zoomEvent;
+
+    const newZoomLevel = viewState.zoom;
+    setZoomLevel(newZoomLevel);
+  }, [ setZoomLevel ]);
 
   // TODO: might be possible to get rid of this
   const layerForCountryHighlighting = layers.find(layer => shouldLayerBeUsedForCountryHighlighting(layer));
@@ -221,11 +232,12 @@ export function PathogenMap<
       initialViewState={initialViewStateOverride ?? {
         latitude: 10,
         longitude: 30,
-        zoom: 2,
+        zoom: INTIIAL_MAP_ZOOM_LEVEL,
       }}
       preserveDrawingBuffer={true}
       attributionControl={false}
       scrollZoom={false}
+      onZoom={onZoom}
       minZoom={2}
       maxZoom={14}
       interactiveLayerIds={[...layers.map((layer) => layer.id), 'country-highlight-layer']}
@@ -266,6 +278,10 @@ export function PathogenMap<
       />
       <MapAksaiChinAreaLayer
         paint={paint}
+        positionedUnderLayerWithId={'abyei-polygon-source'}
+      />
+      <DisputedBorderLayer
+        mapZoomLevel={zoomLevel}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
       />
       <PathogenMapPopup
