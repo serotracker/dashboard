@@ -162,7 +162,8 @@ export const MersMap = (props: MapSectionComponentProps) => {
         <Link className="inline text-link text-sm" href="www.un.org/geospatial/content/map-world-1" target="__blank" rel="noopener noreferrer">www.un.org/geospatial/content/map-world-1</Link>
       </>
     )
-  }), [ countryHighlightLayerLegendEntries, dataTypeLayerLegendEntries, linearLegendColourGradientConfiguration, freeTextEntries, legendTooltipContent ]);
+  //}), [ countryHighlightLayerLegendEntries, dataTypeLayerLegendEntries, linearLegendColourGradientConfiguration, freeTextEntries, legendTooltipContent ]);
+  }), [ dataTypeLayerLegendEntries, freeTextEntries ]);
   
   const { mersMapLegend } = useMersMapLegend({
     legendProps

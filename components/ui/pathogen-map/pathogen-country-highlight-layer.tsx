@@ -109,7 +109,7 @@ export function PathogenCountryHighlightLayer(
     paint,
     countryAlphaThreeCodesToNotHighlight,
     countryHighlightingEnabled
-  }), [ paint, countryAlphaThreeCodesToNotHighlight ]);
+  }), [ paint, countryAlphaThreeCodesToNotHighlight, countryHighlightingEnabled ]);
 
   return (
     <>
