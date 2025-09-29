@@ -278,7 +278,7 @@ export function PathogenMap<
       />
       <MapAksaiChinAreaLayer
         paint={paint}
-        positionedUnderLayerWithId={'abyei-polygon-source'}
+        positionedUnderLayerWithId={'abyei-polygon-layer'}
       />
       <DisputedBorderLayer
         mapZoomLevel={zoomLevel}
