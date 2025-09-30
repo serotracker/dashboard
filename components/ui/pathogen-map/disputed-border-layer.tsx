@@ -36,9 +36,6 @@ export const DisputedBorderLayer = (props: DisputedBorderLayerProps) => {
     return zoomLevelToLineWidthArray[Math.round(mapZoomLevel)] ?? 3;
   }, [ mapZoomLevel ]);
 
-  console.log('mapZoomLevel', mapZoomLevel);
-  console.log('lineDashArray', lineDashArray);
-
   return (
     <>
       <Source
