@@ -46,6 +46,8 @@ export const DisputedBorderLayer = (props: DisputedBorderLayerProps) => {
     return paint.countryData.find((dataPoint) => dataPoint.countryAlphaThreeCode === 'CHN')?.opacity;
   }, [ paint ]);
 
+  console.log('paint', paint);
+
   return (
     <>
       <Source

@@ -89,11 +89,22 @@ export const useMersMapPaint = <
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.TOTAL_CAMEL_POPULATION) {
       const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
 
-      return totalCamelPopulationMapLayer.getCountryHighlightingLayerInformation({
-        data: latestFaoCamelPopulationDataPointsByCountry ?? [],
-        countryOutlineData: dataPoints,
-        countryOutlinesEnabled
-      });
+      return {
+        ...totalCamelPopulationMapLayer.getCountryHighlightingLayerInformation({
+          data: latestFaoCamelPopulationDataPointsByCountry ?? [],
+          countryOutlineData: dataPoints,
+          countryOutlinesEnabled
+        }),
+        paint: {
+          countryData: [],
+          defaults: {
+            fill: MapSymbology.CountryFeature.Default.Color,
+            opacity: MapSymbology.CountryFeature.Default.Opacity,
+            borderWidthPx: MapSymbology.CountryFeature.Default.BorderWidth,
+            borderColour: MapSymbology.CountryFeature.Default.BorderColour,
+          }
+        }
+      };
     }
     if(currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.CAMELS_PER_CAPITA) {
       const countryOutlinesEnabled = (countryOutlinesSetting === CountryPaintChangeSetting.ALWAYS_ENABLED || countryOutlinesSetting === CountryPaintChangeSetting.WHEN_RECOMMENDED);
