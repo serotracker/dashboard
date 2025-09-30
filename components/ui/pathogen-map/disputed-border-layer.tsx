@@ -136,11 +136,17 @@ export const DisputedBorderLayer = (props: DisputedBorderLayerProps) => {
               MapSymbology.CountryFeature.Default.Opacity,
             ]
           }}
-          beforeId='aksai-chin-line-border-layer'
+          beforeId='aksai-chin-border-line-layer'
         />
+      </Source>
+      <Source
+        id='aksai-chin-border-line-source'
+        type='geojson'
+        data='https://raw.githubusercontent.com/serotracker/iit-backend-v2/refs/heads/main/geojson/aksai-chin-border-line.geojson'
+      >
         <Layer
-          id='aksai-chin-line-border-layer'
-          source='aksai-chin-polygon-source'
+          id='aksai-chin-border-line-layer'
+          source='aksai-chin-border-line-source'
           type='line'
           paint={{
             'line-color': '#AEAEAE',
