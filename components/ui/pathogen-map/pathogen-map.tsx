@@ -255,10 +255,6 @@ export function PathogenMap<
           }
         )
       }}
-      onMouseMove={(e) => {
-        console.log('lat', e.lngLat.lat);
-        console.log('lng', e.lngLat.lng);
-      }}
     >
       <NavigationControl showCompass={false} />
       <EsmMapSourceAndLayer
