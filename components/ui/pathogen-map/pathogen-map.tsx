@@ -282,6 +282,7 @@ export function PathogenMap<
       />
       <DisputedBorderLayer
         mapZoomLevel={zoomLevel}
+        paint={paint}
         positionedUnderLayerWithId={layerForCountryHighlighting?.id}
       />
       <PathogenMapPopup
