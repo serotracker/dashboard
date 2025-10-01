@@ -64,7 +64,7 @@ export function EsmMapSourceAndLayer(props: {popupLayerId?: string}) {
           "raster-opacity": 1,
           "raster-fade-duration": 0,
         }}
-        beforeId={props.popupLayerId}
+        beforeId='jammu-kashmir-layer'
       />
     </Source>
   );
