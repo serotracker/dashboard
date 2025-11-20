@@ -132,6 +132,20 @@ const sarsCov2ColumnConfiguration = [{
   fieldName: 'location',
   label: 'Location',
 }, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: 'studyType',
+  label: 'Study Design',
+  valueToColourSchemeClassnameMap: {
+    'Cross-sectional survey ': 'bg-orange-200',
+    'Cross-sectional study with prospective cohort follow up of a subset of the sample': 'bg-green-200',
+    'Prospective cohort': 'bg-indigo-200',
+    'Retrospective cohort': 'bg-rose-200',
+    'Repeated cross-sectional study': 'bg-purple-200',
+    'Systematic Review / Meta-Analysis': 'bg-amber-200'
+  },
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
+}, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
   fieldName: 'isotypes',
   label: 'Isotype',

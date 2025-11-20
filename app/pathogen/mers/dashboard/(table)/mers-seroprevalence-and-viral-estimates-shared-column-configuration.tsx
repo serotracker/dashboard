@@ -136,6 +136,7 @@ export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   primaryEstimateFirstAuthorLastName: estimate.primaryEstimateInfo.firstAuthorFullName.split(' ').at(-1),
   primaryEstimateSourceTitle: estimate.primaryEstimateInfo.sourceTitle,
   primaryEstimateInsitutution: estimate.primaryEstimateInfo.insitutution,
+  primaryEstimateStudyDesign: estimate.primaryEstimateInfo.studyDesign,
   primaryEstimateAnimalType: 'animalType' in estimate.primaryEstimateInfo
     ? estimate.primaryEstimateInfo.animalType
     : undefined,
@@ -334,6 +335,17 @@ export const useMersEstimateColumnConfiguration = () => {
     type: DataTableColumnConfigurationEntryType.STANDARD as const,
     fieldName: 'primaryEstimateSampleNumerator',
     label: 'Numerator'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'primaryEstimateStudyDesign',
+    label: 'Study Design',
+    valueToColourSchemeClassnameMap: {
+      'Cross-sectional': 'bg-orange-200',
+      'Repeated cross-sectional': 'bg-green-200',
+      'Cohort': 'bg-amber-200',
+    },
+    defaultColourSchemeClassname: 'bg-sky-100',
+    fallbackText: 'Not reported'
   }, {
     type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
     fieldName: 'primaryEstimateCountryOfTravelOrImport',

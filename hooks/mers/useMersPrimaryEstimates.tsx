@@ -23,6 +23,7 @@ export const mersPrimaryEstimates = gql`
           countryAlphaThreeCode
           studyInclusionCriteria
           studyExclusionCriteria
+          studyDesign
           latitude
           longitude
           whoRegion
@@ -91,6 +92,7 @@ export const mersPrimaryEstimates = gql`
           countryAlphaThreeCode
           studyInclusionCriteria
           studyExclusionCriteria
+          studyDesign
           latitude
           longitude
           whoRegion
@@ -159,6 +161,7 @@ export const mersPrimaryEstimates = gql`
           countryAlphaThreeCode
           studyInclusionCriteria
           studyExclusionCriteria
+          studyDesign
           latitude
           longitude
           whoRegion
@@ -231,6 +234,7 @@ export const mersPrimaryEstimates = gql`
           countryAlphaThreeCode
           studyInclusionCriteria
           studyExclusionCriteria
+          studyDesign
           latitude
           longitude
           whoRegion

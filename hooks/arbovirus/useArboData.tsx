@@ -25,6 +25,7 @@ export const arbovirusEstimatesQuery = gql`
       estimateId
       id
       inclusionCriteria
+      studyDesign
       latitude
       longitude
       pathogen

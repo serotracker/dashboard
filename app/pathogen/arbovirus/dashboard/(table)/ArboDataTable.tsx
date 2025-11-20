@@ -124,6 +124,21 @@ const getArboColumnConfiguration = (
   fieldName: 'sampleEndDate',
   label: 'Sampling End Date',
 }, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: 'studyDesign',
+  label: 'Study Design',
+  valueToColourSchemeClassnameMap: {
+    'Cross-sectional': 'bg-orange-200',
+    'Repeated cross-sectional': 'bg-green-200',
+    'Prospective cohort': 'bg-indigo-200',
+    'Retrospective cohort': 'bg-rose-200',
+    'Cross-sectional study with prospective cohort follow-up': 'bg-purple-200',
+    'Case-control': 'bg-amber-200',
+    'Clinical trial': 'bg-lime-200'
+  },
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
+}, {
   type: DataTableColumnConfigurationEntryType.STANDARD as const,
   fieldName: 'whoRegion',
   label: 'WHO Region',
