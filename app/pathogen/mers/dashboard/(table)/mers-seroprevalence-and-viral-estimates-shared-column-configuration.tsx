@@ -136,6 +136,7 @@ export const mapMersEstimateBaseForDataTable = (estimate: MersEstimate) => ({
   primaryEstimateFirstAuthorLastName: estimate.primaryEstimateInfo.firstAuthorFullName.split(' ').at(-1),
   primaryEstimateSourceTitle: estimate.primaryEstimateInfo.sourceTitle,
   primaryEstimateInsitutution: estimate.primaryEstimateInfo.insitutution,
+  primaryEstimateStudyDesign: estimate.primaryEstimateInfo.studyDesign,
   primaryEstimateAnimalType: 'animalType' in estimate.primaryEstimateInfo
     ? estimate.primaryEstimateInfo.animalType
     : undefined,
