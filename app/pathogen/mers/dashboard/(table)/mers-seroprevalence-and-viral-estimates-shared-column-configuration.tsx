@@ -335,6 +335,17 @@ export const useMersEstimateColumnConfiguration = () => {
     fieldName: 'primaryEstimateSampleNumerator',
     label: 'Numerator'
   }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'studyDesign',
+    label: 'Study Design',
+    valueToColourSchemeClassnameMap: {
+      'Cross-sectional': 'bg-orange-200',
+      'Repeated cross-sectional': 'bg-green-200',
+      'Cohort': 'bg-amber-200',
+    },
+    defaultColourSchemeClassname: 'bg-sky-100',
+    fallbackText: 'Not reported'
+  }, {
     type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
     fieldName: 'primaryEstimateCountryOfTravelOrImport',
     valueToColourSchemeClassnameMap: countryNameToColourClassnameMap,

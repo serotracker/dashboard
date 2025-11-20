@@ -18,6 +18,7 @@ export const partitionedSarsCov2Estimates = gql`
         sourceType
         riskOfBias
         populationGroup
+        studyType
         sex
         ageGroup
         country

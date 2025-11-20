@@ -28,6 +28,7 @@ export const partitionedGroupedArbovirusEstimatesQuery = gql`
           estimateId
           id
           inclusionCriteria
+          studyDesign
           latitude
           longitude
           pathogen
@@ -74,6 +75,7 @@ export const partitionedGroupedArbovirusEstimatesQuery = gql`
           estimateId
           id
           inclusionCriteria
+          studyDesign
           latitude
           longitude
           pathogen
