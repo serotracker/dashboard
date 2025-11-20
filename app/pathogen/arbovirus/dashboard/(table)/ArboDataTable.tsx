@@ -1,7 +1,6 @@
 "use client";
 
 import { RowExpansionConfigurationEnabled, TableHeader, TableHeaderType } from "@/components/ui/data-table/data-table";
-import uniq from "lodash/uniq";
 import React, { useContext, useMemo, useState } from "react";
 import { parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
@@ -254,8 +253,6 @@ export const ArboDataTable = () => {
   const router = useRouter();
   const { arbovirusVisualizationInformation } = useVisualizationPageConfiguration();
   const [ arboDataTableType, setArboDataTableType ] = useState<ArbovirusDataTableType>(ArbovirusDataTableType.SEROPREVALENCE);
-
-  console.log('abc', uniq(filteredData.map((element) => element.studyDesign).filter((element) => !!element)))
 
   const tableDataWithConciseEstimateIds = useMemo(() => {
     return filteredData
