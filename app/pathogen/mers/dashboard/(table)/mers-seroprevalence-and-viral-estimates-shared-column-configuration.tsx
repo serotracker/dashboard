@@ -337,7 +337,7 @@ export const useMersEstimateColumnConfiguration = () => {
     label: 'Numerator'
   }, {
     type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-    fieldName: 'studyDesign',
+    fieldName: 'primaryEstimateStudyDesign',
     label: 'Study Design',
     valueToColourSchemeClassnameMap: {
       'Cross-sectional': 'bg-orange-200',
