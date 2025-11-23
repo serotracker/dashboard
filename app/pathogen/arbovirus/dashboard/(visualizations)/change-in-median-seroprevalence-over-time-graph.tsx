@@ -1,6 +1,7 @@
 "use client";
 import React, { useMemo } from "react";
 import { parseISO } from "date-fns";
+import sum from "lodash/sum";
 import { convertArboSFtoArbo, median } from "./recharts";
 import { pathogenColors } from "../(map)/ArbovirusMap";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
@@ -8,6 +9,10 @@ import { SplitTimeBucketedBarChart } from "@/components/customs/visualizations/s
 
 interface ChangeInMedianSeroprevalenceOverTimeGraphProps {
   data: ArbovirusEstimate[];
+}
+
+const formatNumber = (numericValue?: number) => {
+  return (numericValue?.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') ?? 0);
 }
 
 export const ChangeInMedianSeroprevalenceOverTimeGraph = (props: ChangeInMedianSeroprevalenceOverTimeGraphProps): React.ReactNode => {
@@ -48,8 +53,9 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (props: ChangeInMedianS
           return (
             <div className="bg-white p-2 border border-background rounded-lg">
               <p>{values.intervalAsString}</p>
-              <p>{`${payload[0].name} : ${values.valueForBar.toFixed(2)} %`}</p>
-              <p>{`Total Studies Included : ${values.numberOfDataPointsInBar.toFixed(0)}`}</p>
+              <p>{`${payload[0].name}: ${values.valueForBar.toFixed(2)} %`}</p>
+              <p>{`Total Studies Included: ${values.numberOfDataPointsInBar.toFixed(0)}`}</p>
+              <p>{`Sum of Sample Sizes: ${formatNumber(sum(values.dataPoints.map((dataPoint: ArbovirusEstimate) => dataPoint.sampleSize)))}`}</p>
             </div>
           );
         }
