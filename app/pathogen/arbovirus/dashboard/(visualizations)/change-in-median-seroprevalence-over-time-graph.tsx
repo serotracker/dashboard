@@ -44,8 +44,6 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (props: ChangeInMedianS
       numberOfDigitsAfterDecimalPointForOutputValue={2}
       tooltipContentOverride={({ active, payload, label }) => {
         if (active && payload && payload.length) {
-          console.log('payload', payload);
-
           const values = payload[0].payload;
           return (
             <div className="bg-white p-2 border border-background rounded-lg">
