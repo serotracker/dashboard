@@ -42,6 +42,22 @@ export const ChangeInMedianSeroprevalenceOverTimeGraph = (props: ChangeInMedianS
       getChartTitle={(arbovirus) => convertArboSFtoArbo(arbovirus)}
       transformOutputValue={(data) => median(data.map((dataPoint) => dataPoint.seroprevalence * 100))}
       numberOfDigitsAfterDecimalPointForOutputValue={2}
+      tooltipContentOverride={({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+          console.log('payload', payload);
+
+          const values = payload[0].payload;
+          return (
+            <div className="bg-white p-2 border border-background rounded-lg">
+              <p>{values.intervalAsString}</p>
+              <p>{`${payload[0].name} : ${values.valueForBar.toFixed(2)} %`}</p>
+              <p>{`Total Studies Included : ${values.numberOfDataPointsInBar.toFixed(0)}`}</p>
+            </div>
+          );
+        }
+
+        return null;
+      }}
     />
   )
 };
