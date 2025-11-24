@@ -11,8 +11,8 @@ export const cleanGeographicScope = (geographicScope: ArbovirusStudyGeographicSc
 }
 
 export const geographicScopeToColourClassnameMap: Record<string, string> = {
-  'National': 'bg-blue-200',
-  'Regional': 'bg-orange-200',
-  'Local': 'bg-red-200'
+  'National': 'bg-blue-300',
+  'Regional': 'bg-orange-300',
+  'Local': 'bg-red-300'
 }
 
