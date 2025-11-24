@@ -141,7 +141,7 @@ const getArboColumnConfiguration = (
   fallbackText: 'Not reported'
 }, {
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'geographicScope',
+  fieldName: 'cleanedGeographicScope',
   label: 'Geographic Scope',
   valueToColourSchemeClassnameMap: geographicScopeToColourClassnameMap,
   defaultColourSchemeClassname: 'bg-sky-100',
