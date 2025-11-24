@@ -4,6 +4,7 @@ import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts
 import { ArbovirusEstimateType } from "@/gql/graphql";
 import { parseISO } from "date-fns";
 import React, { useMemo } from "react";
+import { cleanGeographicScope, geographicScopeToColourClassnameMap } from "../../utils";
 
 function pathogenFullString(pathogen: string) {
   switch (pathogen) {
@@ -35,10 +36,15 @@ export const ArbovirusEstimatePopupContent = (props: ArbovirusEstimatePopupConte
     seroprevalence,
     pathogen,
     estimateType,
+    geographicScope,
     seroprevalenceStudy95CILower,
     seroprevalenceStudy95CIUpper,
     sampleSize
-  } = props.estimate; 
+  } = props.estimate;
+  
+  const cleanedGeographicScope = useMemo(() => {
+    return cleanGeographicScope(geographicScope);
+  }, [ geographicScope ]);
 
   const topBannerText = useMemo(() => {
     const seroprevalenceText = estimateType === ArbovirusEstimateType.Seroprevalence
@@ -91,8 +97,15 @@ export const ArbovirusEstimatePopupContent = (props: ArbovirusEstimatePopupConte
         title: "Location",
         type: PopUpContentRowType.LOCATION,
         countryName: props.estimate.country ?? 'Unknown',
+        districtName: props.estimate.district ?? undefined,
         stateName: props.estimate.state ?? undefined,
         cityName: props.estimate.city ?? undefined,
+      }, {
+        title: "Geographic Scope",
+        type: PopUpContentRowType.COLOURED_PILL_LIST,
+        values: [ cleanedGeographicScope ],
+        valueToColourClassnameMap: geographicScopeToColourClassnameMap,
+        defaultColourClassname: 'bg-sky-100'
       }, (sampleSize ? {
         title: "Sample Size",
         type: PopUpContentRowType.NUMBER,

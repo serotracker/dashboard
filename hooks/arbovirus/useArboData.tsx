@@ -15,6 +15,7 @@ export const arbovirusEstimatesQuery = gql`
       antigen
       assay
       assayOther
+      geographicScope
       city
       state
       district

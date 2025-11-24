@@ -11,12 +11,13 @@ import { RechartsVisualization } from "@/components/customs/visualizations/recha
 import { ArbovirusVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { useMap } from "react-map-gl";
 import { ArboTrackerCitationButtonContent, shortenedArboTrackerCitationText, suggestedArboTrackerCitationText } from "../../arbotracker-citations";
-import { ArbovirusEstimateType } from "@/gql/graphql";
+import { ArbovirusEstimateType, ArbovirusStudyGeographicScope } from "@/gql/graphql";
 import { assertNever } from "assert-never";
 import { ArboSeroprevalenceDataTable } from "./arbo-seroprevalence-data-table";
 import { ArboViralPrevalenceDataTable } from "./arbo-viral-prevalence-data-table";
 import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 import { DashboardType, dashboardTypeToMapIdMap } from "@/app/pathogen/dashboard-enums";
+import { cleanGeographicScope, geographicScopeToColourClassnameMap } from "../../utils";
 
 export const generateConciseEstimateId = (estimate: ArbovirusEstimate) => {
   const country = estimate.country
@@ -136,6 +137,13 @@ const getArboColumnConfiguration = (
     'Case-control': 'bg-amber-200',
     'Clinical trial': 'bg-lime-200'
   },
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: 'cleanedGeographicScope',
+  label: 'Geographic Scope',
+  valueToColourSchemeClassnameMap: geographicScopeToColourClassnameMap,
   defaultColourSchemeClassname: 'bg-sky-100',
   fallbackText: 'Not reported'
 }, {
@@ -259,7 +267,8 @@ export const ArboDataTable = () => {
       .map((estimate) => ({
         ...estimate,
         conciseEstimateId: generateConciseEstimateId(estimate),
-        location: generateLocationForDataTable(estimate)
+        location: generateLocationForDataTable(estimate),
+        cleanedGeographicScope: cleanGeographicScope(estimate.geographicScope),
       }))
       .filter((estimate) => areSubEstimatesVisible ? true : estimate.isPrimaryEstimate)
   }, [ filteredData, areSubEstimatesVisible ]);

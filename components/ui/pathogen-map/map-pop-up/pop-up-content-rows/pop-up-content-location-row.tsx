@@ -10,20 +10,29 @@ export type PopUpContentLocationRowProps = PopUpContentRowBaseProps & {
   type: PopUpContentRowType.LOCATION,
   cityName: string | undefined;
   stateName: string | undefined;
+  districtName: string | undefined;
   countryName: string;
   contentTextAlignment?: PopupContentTextAlignment;
 }
 
 export const PopUpContentLocationRow = (props: PopUpContentLocationRowProps) => {
-  const { cityName, stateName, countryName } = props;
+  const { cityName, districtName, stateName, countryName } = props;
 
   const content = useMemo(() => {
     if(cityName && stateName) {
       return `${cityName.trim()}, ${stateName.trim()}, ${countryName.trim()}`
     }
 
+    if(districtName && stateName) {
+      return `${districtName.trim()}, ${stateName.trim()}, ${countryName.trim()}`
+    }
+
     if(cityName && !stateName) {
       return `${cityName.trim()}, ${countryName.trim()}`
+    }
+
+    if(districtName && !stateName) {
+      return `${districtName.trim()}, ${countryName.trim()}`
     }
 
     if(!cityName && stateName) {
@@ -31,7 +40,7 @@ export const PopUpContentLocationRow = (props: PopUpContentLocationRowProps) => 
     }
 
     return `${countryName.trim()}`
-  }, [cityName, stateName, countryName]);
+  }, [cityName, districtName, stateName, countryName]);
 
   return (
     <GenericPopUpContentRow
