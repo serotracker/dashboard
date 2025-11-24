@@ -31,6 +31,7 @@ export const MersFaoHumanEventPopupContent = (props: MersFaoHumanEventPopupConte
         title: "Location",
         type: PopUpContentRowType.LOCATION,
         countryName: props.event.country ?? 'Unknown',
+        districtName: undefined,
         stateName: props.event.state,
         cityName: props.event.city
       }, {

@@ -18,6 +18,7 @@ export const partitionedGroupedArbovirusEstimatesQuery = gql`
           antigen
           assay
           assayOther
+          geographicScope
           city
           state
           country
@@ -65,6 +66,7 @@ export const partitionedGroupedArbovirusEstimatesQuery = gql`
           antigen
           assay
           assayOther
+          geographicScope
           city
           state
           country

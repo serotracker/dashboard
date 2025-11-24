@@ -19,6 +19,7 @@ export const partitionedUnravelledGroupedArbovirusEstimates = gql`
         antigen
         assay
         assayOther
+        geographicScope
         city
         state
         district

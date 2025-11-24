@@ -724,6 +724,7 @@ export const useMersEstimateRows = () => {
     title: "Location",
     type: PopUpContentRowType.LOCATION,
     countryName: estimate.primaryEstimateInfo.country,
+    districtName: estimate.primaryEstimateInfo.district ?? undefined,
     stateName: estimate.primaryEstimateInfo.state ?? undefined,
     cityName: estimate.primaryEstimateInfo.city ?? undefined
   }, {

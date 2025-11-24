@@ -72,6 +72,7 @@ export const SarsCov2EstimatePopupContent = (props: SarsCov2EstimatePopupContent
         title: "Location",
         type: PopUpContentRowType.LOCATION,
         countryName: props.estimate.country ?? 'Unknown',
+        districtName: undefined,
         stateName: props.estimate.state ?? undefined,
         cityName: props.estimate.city ?? undefined,
       }, (sampleSize ? {

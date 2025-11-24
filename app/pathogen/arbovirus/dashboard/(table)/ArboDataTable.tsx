@@ -11,7 +11,7 @@ import { RechartsVisualization } from "@/components/customs/visualizations/recha
 import { ArbovirusVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
 import { useMap } from "react-map-gl";
 import { ArboTrackerCitationButtonContent, shortenedArboTrackerCitationText, suggestedArboTrackerCitationText } from "../../arbotracker-citations";
-import { ArbovirusEstimateType } from "@/gql/graphql";
+import { ArbovirusEstimateType, ArbovirusStudyGeographicScope } from "@/gql/graphql";
 import { assertNever } from "assert-never";
 import { ArboSeroprevalenceDataTable } from "./arbo-seroprevalence-data-table";
 import { ArboViralPrevalenceDataTable } from "./arbo-viral-prevalence-data-table";
@@ -42,6 +42,22 @@ const generateLocationForDataTable = (estimate: ArbovirusEstimate) => {
   const { country, district, city, state } = estimate;
 
   return city ?? district ?? state ?? '';
+}
+
+export const cleanGeographicScope = (geographicScope: ArbovirusStudyGeographicScope): string => {
+  const geographicScopeMap = {
+    [ArbovirusStudyGeographicScope.Local]: 'Local',
+    [ArbovirusStudyGeographicScope.Regional]: 'Regional',
+    [ArbovirusStudyGeographicScope.National]: 'National',
+  }
+
+  return geographicScopeMap[geographicScope];
+}
+
+export const geographicScopeToColourClassnameMap: Record<string, string> = {
+  'National': 'bg-blue-200',
+  'Regional': 'bg-orange-200',
+  'Local': 'bg-red-200'
 }
 
 export enum ArbovirusDataTableType {
@@ -135,6 +151,17 @@ const getArboColumnConfiguration = (
     'Cross-sectional study with prospective cohort follow-up': 'bg-purple-200',
     'Case-control': 'bg-amber-200',
     'Clinical trial': 'bg-lime-200'
+  },
+  defaultColourSchemeClassname: 'bg-sky-100',
+  fallbackText: 'Not reported'
+}, {
+  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+  fieldName: 'geographicScope',
+  label: 'Geographic Scope',
+  valueToColourSchemeClassnameMap: {
+    'National': 'bg-blue-200',
+    'Regional': 'bg-orange-200',
+    'Local': 'bg-red-200'
   },
   defaultColourSchemeClassname: 'bg-sky-100',
   fallbackText: 'Not reported'
@@ -259,7 +286,8 @@ export const ArboDataTable = () => {
       .map((estimate) => ({
         ...estimate,
         conciseEstimateId: generateConciseEstimateId(estimate),
-        location: generateLocationForDataTable(estimate)
+        location: generateLocationForDataTable(estimate),
+        cleanedGeographicScope: cleanGeographicScope(estimate.geographicScope),
       }))
       .filter((estimate) => areSubEstimatesVisible ? true : estimate.isPrimaryEstimate)
   }, [ filteredData, areSubEstimatesVisible ]);
