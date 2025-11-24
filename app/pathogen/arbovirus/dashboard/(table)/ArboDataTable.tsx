@@ -17,6 +17,7 @@ import { ArboSeroprevalenceDataTable } from "./arbo-seroprevalence-data-table";
 import { ArboViralPrevalenceDataTable } from "./arbo-viral-prevalence-data-table";
 import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 import { DashboardType, dashboardTypeToMapIdMap } from "@/app/pathogen/dashboard-enums";
+import { cleanGeographicScope, geographicScopeToColourClassnameMap } from "../../utils";
 
 export const generateConciseEstimateId = (estimate: ArbovirusEstimate) => {
   const country = estimate.country
@@ -42,22 +43,6 @@ const generateLocationForDataTable = (estimate: ArbovirusEstimate) => {
   const { country, district, city, state } = estimate;
 
   return city ?? district ?? state ?? '';
-}
-
-export const cleanGeographicScope = (geographicScope: ArbovirusStudyGeographicScope): string => {
-  const geographicScopeMap = {
-    [ArbovirusStudyGeographicScope.Local]: 'Local',
-    [ArbovirusStudyGeographicScope.Regional]: 'Regional',
-    [ArbovirusStudyGeographicScope.National]: 'National',
-  }
-
-  return geographicScopeMap[geographicScope];
-}
-
-export const geographicScopeToColourClassnameMap: Record<string, string> = {
-  'National': 'bg-blue-200',
-  'Regional': 'bg-orange-200',
-  'Local': 'bg-red-200'
 }
 
 export enum ArbovirusDataTableType {
@@ -158,11 +143,7 @@ const getArboColumnConfiguration = (
   type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
   fieldName: 'geographicScope',
   label: 'Geographic Scope',
-  valueToColourSchemeClassnameMap: {
-    'National': 'bg-blue-200',
-    'Regional': 'bg-orange-200',
-    'Local': 'bg-red-200'
-  },
+  valueToColourSchemeClassnameMap: geographicScopeToColourClassnameMap,
   defaultColourSchemeClassname: 'bg-sky-100',
   fallbackText: 'Not reported'
 }, {

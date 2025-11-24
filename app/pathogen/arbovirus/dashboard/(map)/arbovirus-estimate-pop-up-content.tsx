@@ -4,7 +4,7 @@ import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts
 import { ArbovirusEstimateType } from "@/gql/graphql";
 import { parseISO } from "date-fns";
 import React, { useMemo } from "react";
-import { cleanGeographicScope, geographicScopeToColourClassnameMap } from "../(table)/ArboDataTable";
+import { cleanGeographicScope, geographicScopeToColourClassnameMap } from "../../utils";
 
 function pathogenFullString(pathogen: string) {
   switch (pathogen) {
