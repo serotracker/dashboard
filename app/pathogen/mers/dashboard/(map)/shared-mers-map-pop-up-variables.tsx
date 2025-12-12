@@ -532,7 +532,7 @@ const getViralPrevalenceConfidenceIntervalRowText = ({ estimate }: GetViralPreva
     : `${((positivePrevalence95CIUpper ?? positivePrevalenceCalculated95CIUpper ?? 0) * 100).toFixed(3)}%`;
 
   if(!!lowerText && !!upperText) {
-    return `[${upperText}-${lowerText}]`
+    return `[${lowerText}-${upperText}]`
   }
 
   return 'Confidence interval unavailable'
@@ -573,7 +573,7 @@ const getSeroprevalenceConfidenceIntervalRowText = ({ estimate }: GetSeroprevale
     : `${((seroprevalence95CIUpper ?? seroprevalenceCalculated95CIUpper ?? 0) * 100).toFixed(3)}%`;
 
   if(!!lowerText && !!upperText) {
-    return `[${upperText}-${lowerText}]`
+    return `[${lowerText}-${upperText}]`
   }
 
   return 'Confidence interval unavailable'
