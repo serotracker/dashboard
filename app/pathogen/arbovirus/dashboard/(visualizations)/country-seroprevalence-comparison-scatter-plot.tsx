@@ -16,10 +16,15 @@ import { ContentType } from "recharts/types/component/Tooltip";
 import { useChartArbovirusDropdown } from "./chart-arbovirus-dropdown";
 import { ArbovirusEstimate } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { groupDataForRechartsTwice } from "@/components/customs/visualizations/group-data-for-recharts/group-data-for-recharts-twice";
+import { MersSeroprevalenceEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 
 const CountrySeroprevalenceComparisonScatterPlotTooltip: ContentType<string, string> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-    const seroprevalencePayload = payload.find((element) => element.name === 'seroprevalence')?.payload;
+    const seroprevalencePayload: {
+      seroprevalence: number;
+      seroprevalenceCalculated95CILower: number | undefined;
+      seroprevalenceCalculated95CIUpper: number | undefined;
+    } = payload.find((element) => element.name === 'seroprevalence')?.payload;
 
     if(!seroprevalencePayload) {
       return null;
@@ -29,10 +34,19 @@ const CountrySeroprevalenceComparisonScatterPlotTooltip: ContentType<string, str
     const seroprevalenceCalculated95CILower = seroprevalencePayload.seroprevalenceCalculated95CILower;
     const seroprevalenceCalculated95CIUpper = seroprevalencePayload.seroprevalenceCalculated95CIUpper;
 
+    const confidenceIntervalText = (
+      seroprevalenceCalculated95CILower !== null &&
+      seroprevalenceCalculated95CILower !== undefined &&
+      seroprevalenceCalculated95CIUpper !== null &&
+      seroprevalenceCalculated95CIUpper !== undefined
+    )
+      ? ` 95% CI: [{seroprevalenceCalculated95CILower}%, {seroprevalenceCalculated95CIUpper}%] `
+      : ' Confidence interval not given ';
+
     return (
       <div className="bg-white p-4">
         <p> Seroprevalence: {seroprevalence}% </p>
-        <p> 95% CI: [{seroprevalenceCalculated95CILower}%, {seroprevalenceCalculated95CIUpper}%] </p>
+        <p> ${confidenceIntervalText} </p>
       </div>
     );
   }

@@ -9,7 +9,9 @@ import {
   HumanMersSeroprevalenceEstimate,
   HumanMersViralEstimate,
   MersEstimate,
+  MersSeroprevalenceEstimate,
   MersSubEstimateInformation,
+  MersViralEstimate,
   isAnimalMersEstimate,
   isHumanMersAgeGroupSubEstimate,
   isHumanMersEstimate,
@@ -491,7 +493,52 @@ interface GetPrevalenceConfidenceIntervalRowsInput {
   estimate: MersEstimateMapMarkerData;
 }
 
-const getPrevalenceConfidenceIntervalRows = ({ estimate }: GetPrevalenceConfidenceIntervalRowsInput) => isMersViralEstimate(estimate) ? [{
+interface GetSeroprevalenceConfidenceIntervalRowsInput {
+  estimate: MersSeroprevalenceEstimate;
+}
+
+interface GetViralPrevalenceConfidenceIntervalRowsInput {
+  estimate: MersViralEstimate;
+}
+
+interface GetSeroprevalenceConfidenceIntervalRowTextInput {
+  estimate: MersSeroprevalenceEstimate;
+}
+
+interface GetViralPrevalenceConfidenceIntervalRowTextInput {
+  estimate: MersViralEstimate;
+}
+
+const getViralPrevalenceConfidenceIntervalRowText = ({ estimate }: GetViralPrevalenceConfidenceIntervalRowTextInput) => {
+  const {
+    positivePrevalence95CILower,
+    positivePrevalenceCalculated95CILower,
+    positivePrevalence95CIUpper,
+    positivePrevalenceCalculated95CIUpper,
+  } = estimate.primaryEstimateInfo;
+
+  const lowerText = (
+    (positivePrevalence95CILower === null || positivePrevalence95CILower === undefined) &&
+    (positivePrevalenceCalculated95CILower === null || positivePrevalenceCalculated95CILower === undefined)
+  )
+    ? undefined 
+    : `${((positivePrevalence95CILower ?? positivePrevalenceCalculated95CILower ?? 0) * 100).toFixed(3)}%`;
+
+  const upperText = (
+    (positivePrevalence95CIUpper === null || positivePrevalence95CIUpper === undefined) &&
+    (positivePrevalenceCalculated95CIUpper === null || positivePrevalenceCalculated95CIUpper === undefined)
+  )
+    ? undefined 
+    : `${((positivePrevalence95CIUpper ?? positivePrevalenceCalculated95CIUpper ?? 0) * 100).toFixed(3)}%`;
+
+  if(!!lowerText && !!upperText) {
+    return `[${upperText}-${lowerText}]`
+  }
+
+  return 'Confidence interval unavailable'
+}
+
+const getViralPrevalenceConfidenceIntervalRows = ({ estimate }: GetViralPrevalenceConfidenceIntervalRowsInput) => [{
   title: (
     estimate.primaryEstimateInfo.positivePrevalence95CILower !== null &&
     estimate.primaryEstimateInfo.positivePrevalence95CILower !== undefined &&
@@ -500,12 +547,39 @@ const getPrevalenceConfidenceIntervalRows = ({ estimate }: GetPrevalenceConfiden
   ) ? "Positive Prevalence 95% Confidence Interval"
     : "Positive Prevalence 95% Confidence Interval (Calculated using the Clopper-Pearson method)",
   type: PopUpContentRowType.TEXT as const,
-  text: `[
-    ${((estimate.primaryEstimateInfo.positivePrevalence95CILower ?? estimate.primaryEstimateInfo.positivePrevalenceCalculated95CILower) * 100).toFixed(3)}%
-    -
-    ${((estimate.primaryEstimateInfo.positivePrevalence95CIUpper ?? estimate.primaryEstimateInfo.positivePrevalenceCalculated95CIUpper) * 100).toFixed(3)}%
-  ]`
-}] : [{
+  text: getViralPrevalenceConfidenceIntervalRowText({ estimate }),
+}];
+
+const getSeroprevalenceConfidenceIntervalRowText = ({ estimate }: GetSeroprevalenceConfidenceIntervalRowTextInput) => {
+  const {
+    seroprevalence95CILower,
+    seroprevalenceCalculated95CILower,
+    seroprevalence95CIUpper,
+    seroprevalenceCalculated95CIUpper,
+  } = estimate.primaryEstimateInfo;
+
+  const lowerText = (
+    (seroprevalence95CILower === null || seroprevalence95CILower === undefined) &&
+    (seroprevalenceCalculated95CILower === null || seroprevalenceCalculated95CILower === undefined)
+  )
+    ? undefined 
+    : `${((seroprevalence95CILower ?? seroprevalenceCalculated95CILower ?? 0) * 100).toFixed(3)}%`;
+
+  const upperText = (
+    (seroprevalence95CIUpper === null || seroprevalence95CIUpper === undefined) &&
+    (seroprevalenceCalculated95CIUpper === null || seroprevalenceCalculated95CIUpper === undefined)
+  )
+    ? undefined 
+    : `${((seroprevalence95CIUpper ?? seroprevalenceCalculated95CIUpper ?? 0) * 100).toFixed(3)}%`;
+
+  if(!!lowerText && !!upperText) {
+    return `[${upperText}-${lowerText}]`
+  }
+
+  return 'Confidence interval unavailable'
+}
+
+const getSeroprevalenceConfidenceIntervalRows = ({ estimate }: GetSeroprevalenceConfidenceIntervalRowsInput) => [{
   title: (
     estimate.primaryEstimateInfo.seroprevalence95CILower !== null &&
     estimate.primaryEstimateInfo.seroprevalence95CILower !== undefined &&
@@ -514,12 +588,12 @@ const getPrevalenceConfidenceIntervalRows = ({ estimate }: GetPrevalenceConfiden
   ) ? "Seroprevalence 95% Confidence Interval"
     : "Seroprevalence 95% Confidence Interval (Calculated using the Clopper-Pearson method)",
   type: PopUpContentRowType.TEXT as const,
-  text: `[
-    ${((estimate.primaryEstimateInfo.seroprevalence95CILower ?? estimate.primaryEstimateInfo.seroprevalenceCalculated95CILower) * 100).toFixed(3)}%
-    -
-    ${((estimate.primaryEstimateInfo.seroprevalence95CIUpper ?? estimate.primaryEstimateInfo.seroprevalenceCalculated95CIUpper) * 100).toFixed(3)}%
-  ]`
+  text: getSeroprevalenceConfidenceIntervalRowText({ estimate }),
 }];
+
+const getPrevalenceConfidenceIntervalRows = ({ estimate }: GetPrevalenceConfidenceIntervalRowsInput) => isMersViralEstimate(estimate)
+  ? getViralPrevalenceConfidenceIntervalRows({ estimate })
+  : getSeroprevalenceConfidenceIntervalRows({ estimate });
 
 interface GetCountryOfTravelOrImportRowsInput {
   estimate: MersEstimateMapMarkerData;

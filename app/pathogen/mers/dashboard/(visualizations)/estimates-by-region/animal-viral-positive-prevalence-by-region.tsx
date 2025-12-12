@@ -50,6 +50,31 @@ const AnimalViralPositivePrevalenceByRegionTooltip = <
   }
 }
 
+interface GetViralPrevalenceErrorInput {
+  positivePrevalence: number;
+  positivePrevalence95CILower: number | null | undefined;
+  positivePrevalence95CIUpper: number | null | undefined;
+}
+
+export const getViralPrevalenceError = (input: GetViralPrevalenceErrorInput): [string, string] => {
+  const {
+    positivePrevalence,
+    positivePrevalence95CILower,
+    positivePrevalence95CIUpper,
+  } = input;
+
+  const lowerError = positivePrevalence95CILower !== null && positivePrevalence95CILower !== undefined
+    ? `${parseFloat(( positivePrevalence * 100 - positivePrevalence95CILower * 100 ).toFixed(3))}`
+    : `${parseFloat(( positivePrevalence * 100 ).toFixed(3))}`;
+
+  const upperError = positivePrevalence95CIUpper !== null && positivePrevalence95CIUpper !== undefined
+    ? `${parseFloat(( positivePrevalence95CIUpper * 100 - positivePrevalence * 100 ).toFixed(3))}`
+    : `${parseFloat(( positivePrevalence * 100 ).toFixed(3))}`;
+  
+
+  return [ lowerError, upperError ];
+}
+
 interface AnimalViralPositivePrevalenceByRegionProps {
   animalMersViralEstimates: AnimalMersViralEstimate[];
   regionGroupingFunction: (dataPoint: MersEstimate | FaoMersEvent | FaoYearlyCamelPopulationDataEntry) => WhoRegion | UnRegion | string | null | undefined;
@@ -95,16 +120,11 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
         positivePrevalence: parseFloat(
           (dataPoint.primaryEstimateInfo.positivePrevalence * 100).toFixed(3)
         ),
-        positivePrevalenceError: [
-          parseFloat((
-            dataPoint.primaryEstimateInfo.positivePrevalence * 100 -
-            dataPoint.positivePrevalence95CILower * 100
-          ).toFixed(3)),
-          parseFloat((
-            dataPoint.positivePrevalence95CIUpper * 100 - 
-            dataPoint.primaryEstimateInfo.positivePrevalence * 100
-          ).toFixed(3))
-        ],
+        positivePrevalenceError: getViralPrevalenceError({
+          positivePrevalence: dataPoint.primaryEstimateInfo.positivePrevalence,
+          positivePrevalence95CILower: dataPoint.primaryEstimateInfo.positivePrevalence95CILower,
+          positivePrevalence95CIUpper: dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper,
+        }),
         estimateNumber: index + 1
       }))
   , [ animalMersViralEstimates, regionGroupingFunction, regionSortingFunction ]);
