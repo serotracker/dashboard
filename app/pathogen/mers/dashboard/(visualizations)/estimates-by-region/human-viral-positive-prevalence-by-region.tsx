@@ -22,7 +22,6 @@ import { HumanMersViralEstimatePopupContent } from "../../(map)/human-mers-viral
 import { useBarColourAndLegendProps } from "@/components/customs/visualizations/use-bar-colour-and-legend-props";
 import { EstimatesByRegionYAxisTick } from "../estimates-by-region";
 import { generateConciseSourceId } from "../../(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
-import { getViralPrevalenceError } from "./animal-viral-positive-prevalence-by-region";
 
 const HumanViralPositivePrevalenceByRegionTooltip = <
   TValueType extends number | string | Array<number | string>,
@@ -82,9 +81,9 @@ export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePr
         ...dataPoint,
         region: regionGroupingFunction(dataPoint),
         positivePrevalence95CILower:
-          dataPoint.primaryEstimateInfo.positivePrevalence95CILower ?? dataPoint.primaryEstimateInfo.positivePrevalenceCalculated95CILower,
+          dataPoint.primaryEstimateInfo.positivePrevalence95CILower ?? dataPoint.primaryEstimateInfo.positivePrevalenceCalculated95CILower ?? 0,
         positivePrevalence95CIUpper:
-          dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper ?? dataPoint.primaryEstimateInfo.positivePrevalenceCalculated95CIUpper,
+          dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper ?? dataPoint.primaryEstimateInfo.positivePrevalenceCalculated95CIUpper ?? 0,
       }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleFrames.every((sampleFrame) => selectedSampleFrames.includes(sampleFrame)))
@@ -100,11 +99,16 @@ export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePr
         positivePrevalence: parseFloat(
           (dataPoint.primaryEstimateInfo.positivePrevalence * 100).toFixed(3)
         ),
-        positivePrevalenceError: getViralPrevalenceError({
-          positivePrevalence: dataPoint.primaryEstimateInfo.positivePrevalence,
-          positivePrevalence95CILower: dataPoint.primaryEstimateInfo.positivePrevalence95CILower,
-          positivePrevalence95CIUpper: dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper,
-        }),
+        positivePrevalenceError: [
+          parseFloat((
+            dataPoint.primaryEstimateInfo.positivePrevalence * 100 -
+            dataPoint.positivePrevalence95CILower * 100
+          ).toFixed(3)),
+          parseFloat((
+            dataPoint.positivePrevalence95CIUpper * 100 - 
+            dataPoint.primaryEstimateInfo.positivePrevalence * 100
+          ).toFixed(3))
+        ],
         estimateNumber: index + 1
       }))
   , [ humanMersViralEstimates, regionGroupingFunction, selectedSampleFrames, regionSortingFunction ]);

@@ -61,31 +61,6 @@ interface AnimalSeroprevalenceByRegionProps {
   regionSortingFunction: (regionA: WhoRegion | UnRegion | string, regionB: WhoRegion | UnRegion | string) => number;
 }
 
-interface GetSeroprevalenceErrorInput {
-  seroprevalence: number;
-  seroprevalence95CILower: number | null | undefined;
-  seroprevalence95CIUpper: number | null | undefined;
-}
-
-export const getSeroprevalenceError = (input: GetSeroprevalenceErrorInput): [string, string] => {
-  const {
-    seroprevalence,
-    seroprevalence95CILower,
-    seroprevalence95CIUpper,
-  } = input;
-
-  const lowerError = seroprevalence95CILower !== null && seroprevalence95CILower !== undefined
-    ? `${parseFloat(( seroprevalence * 100 - seroprevalence95CILower * 100 ).toFixed(3))}`
-    : `${parseFloat(( seroprevalence * 100 ).toFixed(3))}`;
-
-  const upperError = seroprevalence95CIUpper !== null && seroprevalence95CIUpper !== undefined
-    ? `${parseFloat(( seroprevalence95CIUpper * 100 - seroprevalence * 100 ).toFixed(3))}`
-    : `${parseFloat(( seroprevalence * 100 ).toFixed(3))}`;
-  
-
-  return [ lowerError, upperError ];
-}
-
 export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegionProps) => {
   const { animalMersSeroprevalenceEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault, regionSortingFunction } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
@@ -105,9 +80,9 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
         ...dataPoint,
         region: regionGroupingFunction(dataPoint),
         seroprevalence95CILower:
-          dataPoint.primaryEstimateInfo.seroprevalence95CILower ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CILower,
+          dataPoint.primaryEstimateInfo.seroprevalence95CILower ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CILower ?? 0,
         seroprevalence95CIUpper:
-          dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CIUpper,
+          dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CIUpper ?? 0,
       }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .sort((dataPointA, dataPointB) => {
@@ -122,11 +97,16 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
         seroprevalence: parseFloat(
           (dataPoint.primaryEstimateInfo.seroprevalence * 100).toFixed(3)
         ),
-        seroprevalenceError: getSeroprevalenceError({
-          seroprevalence: dataPoint.primaryEstimateInfo.seroprevalence,
-          seroprevalence95CILower: dataPoint.primaryEstimateInfo.seroprevalence95CILower,
-          seroprevalence95CIUpper: dataPoint.primaryEstimateInfo.seroprevalence95CIUpper,
-        }),
+        seroprevalenceError: [
+          parseFloat((
+            dataPoint.primaryEstimateInfo.seroprevalence * 100 -
+            dataPoint.seroprevalence95CILower * 100
+          ).toFixed(3)),
+          parseFloat((
+            dataPoint.seroprevalence95CIUpper * 100 - 
+            dataPoint.primaryEstimateInfo.seroprevalence * 100
+          ).toFixed(3))
+        ],
         estimateNumber: index + 1
       }))
   , [ animalMersSeroprevalenceEstimates, regionGroupingFunction, regionSortingFunction ]);

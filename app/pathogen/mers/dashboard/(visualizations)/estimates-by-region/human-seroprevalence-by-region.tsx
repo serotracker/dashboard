@@ -22,7 +22,6 @@ import { HumanMersSeroprevalenceEstimatePopupContent } from "../../(map)/human-m
 import { useBarColourAndLegendProps } from "@/components/customs/visualizations/use-bar-colour-and-legend-props";
 import { generateConciseSourceId } from "../../(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { EstimatesByRegionYAxisTick } from "../estimates-by-region";
-import { getSeroprevalenceError } from "./animal-seroprevalence-by-region";
 
 const HumanSeroprevalenceByRegionTooltip = <
   TValueType extends number | string | Array<number | string>,
@@ -82,9 +81,9 @@ export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionPr
         ...dataPoint,
         region: regionGroupingFunction(dataPoint),
         seroprevalence95CILower:
-          dataPoint.primaryEstimateInfo.seroprevalence95CILower ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CILower,
+          dataPoint.primaryEstimateInfo.seroprevalence95CILower ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CILower ?? 0,
         seroprevalence95CIUpper:
-          dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CIUpper,
+          dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CIUpper ?? 0,
       }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleFrames.every((sampleFrame) => selectedSampleFrames.includes(sampleFrame)))
@@ -100,11 +99,16 @@ export const HumanSeroprevalenceByRegion = (props: HumanSeroprevalenceByRegionPr
         seroprevalence: parseFloat(
           (dataPoint.primaryEstimateInfo.seroprevalence * 100).toFixed(3)
         ),
-        seroprevalenceError: getSeroprevalenceError({
-          seroprevalence: dataPoint.primaryEstimateInfo.seroprevalence,
-          seroprevalence95CILower: dataPoint.primaryEstimateInfo.seroprevalence95CILower,
-          seroprevalence95CIUpper: dataPoint.primaryEstimateInfo.seroprevalence95CIUpper,
-        }),
+        seroprevalenceError: [
+          parseFloat((
+            dataPoint.primaryEstimateInfo.seroprevalence * 100 -
+            dataPoint.seroprevalence95CILower * 100
+          ).toFixed(3)),
+          parseFloat((
+            dataPoint.seroprevalence95CIUpper * 100 - 
+            dataPoint.primaryEstimateInfo.seroprevalence * 100
+          ).toFixed(3))
+        ],
         estimateNumber: index + 1
       }))
   , [ humanMersSeroprevalenceEstimates, regionGroupingFunction, selectedSampleFrames, regionSortingFunction ]);
