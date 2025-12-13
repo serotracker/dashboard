@@ -81,9 +81,9 @@ export const HumanViralPositivePrevalenceByRegion = (props: HumanViralPositivePr
         ...dataPoint,
         region: regionGroupingFunction(dataPoint),
         positivePrevalence95CILower:
-          dataPoint.primaryEstimateInfo.positivePrevalence95CILower ?? dataPoint.primaryEstimateInfo.positivePrevalenceCalculated95CILower,
+          dataPoint.primaryEstimateInfo.positivePrevalence95CILower ?? dataPoint.primaryEstimateInfo.positivePrevalenceCalculated95CILower ?? 0,
         positivePrevalence95CIUpper:
-          dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper ?? dataPoint.primaryEstimateInfo.positivePrevalenceCalculated95CIUpper,
+          dataPoint.primaryEstimateInfo.positivePrevalence95CIUpper ?? dataPoint.primaryEstimateInfo.positivePrevalenceCalculated95CIUpper ?? 0,
       }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .filter((dataPoint) => dataPoint.primaryEstimateInfo.sampleFrames.every((sampleFrame) => selectedSampleFrames.includes(sampleFrame)))

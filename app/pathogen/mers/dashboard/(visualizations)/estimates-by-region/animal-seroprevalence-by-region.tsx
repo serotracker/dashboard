@@ -80,9 +80,9 @@ export const AnimalSeroprevalenceByRegion = (props: AnimalSeroprevalenceByRegion
         ...dataPoint,
         region: regionGroupingFunction(dataPoint),
         seroprevalence95CILower:
-          dataPoint.primaryEstimateInfo.seroprevalence95CILower ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CILower,
+          dataPoint.primaryEstimateInfo.seroprevalence95CILower ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CILower ?? 0,
         seroprevalence95CIUpper:
-          dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CIUpper,
+          dataPoint.primaryEstimateInfo.seroprevalence95CIUpper ?? dataPoint.primaryEstimateInfo.seroprevalenceCalculated95CIUpper ?? 0,
       }))
       .filter((dataPoint): dataPoint is Omit<typeof dataPoint, 'region'> & {region: NonNullable<typeof dataPoint['region']>} => !!dataPoint.region)
       .sort((dataPointA, dataPointB) => {
