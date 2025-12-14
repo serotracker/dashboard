@@ -12,13 +12,26 @@ import { CountryInformationContext } from "@/contexts/pathogen-context/country-i
 import { Arbovirus, ArbovirusEstimateType, ArbovirusStudyPopulation } from "@/gql/graphql";
 import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
-import { animalSpeciesToStringMap, animalTypeToStringMap, diagnosisSourceToStringMap, isMersDataType, isMersDataTypeSuperOption, mersDataTypeSuperOptionToLabelMap, mersDataTypeToColourClassnameMapForCheckbox, mersDataTypeToLabelMap, mersDataTypeToSortOrderMap, mersDataTypeToSuperOptionMap, mersMapPointVisibilitySettingToHiddenOptionsMap } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
+import {
+  animalSpeciesToStringMap,
+  animalTypeToStringMap,
+  diagnosisSourceToStringMap,
+  isMersDataType,
+  isMersDataTypeSuperOption,
+  mersDataTypeSuperOptionToLabelMap,
+  mersDataTypeToColourClassnameMapForCheckbox,
+  mersDataTypeToSortOrderMap,
+  mersDataTypeToSuperOptionMap,
+  mersMapPointVisibilitySettingToHiddenOptionsMap,
+  useMersDataTypeToLabelMap
+} from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
 import { UNRegionsTooltip, WHORegionsTooltip } from "../tooltip-content";
 import { GroupedColouredCheckboxFilter } from "./grouped-coloured-checkbox-filter";
 import { MersMapCustomizationsContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context";
 import { isMersMacroSampleFrameType, MersMacroSampleFramesContext, MersMacroSampleFrameType, mersMacroSampleFrameTypeToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-macro-sample-frames-context";
 import { isMersAssayClassification, MersAssayClassification, MersAssayClassificationContext, mersAssayClassificationToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-assay-classification-content";
 import { PositivePrevalenceFilterOptions } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-data-filtering";
+import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -256,9 +269,11 @@ export const useAvailableFilters = () => {
     mapDataPointVisibilitySetting,
     setMapDataPointVisibilitySetting
   } = useContext(MersMapCustomizationsContext);
+  const { mersDataTypeToLabelMap } = useMersDataTypeToLabelMap();
 
   const { getMacroSampleFramesForSampleFrame } = useContext(MersMacroSampleFramesContext);
   const { getAssayClassificationsForAssay } = useContext(MersAssayClassificationContext);
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
 
   const availableFilters: {[key in FilterableField]: FieldInformation } = {
     [FilterableField.pathogen]: {
@@ -575,7 +590,9 @@ export const useAvailableFilters = () => {
     },
     [FilterableField.animalType]: {
       field: FilterableField.animalType,
-      label: "Animal Type",
+      label: areNonCamelAnimalsIncluded
+        ? "Animal Type"
+        : "Camel Type",
       valueToLabelMap: animalTypeToStringMap,
       filterRenderingFunction: MultiSelectFilter
     },

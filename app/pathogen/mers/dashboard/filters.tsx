@@ -13,6 +13,7 @@ import { FilterableField } from "@/components/customs/filters/available-filters"
 import { MersMapCustomizationsContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/map-customizations-context";
 import { MapDataPointVisibilityOptions, MersMapCountryHighlightingSettings } from "./(map)/use-mers-map-customization-modal";
 import { PositivePrevalenceFilterOptions } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-data-filtering";
+import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 interface MersFiltersProps {
   className?: string;
@@ -111,6 +112,8 @@ export const MersFilters = (props: MersFiltersProps) => {
     ) || currentMapCountryHighlightingSettings === MersMapCountryHighlightingSettings.MERS_ANIMAL_CASES
   ), [ currentMapCountryHighlightingSettings, selectedDataTypes, mapDataPointVisibilitySetting ]);
 
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
+
   const filterSections = useMemo(() => {
     const filterSectionsArray: FilterSectionConfiguration[] = [];
 
@@ -147,7 +150,9 @@ export const MersFilters = (props: MersFiltersProps) => {
 
     if(areAnimalEstimatesVisibleOnMap) {
       filterSectionsArray.push({
-        headerText: 'Animal Estimates',
+        headerText: areNonCamelAnimalsIncluded
+          ? 'Animal Estimates'
+          : 'Camel Estimates',
         headerTooltipText: 'Filters that only apply to animal seroprevalence and viral estimates.',
         includedFilters:  areAnimalEventsVisibleOnMap
           ? animalEstimatesFilters
@@ -171,14 +176,16 @@ export const MersFilters = (props: MersFiltersProps) => {
       areAnimalEventsVisibleOnMap
     ) {
       filterSectionsArray.push({
-        headerText: 'Animal Data',
+        headerText: areNonCamelAnimalsIncluded
+          ? 'Animal Data'
+          : 'Camel Data',
         headerTooltipText: 'Filters that only apply to animal seroprevalence and viral estimates as well as animal cases.',
         includedFilters: animalCaseFilters
       });
     }
 
     return filterSectionsArray;
-  }, [ areAnimalEstimatesVisibleOnMap, areAnimalEventsVisibleOnMap, areHumanEstimatesVisibleOnMap, areHumanEventsVisibleOnMap ]);
+  }, [ areAnimalEstimatesVisibleOnMap, areAnimalEventsVisibleOnMap, areHumanEstimatesVisibleOnMap, areHumanEventsVisibleOnMap, areNonCamelAnimalsIncluded ]);
 
   return (
     <Filters

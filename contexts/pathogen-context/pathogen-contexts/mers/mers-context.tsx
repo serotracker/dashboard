@@ -11,7 +11,7 @@ import { filterData } from "../../filter-update-steps/apply-new-selected-filters
 import { addActionToSelectedFilters } from "../../filter-update-steps/add-action-to-selected-filters";
 import { adjustMapPosition } from "../../filter-update-steps/adjust-map-position";
 import { useMersPrimaryEstimates } from "@/hooks/mers/useMersPrimaryEstimates";
-import { MersPrimaryEstimatesQuery, PartitionedFaoMersEventsQuery } from "@/gql/graphql";
+import { MersAnimalSpecies, MersPrimaryEstimatesQuery, PartitionedFaoMersEventsQuery } from "@/gql/graphql";
 import { filterMersEstimates } from "./mers-data-filtering";
 import { MersMapCustomizationsProvider } from "./map-customizations-context";
 import { MersMacroSampleFramesProvider } from "./mers-macro-sample-frames-context";
@@ -31,6 +31,10 @@ const initialMersContextState = {
       "AnimalMersEvent",
       "HumanMersEvent"
     ],
+    ['animalSpecies']: [
+      MersAnimalSpecies.BactrianCamel,
+      MersAnimalSpecies.DromedaryCamel
+    ]
   },
   dataFiltered: false,
 }
