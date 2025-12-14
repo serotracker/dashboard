@@ -55,9 +55,20 @@ export const MersFilterMetadataProvider = (props: MersFilterMetadataProviderProp
       }
     }
 
+    let numberOfFiltersAppliedToShow = numberOfNonTypenameFiltersApplied;
+
+    if(
+      !!selectedFilters['animalSpecies'] &&
+      selectedFilters['animalSpecies'].length === 2 &&
+      selectedFilters['animalSpecies'].includes(MersAnimalSpecies.BactrianCamel) &&
+      selectedFilters['animalSpecies'].includes(MersAnimalSpecies.DromedaryCamel)
+    ) {
+      numberOfFiltersAppliedToShow = numberOfFiltersAppliedToShow - 1;
+    }
+
     return {
       enabled: true,
-      buttonText: `Reset all filters (${numberOfNonTypenameFiltersApplied} currently applied)`,
+      buttonText: `Reset all filters (${numberOfFiltersAppliedToShow} currently applied)`,
       onClick: () => dispatch({
         type: PathogenContextActionType.RESET_FILTERS,
         payload: {
@@ -68,7 +79,7 @@ export const MersFilterMetadataProvider = (props: MersFilterMetadataProviderProp
         }
       })
     }
-  }, [ numberOfNonTypenameFiltersApplied, data?.mersPrimaryEstimates, dispatch, faoMersEvents ])
+  }, [ numberOfNonTypenameFiltersApplied, data?.mersPrimaryEstimates, dispatch, faoMersEvents, selectedFilters ]);
   
   const visualizationFootnote = useMemo(() => {
     return numberOfNonTypenameFiltersApplied !== 0

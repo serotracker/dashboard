@@ -32,6 +32,7 @@ export interface SelectFilterProps<
   optionToSuperOptionFunction?: (option: string) => string;
   sorted?: boolean;
   superOptionToLabelMap?: (superOption: string) => string;
+  superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
 }
 
 export const SelectFilter = <
@@ -93,6 +94,7 @@ export const SelectFilter = <
       singleSelect={[SelectFilterType.SINGLE_SELECT, SelectFilterType.BOOLEAN_SELECT].includes(props.selectFilterType)}
       optionToSuperOptionFunction={props.optionToSuperOptionFunction}
       superOptionToLabelMap={props.superOptionToLabelMap}
+      superOptionSortingFunction={props.superOptionSortingFunction}
     />
   </GenericFilter>
 )
