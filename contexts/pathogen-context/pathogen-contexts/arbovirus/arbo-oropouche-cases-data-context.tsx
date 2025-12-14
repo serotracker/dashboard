@@ -56,7 +56,7 @@ export const ArbovirusOropoucheCasesDataProvider = (props: ArbovirusOropoucheCas
         .then((response): Promise<ArbovirusOropoucheCasesDataContextType['oropoucheCasesGeoJSONData']> => response.json())
         .then((responseJson) => setOropoucheCasesGeoJSONData(responseJson))
     }
-  }, [ oropoucheCasesGeoJSONData, setOropoucheCasesGeoJSONData, process ]);
+  }, [ oropoucheCasesGeoJSONData, setOropoucheCasesGeoJSONData ]);
   
   const { mapColourBuckets: oropoucheCaseLayerColourBuckets } = useMemo(() => {
     if(!oropoucheCasesGeoJSONData) {

@@ -18,7 +18,7 @@ import {
   diagnosisSourceToStringMap,
   isMersDataType,
   isMersDataTypeSuperOption,
-  mersDataTypeSuperOptionToLabelMap,
+  useMersDataTypeSuperOptionToLabelMap,
   mersDataTypeToColourClassnameMapForCheckbox,
   mersDataTypeToSortOrderMap,
   mersDataTypeToSuperOptionMap,
@@ -265,15 +265,12 @@ const scopeToLabelForFilter: Record<string, string | undefined> = {
 
 export const useAvailableFilters = () => {
   const { countryAlphaTwoCodeToCountryNameMap } = useContext(CountryInformationContext);
-  const {
-    mapDataPointVisibilitySetting,
-    setMapDataPointVisibilitySetting
-  } = useContext(MersMapCustomizationsContext);
+  const { mapDataPointVisibilitySetting } = useContext(MersMapCustomizationsContext);
   const { mersDataTypeToLabelMap } = useMersDataTypeToLabelMap();
-
   const { getMacroSampleFramesForSampleFrame } = useContext(MersMacroSampleFramesContext);
   const { getAssayClassificationsForAssay } = useContext(MersAssayClassificationContext);
   const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
+  const { mersDataTypeSuperOptionToLabelMap } = useMersDataTypeSuperOptionToLabelMap();
 
   const availableFilters: {[key in FilterableField]: FieldInformation } = {
     [FilterableField.pathogen]: {

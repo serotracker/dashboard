@@ -445,9 +445,19 @@ export const mersDataTypeToSuperOptionMap = {
   "AnimalMersEvent": MersDataTypeSuperOption.ANIMAL
 }
 
-export const mersDataTypeSuperOptionToLabelMap = {
-  [MersDataTypeSuperOption.HUMAN]: "Human Data",
-  [MersDataTypeSuperOption.ANIMAL]: "Animal Data"
+export const useMersDataTypeSuperOptionToLabelMap = () => {
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
+
+  const mersDataTypeSuperOptionToLabelMap = {
+    [MersDataTypeSuperOption.HUMAN]: "Human Data",
+    [MersDataTypeSuperOption.ANIMAL]: areNonCamelAnimalsIncluded
+      ? "Animal Data"
+      : "Animal Data",
+  }
+
+  return {
+    mersDataTypeSuperOptionToLabelMap
+  }
 }
 
 export const mersDataTypeToColourClassnameMap = {
