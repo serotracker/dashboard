@@ -244,7 +244,9 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
           ? "Animal Seroprevalence Estimates"
           : "Camel Seroprevalence Estimates",
         [EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE]: "Human Viral Prevalence Estimates",
-        [EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE]: "Animal Viral Prevalence Estimates",
+        [EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE]: areNonCamelAnimalsIncluded
+          ? "Animal Viral Prevalence Estimates"
+          : "Camel Viral Prevalence Estimates",
       },
       onDropdownOptionChange: (option) => {
         setEstimatesByRegionVariableOfInterest(option);
