@@ -452,7 +452,7 @@ export const useMersDataTypeSuperOptionToLabelMap = () => {
     [MersDataTypeSuperOption.HUMAN]: "Human Data",
     [MersDataTypeSuperOption.ANIMAL]: areNonCamelAnimalsIncluded
       ? "Animal Data"
-      : "Animal Data",
+      : "Camel Data",
   }
 
   return {
