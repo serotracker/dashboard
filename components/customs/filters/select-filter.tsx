@@ -77,6 +77,15 @@ export const SelectFilter = <
         ? pipe(
           props.filterOptions,
           (data) => data.filter(<T extends unknown>(filterOption: T | undefined | null): filterOption is T => filterOption !== undefined && filterOption !== null),
+          (data) => data.filter((option) => {
+            const selected = props.state.selectedFilters[props.filter];
+
+            if(!selected) {
+              return true;
+            }
+
+            return !selected.includes(option);
+          }),
           props.sorted === undefined || props.sorted === true ? (data) => data.sort() : (data) => data
         ) : [BooleanSelectOptionString.TRUE, BooleanSelectOptionString.FALSE]
       }

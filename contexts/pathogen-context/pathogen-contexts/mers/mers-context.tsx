@@ -31,10 +31,7 @@ const initialMersContextState = {
       "AnimalMersEvent",
       "HumanMersEvent"
     ],
-    ['animalSpecies']: [
-      MersAnimalSpecies.BactrianCamel,
-      MersAnimalSpecies.DromedaryCamel
-    ]
+    ['animalSpecies']: [MersAnimalSpecies.BactrianCamel, MersAnimalSpecies.DromedaryCamel],
   },
   dataFiltered: false,
 }
@@ -192,71 +189,82 @@ const MersDataFetcher = (props: PathogenDataFetcherProps<MersEstimate, MersConte
       && props.state.filteredData.length === 0
       && !props.state.dataFiltered
     ) {
+      const dataForAction = {
+        mersEstimates: data.mersPrimaryEstimates.map((primaryEstimate) => ({
+          ...primaryEstimate,
+          geographicalAreaSubestimates: primaryEstimate.geographicalAreaSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          sexSubestimates: primaryEstimate.sexSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          ageGroupSubestimates: primaryEstimate.ageGroupSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          animalSpeciesSubestimates: primaryEstimate.animalSpeciesSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          testUsedSubestimates: primaryEstimate.testUsedSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          timeFrameSubestimates: primaryEstimate.timeFrameSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          sampleTypeSubestimates: primaryEstimate.sampleTypeSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          animalSourceLocationSubestimates: primaryEstimate.animalSourceLocationSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          animalSamplingContextSubestimates: primaryEstimate.animalSamplingContextSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          occupationSubestimates: primaryEstimate.occupationSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          camelExposureLevelSubestimates: primaryEstimate.camelExposureLevelSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          nomadismSubestimates: primaryEstimate.nomadismSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+          humanCountriesOfTravelSubestimates: primaryEstimate.humanCountriesOfTravelSubestimates.map((subestimate) => ({
+            ...subestimate,
+            markedAsFiltered: false,
+          })),
+        })),
+        faoMersEventData: faoMersEvents
+      };
+
       props.dispatch({
         type: PathogenContextActionType.INITIAL_DATA_FETCH,
         payload: {
-          data: {
-            mersEstimates: data.mersPrimaryEstimates.map((primaryEstimate) => ({
-              ...primaryEstimate,
-              geographicalAreaSubestimates: primaryEstimate.geographicalAreaSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              sexSubestimates: primaryEstimate.sexSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              ageGroupSubestimates: primaryEstimate.ageGroupSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              animalSpeciesSubestimates: primaryEstimate.animalSpeciesSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              testUsedSubestimates: primaryEstimate.testUsedSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              timeFrameSubestimates: primaryEstimate.timeFrameSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              sampleTypeSubestimates: primaryEstimate.sampleTypeSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              animalSourceLocationSubestimates: primaryEstimate.animalSourceLocationSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              animalSamplingContextSubestimates: primaryEstimate.animalSamplingContextSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              occupationSubestimates: primaryEstimate.occupationSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              camelExposureLevelSubestimates: primaryEstimate.camelExposureLevelSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              nomadismSubestimates: primaryEstimate.nomadismSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-              humanCountriesOfTravelSubestimates: primaryEstimate.humanCountriesOfTravelSubestimates.map((subestimate) => ({
-                ...subestimate,
-                markedAsFiltered: false,
-              })),
-            })),
-            faoMersEventData: faoMersEvents
-          }
+          data: dataForAction,
         }
       });
+
+      props.dispatch({
+        type: PathogenContextActionType.UPDATE_FILTER,
+        payload: {
+          filter: 'animalSpecies',
+          value: [MersAnimalSpecies.BactrianCamel, MersAnimalSpecies.DromedaryCamel],
+          data: dataForAction,
+        },
+      });
     }
-  }, [ data, faoMersEvents ]);
+  }, [ data, faoMersEvents, props ]);
 
   return (
     <>
@@ -364,7 +372,7 @@ export const MersProviders = (props: MersProvidersProps) => {
           initialMersContextState.selectedFilters
         ),
         selectedFilters: initialMersContextState.selectedFilters,
-        dataFiltered: false,
+        dataFiltered: true,
       })}
       dataFetcher={MersDataFetcher}
     >
