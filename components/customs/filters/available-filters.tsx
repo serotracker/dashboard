@@ -615,7 +615,7 @@ export const useAvailableFilters = () => {
           ? mersAnimalSpeciesGroupToSortOrderMap[superOptionB]
           : mersAnimalSpeciesGroupToSortOrderMap[MersAnimalSpeciesGroup.UNCATEGORIZED];
 
-        return valueForOptionA - valueForOptionB;
+        return valueForOptionB - valueForOptionA;
       },
       superOptionToLabelMap: (superOption: string) => isMersAnimalSpeciesGroup(superOption)
         ? mersAnimalSpeciesGroupToLabelMap[superOption]
