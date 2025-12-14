@@ -1,5 +1,5 @@
 import { useState, useContext, useCallback } from "react";
-import { Map, MapProps, NavigationControl, ViewStateChangeEvent } from "react-map-gl";
+import { Map, MapProps, NavigationControl, ViewStateChangeEvent } from "react-map-gl/mapbox";
 import {
   PathogenMapCursor,
   usePathogenMapMouse,

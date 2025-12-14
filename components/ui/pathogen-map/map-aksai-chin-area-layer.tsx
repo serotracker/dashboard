@@ -1,4 +1,4 @@
-import { Source, Layer, LayerProps } from "react-map-gl";
+import { Source, Layer, LayerProps } from "react-map-gl/mapbox";
 import { PaintForCountries } from "./pathogen-map";
 import { useEffect, useState } from "react";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";

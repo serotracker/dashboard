@@ -1,6 +1,6 @@
 import { ColourBucket, generateMapColourBuckets } from "@/components/ui/pathogen-map/country-highlight-layers/generate-map-colour-buckets";
 import { createContext, useEffect, useState, useMemo } from "react";
-import { Layer, Source } from "react-map-gl";
+import { Layer, Source } from "react-map-gl/mapbox";
 import { rose } from "tailwindcss/colors";
 
 type OropoucheCaseGeoJsonFeature = {

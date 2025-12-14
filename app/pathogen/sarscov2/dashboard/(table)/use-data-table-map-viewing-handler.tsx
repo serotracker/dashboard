@@ -1,4 +1,4 @@
-import { useMap } from "react-map-gl";
+import { useMap } from "react-map-gl/mapbox";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { Row } from "@tanstack/react-table";
