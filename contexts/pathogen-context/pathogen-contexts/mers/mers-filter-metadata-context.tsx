@@ -66,6 +66,12 @@ export const MersFilterMetadataProvider = (props: MersFilterMetadataProviderProp
       numberOfFiltersAppliedToShow = numberOfFiltersAppliedToShow - 1;
     }
 
+    if(numberOfNonTypenameFiltersApplied === 0) {
+      return {
+        enabled: false
+      }
+    }
+
     return {
       enabled: true,
       buttonText: `Reset all filters (${numberOfFiltersAppliedToShow} currently applied)`,
