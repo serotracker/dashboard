@@ -9,7 +9,7 @@ import { DataTableColumnConfigurationEntryType } from "@/components/ui/data-tabl
 import { ToastId } from "@/contexts/toast-provider";
 import { RechartsVisualization } from "@/components/customs/visualizations/recharts-visualization";
 import { ArbovirusVisualizationId, getUrlParameterFromVisualizationId, useVisualizationPageConfiguration } from "../../visualizations/visualization-page-config";
-import { useMap } from "react-map-gl";
+import { useMap } from "react-map-gl/mapbox";
 import { ArboTrackerCitationButtonContent, shortenedArboTrackerCitationText, suggestedArboTrackerCitationText } from "../../arbotracker-citations";
 import { ArbovirusEstimateType, ArbovirusStudyGeographicScope } from "@/gql/graphql";
 import { assertNever } from "assert-never";

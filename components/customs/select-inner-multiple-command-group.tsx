@@ -41,12 +41,15 @@ export const SelectInnerMultipleCommandGroup = (props: SelectInnerMultipleComman
   const allSuperOptions = useMemo(() => {
     return uniq(
       selectablesWithSuperOptions.map((selectable) => selectable.superOption)
-    ).sort((superOptionA, superOptionB) => superOptionSortingFunction
-      ? superOptionSortingFunction(superOptionA, superOptionA)
-      : 0
-    )
-  }, [ selectablesWithSuperOptions, superOptionSortingFunction ]);
+    ).sort((superOptionA, superOptionB) => {
+      if(superOptionSortingFunction) {
+        return superOptionSortingFunction(superOptionA, superOptionB)
+      }
 
+      return 0;
+    })
+  }, [ selectablesWithSuperOptions, superOptionSortingFunction ]);
+  
   return (
     <div
       className={cn("h-full overflow-auto", className)}

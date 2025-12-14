@@ -25,7 +25,6 @@ import { CountryPaintChangeSetting, useArbovirusMapCustomizationModal } from "./
 import { ArbovirusEnvironmentalSuitabilityCountryDataContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-environmental-suitability-country-data-context";
 import { CountryDataContext } from "@/contexts/pathogen-context/country-information-context";
 import { ArbovirusOropoucheCasesDataContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-oropouche-cases-data-context";
-import { Layer, Source } from "react-map-gl";
 import { mapColourBucketsToLinearGradientConfiguration } from "@/components/ui/pathogen-map/country-highlight-layers/map-colour-buckets-to-linear-gradient-configuration";
 import { useGroupedArbovirusEstimateData } from "../../use-arbo-primary-estimate-data";
 import { MapSectionComponentProps } from "@/app/pathogen/generic-pathogen-dashboard-page";

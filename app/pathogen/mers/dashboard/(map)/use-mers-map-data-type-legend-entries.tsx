@@ -10,6 +10,7 @@ import {
 } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { MapDataPointVisibilityOptions } from "./use-mers-map-customization-modal";
 import { MapPinColours } from "./mers-map";
+import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 const CamelIcon = () => (
   <svg
@@ -261,6 +262,8 @@ export const useMersMapDataTypeLegendEntries = (
     )
   ), [ faoMersEventData, mapDataPointVisibilitySetting ]);
 
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
+
   const dataTypeLayerLegendEntries = [
     ...(hasHumanMersSeroprevalenceEstimates ? [{
       description: 'Human Seroprevalence Estimate',
@@ -278,12 +281,16 @@ export const useMersMapDataTypeLegendEntries = (
       icon: HumanIcon
     }] : []),
     ...(hasAnimalMersSeroprevalenceEstimates ? [{
-      description: 'Animal Seroprevalence Estimate',
+      description: areNonCamelAnimalsIncluded
+        ? 'Animal Seroprevalence Estimate'
+        : 'Camel Seroprevalence Estimate',
       colour: MapPinColours['PrimaryAnimalMersSeroprevalenceEstimateInformation'],
       icon: CamelIcon
     }] : []),
     ...(hasAnimalMersViralEstimates ? [{
-      description: 'Animal Viral Estimate',
+      description: areNonCamelAnimalsIncluded
+        ? 'Animal Viral Estimate'
+        : 'Camel Viral Estimate',
       colour: MapPinColours['PrimaryAnimalMersViralEstimateInformation'],
       icon: CamelIcon
     }] : []),

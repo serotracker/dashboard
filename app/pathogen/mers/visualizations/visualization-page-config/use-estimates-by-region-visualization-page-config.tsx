@@ -196,6 +196,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       : ' ';
   }, [ numberOfNonTypenameFiltersApplied, cleanedChosenDropdownOption ])
 
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
 
   const getDisplayNameForEstimatesByRegion: MersVisualizationInformation<
     string,
@@ -239,9 +240,13 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       chosenDropdownOption: cleanedChosenDropdownOption,
       dropdownOptionToLabelMap: {
         [EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_SEROPREVALENCE]: "Human Seroprevalence Estimates",
-        [EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE]: "Animal Seroprevalence Estimates",
+        [EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_SEROPREVALENCE]: areNonCamelAnimalsIncluded
+          ? "Animal Seroprevalence Estimates"
+          : "Camel Seroprevalence Estimates",
         [EstimatesByRegionVariableOfInterestDropdownOption.HUMAN_VIRAL_PREVALENCE]: "Human Viral Prevalence Estimates",
-        [EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE]: "Animal Viral Prevalence Estimates",
+        [EstimatesByRegionVariableOfInterestDropdownOption.ANIMAL_VIRAL_PREVALENCE]: areNonCamelAnimalsIncluded
+          ? "Animal Viral Prevalence Estimates"
+          : "Camel Viral Prevalence Estimates",
       },
       onDropdownOptionChange: (option) => {
         setEstimatesByRegionVariableOfInterest(option);
@@ -308,7 +313,7 @@ export const useEstimatesByRegionVisualizationPageConfig = () => {
       }
     },
     afterAllDropdownsHeaderText: " With 95% Confidence Intervals"
-  }), [ cleanedChosenDropdownOption, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion, availableDropdownOptionGroups, estimatesByRegionSelectedAssayClassification, assayClassificationOptions, availableSampleFrames, estimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame ])
+  }), [ cleanedChosenDropdownOption, setEstimatesByRegionVariableOfInterest, estimatesByRegionSelectedRegion, setEstimatesByRegionSelectedRegion, availableDropdownOptionGroups, estimatesByRegionSelectedAssayClassification, assayClassificationOptions, availableSampleFrames, estimatesByRegionSelectedAnimalSampleFrameOrMacroSampleFrame, areNonCamelAnimalsIncluded ])
 
   const renderVisualizationForEstimatesByRegion: MersVisualizationInformation<
     string,

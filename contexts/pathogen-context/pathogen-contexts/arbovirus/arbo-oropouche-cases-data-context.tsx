@@ -1,6 +1,6 @@
 import { ColourBucket, generateMapColourBuckets } from "@/components/ui/pathogen-map/country-highlight-layers/generate-map-colour-buckets";
 import { createContext, useEffect, useState, useMemo } from "react";
-import { Layer, Source } from "react-map-gl";
+import { Layer, Source } from "react-map-gl/mapbox";
 import { rose } from "tailwindcss/colors";
 
 type OropoucheCaseGeoJsonFeature = {
@@ -56,7 +56,7 @@ export const ArbovirusOropoucheCasesDataProvider = (props: ArbovirusOropoucheCas
         .then((response): Promise<ArbovirusOropoucheCasesDataContextType['oropoucheCasesGeoJSONData']> => response.json())
         .then((responseJson) => setOropoucheCasesGeoJSONData(responseJson))
     }
-  }, [ oropoucheCasesGeoJSONData, setOropoucheCasesGeoJSONData, process ]);
+  }, [ oropoucheCasesGeoJSONData, setOropoucheCasesGeoJSONData ]);
   
   const { mapColourBuckets: oropoucheCaseLayerColourBuckets } = useMemo(() => {
     if(!oropoucheCasesGeoJSONData) {

@@ -16,7 +16,7 @@ import {
   isMersDiagnosisStatus,
   isMersEventAnimalType,
   isMersEventTypename,
-  mersDataTypeToLabelMap,
+  useMersDataTypeToLabelMap,
   mersDataTypeToColourClassnameMap,
   isMersAnimalSpecies
 } from "../(map)/shared-mers-map-pop-up-variables";
@@ -28,100 +28,111 @@ import { VisualizationDisplayNameType } from "@/app/pathogen/generic-pathogen-vi
 import { FaoMersEventForTable, unformatMersEventDataFromTable } from "./use-mers-data-table-data";
 import { MersFilterMetadataContext, MersFilterMetadataProvider } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
-const mersCasesColumnConfiguration = [{
-  type: DataTableColumnConfigurationEntryType.DATE as const,
-  fieldName: 'reportDate',
-  label: 'Report Date',
-  isFixed: true,
-  isHideable: false,
-  size: 200
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: '__typename',
-  valueToDisplayLabel: (typename: string) => isMersEventTypename(typename) ? mersDataTypeToLabelMap[typename] : typename,
-  valueToColourSchemeClassnameMap: mersDataTypeToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Event Type'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'whoRegion',
-  label: 'WHO Region',
-  valueToColourSchemeClassnameMap: {
-    [WhoRegion.Afr]: "bg-who-region-afr",
-    [WhoRegion.Amr]: "bg-who-region-amr",
-    [WhoRegion.Emr]: "bg-who-region-emr",
-    [WhoRegion.Eur]: "bg-who-region-eur",
-    [WhoRegion.Sear]: "bg-who-region-sear",
-    [WhoRegion.Wpr]: "bg-who-region-wpr text-white"
-  },
-  defaultColourSchemeClassname: 'bg-sky-100'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'city',
-  label: 'City'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'state',
-  label: 'State'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'country',
-  label: 'Country or Area'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'latitude',
-  label: 'Latitude'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'longitude',
-  label: 'Longitude'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'diagnosisStatus',
-  valueToDisplayLabel: (diagnosisStatus: string) => isMersDiagnosisStatus(diagnosisStatus) ? diagnosisStatusToStringMap[diagnosisStatus] : diagnosisStatus,
-  valueToColourSchemeClassnameMap: diagnosisStatusToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Diagnosis Status'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'diagnosisSource',
-  valueToDisplayLabel: (diagnosisSource: string) => isMersDiagnosisSource(diagnosisSource) ? diagnosisSourceToStringMap[diagnosisSource] : diagnosisSource,
-  valueToColourSchemeClassnameMap: diagnosisSourceToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Diagnosis Source'
-}, {
-  type: DataTableColumnConfigurationEntryType.DATE as const,
-  fieldName: 'observationDate',
-  label: 'Observation Date'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
-  fieldName: 'animalType',
-  valueToDisplayLabel: (animalType: string) => isMersEventAnimalType(animalType) ? animalTypeToStringMap[animalType] : animalType,
-  valueToColourSchemeClassnameMap: animalTypeToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Animal Type'
-}, {
-  type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
-  fieldName: 'animalSpecies',
-  valueToDisplayLabel: (animalSpecies: string) => isMersAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
-  valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,
-  defaultColourSchemeClassname: "bg-sky-100",
-  label: 'Animal Species'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'humansAffected',
-  label: 'Humans Affected'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'humanDeaths',
-  label: 'Humans Deaths'
-}, {
-  type: DataTableColumnConfigurationEntryType.STANDARD as const,
-  fieldName: 'id',
-  label: 'ID',
-  isHideable: false,
-  initiallyVisible: false
-}];
+const useMersCasesColumnConfiguration = () => {
+  const { mersDataTypeToLabelMap } = useMersDataTypeToLabelMap();
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
+
+  const mersCasesColumnConfiguration = [{
+    type: DataTableColumnConfigurationEntryType.DATE as const,
+    fieldName: 'reportDate',
+    label: 'Report Date',
+    isFixed: true,
+    isHideable: false,
+    size: 200
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: '__typename',
+    valueToDisplayLabel: (typename: string) => isMersEventTypename(typename) ? mersDataTypeToLabelMap[typename] : typename,
+    valueToColourSchemeClassnameMap: mersDataTypeToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Event Type'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'whoRegion',
+    label: 'WHO Region',
+    valueToColourSchemeClassnameMap: {
+      [WhoRegion.Afr]: "bg-who-region-afr",
+      [WhoRegion.Amr]: "bg-who-region-amr",
+      [WhoRegion.Emr]: "bg-who-region-emr",
+      [WhoRegion.Eur]: "bg-who-region-eur",
+      [WhoRegion.Sear]: "bg-who-region-sear",
+      [WhoRegion.Wpr]: "bg-who-region-wpr text-white"
+    },
+    defaultColourSchemeClassname: 'bg-sky-100'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'city',
+    label: 'City'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'state',
+    label: 'State'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'country',
+    label: 'Country or Area'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'latitude',
+    label: 'Latitude'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'longitude',
+    label: 'Longitude'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'diagnosisStatus',
+    valueToDisplayLabel: (diagnosisStatus: string) => isMersDiagnosisStatus(diagnosisStatus) ? diagnosisStatusToStringMap[diagnosisStatus] : diagnosisStatus,
+    valueToColourSchemeClassnameMap: diagnosisStatusToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Diagnosis Status'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'diagnosisSource',
+    valueToDisplayLabel: (diagnosisSource: string) => isMersDiagnosisSource(diagnosisSource) ? diagnosisSourceToStringMap[diagnosisSource] : diagnosisSource,
+    valueToColourSchemeClassnameMap: diagnosisSourceToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Diagnosis Source'
+  }, {
+    type: DataTableColumnConfigurationEntryType.DATE as const,
+    fieldName: 'observationDate',
+    label: 'Observation Date'
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL as const,
+    fieldName: 'animalType',
+    valueToDisplayLabel: (animalType: string) => isMersEventAnimalType(animalType) ? animalTypeToStringMap[animalType] : animalType,
+    valueToColourSchemeClassnameMap: animalTypeToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: areNonCamelAnimalsIncluded
+      ? 'Animal Type'
+      : 'Camel Type',
+  }, {
+    type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
+    fieldName: 'animalSpecies',
+    valueToDisplayLabel: (animalSpecies: string) => isMersAnimalSpecies(animalSpecies) ? animalSpeciesToStringMap[animalSpecies] : animalSpecies,
+    valueToColourSchemeClassnameMap: animalSpeciesToColourClassnameMap,
+    defaultColourSchemeClassname: "bg-sky-100",
+    label: 'Animal Species'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'humansAffected',
+    label: 'Humans Affected'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'humanDeaths',
+    label: 'Humans Deaths'
+  }, {
+    type: DataTableColumnConfigurationEntryType.STANDARD as const,
+    fieldName: 'id',
+    label: 'ID',
+    isHideable: false,
+    initiallyVisible: false
+  }];
+
+  return {
+    mersCasesColumnConfiguration,
+  }
+}
 
 interface MersCasesDataTableProps {
   tableData: FaoMersEventForTable[];
@@ -186,6 +197,8 @@ export const MersCasesDataTable = (props: MersCasesDataTableProps) => {
     },
     viewOnMapHandler
   }), [ viewOnMapHandler, mersVisualizationInformation ]);
+
+  const { mersCasesColumnConfiguration } = useMersCasesColumnConfiguration();
 
   return (
     <DataTable

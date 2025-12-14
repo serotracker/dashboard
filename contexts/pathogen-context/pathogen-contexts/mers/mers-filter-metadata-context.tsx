@@ -5,12 +5,14 @@ import { typedObjectEntries } from "@/lib/utils";
 import { AdditionalButtonConfiguration } from "@/components/ui/data-table/data-table";
 import { PathogenContextActionType } from "../../pathogen-context";
 import { useFaoMersEventData } from "@/hooks/mers/useFaoMersEventData";
+import { MersAnimalSpecies } from "@/gql/graphql";
 
 interface MersFilterMetadataContextType {
   numberOfNonTypenameFiltersApplied: number;
   dataTableAdditionalButtonConfig: AdditionalButtonConfiguration;
   visualizationFootnote: string;
   visualizationDownloadFootnote: string;
+  areNonCamelAnimalsIncluded: boolean;
 }
 
 const initialMersFilterMetadataContext: MersFilterMetadataContextType = {
@@ -24,6 +26,7 @@ const initialMersFilterMetadataContext: MersFilterMetadataContextType = {
   // If you tried that with the empty string or undefined and it worked just fine feel free to get rid of this hack though.
   visualizationFootnote: '⠀',
   visualizationDownloadFootnote: '⠀',
+  areNonCamelAnimalsIncluded: false,
 };
 
 export const MersFilterMetadataContext = createContext<
@@ -52,9 +55,26 @@ export const MersFilterMetadataProvider = (props: MersFilterMetadataProviderProp
       }
     }
 
+    let numberOfFiltersAppliedToShow = numberOfNonTypenameFiltersApplied;
+
+    if(
+      !!selectedFilters['animalSpecies'] &&
+      selectedFilters['animalSpecies'].length === 2 &&
+      selectedFilters['animalSpecies'].includes(MersAnimalSpecies.BactrianCamel) &&
+      selectedFilters['animalSpecies'].includes(MersAnimalSpecies.DromedaryCamel)
+    ) {
+      numberOfFiltersAppliedToShow = numberOfFiltersAppliedToShow - 1;
+    }
+
+    if(numberOfNonTypenameFiltersApplied === 0) {
+      return {
+        enabled: false
+      }
+    }
+
     return {
       enabled: true,
-      buttonText: `Reset all filters (${numberOfNonTypenameFiltersApplied} currently applied)`,
+      buttonText: `Reset all filters (${numberOfFiltersAppliedToShow} currently applied)`,
       onClick: () => dispatch({
         type: PathogenContextActionType.RESET_FILTERS,
         payload: {
@@ -65,7 +85,7 @@ export const MersFilterMetadataProvider = (props: MersFilterMetadataProviderProp
         }
       })
     }
-  }, [ numberOfNonTypenameFiltersApplied ])
+  }, [ numberOfNonTypenameFiltersApplied, data?.mersPrimaryEstimates, dispatch, faoMersEvents, selectedFilters ]);
   
   const visualizationFootnote = useMemo(() => {
     return numberOfNonTypenameFiltersApplied !== 0
@@ -81,13 +101,28 @@ export const MersFilterMetadataProvider = (props: MersFilterMetadataProviderProp
     return 'SeroTracker Research Group (2024); MERSTracker Dashboard. Website, accessible via https://new.serotracker.com/'
   }, [])
 
+  const areNonCamelAnimalsIncluded = useMemo(() => {
+    const selectedAnimalSpecies: string[] | undefined = selectedFilters['animalSpecies'];
+
+    if(!selectedAnimalSpecies || selectedAnimalSpecies.length === 0) {
+      return true;
+    }
+
+    if(selectedAnimalSpecies.some((element) => element !== MersAnimalSpecies.BactrianCamel && element !== MersAnimalSpecies.DromedaryCamel)) {
+      return true;
+    }
+
+    return false;
+  }, [ selectedFilters ]);
+
   return (
     <MersFilterMetadataContext.Provider
       value={{
         numberOfNonTypenameFiltersApplied,
         dataTableAdditionalButtonConfig,
         visualizationFootnote,
-        visualizationDownloadFootnote
+        visualizationDownloadFootnote,
+        areNonCamelAnimalsIncluded,
       }}
     >
       {props.children}
