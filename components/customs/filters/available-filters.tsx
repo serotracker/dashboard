@@ -9,7 +9,7 @@ import { SendFilterChangeDispatch } from "../filters";
 import { BooleanSelectFilter } from "./boolean-select-filter";
 import { BooleanSelectOptionString } from "./select-filter";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
-import { Arbovirus, ArbovirusEstimateType, ArbovirusStudyPopulation } from "@/gql/graphql";
+import { Arbovirus, ArbovirusEstimateType, ArbovirusStudyPopulation, MersAnimalSpecies } from "@/gql/graphql";
 import { arboShortformToFullNamePlusVirusMap } from "@/app/pathogen/arbovirus/dashboard/(visualizations)/recharts";
 import { ColouredCheckboxFilter } from "./coloured-checkbox-filter";
 import {
@@ -23,7 +23,8 @@ import {
   mersDataTypeToSortOrderMap,
   mersDataTypeToSuperOptionMap,
   mersMapPointVisibilitySettingToHiddenOptionsMap,
-  useMersDataTypeToLabelMap
+  useMersDataTypeToLabelMap,
+  isMersAnimalSpecies
 } from "@/app/pathogen/mers/dashboard/(map)/shared-mers-map-pop-up-variables";
 import { UNRegionsTooltip, WHORegionsTooltip } from "../tooltip-content";
 import { GroupedColouredCheckboxFilter } from "./grouped-coloured-checkbox-filter";
@@ -32,6 +33,7 @@ import { isMersMacroSampleFrameType, MersMacroSampleFramesContext, MersMacroSamp
 import { isMersAssayClassification, MersAssayClassification, MersAssayClassificationContext, mersAssayClassificationToTextMap } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-assay-classification-content";
 import { PositivePrevalenceFilterOptions } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-data-filtering";
 import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
+import { isMersAnimalSpeciesGroup, MersAnimalSpeciesGroup, MersAnimalSpeciesGroupContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-animal-species-group-context";
 
 export interface FieldInformation {
   field: FilterableField;
@@ -271,6 +273,11 @@ export const useAvailableFilters = () => {
   const { getAssayClassificationsForAssay } = useContext(MersAssayClassificationContext);
   const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
   const { mersDataTypeSuperOptionToLabelMap } = useMersDataTypeSuperOptionToLabelMap();
+  const {
+    mersAnimalSpeciesToAnimalSpeciesGroupMap,
+    mersAnimalSpeciesGroupToSortOrderMap,
+    mersAnimalSpeciesGroupToLabelMap,
+  } = useContext(MersAnimalSpeciesGroupContext);
 
   const availableFilters: {[key in FilterableField]: FieldInformation } = {
     [FilterableField.pathogen]: {
@@ -597,6 +604,22 @@ export const useAvailableFilters = () => {
       field: FilterableField.animalSpecies,
       label: "Animal Species",
       valueToLabelMap: animalSpeciesToStringMap,
+      optionToSuperOptionFunction: (option: string) => isMersAnimalSpecies(option)
+        ? mersAnimalSpeciesToAnimalSpeciesGroupMap[option]
+        : MersAnimalSpeciesGroup.UNCATEGORIZED,
+      superOptionSortingFunction: (superOptionA, superOptionB) => {
+        const valueForOptionA = isMersAnimalSpeciesGroup(superOptionA)
+          ? mersAnimalSpeciesGroupToSortOrderMap[superOptionA]
+          : mersAnimalSpeciesGroupToSortOrderMap[MersAnimalSpeciesGroup.UNCATEGORIZED];
+        const valueForOptionB = isMersAnimalSpeciesGroup(superOptionB)
+          ? mersAnimalSpeciesGroupToSortOrderMap[superOptionB]
+          : mersAnimalSpeciesGroupToSortOrderMap[MersAnimalSpeciesGroup.UNCATEGORIZED];
+
+        return valueForOptionA - valueForOptionB;
+      },
+      superOptionToLabelMap: (superOption: string) => isMersAnimalSpeciesGroup(superOption)
+        ? mersAnimalSpeciesGroupToLabelMap[superOption]
+        : mersAnimalSpeciesGroupToLabelMap[MersAnimalSpeciesGroup.UNCATEGORIZED],
       filterRenderingFunction: MultiSelectFilter
     },
     positivePrevalence: {
