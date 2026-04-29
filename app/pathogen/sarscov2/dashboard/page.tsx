@@ -28,7 +28,7 @@ function SarsCov2Banner() {
         studies are heterogeneous and vary in their quality, design, methodology, assay performance, and reporting, and
         results should be interpreted and compared with caution.
       </p>
-      <div class="flex justify-start items-center gap-6">
+      <div className="flex justify-start items-center gap-6">
         <Link
           href="#TABLE"
           class="flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground px-4 py-2 w-[30%] bg-background hover:bg-backgroundHover h-full">
