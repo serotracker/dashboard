@@ -27,6 +27,7 @@ export interface SelectProps {
   borderedAreaClassname?: string;
   optionToSuperOptionFunction?: (option: string) => string;
   superOptionToLabelMap?: (superOption: string) => string;
+  superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
 }
 
 const createSelectOptionList = (options: (string)[], optionToLabelMap: Record<string, string | undefined>) => {
@@ -38,7 +39,7 @@ const createSelectOptionList = (options: (string)[], optionToLabelMap: Record<st
 
 export function Select(props: SelectProps) {
   // TODO: I wonder if there is a way to make the background color dynamic based on the page we are on so this does not need to prop drilled
-  const { heading, handleOnChange, optionToLabelMap, singleSelect, optionToSuperOptionFunction, superOptionToLabelMap } = props;
+  const { heading, handleOnChange, optionToLabelMap, singleSelect, optionToSuperOptionFunction, superOptionToLabelMap, superOptionSortingFunction } = props;
   const options = createSelectOptionList(props.options, optionToLabelMap);
   const selected = props.selected
     .map((selectedOption) => selectedOption === true ? BooleanSelectOptionString.TRUE : selectedOption) 
@@ -147,6 +148,7 @@ export function Select(props: SelectProps) {
                 className={!optionToSuperOptionFunction ? 'hidden' : ''}
                 optionToSuperOptionFunction={optionToSuperOptionFunction}
                 superOptionToLabelMap={superOptionToLabelMap}
+                superOptionSortingFunction={superOptionSortingFunction}
               />
             </div>
           ) : null}

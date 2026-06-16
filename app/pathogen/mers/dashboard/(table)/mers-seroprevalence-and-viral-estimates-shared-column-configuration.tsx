@@ -33,6 +33,7 @@ import { isHumanMersEstimate, MersEstimate } from "@/contexts/pathogen-context/p
 import { parseISO } from "date-fns";
 import { useContext, useMemo, useCallback } from "react";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
+import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 export type MersEstimateBaseForDataTable = ReturnType<typeof mapMersEstimateBaseForDataTable>;
 
@@ -280,6 +281,7 @@ interface GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput {
 
 export const useMersEstimateColumnConfiguration = () => {
   const { countryNameToColourClassnameMap } = useContext(CountryInformationContext);
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
 
   const getMersSeroprevalenceAndViralEstimateSharedColumnConfiguration = useCallback((
     input: GetMersSeroprevalenceAndViralEstimateSharedColumnConfigurationInput
@@ -429,7 +431,9 @@ export const useMersEstimateColumnConfiguration = () => {
     valueToDisplayLabel: (animalType: string) => isMersAnimalType(animalType) ? animalTypeToStringMap[animalType] : animalType,
     valueToColourSchemeClassnameMap: animalTypeToColourClassnameMap,
     defaultColourSchemeClassname: "bg-sky-100",
-    label: 'Animal Type'
+    label: areNonCamelAnimalsIncluded
+      ? 'Animal Type'
+      : 'Camel Type'
   }, {
     type: DataTableColumnConfigurationEntryType.COLOURED_PILL_LIST as const,
     fieldName: 'primaryEstimateAnimalSpecies',

@@ -138,6 +138,8 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     setCurrentPageIndex(newCurrentPageIndex);
   }, [ _setNumberOfPagesAvailable, setCurrentPageIndex, currentPageIndex ]);
 
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
+
   const getDisplayNameForSummaryByWhoRegion: MersVisualizationInformation<
     string,
     SummaryByRegionVariableOfInterestDropdownOption,
@@ -177,9 +179,13 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
       chosenDropdownOption: summaryByRegionVariableOfInterestSelectedDropdownOption,
       dropdownOptionToLabelMap: {
         [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_SEROPREVALENCE]: "Median Human Seroprevalence",
-        [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE]: "Median Animal Seroprevalence",
+        [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_SEROPREVALENCE]: areNonCamelAnimalsIncluded 
+          ? "Median Animal Seroprevalence"
+          : "Median Camel Seroprevalence",
         [SummaryByRegionVariableOfInterestDropdownOption.HUMAN_MEDIAN_VIRAL_PREVALENCE]: "Median Human Viral Prevalence",
-        [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_VIRAL_PREVALENCE]: "Median Animal Viral Prevalence",
+        [SummaryByRegionVariableOfInterestDropdownOption.ANIMAL_MEDIAN_VIRAL_PREVALENCE]: areNonCamelAnimalsIncluded
+          ? "Median Animal Viral Prevalence"
+          : "Median Camel Viral Prevalence",
         [SummaryByRegionVariableOfInterestDropdownOption.MERS_ANIMAL_CASES]: "Confirmed Animal Cases",
         [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_CASES]: "Confirmed Human Cases",
         [SummaryByRegionVariableOfInterestDropdownOption.MERS_HUMAN_DEATHS]: "Confirmed Human Deaths"
@@ -239,7 +245,8 @@ export const useSummaryByRegionVisualizationPageConfig = () => {
     setSummaryByRegionSelectedDropdownOption,
     availableSampleFrames,
     summaryByRegionSelectedAnimalSampleFrameOrMacroSampleFrame,
-    setSummaryByRegionSelectedAnimalSampleFrameOrMacroSampleFrame
+    setSummaryByRegionSelectedAnimalSampleFrameOrMacroSampleFrame,
+    areNonCamelAnimalsIncluded,
   ])
 
   const customizationModalConfigurationForSummaryByRegion: MersVisualizationInformation<

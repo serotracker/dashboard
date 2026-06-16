@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import {
   GenericMapPopUp,
   GenericMapPopUpWidth,
@@ -21,6 +21,7 @@ import {
 } from "./shared-mers-map-pop-up-variables";
 import { PopUpContentRowType, PopupContentTextAlignment } from '@/components/ui/pathogen-map/map-pop-up/pop-up-content-rows';
 import { MersWhoCaseDataEntry } from '@/hooks/mers/use-mers-who-case-data-partitioned';
+import { MersFilterMetadataContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context';
 
 interface MersCountryPopupContentProps {
   record: {
@@ -112,7 +113,9 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
     return mersWhoCaseData
       .find((element) => element.country.alphaThreeCode === alpha3CountryCode)
       ?.positiveCasesReported ?? 0
-  }, [ mersWhoCaseData, alpha3CountryCode ])
+  }, [ mersWhoCaseData, alpha3CountryCode ]);
+
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
 
   return (
     <GenericMapPopUp
@@ -138,7 +141,9 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
           rightPaddingEnabled: false
         }] : []),
         ...(estimateDataShown ? [{
-          title: 'Animal Seroprevalence Estimates'.replace(' ', '\u00A0'),
+          title: areNonCamelAnimalsIncluded
+            ? 'Animal Seroprevalence Estimates'.replace(' ', '\u00A0')
+            : 'Camel Seroprevalence Estimates'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.TEXT as const,
           text: animalMersSeroprevalenceRange,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
@@ -154,7 +159,9 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
           rightPaddingEnabled: false
         }] : []),
         ...(estimateDataShown ? [{
-          title: 'Animal Viral Estimates'.replace(' ', '\u00A0'),
+          title: areNonCamelAnimalsIncluded
+            ? 'Animal Viral Estimates'.replace(' ', '\u00A0')
+            : 'Camel Viral Estimates'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.TEXT as const,
           text: animalMersViralPrevalenceRange,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,
@@ -178,7 +185,9 @@ export const MersCountryPopupContent = (props: MersCountryPopupContentProps): Re
           rightPaddingEnabled: false
         }] : []),
         ...(eventDataShown ? [{
-          title: 'Animal Cases'.replace(' ', '\u00A0'),
+          title: areNonCamelAnimalsIncluded
+            ? 'Animal Cases'.replace(' ', '\u00A0')
+            : 'Camel Cases'.replace(' ', '\u00A0'),
           type: PopUpContentRowType.NUMBER as const,
           value: allAnimalMersEvents.length,
           contentTextAlignment: PopupContentTextAlignment.RIGHT,

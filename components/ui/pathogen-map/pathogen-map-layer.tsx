@@ -1,7 +1,6 @@
-import { Layer, Source } from "react-map-gl";
+import { Layer, Source } from "react-map-gl/mapbox";
 import { ClusteringSettings, PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { PathogenMapCursor } from "./use-pathogen-map-mouse";
-import cluster from "cluster";
 
 export interface PathogenMapLayerInfo {
   id: string;

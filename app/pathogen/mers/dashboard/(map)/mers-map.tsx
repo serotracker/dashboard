@@ -36,7 +36,7 @@ import { useMersMapDataTypeLegendEntries } from "./use-mers-map-data-type-legend
 import { useMersWhoCaseData } from "@/hooks/mers/use-mers-who-case-data";
 import { useMersMapLegend } from "./use-mers-map-legend";
 import { Breakpoint, useBreakpoint } from "@/hooks/useBreakpoint";
-import { Layer, Source } from "react-map-gl";
+import { Layer, Source } from "react-map-gl/mapbox";
 import Link from "next/link";
 import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import { MapSectionComponentProps } from "@/app/pathogen/generic-pathogen-dashboard-page";

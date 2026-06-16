@@ -1,4 +1,4 @@
-import { MouseEventHandler, useMemo, useState } from "react";
+import { MouseEventHandler, useContext, useMemo, useState } from "react";
 import { AnimalMersViralEstimate, MersEstimate, isAnimalMersViralEstimate } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-context";
 import { UnRegion, WhoRegion } from "@/gql/graphql";
 import { FaoMersEvent } from "@/hooks/mers/useFaoMersEventDataPartitioned";
@@ -22,6 +22,7 @@ import { AnimalMersViralEstimatePopupContent } from "../../(map)/animal-mers-vir
 import { useBarColourAndLegendProps } from "@/components/customs/visualizations/use-bar-colour-and-legend-props";
 import { generateConciseSourceId } from "../../(table)/mers-seroprevalence-and-viral-estimates-shared-column-configuration";
 import { EstimatesByRegionYAxisTick } from "../estimates-by-region";
+import { MersFilterMetadataContext } from "@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context";
 
 const AnimalViralPositivePrevalenceByRegionTooltip = <
   TValueType extends number | string | Array<number | string>,
@@ -62,7 +63,7 @@ interface AnimalViralPositivePrevalenceByRegionProps {
 export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositivePrevalenceByRegionProps) => {
   const { animalMersViralEstimates, regionGroupingFunction, regionToLegendLabel, legendConfiguration, regionToDotColour: regionToDotColourDefault, regionSortingFunction } = props;
   const [ isMouseOnTooltip, setIsMouseOnTooltip ] = useState<boolean>(false);
-
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
   const {
     getColourForSecondaryKey,
     legendProps
@@ -151,7 +152,7 @@ export const AnimalViralPositivePrevalenceByRegion = (props: AnimalViralPositive
           textAnchor="middle"
           dominantBaseline="central"
         >
-          <tspan fontSize="20">Animal Viral Prevalence</tspan>
+          <tspan fontSize="20">{areNonCamelAnimalsIncluded ? 'Animal Viral Prevalence' : 'Camel Viral Prevalence'}</tspan>
         </text>
         <CartesianGrid strokeDasharray={"4 8"}/>
         <XAxis

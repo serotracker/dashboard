@@ -32,6 +32,7 @@ export interface SelectFilterProps<
   optionToSuperOptionFunction?: (option: string) => string;
   sorted?: boolean;
   superOptionToLabelMap?: (superOption: string) => string;
+  superOptionSortingFunction?: (superOptionA: string, superOptionB: string) => number;
 }
 
 export const SelectFilter = <
@@ -77,6 +78,15 @@ export const SelectFilter = <
         ? pipe(
           props.filterOptions,
           (data) => data.filter(<T extends unknown>(filterOption: T | undefined | null): filterOption is T => filterOption !== undefined && filterOption !== null),
+          (data) => data.filter((option) => {
+            const selected = props.state.selectedFilters[props.filter];
+
+            if(!selected) {
+              return true;
+            }
+
+            return !selected.includes(option);
+          }),
           props.sorted === undefined || props.sorted === true ? (data) => data.sort() : (data) => data
         ) : [BooleanSelectOptionString.TRUE, BooleanSelectOptionString.FALSE]
       }
@@ -84,6 +94,7 @@ export const SelectFilter = <
       singleSelect={[SelectFilterType.SINGLE_SELECT, SelectFilterType.BOOLEAN_SELECT].includes(props.selectFilterType)}
       optionToSuperOptionFunction={props.optionToSuperOptionFunction}
       superOptionToLabelMap={props.superOptionToLabelMap}
+      superOptionSortingFunction={props.superOptionSortingFunction}
     />
   </GenericFilter>
 )

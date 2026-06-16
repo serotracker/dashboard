@@ -2,7 +2,7 @@ import { DashboardType, dashboardTypeToHoverColourClassnameMap, dashboardTypeToM
 import { cn } from "@/lib/utils";
 import { CloudDownload } from "lucide-react";
 import { useMemo, useCallback } from "react";
-import { useMap } from "react-map-gl";
+import { useMap } from "react-map-gl/mapbox";
 import { Card } from "../card";
 
 interface MapDownloadButtonProps {

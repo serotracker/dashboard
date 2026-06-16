@@ -1,4 +1,4 @@
-import { MouseEventHandler, useMemo } from 'react';
+import { MouseEventHandler, useContext, useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import {
   AnimalMersViralEstimateMapMarkerData,
@@ -9,6 +9,7 @@ import {
   generateMersEstimateTableConfigurations,
   useMersEstimateRows
 } from "./shared-mers-map-pop-up-variables";
+import { MersFilterMetadataContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context';
 
 interface AnimalMersViralEstimatePopupContentProps {
   estimate: AnimalMersViralEstimateMapMarkerData;
@@ -19,7 +20,7 @@ interface AnimalMersViralEstimatePopupContentProps {
 
 export const AnimalMersViralEstimatePopupContent = (props: AnimalMersViralEstimatePopupContentProps) => {
   const { estimate } = props;
-
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
   const { getSharedMersEstimateRows } = useMersEstimateRows();
 
   const topBannerText = useMemo(() => {
@@ -37,7 +38,9 @@ export const AnimalMersViralEstimatePopupContent = (props: AnimalMersViralEstima
     <GenericMapPopUp
       width={GenericMapPopUpWidth.EXTRA_EXTRA_WIDE}
       headerConfiguration={{
-        text: "Animal Viral Estimate",
+        text: areNonCamelAnimalsIncluded
+          ? "Animal Viral Estimate"
+          : "Camel Viral Estimate",
         textAlignment: HeaderConfigurationTextAlignment.CENTER
       }}
       subtitleConfiguration={{

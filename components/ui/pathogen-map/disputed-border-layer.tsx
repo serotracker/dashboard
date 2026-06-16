@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Layer, Source } from "react-map-gl";
+import { Layer, Source } from "react-map-gl/mapbox";
 import { MapSymbology } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import { PaintForCountries } from "./pathogen-map";
 

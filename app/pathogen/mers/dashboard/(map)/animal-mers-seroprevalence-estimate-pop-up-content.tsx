@@ -1,4 +1,4 @@
-import { MouseEventHandler, useMemo } from 'react';
+import { MouseEventHandler, useContext, useMemo } from 'react';
 import { GenericMapPopUp, GenericMapPopUpWidth, HeaderConfigurationTextAlignment } from "@/components/ui/pathogen-map/map-pop-up/generic-map-pop-up";
 import {
   AnimalMersSeroprevalenceEstimateMapMarkerData,
@@ -9,6 +9,7 @@ import {
   generateMersEstimateTableConfigurations,
   useMersEstimateRows
 } from "./shared-mers-map-pop-up-variables";
+import { MersFilterMetadataContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context';
 
 interface AnimalMersSeroprevalenceEstimatePopupContentProps {
   estimate: AnimalMersSeroprevalenceEstimateMapMarkerData;
@@ -28,6 +29,8 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
     return `${seroprevalencePercentageText}`
   }, [ estimate ]);
 
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
+
   const tableConfigurations = useMemo(() => generateMersEstimateTableConfigurations({
     type: GenerateMersEstimateTableConfigurationsType.SEROPREVALENCE_ESTIMATES,
     estimate
@@ -37,7 +40,9 @@ export const AnimalMersSeroprevalenceEstimatePopupContent = (props: AnimalMersSe
     <GenericMapPopUp
       width={GenericMapPopUpWidth.EXTRA_EXTRA_WIDE}
       headerConfiguration={{
-        text: "Animal Seroprevalence Estimate",
+        text: areNonCamelAnimalsIncluded
+          ? "Animal Seroprevalence Estimate"
+          : "Camel Seroprevalence Estimate",
         textAlignment: HeaderConfigurationTextAlignment.CENTER
       }}
       subtitleConfiguration={{

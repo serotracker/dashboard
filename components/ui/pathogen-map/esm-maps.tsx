@@ -1,6 +1,6 @@
 import { ArboContext } from "@/contexts/pathogen-context/pathogen-contexts/arbovirus/arbo-context";
 import { useContext } from "react";
-import { Layer, Source } from "react-map-gl";
+import { Layer, Source } from "react-map-gl/mapbox";
 
 type Esms = "zika" | "dengue2015" | "dengue2050";
 

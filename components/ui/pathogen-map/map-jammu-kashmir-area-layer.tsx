@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
 import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
-import { Source, Layer, LayerProps } from "react-map-gl";
+import { Source, Layer, LayerProps } from "react-map-gl/mapbox";
 
 export interface MapJammuKashmirAreaLayerProps {
   positionedUnderLayerWithId: string | undefined;

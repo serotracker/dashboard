@@ -1,8 +1,6 @@
-import { Layer, Source } from "react-map-gl";
+import { Layer } from "react-map-gl/mapbox";
 import { PaintForCountries, PATHOGEN_MAP_WHO_ADMIN_O_SOURCE_LAYER_ID, PathogenDataPointPropertiesBase } from "./pathogen-map";
-import { useEffect, useState, useMemo } from "react";
-import { getEsriVectorSourceStyle } from "@/utils/mapping-util";
-import { MapResources } from "@/app/pathogen/sarscov2/dashboard/(map)/map-config";
+import { useMemo } from "react";
 
 interface PathogenCountryHighlightLayerProps {
   positionedUnderLayerWithId: string | undefined;

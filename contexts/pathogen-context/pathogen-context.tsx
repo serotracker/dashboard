@@ -1,7 +1,7 @@
 "use client";
 import { QueryClient, QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { ToastProvider } from "../toast-provider";
-import { MapProvider, MapRef, useMap } from "react-map-gl";
+import { MapProvider, MapRef, useMap } from "react-map-gl/mapbox";
 import React, { Context, Dispatch, useReducer } from "react";
 import { filterData } from "./filter-update-steps/apply-new-selected-filters";
 import { handleFilterUpdate } from "./filter-update-steps";

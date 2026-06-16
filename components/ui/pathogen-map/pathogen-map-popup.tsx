@@ -1,5 +1,5 @@
 import validator from "validator";
-import { MapRef, Popup, useMap } from "react-map-gl";
+import { MapRef, Popup, useMap } from "react-map-gl/mapbox";
 import { PathogenDataPointPropertiesBase } from "./pathogen-map";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
 import { useMemo } from "react";

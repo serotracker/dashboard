@@ -3,7 +3,7 @@ import { MarkerCollection } from "@/components/ui/pathogen-map/pathogen-map";
 import { Browser, detectBrowser } from "@/lib/detect-browser";
 import mapboxgl from "mapbox-gl";
 import React from "react";
-import { Marker } from "react-map-gl";
+import { Marker } from "react-map-gl/mapbox";
 
 // code for creating an SVG donut chart from feature properties
 export function createDonutChartAndHoverPopup<

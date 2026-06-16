@@ -1,4 +1,4 @@
-import { MapRef } from "react-map-gl"
+import { MapRef } from "react-map-gl/mapbox"
 import { pipe } from "fp-ts/lib/function.js";
 import { adjustMapPosition } from "./filter-update-steps/adjust-map-position";
 import { updatePediatricAgeGroupFilter } from "./filter-update-steps/update-pediatric-age-group-filter";

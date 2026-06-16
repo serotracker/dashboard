@@ -35,6 +35,7 @@ import { parseISO } from "date-fns";
 import { MapDataPointVisibilityOptions } from "./use-mers-map-customization-modal";
 import { useContext } from "react";
 import { CountryInformationContext } from "@/contexts/pathogen-context/country-information-context";
+import { MersFilterMetadataContext } from '@/contexts/pathogen-context/pathogen-contexts/mers/mers-filter-metadata-context';
 
 export const diagnosisStatusToStringMap = {
   [MersDiagnosisStatus.Confirmed]: "Confirmed",
@@ -365,13 +366,28 @@ export const mersDataTypeToSortOrderMap: Record<string, number | undefined> & Re
   "HumanMersEvent": 5,
   "AnimalMersEvent": 6
 };
-export const mersDataTypeToLabelMap = {
-  "PrimaryHumanMersSeroprevalenceEstimateInformation": "Human Seroprevalence Estimate",
-  "PrimaryAnimalMersSeroprevalenceEstimateInformation": "Animal Seroprevalence Estimate",
-  "PrimaryHumanMersViralEstimateInformation": "Human Viral Estimate",
-  "PrimaryAnimalMersViralEstimateInformation": "Animal Viral Estimate",
-  "AnimalMersEvent": "Animal Case",
-  "HumanMersEvent": "Human Case",
+
+export const useMersDataTypeToLabelMap = () => {
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
+
+  const mersDataTypeToLabelMap = {
+    "PrimaryHumanMersSeroprevalenceEstimateInformation": "Human Seroprevalence Estimate",
+    "PrimaryAnimalMersSeroprevalenceEstimateInformation": areNonCamelAnimalsIncluded
+      ? "Animal Seroprevalence Estimate"
+      : "Camel Seroprevalence Estimate",
+    "PrimaryHumanMersViralEstimateInformation": "Human Viral Estimate",
+    "PrimaryAnimalMersViralEstimateInformation": areNonCamelAnimalsIncluded
+      ? "Animal Viral Estimate"
+      : "Camel Viral Estimate",
+    "AnimalMersEvent": areNonCamelAnimalsIncluded
+      ? "Animal Case"
+      : "Camel Case",
+    "HumanMersEvent": "Human Case",
+  };
+
+  return {
+    mersDataTypeToLabelMap
+  };
 };
 
 export const mersMapPointVisibilitySettingToHiddenOptionsMap = {
@@ -429,9 +445,19 @@ export const mersDataTypeToSuperOptionMap = {
   "AnimalMersEvent": MersDataTypeSuperOption.ANIMAL
 }
 
-export const mersDataTypeSuperOptionToLabelMap = {
-  [MersDataTypeSuperOption.HUMAN]: "Human Data",
-  [MersDataTypeSuperOption.ANIMAL]: "Animal Data"
+export const useMersDataTypeSuperOptionToLabelMap = () => {
+  const { areNonCamelAnimalsIncluded } = useContext(MersFilterMetadataContext);
+
+  const mersDataTypeSuperOptionToLabelMap = {
+    [MersDataTypeSuperOption.HUMAN]: "Human Data",
+    [MersDataTypeSuperOption.ANIMAL]: areNonCamelAnimalsIncluded
+      ? "Animal Data"
+      : "Camel Data",
+  }
+
+  return {
+    mersDataTypeSuperOptionToLabelMap
+  }
 }
 
 export const mersDataTypeToColourClassnameMap = {

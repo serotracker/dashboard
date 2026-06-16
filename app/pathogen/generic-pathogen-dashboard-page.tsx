@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useIsLargeScreen } from "@/hooks/useIsLargeScreen";
 import { FiltersButton } from "./filters-button";
 import { DashboardSectionId, DashboardType, dashboardTypeToMapIdMap } from "./dashboard-enums";
-import { useMap } from "react-map-gl";
+import { useMap } from "react-map-gl/mapbox";
 
 interface FiltersComponentProps {
   className?: string;
