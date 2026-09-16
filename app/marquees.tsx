@@ -257,13 +257,6 @@ export const mediaMarqueeEntryProps: MediaMarqueeEntryProps[] = [{
   logo: UniversityOfWaterlooLogo,
   link: 'https://uwaterloo.ca/news/engineering-students/students-build-online-dashboard-track-covid-19-antibody'
 }, {
-  headline: "Global launch of SeroTracker: a COVID-19 antibody testing hub, in partnership with Canada's COVID-19 Immunity Task Force",
-  year: 2020,
-  month: Month.MAY,
-  day: 28,
-  logo: CITFLogo,
-  link: 'https://www.covid19immunitytaskforce.ca/global-launch-of-serotracker-a-covid-19-antibody-testing-hub-in-partnership-with-canadas-covid-19-immunity-task-force'
-}, {
   headline: "Knowledge hub developed to track SARS-CoV antibody studies",
   year: 2020,
   month: Month.MAY,

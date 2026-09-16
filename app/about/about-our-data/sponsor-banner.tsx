@@ -20,18 +20,21 @@ export enum Sponsor {
   RECODID = "RECODID",
   CANADIAN_INSTITUTES_OF_HEALTH_RESEARCH = "CANADIAN_INSTITUTES_OF_HEALTH_RESEARCH",
   HEIDELBERG_UNIVERSITY = "HEIDELBERG_UNIVERSITY",
+  DEZI_NETWORK = "DEZI_NETWORK",
+  WELLCOME = "WELLCOME",
 }
 
 interface SponsorBannerProps {
   className: string;
+  linkClassName?: string;
+  imageClassName?: string;
   sponsors: Sponsor[];
 }
 
 const sponsorToInformationMap: Record<Sponsor, SponsorInformation> = {
   [Sponsor.COVID_19_IMMUNITY_TASK_FORCE]: {
-    imageUrl:
-      "https://www.covid19immunitytaskforce.ca/wp-content/themes/pena-lite-child/CITF_logo_ENG.svg",
-    link: "https://www.covid19immunitytaskforce.ca/",
+    imageUrl: "/CITF_logo_ENG.svg",
+    link: "#", // was https://www.covid19immunitytaskforce.ca/
     imageAlt: "COVID-19 Immunity Task Force logo",
   },
   [Sponsor.CENTRE_FOR_HEALTH_INFORMATICS]: {
@@ -79,6 +82,16 @@ const sponsorToInformationMap: Record<Sponsor, SponsorInformation> = {
     link: "https://www.uni-heidelberg.de/en",
     imageAlt: "Heidelberg University logo",
   },
+  [Sponsor.DEZI_NETWORK]: {
+    imageUrl: "/DeZiNetwork.png",
+    link: "https://www.dezinet.org/",
+    imageAlt: "DeZi Network logo",
+  },
+  [Sponsor.WELLCOME]: {
+    imageUrl: "/Wellcome.svg",
+    link: "https://wellcome.org/",
+    imageAlt: "Wellcome logo",
+  },
 };
 
 export const SponsorBanner = (props: SponsorBannerProps) => (
@@ -92,17 +105,16 @@ export const SponsorBanner = (props: SponsorBannerProps) => (
           key={sponsor}
           target="__blank"
           rel="noopener noreferrer"
-          className="flex my-4 justify-center"
-        >
+          className={cn("flex my-4 justify-center", props.linkClassName)}>
           <Image
             src={sponsorInformation.imageUrl}
             alt={sponsorInformation.imageAlt}
-            className="flex object-contain"
+            className={cn("flex object-contain", props.imageClassName)}
             width={120}
             height={36}
           />
         </Link>
-      )
+      );
     })}
   </div>
 );
