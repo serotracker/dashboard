@@ -188,7 +188,7 @@ export default function DataExtractionPage() {
         </Link>
         <p className="inline">
           {" "}
-          (CIHR-IG) under Grant Agreement No 01886-000. ArboTracker is currently gratefully funded via the DeZi network,
+          (CIHR-IG) under Grant Agreement No 01886-000. ArboTracker is currently gratefully funded via the <Link className="inline text-link" href="https://www.dezinet.org/" target="__blank" rel="noopener noreferrer">DeZi network</Link>,
           led by Imperial College London, which is supported by the Wellcome Trust (DeZi Network: 316633/Z/24/Z).
           Mairead Whelan (project lead) is funded by the Canadian Institutes of Health Research Canada Graduate Research
           Scholarship (CGRS-D) for her doctoral studies, related to ArboTracker.
@@ -325,14 +325,6 @@ export default function DataExtractionPage() {
         </p>
         <Link className="inline text-link" href="mailto:mairead.whelan@ucalgary.ca">
           mairead.whelan@ucalgary.ca
-        </Link>
-        <p className="inline">, Harriet Ware at </p>
-        <Link className="inline text-link" href="mailto:ware.harriet@gmail.com">
-          ware.harriet@gmail.com
-        </Link>
-        <p className="inline">, and Niklas Bobrovitz at </p>
-        <Link className="inline text-link" href="mailto:niklas.bobrovitz@mail.utoronto.ca">
-          niklas.bobrovitz@mail.utoronto.ca
         </Link>
         <p className="inline">.</p>
       </div>

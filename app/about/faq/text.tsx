@@ -33,8 +33,6 @@ export const faqPageText: Record<FAQPageOptionId, {label: string, content: JSX.E
       <>
         <p className='inline'> Yes, the SeroTracker approach and our streamlined pipeline can be adapted to make research data useful across health-related topics. Please contact Mairéad Whelan at </p>
         <Link className="inline text-link" href="mailto:mairead.whelan@ucalgary.ca">mairead.whelan@ucalgary.ca</Link>
-        <p className='inline'> and Harriet Ware at </p>
-        <Link className="inline text-link" href="mailto:ware.harriet@gmail.com">ware.harriet@gmail.com</Link>
         <p className='inline'> to learn more about partnership options.</p>
       </>
     )
